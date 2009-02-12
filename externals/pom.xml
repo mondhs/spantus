@@ -7,9 +7,6 @@
   <packaging>pom</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>Spantus external root pom</name>
-  <url>http://code.google.com/p/spantus/</url>
-
- 
 
   <modules>
     <module>./recognition/spnt-dtw-recognition</module>
