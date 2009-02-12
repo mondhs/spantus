@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>org.spantus</groupId>
+  <artifactId>spnt-svn-pom</artifactId>
+  <packaging>pom</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Spantus svn root pom</name>
+  <url>http://code.google.com/p/spantus/</url>
+
+ <scm>
+    <connection>scm:svn:http://spantus.googlecode.com/svn/trunk</connection>
+    <!--<developerConnection>scm:svn:http://spantus.googlecode.com/svn/trunk</developerConnection>-->
+    <url>http://code.google.com/p/spantus/</url>
+  </scm>
+ 
+
+  <modules>
+    <module>spnt-main</module>
+    <module>externals</module>
+  </modules>
+
+   <profiles>
+		<profile>
+			<id>runSpntWorkUI</id>
+			<activation>
+				<property>
+					<name>run-tool</name>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.spantus</groupId>
+					<artifactId>spnt-work-ui</artifactId>
+					<version>0.0.1-SNAPSHOT</version>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.1</version>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>java</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<mainClass>org.spantus.work.ui.SpantusWorkMain</mainClass>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>		
+
+
+</project>
