@@ -1,0 +1,21 @@
+<MarkerSetHolder>
+  <markerSets class="linked-hash-map">
+    <entry>
+      <string>word</string>
+      <MarkerSet>
+        <markers class="linked-list">
+          <Marker>
+            <start>993.3</start>
+            <length>920.2</length>
+            <label>vienas</label>
+          </Marker>
+          <Marker>
+            <start>2051.1</start>
+            <length>872.9</length>
+            <label>du</label>
+          </Marker>
+        </markers>
+      </MarkerSet>
+    </entry>
+  </markerSets>
+</MarkerSetHolder>
