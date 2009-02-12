@@ -1,0 +1,64 @@
+package org.spantus.segment.online;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.threshold.IThreshold;
+import org.spantus.logger.Logger;
+import org.spantus.segment.ISegmentatorService;
+import org.spantus.segment.SegmentatorParam;
+import org.spantus.utils.Assert;
+
+public class OnlineSegmentaitonService implements ISegmentatorService {
+	private Logger log = Logger.getLogger(getClass());
+
+	public MarkerSet extractSegments(Set<IThreshold> thresholds,
+			SegmentatorParam param) {
+		DecistionSegmentatorOnline multipleSegmentator = new DecistionSegmentatorOnline();
+		if(param != null){
+			multipleSegmentator.setParam((OnlineDecisionSegmentatorParam)param);
+		}
+		Map<IThreshold, Iterator<Float>> thresholdMap = new HashMap<IThreshold, Iterator<Float>>();
+		Integer delta = null;
+//		Float extractorSampleRate = null;
+		
+		for (IThreshold threshold : thresholds) {
+			thresholdMap.put(threshold, threshold.getState().iterator());
+			if(delta == null){
+				delta = threshold.getConfig().getWindowOverlap();
+//				extractorSampleRate = threshold.getState().getSampleRate();
+			}else{
+				Assert.isTrue(delta==threshold.getConfig().getWindowOverlap());
+//				Assert.isTrue(extractorSampleRate == threshold.getState().getSampleRate(),
+//						"Extraction sample rate not the same " + extractorSampleRate 
+//						+ " != " + threshold.getState().getSampleRate()
+//						);
+			}
+		}
+		
+		Long i = delta.longValue();
+		boolean hasMore = true;
+		while(hasMore){
+			hasMore = false;
+			for (Entry<IThreshold, Iterator<Float>> thresholdEntry : thresholdMap.entrySet()) {
+				if(thresholdEntry.getValue().hasNext()){
+					multipleSegmentator.processState(i, thresholdEntry.getKey(), thresholdEntry.getValue().next());
+					hasMore = true;
+				}
+					
+			}
+			i+=delta;			
+		}
+		
+		log.debug("[extractSegments] {0}", multipleSegmentator.getMarkSet().getMarkers());
+		return multipleSegmentator.getMarkSet();
+	}
+
+	public MarkerSet extractSegments(Set<IThreshold> thresholds) {
+		return extractSegments(thresholds, null);
+	}
+}
