@@ -1,0 +1,8 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+
+    <persistence-unit name="spnt-default" transaction-type="RESOURCE_LOCAL">
+		<class>org.spantus.domain.User</class>
+		<class>org.spantus.domain.Sample</class>
+    </persistence-unit>
+
+</persistence>

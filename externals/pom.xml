@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>org.spantus.externals</groupId>
+  <artifactId>spnt-externals-pom</artifactId>
+  <packaging>pom</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Spantus external root pom</name>
+  <url>http://code.google.com/p/spantus/</url>
+
+ 
+
+  <modules>
+    <module>./recognition/spnt-dtw-recognition</module>
+    <module>./demo/spnt-demo</module>
+  </modules>
+</project>

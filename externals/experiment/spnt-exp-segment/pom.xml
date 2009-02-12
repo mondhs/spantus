@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <parent>
+    <artifactId>spnt-main</artifactId>
+    <groupId>org.spantus</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../../spnt-main</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>spnt-exp-segment</artifactId>
+  <name>Spantus - External - Segmentation experiment</name>
+  <version>0.0.1-SNAPSHOT</version>
+  <dependencies>
+    <dependency>
+      <groupId>org.spantus</groupId>
+      <artifactId>spnt-work</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>xstream</groupId>
+      <artifactId>xstream</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jfree</groupId>
+      <artifactId>jfreechart</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>1.8.0.7</version>
+    </dependency>
+  </dependencies>
+  <build>
+	<plugins>
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>exec-maven-plugin</artifactId>
+			<version>1.1</version>
+		</plugin>
+	</plugins>
+  </build>
+</project>
