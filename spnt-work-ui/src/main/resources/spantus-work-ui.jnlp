@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+"
+  codebase="file:///c:/jdc/jnlp/"
+>
+	<information>
+		<title>Spantus Work UI</title>
+		<vendor>Mindaugas Greibus</vendor>
+		<homepage href="http://code.google.com/p/spantus/" />
+		<description>Spantus Work UI</description>
+	</information>
+	<offline-allowed/>
+	<security>
+		<j2ee-application-client-permissions/>
+	</security>
+	<resources>
+		<j2se version="1.6+" />
+		<jar href="/developer/technicalArticles/Programming/jnlp/JNLPTime.jar"/>
+	</resources>
+	<application-desc main-class="Spantus Work UI" />
+</jnlp>
