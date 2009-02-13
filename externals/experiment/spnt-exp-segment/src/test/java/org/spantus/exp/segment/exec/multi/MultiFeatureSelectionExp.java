@@ -87,6 +87,7 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 				expertMS, 
 				createDefaultOnlineParam());
 		}
+		log.info("[compare]Processed iteraions: " + getCompbinations().size());
 		return getExperimentDao().findAllComparisionResult();
 	}
 	/**
@@ -95,18 +96,15 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 	 * @param experMS
 	 * @param param
 	 */
-	public void compare( String featureNames, Set<IThreshold> thresholds,
-			MarkerSet experMS, SegmentatorParam param ) {
-		
-//		for (Entry<String, Set<IThreshold>> thresholds : thresholdsMap.entrySet()) {
-			MarkerSet testMS = getSegmentator().extractSegments(
-					thresholds, param);
-			ComparisionResult result = getMakerComparison().compare(
-					experMS, testMS);
-			result.setName(featureNames);
-			getExperimentDao().save(result, featureNames,
-					getExperimentID(), getExperimentName());
-//		}
+	public void compare(String featureNames, Set<IThreshold> thresholds,
+			MarkerSet experMS, SegmentatorParam param) {
+
+		MarkerSet testMS = getSegmentator().extractSegments(thresholds, param);
+		ComparisionResult result = getMakerComparison()
+				.compare(experMS, testMS);
+		result.setName(featureNames);
+		getExperimentDao().save(result, featureNames, getExperimentID(),
+				getExperimentName());
 	}
 
 	public ExperimentDao getExperimentDao() {

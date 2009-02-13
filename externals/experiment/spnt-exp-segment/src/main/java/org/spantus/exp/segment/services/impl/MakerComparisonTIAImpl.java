@@ -103,7 +103,7 @@ public class MakerComparisonTIAImpl extends MakerComparisonImpl{
 		Float pc_off = ctx.voiceFrameOffsetFailed.floatValue()/ctx.voiceFrameOnsetTotal;
 		Float deltaVAF = Math.abs(testVAF - idealVAF)/idealVAF;
 		
-		result.setTotalResult((pc_on+pc_ss+pc_off+deltaVAF)/4);
+		result.setTotalResult(.3f*pc_on+.5f*pc_ss+.1f*pc_off+.1f*deltaVAF);
 		result.setOnset(pc_on);
 		result.setSteady(pc_ss);
 		result.setOffset(pc_off);

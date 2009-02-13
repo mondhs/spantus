@@ -27,6 +27,7 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 
 import org.spantus.exception.ProcessingException;
+import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.domain.ExperimentResult;
 import org.spantus.exp.segment.domain.ExperimentResultTia;
 
@@ -67,7 +68,15 @@ public class ExperimentHsqlDao extends ExperimentStaticDao{
 		}
 	}
 
+	@Override
+	public ExperimentResult save(ComparisionResult comparisionResult,
+			String features, Long experimentID, String experimentName) {
+		return save(createExperimentResult(comparisionResult, features, experimentID, experimentName) );
+	}
+	
+	@Override
 	public ExperimentResult save(ExperimentResult experimentResult) {
+		if(experimentResult.getTotalResult() >= 1 ) return experimentResult;
 		try {
 			ExperimentResultTia result = (ExperimentResultTia)experimentResult;
 			int featureNum = result.getFeatures().split(" ").length;

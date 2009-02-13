@@ -132,15 +132,23 @@ public class ProcessReaderImpl implements ProcessReader {
 		}
 		return thresholds;
 	}
-	
+	/**
+	 * 
+	 */
 	public Map<String, Set<String>> generateAllCompbinations(Set<? extends IGeneralExtractor> singleSet, int combinationDepth){
 		log.debug("starting generate {0}", combinationDepth);
 		Set<Set<IGeneralExtractor>> allCombinations = new LinkedHashSet<Set<IGeneralExtractor>>();
 		generateList(singleSet, allCombinations, new LinkedHashSet<IGeneralExtractor>(), combinationDepth);
 		log.debug("generated {0}", allCombinations.size());
-		return getCombinationMap(allCombinations);
+		return getCombinationMap(allCombinations, combinationDepth);
 	}
-	protected Map<String, Set<String>>  getCombinationMap(Set<Set<IGeneralExtractor>> allCombinations){
+	/**
+	 * 
+	 * @param allCombinations
+	 * @param combinationDepth
+	 * @return
+	 */
+	protected Map<String, Set<String>>  getCombinationMap(Set<Set<IGeneralExtractor>> allCombinations, int combinationDepth){
 		Map<String, Set<String>> allCombinationsMap = new LinkedHashMap< String, Set<String>>();
 		for (Set<IGeneralExtractor> set : allCombinations) {
 			Set<String> nameSet = new LinkedHashSet<String>();

@@ -314,6 +314,7 @@ public abstract class AbstractGraphGenerator {
 						new File(
 								getExpertMarksPath()
 								));
+		Assert.isTrue(expert!=null,"Expert marks not loaded");
 		return expert;
 	}
 
