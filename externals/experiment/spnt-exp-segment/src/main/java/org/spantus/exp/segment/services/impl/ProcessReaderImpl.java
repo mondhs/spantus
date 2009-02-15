@@ -21,18 +21,17 @@
 package org.spantus.exp.segment.services.impl;
 
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.beans.SampleInfo;
 import org.spantus.core.extractor.ExtractorOutputHolder;
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.IThreshold;
 import org.spantus.exp.segment.beans.ProcessReaderInfo;
@@ -101,25 +100,7 @@ public class ProcessReaderImpl implements ProcessReader {
 		info.getThresholds().addAll(thresholds);
 		return info;
 	}
-	/**
-	 * 
-	 * @param extractor3d
-	 * @return
-	 */
-	protected boolean canBeProcessed(IExtractorVector extractor3d){
-//		if(true) return false;
-		String name = extractor3d.getName();
-		if(extractor3d.getOutputValues().iterator().next().size()>13){
-			return false;
-		}
-		if(//name.matches(".*SPECTRAL_FLUX.*") ||
-				name.matches(".*LPC.*") ||
-				name.matches(".*MFCC.*") ||
-				name.matches(".*FFT.*")){
-			return false;
-		}
-		return true;
-	}
+
 	/**
 	 * 
 	 */
@@ -135,55 +116,13 @@ public class ProcessReaderImpl implements ProcessReader {
 	/**
 	 * 
 	 */
-	public Map<String, Set<String>> generateAllCompbinations(Set<? extends IGeneralExtractor> singleSet, int combinationDepth){
+	public Iterable<Set<String>> generateAllCompbinations(Set<? extends IGeneralExtractor> fullSet, int combinationDepth){
 		log.debug("starting generate {0}", combinationDepth);
-		Set<Set<IGeneralExtractor>> allCombinations = new LinkedHashSet<Set<IGeneralExtractor>>();
-		generateList(singleSet, allCombinations, new LinkedHashSet<IGeneralExtractor>(), combinationDepth);
+		Set<Set<String>> allCombinations = generateList(fullSet, combinationDepth);
 		log.debug("generated {0}", allCombinations.size());
-		return getCombinationMap(allCombinations, combinationDepth);
-	}
-	/**
-	 * 
-	 * @param allCombinations
-	 * @param combinationDepth
-	 * @return
-	 */
-	protected Map<String, Set<String>>  getCombinationMap(Set<Set<IGeneralExtractor>> allCombinations, int combinationDepth){
-		Map<String, Set<String>> allCombinationsMap = new LinkedHashMap< String, Set<String>>();
-		for (Set<IGeneralExtractor> set : allCombinations) {
-			Set<String> nameSet = new LinkedHashSet<String>();
-			for (IGeneralExtractor thr : set) {
-				nameSet.add(thr.getName());
-			}
-			allCombinationsMap.put(getName(set), nameSet);
-		} 
-		return allCombinationsMap; 
+		return allCombinations;
 	}
 	
-	protected void generateList(Set<? extends IGeneralExtractor> singleSet, 
-			Set<Set<IGeneralExtractor>> allCombinations, Set<IGeneralExtractor> top, int combinationDepth){
-		for (IGeneralExtractor
-				threshold : singleSet) {
-			Set<IGeneralExtractor> set = new LinkedHashSet<IGeneralExtractor>();
-			set.addAll(top);
-			set.add(threshold);
-			if(combinationDepth == 1){
-				allCombinations.add(set);
-			}else{
-				generateList(singleSet,allCombinations,set, combinationDepth-1);
-			}
-			
-		}
-	}
-	protected String getName(Set<IGeneralExtractor> set){
-		StringBuffer buf = new StringBuffer();
-		String separator = "";
-		for (IGeneralExtractor threshold : set) {
-			buf.append(separator).append(getName(threshold));
-			separator = " ";
-		}
-		return buf.toString();	
-	}
 	public String getName(IGeneralExtractor threshold) {
 		String _key = threshold.getName();
 		_key = _key.replaceAll("(BUFFERED_)", "");
@@ -201,7 +140,81 @@ public class ProcessReaderImpl implements ProcessReader {
 				generatedSet.add(threshold);
 			}
 		}
-		Assert.isTrue(generatedSet.size()>0, "Atleast one threashold should be added");
+		Assert.isTrue(generatedSet.size() == thresholdNames.size(), "Atleast one threashold should be added");
 		return generatedSet;
+	}
+	
+	//Protected
+	
+	protected Set<Set<String>> generateList(Set<? extends IGeneralExtractor> fullSet, 
+			int combinationDepth){
+		Set<Set<String>> allCombinations = new LinkedHashSet<Set<String>>();
+		int start = 
+			1
+//			combinationDepth
+			;
+		for (int i = start; i <= combinationDepth; i++) {
+			generateList(fullSet, allCombinations, 
+					new LinkedHashSet<IGeneralExtractor>(), i);	
+		}
+		return allCombinations;
+		
+	}
+	
+	protected void generateList(Set<? extends IGeneralExtractor> fullSet, 
+			Set<Set<String>> allCombinations, Set<IGeneralExtractor> top, int combinationDepth){
+		Set<IGeneralExtractor> shrinkedFullSet = new LinkedHashSet<IGeneralExtractor>(
+				fullSet);
+		for (IGeneralExtractor
+				threshold : fullSet) {
+			Set<IGeneralExtractor> set = new LinkedHashSet<IGeneralExtractor>();
+			shrinkedFullSet.remove(threshold);
+			set.addAll(top);
+			set.add(threshold);
+			if(combinationDepth == 1){
+				addToCombinationSet(allCombinations, set);
+			}else{
+				generateList(shrinkedFullSet, allCombinations, set, combinationDepth-1);
+			}
+			
+		}
+	}
+	
+	protected boolean addToCombinationSet(Set<Set<String>> allCombinations, Set<IGeneralExtractor> set){
+		return allCombinations.add(getNameSet(set));
+	}
+	
+	protected Set<String> getNameSet(Set<IGeneralExtractor> set){
+		Set<String> rtnSet = new TreeSet<String>();
+		for (IGeneralExtractor threshold : set) {
+			rtnSet.add(getName(threshold));
+		}
+		return rtnSet;	
+	}
+	
+	protected String getName(Set<IGeneralExtractor> set){
+		StringBuffer buf = new StringBuffer();
+		String separator = "";
+		Set<String> strSet = getNameSet(set);
+		for (String thresholdName : strSet) {
+			buf.append(separator).append(thresholdName);
+			separator = " ";
+		}
+		return buf.toString();	
+	}
+	
+	protected boolean canBeProcessed(IExtractorVector extractor3d){
+//		if(true) return false;
+		String name = extractor3d.getName();
+		if(extractor3d.getOutputValues().iterator().next().size()>13){
+			return false;
+		}
+		if(//name.matches(".*SPECTRAL_FLUX.*") ||
+				name.matches(".*LPC.*") ||
+				name.matches(".*MFCC.*") ||
+				name.matches(".*FFT.*")){
+			return false;
+		}
+		return true;
 	}
 }

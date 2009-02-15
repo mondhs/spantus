@@ -1,7 +1,6 @@
 package org.spantus.exp.segment.test;
 
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -30,19 +29,18 @@ public class ProcessReaderTest extends TestCase {
 		Set<IThreshold> thresholds = createThresholdSet(element_size);
 
 		for (int size = 1; size < element_size; size++) {
-			Map<String, Set<String>> allCompbinations = processReader
+			Iterable<Set<String>> allCompbinations = processReader
 					.generateAllCompbinations(thresholds, size);
-			assertEquals(sum(size), allCompbinations.size());
-
+			
 			int[] curentDistribution = new int[size];
-			for (Set<String> list : allCompbinations.values()) {
-				assertTrue("List too big: " + (list.size() - 1), size > list
+			for (Set<String> set : allCompbinations) {
+				assertTrue("List too big: " + (set.size() - 1), size > set
 						.size() - 1);
-				curentDistribution[list.size() - 1]++;
+				curentDistribution[set.size() - 1]++;
 			}
 			int j = 0;
 			for (int dist : curentDistribution) {
-				assertEquals(DISTRIBUTION_6[j++], dist);
+				assertEquals("Not the same for " + j, DISTRIBUTION_6[j++], dist);
 			}
 		}
 	}

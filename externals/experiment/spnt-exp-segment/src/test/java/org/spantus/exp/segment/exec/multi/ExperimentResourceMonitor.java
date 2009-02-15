@@ -23,7 +23,6 @@ package org.spantus.exp.segment.exec.multi;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -38,7 +37,7 @@ import org.spantus.logger.Logger;
 public class ExperimentResourceMonitor {
 	
 	public final static String[] testPaths = new String[] {
-//		 "",
+		 "",
 		"org_",
 		 "plane_",
 		 "rain_",
@@ -55,10 +54,10 @@ public class ExperimentResourceMonitor {
 
 	
 	private Iterator<String> storage;
-	private Map<String, Set<String>> compbinations;
+	private Iterable<Set<String>> compbinations;
 	private ProcessReader processReader;
 	private ExperimentDao experimentDao;
-	private String localPathToResources = "C:/home/studijos/wav/on_off_up_down_wav/exp/";
+	private String localPathToResources = "E:/home/studijos/wav/on_off_up_down_wav/exp/";
 	private Integer combinationDepth = null;
 	protected Logger log = Logger.getLogger(getClass());
 	
@@ -87,7 +86,7 @@ public class ExperimentResourceMonitor {
 	public ProcessReaderInfo createProcessReaderInfo(String resourceName){
 		return new ProcessReaderInfo(thresholdCoef);
 	}
-	public Map<String, Set<String>> createCombinations(String resourceName, Set<? extends IGeneralExtractor> extractors){
+	public Iterable<Set<String>> createCombinations(String resourceName, Set<? extends IGeneralExtractor> extractors){
 		if(compbinations == null){
 			compbinations = 
 				getProcessReader().generateAllCompbinations(extractors, combinationDepth);

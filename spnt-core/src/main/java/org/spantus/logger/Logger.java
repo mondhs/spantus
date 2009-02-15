@@ -61,7 +61,7 @@ public class Logger {
             String levelStr = (String)labels.get(""+level);
             String classNameStr = getSimpleName(logClass);
             
-            String result = MessageFormat.format("{0,time,kk:mm:ss.S} {1} [{2}] {3}",
+            String result = MessageFormat.format("{0,time,kk:mm:ss.SSS} {1} [{2}] {3}",
             		 new Date(),
                      levelStr,
                      classNameStr,

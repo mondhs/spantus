@@ -20,6 +20,7 @@
  */
 package org.spantus.exp.segment.services;
 
+import org.spantus.exp.segment.services.impl.FileProcessReaderImpl;
 import org.spantus.exp.segment.services.impl.MakerComparisonTIAImpl;
 import org.spantus.exp.segment.services.impl.ProcessReaderImpl;
 
@@ -50,7 +51,7 @@ public abstract class ExpServiceFactory {
 	private static ProcessReader defaultProcessReader;
 	public static ProcessReader createProcessReader(){
 		if(defaultProcessReader == null){
-			ProcessReaderImpl pr = new ProcessReaderImpl();
+			ProcessReaderImpl pr = new FileProcessReaderImpl();
 			defaultProcessReader = pr;
 		}
 		return defaultProcessReader; 

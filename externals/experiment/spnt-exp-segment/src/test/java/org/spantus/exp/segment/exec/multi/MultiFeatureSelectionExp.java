@@ -1,9 +1,7 @@
 package org.spantus.exp.segment.exec.multi;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.spantus.core.beans.SampleInfo;
 import org.spantus.core.marker.MarkerSet;
@@ -25,7 +23,7 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 	
 	private Long experimentID;
 	
-	private Map<String, Set<String>> compbinations;
+	private Iterable<Set<String>> compbinations;
 	
 	
 	private SampleInfo info;
@@ -65,7 +63,7 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 				new ProcessReaderInfo(thresholdCoef));
 		exp.setExpertMS(expertMS);
 		exp.setInfo(info);
-		Map<String, Set<String>> compbinations = 
+		Iterable<Set<String>> compbinations = 
 			exp.getProcessReader().generateAllCompbinations(info.getThresholds(), combinationDepth);
 		exp.setCompbinations(compbinations);
 //		experiment.setGenerateCharts(false);
@@ -78,16 +76,18 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 	 */
 	@Override
 	public List<ComparisionResult> compare() {
-		for (Entry<String, Set<String>> combinatation : getCompbinations().entrySet()) {
+		long processed = 0l;
+		for (Set<String> setCombination : this.getCompbinations()) {
 			Set<IThreshold> threshods = getProcessReader().
-				getThresholdSet(getInfo().getThresholds(), combinatation.getValue());
+				getThresholdSet(getInfo().getThresholds(), setCombination);
 			
-			compare(combinatation.getKey(),
+			compare(join(setCombination),
 				threshods,
 				expertMS, 
 				createDefaultOnlineParam());
+			processed++;
 		}
-		log.info("[compare]Processed iteraions: " + getCompbinations().size());
+		log.info("[compare]Processed iteraions: " + processed);
 		return getExperimentDao().findAllComparisionResult();
 	}
 	/**
@@ -106,7 +106,21 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 		getExperimentDao().save(result, featureNames, getExperimentID(),
 				getExperimentName());
 	}
-
+	///
+	//Protected
+	///
+	protected String join(Set<String> set){
+		StringBuffer buf = new StringBuffer();
+		String separator = "";
+		for (String name : set) {
+			buf.append(separator).append(name);
+			separator = " ";
+		}
+		return buf.toString();	
+	}
+	
+	///Getters and setters
+	
 	public ExperimentDao getExperimentDao() {
 		if(experimentDao == null){
 			experimentDao = new ExperimentStaticDao();
@@ -127,11 +141,11 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 		this.experimentID = experimentID;
 	}
 	
-	public Map<String, Set<String>> getCompbinations() {
+	public Iterable<Set<String>> getCompbinations() {
 		return compbinations;
 	}
 	
-	public void setCompbinations(Map<String, Set<String>> compbinations) {
+	public void setCompbinations(Iterable<Set<String>> compbinations) {
 		this.compbinations = compbinations;
 	}
 

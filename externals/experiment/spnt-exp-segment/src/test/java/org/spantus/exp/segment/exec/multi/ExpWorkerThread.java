@@ -1,6 +1,5 @@
 package org.spantus.exp.segment.exec.multi;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.spantus.core.beans.SampleInfo;
@@ -30,7 +29,7 @@ public class ExpWorkerThread extends Thread {
 			SampleInfo sampleInfo = exp.getProcessReader().processReader(
 					exp.getTestReader(),monitor.createProcessReaderInfo(resourceName));
 			
-			Map<String, Set<String>> compbinations = monitor.createCombinations(
+			Iterable<Set<String>> compbinations = monitor.createCombinations(
 					resourceName, sampleInfo.getThresholds());
 			exp.setCompbinations(compbinations);
 			exp.setInfo(sampleInfo);
@@ -39,7 +38,6 @@ public class ExpWorkerThread extends Thread {
 			exp.setExperimentName(monitor.constructExperimentName(resourceName));
 			exp.setExperimentID(monitor.constructExperimentID(resourceName));
 			exp.setGenerateCharts(false);
-
 			
 			exp.process();
 		}
