@@ -5,7 +5,7 @@ import org.spantus.core.extractor.IExtractor;
 public class StaticThreshold extends AbstractThreshold {
 
 	int windowsLeaned;
-	Float learningPeriod;
+	Long learningPeriod;
 	Float currentThresholdValue = Float.MIN_VALUE;
 
 	public Float getCurrentThresholdValue() {
@@ -16,14 +16,14 @@ public class StaticThreshold extends AbstractThreshold {
 		this.currentThresholdValue = currentThresholdValue;
 	}
 
-	public Float getLearningPeriod() {
+	public Long getLearningPeriod() {
 		if(learningPeriod == null){
-			learningPeriod = 250f;//0.25s
+			learningPeriod = 250L;//0.25s
 		}
 		return learningPeriod;
 	}
 
-	public void setLearningPeriod(Float learningPeriod) {
+	public void setLearningPeriod(Long learningPeriod) {
 		this.learningPeriod = learningPeriod;
 	}
 

@@ -17,6 +17,7 @@ public class ConfigPropertiesDao implements ConfigDao {
 	
 	public static final String key_threshold_leaningPeriod = "threshold.leaningPeriod";
 	public static final String key_format_sampleRate = "format.sampleRate";
+	public static final String key_format_pathOutput = "format.pathOutput";
 	public static final String key_threshold_coef = "threshold.coef";
 	public static final String key_segmentation_minLength = "segmentation.minLength";
 	public static final String key_segmentation_minSpace= "segmentation.minSpace";
@@ -42,6 +43,7 @@ public class ConfigPropertiesDao implements ConfigDao {
 		setLongValue(param, key_segmentation_expandStart, properties);
 		setLongValue(param, key_segmentation_expandEnd, properties);
 		setFloatValue(param, key_threshold_coef, properties);
+		setStringValue(param, key_format_pathOutput, properties);
 		
 		config.getParameters().put(param.getClassName(), param);
 		
@@ -58,6 +60,12 @@ public class ConfigPropertiesDao implements ConfigDao {
 		ExtractorParamUtils.<Float>setValue(param, 
 				key, 
 				Float.valueOf(properties.getProperty(key)));
+	}
+
+	protected void setStringValue(ExtractorParam param, String key, Properties properties){
+		ExtractorParamUtils.<String>setValue(param, 
+				key, 
+				String.valueOf(properties.getProperty(key)));
 	}
 
 	

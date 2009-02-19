@@ -49,7 +49,7 @@ public class ThresholdTest extends TestCase {
 		threshold.setCoef(1f);
 		MockExtractor mockExtractor= new MockExtractor();
 		mockExtractor.setExtractorSampleRate(1);
-		threshold.setLearningPeriod(1000f);
+		threshold.setLearningPeriod(1000L);
 		ExtractorWrapper wraper = new ExtractorWrapper(mockExtractor);
 		threshold.setExtractor(wraper);
 		wraper.getListeners().add(threshold);

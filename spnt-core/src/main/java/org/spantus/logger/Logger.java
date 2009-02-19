@@ -46,7 +46,7 @@ public class Logger {
     private static PrintStream err =  System.err;
     
 
-    private int logMode = DEBUG;
+    private int logMode = INFO;
     private Class<?> logClass = null;
     
     static{

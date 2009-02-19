@@ -50,6 +50,8 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 	
 	RecordWraperExtractorReader reader;
 	
+	String path;
+	
 	@Override
 	protected boolean onSegmentEnded(Marker marker) {
 		if(!super.onSegmentEnded(marker)) return false;
@@ -75,7 +77,7 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 	    InputStream bais = new ByteListInputStream(data);
 	    AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size());
 	    try {
-			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File("./target/"+name+".wav"));
+			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(getPath()+name+".wav"));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -102,5 +104,16 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 	
 	public void setReader(RecordWraperExtractorReader reader) {
 		this.reader = reader;
+	}
+
+	public String getPath() {
+		if(path == null){
+			path = "./target/";
+		}
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 }

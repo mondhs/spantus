@@ -146,7 +146,7 @@ public class OnlineSegmentatorTest extends TestCase {
 		wraper.getListeners().add(segmentator1);
 		segmentator1.setConfig(new MockSegmentatorExtractorConfig());
 		mockExtractor.setExtractorSampleRate(1);
-		segmentator1.setLearningPeriod(1000f);
+		segmentator1.setLearningPeriod(1000L);
 		segmentator1.setOnlineSegmentator(multipe);
 		return segmentator1;
 		

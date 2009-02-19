@@ -18,6 +18,7 @@ import org.spantus.core.io.AudioCapture;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
+import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.online.DecistionSegmentatorOnline;
 import org.spantus.segment.online.MultipleSegmentatorOnline;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
@@ -36,12 +37,11 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 	private Timer timer = new Timer("Sound Monitor Plot");
 	private Logger log = Logger.getLogger(getClass());
 	private AudioCapture capture;
-	public static final String FILE_NAME = "./target/classes/config.properties";  
+	public static final String FILE_NAME = "./config.properties";
+	
 
-	private SegmentMonitorPlot() {
-		
+	public SegmentMonitorPlot() {
 		ConfigDao configDao = new ConfigPropertiesDao();
-		OnlineDecisionSegmentatorParam onlineParam = new OnlineDecisionSegmentatorParam();
 
 		IExtractorConfig config = configDao.read(new File(FILE_NAME));
 		AudioFormat format = getFormat(config.getSampleRate());
@@ -49,13 +49,9 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		ExtractorParam param = config.getParameters().get(DefaultExtractorConfig.class.getName());
 		Float threshold_coef = ExtractorParamUtils.<Float>getValue(param,
 				ConfigPropertiesDao.key_threshold_coef);
-		Float threshold_leaningPeriod = ExtractorParamUtils.<Float>getValue(param,
+		Long threshold_leaningPeriod = ExtractorParamUtils.<Long>getValue(param,
 				ConfigPropertiesDao.key_threshold_leaningPeriod);
 
-		onlineParam.setMinSpace(ExtractorParamUtils.<Long>getValue(param,
-				ConfigPropertiesDao.key_segmentation_minSpace));
-		onlineParam.setMinLength(ExtractorParamUtils.<Long>getValue(param,
-				ConfigPropertiesDao.key_segmentation_minLength));
 		
 		reader = ExtractorsFactory
 				.createReader(format);
@@ -63,9 +59,8 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		reader.getConfig().setBufferSize(3000);
 		
 		DecistionSegmentatorOnline multipleSegmentator = 
-//			getSegmentatorRecordable();
-			getSegmentatorDefault();
-		multipleSegmentator.setParam(onlineParam);
+			getSegmentatorRecordable(param);
+//			getSegmentatorDefault(param);
 
 		ThresholdSegmentatorOnline segmentator = null;
 		
@@ -74,7 +69,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		segmentator.setCoef(threshold_coef);
 		segmentator.setLearningPeriod(threshold_leaningPeriod);
 
-		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR);
+		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(threshold_coef);
 		segmentator.setLearningPeriod(threshold_leaningPeriod);
@@ -111,7 +106,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		}, 1000L, 1000L);
 
 	}
-
+	
 	private void initGraph(IExtractorInputReader reader) {
 		chart = ChartFactory.createChart(reader);
 //		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
@@ -141,9 +136,37 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		
 	}
 	
+	protected DecistionSegmentatorOnline getSegmentatorRecordable(ExtractorParam param){
+		String path = ExtractorParamUtils.<String>getValue(param,
+				ConfigPropertiesDao.key_format_pathOutput);
+		RecordSegmentatorOnline segmentator = 
+			(RecordSegmentatorOnline)super.getSegmentatorRecordable();
+		segmentator.setPath(path);
+		segmentator.setParam(createParam(param));
+		return segmentator;
+	}
+	
+	protected DecistionSegmentatorOnline getSegmentatorDefault(ExtractorParam param){
+		DecistionSegmentatorOnline segmentator = super.getSegmentatorDefault();
+		segmentator.setParam(createParam(param));
+		return segmentator; 
+	}
+	
+	protected OnlineDecisionSegmentatorParam createParam(ExtractorParam param) {
+		OnlineDecisionSegmentatorParam onlineParam = createParam(); 
+		onlineParam.setMinSpace(ExtractorParamUtils.<Long>getValue(param,
+				ConfigPropertiesDao.key_segmentation_minSpace));
+		onlineParam.setMinLength(ExtractorParamUtils.<Long>getValue(param,
+				ConfigPropertiesDao.key_segmentation_minLength));
+		onlineParam.setExpandStart(ExtractorParamUtils.<Long>getValue(param,
+				ConfigPropertiesDao.key_segmentation_expandStart));
+		onlineParam.setExpandEnd(ExtractorParamUtils.<Long>getValue(param,
+				ConfigPropertiesDao.key_segmentation_expandEnd));
+		return onlineParam;
+	}
+	
 	public void repaint() {
 		if (getChart() != null) {
-//			getChart().setSize(getSize());
 			try{
 				getChart().repaint();
 			}catch(Exception e){
