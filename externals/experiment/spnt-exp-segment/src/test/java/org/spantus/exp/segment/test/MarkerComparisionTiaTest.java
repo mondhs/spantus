@@ -1,7 +1,5 @@
 package org.spantus.exp.segment.test;
 
-import java.math.BigDecimal;
-
 import junit.framework.TestCase;
 
 import org.spantus.core.marker.Marker;
@@ -37,11 +35,11 @@ public class MarkerComparisionTiaTest extends TestCase{
 		return ms;
 	}
 	
-	protected Marker createMarker(double start, double length ){
+	protected Marker createMarker(long start, long length ){
 		Marker m = new Marker();
 		m.setLabel(""+start);
-		m.setStart(BigDecimal.valueOf(start));
-		m.setLength(BigDecimal.valueOf(length));
+		m.setStart(start);
+		m.setLength(length);
 		return m;
 	}
 	

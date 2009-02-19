@@ -20,8 +20,6 @@
  */
 package org.spantus.segment.online;
 
-import java.math.BigDecimal;
-
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.rule.DecisionCtx;
@@ -50,7 +48,7 @@ public class DecistionSegmentatorOnline extends MultipleSegmentatorOnline {
 	
 	@Override
 	public void processState(Long sample, IGeneralExtractor extractor, Float val) {
-		BigDecimal time = calculateTime(extractor, sample);
+		Long time = calculateTime(extractor, sample);
 		DecisionCtx ctx = getDecisionContext();
 		ctx.setTime(time);
 		ctx.setSample(sample);
@@ -91,42 +89,44 @@ public class DecistionSegmentatorOnline extends MultipleSegmentatorOnline {
 
 	}
 	
-	public void onProcessNoise(DecisionCtx ctx, BigDecimal time, Long sample){}
+	public void onProcessNoise(DecisionCtx ctx, Long time, Long sample){}
 	
-	public void onStartSegmentFound(DecisionCtx ctx, BigDecimal time, Long sample){
+	public void onStartSegmentFound(DecisionCtx ctx, Long time, Long sample){
 		ctx.setMarker(createSegment(sample, time));
 		finazlizeSegment(ctx.getMarker(), sample, time);
 		ctx.setSegmentState(RuleBaseEnum.state.start);
 	}
 	
-	public void onStartSegmentApproved(DecisionCtx ctx, BigDecimal time, Long sample){
+	public void onStartSegmentApproved(DecisionCtx ctx, Long time, Long sample){
 		super.onStartSegment(ctx.getMarker());
 		finazlizeSegment(ctx.getMarker(), sample, time);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
 	}
 	
-	public void onProcessSegment(DecisionCtx ctx, BigDecimal time, Long sample){
+	public void onProcessSegment(DecisionCtx ctx, Long time, Long sample){
 		finazlizeSegment(ctx.getMarker(), sample, time);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
 	}
 	
-	public void onEndSegmentFound(DecisionCtx ctx, BigDecimal time, Long sample){
+	public void onEndSegmentFound(DecisionCtx ctx, Long time, Long sample){
 		finazlizeSegment(ctx.getMarker(), sample, time);
 		ctx.setSegmentState(RuleBaseEnum.state.end);
 	}
-	public void onEndSegmentApproved(DecisionCtx ctx, BigDecimal time, Long sample){
-		BigDecimal expandedStart =ctx.getMarker().getStart().add(getParam().getExpandMarkerInTime().negate()); 
+	public void onEndSegmentApproved(DecisionCtx ctx, Long time, Long sample){
+		Long expandedStart =ctx.getMarker().getStart()-getParam().getExpandStart();
+		Long expandedLength = ctx.getMarker().getLength()+getParam().getExpandEnd();
 		ctx.getMarker().setStart(expandedStart);
+		ctx.getMarker().setLength(expandedLength);
 		onSegmentEnded(ctx.getMarker());
 		ctx.setMarker(null);
 		ctx.setSegmentState(null);
 	}
 	
-	public void onJoinToSegment(DecisionCtx ctx, BigDecimal time, Long sample){
+	public void onJoinToSegment(DecisionCtx ctx, Long time, Long sample){
 		finazlizeSegment(ctx.getMarker(), sample, time);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
 	}
-	public void onDeleteSegment(DecisionCtx ctx, BigDecimal time, Long sample){
+	public void onDeleteSegment(DecisionCtx ctx, Long time, Long sample){
 		setCurrentMarker(null);
 		ctx.setMarker(null);
 		ctx.setSegmentState(null);

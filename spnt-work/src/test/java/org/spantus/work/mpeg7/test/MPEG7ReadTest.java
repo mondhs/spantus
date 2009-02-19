@@ -43,7 +43,7 @@ public class MPEG7ReadTest extends TestCase {
 		AudioReader mpeg7 = Mpeg7Factory.createAudioReader();
 		IExtractorInputReader reader = new Mpeg7ExtractorInputReader();
 		mpeg7.readAudio((new File("../data/text1.service.xml")).toURI().toURL(), reader);
-		assertEquals(12, reader.getExtractorRegister().size());
+		assertEquals(13, reader.getExtractorRegister().size());
 		assertEquals(5, reader.getExtractorRegister3D().size());
 	}
 	public void testReadAudio() throws MalformedURLException{
@@ -74,7 +74,8 @@ public class MPEG7ReadTest extends TestCase {
 			if(reader.getExtractorRegister().size()+reader.getExtractorRegister3D().size() == 2){
 				log.debug("extr: " + extr);
 			}
-			assertEquals("problem: " + extr,getExtractorTypeSize(extr), reader.getExtractorRegister().size()+reader.getExtractorRegister3D().size());
+			assertEquals("problem: " + extr,getExtractorTypeSize(extr), 
+					reader.getExtractorRegister().size()+reader.getExtractorRegister3D().size());
 		}
 	}
 	

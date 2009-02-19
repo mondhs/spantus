@@ -20,8 +20,6 @@
  */
 package org.spantus.exp.segment.services.impl;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -46,7 +44,7 @@ public class MakerComparisonImpl implements MakerComparison{
 	
 	protected Logger log = Logger.getLogger(getClass());
 	
-	public static final BigDecimal STEP_IN_MILS = new BigDecimal(10).setScale(2,RoundingMode.HALF_UP); 
+	public static final Long STEP_IN_MILS = 10L; 
 	
 	public ComparisionResult compare(MarkerSet original,MarkerSet test){
 		ComparisionResult result = new ComparisionResult();
@@ -58,17 +56,16 @@ public class MakerComparisonImpl implements MakerComparison{
 		return result;
 	}
 	
-	protected Map<String, BigDecimal> analyze(MarkerSet markerSet){
-		Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
-		BigDecimal minLength = null;
-		BigDecimal maxLength = null;
-		BigDecimal avgLength = null;
+	protected Map<String, Long> analyze(MarkerSet markerSet){
+		Map<String, Long> map = new HashMap<String, Long>();
+		Long minLength = null;
+		Long maxLength = null;
+		Long avgLength = null;
 
-		BigDecimal minDistance = null;
-		BigDecimal maxDistance = null;
-		BigDecimal avgDistance = null;
+		Long minDistance = null;
+		Long maxDistance = null;
+		Long avgDistance = null;
 
-		BigDecimal two = BigDecimal.valueOf(2);
 		Marker previous = null;
 		for (Marker m : markerSet.getMarkers()) {
 			if(previous == null){
@@ -77,19 +74,19 @@ public class MakerComparisonImpl implements MakerComparison{
 				minLength = m.getLength();
 				maxLength = m.getLength();
 			}else{
-				BigDecimal distance = m.getStart().add((previous.getStart().add(previous.getLength()).negate()));
+				Long distance = m.getStart()-(previous.getStart()+previous.getLength());
 				if(minDistance == null){
 					minDistance = distance;
 					maxDistance = distance;
 					avgDistance = distance;
 				}
-				minDistance = minDistance.min(distance);
-				maxDistance = maxDistance.max(distance);
-				avgDistance = avgDistance.add(distance).divide(two, RoundingMode.HALF_UP);
+				minDistance = Math.min(minDistance, distance);
+				maxDistance = Math.max(maxDistance, distance);
+				avgDistance = (avgDistance+distance)/2;
 			}
-			minLength = minLength.min(m.getLength());
-			maxLength = maxLength.max(m.getLength());
-			avgLength = avgLength.add(m.getLength()).divide(two, RoundingMode.HALF_UP);
+			minLength = Math.min(minLength,m.getLength());
+			maxLength =Math.max(maxLength, m.getLength()); 
+			avgLength = (avgLength+m.getLength())/2;
 		}
 		map.put(paramEnum.minTstLength.name(), minLength);
 		map.put(paramEnum.maxTstLength.name(), maxLength);
@@ -109,15 +106,15 @@ public class MakerComparisonImpl implements MakerComparison{
 	protected FrameValues createSequence(MarkerSet markerSet1, float coef){
 		FrameValues seq = new FrameValues();
 		seq.setSampleRate(1000/STEP_IN_MILS.floatValue());
-		int lastEnd = 0;
+		long lastEnd = 0;
 		for (Marker m1 : markerSet1.getMarkers()) {
 			m1.getStart();
-			int start = m1.getStart().divide(STEP_IN_MILS).intValue();
+			long start = m1.getStart()/STEP_IN_MILS;
 			
 			for (int i = 0; i < start-lastEnd; i++) {
 				seq.add(0f);
 			}
-			int length = m1.getLength().divide(STEP_IN_MILS).intValue();
+			long length = m1.getLength()/STEP_IN_MILS;
 			for (int i = 0; i < length; i++) {
 				seq.add(coef);
 			}

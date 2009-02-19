@@ -1,4 +1,4 @@
-package org.spantus.work.segment.exec;
+package org.spantus.work.ui;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,11 +15,10 @@ import org.spantus.core.io.DefaultAudioReader;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
-import org.spantus.segment.online.MultipleSegmentatorOnline;
+import org.spantus.segment.online.DecistionSegmentatorOnline;
 import org.spantus.segment.online.ThresholdSegmentatorOnline;
 import org.spantus.utils.Assert;
 import org.spantus.work.segment.OnlineSegmentationUtils;
-import org.spantus.work.test.SignalSelectionListenerMock;
 
 public class SegmentPlot extends AbstractSegmentPlot {
 
@@ -66,7 +65,7 @@ public class SegmentPlot extends AbstractSegmentPlot {
 			throw new RuntimeException();
 		}
 		chart = ChartFactory.createChart(reader);
-		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
+//		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
 		getContentPane().add(chart);
 
 	}
@@ -76,9 +75,9 @@ public class SegmentPlot extends AbstractSegmentPlot {
 		reader = ExtractorsFactory.createReader(getFormat());
 		reader.getConfig().setBufferSize(3000);
 		
-		MultipleSegmentatorOnline multipleSegmentator = 
-			getSegmentatorRecordable();
-//			getSegmentatorDefault();
+		DecistionSegmentatorOnline multipleSegmentator = 
+//			getSegmentatorRecordable();
+			getSegmentatorDefault();
 		
 		
 		

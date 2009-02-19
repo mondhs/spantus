@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -286,9 +285,9 @@ public abstract class AbstractGraphGenerator {
 	}
 	protected OnlineDecisionSegmentatorParam createDefaultOnlineParam(){
 		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
-		param.setMinLength(BigDecimal.valueOf(91).setScale(0));
-		param.setMinSpace(BigDecimal.valueOf(61).setScale(0));
-		param.setExpandMarkerInTime(30L);
+		param.setMinLength(91L);
+		param.setMinSpace(61L);
+		param.setExpandStart(30L);
 		return param;
 	}
 	

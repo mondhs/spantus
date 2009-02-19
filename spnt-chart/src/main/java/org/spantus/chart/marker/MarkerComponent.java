@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
-import java.math.BigDecimal;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -85,20 +84,20 @@ public class MarkerComponent extends JComponent{
 	}
 
 	protected void setStartX(int startX){
-		BigDecimal start = MarkerComponentUtil.screenToTime(getCtx(), startX);
+		Long start = MarkerComponentUtil.screenToTime(getCtx(), startX);
 		getMarker().setStart(start);
 	}
 
 	
 	protected int getEndX(){
-		BigDecimal endXTime = getMarker().getStart().add(getMarker().getLength());
+		Long endXTime = getMarker().getStart()+getMarker().getLength();
 		int endXScreen = MarkerComponentUtil.timeToScreen(getCtx(), endXTime);
 		return endXScreen;
 	}
 	
 	protected void setEndX(int endX){
-		BigDecimal end = MarkerComponentUtil.screenToTime(getCtx(), endX);
-		BigDecimal length =  end.add(getMarker().getStart().negate());
+		Long end = MarkerComponentUtil.screenToTime(getCtx(), endX);
+		Long length =  end-getMarker().getStart();
 		getMarker().setLength(length);
 	}
 	

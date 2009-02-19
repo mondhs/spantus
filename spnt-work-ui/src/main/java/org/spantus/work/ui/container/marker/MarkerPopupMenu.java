@@ -6,7 +6,6 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
-import java.math.BigDecimal;
 
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -29,7 +28,7 @@ public class MarkerPopupMenu extends JPopupMenu {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	BigDecimal defaultSegmentLength = BigDecimal.valueOf(80);
+	private Long defaultSegmentLength = 80L;
 
 	Logger log = Logger.getLogger(getClass());
 	ActionListener listener;
@@ -80,7 +79,7 @@ public class MarkerPopupMenu extends JPopupMenu {
 			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
 			MarkerPopupMenuShower ml = getShower(source);
 			Point p = ml.getCurrentPoint();
-			BigDecimal start = MarkerComponentUtil.screenToTime(
+			Long start = MarkerComponentUtil.screenToTime(
 					_markerSetComponent.getCtx(), p.x);
 			Marker marker = new Marker();
 			marker.setLabel(""

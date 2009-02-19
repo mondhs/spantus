@@ -16,6 +16,8 @@ import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
+import org.spantus.work.services.converter.FrameValues3DConverter;
+import org.spantus.work.services.converter.FrameValuesConverter;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioSystem;
@@ -27,7 +28,6 @@ import org.spantus.mpeg7.io.Mpeg7Utils.Mpeg7nodes;
 import org.spantus.utils.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import de.crysandt.audio.mpeg7audio.MP7DocumentBuilder;
 
@@ -89,19 +89,21 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param doc
 	 */
 	public void transform(IExtractorInputReader reader, Document doc) {
-		NodeList audioDescs = Mpeg7Utils.getAudioDescriptors(doc);
-		for (int i = 0; i < audioDescs.getLength(); i++) {
-			Element descriptor = (Element) audioDescs.item(i);
+		List<Element> audioDescs = Mpeg7Utils.getAudioDescriptors(doc);
+		for (Element descriptor : audioDescs) {
 			Mpeg7Utils.register(reader, readSeries(descriptor));
 		}
 	}
+	
+	
 	/**
 	 * 
 	 * @param descriptor
 	 * @return
 	 */
-	private IGeneralExtractor readSeries(Element descriptor) {
+	protected IGeneralExtractor readSeries(Element descriptor) {
 		String type = Mpeg7Utils.getAttr(descriptor, Mpeg7attrs.xsi_type);
+		Assert.isTrue(!"".equals(type), "Type not found");
 		FrameVectorValues vectorVals = new FrameVectorValues();
 		FrameValues vals = new FrameValues();
 		if ((vectorVals = readSeriesOfScalar(descriptor)) != null) {
@@ -138,8 +140,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 				append(descriptor.toString());
 			
 			Mpeg7Utils.traverseDOMBranch(descriptor, bld);			
-			log.error("type not implemented: " + bld.toString());
-			return null;
+			throw new ProcessingException("type not implemented: " + bld.toString());
 		}
 	}
 	/**
@@ -147,8 +148,8 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param descriptor
 	 * @return
 	 */
-	private FrameValues readScalar(Element descriptor) {
-		Element scalar = Mpeg7Utils.getElement(descriptor, Mpeg7nodes.Scalar);
+	protected FrameValues readScalar(Element descriptor) {
+		Element scalar = Mpeg7Utils.getFirstElement(descriptor, Mpeg7nodes.Scalar);
 		if (scalar == null)
 			return null;
 		Float float1 = Float.valueOf(0);
@@ -167,8 +168,8 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param descriptor
 	 * @return
 	 */
-	private FrameVectorValues readSeriesOfScalar(Element descriptor) {
-		Element seriesOfScalar = Mpeg7Utils.getElement(descriptor,
+	protected FrameVectorValues readSeriesOfScalar(Element descriptor) {
+		Element seriesOfScalar = Mpeg7Utils.getFirstElement(descriptor,
 				Mpeg7nodes.SeriesOfScalar);
 		if (seriesOfScalar == null)
 			return null;
@@ -209,8 +210,8 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param element
 	 * @return
 	 */
-	private FrameVectorValues readSeriesOfVector(Element element) {
-		Element seriesOfVector = Mpeg7Utils.getElement(element,
+	protected FrameVectorValues readSeriesOfVector(Element element) {
+		Element seriesOfVector = Mpeg7Utils.getFirstElement(element,
 				Mpeg7nodes.SeriesOfVector);
 		if (seriesOfVector == null)
 			return null;
@@ -241,7 +242,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param max
 	 * @return
 	 */
-	private static FrameVectorValues readMinMax(FrameValues min, FrameValues max) {
+	protected static FrameVectorValues readMinMax(FrameValues min, FrameValues max) {
 		FrameVectorValues fv3 = new FrameVectorValues();
 		Iterator<Float> maxIter = max.iterator();
 		for (Float floatMin : min) {
@@ -260,7 +261,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param vectorSize
 	 * @return
 	 */
-	private FrameVectorValues readVectors(Element seriesOfValues,
+	protected FrameVectorValues readVectors(Element seriesOfValues,
 			Mpeg7nodes node, int vectorSize) {
 		String[] strs = Mpeg7Utils.readRaw(seriesOfValues, node);
 		FrameVectorValues fv3 = new FrameVectorValues();
@@ -284,7 +285,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param node
 	 * @return
 	 */
-	private static FrameValues readRaw(Element seriesOfValues, Mpeg7nodes node) {
+	protected FrameValues readRaw(Element seriesOfValues, Mpeg7nodes node) {
 		return transformToFrameValue(Mpeg7Utils.readRaw(seriesOfValues, node));
 	}
 	/**
@@ -293,7 +294,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param sampleSize
 	 * @return
 	 */
-	private float readSampleRate(Element series) {
+	protected float readSampleRate(Element series) {
 		String type = Mpeg7Utils.getAttr((Element)series.getParentNode(), Mpeg7attrs.xsi_type);
 		String hopSize = Mpeg7Utils.getAttr(series, Mpeg7attrs.hopSize);
 		int mediaDuration = Mpeg7Utils.getMediaDuration(hopSize);
@@ -307,7 +308,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param strs
 	 * @return
 	 */
-	private static FrameValues transformToFrameValue(String[] strs) {
+	protected FrameValues transformToFrameValue(String[] strs) {
 		if (strs == null)
 			return null;
 		FrameValues vals = new FrameValues();

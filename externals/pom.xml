@@ -9,7 +9,7 @@
   <name>Spantus external root pom</name>
 
   <modules>
-    <module>./recognition/spnt-dtw-recognition</module>
-    <module>./demo/spnt-demo</module>
+    <!--<module>./recognition/spnt-dtw-recognition</module>
+    <module>./demo/spnt-demo</module>-->
   </modules>
 </project>

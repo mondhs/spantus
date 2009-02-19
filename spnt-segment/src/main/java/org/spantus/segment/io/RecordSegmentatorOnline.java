@@ -23,7 +23,6 @@ package org.spantus.segment.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 	}
 	@Override
 	protected Marker createSegment(Long sample,
-			BigDecimal time) {
+			Long time) {
 		Marker marker = super.createSegment(sample, time);
 		marker.getExtractionData().setStartSampleNum(sample);
 		return marker;
@@ -92,7 +91,7 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 	
 	@Override
 	protected Marker finazlizeSegment(Marker marker, Long sample, 
-			BigDecimal time) {
+			Long time) {
 		Marker rtnMarker = super.finazlizeSegment(marker, sample, time);
 		if (rtnMarker == null)
 			return rtnMarker;

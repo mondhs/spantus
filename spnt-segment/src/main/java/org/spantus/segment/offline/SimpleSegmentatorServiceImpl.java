@@ -124,13 +124,13 @@ public class SimpleSegmentatorServiceImpl implements ISegmentatorService {
 	}
 	protected void segmentStarted(SegmentationCtx ctx){
 		ctx.setCurrentMarker(new Marker());
-		BigDecimal started = getTime(ctx.getCurrentMoment(),ctx.getSampleRate());
+		Long started = getTime(ctx.getCurrentMoment(),ctx.getSampleRate());
 		ctx.getCurrentMarker().setStart(started);
 	}
 	
 	protected void segmentFinished(SegmentationCtx ctx){
-		BigDecimal end = getTime(ctx.getCurrentMoment(), ctx.getSampleRate());
-		BigDecimal length = end.add(ctx.getCurrentMarker().getStart().negate());
+		Long end = getTime(ctx.getCurrentMoment(), ctx.getSampleRate());
+		Long length = end-ctx.getCurrentMarker().getStart();
 		ctx.getCurrentMarker().setLength(length);
 		ctx.getCurrentMarker().setLabel("" + ctx.getMarkerSet().getMarkers().size());
 		log.debug(MessageFormat.format("[segmentFinished] segment: {0} {1}:{2} ", 
@@ -143,8 +143,8 @@ public class SimpleSegmentatorServiceImpl implements ISegmentatorService {
 	}
 
 	
-	protected BigDecimal getTime(Float f, Float sampleRate){
-		return BigDecimal.valueOf((f*1000)/sampleRate).setScale(0, RoundingMode.HALF_UP);
+	protected Long getTime(Float f, Float sampleRate){
+		return BigDecimal.valueOf((f*1000)/sampleRate).setScale(0, RoundingMode.HALF_UP).longValue();
 	}
 
 	class SegmentationCtx{

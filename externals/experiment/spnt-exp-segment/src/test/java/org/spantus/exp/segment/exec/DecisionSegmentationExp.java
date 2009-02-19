@@ -20,7 +20,6 @@
  */
 package org.spantus.exp.segment.exec;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -68,11 +67,11 @@ public class DecisionSegmentationExp extends AbstractGraphGenerator {
 //		 2.0 
 		};
 
-		Double[] segmentLengths = new Double[] { 40.0, 
-//				50.0, 50.0, 
+		Long[] segmentLengths = new Long[] { 40L, 
+//				50L, 50L, 
 				};
-		Double[] segmentsSpaces = new Double[] { 30.0, 
-//				30.0, 40.0, 
+		Long[] segmentsSpaces = new Long[] { 30L, 
+//				30L, 40L, 
 				};
 
 		List<Double> threasholdList = Arrays.asList(threasholdArr);
@@ -96,12 +95,10 @@ public class DecisionSegmentationExp extends AbstractGraphGenerator {
 				SimpleDecisionSegmentatorParam param = new SimpleDecisionSegmentatorParam();
 
 				for (int i = 0; i < segmentsSpaces.length; i++) {
-					Double segmentsSpace = segmentsSpaces[i];
-					Double segmentLength = segmentLengths[i];
-					param.setSegmentLengthThreshold(BigDecimal
-							.valueOf(segmentsSpace));
-					param.setSegmentsSpaceThreshold(BigDecimal
-							.valueOf(segmentLength));
+					Long segmentsSpace = segmentsSpaces[i];
+					Long segmentLength = segmentLengths[i];
+					param.setMinLength(segmentLength);
+					param.setMinSpace(segmentsSpace);
 
 					MarkerSet decisionMS = getDecisionSegmentator()
 							.extractSegments(info.getThresholds(), param);

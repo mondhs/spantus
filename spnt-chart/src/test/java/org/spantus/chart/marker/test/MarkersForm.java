@@ -67,26 +67,26 @@ public class MarkersForm extends JFrame {
 		
 		MarkerSet markerSet = new MarkerSet();
 		Marker marker = new Marker();
-		marker.setStart(BigDecimal.valueOf(0));
-		marker.setLength(BigDecimal.valueOf(900));
+		marker.setStart(0L);
+		marker.setLength(900L);
 		marker.setLabel("Test1");
 		markerSet.getMarkers().add(marker);
 
 		marker = new Marker();
-		marker.setStart(BigDecimal.valueOf(1100));
-		marker.setLength(BigDecimal.valueOf(900));
+		marker.setStart(1100L);
+		marker.setLength(900L);
 		marker.setLabel("Test11");
 		markerSet.getMarkers().add(marker);
 
 		marker = new Marker();
-		marker.setStart(BigDecimal.valueOf(2100));
-		marker.setLength(BigDecimal.valueOf(900));
+		marker.setStart(2100L);
+		marker.setLength(900L);
 		marker.setLabel("Test12");
 		markerSet.getMarkers().add(marker);
 
 		marker = new Marker();
-		marker.setStart(BigDecimal.valueOf(3100));
-		marker.setLength(BigDecimal.valueOf(900));
+		marker.setStart(3100L);
+		marker.setLength(900L);
 		marker.setLabel("Test13");
 		markerSet.getMarkers().add(marker);
 
@@ -95,14 +95,14 @@ public class MarkersForm extends JFrame {
 
 		markerSet = new MarkerSet();
 		marker = new Marker();
-		marker.setStart(BigDecimal.valueOf(100));
-		marker.setLength(BigDecimal.valueOf(600));
+		marker.setStart(100L);
+		marker.setLength(600L);
 		marker.setLabel("Test2");
 		markerSet.getMarkers().add(marker);
 
 		marker = new Marker();
-		marker.setStart(BigDecimal.valueOf(1700));
-		marker.setLength(BigDecimal.valueOf(1900));
+		marker.setStart(1700L);
+		marker.setLength(1900L);
 		marker.setLabel("Test21");
 		markerSet.getMarkers().add(marker);
 		holder.getMarkerSets().put(MarkerSetHolderEnum.phone.name(), markerSet);
@@ -160,8 +160,9 @@ public class MarkersForm extends JFrame {
 	    					float x = (float)p.getX()*_markerSetComponent.getCtx().getXScalar().floatValue();
 	    					Marker marker = new Marker();
 	    					marker.setLabel(p.toString());
-	    					marker.setStart(BigDecimal.valueOf(x*1000));
-	    					marker.setLength(BigDecimal.valueOf(80));
+	    					Float start = x*1000;
+	    					marker.setStart(Long.valueOf(start.longValue()));
+	    					marker.setLength(80L);
 	    					_markerSetComponent.getMarkerSet().getMarkers().add(marker);
 		    				_markerSetComponent.repaint();
 	    				}	    				

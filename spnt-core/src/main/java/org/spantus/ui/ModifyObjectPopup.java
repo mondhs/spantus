@@ -10,7 +10,6 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -242,8 +241,8 @@ public class ModifyObjectPopup implements java.awt.event.ActionListener {
 		ModifyObjectPopup rs = new ModifyObjectPopup();
 		Marker m = new Marker();
 		m.setLabel("Test");
-		m.setStart(BigDecimal.valueOf(20f));
-		m.setLength(BigDecimal.valueOf(10f));
+		m.setStart(20L);
+		m.setLength(10L);
 		Object obj = rs.modifyObject(null, "Popup", m);
 		System.out.println(  obj );
 	}

@@ -1,4 +1,4 @@
-package org.spantus.work.services;
+package org.spantus.work.services.converter;
 
 import org.spantus.core.FrameValues;
 import org.spantus.utils.Assert;

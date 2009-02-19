@@ -25,7 +25,8 @@ public enum Mpeg7ExtractorEnum {
 	
 	//Signal Parameters
 	AudioFundamentalFrequency(Mpeg7ExtractorTypeEnum.SignalParameters), 
-	AudioHarmonicity(Mpeg7ExtractorTypeEnum.SignalParameters),  
+	AudioHarmonicityHarmonicRatio(Mpeg7ExtractorTypeEnum.SignalParameters),
+	AudioHarmonicityUpperLimit(Mpeg7ExtractorTypeEnum.SignalParameters),
 	
 	//Timbral Temporal
 //	LogAttackTime(Mpeg7ExtractorTypeEnum.TimbralTemporal),//scalar

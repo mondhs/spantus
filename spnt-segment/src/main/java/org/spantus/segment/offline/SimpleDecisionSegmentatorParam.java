@@ -20,37 +20,57 @@
  */
 package org.spantus.segment.offline;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import org.spantus.segment.SegmentatorParam;
 
+/**
+ * 
+ * @author Mindaugas Greibus
+ * 
+ * @since 0.0.1
+ * 
+ */
 public class SimpleDecisionSegmentatorParam extends SegmentatorParam {
+	/**
+	 * Minimum length in milliseconds, when segment can be accepted as valid.
+	 */
+	private Long minLength;
+	/**
+	 * Minimum distance in milliseconds between two segments, when segments can
+	 * be accepted as two different segments
+	 */
+	private Long minSpace;
 
-	private BigDecimal segmentLengthThreshold;
-	
-	private BigDecimal segmentsSpaceThreshold;
-
-	public BigDecimal getSegmentLengthThreshold() {
-		if(segmentLengthThreshold == null){
-			segmentLengthThreshold = BigDecimal.valueOf(40f).setScale(1,RoundingMode.HALF_UP);
+	/**
+	 * get minimum length of a segment in milliseconds.
+	 */
+	public Long getMinLength() {
+		if (minLength == null) {
+			minLength = 0L;
 		}
-		return segmentLengthThreshold;
+		return minLength;
 	}
 
-	public void setSegmentLengthThreshold(BigDecimal segmentLengthThreshold) {
-		this.segmentLengthThreshold = segmentLengthThreshold;
+	/**
+	 * set minimum length of a segment in milliseconds.
+	 */
+	public void setMinLength(Long minSignalLength) {
+		this.minLength = minSignalLength;
 	}
 
-	public BigDecimal getSegmentsSpaceThreshold() {
-		if(segmentsSpaceThreshold == null){
-			segmentsSpaceThreshold = BigDecimal.valueOf(20f).setScale(1,RoundingMode.HALF_UP);
+	/**
+	 * get minimum distance between two segments in milliseconds.
+	 */
+	public Long getMinSpace() {
+		if (minSpace == null) {
+			minSpace = 0L;
 		}
-		return segmentsSpaceThreshold;
+		return minSpace;
 	}
-
-	public void setSegmentsSpaceThreshold(BigDecimal segmentsSpaceThreshold) {
-		this.segmentsSpaceThreshold = segmentsSpaceThreshold;
+	/**
+	 *  set minimum distance between two segments in milliseconds.
+	 */
+	public void setMinSpace(Long minSpace) {
+		this.minSpace = minSpace;
 	}
 
 }

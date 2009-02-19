@@ -20,8 +20,6 @@
  */
 package org.spantus.segment.offline;
 
-import java.math.BigDecimal;
-
 import org.spantus.core.marker.Marker;
 
 public class MarkerDto {
@@ -56,24 +54,24 @@ public class MarkerDto {
 		this.previous = previous;
 	}
 	
-	public BigDecimal getDistanceToNext(){
+	public Long getDistanceToNext(){
 		if(getNext() == null || getMarker() == null){
-			return BigDecimal.ZERO;
+			return 0L;
 		}
-		BigDecimal distanceToNext = getMarker().getStart().add(
-				getMarker().getLength()).add(getNext().getMarker().getStart().negate()).abs();
+		Long distanceToNext = getMarker().getStart()+
+				getMarker().getLength()-getNext().getMarker().getStart();
 
-		return distanceToNext;
+		return Math.abs(distanceToNext);
 	}
 
-	public BigDecimal getDistanceToPrevious(){
+	public Long getDistanceToPrevious(){
 		if(getPrevious() == null || getMarker() == null){
-			return BigDecimal.ZERO;
+			return 0L;
 		}
-		BigDecimal distanceToPrevious = getPrevious().getMarker().getStart().add(
-				getPrevious().getMarker().getLength()).add(getMarker().getStart().negate()).abs();
+		Long distanceToPrevious = getPrevious().getMarker().getStart()+
+				getPrevious().getMarker().getLength()-getMarker().getStart();
 
-		return distanceToPrevious;
+		return Math.abs(distanceToPrevious);
 
 	}
 

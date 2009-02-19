@@ -8,7 +8,6 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,7 +83,7 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 	
 	public void addMarkerToView(Point p, int length){
 		MarkerServiceFactory.createMarkerService().addMarker(markerSet, 
-				BigDecimal.valueOf(p.x), BigDecimal.valueOf(100));
+				Long.valueOf(p.x), 100L);
 	}
 	
 	public void repaintIfDirty(){

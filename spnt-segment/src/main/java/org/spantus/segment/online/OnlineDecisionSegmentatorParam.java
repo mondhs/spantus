@@ -1,50 +1,33 @@
 package org.spantus.segment.online;
 
-import java.math.BigDecimal;
+import org.spantus.segment.offline.SimpleDecisionSegmentatorParam;
 
-import org.spantus.segment.SegmentatorParam;
-
-public class OnlineDecisionSegmentatorParam extends SegmentatorParam {
-	private BigDecimal minLength;
-	private BigDecimal minSpace;
-	private BigDecimal expandMarkerInTime;
+public class OnlineDecisionSegmentatorParam extends SimpleDecisionSegmentatorParam {
 	
-	public BigDecimal getMinLength() {
-		if(minLength == null){
-			minLength = BigDecimal.ZERO.setScale(0);
+	private Long expandStart;
+	private Long expandEnd;
+	
+	
+	
+	public Long getExpandStart() {
+		if(expandStart == null){
+			expandStart = 0L;
 		}
-		return minLength;
+		return expandStart;
 	}
-	public void setMinLength(BigDecimal minSignalLength) {
-		this.minLength = minSignalLength;
+
+	public void setExpandStart(Long latency) {
+		this.expandStart = latency;
 	}
 	
-	public void setMinLength(Long minSignalLength) {
-		setMinLength(BigDecimal.valueOf(minSignalLength));
-	}
-
-	public BigDecimal getMinSpace() {
-		if(minSpace == null){
-			minSpace = BigDecimal.ZERO.setScale(0);
+	public Long getExpandEnd() {
+		if(expandEnd == null){
+			expandEnd = 0L;
 		}
-		return minSpace;
+		return expandEnd;
 	}
-
-	public void setMinSpace(Long minLengthToPrevious) {
-		setMinSpace(BigDecimal.valueOf(minLengthToPrevious));
-	}
-	public void setMinSpace(BigDecimal minLengthToPrevious) {
-		this.minSpace = minLengthToPrevious;
-	}
-
-	public BigDecimal getExpandMarkerInTime() {
-		if(expandMarkerInTime == null){
-			expandMarkerInTime = BigDecimal.ZERO.setScale(0);
-		}
-		return expandMarkerInTime;
-	}
-
-	public void setExpandMarkerInTime(Long latency) {
-		this.expandMarkerInTime = BigDecimal.valueOf(latency);
+	
+	public void setExpandEnd(Long expandEnd) {
+		this.expandEnd = expandEnd;
 	}
 }

@@ -24,7 +24,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -79,9 +78,10 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 			}
 		}
 		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
-		param.setMinLength(BigDecimal.valueOf(61).setScale(0));
-		param.setMinSpace(BigDecimal.valueOf(31).setScale(0));
-		param.setExpandMarkerInTime(30L);
+		param.setMinLength(61L);
+		param.setMinSpace(31L);
+		param.setExpandEnd(30L);
+		param.setExpandEnd(30L);
 		MarkerSet value = segmentator.extractSegments(threasholds, param);
 		ctx.getProject().getCurrentSample().getMarkerSetHolder()
 				.getMarkerSets().put(MarkerSetHolderEnum.word.name(), value);

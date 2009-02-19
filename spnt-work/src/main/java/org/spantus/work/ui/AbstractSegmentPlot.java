@@ -1,4 +1,4 @@
-package org.spantus.work.segment.exec;
+package org.spantus.work.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +36,7 @@ public abstract class AbstractSegmentPlot extends JFrame {
 		return multipleSegmentator;
 	}
 	
-	protected MultipleSegmentatorOnline getSegmentatorDefault(){
+	protected DecistionSegmentatorOnline getSegmentatorDefault(){
 		wraperExtractorReader = new WraperExtractorReader(reader);
 		DecistionSegmentatorOnline multipleSegmentator = new DecistionSegmentatorOnline();
 		multipleSegmentator.setParam(createParam());
@@ -47,7 +47,7 @@ public abstract class AbstractSegmentPlot extends JFrame {
 		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
 		param.setMinLength(100L);
 		param.setMinSpace(80L);
-		param.setExpandMarkerInTime(50L);
+		param.setExpandStart(50L);
 		return param;
 	}
 	

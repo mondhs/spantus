@@ -1,13 +1,11 @@
 package org.spantus.core.marker.service;
 
-import java.math.BigDecimal;
-
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 
 public class MarkerServiceImp implements IMarkerService {
 
-	public Marker addMarker(MarkerSet markerSet, BigDecimal start, BigDecimal length) {
+	public Marker addMarker(MarkerSet markerSet, Long start, Long length) {
 		Marker marker = new Marker();
 		marker.setStart(start);
 		marker.setLength(length);
@@ -21,7 +19,7 @@ public class MarkerServiceImp implements IMarkerService {
 	}
 
 	public boolean validate(MarkerSet markerSet, Marker marker,
-			BigDecimal newStart, BigDecimal newLength) {
+			Long newStart, Long newLength) {
 		// TODO Auto-generated method stub
 		return false;
 	}

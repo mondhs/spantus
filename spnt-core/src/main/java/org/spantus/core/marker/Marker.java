@@ -1,36 +1,34 @@
 package org.spantus.core.marker;
 
-import java.math.BigDecimal;
 
 public class Marker {
 
-	BigDecimal start;
-	BigDecimal length;
+	Long start;
+	Long length;
 
 	String label;
 	MarkerExtractionData extractionData;
 
-	public BigDecimal getStart() {
+	public Long getStart() {
 		return start;
 	}
 
-	public void setStart(BigDecimal start) {
-//		this.start = start.setScale(0, RoundingMode.HALF_UP);
-		this.start = start;
-	}
-
-	public BigDecimal getLength() {
+	public Long getLength() {
 		return length;
 	}
 
-	public void setLength(BigDecimal length) {
+	public void setEnd(Long end) {
+		setLength(end-getStart());
+	}
+
+	public void setStart(Long start) {
+		this.start = start;
+	}
+
+	public void setLength(Long length) {
 		this.length = length;
 	}
 	
-	public void setEnd(BigDecimal end) {
-		setLength(end.add(getStart().negate()));
-	}
-
 	public String getLabel() {
 		return label;
 	}
@@ -60,5 +58,7 @@ public class Marker {
 	public void setExtractionData(MarkerExtractionData extractionData) {
 		this.extractionData = extractionData;
 	}
+
+	
 	
 }

@@ -1,6 +1,5 @@
 package org.spantus.segment.online.rule;
 
-import java.math.BigDecimal;
 import java.text.MessageFormat;
 
 import org.spantus.core.marker.Marker;
@@ -8,7 +7,7 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 
 public class DecisionCtx {
 	Marker marker;
-	BigDecimal time;
+	Long time;
 	Boolean state;
 	Long sample;
 	RuleBaseEnum.state segmentState;
@@ -45,11 +44,11 @@ public class DecisionCtx {
 		this.marker = marker;
 	}
 
-	public BigDecimal getTime() {
+	public Long getTime() {
 		return time;
 	}
 
-	public void setTime(BigDecimal time) {
+	public void setTime(Long time) {
 		this.time = time;
 	}
 
@@ -88,21 +87,21 @@ public class DecisionCtx {
 		this.param = param;
 	}
 
-	public BigDecimal getSegmentLength() {
-		BigDecimal substr = null;
+	public Long getSegmentLength() {
+		Long substr = null;
 		if (getMarker() != null && getMarker().getStart() != null) {
 			substr = getMarker().getStart();
 		}
 		substr = substr == null ? getTime() : substr;
-		return getTime().subtract(substr);
+		return getTime()-substr;
 	}
 
-	public BigDecimal getNoiseLength() {
-		BigDecimal substr = getTime();
+	public Long getNoiseLength() {
+		Long substr = getTime();
 		if (getMarker() != null) {
-			substr = getMarker().getStart().add(getMarker().getLength());
+			substr = getMarker().getStart()+getMarker().getLength();
 		}
-		return getTime().subtract(substr);
+		return getTime()-substr;
 	}
 	
 	@Override

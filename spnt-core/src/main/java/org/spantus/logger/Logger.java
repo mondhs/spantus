@@ -41,24 +41,24 @@ public class Logger {
     public static final int INFO = 2;
     public static final int ERROR = 3;
     public static final int FATAL = 4;
-    public static final HashMap<String, String> labels = new HashMap<String, String>();
+    public static final HashMap<Integer, String> labels = new HashMap<Integer, String>();
     private static PrintStream out =  System.out;
     private static PrintStream err =  System.err;
     
 
-    private int logMode = INFO;
+    private int logMode = DEBUG;
     private Class<?> logClass = null;
     
     static{
-        labels.put("" + DEBUG,"DEBUG");
-        labels.put("" + INFO,"INFO");
-        labels.put("" + ERROR,"ERROR");
-        labels.put("" + FATAL,"FATAL");
+        labels.put(DEBUG,"DEBUG");
+        labels.put(INFO,"INFO");
+        labels.put(ERROR,"ERROR");
+        labels.put(FATAL,"FATAL");
     }
     
     void log(int level, String message){
         if(level >= logMode){
-            String levelStr = (String)labels.get(""+level);
+            String levelStr = labels.get(level);
             String classNameStr = getSimpleName(logClass);
             
             String result = MessageFormat.format("{0,time,kk:mm:ss.SSS} {1} [{2}] {3}",

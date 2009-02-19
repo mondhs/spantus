@@ -26,6 +26,7 @@ import java.util.Set;
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.threshold.IThreshold;
+import org.spantus.segment.offline.SimpleDecisionSegmentatorParam;
 import org.spantus.segment.offline.SimpleDecisionSegmentatorServiceImpl;
 import org.spantus.segment.offline.SimpleSegmentatorServiceImpl;
 
@@ -39,6 +40,9 @@ public class SimpleDecisionSegmentatorTest extends SegmentatorTest {
 	
 	public void testDecisionSegmentator(){
 		SimpleDecisionSegmentatorServiceImpl segmentator = new SimpleDecisionSegmentatorServiceImpl();
+		SimpleDecisionSegmentatorParam param = new SimpleDecisionSegmentatorParam();
+		param.setMinSpace(20L);
+		param.setMinLength(40L);
 		segmentator.setSegmentator(new SimpleSegmentatorServiceImpl());
 		Set<IThreshold> thresholds = new HashSet<IThreshold>();
 		
@@ -57,7 +61,7 @@ public class SimpleDecisionSegmentatorTest extends SegmentatorTest {
 		fv.addAll(new FrameValues(silence));
 		thresholds.add(contsructThreshold(fv.toArray()));
 		
-		MarkerSet markerSet = segmentator.extractSegments(thresholds);
+		MarkerSet markerSet = segmentator.extractSegments(thresholds, param);
 		assertEquals(3, markerSet.getMarkers().size());
 		assertEquals(50,markerSet.getMarkers().get(0).getLength().intValue());
 		assertEquals(70,markerSet.getMarkers().get(1).getLength().intValue());

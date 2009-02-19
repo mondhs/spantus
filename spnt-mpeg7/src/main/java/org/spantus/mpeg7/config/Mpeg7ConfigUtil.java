@@ -54,6 +54,11 @@ public abstract class Mpeg7ConfigUtil {
 			"AudioSpectrumCentroidSpread");
 		enumMapping.put(Mpeg7ExtractorEnum.AudioSpectrumSpread,
 			"AudioSpectrumCentroidSpread");
+		
+		enumMapping.put(Mpeg7ExtractorEnum.AudioHarmonicityUpperLimit,
+			"AudioHarmonicity");
+		enumMapping.put(Mpeg7ExtractorEnum.AudioHarmonicityHarmonicRatio,
+			"AudioHarmonicity");
 
 		
 	}
@@ -80,6 +85,13 @@ public abstract class Mpeg7ConfigUtil {
 		}else if(mp7conf.getExtractors().contains(Mpeg7ExtractorEnum.AudioSpectrumSpread.name()) ){
 			conf.setValue(getEnumMapping(Mpeg7ExtractorEnum.AudioSpectrumSpread), "enable", true);
 		}
+		
+		if(mp7conf.getExtractors().contains(Mpeg7ExtractorEnum.AudioHarmonicityUpperLimit.name()) ){
+			conf.setValue(getEnumMapping(Mpeg7ExtractorEnum.AudioHarmonicityHarmonicRatio), "enable", true);
+		}else if(mp7conf.getExtractors().contains(Mpeg7ExtractorEnum.AudioHarmonicityHarmonicRatio.name()) ){
+			conf.setValue(getEnumMapping(Mpeg7ExtractorEnum.AudioHarmonicityHarmonicRatio), "enable", true);
+		}
+		
 		return conf;
 	}
 	public static String getEnumMapping(Mpeg7ExtractorEnum extractor){
@@ -140,6 +152,13 @@ public abstract class Mpeg7ConfigUtil {
 		}else if(!extrs.contains(Mpeg7ExtractorEnum.AudioSpectrumSpread) && 
 				extrs.contains(Mpeg7ExtractorEnum.AudioSpectrumCentroid)){
 			reader.getExtractorRegister().remove(reader.getExtractorRegister().toArray()[1]);			
+		}
+		if(extrs.contains(Mpeg7ExtractorEnum.AudioHarmonicityHarmonicRatio) && 
+				!extrs.contains(Mpeg7ExtractorEnum.AudioHarmonicityUpperLimit)){
+			reader.getExtractorRegister().remove(reader.getExtractorRegister().toArray()[1]);
+		}else if(!extrs.contains(Mpeg7ExtractorEnum.AudioHarmonicityHarmonicRatio) && 
+				extrs.contains(Mpeg7ExtractorEnum.AudioHarmonicityUpperLimit)){
+			reader.getExtractorRegister().remove(reader.getExtractorRegister().toArray()[0]);
 		}
 
 		

@@ -54,13 +54,13 @@ public class MultipleSegmentatorOnline implements OnlineSegmentator {
 	private Logger log = Logger.getLogger(MultipleSegmentatorOnline.class);
 
 	private Set<IGeneralExtractor> extractors;
-	private Map<BigDecimal, Map<IGeneralExtractor, Float>> status;
+	private Map<Long, Map<IGeneralExtractor, Float>> status;
 	private Boolean lastState = null;
 
 	public void processState(Long sample, IGeneralExtractor extractor,
 			Float val) {
 
-		BigDecimal time = calculateTime(extractor, sample);
+		Long time = calculateTime(extractor, sample);
 		Boolean state = getVoteForState(time, extractor, val);
 
 		if (Boolean.TRUE.equals(state)) {
@@ -79,18 +79,18 @@ public class MultipleSegmentatorOnline implements OnlineSegmentator {
 		}
 	}
 
-	protected BigDecimal calculateTime(IGeneralExtractor extractor, Long sample) {
+	protected Long calculateTime(IGeneralExtractor extractor, Long sample) {
 		BigDecimal time = new BigDecimal(sample.floatValue()
 				/ 
 				(extractor.getConfig().getSampleRate()/1000)
 				).setScale(0, RoundingMode.HALF_UP);
 //		time = time.multiply(BigDecimal.valueOf(1000)).setScale(0,
 //				RoundingMode.HALF_UP);
-		return time;
+		return time.longValue();
 	}
 
 	protected Marker createSegment(Long sample,
-			BigDecimal time) {
+			Long time) {
 		Marker marker = new Marker();
 		marker.setStart(time);
 		marker.setLabel(time.toString());
@@ -99,7 +99,7 @@ public class MultipleSegmentatorOnline implements OnlineSegmentator {
 	}
 
 	protected Marker finazlizeSegment(Marker marker, Long sample, 
-			BigDecimal time) {
+			Long time) {
 		if (marker == null)
 			return marker;
 		marker.setEnd(time);
@@ -157,7 +157,7 @@ public class MultipleSegmentatorOnline implements OnlineSegmentator {
 	 * @param f
 	 * @return null not enough data for voting. true - signal. false - noise
 	 */
-	public Boolean getVoteForState(BigDecimal time, IGeneralExtractor extractor,
+	public Boolean getVoteForState(Long time, IGeneralExtractor extractor,
 			Float f) {
 		Map<IGeneralExtractor, Float> statusExtrs = getStatus().get(time);
 
@@ -182,9 +182,9 @@ public class MultipleSegmentatorOnline implements OnlineSegmentator {
 		return null;
 	}
 
-	public Map<BigDecimal, Map<IGeneralExtractor, Float>> getStatus() {
+	public Map<Long, Map<IGeneralExtractor, Float>> getStatus() {
 		if (status == null) {
-			status = new LinkedHashMap<BigDecimal, Map<IGeneralExtractor, Float>>();
+			status = new LinkedHashMap<Long, Map<IGeneralExtractor, Float>>();
 		}
 		return status;
 	}

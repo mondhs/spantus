@@ -1,6 +1,5 @@
 package org.spantus.exp.segment.exec;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -41,12 +40,12 @@ public class SegmentatorExp extends AbstractGraphGenerator {
 		SimpleDecisionSegmentatorParam param = new SimpleDecisionSegmentatorParam();
 		
 		for (int i = 7; i < 17; i++) {
-			param.setSegmentLengthThreshold(BigDecimal.valueOf(i*10).setScale(0));
+			param.setMinLength(i*10L);
 			for (int j = 7; j < 17; j++) {
 				String name = "_sgmnts_"
-					+ param.getSegmentLengthThreshold() + "_" 
-					+ param.getSegmentsSpaceThreshold();
-				param.setSegmentsSpaceThreshold(BigDecimal.valueOf(j*10).setScale(0));
+					+ param.getMinLength() + "_" 
+					+ param.getMinSpace();
+				param.setMinSpace(j*10L);
 				MarkerSet testMS = getSegmentator().extractSegments(info.getThresholds(), param);
 				log.debug("Will be processed: " + name);
 				ComparisionResult result = getMakerComparison().compare(experMS,

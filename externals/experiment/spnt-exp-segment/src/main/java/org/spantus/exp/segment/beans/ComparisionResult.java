@@ -20,7 +20,6 @@
  */
 package org.spantus.exp.segment.beans;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,11 +50,11 @@ public class ComparisionResult {
 	
 	float totalResult;
 	
-	Map<String, BigDecimal> params;
+	Map<String, Number> params;
 	
-	public Map<String, BigDecimal> getParams() {
+	public Map<String, Number> getParams() {
 		if(params == null){
-			params = new HashMap<String, BigDecimal>();
+			params = new HashMap<String, Number>();
 		}
 		return params;
 	}

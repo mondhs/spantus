@@ -20,7 +20,6 @@
  */
 package org.spantus.segment.offline;
 
-import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -100,36 +99,34 @@ public class SimpleDecisionSegmentatorServiceImpl implements
 		removed.clear();
 
 		for (MarkerDto markerDto : markerDtos.values()) {
-			if (param.getSegmentLengthThreshold().compareTo(
-					markerDto.getMarker().getLength()) > 0) {
+			if (param.getMinLength()>markerDto.getMarker().getLength()) {
 				if (markerDto.getDistanceToNext().intValue() > 0
-						&& param.getSegmentsSpaceThreshold().compareTo(
-								markerDto.getDistanceToNext()) > 0) {
+						&& param.getMinSpace()>
+								markerDto.getDistanceToNext()) {
 					log.debug("joint " + markerDto + "to next: "
 							+ markerDto.getNext());
 					Marker current = markerDto.getMarker();
 					Marker next = markerDto.getNext().getMarker();
-					BigDecimal end = next.getStart().add(next.getLength());
+					Long end = next.getStart()+next.getLength();
 					// expand next marker
 					next.setStart(current.getStart());
-					next.setLength(end.add(current.getStart().negate()));
+					next.setLength(end-current.getStart());
 					// remove joined marker
 					if (markerDto.getPrevious() != null) {
 						markerDto.getPrevious().setNext(markerDto.getNext());
 					}
 					markerDto.getNext().setPrevious(markerDto.getPrevious());
 					removed.add(markerDto.getMarker());
-				} else if (markerDto.getDistanceToPrevious().intValue() > 0
-						&& param.getSegmentsSpaceThreshold().compareTo(
-								markerDto.getDistanceToPrevious()) > 0) {
+				} else if (markerDto.getDistanceToPrevious() > 0
+						&& param.getMinSpace()>
+								markerDto.getDistanceToPrevious()) {
 					log.debug("joint " + markerDto + "to previous: "
 							+ markerDto.getPrevious());
 					Marker current = markerDto.getMarker();
 					Marker previous = markerDto.getPrevious().getMarker();
-					BigDecimal end = current.getStart()
-							.add(current.getLength());
+					Long end = current.getStart()+current.getLength();
 					// expand next marker
-					previous.setLength(end.add(previous.getStart().negate()));
+					previous.setLength(end-previous.getStart());
 					// remove joined marker
 					if (markerDto.getNext() != null) {
 						markerDto.getNext()
@@ -148,16 +145,16 @@ public class SimpleDecisionSegmentatorServiceImpl implements
 
 		for (MarkerDto markerDto : markerDtos.values()) {
 			if (markerDto.getDistanceToNext().intValue() > 0
-					&& param.getSegmentsSpaceThreshold().compareTo(
-							markerDto.getDistanceToNext()) > 0) {
+					&& param.getMinSpace()>
+							markerDto.getDistanceToNext()) {
 				log.debug("joint " + markerDto + "to next: "
 						+ markerDto.getNext());
 				Marker current = markerDto.getMarker();
 				Marker next = markerDto.getNext().getMarker();
-				BigDecimal end = next.getStart().add(next.getLength());
+				Long end = next.getStart()+next.getLength();
 				// expand next marker
 				next.setStart(current.getStart());
-				next.setLength(end.add(current.getStart().negate()));
+				next.setLength(end-current.getStart());
 				// remove joined marker
 				if (markerDto.getPrevious() != null) {
 					markerDto.getPrevious().setNext(markerDto.getNext());
@@ -191,12 +188,12 @@ public class SimpleDecisionSegmentatorServiceImpl implements
 	}
 
 	protected boolean isForRemove(Marker current,
-			BigDecimal distanceToPrevious, BigDecimal distanceToNext,
+			Long distanceToPrevious, Long distanceToNext,
 			SimpleDecisionSegmentatorParam param) {
-		return current.getLength().compareTo(param.getSegmentLengthThreshold()) < 0
-				&& distanceToNext.compareTo(param.getSegmentsSpaceThreshold()) > 0
-				&& distanceToPrevious.compareTo(param
-						.getSegmentsSpaceThreshold()) > 0;
+		return current.getLength()<param.getMinLength()
+				&& distanceToNext>param.getMinSpace()
+				&& distanceToPrevious>param
+						.getMinSpace();
 	}
 
 	protected void remove(MarkerSet markerSet, Set<Marker> removed) {

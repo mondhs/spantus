@@ -92,7 +92,7 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 				info.getThresholds().clear();
 				info.getThresholds().add(threshold);
 				OnlineDecisionSegmentatorParam onlineParam = new OnlineDecisionSegmentatorParam();
-				onlineParam.setExpandMarkerInTime(0L);
+				onlineParam.setExpandStart(0L);
 
 				for (int i = 0; i < segmentsSpaces.length; i++) {
 					Long segmentsSpace = segmentsSpaces[i];

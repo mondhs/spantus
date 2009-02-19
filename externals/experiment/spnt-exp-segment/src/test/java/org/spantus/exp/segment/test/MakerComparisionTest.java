@@ -1,7 +1,5 @@
 package org.spantus.exp.segment.test;
 
-import java.math.BigDecimal;
-
 import junit.framework.TestCase;
 
 import org.spantus.core.marker.Marker;
@@ -33,8 +31,8 @@ public class MakerComparisionTest extends TestCase {
 		MarkerSet ms = new MarkerSet();
 		Marker m = new Marker();
 		m.setLabel("0");
-		m.setStart(BigDecimal.valueOf(100));
-		m.setLength(BigDecimal.valueOf(50));
+		m.setStart(100L);
+		m.setLength(50L);
 		ms.getMarkers().add(m);
 		return ms;
 	}
@@ -43,8 +41,8 @@ public class MakerComparisionTest extends TestCase {
 		MarkerSet ms = new MarkerSet();
 		Marker m = new Marker();
 		m.setLabel("0");
-		m.setStart(BigDecimal.valueOf(100));
-		m.setLength(BigDecimal.valueOf(50));
+		m.setStart(100L);
+		m.setLength(50L);
 		ms.getMarkers().add(m);
 		return ms;
 	}
