@@ -7,6 +7,7 @@ import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.dto.WorkSample;
+import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 
 /**
@@ -25,7 +26,7 @@ public abstract class WorkUIServiceFactory {
 		return new DefaultReaderService();
 	}
 	public static IExtractorInputReader constructReader(SpantusWorkInfo ctx, ProcessedFrameLinstener processedFrameLinstener){
-		setThreshold(ctx.getProject());
+		setThreshold(ctx.getProject(), ctx.getProject().getFeatureReader().getWorkConfig());
 		WorkSample workSample = ctx.getProject().getCurrentSample();
 		workSample.setFormat(createReaderService().getFormat(workSample.getCurrentFile()));
 		return createReaderService().getReader(
@@ -33,10 +34,10 @@ public abstract class WorkUIServiceFactory {
 				ctx.getProject().getFeatureReader(),
 				processedFrameLinstener);
 	}
-	protected static void setThreshold(SpantusWorkProjectInfo project){
+	protected static void setThreshold(SpantusWorkProjectInfo project, WorkUIExtractorConfig config){
 		ProjectTypeEnum projectType = ProjectTypeEnum.valueOf(project.getCurrentType());
 		switch (projectType) {
-		case fileThreshold:
+		case segmenation:
 			for (String extractorKey : project.getFeatureReader().getExtractors()) {
 				ExtractorParam param = ExtractorParamUtils.getSafeParam(
 						project.getFeatureReader().getParameters(),
@@ -46,7 +47,7 @@ public abstract class WorkUIServiceFactory {
 						Boolean.TRUE);
 				ExtractorParamUtils.<Float>setValue(param,
 						ExtractorParamUtils.commonParam.threasholdCoef.name(),
-						Float.valueOf(1.5f));
+						Float.valueOf(config.getThresholdCoef()));
 
 			}
 			break;

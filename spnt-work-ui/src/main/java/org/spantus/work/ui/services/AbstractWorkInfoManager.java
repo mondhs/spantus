@@ -24,11 +24,14 @@ package org.spantus.work.ui.services;
 import java.io.File;
 import java.util.Locale;
 
+import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.work.WorkReadersEnum;
+import org.spantus.work.reader.SupportableReaderEnum;
 import org.spantus.work.ui.dto.NewProjectContext;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
+import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 /**
  * 
  * 
@@ -65,6 +68,24 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		SpantusWorkProjectInfo project = createProject();
 		project.setWorkingDir(ctx.getWorkingDir());
 		project.setCurrentType(ctx.getProjectType());
+		switch (ProjectTypeEnum.valueOf(ctx.getProjectType())) {
+		case feature:
+		case segmenation:
+		case recordSegmentation:
+			project.getFeatureReader().getExtractors().clear();
+			project.getFeatureReader().getExtractors().add(
+					SupportableReaderEnum.spantus.name() + ":" + 
+					ExtractorEnum.WAVFORM_EXTRACTOR.name());
+			project.getFeatureReader().getExtractors().add(
+					SupportableReaderEnum.spantus.name() + ":" + 
+					ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR.name());
+			project.getFeatureReader().getExtractors().add(
+					SupportableReaderEnum.spantus.name() + ":" + 
+					ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name());
+			break;
+		default:
+			break;
+		}
 		return project;
 	}
 	

@@ -1,3 +1,23 @@
+/*
+ * Part of program for analyze speech signal 
+ * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
+ * http://spantus.sourceforge.net
+ * 
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ */
 package org.spantus.ui;
 
 import java.awt.BorderLayout;
@@ -10,9 +30,12 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
@@ -26,8 +49,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.spantus.core.marker.Marker;
-
+import org.spantus.logger.Logger;
+/**
+ * 
+ * @author Mindaugas Greibus
+ * @since 0.0.1
+ * Created on Feb 22, 2009
+ */
 public class ModifyObjectPopup implements java.awt.event.ActionListener {
+	
+	private Logger log = Logger.getLogger(getClass());
 	/**
 	 * As we prompt for user input, this button will appear on the dialog box to
 	 * signify an approval of input
@@ -46,6 +77,9 @@ public class ModifyObjectPopup implements java.awt.event.ActionListener {
 	 */
 	private JDialog dlg;
 
+	Set<String> includeFields;
+	Set<String> excludeFields;
+	
 	/**
 	 * This boolean reports the result of button presses: isOK will be true if
 	 * OK was pressed or false if Cancel was pressed
@@ -111,7 +145,12 @@ public class ModifyObjectPopup implements java.awt.event.ActionListener {
 		// Process the properties
 		for (Entry<String, Property> propertyEntry : props.entrySet()) {
 			String className = propertyEntry.getValue().getClassType();
-
+			if(getExcludeFields() != null && getExcludeFields().contains(propertyEntry.getKey())){
+				continue;
+			}
+			if(getIncludeFields() != null && !getIncludeFields().contains(propertyEntry.getKey())){
+				continue;
+			}
 			if (ReflectionUtils.isPrimitiveType(className)) {
 
 				// Build the JLabel and add it to the panel
@@ -226,10 +265,10 @@ public class ModifyObjectPopup implements java.awt.event.ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// See what button the user pressed
 		if (e.getSource() == this.okButton) {
-			System.out.println("OK pressed");
+			log.debug("OK pressed");
 			this.isOK = true;
 		} else {
-			System.out.println("Cancel pressed");
+			log.debug("Cancel pressed");
 			this.isOK = false;
 		}
 
@@ -237,8 +276,30 @@ public class ModifyObjectPopup implements java.awt.event.ActionListener {
 		dlg.setVisible(false);
 	}
 
+	public Set<String> getIncludeFields() {
+		return includeFields;
+	}
+
+
+	public void setIncludeFields(Set<String> includeFields) {
+		this.includeFields = includeFields;
+	}
+
+
+	public Set<String> getExcludeFields() {
+		return excludeFields;
+	}
+
+
+	public void setExcludeFields(Set<String> excludeFields) {
+		this.excludeFields = excludeFields;
+	}
+	
 	public static void main(String[] args) {
 		ModifyObjectPopup rs = new ModifyObjectPopup();
+		Set<String> includeFields = new HashSet<String>(
+				Arrays.asList(new String[]{"start","length", "label"}));
+		rs.setIncludeFields(includeFields);
 		Marker m = new Marker();
 		m.setLabel("Test");
 		m.setStart(20L);

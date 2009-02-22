@@ -16,7 +16,10 @@ import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 
 public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableComponent{
 	
-	enum optionsLabels{bufferSize, frameSize, windowSize, windowOverlap} 
+	enum optionsLabels{bufferSize, frameSize, windowSize, windowOverlap, 
+		recordSampleRate, audioPathOutput, thresholdLeaningPeriod, thresholdCoef, 
+		segmentationMinLength, segmentationMinSpace,
+		segmentationExpandStart, segmentationExpandEnd} 
 
 	SpantusWorkInfo config;
 	
@@ -74,6 +77,31 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			case windowOverlap:
 				textField.setValue(Double.valueOf(((double)workConfig.getWindowOverlap()/100)));
 				break;
+			case recordSampleRate:
+				textField.setValue(workConfig.getRecordSampleRate());
+				break;
+			case audioPathOutput:
+				textField.setValue(workConfig.getAudioPathOutput());
+				break;
+			case thresholdLeaningPeriod:
+				textField.setValue(Integer.valueOf(workConfig.getThresholdLeaningPeriod()));
+				break;
+			case thresholdCoef:
+				textField.setValue(Float.valueOf(workConfig.getThresholdCoef()));
+				break;
+			case segmentationMinLength:
+				textField.setValue(Integer.valueOf(workConfig.getSegmentationMinLength()));
+				break;
+			case segmentationMinSpace:
+				textField.setValue(Integer.valueOf(workConfig.getSegmentationMinSpace()));
+				break;
+			case segmentationExpandStart:
+				textField.setValue(Integer.valueOf(workConfig.getSegmentationExpandStart()));
+				break;
+			case segmentationExpandEnd:
+				textField.setValue(Integer.valueOf(workConfig.getSegmentationExpandEnd()));
+				break;
+				
 			default:
 				throw new RuntimeException("Not impl: "  + lbl.name());
 			}
@@ -106,6 +134,38 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 
 			textField = new JFormattedTextField(getI18n().getPercentFormat());
 			textField.setName(optionsLabels.windowOverlap.name());
+			jTextFields.add(textField);
+			
+			textField = new JFormattedTextField(getI18n().getDecimalFormat());
+			textField.setName(optionsLabels.recordSampleRate.name());
+			jTextFields.add(textField);
+			
+			textField = new JFormattedTextField();
+			textField.setName(optionsLabels.audioPathOutput.name());
+			jTextFields.add(textField);
+			
+			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
+			textField.setName(optionsLabels.thresholdLeaningPeriod.name());
+			jTextFields.add(textField);
+
+			textField = new JFormattedTextField(getI18n().getDecimalFormat());
+			textField.setName(optionsLabels.thresholdCoef.name());
+			jTextFields.add(textField);
+			
+			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
+			textField.setName(optionsLabels.segmentationMinLength.name());
+			jTextFields.add(textField);
+			
+			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
+			textField.setName(optionsLabels.segmentationMinSpace.name());
+			jTextFields.add(textField);
+			
+			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
+			textField.setName(optionsLabels.segmentationExpandStart.name());
+			jTextFields.add(textField);
+			
+			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
+			textField.setName(optionsLabels.segmentationExpandEnd.name());
 			jTextFields.add(textField);
 
 			
@@ -146,6 +206,37 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			case windowOverlap:
 				Double overlap = (((Number)field.getValue()).doubleValue())*100;
 				workConfig.setWindowOverlap(overlap.intValue());
+				break;
+			case recordSampleRate:
+				Number recordSampleRate = (Number)(field.getValue());
+				workConfig.setRecordSampleRate(recordSampleRate.floatValue());
+				break;
+			case audioPathOutput:
+				workConfig.setAudioPathOutput(field.getValue().toString());
+				break;
+			case thresholdLeaningPeriod:
+				Number thresholdLeaningPeriod = (Number)(field.getValue());
+				workConfig.setThresholdLeaningPeriod(thresholdLeaningPeriod.intValue());
+				break;
+			case thresholdCoef:
+				Number thresholdCoef = (Number)(field.getValue());
+				workConfig.setThresholdCoef(thresholdCoef.floatValue());
+				break;
+			case segmentationMinLength:
+				Number segmentationMinLength = (Number)(field.getValue());
+				workConfig.setSegmentationMinLength(segmentationMinLength.intValue());
+				break;
+			case segmentationMinSpace:
+				Number segmentationMinSpace = (Number)(field.getValue());
+				workConfig.setSegmentationMinSpace(segmentationMinSpace.intValue());
+				break;
+			case segmentationExpandStart:
+				Number segmentationExpandStart = (Number)(field.getValue());
+				workConfig.setSegmentationExpandStart(segmentationExpandStart.intValue());
+				break;
+			case segmentationExpandEnd:
+				Number segmentationExpandEnd = (Number)(field.getValue());
+				workConfig.setSegmentationExpandEnd(segmentationExpandEnd.intValue());
 				break;
 			default:
 				throw new RuntimeException("Not impl: "  + lbl.name());

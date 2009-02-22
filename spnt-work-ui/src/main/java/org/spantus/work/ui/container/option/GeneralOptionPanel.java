@@ -34,7 +34,7 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 
 			switch (lbl) {
 			case locale:
-				Object locale = ((JComboBox)field).getSelectedItem();
+				Object locale = I18n.LOCALES[((JComboBox)field).getSelectedIndex()];
 				getConfig().setLocale((Locale)locale);
 				break;
 			default:
@@ -85,8 +85,12 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 	private List<JComponent> getJComponents() {
 		if (jComponents == null) {
 			jComponents = new ArrayList<JComponent>();
-			
-			JComboBox input = new JComboBox(I18n.LOCALES);
+			String[] locales = new String[I18n.LOCALES.length];
+			int i = 0;
+			for (Locale locale : I18n.LOCALES) {
+				locales[i++] = getMessage("locale_" + locale.toString());
+			}
+			JComboBox input = new JComboBox(locales);
 			input.setName(generalLabels.locale.name());
 			jComponents.add(input);
 			

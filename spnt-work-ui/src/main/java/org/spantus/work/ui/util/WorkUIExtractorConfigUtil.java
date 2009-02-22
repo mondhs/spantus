@@ -38,6 +38,7 @@ public abstract class WorkUIExtractorConfigUtil {
 	public static IExtractorConfig convert(WorkUIExtractorConfig workConfig, float sampleRate){
 		IExtractorConfig config = new ExtractorConfig();
 		config.setSampleRate(sampleRate);
+		config.setBufferSize(3000);
 		float windowSize = (((float)sampleRate*workConfig.getWindowSize())/1000);
 		config.setWindowSize((int)windowSize);
 		float windowOverlapPercent = ((float)workConfig.getWindowOverlap())/100;

@@ -14,6 +14,9 @@ public class ReloadSampleChartCmd extends AbsrtactCmd {
 
 	
 	public String execute(SpantusWorkInfo ctx) {
+		if(ctx.getProject().getCurrentSample().getCurrentFile()==null){
+			chart.setReader(null);
+		}
 		chart.updateContent();
 		return null;
 	}

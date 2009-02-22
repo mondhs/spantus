@@ -13,7 +13,7 @@ import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
-import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
+import org.spantus.work.ui.i18n.I18nFactory;
 /**
  * 
  * 
@@ -44,7 +44,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 //	};
 
 	enum toolMenuLabels {
-		autoSegmentation, option
+		autoSegmentation, option, saveSegments
 	};
 	enum helpMenuLabels {
 		about
@@ -85,18 +85,6 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		initialize(getInfo().getProject().getCurrentType());
 	}
 	protected void initialize(String projectType) {
-		ProjectTypeEnum type = ProjectTypeEnum.valueOf(projectType);
-		switch (type) {
-		case file:
-			
-			break;
-		case record:
-			
-			break;
-
-		default:
-			break;
-		}
 		this.add(getFileMenu());
 		this.add(getToolMenu());
 		this.add(getHelpMenu());
@@ -132,9 +120,13 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			JMenu menu = new JMenu();
 			menu.add(createMenuItemp(GlobalCommands.tool.autoSegmentation.name(), KeyStroke.getKeyStroke(KeyEvent.VK_U, 0)));
 			menu.setText(getResource(menuLabels.tool.name()));
+		
 			JMenuItem m = createMenuItemp(toolMenuLabels.option.name()); 
 			m.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0));
 			menu.add(m);
+
+			menu.add(createMenuItemp(GlobalCommands.tool.saveSegments.name()));
+			
 			toolMenu = menu;
 
 		}
@@ -163,7 +155,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 	}
 
 	public String getResource(String key) {
-		return org.spantus.work.ui.i18n.I18nFactory.createI18n().getMessage(key);
+		return I18nFactory.createI18n().getMessage(key);
 	}
 
 	public class MenuListener implements ActionListener {

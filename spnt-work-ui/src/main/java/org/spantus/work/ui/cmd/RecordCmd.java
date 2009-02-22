@@ -5,16 +5,24 @@ import java.util.TimerTask;
 
 import javax.sound.sampled.AudioFormat;
 
+import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioCapture;
 import org.spantus.core.io.WraperExtractorReader;
-import org.spantus.core.threshold.StaticThreshold;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.logger.Logger;
+import org.spantus.segment.io.RecordSegmentatorOnline;
+import org.spantus.segment.io.RecordWraperExtractorReader;
+import org.spantus.segment.online.DecistionSegmentatorOnline;
+import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
+import org.spantus.segment.online.ThresholdSegmentatorOnline;
+import org.spantus.work.reader.SupportableReaderEnum;
+import org.spantus.work.segment.OnlineSegmentationUtils;
 import org.spantus.work.ui.container.SampleChangeListener;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.dto.WorkUIExtractorConfig;
+import org.spantus.work.ui.util.WorkUIExtractorConfigUtil;
 
 public class RecordCmd extends AbsrtactCmd {
 
@@ -37,23 +45,57 @@ public class RecordCmd extends AbsrtactCmd {
 	public String execute(final SpantusWorkInfo ctx) {
 		this.ctx = ctx;
 		
+		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader().getWorkConfig();
+		
+		
 		ctx.getProject().getCurrentSample().setCurrentFile(null);
 		ctx.getProject().getCurrentSample().setFormat(null);
 		
-		IExtractorInputReader reader = ExtractorsFactory
-				.createReader(getFormat());
+		WraperExtractorReader wrapReader = createReader(config);
 		
-		StaticThreshold threshold = new StaticThreshold();
-		threshold.setCoef(2f);
+		DecistionSegmentatorOnline multipleSegmentator =
+			createSegmentator(config, wrapReader);
 		
-		ExtractorUtils.register(reader, ExtractorEnum.WAVFORM_EXTRACTOR);
-		ExtractorUtils.registerThreshold(reader, ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR, threshold);
+		ThresholdSegmentatorOnline segmentator = null;
 		
-		capture = new AudioCapture(new WraperExtractorReader(reader));
-		capture.setFormat(getFormat());
+		for (String extr : ctx.getProject().getFeatureReader().getExtractors()) {
+			String[] extractor = extr.split(":");
+			SupportableReaderEnum readerType = SupportableReaderEnum.valueOf(extractor[0]);
+			switch (readerType) {
+			case spantus:
+				ExtractorEnum extractorType = ExtractorEnum.valueOf(extractor[1]);
+				segmentator  = OnlineSegmentationUtils.register(wrapReader.getReader(), extractorType);
+				segmentator.setOnlineSegmentator(multipleSegmentator);
+				segmentator.setCoef(config.getThresholdCoef());
+				segmentator.setLearningPeriod(config.getThresholdLeaningPeriod().longValue());
+				break;
+			case mpeg7:
+				break;
+			default:
+				throw new RuntimeException("not impl: " + readerType);
+			}
+		}
+		
+		
+//		segmentator  = OnlineSegmentationUtils.register(wrapReader.getReader(), ExtractorEnum.ENERGY_EXTRACTOR);
+//		segmentator.setOnlineSegmentator(multipleSegmentator);
+//		segmentator.setCoef(config.getThresholdCoef());
+//		segmentator.setLearningPeriod(config.getThresholdLeaningPeriod().longValue());
+//
+//		segmentator  = OnlineSegmentationUtils.register(wrapReader.getReader(), ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
+//		segmentator.setOnlineSegmentator(multipleSegmentator);
+//		segmentator.setCoef(config.getThresholdCoef());
+//		segmentator.setLearningPeriod(config.getThresholdLeaningPeriod().longValue());
+//
+//		segmentator  = OnlineSegmentationUtils.register(wrapReader.getReader(), ExtractorEnum.WAVFORM_EXTRACTOR);
+
+		capture = new AudioCapture(wrapReader);
+		capture.setFormat(getFormat(config));
 		capture.start();
+		
+		
 		ctx.setPlaying(true);
-		getTimer().schedule(new InitCapture(reader), 2000L);
+		getTimer().schedule(new InitCapture(wrapReader.getReader()), 2000L);
 		getTimer().schedule(new UpdateCapture(), 2000L, 1000L);
 
 		return null;
@@ -90,8 +132,8 @@ public class RecordCmd extends AbsrtactCmd {
 	}
 	
 	
-	public AudioFormat getFormat() {
-		float sampleRate = 8000;
+	public AudioFormat getFormat(WorkUIExtractorConfig config) {
+		Float sampleRate = config.getRecordSampleRate();
 		int sampleSizeInBits = 16;
 		int channels = 1;
 		boolean signed = true;
@@ -99,7 +141,55 @@ public class RecordCmd extends AbsrtactCmd {
 		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed,
 				bigEndian);
 	}
+	
+	protected WraperExtractorReader createReader(WorkUIExtractorConfig workConfig){
+		AudioFormat format = getFormat(workConfig);
+		IExtractorInputReader reader = ExtractorsFactory.createReader(format);
+		reader.setConfig(createReaderConfig(workConfig));
+		WraperExtractorReader wraperExtractorReader = null;
+		if(isRecordable(workConfig)){
+			wraperExtractorReader =  new RecordWraperExtractorReader(reader);
+		}else{
+			wraperExtractorReader = new WraperExtractorReader(reader);
+		}
+		wraperExtractorReader.setFormat(getFormat(workConfig));
+		return wraperExtractorReader;
+	}
+	
+	protected DecistionSegmentatorOnline createSegmentator(WorkUIExtractorConfig config, WraperExtractorReader reader){
+		DecistionSegmentatorOnline segmentator = null;
+		if(isRecordable(config)){
+			RecordSegmentatorOnline recSegmentator = new RecordSegmentatorOnline();
+			recSegmentator.setReader((RecordWraperExtractorReader)reader);
+			recSegmentator.setPath(config.getAudioPathOutput());
+			segmentator = recSegmentator;
+		}else{
+			segmentator = new DecistionSegmentatorOnline();
+		}
+		segmentator.setParam(createParam(config));
+		return segmentator;
+	}
 
+	protected OnlineDecisionSegmentatorParam createParam(WorkUIExtractorConfig config){
+		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
+		param.setMinSpace(config.getSegmentationMinSpace().longValue());
+		param.setMinLength(config.getSegmentationMinLength().longValue());
+		param.setExpandStart(config.getSegmentationExpandStart().longValue());
+		param.setExpandEnd(config.getSegmentationExpandEnd().longValue());
+		return param;
+	}
+	
+	protected IExtractorConfig createReaderConfig(WorkUIExtractorConfig workConfig){
+		IExtractorConfig config = WorkUIExtractorConfigUtil.convert(workConfig,
+				workConfig.getRecordSampleRate());
+		return config;
+	}
+	
+	protected boolean isRecordable(WorkUIExtractorConfig config){
+		return config.getAudioPathOutput()!=null && !"".equals(config.getAudioPathOutput());
+	}
+	
+	
 	protected Timer getTimer() {
 		if(timer == null){
 			timer = new Timer("Spantus sound capture");

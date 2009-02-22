@@ -45,7 +45,7 @@ public class OptionDialog extends JDialog implements ReloadableComponent{
 //	
 //	ExtractorsOptionPanel extractorsOptionPnl;
 	
-	enum optionsPanelEnum{general, window, extractor	};
+	enum optionsPanelEnum{general, parameters, feature	};
 	enum optionsLabelEnum{spantus, ok, cancel};
 	enum optionsCmdEnum{save, discard};
 
@@ -106,11 +106,11 @@ public class OptionDialog extends JDialog implements ReloadableComponent{
 		if (jTree == null) {
 			I18nTreeNode root = new I18nTreeNode(optionsLabelEnum.spantus);
 			I18nTreeNode general = new I18nTreeNode(optionsPanelEnum.general);
-			I18nTreeNode window = new I18nTreeNode(optionsPanelEnum.window);
-			I18nTreeNode extractor = new I18nTreeNode(optionsPanelEnum.extractor);
+			I18nTreeNode parameters = new I18nTreeNode(optionsPanelEnum.parameters);
+			I18nTreeNode feature = new I18nTreeNode(optionsPanelEnum.feature);
 			root.add(general);
-			root.add(window);
-			root.add(extractor);
+			root.add(parameters);
+			root.add(feature);
 			jTree = new JTree(root);
 			jTree.addTreeSelectionListener(new OptionTreeSelectionListener());
 		}
@@ -165,13 +165,13 @@ public class OptionDialog extends JDialog implements ReloadableComponent{
 	public Map<optionsPanelEnum, AbstractOptionPanel> getSaveablePanels() {
 		if(saveablePanels == null){
 			saveablePanels = new LinkedHashMap<optionsPanelEnum, AbstractOptionPanel>();
-			WindowOptionPnl windowPnl = new WindowOptionPnl();
+			WindowOptionPnl parametersPnl = new WindowOptionPnl();
 			ExtractorsOptionPanel extractorsOptionPnl = new ExtractorsOptionPanel();
 			GeneralOptionPanel generalOptionPnl = new GeneralOptionPanel();
 
 			saveablePanels.put(optionsPanelEnum.general, generalOptionPnl);
-			saveablePanels.put(optionsPanelEnum.window, windowPnl);
-			saveablePanels.put(optionsPanelEnum.extractor, extractorsOptionPnl);
+			saveablePanels.put(optionsPanelEnum.parameters, parametersPnl);
+			saveablePanels.put(optionsPanelEnum.feature, extractorsOptionPnl);
 			
 			
 		}

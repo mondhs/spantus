@@ -31,9 +31,9 @@ public class NewProjectCmd extends AbsrtactCmd {
 	
 	public boolean newProject(SpantusWorkInfo info) {
 		Map<String,ProjectTypeEnum> selectionMap = new LinkedHashMap<String, ProjectTypeEnum>();
-		selectionMap.put(getMessage(RESOURCE_PREFIX + ProjectTypeEnum.file.name()), ProjectTypeEnum.file);
-		selectionMap.put(getMessage(RESOURCE_PREFIX + ProjectTypeEnum.fileThreshold.name()), ProjectTypeEnum.fileThreshold);
-		selectionMap.put(getMessage(RESOURCE_PREFIX + ProjectTypeEnum.record.name()), ProjectTypeEnum.record);
+		for (ProjectTypeEnum projectType : ProjectTypeEnum.values()) {
+			selectionMap.put(getMessage(RESOURCE_PREFIX + projectType.name()), projectType);
+		}
 		String current = getMessage(RESOURCE_PREFIX + info.getProject().getCurrentType());
 		
 	    String projectType = (String)JOptionPane.showInputDialog(

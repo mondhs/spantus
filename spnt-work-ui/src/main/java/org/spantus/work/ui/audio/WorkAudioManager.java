@@ -1,8 +1,12 @@
 package org.spantus.work.ui.audio;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -10,6 +14,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
 
 public class WorkAudioManager implements AudioManager {
@@ -32,21 +37,50 @@ public class WorkAudioManager implements AudioManager {
 		play(stream, from, length);
 	}
 	
-	private void play(AudioInputStream stream, float from, float length) {
-		log.debug("[play] from: " + from +"; length=" + length);
+	private void play(AudioInputStream stream, float starts, float length) {
+		log.debug("[play] from: " + starts +"; length=" + length);
 		double totalTime = getTotalTime(stream);
-		double ends = from + length;
-		double adaptedLength = ends > totalTime?totalTime-from:length;
-		if (from > totalTime) {
+		double ends = starts + length;
+		double adaptedLength = ends > totalTime?totalTime-starts:length;
+		if (starts > totalTime) {
 			log.error("[play] Cannot play.");
 			return;
 		}
-		long startsBytes = (long) ((from * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());
+		long startsBytes = (long) ((starts * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());
 		long lengthBytes = (long) ((adaptedLength  * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());
 		Playback pl = new Playback(stream, startsBytes, lengthBytes);
 		pl.start();
 	}
+	/**
+	 * 
+	 */
+	public void save(URL fileURL, float starts, float length, String pathToSave) {
+		log.debug("[save] from:{0}; lenght:{1}; pathToSave:{2}", starts, length, pathToSave );
+		AudioInputStream stream = createInput(fileURL);
+		double totalTime = getTotalTime(stream);
+		double ends = starts + length;
+		double adaptedLength = ends > totalTime?totalTime-starts:length;
+		if (starts > totalTime) {
+			log.error("[save] Cannot save due stars:"+starts+" more than total time:"+totalTime );
+			return;
+		}
+		Long startsBytes = (long) ((starts * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());
+		Long lengthBytes = (long) ((adaptedLength  * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());
+		
+		try {
+			stream.skip(startsBytes);
+			byte[] data = new byte[lengthBytes.intValue()];
+			stream.read(data);
+			InputStream bais = new ByteArrayInputStream(data);
+			AudioInputStream ais = new AudioInputStream(bais, stream.getFormat(), data.length);
+			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(pathToSave));
+		} catch (IOException e) {
+			throw new ProcessingException(e);
+		}
+		
 
+	}
+	
 	/**
 	 * 
 	 * @return

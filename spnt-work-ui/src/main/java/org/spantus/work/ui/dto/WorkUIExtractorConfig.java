@@ -37,54 +37,137 @@ public class WorkUIExtractorConfig{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	int windowSize = 30 ; //30ms
-	int frameSize = 10 ; //10 windows
-	int windowOverlap = 66; //66%
-	int bufferSize = 800; //5s	
-
+	private Integer windowSize = 30 ; //30ms
+	private Integer frameSize = 10 ; //10 windows
+	private Integer windowOverlap = 66; //66%
+	private Integer bufferSize = 800; //5s	
 	
-	public int getBitsPerSample() {
-		throw new RuntimeException("Not supported");
-	}
-
+	private Float recordSampleRate=8000F;
+	private String audioPathOutput="./";
+	private Integer thresholdLeaningPeriod=5000;
+	private Float thresholdCoef=6F;
+	private Integer segmentationMinLength=91;
+	private Integer segmentationMinSpace=61;
+	private Integer segmentationExpandStart=60;
+	private Integer segmentationExpandEnd=60;
 	 
-	public int getBufferSize() {
+	public Integer getBufferSize() {
 		return bufferSize;
 	}
 
 	 
-	public int getFrameSize() {
+	public Integer getFrameSize() {
 		return frameSize;
 	}
 
 	 
-	public int getWindowOverlap() {
+	public Integer getWindowOverlap() {
 		return windowOverlap;
 	}
 
 	 
-	public int getWindowSize() {
+	public Integer getWindowSize() {
 		return windowSize;
 	}
 
 	 
-	public void setBufferSize(int bufferSize) {
+	public void setBufferSize(Integer bufferSize) {
 		this.bufferSize = bufferSize;
 	}
 
 	 
-	public void setFrameSize(int frameSize) {
+	public void setFrameSize(Integer frameSize) {
 		this.frameSize = frameSize;
 	}
 
 	 
-	public void setWindowOverlap(int windowOverlap) {
+	public void setWindowOverlap(Integer windowOverlap) {
 		this.windowOverlap = windowOverlap;
 	}
 
 	 
-	public void setWindowSize(int windowSize) {
+	public void setWindowSize(Integer windowSize) {
 		this.windowSize = windowSize;
+	}
+
+
+	public Float getRecordSampleRate() {
+		return recordSampleRate;
+	}
+
+
+	public void setRecordSampleRate(Float sampleRate) {
+		this.recordSampleRate = sampleRate;
+	}
+
+
+	public String getAudioPathOutput() {
+		return audioPathOutput;
+	}
+
+
+	public void setAudioPathOutput(String pathOutput) {
+		this.audioPathOutput = pathOutput;
+	}
+
+
+	public Integer getThresholdLeaningPeriod() {
+		return thresholdLeaningPeriod;
+	}
+
+
+	public void setThresholdLeaningPeriod(Integer leaningPeriod) {
+		this.thresholdLeaningPeriod = leaningPeriod;
+	}
+
+
+	public Float getThresholdCoef() {
+		return thresholdCoef;
+	}
+
+
+	public void setThresholdCoef(Float coef) {
+		this.thresholdCoef = coef;
+	}
+
+
+	public Integer getSegmentationMinLength() {
+		return segmentationMinLength;
+	}
+
+
+	public void setSegmentationMinLength(Integer segmentationMinLength) {
+		this.segmentationMinLength = segmentationMinLength;
+	}
+
+
+	public Integer getSegmentationMinSpace() {
+		return segmentationMinSpace;
+	}
+
+
+	public void setSegmentationMinSpace(Integer segmentationMinSpace) {
+		this.segmentationMinSpace = segmentationMinSpace;
+	}
+
+
+	public Integer getSegmentationExpandStart() {
+		return segmentationExpandStart;
+	}
+
+
+	public void setSegmentationExpandStart(Integer segmentationExpandStart) {
+		this.segmentationExpandStart = segmentationExpandStart;
+	}
+
+
+	public Integer getSegmentationExpandEnd() {
+		return segmentationExpandEnd;
+	}
+
+
+	public void setSegmentationExpandEnd(Integer segmentationExpandEnd) {
+		this.segmentationExpandEnd = segmentationExpandEnd;
 	}
 
 }

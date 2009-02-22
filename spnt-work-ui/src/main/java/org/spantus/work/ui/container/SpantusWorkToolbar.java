@@ -15,6 +15,7 @@ import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
+import org.spantus.work.ui.i18n.I18nFactory;
 /**
  * 
  * 
@@ -96,19 +97,20 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		
 		ProjectTypeEnum type = ProjectTypeEnum.valueOf(projectType);
 		switch (type) {
-		case file:
+		case feature:
 			isPlayable = true;
 			break;
-		case fileThreshold:
+		case segmenation:
 			isPlayable = true;
 			break;
-		case record:
+		case recordSegmentation:
 			break;
 		default:
 			break;
 		}
 		getRecordBtn().setEnabled(!isPlayable);
 		getPlayBtn().setEnabled(isPlayable);
+		getOpenBtn().setEnabled(isPlayable);
 
 		this.add(new JToolBar.Separator());
 		this.add(new JToolBar.Separator());
@@ -223,6 +225,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		btn.setMargin(new Insets(0, 0, 0, 0));
 		btn.setFocusable(false);
 		btn.setActionCommand(cmd);
+		btn.setToolTipText(getResource(cmd));
 		btn.addActionListener(getToolbarActionListener());
 		return btn;
 	}
@@ -252,5 +255,10 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 			getHandler().execute(e.getActionCommand(), getInfo());
 		}
 	}
+
+	public String getResource(String key) {
+		return I18nFactory.createI18n().getMessage(key);
+	}
+	
 
 }

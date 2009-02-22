@@ -127,13 +127,13 @@ getYFormatted(Graph graph, Point2D position) {
  * This method requires <a href="http://xmlgraphics.apache.org/batik/" rel="help">Apache Batik</a>.
  @since 1.5
  */
+@SuppressWarnings("unchecked")
 public static void
 writeAsSVG(Graph graph, Writer target)
 throws IOException {
 	if (graph == null || target == null)
 		throw new IllegalArgumentException();
 	try {
-		@SuppressWarnings("unchecked")
 		Class domClass = Class.forName("org.apache.batik.dom.GenericDOMImplementation");
 
 		Method buildDOM = domClass.getDeclaredMethod("getDOMImplementation");
@@ -142,9 +142,7 @@ throws IOException {
 		Method buildDocument = domClass.getDeclaredMethod("createDocument", String.class, String.class, DocumentType.class);
 		Object document = buildDocument.invoke(dom, "http://www.w3.org/2000/svg", "svg", null);
 
-		@SuppressWarnings("unchecked")
 		Class svgClass = Class.forName("org.apache.batik.svggen.SVGGraphics2D");
-		@SuppressWarnings("unchecked")
 		Constructor<Graphics> svgConstructor = svgClass.getDeclaredConstructor(Document.class);
 		Graphics svg = svgConstructor.newInstance(document);
 
@@ -182,6 +180,7 @@ throws IOException {
  * This method requires <a href="http://quies.net/java/tech/csv/" rel="help">QN CSV</a>.
  @since 1.3
  */
+@SuppressWarnings("unchecked")
 public static void
 writeAsCSV(Graph graph, Writer target)
 throws IOException {
@@ -195,9 +194,7 @@ throws IOException {
 	Axis yAxis = graph.getYAxis();
 
 	try {
-		@SuppressWarnings("unchecked")
 		Class csvClass = Class.forName("net.quies.tech.csv.CSVWriter");
-		@SuppressWarnings("unchecked")
 		Constructor<Writer> csvConstructor = csvClass.getDeclaredConstructor(Writer.class);
 		Writer csv = csvConstructor.newInstance(target);
 

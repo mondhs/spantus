@@ -38,7 +38,7 @@ public class XmlWorkInfoManagerTest extends TestCase {
 	public void testProject(){
 		String fileName = PATH+"project.xml";
 		SpantusWorkProjectInfo project = createProject();
-		project.setCurrentType(ProjectTypeEnum.record.name());
+		project.setCurrentType(ProjectTypeEnum.recordSegmentation.name());
 		workInfoManager.saveProject(project, fileName);
 		SpantusWorkProjectInfo loadedProject = workInfoManager.openProject(fileName);
 		assertNotNull(loadedProject);

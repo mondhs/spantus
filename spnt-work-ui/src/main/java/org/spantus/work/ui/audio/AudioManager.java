@@ -1,5 +1,4 @@
-
-/**
+/*
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
  * http://spantus.sourceforge.net
@@ -19,7 +18,6 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-
 package org.spantus.work.ui.audio;
 
 import java.net.URL;
@@ -36,4 +34,5 @@ import java.net.URL;
 public interface AudioManager {
 	public void play(URL file);
 	public void play(URL file, float starts, float length);
+	public void save(URL file, float starts, float length, String pathToSave);
 }

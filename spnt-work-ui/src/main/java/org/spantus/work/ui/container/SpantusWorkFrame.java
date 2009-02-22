@@ -20,11 +20,12 @@ import org.spantus.work.ui.cmd.PlayCmd;
 import org.spantus.work.ui.cmd.RecordCmd;
 import org.spantus.work.ui.cmd.ReloadResourcesCmd;
 import org.spantus.work.ui.cmd.ReloadSampleChartCmd;
+import org.spantus.work.ui.cmd.SaveSegmentCmd;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.cmd.StopCmd;
 import org.spantus.work.ui.cmd.ZoomInCmd;
 import org.spantus.work.ui.cmd.ZoomOutCmd;
-import org.spantus.work.ui.cmd.file.CurrentProjectChanged;
+import org.spantus.work.ui.cmd.file.CurrentProjectChangedCmd;
 import org.spantus.work.ui.cmd.file.ExportCmd;
 import org.spantus.work.ui.cmd.file.ImportCmd;
 import org.spantus.work.ui.cmd.file.NewProjectCmd;
@@ -195,7 +196,14 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 			.getCmds()
 			.put(GlobalCommands.tool.reloadResources.name(), 
 					new ReloadResourcesCmd(this, currentSampleChanged));
+			
+			handler
+			.getCmds()
+			.put(GlobalCommands.tool.saveSegments.name(), 
+					new SaveSegmentCmd());
 
+			
+			
 			handler
 			.getCmds()
 			.put(GlobalCommands.tool.autoSegmentation.name(), 
@@ -245,7 +253,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 				new SaveProjectCmd(this));
 
 		handler.getCmds().put(GlobalCommands.file.currentProjectChanged.name(),
-				new CurrentProjectChanged(this));
+				new CurrentProjectChangedCmd(this));
 		handler.getCmds().put(GlobalCommands.file.exportFile.name(),
 				new ExportCmd(this, getSampleRepresentationPanel().getSampleChart()));
 		handler.getCmds().put(GlobalCommands.file.importFile.name(),

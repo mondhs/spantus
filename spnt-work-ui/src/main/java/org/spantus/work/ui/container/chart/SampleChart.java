@@ -95,15 +95,15 @@ public class SampleChart extends JPanel {
 	}
 
 	private void initializeChart(IExtractorInputReader reader) {
+		removeAll();
 		if (reader != null) {
-			removeAll();
 			chart = ChartFactory.createChart(reader,
 					new I18NChartDescriptionResolver());
 			chart.getCharInfo().setSelfZoomable(false);
 			chart.setPreferredSize(getSize());
 			chart.addSignalSelectionListener(getSelectionListener());
 			add(chart, BorderLayout.CENTER);
-			if(!ProjectTypeEnum.file.name().equals(getInfo().getProject().getCurrentType())
+			if(!ProjectTypeEnum.feature.name().equals(getInfo().getProject().getCurrentType())
 					&&
 					getInfo().getProject().getCurrentSample().getMarkerSetHolder() != null){
 				if( chart instanceof MarkeredTimeSeriesMultiChart )
@@ -112,8 +112,9 @@ public class SampleChart extends JPanel {
 						createMouseListener());
 			}
 			
-			repaint();
+			
 		}
+		repaint();
 	}
 
 

@@ -1,3 +1,23 @@
+/*
+ * Part of program for analyze speech signal 
+ * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
+ * http://spantus.sourceforge.net
+ * 
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ */
 package org.spantus.chart.marker;
 
 import java.awt.Color;
@@ -13,7 +33,11 @@ import javax.swing.UIManager;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.logger.Logger;
-
+/**
+ * 
+ * @author Mindaugas Greibus
+ *
+ */
 public class MarkerComponent extends JComponent{
 	/**
 	 * 
@@ -24,6 +48,9 @@ public class MarkerComponent extends JComponent{
 	private final Color MARK_TRANSPARENT = new Color(MARK_COLOR.getRGB() & 0x00FFFFFF | 0x77000000, true);
 	private final Color MARK_SELECTED_TRANSPARENT = new Color(MARK_COLOR.getRGB() & 0x00FFFFA0 | 0x77000000, true);
 
+	Integer startX = null;
+	Integer endX = null;
+	
 	Marker marker;
 	
 	MarkerGraphCtx ctx;
@@ -79,23 +106,34 @@ public class MarkerComponent extends JComponent{
 	}
 	
 	protected int getStartX(){
-		int startX = MarkerComponentUtil.timeToScreen(getCtx(), getMarker().getStart());
-		return startX;
+		if(this.startX == null){
+			this.startX = MarkerComponentUtil.timeToScreen(getCtx(), getMarker().getStart());	
+		}
+		return this.startX;
 	}
 
 	protected void setStartX(int startX){
+		this.startX = startX;
 		Long start = MarkerComponentUtil.screenToTime(getCtx(), startX);
 		getMarker().setStart(start);
 	}
 
+	public void resetScreenCoord(){
+		this.startX = MarkerComponentUtil.timeToScreen(getCtx(), getMarker().getStart());	
+		Long endXTime = getMarker().getStart()+getMarker().getLength();
+		this.endX = MarkerComponentUtil.timeToScreen(getCtx(), endXTime);
+	}
 	
 	protected int getEndX(){
-		Long endXTime = getMarker().getStart()+getMarker().getLength();
-		int endXScreen = MarkerComponentUtil.timeToScreen(getCtx(), endXTime);
-		return endXScreen;
+		if(endX == null){
+			Long endXTime = getMarker().getStart()+getMarker().getLength();
+			this.endX = MarkerComponentUtil.timeToScreen(getCtx(), endXTime);
+		}
+		return this.endX;
 	}
 	
 	protected void setEndX(int endX){
+		this.endX = endX;
 		Long end = MarkerComponentUtil.screenToTime(getCtx(), endX);
 		Long length =  end-getMarker().getStart();
 		getMarker().setLength(length);

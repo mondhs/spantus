@@ -73,7 +73,7 @@ public class DefaultI18n implements I18n {
 			rtnStr = getBundle().getString(key);
 		} catch (MissingResourceException e) {
 //			System.out.println(key + "=" + key);
-			log.debug("Resource not fount: " + key);
+			log.error("Resource not fount: " + key);
 //			e.printStackTrace();
 		}
 		return rtnStr;

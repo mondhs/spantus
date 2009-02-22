@@ -34,14 +34,13 @@ import java.io.File;
  */
 public class SpantusWorkProjectInfo {
 
-	public enum ProjectTypeEnum{file, fileThreshold ,record};
+	public enum ProjectTypeEnum{feature, segmenation, recordSegmentation};
 	
 	float from;
 
 	float length;
 	
 	String currentType;
-
 
 	WorkSample currentSample;
 	
@@ -99,7 +98,7 @@ public class SpantusWorkProjectInfo {
 
 	public String getCurrentType() {
 		if(currentType == null){
-			currentType = ProjectTypeEnum.file.name();
+			currentType = ProjectTypeEnum.feature.name();
 		}
 		return currentType;
 	}

@@ -6,6 +6,9 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -112,8 +115,17 @@ public class MarkerPopupMenu extends JPopupMenu {
 			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
 			MarkerPopupMenuShower ml = getShower(source);
 			Marker _marker = ml.getCurrentMarker().getMarker();
+			Long start = _marker.getStart();
+			Long length = _marker.getLength();
 			ModifyObjectPopup modifyObjectPopup = new ModifyObjectPopup();
+			Set<String> includeFields = new HashSet<String>();
+			includeFields.addAll(Arrays.asList(new String[]{"start","length", "label"}));
+			modifyObjectPopup.setIncludeFields(includeFields);
 			modifyObjectPopup.modifyObject(null, "Modify", _marker);
+			
+			if(!_marker.getStart().equals(start) || !_marker.getLength().equals(length) ){
+				ml.getCurrentMarker().resetScreenCoord();
+			}
 			log.debug("modified: " + _marker);
 			_markerSetComponent.repaint();
 		}

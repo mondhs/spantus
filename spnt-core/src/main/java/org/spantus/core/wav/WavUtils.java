@@ -1,4 +1,4 @@
-/**
+/*
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
  * http://spantus.sourceforge.net
@@ -18,6 +18,7 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
+
 package org.spantus.core.wav;
 
 import java.text.NumberFormat;
@@ -247,7 +248,7 @@ public class WavUtils {
         if(numArray == null){
             return "[]";
         }
-        StringBuffer strArray = new StringBuffer();
+        StringBuilder strArray = new StringBuilder();
         strArray.append("[");
         String seperator = "";
         NumberFormat nf = NumberFormat.getInstance();

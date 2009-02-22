@@ -1,7 +1,7 @@
-/**
+/*
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://code.google.com/p/spantus/
+ * http://spantus.sourceforge.net
  * 
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -26,6 +26,8 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.spantus.utils.Assert;
 
 import net.quies.math.plot.AxisInstance;
 import net.quies.math.plot.CoordinateBoundary;
@@ -156,6 +158,9 @@ public class InteractiveChart extends InteractiveGraph {
 		int width = getWidth();
 		width = width == 0 ? 1:width;
 		CoordinateBoundary boundary = getCoordinateBoundary();
+		Assert.isTrue(getXAxis()!= null);
+		Assert.isTrue(boundary != null);
+		
 		AxisInstance xAxis = getXAxis().getInstance(boundary.getXMin(), boundary.getXMax(), 
 				width);
 //		BigDecimal xScalar = xAxis.getGraphichsScalar();

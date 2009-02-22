@@ -1,4 +1,4 @@
-/**
+/*
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
  * http://spantus.sourceforge.net
@@ -39,9 +39,9 @@ import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
-import org.spantus.utils.Assert;
 import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 
 /**
  * 
@@ -67,9 +67,11 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	}
 
 	public String execute(SpantusWorkInfo ctx) {
-		ctx.getProject().getFeatureReader();
+		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader().getWorkConfig();
 		IExtractorInputReader reader = sampleChart.getReader();
-		Assert.isTrue(reader != null);
+		if(reader == null){
+			log.info("Nothing to segment");
+		}
 		reader.getExtractorRegister();
 		Set<IThreshold> threasholds = new HashSet<IThreshold>();
 		for (IExtractor extractor : reader.getExtractorRegister()) {
@@ -78,10 +80,10 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 			}
 		}
 		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
-		param.setMinLength(61L);
-		param.setMinSpace(31L);
-		param.setExpandEnd(30L);
-		param.setExpandEnd(30L);
+		param.setMinLength(config.getSegmentationMinLength().longValue());
+		param.setMinSpace(config.getSegmentationMinSpace().longValue());
+		param.setExpandEnd(config.getSegmentationExpandEnd().longValue());
+		param.setExpandStart(config.getSegmentationExpandStart().longValue());
 		MarkerSet value = segmentator.extractSegments(threasholds, param);
 		ctx.getProject().getCurrentSample().getMarkerSetHolder()
 				.getMarkerSets().put(MarkerSetHolderEnum.word.name(), value);

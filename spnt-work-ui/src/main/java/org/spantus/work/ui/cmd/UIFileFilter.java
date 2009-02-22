@@ -32,7 +32,7 @@ public class UIFileFilter extends FileFilter {
 
 	@Override
 	public String getDescription() {
-		StringBuffer buffer = new StringBuffer( "*." + getExtension()[0] );
+		StringBuilder buffer = new StringBuilder( "*." + getExtension()[0] );
 	    for (int i=1; i<getExtension().length; ++i)
 	      buffer.append( ", *." + extension[i]);
 	    return buffer.toString();

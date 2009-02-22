@@ -106,7 +106,7 @@ public class Property {
 	}
 
 	public String toString() {
-		StringBuffer sb = new StringBuffer("Property(").append(name).append(
+		StringBuilder sb = new StringBuilder("Property(").append(name).append(
 				": ");
 		sb.append(classType).append(") -> ");
 		if (readable)
