@@ -22,6 +22,7 @@ package org.spantus.chart.impl;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.math.RoundingMode;
 
@@ -46,12 +47,13 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 		super(reader, globalMessageResolver);
 	}
 	
-	public void initialize(MarkerSetHolder holder, MouseListener mouseListener){
+	public void initialize(MarkerSetHolder holder, MouseListener mouseListener, KeyListener keyListener){
 		add(getMarkerGraph(), BorderLayout.NORTH);
 		AxisInstance axisX = getGraph().getXAxisInstance();
 		getMarkerGraph().getCtx().setXScalar(axisX.getGraphichsScalar().setScale(4, RoundingMode.HALF_UP));
 		getMarkerGraph().setMarkerSetHolder(holder);
 		getMarkerGraph().addMouseListener(mouseListener);
+		getMarkerGraph().addKeyListener(keyListener);
 		getMarkerGraph().setPreferredSize(new Dimension(300, 40));
 		getMarkerGraph().initialize();
 	}

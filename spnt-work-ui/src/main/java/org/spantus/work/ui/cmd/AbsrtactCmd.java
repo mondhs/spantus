@@ -22,6 +22,8 @@ package org.spantus.work.ui.cmd;
 
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.i18n.I18n;
+import org.spantus.work.ui.i18n.I18nFactory;
 
 public abstract class AbsrtactCmd implements SpantusWorkCommand {
 	
@@ -33,4 +35,10 @@ public abstract class AbsrtactCmd implements SpantusWorkCommand {
 	}
 	public abstract String execute(SpantusWorkInfo ctx);
 	
+	protected String getMessage(String key){
+		return getI18n().getMessage(key);
+	}
+	protected I18n getI18n(){
+		return I18nFactory.createI18n();
+	}
 }

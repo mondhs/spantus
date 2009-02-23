@@ -1,10 +1,16 @@
 package org.spantus.work.ui.container.option;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -50,14 +56,40 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			 l.setLabelFor(edit);
 			 this.add(edit);
 		}
-
+		
+		this.add(getHelpButton());
+		this.add(new JLabel("", JLabel.TRAILING));
 
 		SpantusWorkSwingUtils.makeCompactGrid(this,
-				optionsLabels.values().length, 2, //rows, cols
+				optionsLabels.values().length+1, 2, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
+		
+		
+		
 		reload();
 	}
+	
+	JButton  helpButton = null;
+	protected JButton getHelpButton(){
+		if(helpButton == null){
+			helpButton = new JButton(getMessage("help"));
+			helpButton.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					Icon icon =new ImageIcon(getClass().getResource(
+							"/org/spantus/work/ui/img/ui-segment-prams."+getI18n().getLocale()+".png"));
+					JOptionPane.showMessageDialog(null, 
+							"", 
+							getMessage("help"), 
+							JOptionPane.PLAIN_MESSAGE, icon);
+				}
+				
+			});
+		}
+		return helpButton;
+		
+	}
+	
 	public void reload() {
 		for (JFormattedTextField textField : getJTextFields()) {
 			optionsLabels lbl = optionsLabels.valueOf(textField.getName());

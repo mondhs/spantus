@@ -160,4 +160,4 @@ public class SpantusAbout extends JDialog {
 	}
 
 
-} // @jve:decl-index=0:visual-constraint="10,10"
+}

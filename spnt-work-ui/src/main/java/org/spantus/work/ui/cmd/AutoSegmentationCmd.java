@@ -24,10 +24,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.JOptionPane;
 
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
@@ -55,6 +58,9 @@ import org.spantus.work.ui.dto.WorkUIExtractorConfig;
  */
 public class AutoSegmentationCmd extends AbsrtactCmd {
 
+	public static final String segmentAutoPanelMessageHeader = "segmentAutoPanelMessageHeader";
+	public static final String segmentAutoPanelMessageBody = "segmentAutoPanelMessageBody";
+	
 	private ISegmentatorService segmentator;
 	private SampleChart sampleChart;
 
@@ -88,6 +94,16 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		ctx.getProject().getCurrentSample().getMarkerSetHolder()
 				.getMarkerSets().put(MarkerSetHolderEnum.word.name(), value);
 		putLabels(ctx);
+		
+		String messageFormat = getMessage(segmentAutoPanelMessageBody);
+		String messageBody = MessageFormat.format(messageFormat, 
+				value.getMarkers().size()
+				);
+		
+		JOptionPane.showMessageDialog(null,messageBody,
+				getMessage(segmentAutoPanelMessageHeader),
+				JOptionPane.INFORMATION_MESSAGE);
+		
 		return GlobalCommands.sample.reloadSampleChart.name();
 	}
 	

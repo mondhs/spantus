@@ -43,7 +43,7 @@ public class WorkAudioManager implements AudioManager {
 		double ends = starts + length;
 		double adaptedLength = ends > totalTime?totalTime-starts:length;
 		if (starts > totalTime) {
-			log.error("[play] Cannot play.");
+			log.error("[play] Cannot play due start is more than total time" + starts +">"+ totalTime);
 			return;
 		}
 		long startsBytes = (long) ((starts * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());

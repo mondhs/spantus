@@ -144,6 +144,7 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 		//create new markers
 		for (Marker marker : created) {
 			MarkerComponent markerComponent = new MarkerComponent();
+			markerComponent.addKeyListener(getKeyListeners()[0]);
 			markerComponent.setMarker(marker);
 			add(markerComponent);
 			log.debug("created:" + marker.getLabel());

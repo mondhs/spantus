@@ -23,6 +23,9 @@ package org.spantus.work.ui.container.chart;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
@@ -32,8 +35,11 @@ import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
 import org.spantus.chart.SignalSelectionListener;
 import org.spantus.chart.impl.MarkeredTimeSeriesMultiChart;
+import org.spantus.chart.marker.MarkerComponent;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.marker.Marker;
 import org.spantus.logger.Logger;
+import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.container.marker.MarkerPopupMenuShower;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -106,10 +112,14 @@ public class SampleChart extends JPanel {
 			if(!ProjectTypeEnum.feature.name().equals(getInfo().getProject().getCurrentType())
 					&&
 					getInfo().getProject().getCurrentSample().getMarkerSetHolder() != null){
-				if( chart instanceof MarkeredTimeSeriesMultiChart )
-				((MarkeredTimeSeriesMultiChart)chart).initialize(
+				if( chart instanceof MarkeredTimeSeriesMultiChart ){
+					MarkeredTimeSeriesMultiChart cart_ = ((MarkeredTimeSeriesMultiChart)chart);
+					cart_.initialize(
 						getInfo().getProject().getCurrentSample().getMarkerSetHolder(), 
-						createMouseListener());
+						createMouseListener(),
+						createKeyListener());
+					
+				}
 			}
 			
 			
@@ -163,6 +173,28 @@ public class SampleChart extends JPanel {
 
 	protected MouseListener createMouseListener() {
 		return new MarkerPopupMenuShower(getInfo(), getHandler());
+	}
+	
+	protected KeyListener createKeyListener(){
+		KeyListener listener = new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                int keyChar = e.getKeyChar();
+                if(32 == keyChar){
+                	if(e.getComponent() instanceof MarkerComponent){
+                		Marker m = ((MarkerComponent)e.getComponent()).getMarker();
+                		getInfo().getProject().setFrom(m.getStart()/1000f);
+                		getInfo().getProject().setLength(m.getLength()/1000f);
+                		getHandler().execute(GlobalCommands.sample.play.name(), getInfo());
+                	}
+                		
+                }else{
+                	log.debug("[keyTyped] name{0}; keyChar{1};", getName(), keyChar);	
+                }
+        		
+            }
+        };
+        return listener;
 	}
 
 	public SpantusWorkCommand getHandler() {

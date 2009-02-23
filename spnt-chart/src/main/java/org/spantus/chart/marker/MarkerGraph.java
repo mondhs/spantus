@@ -24,9 +24,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
@@ -67,21 +64,20 @@ public class MarkerGraph extends JComponent {
 	public void initialize() {
 		Assert.isTrue(getMarkerSetHolder() != null, "Should not be null");
 		setLayout(null);
-		KeyListener listener = new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                int keyChar = e.getKeyChar();
-        		log.error(getName() + ":"+ keyChar);
-            }
-        };
-        this.addKeyListener(listener);
+//		KeyListener listener = new KeyAdapter() {
+//            @Override
+//            public void keyTyped(KeyEvent e) {
+//                int keyChar = e.getKeyChar();
+//        		log.debug("[keyTyped] name{0}; keyChar{1};", getName(), keyChar);
+//            }
+//        };
+//        this.addKeyListener(listener);
 
 
 		Map<String, MarkerSet> map = getMarkerSetHolder().getMarkerSets();
 		for (Entry<String, MarkerSet> entry : map.entrySet()) {
 			MarkerSetComponent comp = createMarkerSetComponent(entry.getValue());
 			comp.setName(entry.getKey());
-			comp.addMouseListener(getMouseListeners()[0]);
 			getLayers().put(entry.getKey(), comp);
 			add(comp);
 		}
@@ -107,6 +103,7 @@ public class MarkerGraph extends JComponent {
 
 	public MarkerSetComponent createMarkerSetComponent(MarkerSet markerSet) {
 		MarkerSetComponent component = new MarkerSetComponent();
+		component.addMouseListener(getMouseListeners()[0]);
 		component.addKeyListener(getKeyListeners()[0]);
 		component.setMarkerSet(markerSet);
 		component.setCtx(getCtx());
