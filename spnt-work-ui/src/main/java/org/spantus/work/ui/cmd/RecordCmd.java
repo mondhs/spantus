@@ -1,20 +1,22 @@
 package org.spantus.work.ui.cmd;
 
+import java.text.MessageFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.sound.sampled.AudioFormat;
+import javax.swing.JOptionPane;
 
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioCapture;
 import org.spantus.core.io.WraperExtractorReader;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.io.RecordWraperExtractorReader;
-import org.spantus.segment.online.DecistionSegmentatorOnline;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.segment.online.ThresholdSegmentatorOnline;
 import org.spantus.work.reader.SupportableReaderEnum;
@@ -25,6 +27,9 @@ import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import org.spantus.work.ui.util.WorkUIExtractorConfigUtil;
 
 public class RecordCmd extends AbsrtactCmd {
+	
+	public static final String recordFinishedMessageHeader = "recordFinishedMessageHeader"; 
+	public static final String recordFinishedMessageBody = "recordFinishedMessageBody"; 
 
 	protected Logger log = Logger.getLogger(getClass());
 
@@ -53,7 +58,7 @@ public class RecordCmd extends AbsrtactCmd {
 		
 		WraperExtractorReader wrapReader = createReader(config);
 		
-		DecistionSegmentatorOnline multipleSegmentator =
+		RecordSegmentatorOnline recordSegmentator =
 			createSegmentator(config, wrapReader);
 		
 		ThresholdSegmentatorOnline segmentator = null;
@@ -65,7 +70,7 @@ public class RecordCmd extends AbsrtactCmd {
 			case spantus:
 				ExtractorEnum extractorType = ExtractorEnum.valueOf(extractor[1]);
 				segmentator  = OnlineSegmentationUtils.register(wrapReader.getReader(), extractorType);
-				segmentator.setOnlineSegmentator(multipleSegmentator);
+				segmentator.setOnlineSegmentator(recordSegmentator);
 				segmentator.setCoef(config.getThresholdCoef());
 				segmentator.setLearningPeriod(config.getThresholdLeaningPeriod().longValue());
 				break;
@@ -96,7 +101,7 @@ public class RecordCmd extends AbsrtactCmd {
 		
 		ctx.setPlaying(true);
 		getTimer().schedule(new InitCapture(wrapReader.getReader()), 2000L);
-		getTimer().schedule(new UpdateCapture(), 2000L, 1000L);
+		getTimer().schedule(new UpdateCapture(recordSegmentator), 2000L, 1000L);
 
 		return null;
 	}
@@ -114,6 +119,14 @@ public class RecordCmd extends AbsrtactCmd {
 	}
 	
 	public class UpdateCapture extends TimerTask {
+		
+		RecordSegmentatorOnline recordSegmentator;
+		
+		public UpdateCapture(RecordSegmentatorOnline recordSegmentator) {
+			super();
+			this.recordSegmentator = recordSegmentator;
+		}
+
 		@Override
 		public void run() {
 			if(!isRecordInitialyzed){
@@ -126,11 +139,28 @@ public class RecordCmd extends AbsrtactCmd {
 				log.debug("repaint");
 				capture.finalize();
 				this.cancel();
+				String fullSingalName = "full"+System.currentTimeMillis();
+				String fullSingalFullPath = recordSegmentator.getPath() + "/" + fullSingalName;
+				if(recordSegmentator.getPath() != null && !"".equals(recordSegmentator.getPath())){
+					recordSegmentator.saveFullSignal(fullSingalName);
+				}else{
+					fullSingalFullPath = "";
+				}
+				showMessage(recordSegmentator.getMarkSet(), fullSingalFullPath);
 			}
 		}
 
 	}
-	
+	protected void showMessage(MarkerSet words, String path){
+		String messageFormat = getMessage(recordFinishedMessageBody);
+		String messageBody = MessageFormat.format(messageFormat, 
+				words.getMarkers().size(),
+				path
+				);
+		JOptionPane.showMessageDialog(null,messageBody,
+							getMessage(recordFinishedMessageHeader),
+							JOptionPane.INFORMATION_MESSAGE);
+	}
 	
 	public AudioFormat getFormat(WorkUIExtractorConfig config) {
 		Float sampleRate = config.getRecordSampleRate();
@@ -156,15 +186,13 @@ public class RecordCmd extends AbsrtactCmd {
 		return wraperExtractorReader;
 	}
 	
-	protected DecistionSegmentatorOnline createSegmentator(WorkUIExtractorConfig config, WraperExtractorReader reader){
-		DecistionSegmentatorOnline segmentator = null;
+	protected RecordSegmentatorOnline createSegmentator(WorkUIExtractorConfig config, WraperExtractorReader reader){
+		RecordSegmentatorOnline segmentator = new RecordSegmentatorOnline();
+		segmentator.setReader((RecordWraperExtractorReader)reader);
 		if(isRecordable(config)){
-			RecordSegmentatorOnline recSegmentator = new RecordSegmentatorOnline();
-			recSegmentator.setReader((RecordWraperExtractorReader)reader);
-			recSegmentator.setPath(config.getAudioPathOutput());
-			segmentator = recSegmentator;
+			segmentator.setPath(config.getAudioPathOutput());
 		}else{
-			segmentator = new DecistionSegmentatorOnline();
+			segmentator.setPath(null);
 		}
 		segmentator.setParam(createParam(config));
 		return segmentator;

@@ -68,7 +68,11 @@ public class WorkAudioManager implements AudioManager {
 		Long lengthBytes = (long) ((adaptedLength  * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());
 		
 		try {
-			stream.skip(startsBytes);
+			long skipedByteTotal = startsBytes;
+			long skipedByte = stream.available();
+			while((skipedByte=stream.skip(skipedByteTotal)) != 0 ){
+				skipedByteTotal -= skipedByte;
+			}
 			byte[] data = new byte[lengthBytes.intValue()];
 			stream.read(data);
 			InputStream bais = new ByteArrayInputStream(data);

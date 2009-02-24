@@ -31,6 +31,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
 import org.spantus.core.marker.Marker;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecistionSegmentatorOnline;
 
@@ -50,6 +51,8 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 	
 	RecordWraperExtractorReader reader;
 	
+	MarkerSet words;
+	
 	String path;
 	
 	@Override
@@ -63,10 +66,11 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 		int toIndex = fromIndex + (marker.getExtractionData().getLengthSampleNum().intValue()*bytesPerSample);
 		
 		try{
+			getWords().getMarkers().add(marker);
 			List<Byte> data = reader.getAudioBuffer().subList(fromIndex, toIndex);
 			saveSegmentAccepted(data, marker.getLabel());
 		}catch (IndexOutOfBoundsException e) {
-			log.error(MessageFormat.format("buufer: {3}.marker: {0}. samples: [{1};{2}]", 
+			log.error(MessageFormat.format("buffer: {3}.marker: {0}. samples: [{1};{2}]", 
 					marker.toString(),fromIndex, toIndex, reader.getAudioBuffer().size()));
 			e.printStackTrace();
 		}
@@ -77,12 +81,20 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 	    InputStream bais = new ByteListInputStream(data);
 	    AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size());
 	    try {
-			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(getPath()+name+".wav"));
+	    	if(path!= null && !"".equals(path)){
+	    		String path = getPath()+"/"+name+".wav";
+	    		AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(path));
+	    		log.debug("[saveSegmentAccepted] saved{0}", path);
+	    	}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
 	}
+	
+	public void saveFullSignal(String name){
+		saveSegmentAccepted(reader.getAudioBuffer(), name);
+	}
+	
 	@Override
 	protected Marker createSegment(Long sample,
 			Long time) {
@@ -115,5 +127,16 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public MarkerSet getWords() {
+		if(words == null){
+			words = new MarkerSet();
+		}
+		return words;
+	}
+
+	public void setWords(MarkerSet words) {
+		this.words = words;
 	}
 }

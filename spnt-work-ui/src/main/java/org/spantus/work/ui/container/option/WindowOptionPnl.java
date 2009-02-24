@@ -23,7 +23,7 @@ import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableComponent{
 	
 	enum optionsLabels{bufferSize, frameSize, windowSize, windowOverlap, 
-		recordSampleRate, audioPathOutput, thresholdLeaningPeriod, thresholdCoef, 
+		recordSampleRate, audioPathOutput, thresholdLearningPeriod, thresholdCoef, 
 		segmentationMinLength, segmentationMinSpace,
 		segmentationExpandStart, segmentationExpandEnd} 
 
@@ -115,7 +115,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			case audioPathOutput:
 				textField.setValue(workConfig.getAudioPathOutput());
 				break;
-			case thresholdLeaningPeriod:
+			case thresholdLearningPeriod:
 				textField.setValue(Integer.valueOf(workConfig.getThresholdLeaningPeriod()));
 				break;
 			case thresholdCoef:
@@ -177,7 +177,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			jTextFields.add(textField);
 			
 			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
-			textField.setName(optionsLabels.thresholdLeaningPeriod.name());
+			textField.setName(optionsLabels.thresholdLearningPeriod.name());
 			jTextFields.add(textField);
 
 			textField = new JFormattedTextField(getI18n().getDecimalFormat());
@@ -246,7 +246,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			case audioPathOutput:
 				workConfig.setAudioPathOutput(field.getValue().toString());
 				break;
-			case thresholdLeaningPeriod:
+			case thresholdLearningPeriod:
 				Number thresholdLeaningPeriod = (Number)(field.getValue());
 				workConfig.setThresholdLeaningPeriod(thresholdLeaningPeriod.intValue());
 				break;

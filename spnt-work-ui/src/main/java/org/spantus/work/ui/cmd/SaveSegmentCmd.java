@@ -42,30 +42,37 @@ public class SaveSegmentCmd extends AbsrtactCmd{
 
 	@Override
 	public String execute(SpantusWorkInfo ctx) {
-		String pathToSavePattern = ctx.getProject().getFeatureReader().getWorkConfig().getAudioPathOutput()+
+		String pathToSaveFormat = ctx.getProject().getFeatureReader().getWorkConfig().getAudioPathOutput()+
 		"/{0}.wav";
 		MarkerSet words = 
 		ctx.getProject().getCurrentSample().getMarkerSetHolder().getMarkerSets().get(
 				MarkerSetHolderEnum.word.name());
-		StringBuilder sb = new StringBuilder();
+//		StringBuilder sb = new StringBuilder();
 		for (Marker marker : words.getMarkers()) {
-			String path = MessageFormat.format(pathToSavePattern, marker.getLabel());
+			String path = MessageFormat.format(pathToSaveFormat, marker.getLabel());
 			AudioManagerFactory.createAudioManager().save(
 					ctx.getProject().getCurrentSample().getCurrentFile(), 
 					marker.getStart()/1000f,
 					marker.getLength()/1000f,
 					path
 					);
-			sb.append(path).append("\n");
+//			sb.append(path).append("\n");
 		}
+		
+		showMessage(words, ctx.getProject().getFeatureReader().getWorkConfig().getAudioPathOutput());
+		
+		return null;
+	}
+	
+	protected void showMessage(MarkerSet words, String pathToSave){
 		String messageFormat = getMessage(segmentSavedPanelMessageBody);
 		String messageBody = MessageFormat.format(messageFormat, 
 				words.getMarkers().size(),
-				sb.toString()
+				pathToSave
 				);
 		JOptionPane.showMessageDialog(null,messageBody,
 							getMessage(segmentSavedPanelMessageHeader),
 							JOptionPane.INFORMATION_MESSAGE);
-		return null;
+		
 	}
 }
