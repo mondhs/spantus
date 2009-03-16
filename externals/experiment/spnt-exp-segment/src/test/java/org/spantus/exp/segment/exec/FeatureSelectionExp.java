@@ -31,7 +31,9 @@ public class FeatureSelectionExp extends AbstractGraphGenerator {
 
 		Set<IThreshold> thresholds = new LinkedHashSet<IThreshold>();
 
-		OnlineDecisionSegmentatorParam param = createDefaultOnlineParam();
+		OnlineDecisionSegmentatorParam param =
+//			new OnlineDecisionSegmentatorParam();
+			createDefaultOnlineParam();
 
 		for (IThreshold threshold : info.getThresholds()) {
 			thresholds.clear();

@@ -12,6 +12,7 @@ import org.spantus.exp.segment.draw.AbstractGraphGenerator;
 import org.spantus.exp.segment.services.ExperimentDao;
 import org.spantus.exp.segment.services.impl.ExperimentStaticDao;
 import org.spantus.segment.SegmentatorParam;
+import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 /**
  * 
  * @author Mindaugas Greibus
@@ -24,6 +25,8 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 	private Long experimentID;
 	
 	private Iterable<Set<String>> compbinations;
+	
+	private OnlineDecisionSegmentatorParam onlineParam;
 	
 	
 	private SampleInfo info;
@@ -84,12 +87,13 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 			compare(join(setCombination),
 				threshods,
 				expertMS, 
-				createDefaultOnlineParam());
+				getOnlineParam());
 			processed++;
 		}
 		log.info("[compare]Processed iteraions: " + processed);
 		return getExperimentDao().findAllComparisionResult();
 	}
+	
 	/**
 	 * 
 	 * @param thresholdsMap
@@ -113,7 +117,10 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 		StringBuffer buf = new StringBuffer();
 		String separator = "";
 		for (String name : set) {
-			buf.append(separator).append(name);
+			String tempName = name;  
+			tempName = tempName.replace("BUFFERED_", "");
+			tempName = tempName.replace("_EXTRACTOR", "");
+			buf.append(separator).append(tempName);
 			separator = " ";
 		}
 		return buf.toString();	
@@ -148,9 +155,6 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 	public void setCompbinations(Iterable<Set<String>> compbinations) {
 		this.compbinations = compbinations;
 	}
-
-
-
 	
 	public SampleInfo getInfo() {
 		return info;
@@ -170,7 +174,17 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 	public void setExpertMS(MarkerSet experMS) {
 		this.expertMS = experMS;
 	}
+	
+	public void setOnlineParam(OnlineDecisionSegmentatorParam onlineParam) {
+		this.onlineParam = onlineParam;
+	}
 
+	protected OnlineDecisionSegmentatorParam getOnlineParam(){
+		if(onlineParam == null){
+			onlineParam = createDefaultOnlineParam();
+		}
+		return onlineParam;
+	}
 
 
 

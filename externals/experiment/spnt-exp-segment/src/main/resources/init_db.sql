@@ -20,8 +20,23 @@ CREATE INDEX feature_idx on EXPERIMENTRESULT(TOTALRESULT)
 --INSERT INTO ExperimentResult(experimentID,  RESOURCE, FEATURES, TOTALRESULT) VALUES(1,'test_res', 'test_feat', 1.0 ) 
 
 --SELECT * FROM ExperimentResult
-select  FEATURES, avg(TOTALRESULT) as avg1, stddev_pop(TOTALRESULT) as stdev1, min(TOTALRESULT) as min1, max(TOTALRESULT) as max1 FROM ExperimentResult GROUP BY FEATURES ORDER BY avg1
+select
+FEATURES,
+avg(TOTALRESULT) as avg1,
+stddev_pop(TOTALRESULT) as stdev1,
+min(TOTALRESULT) as min1,
+max(TOTALRESULT) as max1,
+avg(FEATURENUM)
+FROM ExperimentResult
+--WHERE EXPERIMENTID = 2
+WHERE FEATURES='MFCC2 SIGNAL_ENTROPY SPECTRAL_FLUX'
+GROUP BY FEATURES
+ORDER BY avg1;
+
+select * from EXPERIMENTRESULT where FEATURES='ENERGY ENVELOPE'
+
 SELECT RESOURCE, count(ID) from ExperimentResult GROUP by RESOURCE
+
 SELECT  * from ExperimentResult
 
 SHUTDOWN

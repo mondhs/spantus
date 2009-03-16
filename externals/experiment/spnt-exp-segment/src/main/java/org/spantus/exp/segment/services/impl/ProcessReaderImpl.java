@@ -150,8 +150,8 @@ public class ProcessReaderImpl implements ProcessReader {
 			int combinationDepth){
 		Set<Set<String>> allCombinations = new LinkedHashSet<Set<String>>();
 		int start = 
-			1
-//			combinationDepth
+//			1
+			combinationDepth
 			;
 		for (int i = start; i <= combinationDepth; i++) {
 			generateList(fullSet, allCombinations, 
@@ -205,6 +205,7 @@ public class ProcessReaderImpl implements ProcessReader {
 	
 	protected boolean canBeProcessed(IExtractorVector extractor3d){
 //		if(true) return false;
+		if(true) return true;
 		String name = extractor3d.getName();
 		if(extractor3d.getOutputValues().iterator().next().size()>13){
 			return false;

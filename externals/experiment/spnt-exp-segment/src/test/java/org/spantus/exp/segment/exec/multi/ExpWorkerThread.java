@@ -7,7 +7,9 @@ import org.spantus.core.beans.SampleInfo;
 public class ExpWorkerThread extends Thread {
 	private boolean process = true;
 	
-	ExperimentResourceMonitor monitor;
+	private ExperimentResourceMonitor monitor;
+	
+	
 	
 	
 	public ExpWorkerThread(ExperimentResourceMonitor monitor) {
@@ -38,9 +40,11 @@ public class ExpWorkerThread extends Thread {
 			exp.setExperimentName(monitor.constructExperimentName(resourceName));
 			exp.setExperimentID(monitor.constructExperimentID(resourceName));
 			exp.setGenerateCharts(false);
-			
+			exp.setOnlineParam(monitor.getOnlineParam());
 			exp.process();
 		}
 	}
+	
+
 
 }

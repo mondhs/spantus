@@ -33,26 +33,28 @@ import org.spantus.exp.segment.services.ExperimentDao;
 import org.spantus.exp.segment.services.ProcessReader;
 import org.spantus.exp.segment.services.impl.ExperimentStaticDao;
 import org.spantus.logger.Logger;
+import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 
 public class ExperimentResourceMonitor {
 	
 	public final static String[] testPaths = new String[] {
-		 "",
-		"org_",
-		 "plane_",
-		 "rain_",
-		 "shower_",
-		 "trafic_",
-		 "white_",
+		 "original",
+		 "plane",
+		 "rain",
+		 "shower",
+		 "traffic",
+		 "keyboard",
+		 "hammer"
 		};
 	
 	public final static String expertMarksPath = "_on_off_up_down.mspnt.xml";
 	
-	public final static String sufix = "on_off_up_down.sspnt.xml";
+	public final static String sufix = ".sspnt.xml";
 	public final static Long expID = 1L;
-	public final static Double thresholdCoef = 1.6D;
+	public final static Double thresholdCoef = 2.0D;
 
 	
+	private OnlineDecisionSegmentatorParam onlineParam;
 	private Iterator<String> storage;
 	private Iterable<Set<String>> compbinations;
 	private ProcessReader processReader;
@@ -79,7 +81,7 @@ public class ExperimentResourceMonitor {
 		return resourceName;
 	}
 	public Long constructExperimentID(String resourceName){
-		return 1L;
+		return expID;
 	}
 	
 	
@@ -145,6 +147,26 @@ public class ExperimentResourceMonitor {
 
 	public void setCombinationDepth(Integer combinationDepth) {
 		this.combinationDepth = combinationDepth;
+	}
+	
+	public void setOnlineParam(OnlineDecisionSegmentatorParam onlineParam) {
+		this.onlineParam = onlineParam;
+	}
+
+	protected OnlineDecisionSegmentatorParam getOnlineParam(){
+		if(onlineParam == null){
+			onlineParam = createDefaultOnlineParam();
+		}
+		return onlineParam;
+	}
+	
+	protected OnlineDecisionSegmentatorParam createDefaultOnlineParam() {
+		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
+//		param.setMinLength(200L);
+//		param.setMinSpace(100L);
+//		param.setExpandStart(60L);
+//		param.setExpandEnd(0L);
+		return param;
 	}
 	
 }
