@@ -20,6 +20,8 @@
  */
 package org.spantus.demo.dto;
 
+import javax.sound.sampled.AudioFormat;
+
 /**
  * 
  * @author Mindaugas Greibus
@@ -30,10 +32,12 @@ package org.spantus.demo.dto;
  *
  */
 public class DemoAppletInfo {
-	SampleDto currentSample;
-	ReaderDto currentReader;
-	float from;
-	float length;
+	private SampleDto currentSample;
+	private ReaderDto currentReader;
+	private Boolean recording;
+	private AudioFormat format;
+	private float from;
+	private float length;
 	
 	public SampleDto getCurrentSample() {
 		return currentSample;
@@ -72,6 +76,25 @@ public class DemoAppletInfo {
 
 	public void setCurrentReader(ReaderDto reader) {
 		this.currentReader = reader;
+	}
+
+	public Boolean getRecording() {
+		if(recording == null){
+			recording = Boolean.FALSE;
+		}
+		return recording;
+	}
+
+	public void setRecording(Boolean recording) {
+		this.recording = recording;
+	}
+
+	public AudioFormat getFormat() {
+		return format;
+	}
+
+	public void setFormat(AudioFormat format) {
+		this.format = format;
 	}
 
 	

@@ -1,7 +1,7 @@
 /*
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://code.google.com/p/spantus/
+ * http://spantus.sourceforge.net
  * 
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 
 import javax.swing.JApplet;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -81,6 +82,7 @@ public class SpantusDemoApplet extends JApplet {
 	 * @return void
 	 */
 	
+    @Override
 	public void init() {
 		this.setSize(600, 400);
 		this.setContentPane(getJContentPane());
@@ -156,6 +158,8 @@ public class SpantusDemoApplet extends JApplet {
 		}
 	}
 	
+       
+        
 	class AppletEventListener implements ActionListener{
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			DemoGlobalCommands cmd = DemoGlobalCommands .valueOf(e.getActionCommand());
@@ -211,5 +215,15 @@ public class SpantusDemoApplet extends JApplet {
 			getListener().actionPerformed(e);
 		}
 	}
+        public  static void main(String[] args){
+            JFrame frame = new JFrame("Frame");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            SpantusDemoApplet   t = new SpantusDemoApplet();
+            frame.add(t);
+            t.init();                // simulate browser call(1)    
+            frame.setSize(400,600);           // Set the size of the frame
+            frame.setVisible(true);           // Show the frame
+        }
+
 
 }

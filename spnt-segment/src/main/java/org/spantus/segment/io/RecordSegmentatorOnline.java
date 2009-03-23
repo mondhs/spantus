@@ -30,6 +30,8 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
+import org.spantus.core.io.ByteListInputStream;
+import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.logger.Logger;

@@ -1,7 +1,7 @@
 /*
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://code.google.com/p/spantus/
+ * http://spantus.sourceforge.net
  * 
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -82,10 +82,14 @@ public class SampleChart extends JPanel {
 	}
 
 	private void initializeChart(IExtractorInputReader reader) {
+		removeAll();
 		if (reader != null) {
-			removeAll();
 			chart = ChartFactory.createChart(reader);
-			chart.getCharInfo().setPlayable(getInfo().getCurrentSample().isSamplePlayable());
+			if(!getInfo().getRecording()){
+				chart.getCharInfo().setPlayable(getInfo().getCurrentSample().isSamplePlayable());
+			}else{
+				chart.getCharInfo().setPlayable(false);
+			}
 			chart.setPreferredSize(getSize());
 			chart.addSignalSelectionListener(getSelectionListener());
 			add(chart, BorderLayout.CENTER);
