@@ -110,8 +110,7 @@ getGraphicsScalar(BigDecimal min, BigDecimal max, int graphicalLength) {
 }
 
 
-final void
-paint(Graphics g) {
+void paint(Graphics g) {
 	Graphics2D g2 = (Graphics2D) g.create();
 
 	// paint axis:
@@ -216,6 +215,9 @@ public final BigDecimal getMax(){
 public final BigDecimal getGraphichsScalar(){
 	return GRAPHICS_SCALAR;
 }
+public Shape[] getNailRender() {
+	return nailRender;
+}
 
 /** The lowest value on the axis. */
 final BigDecimal MIN;
@@ -235,8 +237,10 @@ private final ArrayList<BigDecimal> indexValues;
 // Render storage:
 private Shape[] axisRender = null;	// axis line with possible zig-zag
 private Shape[] nailRender = null;	// index nails
+
 private String[] labelText = null;	// index label contents
 private float[] labelX = null;		// index label horizontal positions
 private float[] labelY = null;		// index label vertical positions
+
 
 }
