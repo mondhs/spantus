@@ -64,6 +64,9 @@ public class ExperimentStaticDao implements ExperimentDao {
 		
 		return save(createExperimentResult(comparisionResult, features, experimentID, experimentName) );
 	}
+	public void init(){
+		//Do nothing
+	}
 	
 	protected ExperimentResult createExperimentResult(
 			ComparisionResult comparisionResult, String features, 

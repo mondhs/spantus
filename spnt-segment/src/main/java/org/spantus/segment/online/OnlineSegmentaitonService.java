@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.threshold.IThreshold;
 import org.spantus.logger.Logger;
@@ -53,6 +54,11 @@ public class OnlineSegmentaitonService implements ISegmentatorService {
 			}
 			i+=delta;			
 		}
+		int num = 1;
+		for (Marker marker : multipleSegmentator.getMarkSet().getMarkers()) {
+			marker.setLabel("" +(num++));
+		}
+		
 		
 		log.debug("[extractSegments] {0}", multipleSegmentator.getMarkSet().getMarkers());
 		return multipleSegmentator.getMarkSet();

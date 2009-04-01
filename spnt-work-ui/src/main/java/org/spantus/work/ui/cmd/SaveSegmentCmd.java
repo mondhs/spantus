@@ -20,6 +20,7 @@
  */
 package org.spantus.work.ui.cmd;
 
+import java.io.File;
 import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
@@ -43,13 +44,13 @@ public class SaveSegmentCmd extends AbsrtactCmd{
 	@Override
 	public String execute(SpantusWorkInfo ctx) {
 		String pathToSaveFormat = ctx.getProject().getFeatureReader().getWorkConfig().getAudioPathOutput()+
-		"/{0}.wav";
+		"/{0}_{1}.wav";
 		MarkerSet words = 
 		ctx.getProject().getCurrentSample().getMarkerSetHolder().getMarkerSets().get(
 				MarkerSetHolderEnum.word.name());
 //		StringBuilder sb = new StringBuilder();
 		for (Marker marker : words.getMarkers()) {
-			String path = MessageFormat.format(pathToSaveFormat, marker.getLabel());
+			String path = MessageFormat.format(pathToSaveFormat,ctx.getProject().getExperimentId(), marker.getLabel());
 			AudioManagerFactory.createAudioManager().save(
 					ctx.getProject().getCurrentSample().getCurrentFile(), 
 					marker.getStart()/1000f,
@@ -58,8 +59,8 @@ public class SaveSegmentCmd extends AbsrtactCmd{
 					);
 //			sb.append(path).append("\n");
 		}
-		
-		showMessage(words, ctx.getProject().getFeatureReader().getWorkConfig().getAudioPathOutput());
+		String pathToSave = new File(ctx.getProject().getFeatureReader().getWorkConfig().getAudioPathOutput()).getAbsolutePath();
+		showMessage(words, pathToSave);
 		
 		return null;
 	}

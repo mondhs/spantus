@@ -41,7 +41,7 @@ public class SpantusWorkInfo implements Serializable{
 
 	private Locale locale;
 	
-	EnviromentRepresentation env;
+	private EnviromentRepresentation env;
 	
 	private SpantusWorkProjectInfo project;
 

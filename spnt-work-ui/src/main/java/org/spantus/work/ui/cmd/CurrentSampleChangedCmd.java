@@ -34,10 +34,12 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 
 	SampleChangeListener lisetener;
 	ProcessedFrameLinstener processedFrameLinstener;
+	SpantusWorkCommand handler;
 	
-	public CurrentSampleChangedCmd(SampleChangeListener lisetener, ProcessedFrameLinstener processedFrameLinstener) {
+	public CurrentSampleChangedCmd(SampleChangeListener lisetener, ProcessedFrameLinstener processedFrameLinstener, SpantusWorkCommand handler) {
 		this.lisetener = lisetener;
 		this.processedFrameLinstener = processedFrameLinstener;
+		this.handler = handler;
 	}
 
 	
@@ -67,6 +69,7 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 			lisetener.changedReader(WorkUIServiceFactory.constructReader(ctx, 
 					processedFrameLinstener));
 			Toolkit.getDefaultToolkit().beep();
+			handler.execute(GlobalCommands.tool.autoSegmentation.name(), ctx);
 		}
 	}
 	

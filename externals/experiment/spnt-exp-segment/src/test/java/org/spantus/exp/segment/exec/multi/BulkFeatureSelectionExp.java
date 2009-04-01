@@ -21,6 +21,7 @@
 package org.spantus.exp.segment.exec.multi;
 
 import org.spantus.exp.segment.services.impl.ExperimentHsqlDao;
+import org.spantus.exp.segment.services.impl.ExperimentStaticDao;
 
 public class BulkFeatureSelectionExp  {
 
@@ -31,18 +32,17 @@ public class BulkFeatureSelectionExp  {
 			monitor.setLocalPathToResources(args[0]);
 		}
 		
-		ExperimentHsqlDao experimentDao = new ExperimentHsqlDao(); 
+		ExperimentStaticDao experimentDao = 
+			new ExperimentHsqlDao();
+//			new ExperimentPGSQLDao();
 		experimentDao.init();
 		monitor.setExperimentDao(experimentDao);
-		monitor.setCombinationDepth(2);
-		
-		for (int i = 0; i < 1; i++) {
+		monitor.setCombinationDepth(1);
+		for (int i = 0; i < 2; i++) {
 			ExpWorkerThread workerThread = new ExpWorkerThread(monitor);
 			workerThread.start();
 			
 		}
-	
-		System.out.println("done");
 		
 //		experimentDao.destroy();
 	}

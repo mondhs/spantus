@@ -110,7 +110,9 @@ public class MarkerPopupMenu extends JPopupMenu {
 	}
 
 	public void edit(JComponent source) {
-		Component invoker = getInvoker(source);
+		Component invoker = getInvoker(source);	
+		
+		
 		if (invoker instanceof MarkerSetComponent) {
 			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
 			MarkerPopupMenuShower ml = getShower(source);
@@ -186,6 +188,10 @@ public class MarkerPopupMenu extends JPopupMenu {
 	}
 
 	protected Component getInvoker(JComponent source) {
+		if(source instanceof MarkerSetComponent){
+			return source; 
+		}
+
 		JPopupMenu parent = (JPopupMenu) source.getParent();
 		return parent.getInvoker();
 	}

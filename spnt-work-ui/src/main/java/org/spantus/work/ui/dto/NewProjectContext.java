@@ -36,6 +36,8 @@ import java.io.File;
 public class NewProjectContext {
 
 	String projectType;
+	
+	String experimentId;
 
 	File workingDir;
 	
@@ -59,6 +61,14 @@ public class NewProjectContext {
 
 	public void setWorkingDir(File workingDir) {
 		this.workingDir = workingDir;
+	}
+
+	public String getExperimentId() {
+		return experimentId;
+	}
+
+	public void setExperimentId(String experimentId) {
+		this.experimentId = experimentId;
 	}
 	
 

@@ -2,6 +2,7 @@ package org.spantus.work.ui.cmd;
 
 import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 
 public class ReloadSampleChartCmd extends AbsrtactCmd {
 	
@@ -18,6 +19,7 @@ public class ReloadSampleChartCmd extends AbsrtactCmd {
 			chart.setReader(null);
 		}
 		chart.updateContent();
+		
 		return null;
 	}
 

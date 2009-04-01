@@ -34,6 +34,15 @@ public class MarkerPopupMenuShower extends MouseAdapter {
 		showIfPopupTrigger(mouseEvent);
 	}
 
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getClickCount()==2){
+//			if(e.getComponent() instanceof MarkerSetComponent)
+//			popup.edit((JComponent)e.getComponent());
+		}
+		
+	}
+	
 	protected void showIfPopupTrigger(MouseEvent mouseEvent) {
 		if (popup.isPopupTrigger(mouseEvent)) {
 			JComponent source = (JComponent)mouseEvent.getSource();

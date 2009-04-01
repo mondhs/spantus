@@ -43,7 +43,6 @@ public class DecistionSegmentatorOnline extends MultipleSegmentatorOnline {
 	private DecisionCtx decisionContext;
 	
 	
-	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(DecistionSegmentatorOnline.class);
 	
 	@Override
@@ -95,22 +94,26 @@ public class DecistionSegmentatorOnline extends MultipleSegmentatorOnline {
 		ctx.setMarker(createSegment(sample, time));
 		finazlizeSegment(ctx.getMarker(), sample, time);
 		ctx.setSegmentState(RuleBaseEnum.state.start);
+		debugAction("onStartSegmentFound", ctx);
 	}
 	
 	public void onStartSegmentApproved(DecisionCtx ctx, Long time, Long sample){
 		super.onStartSegment(ctx.getMarker());
 		finazlizeSegment(ctx.getMarker(), sample, time);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
+		debugAction("onStartSegmentApproved", ctx);
 	}
 	
 	public void onProcessSegment(DecisionCtx ctx, Long time, Long sample){
 		finazlizeSegment(ctx.getMarker(), sample, time);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
+		debugAction("onProcessSegment" , ctx);
 	}
 	
 	public void onEndSegmentFound(DecisionCtx ctx, Long time, Long sample){
 		finazlizeSegment(ctx.getMarker(), sample, time);
 		ctx.setSegmentState(RuleBaseEnum.state.end);
+		debugAction("onEndSegmentFound", ctx);
 	}
 	public void onEndSegmentApproved(DecisionCtx ctx, Long time, Long sample){
 		Long expandedStart =ctx.getMarker().getStart()-getParam().getExpandStart();
@@ -118,6 +121,7 @@ public class DecistionSegmentatorOnline extends MultipleSegmentatorOnline {
 		ctx.getMarker().setStart(expandedStart);
 		ctx.getMarker().setLength(expandedLength);
 		onSegmentEnded(ctx.getMarker());
+		debugAction("onEndSegmentApproved", ctx);
 		ctx.setMarker(null);
 		ctx.setSegmentState(null);
 	}
@@ -125,11 +129,14 @@ public class DecistionSegmentatorOnline extends MultipleSegmentatorOnline {
 	public void onJoinToSegment(DecisionCtx ctx, Long time, Long sample){
 		finazlizeSegment(ctx.getMarker(), sample, time);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
+		debugAction("onJoinToSegment", ctx);
 	}
 	public void onDeleteSegment(DecisionCtx ctx, Long time, Long sample){
+		if(ctx.getMarker() != null)debugAction("onDeleteSegment", ctx);
 		setCurrentMarker(null);
 		ctx.setMarker(null);
 		ctx.setSegmentState(null);
+		
 	}
 		
 	public DecisionCtx getDecisionContext() {
@@ -148,4 +155,9 @@ public class DecistionSegmentatorOnline extends MultipleSegmentatorOnline {
 		getDecisionContext().setParam(param);
 	}
 	
+	protected void debugAction(String msg, DecisionCtx ctx){
+		if(log.isDebugMode()){
+			log.debug("{0}: {1}",msg, ctx);
+		}
+	}
 }

@@ -28,6 +28,8 @@ import javax.swing.JFileChooser;
 import org.spantus.exception.ProcessingException;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
+import org.spantus.work.ui.services.WorkInfoManager;
+import org.spantus.work.ui.services.WorkUIServiceFactory;
 
 import de.crysandt.util.FileFilterExtension;
 
@@ -35,11 +37,12 @@ public class OpenCmd extends AbsrtactCmd {
 	public static final String[] FILES = {"wav"};
 	
 	public static final String OPEN_DIALOG_TITLE ="spantus.work.ui.sample.open-dialog-title";
-
+	
+	private WorkInfoManager workInfoManager;
 	
 	public String execute(SpantusWorkInfo ctx) {
 		if(importSample(ctx)){
-			return GlobalCommands.file.currentSampleChanged.name();
+			return GlobalCommands.tool.reloadResources.name();
 		}
 		return null;
 		
@@ -52,6 +55,8 @@ public class OpenCmd extends AbsrtactCmd {
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.setCurrentDirectory(ctx.getProject().getWorkingDir());
 		
+		
+		
 		int returnValue = fileChooser.showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
@@ -59,6 +64,7 @@ public class OpenCmd extends AbsrtactCmd {
 				ctx.getProject().getCurrentSample().setCurrentFile(
 						selectedFile.toURI().toURL());
 				ctx.getProject().setWorkingDir(selectedFile.getParentFile());
+				getWorkInfoManager().increaseExperimentId(ctx);
 			} catch (MalformedURLException e1) {
 				throw new ProcessingException(e1);
 			}
@@ -71,6 +77,13 @@ public class OpenCmd extends AbsrtactCmd {
 		return I18nFactory.createI18n().getMessage(key);
 	}
 	
+	public WorkInfoManager getWorkInfoManager() {
+		if(workInfoManager == null){
+			workInfoManager = WorkUIServiceFactory.createInfoManager();
+		}
+		return workInfoManager;
+	}
+
 	
 
 }

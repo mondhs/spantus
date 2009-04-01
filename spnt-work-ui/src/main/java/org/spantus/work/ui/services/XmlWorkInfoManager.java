@@ -46,6 +46,7 @@ public class XmlWorkInfoManager extends AbstractWorkInfoManager{
 			log.debug("Config file not read. Create new one.");
 			info = newWorkInfo();
 		}
+		initializeExperimentId(info.getProject());
 		return info;
 	}
 

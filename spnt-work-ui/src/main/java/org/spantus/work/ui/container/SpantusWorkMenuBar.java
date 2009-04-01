@@ -1,5 +1,6 @@
 package org.spantus.work.ui.container;
 
+import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -101,7 +102,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		if (fileMenu == null) {
 			JMenu menu = new JMenu();
 			menu.setText(getResource(menuLabels.file.name()));
-			JMenuItem m = createMenuItemp(GlobalCommands.file.open.name(), KeyStroke.getKeyStroke(KeyEvent.VK_O, 0)); 
+			JMenuItem m = createMenuItemp(GlobalCommands.file.open.name(), KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK)); 
 			menu.add(m);
 			menu.addSeparator();
 			menu.add(createMenuItemp(GlobalCommands.file.newProject.name()));
@@ -118,14 +119,16 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 	private JMenu getToolMenu() {
 		if (toolMenu == null) {
 			JMenu menu = new JMenu();
-			menu.add(createMenuItemp(GlobalCommands.tool.autoSegmentation.name(), KeyStroke.getKeyStroke(KeyEvent.VK_U, 0)));
+			menu.add(createMenuItemp(GlobalCommands.tool.autoSegmentation.name(), KeyStroke.getKeyStroke(KeyEvent.VK_U, Event.CTRL_MASK)));
 			menu.setText(getResource(menuLabels.tool.name()));
-		
-			JMenuItem m = createMenuItemp(toolMenuLabels.option.name()); 
-			m.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0));
-			menu.add(m);
 
 			menu.add(createMenuItemp(GlobalCommands.tool.saveSegments.name()));
+			
+			menu.addSeparator();
+			
+			JMenuItem m = createMenuItemp(toolMenuLabels.option.name()); 
+			m.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			menu.add(m);
 			
 			toolMenu = menu;
 

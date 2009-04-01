@@ -180,7 +180,8 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 
 			CurrentSampleChangedCmd currentSampleChanged = new CurrentSampleChangedCmd(
 					getSampleRepresentationPanel(),
-					getSampleRepresentationPanel()
+					getSampleRepresentationPanel(),
+					getHandler()
 					);
 			handler
 			.getCmds()

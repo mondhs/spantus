@@ -10,13 +10,13 @@ import javax.swing.JOptionPane;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioCapture;
-import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.core.io.WraperExtractorReader;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
+import org.spantus.segment.io.RecordWraperExtractorReader;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.segment.online.ThresholdSegmentatorOnline;
 import org.spantus.work.reader.SupportableReaderEnum;
@@ -29,8 +29,8 @@ import org.spantus.work.ui.util.WorkUIExtractorConfigUtil;
 public class RecordCmd extends AbsrtactCmd {
 	
 	public static final String recordFinishedMessageHeader = "recordFinishedMessageHeader"; 
-	public static final String recordFinishedMessageBody = "recordFinishedMessageBody"; 
-
+	public static final String recordFinishedMessageBody = "recordFinishedMessageBody";
+	
 	protected Logger log = Logger.getLogger(getClass());
 
 	private AudioCapture capture;

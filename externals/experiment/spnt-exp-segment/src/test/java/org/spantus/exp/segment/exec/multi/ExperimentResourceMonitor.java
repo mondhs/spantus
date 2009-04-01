@@ -51,7 +51,7 @@ public class ExperimentResourceMonitor {
 	
 	public final static String sufix = ".sspnt.xml";
 	public final static Long expID = 1L;
-	public final static Double thresholdCoef = 2.0D;
+	public final static Double thresholdCoef = 2.4D;
 
 	
 	private OnlineDecisionSegmentatorParam onlineParam;
@@ -59,7 +59,7 @@ public class ExperimentResourceMonitor {
 	private Iterable<Set<String>> compbinations;
 	private ProcessReader processReader;
 	private ExperimentDao experimentDao;
-	private String localPathToResources = "E:/home/studijos/wav/on_off_up_down_wav/exp/";
+	private String localPathToResources = "/home/studijos/wav/on_off_up_down_wav/exp/";
 	private Integer combinationDepth = null;
 	protected Logger log = Logger.getLogger(getClass());
 	
@@ -88,7 +88,8 @@ public class ExperimentResourceMonitor {
 	public ProcessReaderInfo createProcessReaderInfo(String resourceName){
 		return new ProcessReaderInfo(thresholdCoef);
 	}
-	public Iterable<Set<String>> createCombinations(String resourceName, Set<? extends IGeneralExtractor> extractors){
+	
+	public synchronized Iterable<Set<String>> createCombinations(String resourceName, Set<? extends IGeneralExtractor> extractors){
 		if(compbinations == null){
 			compbinations = 
 				getProcessReader().generateAllCompbinations(extractors, combinationDepth);
@@ -162,10 +163,10 @@ public class ExperimentResourceMonitor {
 	
 	protected OnlineDecisionSegmentatorParam createDefaultOnlineParam() {
 		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
-//		param.setMinLength(200L);
-//		param.setMinSpace(100L);
-//		param.setExpandStart(60L);
-//		param.setExpandEnd(0L);
+//		param.setMinLength(170L);
+//		param.setMinSpace(90L);
+//		param.setExpandStart(70L);
+//		param.setExpandEnd(30L);
 		return param;
 	}
 	

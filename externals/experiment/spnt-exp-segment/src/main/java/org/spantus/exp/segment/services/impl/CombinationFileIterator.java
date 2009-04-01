@@ -13,7 +13,7 @@ import java.util.Set;
 import org.spantus.exception.ProcessingException;
 
 public class CombinationFileIterator implements Iterator<Set<String>>{
-	public static final String FILE_NAME = "./target/test.data";
+	public static final String FILE_NAME = "./target/feature_combinations.data";
 	String fileName = FILE_NAME;
 	BufferedReader in;
 	String currentLine;

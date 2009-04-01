@@ -106,7 +106,9 @@ public class DecisionCtx {
 	
 	@Override
 	public String toString() {
-		return MessageFormat.format( "{0}:[{1} ms] segmentState:{2} frame: {3}", 
-				getClass().getSimpleName(), getTime(), getSegmentState(), getState());
+		return MessageFormat.format( "{0}:[{1} ms] state:{2};{3};marker:{4}", 
+				getClass().getSimpleName(), getTime(), getSegmentState(), 
+				(Boolean.TRUE.equals(getState())?"signal":"noise")
+					,getMarker());
 	}
 }

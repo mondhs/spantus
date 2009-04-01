@@ -49,6 +49,7 @@ public class NewProjectCmd extends AbsrtactCmd {
 	    	NewProjectContext ctx = new NewProjectContext();
 	    	ctx.setProjectType(selectionMap.get(projectType).name());
 	    	ctx.setWorkingDir(info.getProject().getWorkingDir());
+	    	ctx.setExperimentId(info.getProject().getExperimentId());
 	    	info.setProject(WorkUIServiceFactory.createInfoManager().newProject(ctx));
 	    	return true;
 	    }

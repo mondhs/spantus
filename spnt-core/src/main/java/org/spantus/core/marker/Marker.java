@@ -38,7 +38,7 @@ public class Marker {
 	}
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + ": " + getLabel() +"[" + getStart() + "; " + getLength() + "]";
+		return getClass().getSimpleName() + ": " + getLabel() +"[" + getStart() + "; " + (getStart()+getLength()) + "]";
 	}
 	
 	@Override

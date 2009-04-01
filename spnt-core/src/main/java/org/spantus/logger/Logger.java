@@ -46,7 +46,7 @@ public class Logger {
     private static PrintStream err =  System.err;
     
 
-    private int logMode = DEBUG;
+    private int logMode = INFO;
     private Class<?> logClass = null;
     
     static{
@@ -78,13 +78,13 @@ public class Logger {
     }
 
     public void debug(String pattern, Object... arguments ){
-    	if(DEBUG >= logMode){
+    	if(isDebugMode()){
     		log(DEBUG,MessageFormat.format(pattern, arguments));
     	}
     }
     
     public void debug(String str){
-    	if(DEBUG >= logMode){
+    	if(isDebugMode()){
     		log(DEBUG,str);
     	}
     }
@@ -133,4 +133,8 @@ public class Logger {
     public int getLogMode() {
         return logMode;
     }
+    public boolean isDebugMode() {
+        return DEBUG >= getLogMode();
+    }
+
 }

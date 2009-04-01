@@ -1,12 +1,18 @@
 package org.spantus.work.ui.container;
 
+import java.awt.FlowLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
@@ -42,6 +48,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 
 	public static final String ZOOMIN_ICON = "org/spantus/work/ui/icon/gtk-zoom-in.png";
 	public static final String ZOOMOUT_ICON = "org/spantus/work/ui/icon/gtk-zoom-out.png";
+	
 
 	Logger log = Logger.getLogger(getClass());
 	
@@ -63,6 +70,8 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 	
 	private JButton zoomOutBtn = null;
 	
+	private JTextField experimentIdTxt = null;
+	
 	private SpantusWorkCommand handler;
 	
 	private ToolbarListener toolbarActionListener;
@@ -82,9 +91,14 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 	}
 	
 	protected void initialize(String projectType) {
+		FlowLayout layout = new FlowLayout(FlowLayout.LEFT, 3, 2);
+		this.setLayout(layout);
+
 		boolean isPlayable = false;
 
 		this.add(getOpenBtn());
+		this.add(new JToolBar.Separator());
+		this.add(getExperimentIdTxt());
 		this.add(new JToolBar.Separator());
 		this.add(getPlayBtn());
         this.add(getStopBtn());
@@ -108,14 +122,13 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		default:
 			break;
 		}
-		getRecordBtn().setEnabled(!isPlayable);
 		getPlayBtn().setEnabled(isPlayable);
 		getOpenBtn().setEnabled(isPlayable);
-
+		
 		this.add(new JToolBar.Separator());
 		this.add(new JToolBar.Separator());
 		this.add(getPreferencesBtn());
-//		this.add(getOpenBtn());
+		
 	}	
 	
 	public void reload() {
@@ -258,6 +271,36 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 
 	public String getResource(String key) {
 		return I18nFactory.createI18n().getMessage(key);
+	}
+
+	public JTextField getExperimentIdTxt() {
+		if(experimentIdTxt == null){
+			experimentIdTxt = new JTextField(getInfo().getProject().getExperimentId());
+			experimentIdTxt.setColumns(30);
+			experimentIdTxt.setFocusable(false);
+			experimentIdTxt.addMouseListener(new MouseAdapter(){
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					experimentIdTxt.setFocusable(true);
+					experimentIdTxt.requestFocus();
+					super.mouseEntered(e);
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					experimentIdTxt.setFocusable(false);
+					super.mouseExited(e);
+				}
+
+				
+			});
+			experimentIdTxt.addFocusListener( new FocusAdapter() {
+	            public void focusLost(FocusEvent evt) {
+	            	getInfo().getProject().setExperimentId(((JTextField)evt.getComponent()).getText());
+	            }
+	        });
+		}
+		experimentIdTxt.setText(getInfo().getProject().getExperimentId());
+		return experimentIdTxt;
 	}
 	
 

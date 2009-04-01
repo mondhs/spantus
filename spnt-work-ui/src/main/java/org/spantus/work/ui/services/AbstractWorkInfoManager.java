@@ -22,9 +22,13 @@
 package org.spantus.work.ui.services;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.utils.StringUtils;
 import org.spantus.work.WorkReadersEnum;
 import org.spantus.work.reader.SupportableReaderEnum;
 import org.spantus.work.ui.dto.NewProjectContext;
@@ -32,6 +36,8 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
+import org.spantus.work.ui.i18n.I18n;
+import org.spantus.work.ui.i18n.I18nFactory;
 /**
  * 
  * 
@@ -43,7 +49,8 @@ import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
  *
  */
 public abstract class AbstractWorkInfoManager implements WorkInfoManager {
-
+	public static final String EXPERIMENT = "Experiment";
+	
 	
 	public SpantusWorkInfo openWorkInfo() {
 		return newWorkInfo();
@@ -67,6 +74,7 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 	public SpantusWorkProjectInfo newProject(NewProjectContext ctx) {
 		SpantusWorkProjectInfo project = createProject();
 		project.setWorkingDir(ctx.getWorkingDir());
+		project.setExperimentId(ctx.getExperimentId());
 		project.setCurrentType(ctx.getProjectType());
 		switch (ProjectTypeEnum.valueOf(ctx.getProjectType())) {
 		case feature:
@@ -94,7 +102,42 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		project.setWorkingDir(new File("."));
 		project.getFeatureReader().setReaderPerspective(WorkReadersEnum.multiFeature);
 		project.getFeatureReader().setWorkConfig(new WorkUIExtractorConfig());
+		initializeExperimentId(project);
 		return project;
+	}
+	
+	protected void initializeExperimentId(SpantusWorkProjectInfo project){
+		if(!StringUtils.hasText(project.getExperimentId())){
+			String experiment = getI18n().getMessage(EXPERIMENT);
+			project.setExperimentId(MessageFormat.format("{0}_{1}", experiment,1));
+		}
+	}
+	
+	public String increaseExperimentId(SpantusWorkInfo info){
+		String experimentId = info.getProject().getExperimentId();
+		Pattern pattern = Pattern.compile("(.*)(\\d+)(.*)");
+		Matcher matcher = pattern.matcher(experimentId);
+//		String id = experimentId.matches(experimentId);
+		if(matcher.matches()){
+			String idStr = matcher.group(2);
+			Integer id = 0;
+			try{
+				id= Integer.valueOf(idStr);
+			}catch (NumberFormatException e) {}
+			id++;
+			experimentId = matcher.replaceAll("$1"+id.toString()+"$3");
+			info.getProject().setExperimentId(experimentId); 
+//			experimentId = experimentId.replaceFirst(pattern.pattern(), id.toString());
+		}else{
+			info.getProject().setExperimentId(experimentId+"_1");
+		}
+		
+		return info.getProject().getExperimentId();
+		
+	}
+	
+	protected I18n getI18n(){
+		return I18nFactory.createI18n();
 	}
 
 }

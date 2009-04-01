@@ -36,17 +36,19 @@ public class SpantusWorkProjectInfo {
 
 	public enum ProjectTypeEnum{feature, segmenation, recordSegmentation};
 	
-	float from;
+	private float from;
 
-	float length;
+	private float length;
 	
-	String currentType;
+	private String currentType;
 
-	WorkSample currentSample;
+	private WorkSample currentSample;
 	
-	FeatureReader featureReader;
+	private FeatureReader featureReader;
 	
-	File workingDir;
+	private File workingDir;
+	
+	private String experimentId;
 
 	
 	public float getFrom() {
@@ -105,6 +107,14 @@ public class SpantusWorkProjectInfo {
 
 	public void setCurrentType(String currentType) {
 		this.currentType = currentType;
+	}
+
+	public String getExperimentId() {
+		return experimentId;
+	}
+
+	public void setExperimentId(String experimentId) {
+		this.experimentId = experimentId;
 	}
 
 	

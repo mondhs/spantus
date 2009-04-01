@@ -11,4 +11,5 @@ public interface WorkInfoManager {
 	public SpantusWorkProjectInfo newProject(NewProjectContext ctx);
 	public void saveProject(SpantusWorkProjectInfo project, String path);
 	public SpantusWorkProjectInfo openProject(String path);
+	public String increaseExperimentId(SpantusWorkInfo info);
 }
