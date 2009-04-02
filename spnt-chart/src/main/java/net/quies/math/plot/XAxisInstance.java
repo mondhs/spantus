@@ -35,9 +35,9 @@ import java.util.*;
 /**
  @author Pascal S. de Kloe
  */
-final class XAxisInstance extends AxisInstance {
+public class XAxisInstance extends AxisInstance {
 
-XAxisInstance(XAxis parent, BigDecimal min, BigDecimal max, int length) {
+public XAxisInstance(XAxis parent, BigDecimal min, BigDecimal max, int length) {
 	super(parent, min, max, length);
 }
 
@@ -102,27 +102,6 @@ renderIndex(ArrayList<BigDecimal> indexValues, Shape[] nailRender, float[] label
 		labelX[i] = x;
 		labelY[i] = y;
 	}
-}
-@Override
-void paint(Graphics g) {
-	super.paint(g);
-	Graphics2D g2 = (Graphics2D) g.create();
-//	g2.setStroke(new BasicStroke(3f));
-	g2.setPaint(Color.lightGray);
-	Float prevPoint = 0f;
-	for (Shape shape : getNailRender()) {
-		Line2D.Float line = (Line2D.Float)((Line2D.Float)shape).clone();
-		line.y1 = 0;
-		line.y2 = new Float(g2.getClip().getBounds2D().getMinY())+10;
-		g2.draw(line);
-		Line2D.Float linePrev = (Line2D.Float)line.clone();
-		linePrev.x1=(line.x1+prevPoint)/2;
-		linePrev.x2=linePrev.x1;
-		prevPoint = line.x1;
-		g2.draw(linePrev);
-		
-	}
-	
 }
 
 }

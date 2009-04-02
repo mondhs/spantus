@@ -287,12 +287,11 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		return super.getCharInfo();
 	}
 	
-	public void setCharInfo(ChartInfo info) {
+	public void setCharInfo(ChartInfo chartInfo) {
 		if(toolbar != null){
-			toolbar.setCharInfo(info);
-			return;
+			toolbar.setCharInfo(chartInfo);
 		}
-		super.setCharInfo(info);
+		super.setCharInfo(chartInfo);
 	}
 	public IColorResolver getColorResolver() {
 		if(colorResolver == null){

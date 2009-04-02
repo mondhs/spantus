@@ -244,7 +244,7 @@ public class OptionDialog extends JDialog implements ReloadableComponent{
 	public void setInfo(SpantusWorkInfo info) {
 		this.info = info;
 		for (AbstractOptionPanel optionPnl : getSaveablePanels().values()) {
-			optionPnl.setConfig(info);
+			optionPnl.setInfo(info);
 		}
 	}
 

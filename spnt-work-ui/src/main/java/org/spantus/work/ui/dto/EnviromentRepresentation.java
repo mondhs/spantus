@@ -23,6 +23,8 @@ package org.spantus.work.ui.dto;
 
 import java.awt.Dimension;
 import java.awt.Point;
+
+import javax.swing.LookAndFeel;
 /**
  * 
  * @author Mindaugas Greibus
@@ -35,6 +37,8 @@ import java.awt.Point;
 public class EnviromentRepresentation {
 	private Dimension clientWindow;
 	private Point location;
+	private Boolean grid = true;
+	private String laf;
 
 	public Dimension getClientWindow() {
 		return clientWindow;
@@ -52,6 +56,22 @@ public class EnviromentRepresentation {
 
 	public void setLocation(Point location) {
 		this.location = location;
+	}
+
+	public Boolean getGrid() {
+		return grid;
+	}
+
+	public void setGrid(Boolean grid) {
+		this.grid = grid;
+	}
+
+	public String getLaf() {
+		return laf;
+	}
+
+	public void setLaf(String laf) {
+		this.laf = laf;
 	}
 
 

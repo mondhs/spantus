@@ -1,7 +1,7 @@
-/*
+/**
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://code.google.com/p/spantus/
+ * http://spantus.sourceforge.net
  * 
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -32,13 +32,15 @@ package org.spantus.chart.bean;
  */
 public class ChartInfo {
 	
-	boolean playable;
+	private boolean playable;
 	
-	boolean exportable;
+	private boolean exportable;
 	
-	boolean printable;
+	private boolean printable;
 	
-	boolean selfZoomable = true;
+	private boolean selfZoomable = true;
+	
+	private Boolean grid = null;
 	
 	
 	public boolean isPlayable() {
@@ -70,6 +72,14 @@ public class ChartInfo {
 
 	public void setSelfZoomable(boolean selfZoomable) {
 		this.selfZoomable = selfZoomable;
+	}
+
+	public Boolean getGrid() {
+		return grid;
+	}
+
+	public void setGrid(Boolean grid) {
+		this.grid = grid;
 	}
 	
 }

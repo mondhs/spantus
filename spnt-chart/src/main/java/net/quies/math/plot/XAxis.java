@@ -34,7 +34,7 @@ import java.text.*;
  @author Pascal S. de Kloe
  @since 1.0
  */
-public final class XAxis extends Axis {
+public class XAxis extends Axis {
 
 /**
  @since 1.0

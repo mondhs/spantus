@@ -27,15 +27,15 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.spantus.utils.Assert;
-
 import net.quies.math.plot.AxisInstance;
 import net.quies.math.plot.CoordinateBoundary;
 import net.quies.math.plot.GraphInstance;
 import net.quies.math.plot.InteractiveGraph;
-import net.quies.math.plot.ToolBar;
 import net.quies.math.plot.XAxis;
 import net.quies.math.plot.YAxis;
+
+import org.spantus.chart.bean.ChartInfo;
+import org.spantus.utils.Assert;
 
 /**
  * 
@@ -48,8 +48,9 @@ import net.quies.math.plot.YAxis;
  * 
  */
 public class InteractiveChart extends InteractiveGraph {
-	SpantusChartToolbar spntToolbar;
-	List<ChartDescriptionResolver> resolvers;
+	private SpantusChartToolbar spntToolbar;
+	private List<ChartDescriptionResolver> resolvers;
+	private ChartInfo chartInfo;
 
 	/**
 	 * 
@@ -57,17 +58,19 @@ public class InteractiveChart extends InteractiveGraph {
 	private static final long serialVersionUID = 1L;
 	
 	public InteractiveChart() {
-		super(new XAxis(), new YAxis(), new Insets(0, 0, 65, 0));
+		super(new XAxisGrid(), new YAxis(), new Insets(0, 0, 65, 0));
 	}
 
 	
-	public ToolBar getToolBar() {
+	public SpantusChartToolbar getToolBar() {
 		if (spntToolbar == null) {
 			spntToolbar = new SpantusChartToolbar(this);
 		}
 		return spntToolbar;
 	}
-
+	/**
+	 * calculate Tooltip text
+	 */
 	public String getToolTipText(MouseEvent event) {
 		GraphInstance render = getRender();
 		if (render == null)
@@ -82,7 +85,11 @@ public class InteractiveChart extends InteractiveGraph {
 		buffer.append(')');
 		return buffer.toString();
 	}
-
+	/**
+	 * Resolve Chart
+	 * @param y
+	 * @return
+	 */
 	private String resolveChart(int y) {
 		GraphInstance render = getRender();
 		List<String> descs = new ArrayList<String>();
@@ -98,14 +105,21 @@ public class InteractiveChart extends InteractiveGraph {
 		}
 		return descs.toString();
 	}
-
+	/**
+	 * Getter 
+	 * @return
+	 */
 	public List<ChartDescriptionResolver> getResolvers() {
 		if (resolvers == null) {
 			resolvers = new ArrayList<ChartDescriptionResolver>();
 		}
 		return resolvers;
 	}
-
+	/**
+	 * add Chart Description Resolver
+	 * 
+	 * @param resolver
+	 */
 	public void addResolver(ChartDescriptionResolver resolver) {
 		getResolvers().add(resolver);
 	}
@@ -160,12 +174,26 @@ public class InteractiveChart extends InteractiveGraph {
 		CoordinateBoundary boundary = getCoordinateBoundary();
 		Assert.isTrue(getXAxis()!= null);
 		Assert.isTrue(boundary != null);
+		AxisInstance xAxis = null;
+		if(Boolean.TRUE.equals(getChartInfo().getGrid())){
+			xAxis = new XAxisGridInstance(getXAxis(), boundary.getXMin(), boundary.getXMax(), 
+					width); 
+		}else{
+			xAxis = getXAxis().getInstance(boundary.getXMin(), boundary.getXMax(), 
+					width);
+		}
 		
-		AxisInstance xAxis = getXAxis().getInstance(boundary.getXMin(), boundary.getXMax(), 
-				width);
+		
 //		BigDecimal xScalar = xAxis.getGraphichsScalar();
 		return xAxis;
-	}	
+	}
+
+
+	public ChartInfo getChartInfo() {
+		return getToolBar().getChartInfo();
+	}
+
+
 
 
 }

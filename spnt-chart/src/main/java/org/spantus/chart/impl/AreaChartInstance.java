@@ -116,7 +116,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 		this.max = _max;
 	}
 
-	public void paintFunction(Graphics g) {
+	public synchronized void paintFunction(Graphics g) {
 //		log.debug("paint: " + description + "; size: " + values.size());
 //		Integer fx = null, fy = null, lx = null, ly = null;
 		Polygon polygon = new Polygon();

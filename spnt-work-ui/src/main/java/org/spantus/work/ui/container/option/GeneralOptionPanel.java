@@ -1,102 +1,181 @@
 package org.spantus.work.ui.container.option;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Frame;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.LookAndFeel;
 import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.UIManager.LookAndFeelInfo;
 
+import org.spantus.ui.MapComboBoxModel;
+import org.spantus.ui.ModelEntry;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18n;
 
 public class GeneralOptionPanel extends AbstractOptionPanel {
 
-	SpantusWorkInfo info;
-	
-	List<JComponent> jComponents;
-	
-	enum generalLabels{locale} 
+	private SpantusWorkInfo info;
 
-	
+	private Map<generalLabels, JComponent> jComponents;
+
+	private MapComboBoxModel laf;
+	private MapComboBoxModel locales;
+
+	enum generalLabels {
+		locale, lookAndFeel, chartGrid
+	}
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	public void save() {
-		for (JComponent field : getJComponents()) {
-			generalLabels lbl = generalLabels.valueOf(field.getName());
+		for (Entry<generalLabels, JComponent> field : getJComponents().entrySet()) {
 
-
-			switch (lbl) {
+			switch (field.getKey()) {
 			case locale:
-				Object locale = I18n.LOCALES[((JComboBox)field).getSelectedIndex()];
-				getConfig().setLocale((Locale)locale);
+				Object locale = getLocaleModel().getSelectedObject();
+				getInfo().setLocale((Locale) locale);
+				break;
+			case lookAndFeel:
+				getInfo().getEnv().setLaf((String)getLAFModel().getSelectedItem());
+				LookAndFeelInfo laf = (LookAndFeelInfo)getLAFModel().getSelectedObject();
+				try {
+						UIManager.setLookAndFeel(laf.getClassName());
+						Frame frame = (Frame)SwingUtilities.getAncestorOfClass(Frame.class, this);
+						 SwingUtilities.updateComponentTreeUI(frame);
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InstantiationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (UnsupportedLookAndFeelException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+               
+				break;
+			case chartGrid:
+				getInfo().getEnv().setGrid(((JCheckBox)field.getValue()).isSelected());
 				break;
 			default:
-				throw new RuntimeException("Not impl: "  + lbl.name());
+				throw new RuntimeException("Not impl: " + field.getKey());
 			}
 		}
 	}
 
-	public void setConfig(SpantusWorkInfo info) {
-		this.info = info; 
+	public void setInfo(SpantusWorkInfo info) {
+		this.info = info;
 	}
-	public SpantusWorkInfo getConfig() {
-		return info; 
+
+	public SpantusWorkInfo getInfo() {
+		return info;
 	}
 
 	public void initialize() {
 		SpringLayout layout = new SpringLayout();
 		this.setLayout(layout);
-		for (JComponent edit : getJComponents()) {
-			 JLabel l = new JLabel(getMessage(edit.getName()), JLabel.TRAILING);
-			 this.add(l);
-			 l.setLabelFor(edit);
-			 this.add(edit);
+		for (generalLabels label : generalLabels.values()) {
+			JLabel l = new JLabel(getMessage(label.name()), JLabel.TRAILING);
+			this.add(l);
+			JComponent edit = getJComponents().get(label);
+			l.setLabelFor(edit);
+			this.add(edit);
 		}
-
+		
 
 		SpantusWorkSwingUtils.makeCompactGrid(this,
-				generalLabels.values().length, 2, //rows, cols
-                6, 6,        //initX, initY
-                6, 6);       //xPad, yPad
+				generalLabels.values().length, 2, // rows, cols
+				6, 6, // initX, initY
+				6, 6); // xPad, yPad
 		reload();
 	}
 
 	public void reload() {
-		for (JComponent comp : getJComponents()) {
-			generalLabels lbl = generalLabels.valueOf(comp.getName());
-
-			switch (lbl) {
+		for (Entry<generalLabels, JComponent> comp : getJComponents()
+				.entrySet()) {
+			switch (comp.getKey()) {
 			case locale:
-				((JComboBox)comp).setSelectedItem(getConfig().getLocale());
+				((JComboBox)comp.getValue()).setSelectedItem(
+						getMessage("locale_" + getInfo().getLocale().toString())
+						);
+				break;
+			case lookAndFeel:
+				getLAFModel().setSelectedItem(getInfo().getEnv().getLaf());
+				break;
+			case chartGrid:
+				((JCheckBox)comp.getValue()).setSelected(getInfo().getEnv().getGrid());
 				break;
 			default:
-				throw new RuntimeException("Not impl: "  + lbl.name());
+				throw new RuntimeException("Not impl: " + comp.getKey());
 			}
 		}
-		
-	}	
-	private List<JComponent> getJComponents() {
+
+	}
+
+	private Map<generalLabels, JComponent> getJComponents() {
 		if (jComponents == null) {
-			jComponents = new ArrayList<JComponent>();
-			String[] locales = new String[I18n.LOCALES.length];
-			int i = 0;
-			for (Locale locale : I18n.LOCALES) {
-				locales[i++] = getMessage("locale_" + locale.toString());
-			}
-			JComboBox input = new JComboBox(locales);
+			jComponents = new HashMap<generalLabels, JComponent>();
+
+			JComboBox input = new JComboBox();
+			input.setModel(getLocaleModel());
 			input.setName(generalLabels.locale.name());
-			jComponents.add(input);
-			
+			jComponents.put(generalLabels.locale, input);
+
+			JCheckBox gridOn = new JCheckBox();
+			gridOn.setSelected(Boolean.TRUE
+					.equals(getInfo().getEnv().getGrid()));
+			jComponents.put(generalLabels.chartGrid, gridOn);
+
+			JComboBox lookAndFeel = new JComboBox(getLAFModel());
+			input.setName(generalLabels.lookAndFeel.name());
+			jComponents.put(generalLabels.lookAndFeel, lookAndFeel);
+
 		}
 		return jComponents;
 	}
 
+	/**
+	 * 
+	 */
+	protected MapComboBoxModel getLAFModel() {
+		if (laf == null) {
+			laf = new MapComboBoxModel();
+			UIManager.LookAndFeelInfo looks[] = UIManager
+					.getInstalledLookAndFeels();
+			for (LookAndFeelInfo lookAndFeelInfo : looks) {
+				laf.addElement(new ModelEntry(lookAndFeelInfo.getName(),
+						lookAndFeelInfo));
+			}
+		}
+		return laf;
+	}
+
+	protected MapComboBoxModel getLocaleModel() {
+		if (locales == null) {
+			locales = new MapComboBoxModel();
+			for (Locale locale : I18n.LOCALES) {
+				String label = getMessage("locale_" + locale.toString());
+				locales.addElement(new ModelEntry(label, locale));
+			}
+		}
+		return locales;
+	}
 
 }

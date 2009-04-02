@@ -212,7 +212,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		return config;
 	}
 
-	public void setConfig(SpantusWorkInfo config) {
+	public void setInfo(SpantusWorkInfo config) {
 		this.config = config;
 	}
 

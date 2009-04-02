@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
 import org.spantus.chart.SignalSelectionListener;
+import org.spantus.chart.bean.ChartInfo;
 import org.spantus.chart.impl.MarkeredTimeSeriesMultiChart;
 import org.spantus.chart.marker.MarkerComponent;
 import org.spantus.core.extractor.IExtractorInputReader;
@@ -105,7 +106,7 @@ public class SampleChart extends JPanel {
 		if (reader != null) {
 			chart = ChartFactory.createChart(reader,
 					new I18NChartDescriptionResolver());
-			chart.getCharInfo().setSelfZoomable(false);
+			chart.setCharInfo(createChartInfo());
 			chart.setPreferredSize(getSize());
 			chart.addSignalSelectionListener(getSelectionListener());
 			add(chart, BorderLayout.CENTER);
@@ -126,7 +127,13 @@ public class SampleChart extends JPanel {
 		}
 		repaint();
 	}
-
+	
+	protected ChartInfo createChartInfo(){
+		ChartInfo chartInfo = new ChartInfo();
+		chartInfo.setGrid(getInfo().getEnv().getGrid());
+		chartInfo.setSelfZoomable(false);
+		return chartInfo;
+	}
 
 	public IExtractorInputReader getReader() {
 		return reader;

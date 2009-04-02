@@ -150,7 +150,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 		return config;
 	}
 
-	public void setConfig(SpantusWorkInfo config) {
+	public void setInfo(SpantusWorkInfo config) {
 		this.config = config;
 		selectCheckboxes(config.getProject().getFeatureReader().getExtractors());
 	}

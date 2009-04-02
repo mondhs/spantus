@@ -110,7 +110,7 @@ getGraphicsScalar(BigDecimal min, BigDecimal max, int graphicalLength) {
 }
 
 
-void paint(Graphics g) {
+public void paint(Graphics g) {
 	Graphics2D g2 = (Graphics2D) g.create();
 
 	// paint axis:

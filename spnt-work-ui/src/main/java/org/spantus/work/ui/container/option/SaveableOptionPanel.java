@@ -4,5 +4,5 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public interface SaveableOptionPanel {
 	public void save();
-	public void setConfig(SpantusWorkInfo info);
+	public void setInfo(SpantusWorkInfo info);
 }

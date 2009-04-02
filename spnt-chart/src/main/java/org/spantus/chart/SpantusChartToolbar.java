@@ -129,12 +129,14 @@ public class SpantusChartToolbar extends ToolBar {
 	public void addSignalSelectionListener(SignalSelectionListener listener) {
 		getSignalSelectionListeners().add(listener);
 	}
+	
 	public ChartInfo getChartInfo() {
 		if(chartInfo == null){
 			chartInfo = new ChartInfo();
 		}
 		return chartInfo;
 	}
+	
 	public void setCharInfo(ChartInfo info) {
 		this.chartInfo = info;
 	}
