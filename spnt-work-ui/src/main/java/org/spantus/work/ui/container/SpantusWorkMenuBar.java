@@ -4,6 +4,9 @@ import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -28,6 +31,9 @@ import org.spantus.work.ui.i18n.I18nFactory;
  */
 public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 	Logger log = Logger.getLogger(getClass());
+	
+	Map<String, JMenuItem> menuItems = new HashMap<String, JMenuItem>();
+	
 	/**
 	 * 
 	 */
@@ -76,20 +82,22 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		initialize(getInfo().getProject().getCurrentType());
 	}
 	public void reload() {
-		this.remove(getFileMenu());
-		this.remove(getToolMenu());
-		this.remove(getHelpMenu());
+//		this.remove(getFileMenu());
+//		this.remove(getToolMenu());
+//		this.remove(getHelpMenu());
 
-		fileMenu = null;
-		toolMenu = null;
-		helpMenu = null;
+//		fileMenu = null;
+//		toolMenu = null;
+//		helpMenu = null;
 		initialize(getInfo().getProject().getCurrentType());
 	}
 	protected void initialize(String projectType) {
-		this.add(getFileMenu());
-		this.add(getToolMenu());
-		this.add(getHelpMenu());
-
+		getFileMenu();
+		getToolMenu();
+		getHelpMenu();
+		for (Entry<String, JMenuItem> menuItem : menuItems.entrySet()) {
+			menuItem.getValue().setText(getResource(menuItem.getKey()));
+		}
 	}	
 
 	
@@ -112,6 +120,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			menu.add(createMenuItemp(GlobalCommands.file.exportFile.name()));
 			menu.add(createMenuItemp(GlobalCommands.file.importFile.name()));
 			fileMenu = menu;
+			this.add(fileMenu);
 		}
 		return fileMenu;
 	}
@@ -131,6 +140,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			menu.add(m);
 			
 			toolMenu = menu;
+			this.add(toolMenu);
 
 		}
 		return toolMenu;
@@ -141,6 +151,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			helpMenu = new JMenu();
 			helpMenu.setText(getResource(menuLabels.help.name()));
 			helpMenu.add(createMenuItemp(helpMenuLabels.about.name()));
+			this.add(helpMenu);
 		}
 		return helpMenu;
 	}
@@ -149,6 +160,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		JMenuItem item = new JMenuItem(getResource(key));
 		item.addActionListener(getListener());
 		item.setActionCommand(key);
+		menuItems.put(key, item);
 		return item;
 	}
 	public JMenuItem createMenuItemp(String key, KeyStroke stroke) {

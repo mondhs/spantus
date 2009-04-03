@@ -22,6 +22,7 @@ import org.spantus.ui.ModelEntry;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18n;
+import org.spantus.work.ui.i18n.I18nFactory;
 
 public class GeneralOptionPanel extends AbstractOptionPanel {
 
@@ -120,7 +121,7 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 				getLAFModel().setSelectedItem(getInfo().getEnv().getLaf());
 				break;
 			case chartGrid:
-				((JCheckBox)comp.getValue()).setSelected(getInfo().getEnv().getGrid());
+				((JCheckBox)comp.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getGrid()));
 				break;
 			default:
 				throw new RuntimeException("Not impl: " + comp.getKey());
