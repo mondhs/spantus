@@ -82,13 +82,6 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		initialize(getInfo().getProject().getCurrentType());
 	}
 	public void reload() {
-//		this.remove(getFileMenu());
-//		this.remove(getToolMenu());
-//		this.remove(getHelpMenu());
-
-//		fileMenu = null;
-//		toolMenu = null;
-//		helpMenu = null;
 		initialize(getInfo().getProject().getCurrentType());
 	}
 	protected void initialize(String projectType) {
@@ -97,6 +90,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		getHelpMenu();
 		for (Entry<String, JMenuItem> menuItem : menuItems.entrySet()) {
 			menuItem.getValue().setText(getResource(menuItem.getKey()));
+//			log.error(getResource(menuItem.getKey()));
 		}
 	}	
 
@@ -110,6 +104,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		if (fileMenu == null) {
 			JMenu menu = new JMenu();
 			menu.setText(getResource(menuLabels.file.name()));
+			menuItems.put(menuLabels.file.name(), menu);
 			JMenuItem m = createMenuItemp(GlobalCommands.file.open.name(), KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK)); 
 			menu.add(m);
 			menu.addSeparator();
@@ -130,7 +125,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			JMenu menu = new JMenu();
 			menu.add(createMenuItemp(GlobalCommands.tool.autoSegmentation.name(), KeyStroke.getKeyStroke(KeyEvent.VK_U, Event.CTRL_MASK)));
 			menu.setText(getResource(menuLabels.tool.name()));
-
+			menuItems.put(menuLabels.tool.name(), menu);
 			menu.add(createMenuItemp(GlobalCommands.tool.saveSegments.name()));
 			
 			menu.addSeparator();
@@ -150,6 +145,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		if (helpMenu == null) {
 			helpMenu = new JMenu();
 			helpMenu.setText(getResource(menuLabels.help.name()));
+			menuItems.put(menuLabels.help.name(), helpMenu);
 			helpMenu.add(createMenuItemp(helpMenuLabels.about.name()));
 			this.add(helpMenu);
 		}

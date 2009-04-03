@@ -64,7 +64,15 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 
 	public SpantusWorkInfo newWorkInfo() {
 		SpantusWorkInfo info = new SpantusWorkInfo();
-		info.setLocale(Locale.getDefault());
+		Locale currentLocale = null;
+		for (Locale ilocale : I18n.LOCALES) {
+			if(ilocale.equals(Locale.getDefault())){
+				currentLocale = ilocale;
+				break;
+			}
+		}
+		currentLocale = currentLocale == null? I18n.LOCALES[1]:currentLocale;
+		info.setLocale(currentLocale);
 		SpantusWorkProjectInfo project = createProject();
 		info.setProject(project);
 		return info;
@@ -115,6 +123,9 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 	
 	public String increaseExperimentId(SpantusWorkInfo info){
 		String experimentId = info.getProject().getExperimentId();
+		if(!StringUtils.hasText(experimentId)){
+			experimentId = I18nFactory.createI18n().getMessage("Experiment");
+		}
 		Pattern pattern = Pattern.compile("(.*)(\\d+)(.*)");
 		Matcher matcher = pattern.matcher(experimentId);
 //		String id = experimentId.matches(experimentId);

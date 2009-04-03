@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
+import org.spantus.logger.Logger;
 import org.spantus.work.ui.audio.AudioManagerFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
@@ -40,7 +41,8 @@ public class SaveSegmentCmd extends AbsrtactCmd{
 	
 	public static final String segmentSavedPanelMessageHeader = "segmentSavedPanelMessageHeader";
 	public static final String segmentSavedPanelMessageBody = "segmentSavedPanelMessageBody";
-
+	protected Logger log = Logger.getLogger(getClass());
+	
 	@Override
 	public String execute(SpantusWorkInfo ctx) {
 		String pathToSaveFormat = ctx.getProject().getFeatureReader().getWorkConfig().getAudioPathOutput()+
@@ -60,20 +62,23 @@ public class SaveSegmentCmd extends AbsrtactCmd{
 //			sb.append(path).append("\n");
 		}
 		String pathToSave = new File(ctx.getProject().getFeatureReader().getWorkConfig().getAudioPathOutput()).getAbsolutePath();
-		showMessage(words, pathToSave);
+		showMessage(words, pathToSave, ctx);
 		
 		return null;
 	}
 	
-	protected void showMessage(MarkerSet words, String pathToSave){
+	protected void showMessage(MarkerSet words, String pathToSave, SpantusWorkInfo ctx){
 		String messageFormat = getMessage(segmentSavedPanelMessageBody);
 		String messageBody = MessageFormat.format(messageFormat, 
 				words.getMarkers().size(),
 				pathToSave
 				);
-		JOptionPane.showMessageDialog(null,messageBody,
+		log.info(messageBody);
+		if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
+			JOptionPane.showMessageDialog(null,messageBody,
 							getMessage(segmentSavedPanelMessageHeader),
 							JOptionPane.INFORMATION_MESSAGE);
+		}
 		
 	}
 }

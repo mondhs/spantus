@@ -23,12 +23,11 @@ package org.spantus.work.ui.container.chart;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import org.spantus.chart.AbstractSwingChart;
@@ -36,15 +35,14 @@ import org.spantus.chart.ChartFactory;
 import org.spantus.chart.SignalSelectionListener;
 import org.spantus.chart.bean.ChartInfo;
 import org.spantus.chart.impl.MarkeredTimeSeriesMultiChart;
-import org.spantus.chart.marker.MarkerComponent;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.marker.Marker;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
-import org.spantus.work.ui.container.marker.MarkerPopupMenuShower;
+import org.spantus.work.ui.container.marker.MarkerComponentEventHandler;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
+import org.spantus.work.ui.i18n.I18nFactory;
 
 /**
  * 
@@ -61,12 +59,14 @@ public class SampleChart extends JPanel {
 
 	Logger log = Logger.getLogger(getClass());
 
+	public static final String CHOOSE_SAMPLE = "clickToChooseSample";
 	private static final long serialVersionUID = 1L;
 	private IExtractorInputReader reader;
-	SignalSelectionListener selectionListener;
-	SpantusWorkInfo info;
-	AbstractSwingChart chart;
-	SpantusWorkCommand handler;
+	private SignalSelectionListener selectionListener;
+	private SpantusWorkInfo info;
+	private AbstractSwingChart chart;
+	private SpantusWorkCommand handler;
+	private MarkerComponentEventHandler markerComponentEventHandler;
 
 	public SpantusWorkInfo getInfo() {
 		if (info == null) {
@@ -117,12 +117,22 @@ public class SampleChart extends JPanel {
 					MarkeredTimeSeriesMultiChart cart_ = ((MarkeredTimeSeriesMultiChart)chart);
 					cart_.initialize(
 						getInfo().getProject().getCurrentSample().getMarkerSetHolder(), 
-						createMouseListener(),
-						createKeyListener());
+						getMarkerComponentEventHandler(),
+						getMarkerComponentEventHandler());
 					
 				}
 			}
 			
+			
+		}else{
+			JButton btn = new JButton(I18nFactory.createI18n().getMessage(CHOOSE_SAMPLE));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					getHandler().execute(GlobalCommands.file.open.name(), getInfo());					
+				}
+			});
+			btn.setBorder(BorderFactory.createEmptyBorder());
+			add(btn, BorderLayout.CENTER);
 			
 		}
 		repaint();
@@ -130,7 +140,7 @@ public class SampleChart extends JPanel {
 	
 	protected ChartInfo createChartInfo(){
 		ChartInfo chartInfo = new ChartInfo();
-		chartInfo.setGrid(getInfo().getEnv().getGrid());
+		chartInfo.setGrid(Boolean.TRUE.equals(getInfo().getEnv().getGrid()));
 		chartInfo.setSelfZoomable(false);
 		return chartInfo;
 	}
@@ -178,31 +188,13 @@ public class SampleChart extends JPanel {
 	}
 
 
-	protected MouseListener createMouseListener() {
-		return new MarkerPopupMenuShower(getInfo(), getHandler());
+	protected MarkerComponentEventHandler getMarkerComponentEventHandler() {
+		if(markerComponentEventHandler == null){
+			markerComponentEventHandler = new MarkerComponentEventHandler(getInfo(), getHandler());
+		}
+		return markerComponentEventHandler;
 	}
 	
-	protected KeyListener createKeyListener(){
-		KeyListener listener = new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                int keyChar = e.getKeyChar();
-                if(32 == keyChar){
-                	if(e.getComponent() instanceof MarkerComponent){
-                		Marker m = ((MarkerComponent)e.getComponent()).getMarker();
-                		getInfo().getProject().setFrom(m.getStart()/1000f);
-                		getInfo().getProject().setLength(m.getLength()/1000f);
-                		getHandler().execute(GlobalCommands.sample.play.name(), getInfo());
-                	}
-                		
-                }else{
-                	log.debug("[keyTyped] name{0}; keyChar{1};", getName(), keyChar);	
-                }
-        		
-            }
-        };
-        return listener;
-	}
 
 	public SpantusWorkCommand getHandler() {
 		return handler;

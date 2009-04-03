@@ -68,7 +68,9 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 		public void run() {
 			lisetener.changedReader(WorkUIServiceFactory.constructReader(ctx, 
 					processedFrameLinstener));
-			Toolkit.getDefaultToolkit().beep();
+			if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
+				Toolkit.getDefaultToolkit().beep();
+			}
 			handler.execute(GlobalCommands.tool.autoSegmentation.name(), ctx);
 		}
 	}

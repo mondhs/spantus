@@ -1,6 +1,5 @@
 package org.spantus.work.ui.container.option;
 
-import java.awt.Frame;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -10,11 +9,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.LookAndFeel;
 import javax.swing.SpringLayout;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.spantus.ui.MapComboBoxModel;
@@ -22,7 +18,6 @@ import org.spantus.ui.ModelEntry;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18n;
-import org.spantus.work.ui.i18n.I18nFactory;
 
 public class GeneralOptionPanel extends AbstractOptionPanel {
 
@@ -34,7 +29,7 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 	private MapComboBoxModel locales;
 
 	enum generalLabels {
-		locale, lookAndFeel, chartGrid
+		locale, lookAndFeel, chartGrid, popupNotification
 	}
 
 	/**
@@ -51,29 +46,13 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 				getInfo().setLocale((Locale) locale);
 				break;
 			case lookAndFeel:
-				getInfo().getEnv().setLaf((String)getLAFModel().getSelectedItem());
-				LookAndFeelInfo laf = (LookAndFeelInfo)getLAFModel().getSelectedObject();
-				try {
-						UIManager.setLookAndFeel(laf.getClassName());
-						Frame frame = (Frame)SwingUtilities.getAncestorOfClass(Frame.class, this);
-						 SwingUtilities.updateComponentTreeUI(frame);
-					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InstantiationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalAccessException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (UnsupportedLookAndFeelException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-               
+				getInfo().getEnv().setLaf((String)getLAFModel().getSelectedObject());
 				break;
 			case chartGrid:
 				getInfo().getEnv().setGrid(((JCheckBox)field.getValue()).isSelected());
+				break;
+			case popupNotification:
+				getInfo().getEnv().setPopupNotifications(((JCheckBox)field.getValue()).isSelected());
 				break;
 			default:
 				throw new RuntimeException("Not impl: " + field.getKey());
@@ -109,22 +88,25 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 	}
 
 	public void reload() {
-		for (Entry<generalLabels, JComponent> comp : getJComponents()
+		for (Entry<generalLabels, JComponent> field : getJComponents()
 				.entrySet()) {
-			switch (comp.getKey()) {
+			switch (field.getKey()) {
 			case locale:
-				((JComboBox)comp.getValue()).setSelectedItem(
-						getMessage("locale_" + getInfo().getLocale().toString())
+				getLocaleModel().setSelectedObject(
+						getInfo().getLocale()
 						);
 				break;
 			case lookAndFeel:
-				getLAFModel().setSelectedItem(getInfo().getEnv().getLaf());
+				getLAFModel().setSelectedObject(getInfo().getEnv().getLaf());
 				break;
 			case chartGrid:
-				((JCheckBox)comp.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getGrid()));
+				((JCheckBox)field.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getGrid()));
+				break;
+			case popupNotification:
+				((JCheckBox)field.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getPopupNotifications()));
 				break;
 			default:
-				throw new RuntimeException("Not impl: " + comp.getKey());
+				throw new RuntimeException("Not impl: " + field.getKey());
 			}
 		}
 
@@ -136,17 +118,28 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 
 			JComboBox input = new JComboBox();
 			input.setModel(getLocaleModel());
+			input.setSelectedItem(getLocaleModel().getLabel(getInfo().getLocale()));
+			input.getSelectedItem();
 			input.setName(generalLabels.locale.name());
 			jComponents.put(generalLabels.locale, input);
 
+			JComboBox lookAndFeel = new JComboBox(getLAFModel());	
+			lookAndFeel.setSelectedItem(getLAFModel().getLabel(getInfo().getEnv().getLaf()));
+			lookAndFeel.getSelectedItem();
+			lookAndFeel.setName(generalLabels.lookAndFeel.name());
+			jComponents.put(generalLabels.lookAndFeel, lookAndFeel);
+			
 			JCheckBox gridOn = new JCheckBox();
 			gridOn.setSelected(Boolean.TRUE
 					.equals(getInfo().getEnv().getGrid()));
 			jComponents.put(generalLabels.chartGrid, gridOn);
+			
+			JCheckBox popupNotificationOn = new JCheckBox();
+			popupNotificationOn.setSelected(Boolean.TRUE
+					.equals(getInfo().getEnv().getPopupNotifications()));
+			jComponents.put(generalLabels.popupNotification, popupNotificationOn);
 
-			JComboBox lookAndFeel = new JComboBox(getLAFModel());
-			input.setName(generalLabels.lookAndFeel.name());
-			jComponents.put(generalLabels.lookAndFeel, lookAndFeel);
+
 
 		}
 		return jComponents;
@@ -162,7 +155,7 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 					.getInstalledLookAndFeels();
 			for (LookAndFeelInfo lookAndFeelInfo : looks) {
 				laf.addElement(new ModelEntry(lookAndFeelInfo.getName(),
-						lookAndFeelInfo));
+						lookAndFeelInfo.getClassName()));
 			}
 		}
 		return laf;

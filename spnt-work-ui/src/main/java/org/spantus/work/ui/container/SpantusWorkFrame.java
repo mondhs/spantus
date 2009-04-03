@@ -8,6 +8,10 @@ import java.text.MessageFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.spantus.work.ui.cmd.AboutCmd;
 import org.spantus.work.ui.cmd.AutoSegmentationCmd;
@@ -58,7 +62,6 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 				).getImage());
 		addWindowListener(new WindowAdapter() {
 		      public void windowClosing(WindowEvent e) {
-		    	  getInfo().setEnv(new EnviromentRepresentation());
 		    	  getInfo().getEnv().setClientWindow(e.getComponent().getSize());
 		    	  getInfo().getEnv().setLocation(e.getComponent().getLocation());
 
@@ -78,7 +81,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		getSampleRepresentationPanel().initialize();
 		this.setJMenuBar(getJJMenuBar());
 		this.setContentPane(getJContentPane());
-		setWindowSize(getInfo().getEnv());
+		setupEnv(getInfo());
 		contructTitle();
 	}
 	public void reload() {
@@ -146,16 +149,60 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		return jJToolBarBar;
 	}
 
-	public  void setWindowSize(EnviromentRepresentation env) {
-		if(env == null){
+	protected void setupEnv(SpantusWorkInfo info) {
+		EnviromentRepresentation env = info.getEnv();
+		if (env == null) {
 			SpantusWorkSwingUtils.fullWindow(this);
-		}else{
-	        this.setSize(env.getClientWindow().width, env.getClientWindow().height);
-	        this.setLocation(env.getLocation());			
+			info.setEnv(new EnviromentRepresentation());
+
+			info.getEnv().setLaf(
+					UIManager.getLookAndFeel().getClass().getName());
+		} else {
+			this.setSize(env.getClientWindow().width,
+					env.getClientWindow().height);
+			this.setLocation(env.getLocation());
+			if (info.getEnv().getLaf() == null) {
+				info.getEnv().setLaf(getDefaultLAF());
+			}
+			try {
+				UIManager.setLookAndFeel(env.getLaf());
+				SwingUtilities.updateComponentTreeUI(this);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (UnsupportedLookAndFeelException e) {
+				e.printStackTrace();
+			}
 		}
-      
-       
-    }
+		if(info.getEnv().getGrid()==null){
+			info.getEnv().setGrid(Boolean.TRUE);
+		}
+		if(info.getEnv().getPopupNotifications()==null){
+			info.getEnv().setPopupNotifications(Boolean.TRUE);
+		}
+	}
+	protected String getDefaultLAF(){
+		String laf = null;
+		// if MS Windows then select LAF Windows as default, if other OS then pick up default 
+		if(System.getProperties().getProperty("os.name").startsWith("Windows")){
+			for (LookAndFeelInfo lafInfo : UIManager.getInstalledLookAndFeels()) {
+				if(lafInfo.getName().equals("Windows")){
+					laf = lafInfo.getClassName();
+					break;
+				}
+			}
+			if(laf == null){
+				laf = UIManager.getLookAndFeel().getClass().getName();	
+			}
+		}else{
+			laf =  UIManager.getLookAndFeel().getClass().getName();
+		}
+		return laf;
+		
+	}
 
 	public SpantusWorkInfo getInfo() {
 		if(info == null){

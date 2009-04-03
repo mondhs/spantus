@@ -100,9 +100,14 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 				value.getMarkers().size()
 				);
 		
-		JOptionPane.showMessageDialog(null,messageBody,
-				getMessage(segmentAutoPanelMessageHeader),
-				JOptionPane.INFORMATION_MESSAGE);
+		log.info(messageBody);
+		
+		if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
+			JOptionPane.showMessageDialog(null,messageBody,
+					getMessage(segmentAutoPanelMessageHeader),
+					JOptionPane.INFORMATION_MESSAGE);	
+		}
+		
 		
 		return GlobalCommands.sample.reloadSampleChart.name();
 	}
@@ -124,15 +129,27 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(words == null) return;
 		List<Marker> markers = ctx.getProject().getCurrentSample().getMarkerSetHolder().getMarkerSets().get(
 				MarkerSetHolderEnum.word.name()).getMarkers();
 		int i = 0;
-		for (Marker marker : markers) {
-			if(i>=words.size()) break;
-			marker.setLabel(words.get(i));
-			i++;
+		
+		if(words == null){
+			for (Marker marker : markers) {
+				marker.setLabel(Integer.valueOf(i+1).toString());
+				i++;
+			}
+		}else{
+			for (Marker marker : markers) {
+				if(i>=words.size()) break;
+				marker.setLabel(words.get(i));
+				i++;
+			}
+			
 		}
+		return;
+		
+		
+		
 
 	}
 }

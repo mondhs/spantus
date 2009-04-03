@@ -157,9 +157,14 @@ public class RecordCmd extends AbsrtactCmd {
 				words.getMarkers().size(),
 				path
 				);
-		JOptionPane.showMessageDialog(null,messageBody,
+		
+		log.info(messageBody);
+		
+		if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
+			JOptionPane.showMessageDialog(null,messageBody,
 							getMessage(recordFinishedMessageHeader),
 							JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 	
 	public AudioFormat getFormat(WorkUIExtractorConfig config) {

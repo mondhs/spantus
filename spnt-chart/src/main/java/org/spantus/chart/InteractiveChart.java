@@ -31,7 +31,6 @@ import net.quies.math.plot.AxisInstance;
 import net.quies.math.plot.CoordinateBoundary;
 import net.quies.math.plot.GraphInstance;
 import net.quies.math.plot.InteractiveGraph;
-import net.quies.math.plot.XAxis;
 import net.quies.math.plot.YAxis;
 
 import org.spantus.chart.bean.ChartInfo;
@@ -171,21 +170,17 @@ public class InteractiveChart extends InteractiveGraph {
 	public AxisInstance getXAxisInstance(){
 		int width = getWidth();
 		width = width == 0 ? 1:width;
-		CoordinateBoundary boundary = getCoordinateBoundary();
+		CoordinateBoundary  boundary = getCoordinateBoundary();
 		Assert.isTrue(getXAxis()!= null);
 		Assert.isTrue(boundary != null);
-		AxisInstance xAxis = null;
-		if(Boolean.TRUE.equals(getChartInfo().getGrid())){
-			xAxis = new XAxisGridInstance(getXAxis(), boundary.getXMin(), boundary.getXMax(), 
-					width); 
-		}else{
-			xAxis = getXAxis().getInstance(boundary.getXMin(), boundary.getXMax(), 
-					width);
+		if(getXAxis() instanceof XAxisGrid){
+			((XAxisGrid)getXAxis()).setGridOn(Boolean.TRUE.equals(getChartInfo().getGrid()));
 		}
 		
-		
+		AxisInstance xAxisInst = getXAxis().getInstance(boundary.getXMin(), boundary.getXMax(), 
+				width);
 //		BigDecimal xScalar = xAxis.getGraphichsScalar();
-		return xAxis;
+		return xAxisInst;
 	}
 
 

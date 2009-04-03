@@ -23,8 +23,6 @@ package org.spantus.work.ui.dto;
 
 import java.awt.Dimension;
 import java.awt.Point;
-
-import javax.swing.LookAndFeel;
 /**
  * 
  * @author Mindaugas Greibus
@@ -37,7 +35,9 @@ import javax.swing.LookAndFeel;
 public class EnviromentRepresentation {
 	private Dimension clientWindow;
 	private Point location;
-	private Boolean grid = true;
+	private Boolean grid;
+	private Boolean popupNotifications;
+	
 	private String laf;
 
 	public Dimension getClientWindow() {
@@ -72,6 +72,14 @@ public class EnviromentRepresentation {
 
 	public void setLaf(String laf) {
 		this.laf = laf;
+	}
+
+	public Boolean getPopupNotifications() {
+		return popupNotifications;
+	}
+
+	public void setPopupNotifications(Boolean popupNotifications) {
+		this.popupNotifications = popupNotifications;
 	}
 
 

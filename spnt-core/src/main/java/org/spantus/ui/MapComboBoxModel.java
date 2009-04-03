@@ -14,8 +14,8 @@ public class MapComboBoxModel extends DefaultComboBoxModel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	Map<String, Object> objectMap;
-	String selectedKey;
+	private Map<String, Object> objectMap;
+	private String selectedObject;
 	
 	public void addElement(Object obj) {
 		if(obj instanceof Entry){
@@ -45,18 +45,32 @@ public class MapComboBoxModel extends DefaultComboBoxModel {
 //			return null;
 //		}
 //		ModelEntry entry = new ModelEntry(selectedKey, value);
-		return selectedKey;
+		return selectedObject;
 	}
-
+	@Override
 	public void setSelectedItem(Object anItem) {
-		selectedKey = (String)anItem;
+		selectedObject = (String)anItem;
+	}
+	
+	public void setSelectedObject(Object obj) {
+		setSelectedItem(getLabel(obj));
 	}
 
 	public Object get(String key){
 		return getObjectMap().get(key);
 	}
+	
+	public String getLabel(Object obj){
+		for (Entry<String, Object> entry : getObjectMap().entrySet()) {
+			if(entry.getValue().equals(obj)){
+				return entry.getKey();
+			}
+		}
+		return null;
+	}
+	
 	public Object getSelectedObject(){
-		return get(selectedKey);
+		return get((String)getSelectedItem());
 	}
 	
 	public Object getElementAt(int index) {

@@ -24,6 +24,8 @@ package org.spantus.work.ui.dto;
 import java.io.Serializable;
 import java.util.Locale;
 
+import org.spantus.work.ui.i18n.I18n;
+
 /**
  * 
  * @author Mindaugas Greibus
@@ -39,11 +41,11 @@ public class SpantusWorkInfo implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Locale locale;
+	private Locale locale = null;
 	
-	private EnviromentRepresentation env;
+	private EnviromentRepresentation env = null;
 	
-	private SpantusWorkProjectInfo project;
+	private SpantusWorkProjectInfo project = null;
 
 	private boolean playing;
 
@@ -72,7 +74,7 @@ public class SpantusWorkInfo implements Serializable{
 	}
 	public Locale getLocale() {
 		if (locale == null) {
-			locale = Locale.getDefault();
+			locale = I18n.LOCALES[1];
 		}
 		return locale;
 	}

@@ -31,7 +31,6 @@ import java.awt.event.MouseMotionListener;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -42,6 +41,7 @@ import javax.swing.JComponent;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.marker.MarkerTimeComparator;
 import org.spantus.core.marker.service.MarkerServiceFactory;
 import org.spantus.logger.Logger;
 /**
@@ -141,17 +141,22 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 			log.debug("removed:" + marker.getMarker().getLabel());
 
 		}
+		MarkerComponent newest = null;
 		//create new markers
 		for (Marker marker : created) {
 			MarkerComponent markerComponent = new MarkerComponent();
 			markerComponent.addKeyListener(getKeyListeners()[0]);
 			markerComponent.setMarker(marker);
 			add(markerComponent);
+			newest = markerComponent;
 			log.debug("created:" + marker.getLabel());
 			sortMarkers();
 			changeSize(getSize());
-
 		}
+		if(newest != null){
+			newest.requestFocus();
+		}
+		repaintMarkers();
 	}
 	
 	public void changeSize(Dimension size){
@@ -337,14 +342,9 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 	}
 
 	public void sortMarkers(){
-		Comparator<Marker> comparator = new Comparator<Marker>(){
-			public int compare(Marker o1, Marker o2) {
-				return o1.getStart().compareTo(o2.getStart());
-			}
-		};
-		log.debug("[sortMarkers]before: " + getMarkerSet().getMarkers());
-		Collections.sort(getMarkerSet().getMarkers(), comparator);
-		log.debug("[sortMarkers]after: " + getMarkerSet().getMarkers());
+//		log.debug("[sortMarkers]before: " + getMarkerSet().getMarkers());
+		Collections.sort(getMarkerSet().getMarkers(), new MarkerTimeComparator());
+//		log.debug("[sortMarkers]after: " + getMarkerSet().getMarkers());
 		
 	}
 	public MarkerComponent nextMarkers(Marker marker){
@@ -403,5 +403,4 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 	public void setCtx(MarkerGraphCtx ctx) {
 		this.ctx = ctx;
 	}
-
 }
