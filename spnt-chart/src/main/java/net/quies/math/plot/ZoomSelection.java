@@ -57,7 +57,7 @@ protected ZoomSelection(InteractiveGraph graph, Point start) {
 }
 
 
-void
+public void
 setMousePosition(Point position) {
 	current = position;
 }
@@ -130,7 +130,7 @@ apply() {
 	return true;
 }
 
-
+@Override
 public void
 paintComponent(Graphics g) {
 	int x =	Math.min(origin.x, current.x);
@@ -146,6 +146,24 @@ paintComponent(Graphics g) {
 	--height;
 	g.setColor(SELECTION_TRANSPARENT);
 	g.fillRect(x, y, width, height);
+}
+
+public Point getCurrent() {
+	return current;
+}
+
+
+public void setCurrent(Point current) {
+	this.current = current;
+}
+
+
+public Point getOrigin() {
+	return origin;
+}
+public void setOrigin(Point origin) {
+	this.origin.x = origin.x;
+	this.origin.y = origin.y;
 }
 
 

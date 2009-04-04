@@ -133,8 +133,11 @@ public class InteractiveChart extends InteractiveGraph {
 				setZoomSelection(new SpantusChartZoomSelection(this, event.getPoint()));
 		}
 	}
-
+	/**
+	 * 
+	 */
 	public void mouseReleased(MouseEvent event) {
+		//if isnot set controlling toolbar then used default impl
 		if(spntToolbar == null || spntToolbar.getChartInfo().isSelfZoomable()){
 			super.mouseReleased(event);
 			return;
@@ -152,6 +155,34 @@ public class InteractiveChart extends InteractiveGraph {
 				 notifyZoomListeners(spntZoomSelection.getZoomDomain());
 			}
 		}
+	}
+	
+	public void changeSelection(int start, int length){
+		Point p1 = new Point(start,10);
+		Point p2 = new Point(start+length,10);
+		SpantusChartZoomSelection selection = null;
+		
+		if(getZoomSelection() == null || 
+				!(selection instanceof SpantusChartZoomSelection)){
+			selection = new SpantusChartZoomSelection(this, p1);
+			setZoomSelection(selection);
+		}else{
+			selection = (SpantusChartZoomSelection)getZoomSelection();
+		}
+//		if(getZoomSelection().getOrigin() == null){
+		selection.setOrigin(p1);
+//		}
+//		if(getZoomSelection().getCurrent() == null){
+		selection.setCurrent(p2);
+//		}
+		
+//		selection.setMousePosition(p2);
+		
+		getToolBar().setZoomPending(null);
+		getZoomSelection().apply();
+		notifyZoomListeners(selection.getZoomDomain());
+		repaint(30L);
+		
 	}
 	/**
 	 * 

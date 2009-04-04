@@ -104,6 +104,7 @@ public class MarkerGraph extends JComponent {
 	public MarkerSetComponent createMarkerSetComponent(MarkerSet markerSet) {
 		MarkerSetComponent component = new MarkerSetComponent();
 		component.addMouseListener(getMouseListeners()[0]);
+		component.addMouseMotionListener(getMouseMotionListeners()[0]);
 		component.addKeyListener(getKeyListeners()[0]);
 		component.setMarkerSet(markerSet);
 		component.setCtx(getCtx());

@@ -44,11 +44,11 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerTimeComparator;
 import org.spantus.core.marker.service.MarkerServiceFactory;
 import org.spantus.logger.Logger;
+
 /**
  * 
  * @author Mindaugas Greibus
- * @since 0.0.1
- * Created on Feb 22, 2009
+ * @since 0.0.1 Created on Feb 22, 2009
  */
 public class MarkerSetComponent extends JComponent implements MouseListener,
 		MouseMotionListener {
@@ -60,17 +60,16 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 	private static final Cursor CURSOR_DRAG_EAST = new Cursor(
 			Cursor.E_RESIZE_CURSOR);
 	private static final Cursor CURSOR_DRAG_WEST = new Cursor(
-			Cursor.W_RESIZE_CURSOR);	
+			Cursor.W_RESIZE_CURSOR);
 	public static final Cursor CURSOR_DEFAULT = new Cursor(
 			Cursor.DEFAULT_CURSOR);
 	public static final Cursor CURSOR_MOVE = new Cursor(Cursor.MOVE_CURSOR);
 
 	public static final int DRAG_BORDER_SIZE = 5;
-	
+
 	MarkerGraphCtx ctx;
 
 	public final Color MARK_COLOR = Color.RED;
-
 
 	enum DragStatusEnum {
 		move, left, right, none
@@ -78,7 +77,7 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 
 	DragStatusEnum dragStatus = DragStatusEnum.none;
 	MarkerSet markerSet;
-//	List<MarkerComponent> markerComponents;
+	// List<MarkerComponent> markerComponents;
 	Logger log = Logger.getLogger(getClass());
 	Integer lastMouseX;
 	MarkerComponent currentMarkerComponent;
@@ -105,44 +104,45 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 			add(component);
 		}
 	}
-	
-	public void addMarkerToView(Point p, int length){
-		MarkerServiceFactory.createMarkerService().addMarker(markerSet, 
+
+	public void addMarkerToView(Point p, int length) {
+		MarkerServiceFactory.createMarkerService().addMarker(markerSet,
 				Long.valueOf(p.x), 100L);
 	}
-	
-	public void repaintIfDirty(){
+
+	public void repaintIfDirty() {
 		Set<MarkerComponent> removed = new HashSet<MarkerComponent>();
 		Set<Marker> created = new HashSet<Marker>();
-		
+
 		List<MarkerComponent> markerComponents = getMarkerComponents();
-		//collect removed markers
+		// collect removed markers
 		for (MarkerComponent markerComponent : markerComponents) {
-			if(!getMarkerSet().getMarkers().contains(markerComponent.getMarker())){
+			if (!getMarkerSet().getMarkers().contains(
+					markerComponent.getMarker())) {
 				removed.add(markerComponent);
 			}
 		}
-		//collect new markers
+		// collect new markers
 		for (Marker marker : getMarkerSet().getMarkers()) {
 			boolean exist = false;
 			for (MarkerComponent markerComponent : markerComponents) {
-				if(marker.equals(markerComponent.getMarker())){
+				if (marker.equals(markerComponent.getMarker())) {
 					exist = true;
 					break;
 				}
 			}
-			if(!exist){
+			if (!exist) {
 				created.add(marker);
 			}
 		}
-		//remove markers		
+		// remove markers
 		for (MarkerComponent marker : removed) {
 			remove(marker);
 			log.debug("removed:" + marker.getMarker().getLabel());
 
 		}
 		MarkerComponent newest = null;
-		//create new markers
+		// create new markers
 		for (Marker marker : created) {
 			MarkerComponent markerComponent = new MarkerComponent();
 			markerComponent.addKeyListener(getKeyListeners()[0]);
@@ -153,28 +153,27 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 			sortMarkers();
 			changeSize(getSize());
 		}
-		if(newest != null){
+		if (newest != null) {
 			newest.requestFocus();
 		}
 		repaintMarkers();
 	}
-	
-	public void changeSize(Dimension size){
+
+	public void changeSize(Dimension size) {
 		setSize(size);
 		for (MarkerComponent component : getMarkerComponents()) {
 			component.setCtx(getCtx());
 			component.changeSize(new Dimension(getSize()));
 		}
 	}
-	
+
 	public List<MarkerComponent> getMarkerComponents() {
 		List<MarkerComponent> markerComponents = new ArrayList<MarkerComponent>();
 		for (int i = 0; i < getComponentCount(); i++) {
-			markerComponents.add((MarkerComponent)getComponent(i));
+			markerComponents.add((MarkerComponent) getComponent(i));
 		}
 		return markerComponents;
 	}
-
 
 	public void mouseClicked(MouseEvent e) {
 		Component component = findComponentAt(e.getPoint());
@@ -204,7 +203,7 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 		if (component instanceof MarkerComponent) {
 			currentMarkerComponent = ((MarkerComponent) component);
 			currentMarkerComponent.requestFocus();
-			updateCursor(e.getPoint(),currentMarkerComponent);
+			updateCursor(e.getPoint(), currentMarkerComponent);
 			updateDragState(e.getPoint());
 		}
 		repaintMarkers();
@@ -225,45 +224,52 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 			lastMouseX = e.getPoint().x;
 			switch (dragStatus) {
 			case move:
-				update(markerComponent, markerComponent.getStartX() + delta, markerComponent.getEndX() + delta);
+				update(markerComponent, markerComponent.getStartX() + delta,
+						markerComponent.getEndX() + delta);
 				break;
 			case left:
-				update(markerComponent, markerComponent.getStartX() + delta, markerComponent.getEndX());
+				update(markerComponent, markerComponent.getStartX() + delta,
+						markerComponent.getEndX());
 				break;
 			case right:
-				update(markerComponent, markerComponent.getStartX(), markerComponent.getEndX() + delta);
+				update(markerComponent, markerComponent.getStartX(),
+						markerComponent.getEndX() + delta);
 				break;
 			default:
 				break;
 			}
 			this.repaint();
-//			log.debug("[mouseDragged]Dragged: status:{0}; delta:{1};", dragStatus, delta);
+			// log.debug("[mouseDragged]Dragged: status:{0}; delta:{1};",
+			// dragStatus, delta);
 		}
 	}
-	
+
 	public void mouseMoved(MouseEvent e) {
 		Component component = findComponentAt(e.getPoint());
 		if (component instanceof MarkerComponent) {
 			updateCursor(e.getPoint(), (MarkerComponent) component);
-		}else{
-			updateCursor(e.getPoint(), null	);
+		} else {
+			updateCursor(e.getPoint(), null);
 		}
 	}
+
 	/**
 	 * 
 	 */
-	protected void repaintMarkers(){
+	protected void repaintMarkers() {
 		for (MarkerComponent _marker : getMarkerComponents()) {
-//			log.error("[repaintMarkers]" + _marker.getMarker());
+			// log.error("[repaintMarkers]" + _marker.getMarker());
 			_marker.repaint();
 		}
 
 	}
 
-	protected void updateDragState(Point p){
+	protected void updateDragState(Point p) {
 		MarkerComponent markerComponent = currentMarkerComponent;
 		int dToStart = p.x - markerComponent.getLocation().x;
-		int dToEnd = (markerComponent.getLocation().x + markerComponent.getSize().width)- p.x;
+		int dToEnd = (markerComponent.getLocation().x + markerComponent
+				.getSize().width)
+				- p.x;
 		if (dToStart < DRAG_BORDER_SIZE) {
 			dragStatus = DragStatusEnum.left;
 		} else if (dToEnd < DRAG_BORDER_SIZE) {
@@ -271,19 +277,20 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 		} else {
 			dragStatus = DragStatusEnum.move;
 		}
-//		log.debug("[updateDragState] Mouse moved name:{3}; status:{0}; dToStart:{1}; dToEnd:{2};",
-//				dragStatus.name(), 
-//				dToStart, 
-//				dToEnd, 
-//				markerComponent.getName());
-		
+		// log.debug("[updateDragState] Mouse moved name:{3}; status:{0}; dToStart:{1}; dToEnd:{2};",
+		// dragStatus.name(),
+		// dToStart,
+		// dToEnd,
+		// markerComponent.getName());
+
 	}
 
-	
-	protected void updateCursor(Point p, MarkerComponent markerComponent){
+	protected void updateCursor(Point p, MarkerComponent markerComponent) {
 		if (markerComponent != null) {
 			int dToStart = p.x - markerComponent.getLocation().x;
-			int dToEnd = (markerComponent.getLocation().x + markerComponent.getSize().width)- p.x;
+			int dToEnd = (markerComponent.getLocation().x + markerComponent
+					.getSize().width)
+					- p.x;
 			if (dToStart < DRAG_BORDER_SIZE) {
 				setCursor(CURSOR_DRAG_WEST);
 			} else if (dToEnd < DRAG_BORDER_SIZE) {
@@ -295,24 +302,24 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 			setCursor(CURSOR_DEFAULT);
 		}
 	}
-	
+
 	protected void update(MarkerComponent marker, int newStartX, int newEndX) {
 		if (validate(marker, newStartX, newEndX)) {
-//			log.debug("[update] startX:{0}->{1}; newEndX:{2}->{3};", 
-//					marker.getStartX(), newStartX, 
-//					marker.getEndX(),
-//					newEndX);
+			// log.debug("[update] startX:{0}->{1}; newEndX:{2}->{3};",
+			// marker.getStartX(), newStartX,
+			// marker.getEndX(),
+			// newEndX);
 			marker.setStartX(newStartX);
 			marker.setEndX(newEndX);
-//			log.debug("[update] start:{0}; length:{1};", 
-//					marker.getMarker().getStart(), marker.getMarker().getLength());
+			// log.debug("[update] start:{0}; length:{1};",
+			// marker.getMarker().getStart(), marker.getMarker().getLength());
 		}
 	}
 
 	protected boolean validate(MarkerComponent marker, int newStartX,
 			int newEndX) {
 		List<MarkerComponent> markerComponentList = getMarkerComponents();
-		
+
 		if (newEndX - newStartX < DRAG_BORDER_SIZE * 2) {
 			log.debug("element too small" + (newEndX - newStartX));
 			return false;
@@ -324,16 +331,21 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 		}
 		MarkerComponent next = nextMarkers(marker.getMarker());
 		MarkerComponent previous = previousMarkers(marker.getMarker());
-		if(previous != null){
-			if(previous.getEndX()> newStartX){
-				log.debug("last element overlaps with previous element " + newStartX);
+		if (previous != null) {
+			if (previous.getEndX() > newStartX) {
+				log.debug("last element overlaps with previous element "
+						+ newStartX);
 				return false;
 			}
 		}
-		if(next != null){
-			if( newEndX > next.getStartX()){
-				log.debug(MessageFormat.format("first element {0}[{1}] overlaps with next element {2}[{3}]" , 
-						marker.getName(),newEndX, next.getName(), next.getStartX()));
+		if (next != null) {
+			if (newEndX > next.getStartX()) {
+				log
+						.debug(MessageFormat
+								.format(
+										"first element {0}[{1}] overlaps with next element {2}[{3}]",
+										marker.getName(), newEndX, next
+												.getName(), next.getStartX()));
 				return false;
 			}
 		}
@@ -341,61 +353,65 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 		return true;
 	}
 
-	public void sortMarkers(){
-//		log.debug("[sortMarkers]before: " + getMarkerSet().getMarkers());
-		Collections.sort(getMarkerSet().getMarkers(), new MarkerTimeComparator());
-//		log.debug("[sortMarkers]after: " + getMarkerSet().getMarkers());
-		
+	public void sortMarkers() {
+		// log.debug("[sortMarkers]before: " + getMarkerSet().getMarkers());
+		Collections.sort(getMarkerSet().getMarkers(),
+				new MarkerTimeComparator());
+		// log.debug("[sortMarkers]after: " + getMarkerSet().getMarkers());
+
 	}
-	public MarkerComponent nextMarkers(Marker marker){
+
+	public MarkerComponent nextMarkers(Marker marker) {
 		MarkerComponent next = null;
 		Marker nextMarker = null;
-		for (Iterator<Marker> iterator = getMarkerSet().getMarkers().iterator(); iterator.hasNext();) {
+		for (Iterator<Marker> iterator = getMarkerSet().getMarkers().iterator(); iterator
+				.hasNext();) {
 			Marker iMarker = iterator.next();
-			if(iMarker.equals(marker) && iterator.hasNext()){
+			if (iMarker.equals(marker) && iterator.hasNext()) {
 				nextMarker = iterator.next();
 			}
 		}
-		if(nextMarker == null){
+		if (nextMarker == null) {
 			return null;
 		}
 		for (int i = 0; i < getComponentCount(); i++) {
-			MarkerComponent markerComponent = (MarkerComponent)getComponent(i);
-			if(markerComponent.getMarker().equals(nextMarker)){
+			MarkerComponent markerComponent = (MarkerComponent) getComponent(i);
+			if (markerComponent.getMarker().equals(nextMarker)) {
 				next = markerComponent;
 			}
 		}
 		return next;
 	}
+
 	/**
 	 * 
 	 * @param marker
 	 * @return
 	 */
-	public MarkerComponent previousMarkers(Marker marker){
+	public MarkerComponent previousMarkers(Marker marker) {
 		MarkerComponent previous = null;
 		Marker previousMarker = null;
 		boolean found = false;
 		for (Marker iMarker : getMarkerSet().getMarkers()) {
-			if(iMarker.equals(marker)){
+			if (iMarker.equals(marker)) {
 				found = true;
 				break;
 			}
 			previousMarker = iMarker;
 		}
-		if(!found){
+		if (!found) {
 			return null;
 		}
 		for (int i = 0; i < getComponentCount(); i++) {
-			MarkerComponent markerComponent = (MarkerComponent)getComponent(i);
-			if(markerComponent.getMarker().equals(previousMarker)){
+			MarkerComponent markerComponent = (MarkerComponent) getComponent(i);
+			if (markerComponent.getMarker().equals(previousMarker)) {
 				previous = markerComponent;
 			}
 		}
 		return previous;
 
 	}
-	
+
 	public MarkerGraphCtx getCtx() {
 		return ctx;
 	}

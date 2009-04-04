@@ -78,7 +78,7 @@ public class FrameValues extends LinkedList<Float>{
 	}
 	
 	
-	public Float[] toArray() {
+	public synchronized Float[] toArray() {
 		Object[] objs = super.toArray();
 		Float[] floats = new Float[objs.length];
 		System.arraycopy(objs, 0, floats, 0, objs.length);

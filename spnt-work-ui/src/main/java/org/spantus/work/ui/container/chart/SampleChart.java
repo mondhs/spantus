@@ -114,13 +114,15 @@ public class SampleChart extends JPanel {
 					&&
 					getInfo().getProject().getCurrentSample().getMarkerSetHolder() != null){
 				if( chart instanceof MarkeredTimeSeriesMultiChart ){
-					MarkeredTimeSeriesMultiChart cart_ = ((MarkeredTimeSeriesMultiChart)chart);
-					cart_.initialize(
-						getInfo().getProject().getCurrentSample().getMarkerSetHolder(), 
-						getMarkerComponentEventHandler(),
-						getMarkerComponentEventHandler());
-					
+					getMarkerComponentEventHandler().setChart(((MarkeredTimeSeriesMultiChart) chart));
+					MarkeredTimeSeriesMultiChart _chart = ((MarkeredTimeSeriesMultiChart)chart);
+					_chart.initialize(getInfo().getProject().getCurrentSample().getMarkerSetHolder()
+							,getMarkerComponentEventHandler()
+							,getMarkerComponentEventHandler());
+//					_chart.addMouseListener(getMarkerComponentEventHandler());
+//					_chart.addKeyListener(getMarkerComponentEventHandler());
 				}
+				
 			}
 			
 			

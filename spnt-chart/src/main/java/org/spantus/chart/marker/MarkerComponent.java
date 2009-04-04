@@ -20,9 +20,12 @@
  */
 package org.spantus.chart.marker;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
@@ -84,6 +87,12 @@ public class MarkerComponent extends JComponent{
 		Rectangle2D textRectangle = g.getFontMetrics().getStringBounds(getName(), g); 
 		textLocation.x = ((getSize().width-(int)textRectangle.getWidth())/2);;
 		textLocation.y = (getSize().height + (int)textRectangle.getHeight())/2;
+		
+		if(isFocusOwner()){
+			g.setFont (new Font ("Sanserif", Font.BOLD, 13));
+		}else{
+			g.setFont (new Font ("Sanserif", Font.PLAIN, 10));
+		}
 		g.drawString(getName(), textLocation.x, textLocation.y);
 		
 
@@ -93,6 +102,7 @@ public class MarkerComponent extends JComponent{
 			g.setColor(MARK_TRANSPARENT);
 		}
 		g.fillRect(0, 0, getSize().width, getSize().height);
+		
 //		g.fillRoundRect(0, 0, getSize().width, getSize().height,100,10);
 
 	}

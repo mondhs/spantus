@@ -160,7 +160,7 @@ mouseReleased(MouseEvent event) {
 	}
 }
 
-protected ZoomSelection getZoomSelection() {
+public ZoomSelection getZoomSelection() {
 	return zoomSelection;
 }
 
