@@ -1,12 +1,10 @@
 package org.spantus.extractor;
 
-import java.util.Collections;
-
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.ExtractorParam;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorConfig;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.logger.Logger;
 
 public class ExtractorResultBuffer3D implements IExtractorVector {

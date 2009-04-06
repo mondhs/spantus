@@ -1,7 +1,5 @@
 package org.spantus.work.ui.cmd;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Timer;

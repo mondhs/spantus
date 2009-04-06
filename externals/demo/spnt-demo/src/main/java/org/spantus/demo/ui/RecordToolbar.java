@@ -22,8 +22,10 @@ package org.spantus.demo.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JToolBar;
+
 import org.spantus.demo.SpantusRecordApplet.RecordAppletGlobalCommands;
 import org.spantus.demo.dto.DemoAppletInfo;
 import org.spantus.demo.i18n.I18nFactory;
@@ -31,7 +33,11 @@ import org.spantus.utils.Assert;
 
 public class RecordToolbar extends JToolBar {
 
-    private JButton recordBtn = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JButton recordBtn = null;
     private JButton stopBtn = null;
     private JButton playBtn = null;
     private JButton aboutBtn = null;

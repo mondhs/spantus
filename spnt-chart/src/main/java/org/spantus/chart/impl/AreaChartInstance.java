@@ -30,7 +30,6 @@ import java.awt.geom.IllegalPathStateException;
 import java.math.BigDecimal;
 import java.text.Format;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
 

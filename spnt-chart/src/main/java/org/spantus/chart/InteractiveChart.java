@@ -49,7 +49,6 @@ import org.spantus.utils.Assert;
 public class InteractiveChart extends InteractiveGraph {
 	private SpantusChartToolbar spntToolbar;
 	private List<ChartDescriptionResolver> resolvers;
-	private ChartInfo chartInfo;
 
 	/**
 	 * 
