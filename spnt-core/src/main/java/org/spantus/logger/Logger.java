@@ -21,6 +21,8 @@
 package org.spantus.logger;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -104,6 +106,12 @@ public class Logger {
     
     public void error(String str){
         log(ERROR,str);
+    }
+    public void error(Exception e){
+    	StringWriter sw = new StringWriter();
+    	PrintWriter pw = new PrintWriter(sw);
+    	e.printStackTrace(pw);
+        log(ERROR,sw.toString());
     }
     public void fatal(String str){
         log(FATAL,str);

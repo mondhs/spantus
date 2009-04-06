@@ -3,16 +3,17 @@ package org.spantus.segment.io;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ByteListInputStream extends InputStream {
 	
-	List<Byte> buffer;
-	Iterator<Byte> bufferIterator;
+//	private final List<Byte> buffer;
+	private Iterator<Byte> bufferIterator;
 	
 	public ByteListInputStream(List<Byte> buffer) {
-		this.buffer = buffer;
-		bufferIterator = buffer.iterator();
+		List<Byte> _buffer = new LinkedList<Byte>(buffer);
+		bufferIterator = _buffer.iterator();
 	}
 	
 	@Override

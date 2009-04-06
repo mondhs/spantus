@@ -50,6 +50,7 @@ import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.threshold.IThreshold;
 import org.spantus.logger.Logger;
+import org.spantus.utils.Assert;
 
 /**
  * 
@@ -199,6 +200,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 	private TimeSeriesFunctionInstance addFunction(Graph graphChart, IExtractorVector extr,
 			int order) {
 		TimeSeriesFunctionInstance charType = null;
+		Assert.isTrue(extr.getOutputValues().size()!=0,"No values");
 		if (extr.getOutputValues().getFirst().size() == VIEW_AREA_SIZE) {
 			charType = addAreaFunction(graphChart, extr, order);
 //		} else if (vals.getFirst().size() < VIEW_MATRIX_MIN_SIZE) {

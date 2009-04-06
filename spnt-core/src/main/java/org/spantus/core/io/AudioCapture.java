@@ -6,6 +6,9 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
+import org.spantus.exception.ProcessingException;
+import org.spantus.logger.Logger;
+
 
 public class AudioCapture extends Thread {
 	
@@ -14,11 +17,22 @@ public class AudioCapture extends Thread {
 	AudioFormat format;
 	
 	WraperExtractorReader reader;
+	private Logger log = Logger.getLogger(getClass());
 	
 	public AudioCapture(WraperExtractorReader reader) {
 		this.reader = reader;
 	}
+	public AudioCapture() {
+	}
 	
+	public WraperExtractorReader getReader() {
+		return reader;
+	}
+
+	public void setReader(WraperExtractorReader reader) {
+		this.reader = reader;
+	}
+
 	public AudioFormat getFormat() {
 		return format;
 	}
@@ -31,12 +45,11 @@ public class AudioCapture extends Thread {
 	
 	public synchronized void start() {
 		super.start();
-		running = true;
 	}
 
 	
 	public void run() {
-		super.run();
+		running = true;
 		final AudioFormat format = getFormat();
 		reader.setFormat(format);
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -45,6 +58,7 @@ public class AudioCapture extends Thread {
 			line = (TargetDataLine) AudioSystem.getLine(info);
 			line.open(format);
 			line.start();
+			log.error("grabing line. " + running + ": " + this.hashCode());
 			int bufferSize = (int) format.getSampleRate()
 					* format.getFrameSize();
 			byte buffer[] = new byte[bufferSize];
@@ -57,14 +71,21 @@ public class AudioCapture extends Thread {
 			}
 			line.drain();
 			line.close();
+			log.error("line closed");
 		} catch (LineUnavailableException e1) {
-			e1.printStackTrace();
+			log.error(e1);
+			running = false;
+			throw new ProcessingException(e1);
 		}
 
 	}
 
+	public boolean isRunning(){
+		return running;
+	}
 	
 	public void finalize() {
+		log.error("finalize");
 		running = false;
 	}
 

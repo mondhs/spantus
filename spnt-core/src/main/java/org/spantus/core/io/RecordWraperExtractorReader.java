@@ -3,10 +3,13 @@ package org.spantus.core.io;
 import java.util.LinkedList;
 
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.logger.Logger;
 
 public class RecordWraperExtractorReader extends WraperExtractorReader{
 	LinkedList<Byte> audioBuffer;
 	long offset = 0;
+	
+	private Logger log = Logger.getLogger(getClass());
 	
 	public RecordWraperExtractorReader(IExtractorInputReader reader) {
 		super(reader);
@@ -27,7 +30,7 @@ public class RecordWraperExtractorReader extends WraperExtractorReader{
 			i--;
 			offset++;
 		}
-
+		log.error("alue:" + value);
 	}
 
 	public LinkedList<Byte> getAudioBuffer() {

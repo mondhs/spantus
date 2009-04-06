@@ -28,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.logger.Logger;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.WorkReadersEnum;
 import org.spantus.work.reader.SupportableReaderEnum;
@@ -50,6 +51,7 @@ import org.spantus.work.ui.i18n.I18nFactory;
  */
 public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 	public static final String EXPERIMENT = "Experiment";
+	private Logger log = Logger.getLogger(this.getClass());
 	
 	
 	public SpantusWorkInfo openWorkInfo() {
@@ -126,7 +128,7 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		if(!StringUtils.hasText(experimentId)){
 			experimentId = I18nFactory.createI18n().getMessage("Experiment");
 		}
-		Pattern pattern = Pattern.compile("(.*)(\\d+)(.*)");
+		Pattern pattern = Pattern.compile("(.*?)(\\d+)(.*?)");
 		Matcher matcher = pattern.matcher(experimentId);
 //		String id = experimentId.matches(experimentId);
 		if(matcher.matches()){
@@ -135,6 +137,7 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 			try{
 				id= Integer.valueOf(idStr);
 			}catch (NumberFormatException e) {}
+			log.error("id: "+id);
 			id++;
 			experimentId = matcher.replaceAll("$1"+id.toString()+"$3");
 			info.getProject().setExperimentId(experimentId); 

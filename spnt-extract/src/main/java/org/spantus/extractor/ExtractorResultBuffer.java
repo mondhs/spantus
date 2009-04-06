@@ -1,5 +1,7 @@
 package org.spantus.extractor;
 
+import java.util.Collections;
+
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
@@ -27,7 +29,7 @@ public class ExtractorResultBuffer implements IExtractor {
 	
 	public FrameValues getOutputValues() {
 		outputValues.setSampleRate(extractor.getExtractorSampleRate());
-		return outputValues;
+		return (FrameValues) Collections.synchronizedList(outputValues);
 	}
 	public void setOutputValues(FrameValues outputValues) {
 		this.outputValues = outputValues;

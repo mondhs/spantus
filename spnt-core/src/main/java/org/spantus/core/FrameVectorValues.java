@@ -21,6 +21,7 @@
 package org.spantus.core;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 /**
@@ -36,7 +37,7 @@ public class FrameVectorValues extends LinkedList<FrameValues>{
 	
 	public static float max = Float.MIN_VALUE;
 	public static float min = Float.MAX_VALUE;
-
+	
 	/**
 	 * 
 	 */

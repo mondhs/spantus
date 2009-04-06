@@ -118,6 +118,10 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 		this.reader = reader;
 	}
 
+	public RecordWraperExtractorReader getReader() {
+		return reader;
+	}
+
 	public String getPath() {
 		if(path == null){
 			path = "./target/";
