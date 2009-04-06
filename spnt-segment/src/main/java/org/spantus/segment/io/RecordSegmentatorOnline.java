@@ -23,6 +23,7 @@ package org.spantus.segment.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -77,22 +78,25 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 		return true;
 	}
 	
-	public void saveSegmentAccepted(List<Byte> data, String name){
+	public URL saveSegmentAccepted(List<Byte> data, String name){
 	    InputStream bais = new ByteListInputStream(data);
 	    AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size());
 	    try {
 	    	if(path!= null && !"".equals(path)){
 	    		String path = getPath()+"/"+name+".wav";
-	    		AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(path));
+	    		File wavFile = new File(path);
+	    		AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
 	    		log.debug("[saveSegmentAccepted] saved{0}", path);
+	    		return wavFile.toURI().toURL();
 	    	}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		return null;
 	}
 	
-	public void saveFullSignal(String name){
-		saveSegmentAccepted(reader.getAudioBuffer(), name);
+	public URL saveFullSignal(String name){
+		return saveSegmentAccepted(reader.getAudioBuffer(), name);
 	}
 	
 	@Override

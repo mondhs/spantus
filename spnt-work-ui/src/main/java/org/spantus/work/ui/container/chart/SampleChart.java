@@ -118,6 +118,7 @@ public class SampleChart extends JPanel {
 					MarkeredTimeSeriesMultiChart _chart = ((MarkeredTimeSeriesMultiChart)chart);
 					_chart.initialize(getInfo().getProject().getCurrentSample().getMarkerSetHolder()
 							,getMarkerComponentEventHandler()
+							,getMarkerComponentEventHandler()
 							,getMarkerComponentEventHandler());
 //					_chart.addMouseListener(getMarkerComponentEventHandler());
 //					_chart.addKeyListener(getMarkerComponentEventHandler());

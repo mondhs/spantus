@@ -26,9 +26,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.geom.IllegalPathStateException;
 import java.math.BigDecimal;
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -86,7 +88,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 						+ values.size());
 	}
 
-	public void renderFunction(BigDecimal[] xCoordinate,
+	public synchronized void renderFunction(BigDecimal[] xCoordinate,
 			BigDecimal[] yCoordinate, BigDecimal xScalar, BigDecimal yScalar) {
 		if (minPoints.size() > 0)
 			return;
@@ -120,6 +122,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 //		log.debug("paint: " + description + "; size: " + values.size());
 //		Integer fx = null, fy = null, lx = null, ly = null;
 		Polygon polygon = new Polygon();
+		try{
 		for (Point p : minPoints) {
 			polygon.addPoint(p.x, p.y);
 		}
@@ -129,6 +132,9 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 
 //		log.debug("polygon size: " + minPoints.size());
 		g.fillPolygon(polygon);
+		}catch (IllegalPathStateException e) {
+			log.info(e.getMessage());
+		}
 	}
 
 	private CoordinateBoundary getCoordinateBoundary(FrameVectorValues values) {

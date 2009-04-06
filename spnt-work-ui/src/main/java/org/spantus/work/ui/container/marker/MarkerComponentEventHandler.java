@@ -19,7 +19,7 @@ import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
-public class MarkerComponentEventHandler extends MouseAdapter implements KeyListener{
+public class MarkerComponentEventHandler extends MouseAdapter implements MouseMotionListener, KeyListener{
 
 	private MarkerPopupMenu popup;
 	
@@ -53,7 +53,6 @@ public class MarkerComponentEventHandler extends MouseAdapter implements KeyList
 		showIfPopupTrigger(mouseEvent);
 	}
 	
-	@Override
 	public void mouseDragged(MouseEvent e){
 		Component currentComponent = ((JComponent)e.getSource()).findComponentAt(e.getPoint());
 		if(currentComponent instanceof MarkerComponent){
@@ -65,6 +64,10 @@ public class MarkerComponentEventHandler extends MouseAdapter implements KeyList
 				}
 			}
 		}
+	}
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	  
 
@@ -150,6 +153,7 @@ public class MarkerComponentEventHandler extends MouseAdapter implements KeyList
 	public void setCurrentPoint(Point currentPoint) {
 		this.currentPoint = currentPoint;
 	}
+	
 	
 	
 

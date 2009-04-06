@@ -68,6 +68,7 @@ public class OptionDialog extends JDialog implements ReloadableComponent{
 	 * @return void
 	 */
 	public void initialize() {
+		this.setModal(true);
 		for (AbstractOptionPanel optionPnl : getSaveablePanels().values()) {
 			optionPnl.initialize();
 		}

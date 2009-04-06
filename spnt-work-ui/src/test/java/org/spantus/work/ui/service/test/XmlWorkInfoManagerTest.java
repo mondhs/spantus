@@ -45,6 +45,25 @@ public class XmlWorkInfoManagerTest extends TestCase {
 		assertEquals(project.getCurrentType(),loadedProject.getCurrentType());
 	}
 	
+	public void testIncreaseExperimentId(){
+		SpantusWorkInfo info = new SpantusWorkInfo();
+		info.setProject(createProject());
+		info.getProject().setExperimentId("test");
+		for (int i = 1; i < 1000; i++) {
+			String expID = workInfoManager.increaseExperimentId(info);
+			assertEquals("ExperimentId ","test_"+i, expID);	
+			assertEquals("Enviroment ExperimentId ","test_"+i, info.getProject().getExperimentId());	
+		}
+		info.getProject().setExperimentId("test_0test");
+		for (int i = 1; i < 1000; i++) {
+			String expID = workInfoManager.increaseExperimentId(info);
+			assertEquals("ExperimentId ","test_"+i+"test", expID);	
+			assertEquals("Enviroment ExperimentId ","test_"+i+"test", info.getProject().getExperimentId());	
+		}
+
+		
+	}
+	
 	protected SpantusWorkProjectInfo createProject(){
 		SpantusWorkProjectInfo project = new SpantusWorkProjectInfo();
 		project.getFeatureReader().setReaderPerspective(WorkReadersEnum.multiFeature);

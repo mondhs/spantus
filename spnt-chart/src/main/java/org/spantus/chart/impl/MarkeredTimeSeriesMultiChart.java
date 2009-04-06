@@ -25,6 +25,7 @@ import java.awt.Dimension;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.math.RoundingMode;
 
 import net.quies.math.plot.AxisInstance;
@@ -48,13 +49,13 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 		super(reader, globalMessageResolver);
 	}
 	
-	public void initialize(MarkerSetHolder holder, MouseAdapter mouseListener, KeyListener keyListener){
+	public void initialize(MarkerSetHolder holder, MouseAdapter mouseListener, MouseMotionListener mouseMotionListener, KeyListener keyListener){
 		add(getMarkerGraph(), BorderLayout.NORTH);
 		AxisInstance axisX = getGraph().getXAxisInstance();
 		getMarkerGraph().getCtx().setXScalar(axisX.getGraphichsScalar().setScale(4, RoundingMode.HALF_UP));
 		getMarkerGraph().setMarkerSetHolder(holder);
 		getMarkerGraph().addMouseListener(mouseListener);
-		getMarkerGraph().addMouseMotionListener(mouseListener);
+		getMarkerGraph().addMouseMotionListener(mouseMotionListener);
 		getMarkerGraph().addKeyListener(keyListener);
 		getMarkerGraph().setPreferredSize(new Dimension(300, 40));
 		getMarkerGraph().initialize();

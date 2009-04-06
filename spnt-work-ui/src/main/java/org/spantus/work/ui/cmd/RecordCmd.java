@@ -1,5 +1,8 @@
 package org.spantus.work.ui.cmd;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,20 +39,12 @@ public class RecordCmd extends AbsrtactCmd {
 	public static final String recordFinishedMessageHeader = "recordFinishedMessageHeader"; 
 	public static final String recordFinishedMessageBody = "recordFinishedMessageBody";
 	
+	
 	protected Logger log = Logger.getLogger(getClass());
 
 	private AudioCapture capture;
+	private SpantusWorkCommand handler;
 	
-	public AudioCapture getCapture() {
-		if(capture == null){
-			capture = new AudioCapture();
-		}
-		return capture;
-	}
-
-	public void setCapture(AudioCapture capture) {
-		this.capture = capture;
-	}
 
 	private Timer timer;
 
@@ -60,8 +55,9 @@ public class RecordCmd extends AbsrtactCmd {
 	
 	private SampleChangeListener lisetener;
 
-	public RecordCmd(SampleChangeListener lisetener) {
+	public RecordCmd(SampleChangeListener lisetener, SpantusWorkCommand handler) {
 		this.lisetener = lisetener;
+		this.handler = handler;
 	}
 	
 	public String execute(final SpantusWorkInfo ctx) {
@@ -139,18 +135,7 @@ public class RecordCmd extends AbsrtactCmd {
 		}
 	}
 
-//	public class InitCapture extends TimerTask {
-//		IExtractorInputReader reader;
-//		public InitCapture(IExtractorInputReader reader) {
-//			this.reader = reader;
-//		}
-//		@Override
-//		public void run() {
-//			log.error("Init " + ((RecordWraperExtractorReader)reader).getAudioBuffer().size());
-//			lisetener.changedReader(reader);
-//			isRecordInitialyzed = true;
-//		}
-//	}
+
 	
 	public class UpdateCapture extends TimerTask {
 		
@@ -176,20 +161,36 @@ public class RecordCmd extends AbsrtactCmd {
 				lisetener.refresh();
 			}
 			if (!ctx.getPlaying()) {
-				log.error("repaint");
-				getCapture().finalize();
-//				isRecordInitialyzed = false;
+				stop();
 				
-				String fullSingalFullPath = recordSegmentator.getPath() + "/" + getSignalName();
-				if(recordSegmentator.getPath() != null && !"".equals(recordSegmentator.getPath())){
-					recordSegmentator.saveFullSignal(getSignalName());
-				}else{
-					fullSingalFullPath = "";
-				}
-				showMessage(recordSegmentator.getMarkSet(), fullSingalFullPath);
-				this.cancel();
 			}
 		}
+		/**
+		 * 
+		 */
+		private void stop(){
+//			log.error("repaint");
+			getCapture().finalize();
+//			isRecordInitialyzed = false;
+			URL wavFile = null;
+			String fullSingalFullPath = recordSegmentator.getPath() + "/" + getSignalName();
+			if(StringUtils.hasText(recordSegmentator.getPath())){
+				wavFile = recordSegmentator.saveFullSignal(fullSingalFullPath);
+			}else{
+				fullSingalFullPath = "";
+			}
+			showMessage(recordSegmentator.getMarkSet(), fullSingalFullPath);
+			this.cancel();
+			if(wavFile != null){
+				ctx.getProject().getCurrentSample().setCurrentFile(wavFile);
+				handler.execute(GlobalCommands.file.currentSampleChanged.name(), ctx);
+			}
+			
+		}
+		/**
+		 * 
+		 * @return
+		 */
 		public String getSignalName(){
 			String fullSingalName = ctx.getProject().getExperimentId();
 			getWorkInfoManager().increaseExperimentId(ctx);
@@ -283,5 +284,14 @@ public class RecordCmd extends AbsrtactCmd {
 		}
 		return workInfoManager;
 	}
+	public AudioCapture getCapture() {
+		if(capture == null){
+			capture = new AudioCapture();
+		}
+		return capture;
+	}
 
+	public void setCapture(AudioCapture capture) {
+		this.capture = capture;
+	}
 }

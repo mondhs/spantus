@@ -137,7 +137,7 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 			try{
 				id= Integer.valueOf(idStr);
 			}catch (NumberFormatException e) {}
-			log.error("id: "+id);
+//			log.error("id: "+id);
 			id++;
 			experimentId = matcher.replaceAll("$1"+id.toString()+"$3");
 			info.getProject().setExperimentId(experimentId); 

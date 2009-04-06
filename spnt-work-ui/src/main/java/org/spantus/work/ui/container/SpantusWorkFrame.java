@@ -265,7 +265,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		handler
 		.getCmds()
 		.put(GlobalCommands.sample.record.name(), 
-				new RecordCmd(getSampleRepresentationPanel()));
+				new RecordCmd(getSampleRepresentationPanel(),getHandler()));
 		handler
 		.getCmds()
 		.put(GlobalCommands.sample.play.name(), 
