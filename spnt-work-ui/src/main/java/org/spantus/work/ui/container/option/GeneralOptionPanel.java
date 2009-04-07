@@ -119,7 +119,6 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 			JComboBox input = new JComboBox();
 			input.setModel(getLocaleModel());
 			input.setSelectedItem(getLocaleModel().getLabel(getInfo().getLocale()));
-			input.getSelectedItem();
 			input.setName(generalLabels.locale.name());
 			jComponents.put(generalLabels.locale, input);
 

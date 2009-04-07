@@ -10,7 +10,7 @@
   <name>Spantus svn root pom</name>
   <url>http://spantus.sourceforge.net</url>
 
- <scm>
+  <scm>
     <connection>scm:svn:https://spantus.svn.sourceforge.net/svnroot/spantus/trunk</connection>
     <url>http://spantus.sourceforge.net/</url>
   </scm>

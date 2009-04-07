@@ -45,7 +45,7 @@ public class OptionDialog extends JDialog implements ReloadableComponent{
 //	
 //	ExtractorsOptionPanel extractorsOptionPnl;
 	
-	enum optionsPanelEnum{general, parameters, feature	};
+	enum optionsPanelEnum{general, parameters, feature, spantus	};
 	enum optionsLabelEnum{spantus, ok, cancel};
 	enum optionsCmdEnum{save, discard};
 
@@ -73,7 +73,6 @@ public class OptionDialog extends JDialog implements ReloadableComponent{
 			optionPnl.initialize();
 		}
 		getJScrollPane().setViewportView(setPanel(getSaveablePanels().get(optionsPanelEnum.values()[0])));
-
 	}
 
 	public void reload() {

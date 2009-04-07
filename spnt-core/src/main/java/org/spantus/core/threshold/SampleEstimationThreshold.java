@@ -18,11 +18,10 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.exp.threshold;
+package org.spantus.core.threshold;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.threshold.StaticThreshold;
 /**
  * 
  * @author Mindaugas Greibus
@@ -36,12 +35,22 @@ public class SampleEstimationThreshold extends StaticThreshold {
 	@Override
 	public void setExtractor(IExtractor extractor) {
 		super.setExtractor(extractor);
-		afterCalculated(0L, extractor.getOutputValues());
+//		afterCalculated(0L, extractor.getOutputValues());
 	}
 	@Override
 	public void afterCalculated(Long sample, FrameValues result) {
 		estimateThreshold(result);
 		super.afterCalculated(sample, result);
+		FrameValues newThresholdVals = new FrameValues();
+		FrameValues  newState = new FrameValues();
+		for (Float float1 : getOutputValues()) {
+//		for (int i = 0; i < getThresholdValues().size(); i++) {
+			Float threshold = getCurrentThresholdValue();
+			newThresholdVals.add(threshold);
+			newState.add(calculateState(sample, float1, threshold));
+		}
+		thereshold = newThresholdVals;
+		state = newState;
 	}
 
 	public void estimateThreshold(FrameValues result){

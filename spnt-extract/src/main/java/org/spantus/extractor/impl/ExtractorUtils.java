@@ -29,7 +29,9 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.SampleEstimationThreshold;
 import org.spantus.core.threshold.StaticThreshold;
+import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.AbstractExtractor3D;
 import org.spantus.extractor.ExtractorResultBuffer;
@@ -140,14 +142,37 @@ public abstract class ExtractorUtils {
 
 	public static IThreshold registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType) {
-		return registerThreshold(bufferedReader, extractorType,
-				new StaticThreshold());
+		return registerThreshold(bufferedReader, extractorType, ThresholdEnum.online);
 	}
 
 	public static void registerThreshold(IExtractorInputReader bufferedReader,
 			ExtractorEnum[] extractors) {
+		registerThreshold(bufferedReader, extractors, ThresholdEnum.online);
+	}
+	public static IThreshold registerThreshold(
+			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
+			ThresholdEnum thresholdType) {
+		AbstractThreshold threshold = null;
+		
+		switch (thresholdType) {
+		case online:
+			threshold = new StaticThreshold();
+			break;
+		case offline:
+			threshold = new SampleEstimationThreshold();
+			break;
+		default:
+			break;
+		}
+		return registerThreshold(bufferedReader, extractorType,
+				threshold);
+	}
+
+	public static void registerThreshold(IExtractorInputReader bufferedReader,
+			ExtractorEnum[] extractors,
+			ThresholdEnum thresholdType) {
 		for (ExtractorEnum extractor : extractors) {
-			ExtractorUtils.registerThreshold(bufferedReader, extractor);
+			ExtractorUtils.registerThreshold(bufferedReader, extractor, thresholdType);
 		}
 	}
 

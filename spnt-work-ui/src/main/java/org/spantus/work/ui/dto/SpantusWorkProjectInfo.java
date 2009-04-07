@@ -22,6 +22,8 @@
 package org.spantus.work.ui.dto;
 
 import java.io.File;
+
+import org.spantus.core.threshold.ThresholdEnum;
 /**
  * 
  * 
@@ -36,6 +38,7 @@ public class SpantusWorkProjectInfo {
 
 	public enum ProjectTypeEnum{feature, segmenation, recordSegmentation};
 	
+	
 	private float from;
 
 	private float length;
@@ -49,6 +52,8 @@ public class SpantusWorkProjectInfo {
 	private File workingDir;
 	
 	private String experimentId;
+	
+	private String thresholdType;
 
 	
 	public float getFrom() {
@@ -115,6 +120,17 @@ public class SpantusWorkProjectInfo {
 
 	public void setExperimentId(String experimentId) {
 		this.experimentId = experimentId;
+	}
+
+	public String getThresholdType() {
+		if(thresholdType == null){
+			thresholdType = ThresholdEnum.online.name();
+		}
+		return thresholdType;
+	}
+
+	public void setThresholdType(String thresholdType) {
+		this.thresholdType = thresholdType;
 	}
 
 	

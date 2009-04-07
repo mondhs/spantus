@@ -2,8 +2,6 @@ package org.spantus.work.ui.cmd;
 
 import java.awt.Frame;
 
-import javax.swing.SwingUtilities;
-
 import org.spantus.work.ui.container.panel.OptionDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
@@ -27,12 +25,17 @@ public class OptionCmd extends AbsrtactCmd{
 		}
 		
 		getOptionDialog().setVisible(true);
+//		getOptionDialog().setSize(getOptionDialog().getSize());
+		getOptionDialog().invalidate();
+		getOptionDialog().repaint(500);
+		
+		
 		return GlobalCommands.tool.reloadResources.name();
 	}
 
 	private OptionDialog getOptionDialog(){
 		if(optionDialog == null){
-			optionDialog = new OptionDialog((Frame)SwingUtilities.getAncestorOfClass(Frame.class, frame));
+			optionDialog = new OptionDialog( frame);
 		}
 		return optionDialog;
 	}

@@ -12,6 +12,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -21,6 +22,7 @@ import org.spantus.mpeg7.Mpeg7ExtractorEnum;
 import org.spantus.mpeg7.Mpeg7ExtractorUtils;
 import org.spantus.mpeg7.extractors.Mpeg7ExtractorInputReader;
 import org.spantus.utils.ExtractorParamUtils;
+import org.spantus.utils.StringUtils;
 
 public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 	
@@ -132,11 +134,14 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 			ExtractorParam param = ExtractorParamUtils.getSafeParam(params, 
 					key);
 			
-			Boolean isTreashold = ExtractorParamUtils.getBoolean(param, 
-					ExtractorParamUtils.commonParam.isThreashold.name(), 
-					Boolean.FALSE);
-			if(isTreashold){
-				IThreshold threshold = ExtractorUtils.registerThreshold(getDefaultReader(), extractorType);
+			String tresholdType = ExtractorParamUtils.getString(param, 
+					ExtractorParamUtils.commonParam.thresholdType.name(), 
+					"");
+			if(StringUtils.hasText(tresholdType)){
+				ThresholdEnum thresholdEnum = ThresholdEnum.valueOf(tresholdType);
+				IThreshold threshold = ExtractorUtils.registerThreshold(getDefaultReader(),
+						extractorType,
+						thresholdEnum);
 				param = ExtractorParamUtils.getSafeParam(params, key);
 				Float threasholdCoef = ExtractorParamUtils.<Float>getValue(param, 
 						ExtractorParamUtils.commonParam.threasholdCoef.name(), Float.valueOf(1.1f));

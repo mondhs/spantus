@@ -2,19 +2,24 @@ package org.spantus.work.ui.container.option;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.logger.Logger;
+import org.spantus.ui.MapComboBoxModel;
+import org.spantus.ui.ModelEntry;
 import org.spantus.work.ui.container.ReloadableComponent;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -25,14 +30,14 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 	enum optionsLabels{bufferSize, frameSize, windowSize, windowOverlap, 
 		recordSampleRate, audioPathOutput, thresholdLearningPeriod, thresholdCoef, 
 		segmentationMinLength, segmentationMinSpace,
-		segmentationExpandStart, segmentationExpandEnd} 
+		segmentationExpandStart, segmentationExpandEnd, thresholdType} 
 
 	SpantusWorkInfo config;
 	
 	Logger log = Logger.getLogger(getClass());
 	
 	private static final long serialVersionUID = 1L;
-	private List<JFormattedTextField> jTextFields = null;
+	private Map<optionsLabels, JComponent> jTextFields = null;
 
 	/**
 	 * This is the default constructor
@@ -50,11 +55,11 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		this.setSize(300, 200);
 		SpringLayout layout = new SpringLayout();
 		this.setLayout(layout);
-		for (JTextField edit : getJTextFields()) {
-			 JLabel l = new JLabel(getMessage(edit.getName()), JLabel.TRAILING);
+		for (Entry<optionsLabels, JComponent> fieldEntry : getOptionComponents().entrySet()) {
+			 JLabel l = new JLabel(getMessage(fieldEntry.getKey().name()), JLabel.TRAILING);
 			 this.add(l);
-			 l.setLabelFor(edit);
-			 this.add(edit);
+			 l.setLabelFor(fieldEntry.getValue());
+			 this.add(fieldEntry.getValue());
 		}
 		
 		this.add(getHelpButton());
@@ -91,51 +96,58 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 	}
 	
 	public void reload() {
-		for (JFormattedTextField textField : getJTextFields()) {
-			optionsLabels lbl = optionsLabels.valueOf(textField.getName());
+		for (Entry<optionsLabels, JComponent> fieldEntry : getOptionComponents().entrySet()) {
 
 			WorkUIExtractorConfig workConfig = getConfig().getProject().getFeatureReader().getWorkConfig();
 
-			switch (lbl) {
+			JFormattedTextField field = null;
+			if(fieldEntry.getValue() instanceof JFormattedTextField){
+				field = (JFormattedTextField)fieldEntry.getValue();
+			}
+			
+			switch (fieldEntry.getKey()) {
 			case bufferSize:
-				textField.setValue(Integer.valueOf((workConfig.getBufferSize())));
+				field.setValue(Integer.valueOf((workConfig.getBufferSize())));
 				break;
 			case frameSize:
-				textField.setValue(Integer.valueOf((workConfig.getFrameSize())));
+				field.setValue(Integer.valueOf((workConfig.getFrameSize())));
 				break;
 			case windowSize:
-				textField.setValue(Integer.valueOf((workConfig.getWindowSize())));
+				field.setValue(Integer.valueOf((workConfig.getWindowSize())));
 				break;
 			case windowOverlap:
-				textField.setValue(Double.valueOf(((double)workConfig.getWindowOverlap()/100)));
+				field.setValue(Double.valueOf(((double)workConfig.getWindowOverlap()/100)));
 				break;
 			case recordSampleRate:
-				textField.setValue(workConfig.getRecordSampleRate());
+				field.setValue(workConfig.getRecordSampleRate());
 				break;
 			case audioPathOutput:
-				textField.setValue(workConfig.getAudioPathOutput());
+				field.setValue(workConfig.getAudioPathOutput());
 				break;
 			case thresholdLearningPeriod:
-				textField.setValue(Integer.valueOf(workConfig.getThresholdLeaningPeriod()));
+				field.setValue(Integer.valueOf(workConfig.getThresholdLeaningPeriod()));
 				break;
 			case thresholdCoef:
-				textField.setValue(Float.valueOf(workConfig.getThresholdCoef()));
+				field.setValue(Float.valueOf(workConfig.getThresholdCoef()));
 				break;
 			case segmentationMinLength:
-				textField.setValue(Integer.valueOf(workConfig.getSegmentationMinLength()));
+				field.setValue(Integer.valueOf(workConfig.getSegmentationMinLength()));
 				break;
 			case segmentationMinSpace:
-				textField.setValue(Integer.valueOf(workConfig.getSegmentationMinSpace()));
+				field.setValue(Integer.valueOf(workConfig.getSegmentationMinSpace()));
 				break;
 			case segmentationExpandStart:
-				textField.setValue(Integer.valueOf(workConfig.getSegmentationExpandStart()));
+				field.setValue(Integer.valueOf(workConfig.getSegmentationExpandStart()));
 				break;
 			case segmentationExpandEnd:
-				textField.setValue(Integer.valueOf(workConfig.getSegmentationExpandEnd()));
+				field.setValue(Integer.valueOf(workConfig.getSegmentationExpandEnd()));
+				break;
+			case thresholdType:
+				((JComboBox)fieldEntry.getValue()).setSelectedItem("threshold_"+getConfig().getProject().getThresholdType());
 				break;
 				
 			default:
-				throw new RuntimeException("Not impl: "  + lbl.name());
+				throw new RuntimeException("Not impl: "  + fieldEntry.getKey().name());
 			}
 		}
 		
@@ -147,58 +159,63 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 	 * 	
 	 * @return javax.swing.JTextField	
 	 */
-	private List<JFormattedTextField> getJTextFields() {
+	private Map<optionsLabels, JComponent> getOptionComponents() {
 		if (jTextFields == null) {
-			jTextFields = new ArrayList<JFormattedTextField>();
+			jTextFields = new LinkedHashMap<optionsLabels, JComponent>();
 			
 			JFormattedTextField textField = new JFormattedTextField(
 					getI18n().getDecimalFormat());
 			textField.setName(optionsLabels.bufferSize.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.bufferSize, textField);
 			
 			textField = new JFormattedTextField(getI18n().getDecimalFormat());
 			textField.setName(optionsLabels.frameSize.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.frameSize, textField);
 
 			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
 			textField.setName(optionsLabels.windowSize.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.windowSize,textField);
 
 			textField = new JFormattedTextField(getI18n().getPercentFormat());
 			textField.setName(optionsLabels.windowOverlap.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.windowOverlap,textField);
 			
 			textField = new JFormattedTextField(getI18n().getDecimalFormat());
 			textField.setName(optionsLabels.recordSampleRate.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.recordSampleRate, textField);
 			
 			textField = new JFormattedTextField();
 			textField.setName(optionsLabels.audioPathOutput.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.audioPathOutput, textField);
 			
 			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
 			textField.setName(optionsLabels.thresholdLearningPeriod.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.thresholdLearningPeriod,textField);
 
 			textField = new JFormattedTextField(getI18n().getDecimalFormat());
 			textField.setName(optionsLabels.thresholdCoef.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.thresholdCoef, textField);
 			
 			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
 			textField.setName(optionsLabels.segmentationMinLength.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.segmentationMinLength, textField);
 			
 			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
 			textField.setName(optionsLabels.segmentationMinSpace.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.segmentationMinSpace, textField);
 			
 			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
 			textField.setName(optionsLabels.segmentationExpandStart.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.segmentationExpandStart, textField);
 			
 			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
 			textField.setName(optionsLabels.segmentationExpandEnd.name());
-			jTextFields.add(textField);
+			jTextFields.put(optionsLabels.segmentationExpandEnd, textField);
+			
+			JComboBox thresholdInput = new JComboBox();
+			thresholdInput.setModel(getThresholdModel());
+			thresholdInput.setName(optionsLabels.thresholdType.name());
+			jTextFields.put(optionsLabels.thresholdType, thresholdInput);
 
 			
 		}
@@ -218,12 +235,16 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 
 	
 	public void save() {
-		for (JFormattedTextField field : getJTextFields()) {
-			optionsLabels lbl = optionsLabels.valueOf(field.getName());
+		for (Entry<optionsLabels, JComponent> fieldEntry : getOptionComponents().entrySet()) {
 
 			WorkUIExtractorConfig workConfig = getConfig().getProject().getFeatureReader().getWorkConfig();
-
-			switch (lbl) {
+			JComponent fieldComponent =  fieldEntry.getValue();
+			JFormattedTextField field = null;
+			if(fieldComponent instanceof JFormattedTextField){
+				field = (JFormattedTextField)fieldComponent;
+			}
+			
+			switch (fieldEntry.getKey()) {
 			case bufferSize:
 				Number bufferSize = (Number)(field.getValue());
 				workConfig.setBufferSize(bufferSize.intValue());
@@ -270,10 +291,27 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				Number segmentationExpandEnd = (Number)(field.getValue());
 				workConfig.setSegmentationExpandEnd(segmentationExpandEnd.intValue());
 				break;
+			case thresholdType:
+				ThresholdEnum thresholdType = (ThresholdEnum)getThresholdModel().getSelectedObject();
+				getConfig().getProject().setThresholdType(thresholdType.name());
+				break;
 			default:
-				throw new RuntimeException("Not impl: "  + lbl.name());
+				throw new RuntimeException("Not impl: "  + fieldEntry.getKey().name());
 			}
 		}
+	}
+	
+	MapComboBoxModel treasholdType;
+	
+	protected MapComboBoxModel getThresholdModel() {
+		if (treasholdType == null) {
+			treasholdType = new MapComboBoxModel();
+			for (ThresholdEnum thresholdTypeEnum : ThresholdEnum.values()) {
+				String label = getMessage("threshold_" + thresholdTypeEnum.name());
+				treasholdType.addElement(new ModelEntry(label, thresholdTypeEnum));
+			}
+		}
+		return treasholdType;
 	}
 	
 

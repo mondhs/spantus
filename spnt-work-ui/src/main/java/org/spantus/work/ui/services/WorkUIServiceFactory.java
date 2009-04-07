@@ -42,9 +42,9 @@ public abstract class WorkUIServiceFactory {
 				ExtractorParam param = ExtractorParamUtils.getSafeParam(
 						project.getFeatureReader().getParameters(),
 						extractorKey);
-				ExtractorParamUtils.setBoolean(param,
-						ExtractorParamUtils.commonParam.isThreashold.name(),
-						Boolean.TRUE);
+				ExtractorParamUtils.setString(param,
+						ExtractorParamUtils.commonParam.thresholdType.name(),
+						project.getThresholdType());
 				ExtractorParamUtils.<Float>setValue(param,
 						ExtractorParamUtils.commonParam.threasholdCoef.name(),
 						Float.valueOf(config.getThresholdCoef()));

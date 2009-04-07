@@ -1,11 +1,11 @@
-package org.spantus.exp.segment.test;
+package org.spantus.core.threshold.test;
 
 import junit.framework.TestCase;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.DefaultExtractorConfig;
 import org.spantus.core.extractor.ExtractorOutputHolder;
-import org.spantus.exp.threshold.SampleEstimationThreshold;
+import org.spantus.core.threshold.SampleEstimationThreshold;
 
 public class SampleEstimationThresholdTest extends TestCase {
 	
@@ -20,8 +20,8 @@ public class SampleEstimationThresholdTest extends TestCase {
 		mockExtractor.setConfig(new DefaultExtractorConfig());
 		mockExtractor.setOutputValues(getFrameValues(vals));
 		threshold.setExtractor(mockExtractor);
-		assertEquals(2.0F, threshold.getCurrentThresholdValue());
-		assertEquals(2.2F,threshold.getThresholdValues().iterator().next());
+		assertEquals("Current Threshold Value", 1.0F, threshold.getCurrentThresholdValue());
+		assertEquals("First Threshold Value", 1.1F,threshold.getThresholdValues().iterator().next());
 	}
 	
 	public void testNegativesValuesTest(){
@@ -30,8 +30,8 @@ public class SampleEstimationThresholdTest extends TestCase {
 		mockExtractor.setConfig(new DefaultExtractorConfig());
 		mockExtractor.setOutputValues(getFrameValues(negativeVals));
 		threshold.setExtractor(mockExtractor);
-		assertEquals(-4.0F, threshold.getCurrentThresholdValue());
-		assertEquals(-3.6F,threshold.getThresholdValues().iterator().next());
+		assertEquals(-5.0F, threshold.getCurrentThresholdValue());
+		assertEquals(-4.5F,threshold.getThresholdValues().iterator().next());
 	}
 	
 	
