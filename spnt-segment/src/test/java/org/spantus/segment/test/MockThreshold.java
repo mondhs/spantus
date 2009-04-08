@@ -80,5 +80,9 @@ public class MockThreshold implements IThreshold {
 		// TODO Auto-generated method stub
 
 	}
+	public void flush() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

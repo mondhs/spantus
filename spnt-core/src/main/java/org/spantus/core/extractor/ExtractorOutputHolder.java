@@ -6,7 +6,7 @@ public class ExtractorOutputHolder implements IExtractor {
 	private FrameValues outputValues;
 	private String name;
 	private IExtractorConfig config;
-//	private float extractorSampleRate;
+	private Float extractorSampleRate;
 
 
 	public FrameValues calculate(Long sample, FrameValues values) {
@@ -26,7 +26,10 @@ public class ExtractorOutputHolder implements IExtractor {
 	}
 
 	public float getExtractorSampleRate() {
-		return this.outputValues.getSampleRate();
+		if(extractorSampleRate == null){
+			return this.outputValues.getSampleRate();
+		}
+		return extractorSampleRate;
 	}
 
 	public String getName() {
@@ -45,6 +48,15 @@ public class ExtractorOutputHolder implements IExtractor {
 	}
 	public void setOutputValues(FrameValues outputValues) {
 		this.outputValues = outputValues;
+	}
+
+	public void setExtractorSampleRate(Float extractorSampleRate) {
+		this.extractorSampleRate = extractorSampleRate;
+	}
+
+	public void flush() {
+		throw new IllegalAccessError("Should not be called");
+		//do nothing
 	}
 
 }

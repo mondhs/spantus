@@ -154,6 +154,10 @@ public abstract class AbstractExtractor3D implements IExtractorVector {
 		}
 		return windowing;
 	}
+	
+	public void flush() {
+		//doNothing
+	}
 
 
 

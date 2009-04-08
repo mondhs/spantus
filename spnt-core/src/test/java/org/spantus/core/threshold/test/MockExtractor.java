@@ -60,4 +60,9 @@ public class MockExtractor implements IExtractor {
 		this.config = config;
 	}
 
+	public void flush() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -8,10 +8,10 @@ import org.spantus.utils.Assert;
 
 public abstract class AbstractThreshold implements IThreshold, IExtractorListener {
 	
-	IExtractor extractor;
-	FrameValues thereshold;
-	Float coef =null;
-	FrameValues state;
+	private IExtractor extractor;
+	private FrameValues thereshold;
+	private Float coef =null;
+	private FrameValues state;
 	
 	/**
 	 * 
@@ -88,11 +88,19 @@ public abstract class AbstractThreshold implements IThreshold, IExtractorListene
 		
 	}
 
-
+	/**
+	 * 
+	 */
 	public void beforeCalculated(Long sample, FrameValues window) {
-		
+		//do nothing
 	}
-
+	/**
+	 * 
+	 */
+	public void flush() {
+		getExtractor().flush();
+	}
+	
 	/**
 	 * 
 	 * @param windowValue

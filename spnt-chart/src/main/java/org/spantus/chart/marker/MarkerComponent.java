@@ -101,6 +101,7 @@ public class MarkerComponent extends JComponent{
 		}
 		g.fillRect(0, 0, getSize().width, getSize().height);
 		
+//		log.error("paintComponent" + this.getMarker().getLabel());
 //		g.fillRoundRect(0, 0, getSize().width, getSize().height,100,10);
 
 	}

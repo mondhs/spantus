@@ -7,7 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JComponent;
@@ -40,8 +42,10 @@ public class MarkerPopupMenu extends JPopupMenu {
 	SpantusWorkCommand handler;
 	SpantusWorkInfo info;
 
+	Map<menuItemsEnum, JComponent> cmpMap;
+	
 	enum menuItemsEnum {
-		add, remove, edit, play
+		play, edit, add, remove
 	}
 
 	public MarkerPopupMenu() {
@@ -49,15 +53,14 @@ public class MarkerPopupMenu extends JPopupMenu {
 	}
 
 	public void initialize() {
-		JMenuItem menuItem = createMenuItemp(menuItemsEnum.add.name());
-		add(menuItem);
-		menuItem = createMenuItemp(menuItemsEnum.remove.name());
-		add(menuItem);
-		menuItem = createMenuItemp(menuItemsEnum.edit.name());
-		add(menuItem);
-		menuItem = createMenuItemp(menuItemsEnum.play.name());
-		add(menuItem);
-
+		cmpMap = new HashMap<menuItemsEnum, JComponent>();
+		cmpMap.put(menuItemsEnum.add, createMenuItemp(menuItemsEnum.add.name()));
+		cmpMap.put(menuItemsEnum.remove, createMenuItemp(menuItemsEnum.remove.name()));
+		cmpMap.put(menuItemsEnum.edit, createMenuItemp(menuItemsEnum.edit.name()));
+		cmpMap.put(menuItemsEnum.play, createMenuItemp(menuItemsEnum.play.name()));
+		for (menuItemsEnum menuName : menuItemsEnum.values()) {
+			add(cmpMap.get(menuName));	
+		}
 	}
 
 	public ActionListener getListener() {

@@ -25,11 +25,6 @@ public class OptionCmd extends AbsrtactCmd{
 		}
 		
 		getOptionDialog().setVisible(true);
-//		getOptionDialog().setSize(getOptionDialog().getSize());
-		getOptionDialog().invalidate();
-		getOptionDialog().repaint(500);
-		
-		
 		return GlobalCommands.tool.reloadResources.name();
 	}
 

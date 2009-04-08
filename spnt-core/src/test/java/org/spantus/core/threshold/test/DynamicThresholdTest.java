@@ -5,27 +5,37 @@ import junit.framework.TestCase;
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.DefaultExtractorConfig;
 import org.spantus.core.extractor.ExtractorOutputHolder;
-import org.spantus.core.threshold.SampleEstimationThreshold;
+import org.spantus.core.threshold.DynamicThreshold;
 
-public class SampleEstimationThresholdTest extends TestCase {
-	
+public class DynamicThresholdTest extends TestCase {
+	Float extractorSampleRate = 100F;
 	Double[] vals = new Double[]{1.0, 1.0, 2.0, 3.0, 4.0, 4.0, 3.0, 2.0, 1.0, 1.0};
+	Double[][] valss = new Double[][]{
+			new Double[]{1.0, 1.0, 2.0},
+			new Double[]{3.0, 4.0, 4.0},
+			new Double[]{3.0, 2.0, 1.0}};
 	Double[] negativeVals = new Double[]{-5.0, -5.0, -3.0, -2.0, -1.0, -1.0, -2.0, -3.0, -4.0, -4.0};
 	
 	
 	
 	public void testPositiveValuesTest(){
-		SampleEstimationThreshold threshold = new SampleEstimationThreshold();
+		DynamicThreshold threshold = new DynamicThreshold();
 		ExtractorOutputHolder mockExtractor = new ExtractorOutputHolder();
+		mockExtractor.setExtractorSampleRate(extractorSampleRate);
 		mockExtractor.setConfig(new DefaultExtractorConfig());
-		mockExtractor.setOutputValues(getFrameValues(vals));
+//		mockExtractor.setOutputValues(getFrameValues(vals));
 		threshold.setExtractor(mockExtractor);
+		Long i = 0L;
+		for (Double[] dv : valss) {
+			threshold.afterCalculated(i, getFrameValues(dv));
+			i+=3;
+		}
 		assertEquals("Current Threshold Value", 1.0F, threshold.getCurrentThresholdValue());
 		assertEquals("First Threshold Value", 1.1F,threshold.getThresholdValues().iterator().next());
 	}
 	
 	public void testNegativesValuesTest(){
-		SampleEstimationThreshold threshold = new SampleEstimationThreshold();
+		DynamicThreshold threshold = new DynamicThreshold();
 		ExtractorOutputHolder mockExtractor = new ExtractorOutputHolder();
 		mockExtractor.setConfig(new DefaultExtractorConfig());
 		mockExtractor.setOutputValues(getFrameValues(negativeVals));
@@ -38,7 +48,8 @@ public class SampleEstimationThresholdTest extends TestCase {
 	
 	protected FrameValues  getFrameValues(Double[] vals){
 		FrameValues fv = new FrameValues();
-		for (Double float1 : vals) {
+		fv.setSampleRate(100);
+		for (Double float1 : vals){
 			fv.add(float1.floatValue());
 		}
 		return fv;

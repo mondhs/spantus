@@ -78,4 +78,8 @@ public class ExtractorResultBuffer implements IExtractor {
 	public String toString() {
 		return getClass().getSimpleName()+ ":" + getName();
 	}
+	
+	public void flush() {
+		extractor.flush();		
+	}
 }

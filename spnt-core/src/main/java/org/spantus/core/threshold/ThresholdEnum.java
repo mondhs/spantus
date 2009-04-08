@@ -1,5 +1,5 @@
 package org.spantus.core.threshold;
 
 public enum ThresholdEnum {
-	online, offline
+	online, dynamic, offline
 }

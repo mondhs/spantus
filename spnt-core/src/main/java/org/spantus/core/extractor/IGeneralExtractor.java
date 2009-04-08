@@ -37,6 +37,8 @@ public interface IGeneralExtractor {
 	
 	public void putValues(Long sample, FrameValues values);
 	
+	public void flush();
+	
 	public float getExtractorSampleRate();
 	
 	public IExtractorConfig getConfig();

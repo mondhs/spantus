@@ -111,7 +111,7 @@ public class MarkerGraph extends JComponent {
 		component.initialize();
 		return component;
 	}
-
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g.create();
@@ -127,10 +127,15 @@ public class MarkerGraph extends JComponent {
 		} finally {
 			g2.dispose();
 		}
-		resize(getSize());
+//		log.error("paintComponent");
+		
 	}
 
-	public void resize(Dimension size){
+	@Override
+	protected void paintChildren(Graphics g) {
+		super.paintChildren(g);
+//		log.error("paintChildren");
+//		Dimension size = getSize();
 		int yLayer = 0;
 		int layersCount = getLayers().keySet().size();
 		layersCount = layersCount == 0?1:layersCount;
@@ -141,9 +146,6 @@ public class MarkerGraph extends JComponent {
 			cmp.setCtx(getCtx());
 			cmp.setLocation(0, yLayer);
 			cmp.changeSize(new Dimension(widthLayer, heightLayer));
-//			for (MarkerComponent mc : cmp.getMarkerComponents()) {
-//				mc.resetScreenCoord();
-//			}
 			yLayer += heightLayer;
 			cmp.repaintIfDirty();
 		}

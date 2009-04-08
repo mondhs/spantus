@@ -7,8 +7,11 @@ import java.util.List;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerTimeComparator;
+import org.spantus.logger.Logger;
 
 public class MarkerComponentServiceImpl {
+	
+	Logger log = Logger.getLogger(getClass());
 	/**
 	 * 
 	 * @param markerSetComponent
@@ -52,8 +55,13 @@ public class MarkerComponentServiceImpl {
 	 * @param markerSetComponent
 	 */
 	public Marker remove(MarkerSetComponent markerSetComponent, MarkerComponent markerComponent) {
+			if(markerComponent == null){
+				log.error("marker set component is null");
+				return null;
+			}
 			Marker _marker = markerComponent.getMarker();
 			markerSetComponent.getMarkerSet().getMarkers().remove(_marker);
+			markerSetComponent.remove(markerComponent);
 			relable(markerSetComponent.getMarkerSet());
 			markerSetComponent.repaint();
 			return _marker;

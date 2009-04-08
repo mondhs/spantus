@@ -136,5 +136,9 @@ public abstract class AbstractExtractor implements IExtractor {
 		}
 		return windowing;
 	}
+	
+	public void flush() {
+		//do nothing
+	}
 
 }

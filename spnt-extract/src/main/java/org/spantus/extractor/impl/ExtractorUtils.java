@@ -29,7 +29,8 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.IThreshold;
-import org.spantus.core.threshold.SampleEstimationThreshold;
+import org.spantus.core.threshold.DynamicThreshold;
+import org.spantus.core.threshold.OfflineThreshold;
 import org.spantus.core.threshold.StaticThreshold;
 import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.extractor.AbstractExtractor;
@@ -158,8 +159,11 @@ public abstract class ExtractorUtils {
 		case online:
 			threshold = new StaticThreshold();
 			break;
+		case dynamic:
+			threshold = new DynamicThreshold();
+			break;
 		case offline:
-			threshold = new SampleEstimationThreshold();
+			threshold = new OfflineThreshold();
 			break;
 		default:
 			break;

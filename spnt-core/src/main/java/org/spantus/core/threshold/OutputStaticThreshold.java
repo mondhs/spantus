@@ -61,8 +61,8 @@ public class OutputStaticThreshold extends StaticThreshold {
 	}
 	@Override
 	public Float getCoef() {
-		if(coef == null){
-			coef = 1.3f;//*30%
+		if(super.getCoef() == null){
+			setCoef(1.3f);//*30%
 		}
 		return super.getCoef();
 	}

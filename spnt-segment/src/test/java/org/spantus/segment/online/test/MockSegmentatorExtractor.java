@@ -99,6 +99,11 @@ public class MockSegmentatorExtractor implements IExtractor {
 		return getClass().getSimpleName() + ": " + getName();
 	}
 
+	public void flush() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 
 }

@@ -57,4 +57,8 @@ public class ExtractorVectorOutputHolder implements IExtractorVector {
 				"]";
 	}
 
+	public void flush() {
+		throw new IllegalAccessError("Should not be called");
+	}
+
 }

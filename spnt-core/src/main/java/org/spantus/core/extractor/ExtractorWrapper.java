@@ -66,5 +66,9 @@ public class ExtractorWrapper implements IExtractor {
 		return listeners;
 	}
 
+	public void flush() {
+		getExtractor().flush();
+	}
+
 
 }

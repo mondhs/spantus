@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -156,7 +157,7 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 		if (newest != null) {
 			newest.requestFocus();
 		}
-		repaintMarkers();
+//		repaintMarkers();
 	}
 
 	public void changeSize(Dimension size) {
@@ -180,7 +181,7 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 		if (component instanceof MarkerComponent) {
 			((MarkerComponent) component).requestFocus();
 		}
-		repaintMarkers();
+//		repaintMarkers();
 	}
 
 	public void mouseEntered(MouseEvent e) {
@@ -206,7 +207,7 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 			updateCursor(e.getPoint(), currentMarkerComponent);
 			updateDragState(e.getPoint());
 		}
-		repaintMarkers();
+//		repaintMarkers();
 	}
 
 	public void mouseReleased(MouseEvent e) {
@@ -256,12 +257,14 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 	/**
 	 * 
 	 */
-	protected void repaintMarkers() {
+	@Override
+	protected void paintChildren(Graphics g) {
+//		log.error("[paintChildren]+++");
+		super.paintChildren(g);
 		for (MarkerComponent _marker : getMarkerComponents()) {
-			// log.error("[repaintMarkers]" + _marker.getMarker());
-			_marker.repaint();
+			_marker.invalidate();
 		}
-
+//		log.error("[paintChildren]---");
 	}
 
 	protected void updateDragState(Point p) {

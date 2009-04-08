@@ -1,6 +1,7 @@
 package org.spantus.work.ui.container.marker;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -75,17 +76,22 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
 	public void mouseClicked(MouseEvent e) {
 		if(e.getClickCount()==2){
 			Component currentComponent = ((JComponent)e.getSource()).findComponentAt(e.getPoint());
+			//edit
 			if(currentComponent instanceof MarkerComponent){
 				popup.editMarker((MarkerComponent)currentComponent, (MarkerSetComponent) e.getSource());
-				
+				currentComponent.getParent().repaint();
+			//add
 			}else if(currentComponent instanceof MarkerSetComponent){
 				popup.getMarkerComponentService()
 				.addMarker( (MarkerSetComponent) currentComponent, e.getPoint(), popup.getDefaultSegmentLength());
+				currentComponent.repaint();
 			}
 		}else if(e.getClickCount()==1){
 			Component currentComponent = ((JComponent)e.getSource()).findComponentAt(e.getPoint());
+			//change selection
 			if(currentComponent instanceof MarkerComponent){
 				getChart().changeSelection(currentComponent.getX(), currentComponent.getWidth());
+				currentComponent.getParent().repaint();
 			}
 		}
 		
@@ -111,6 +117,7 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
 	public void keyTyped(KeyEvent e) {
          int keyChar = e.getKeyChar();
          if(32 == keyChar){
+        	 //play
          	if(e.getComponent() instanceof MarkerComponent){
          		Marker m = ((MarkerComponent)e.getComponent()).getMarker();
          		popup.getInfo().getProject().setFrom(m.getStart()/1000f);
@@ -118,9 +125,12 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
          		popup.getHandler().execute(GlobalCommands.sample.play.name(), popup.getInfo());
          	}
          }else if(127 == keyChar){
+        	 //delet
          	if(e.getComponent() instanceof MarkerComponent){
          		MarkerComponent markerComponent =(MarkerComponent)e.getComponent();
+         		Container parent = markerComponent.getParent(); 
          		popup.getMarkerComponentService().remove((MarkerSetComponent)markerComponent.getParent(), markerComponent);
+         		parent.invalidate();
          	}
          }else{
          	log.error("[keyTyped] name" + popup.getName()+ "; keyChar" + keyChar);	

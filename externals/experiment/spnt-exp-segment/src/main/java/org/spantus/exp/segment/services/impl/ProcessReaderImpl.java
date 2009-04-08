@@ -34,7 +34,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.IThreshold;
-import org.spantus.core.threshold.SampleEstimationThreshold;
+import org.spantus.core.threshold.DynamicThreshold;
 import org.spantus.exp.segment.beans.ProcessReaderInfo;
 import org.spantus.exp.segment.services.ProcessReader;
 import org.spantus.extractor.ExtractorInputReader;
@@ -62,7 +62,7 @@ public class ProcessReaderImpl implements ProcessReader {
 			if(extractor.getName().endsWith(ExtractorEnum.SIGNAL_EXTRACTOR.name())){
 				continue;
 			}
-			SampleEstimationThreshold threshold = new SampleEstimationThreshold();
+			DynamicThreshold threshold = new DynamicThreshold();
 			if(processReaderInfo.getThresholdCoef()!=null){
 				threshold.setCoef(processReaderInfo.getThresholdCoef().floatValue());
 			}
@@ -78,7 +78,7 @@ public class ProcessReaderImpl implements ProcessReader {
 			int i = 0;
 			for (FrameValues frameValues : vals) {
 				frameValues.setSampleRate(vals.getSampleRate());
-				SampleEstimationThreshold threshold = new SampleEstimationThreshold();
+				DynamicThreshold threshold = new DynamicThreshold();
 				if(processReaderInfo.getThresholdCoef()!=null){
 					threshold.setCoef(processReaderInfo.getThresholdCoef().floatValue());
 				}
