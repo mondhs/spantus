@@ -79,4 +79,10 @@ public class AudioDescriptorVectorExtractor implements IExtractorVector {
 	public void setConfig(IExtractorConfig config) {
 	}
 
+
+	public void flush() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

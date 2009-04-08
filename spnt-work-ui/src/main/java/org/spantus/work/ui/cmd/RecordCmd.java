@@ -61,7 +61,7 @@ public class RecordCmd extends AbsrtactCmd {
 	public String execute(final SpantusWorkInfo ctx) {
 		this.ctx = ctx;
 		if( getCapture()!=null && getCapture().isRunning()){
-			log.error("is already recording ");
+//			log.error("is already recording ");
 			return null;
 		}
 		
@@ -149,7 +149,7 @@ public class RecordCmd extends AbsrtactCmd {
 		public void run() {
 			if(!getCapture().isAlive()){
 				capture.start();
-				log.error("isNotRecordInitialyzed " + recordSegmentator.getReader().getAudioBuffer().size());
+//				log.error("isNotRecordInitialyzed " + recordSegmentator.getReader().getAudioBuffer().size());
 				return;
 			}
 			if(!isRecordInitialyzed && recordSegmentator.getReader().getAudioBuffer().size()>0){

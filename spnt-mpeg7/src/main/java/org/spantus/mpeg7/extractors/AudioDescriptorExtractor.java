@@ -75,4 +75,10 @@ public class AudioDescriptorExtractor implements IExtractor {
 	}
 
 
+	public void flush() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 }

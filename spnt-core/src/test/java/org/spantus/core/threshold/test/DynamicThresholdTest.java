@@ -9,12 +9,16 @@ import org.spantus.core.threshold.DynamicThreshold;
 
 public class DynamicThresholdTest extends TestCase {
 	Float extractorSampleRate = 100F;
-	Double[] vals = new Double[]{1.0, 1.0, 2.0, 3.0, 4.0, 4.0, 3.0, 2.0, 1.0, 1.0};
+//	Double[] vals = new Double[]{1.0, 1.0, 2.0, 3.0, 4.0, 4.0, 3.0, 2.0, 1.0, 1.0};
 	Double[][] valss = new Double[][]{
 			new Double[]{1.0, 1.0, 2.0},
 			new Double[]{3.0, 4.0, 4.0},
 			new Double[]{3.0, 2.0, 1.0}};
 	Double[] negativeVals = new Double[]{-5.0, -5.0, -3.0, -2.0, -1.0, -1.0, -2.0, -3.0, -4.0, -4.0};
+	Double[][] nvalss = new Double[][]{
+			new Double[]{-5.0, -5.0, -2.0},
+			new Double[]{-1.0, -1.0, -1.0},
+			new Double[]{-2.0, -3.0, -4.0}};
 	
 	
 	
@@ -23,7 +27,6 @@ public class DynamicThresholdTest extends TestCase {
 		ExtractorOutputHolder mockExtractor = new ExtractorOutputHolder();
 		mockExtractor.setExtractorSampleRate(extractorSampleRate);
 		mockExtractor.setConfig(new DefaultExtractorConfig());
-//		mockExtractor.setOutputValues(getFrameValues(vals));
 		threshold.setExtractor(mockExtractor);
 		Long i = 0L;
 		for (Double[] dv : valss) {
@@ -37,9 +40,14 @@ public class DynamicThresholdTest extends TestCase {
 	public void testNegativesValuesTest(){
 		DynamicThreshold threshold = new DynamicThreshold();
 		ExtractorOutputHolder mockExtractor = new ExtractorOutputHolder();
+		mockExtractor.setExtractorSampleRate(extractorSampleRate);
 		mockExtractor.setConfig(new DefaultExtractorConfig());
-		mockExtractor.setOutputValues(getFrameValues(negativeVals));
 		threshold.setExtractor(mockExtractor);
+		Long i = 0L;
+		for (Double[] dv : nvalss) {
+			threshold.afterCalculated(i, getFrameValues(dv));
+			i+=3;
+		}
 		assertEquals(-5.0F, threshold.getCurrentThresholdValue());
 		assertEquals(-4.5F,threshold.getThresholdValues().iterator().next());
 	}

@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
 import org.spantus.work.ui.cmd.GlobalCommands;
-import org.spantus.work.ui.dto.NewProjectContext;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
@@ -46,11 +45,11 @@ public class NewProjectCmd extends AbsrtactCmd {
 	                        current);
 
 	    if ((projectType != null) && (projectType.length() > 0)) {
-	    	NewProjectContext ctx = new NewProjectContext();
-	    	ctx.setProjectType(selectionMap.get(projectType).name());
-	    	ctx.setWorkingDir(info.getProject().getWorkingDir());
-	    	ctx.setExperimentId(info.getProject().getExperimentId());
-	    	info.setProject(WorkUIServiceFactory.createInfoManager().newProject(ctx));
+//	    	ctx.setProjectType(selectionMap.get(projectType).name());
+//	    	ctx.setWorkingDir(info.getProject().getWorkingDir());
+//	    	ctx.setExperimentId(info.getProject().getExperimentId());
+	    	info.setProject(WorkUIServiceFactory.createInfoManager().newProject(info.getProject(),
+	    			selectionMap.get(projectType).name() ));
 	    	return true;
 	    }
 

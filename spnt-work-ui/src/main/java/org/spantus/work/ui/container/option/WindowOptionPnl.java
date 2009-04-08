@@ -143,7 +143,9 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				field.setValue(Integer.valueOf(workConfig.getSegmentationExpandEnd()));
 				break;
 			case thresholdType:
-				((JComboBox)fieldEntry.getValue()).setSelectedItem("threshold_"+getConfig().getProject().getThresholdType());
+				((JComboBox)fieldEntry.getValue()).setSelectedItem(
+						getMessage("threshold_"
+						+getConfig().getProject().getThresholdType()));
 				break;
 				
 			default:

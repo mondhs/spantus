@@ -27,12 +27,12 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.WorkReadersEnum;
 import org.spantus.work.reader.SupportableReaderEnum;
-import org.spantus.work.ui.dto.NewProjectContext;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
@@ -81,12 +81,13 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 	}
 
 
-	public SpantusWorkProjectInfo newProject(NewProjectContext ctx) {
+	public SpantusWorkProjectInfo newProject(SpantusWorkProjectInfo oldProject, String type) {
 		SpantusWorkProjectInfo project = createProject();
-		project.setWorkingDir(ctx.getWorkingDir());
-		project.setExperimentId(ctx.getExperimentId());
-		project.setCurrentType(ctx.getProjectType());
-		switch (ProjectTypeEnum.valueOf(ctx.getProjectType())) {
+		project.setWorkingDir(oldProject.getWorkingDir());
+		project.setExperimentId(oldProject.getExperimentId());
+		project.setCurrentType(oldProject.getCurrentType());
+		project.setThresholdType(oldProject.getThresholdType());
+		switch (ProjectTypeEnum.valueOf(type)) {
 		case feature:
 		case segmenation:
 		case recordSegmentation:
@@ -114,6 +115,17 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		project.getFeatureReader().setWorkConfig(new WorkUIExtractorConfig());
 		initializeExperimentId(project);
 		return project;
+	}
+	/**
+	 * 
+	 * @param info
+	 */
+	protected void updateOnLoad(SpantusWorkInfo info){
+		initializeExperimentId(info.getProject());
+		if(!StringUtils.hasText(info.getProject().getThresholdType())){
+			info.getProject().setThresholdType(ThresholdEnum.online.name());
+		}
+
 	}
 	
 	protected void initializeExperimentId(SpantusWorkProjectInfo project){

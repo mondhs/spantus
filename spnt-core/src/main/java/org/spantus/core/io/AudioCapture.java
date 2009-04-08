@@ -58,7 +58,7 @@ public class AudioCapture extends Thread {
 			line = (TargetDataLine) AudioSystem.getLine(info);
 			line.open(format);
 			line.start();
-			log.error("grabing line. " + running + ": " + this.hashCode());
+//			log.error("grabing line. " + running + ": " + this.hashCode());
 			int bufferSize = (int) format.getSampleRate()
 					* format.getFrameSize();
 			byte buffer[] = new byte[bufferSize];
@@ -71,7 +71,7 @@ public class AudioCapture extends Thread {
 			}
 			line.drain();
 			line.close();
-			log.error("line closed");
+//			log.error("line closed");
 		} catch (LineUnavailableException e1) {
 			log.error(e1);
 			running = false;
@@ -85,7 +85,7 @@ public class AudioCapture extends Thread {
 	}
 	
 	public void finalize() {
-		log.error("finalize");
+//		log.error("finalize");
 		running = false;
 	}
 

@@ -46,5 +46,9 @@ public abstract class AbstractMpeg7Extractor implements IGeneralExtractor {
 	public void setSampleRate(float sampleRate) {
 		this.sampleRate = sampleRate;
 	}
+	
+	public void flush() {
+		
+	}
 
 }
