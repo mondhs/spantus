@@ -23,6 +23,7 @@ package org.spantus.work.ui.container;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Toolkit;
 
 import javax.swing.JDialog;
@@ -59,7 +60,7 @@ public class SpantusWorkSwingUtils {
        
     }
 	
-	public static void fullWindow(JFrame frame) {
+	public static void fullWindow(Frame frame) {
         //      Get the size of the screen
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize(dim.width, dim.height);

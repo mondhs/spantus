@@ -24,8 +24,6 @@ package org.spantus.work.ui.cmd;
 
 import java.awt.Frame;
 
-import javax.swing.SwingUtilities;
-
 import org.spantus.work.ui.container.panel.SpantusAbout;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
@@ -55,7 +53,8 @@ public class AboutCmd extends AbsrtactCmd {
 
 	private SpantusAbout getAboutPnl(){
 		if(about == null){
-			about = new SpantusAbout((Frame)SwingUtilities.getAncestorOfClass(Frame.class, frame));
+			about = new SpantusAbout(frame);
+			about.setModal(true);
 		}
 		return about;
 	}

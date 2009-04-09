@@ -6,18 +6,18 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 public class ReloadResourcesCmd extends AbsrtactCmd {
 	
 	private ReloadableComponent component;
-	private CurrentSampleChangedCmd currentSampleChanged;
+//	private CurrentSampleChangedCmd currentSampleChanged;
 	
-	public ReloadResourcesCmd(ReloadableComponent component, CurrentSampleChangedCmd currentSampleChanged) {
+	public ReloadResourcesCmd(ReloadableComponent component) {
 		this.component = component;
-		this.currentSampleChanged = currentSampleChanged;
+//		this.currentSampleChanged = currentSampleChanged;
 	}
 
 	
 	public String execute(SpantusWorkInfo ctx) {
 		component.reload();
-		currentSampleChanged.execute(ctx);
-		return null;
+//		currentSampleChanged.execute(ctx);
+		return GlobalCommands.file.currentSampleChanged.name();
 	}
 
 }

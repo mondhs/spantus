@@ -1,6 +1,12 @@
 package org.spantus.work.ui.container;
 
 import java.awt.BorderLayout;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
@@ -8,37 +14,14 @@ import java.text.MessageFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.UIManager.LookAndFeelInfo;
 
-import org.spantus.work.ui.cmd.AboutCmd;
-import org.spantus.work.ui.cmd.AutoSegmentationCmd;
-import org.spantus.work.ui.cmd.CurrentSampleChangedCmd;
-import org.spantus.work.ui.cmd.GlobalCommands;
+import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.MainHandler;
-import org.spantus.work.ui.cmd.OpenCmd;
-import org.spantus.work.ui.cmd.OptionCmd;
-import org.spantus.work.ui.cmd.PlayCmd;
-import org.spantus.work.ui.cmd.RecordCmd;
-import org.spantus.work.ui.cmd.ReloadResourcesCmd;
-import org.spantus.work.ui.cmd.ReloadSampleChartCmd;
-import org.spantus.work.ui.cmd.SaveSegmentCmd;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
-import org.spantus.work.ui.cmd.StopCmd;
-import org.spantus.work.ui.cmd.ZoomInCmd;
-import org.spantus.work.ui.cmd.ZoomOutCmd;
-import org.spantus.work.ui.cmd.file.CurrentProjectChangedCmd;
-import org.spantus.work.ui.cmd.file.ExportCmd;
-import org.spantus.work.ui.cmd.file.ImportCmd;
-import org.spantus.work.ui.cmd.file.NewProjectCmd;
-import org.spantus.work.ui.cmd.file.OpenProjectCmd;
-import org.spantus.work.ui.cmd.file.SaveProjectCmd;
 import org.spantus.work.ui.container.panel.SampleRepresentationPanel;
-import org.spantus.work.ui.dto.EnviromentRepresentation;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
+import org.spantus.work.ui.services.SpantusUIServiceImpl;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
 
 public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
@@ -50,6 +33,8 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	private SpantusWorkInfo info = null;
 	private MainHandler handler = null;
 	private SampleRepresentationPanel sampleRepresentationPanel;
+	private Logger log= Logger.getLogger(SpantusWorkFrame.class);
+	private SpantusUIServiceImpl spantusUIService;
 
 	/**
 	 * This is the default constructor
@@ -81,17 +66,17 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		getSampleRepresentationPanel().initialize();
 		this.setJMenuBar(getJJMenuBar());
 		this.setContentPane(getJContentPane());
-		setupEnv(getInfo());
+		getSpantusUIService().setupEnv(getInfo(),this);
 		contructTitle();
 	}
 	public void reload() {
 		getJJMenuBar().reload();
 		getJJToolBarBar().reload();
 		contructTitle();
-//		repaint(500);
+		this.setTitle(contructTitle());
 	}
 	
-	protected void contructTitle(){
+	protected String contructTitle(){
 		String version = getMessage("spantus.work.ui.version");
 		String projectType = getMessage("spantus.work.ui.project.type." + getInfo().getProject().getCurrentType());
 		String fileName = "";
@@ -102,9 +87,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 				version,
 				projectType,
 				fileName);
-		
-		this.setTitle(title);
-
+		return title;
 	}
 	
 	/**
@@ -118,7 +101,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 			jContentPane.setLayout(new BorderLayout());
 			jContentPane.add(getJJToolBarBar(), BorderLayout.NORTH);
 			jContentPane.add(getSampleRepresentationPanel(),BorderLayout.CENTER);
-
+			new DropTarget(jContentPane, new WavDropTargetListener(getHandler(),getInfo()));
 		}
 		return jContentPane;
 	}
@@ -150,60 +133,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		return jJToolBarBar;
 	}
 
-	protected void setupEnv(SpantusWorkInfo info) {
-		EnviromentRepresentation env = info.getEnv();
-		if (env == null) {
-			SpantusWorkSwingUtils.fullWindow(this);
-			info.setEnv(new EnviromentRepresentation());
-
-			info.getEnv().setLaf(
-					UIManager.getLookAndFeel().getClass().getName());
-		} else {
-			this.setSize(env.getClientWindow().width,
-					env.getClientWindow().height);
-			this.setLocation(env.getLocation());
-			if (info.getEnv().getLaf() == null) {
-				info.getEnv().setLaf(getDefaultLAF());
-			}
-			try {
-				UIManager.setLookAndFeel(env.getLaf());
-				SwingUtilities.updateComponentTreeUI(this);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (UnsupportedLookAndFeelException e) {
-				e.printStackTrace();
-			}
-		}
-		if(info.getEnv().getGrid()==null){
-			info.getEnv().setGrid(Boolean.TRUE);
-		}
-		if(info.getEnv().getPopupNotifications()==null){
-			info.getEnv().setPopupNotifications(Boolean.TRUE);
-		}
-	}
-	protected String getDefaultLAF(){
-		String laf = null;
-		// if MS Windows then select LAF Windows as default, if other OS then pick up default 
-		if(System.getProperties().getProperty("os.name").startsWith("Windows")){
-			for (LookAndFeelInfo lafInfo : UIManager.getInstalledLookAndFeels()) {
-				if(lafInfo.getName().equals("Windows")){
-					laf = lafInfo.getClassName();
-					break;
-				}
-			}
-			if(laf == null){
-				laf = UIManager.getLookAndFeel().getClass().getName();	
-			}
-		}else{
-			laf =  UIManager.getLookAndFeel().getClass().getName();
-		}
-		return laf;
-		
-	}
+	
 
 	public SpantusWorkInfo getInfo() {
 		if(info == null){
@@ -220,96 +150,11 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	public SpantusWorkCommand getHandler() {
 		if(handler == null){
 			handler = new MainHandler();
-			createFileCmd();
-			createSampleCmd();
-			handler
-				.getCmds()
-				.put(GlobalCommands.help.about.name(), new AboutCmd(this));
-
-			CurrentSampleChangedCmd currentSampleChanged = new CurrentSampleChangedCmd(
-					getSampleRepresentationPanel(),
-					getSampleRepresentationPanel(),
-					getHandler()
-					);
-			handler
-			.getCmds()
-			.put(GlobalCommands.file.currentSampleChanged.name(), currentSampleChanged);
-			
-			
-			handler
-			.getCmds()
-			.put(GlobalCommands.tool.option.name(), 
-					new OptionCmd(this));
-
-			handler
-			.getCmds()
-			.put(GlobalCommands.tool.reloadResources.name(), 
-					new ReloadResourcesCmd(this, currentSampleChanged));
-			
-			handler
-			.getCmds()
-			.put(GlobalCommands.tool.saveSegments.name(), 
-					new SaveSegmentCmd());
-
-			
-			
-			handler
-			.getCmds()
-			.put(GlobalCommands.tool.autoSegmentation.name(), 
-					new AutoSegmentationCmd(getSampleRepresentationPanel().getSampleChart()));
-
+			handler.initialize(this);
 		}
 		return handler;
 	}
-	private void createSampleCmd() {
-
-		handler
-		.getCmds()
-		.put(GlobalCommands.sample.record.name(), 
-				new RecordCmd(getSampleRepresentationPanel(),getHandler()));
-		handler
-		.getCmds()
-		.put(GlobalCommands.sample.play.name(), 
-				new PlayCmd());
-
-		handler
-		.getCmds()
-		.put(GlobalCommands.sample.stop.name(), 
-				new StopCmd());
-		
-		handler
-		.getCmds()
-		.put(GlobalCommands.sample.zoomin.name(), 
-				new ZoomInCmd(getSampleRepresentationPanel().getSampleChart()));
-		handler
-		.getCmds()
-		.put(GlobalCommands.sample.zoomout.name(), 
-				new ZoomOutCmd(getSampleRepresentationPanel().getSampleChart()));
-		
-		handler
-		.getCmds()
-		.put(GlobalCommands.sample.reloadSampleChart.name(), 
-				new ReloadSampleChartCmd(getSampleRepresentationPanel().getSampleChart()));
-
-	}
-	private void createFileCmd() {
-		handler.getCmds().put(GlobalCommands.file.open.name(), new OpenCmd());
-		handler.getCmds().put(GlobalCommands.file.newProject.name(),
-				new NewProjectCmd(this));
-		handler.getCmds().put(GlobalCommands.file.openProject.name(),
-				new OpenProjectCmd(this));
-		handler.getCmds().put(GlobalCommands.file.saveProject.name(),
-				new SaveProjectCmd(this));
-
-		handler.getCmds().put(GlobalCommands.file.currentProjectChanged.name(),
-				new CurrentProjectChangedCmd(this));
-		handler.getCmds().put(GlobalCommands.file.exportFile.name(),
-				new ExportCmd(this, getSampleRepresentationPanel().getSampleChart()));
-		handler.getCmds().put(GlobalCommands.file.importFile.name(),
-				new ImportCmd(this, getSampleRepresentationPanel().getSampleChart()));
-
-
-	}
+	
 
 	public SampleRepresentationPanel getSampleRepresentationPanel() {
 		if (sampleRepresentationPanel == null) {
@@ -328,4 +173,42 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		return I18nFactory.createI18n().getMessage(key);
 	}
 
+	public SpantusUIServiceImpl getSpantusUIService() {
+		if(spantusUIService == null){
+			spantusUIService = new SpantusUIServiceImpl();
+		}
+		return spantusUIService;
+	}
+
+	/*
+	 * 
+	 * Drag and drop functionality
+	 * 
+	 */
+	public void dragEnter(DropTargetDragEvent dtde) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void dragExit(DropTargetEvent dte) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void dragOver(DropTargetDragEvent dtde) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void drop(DropTargetDropEvent dtde) {
+		dtde.acceptDrop (DnDConstants.ACTION_COPY_OR_MOVE);
+		
+	}
+
+	public void dropActionChanged(DropTargetDragEvent dtde) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 }

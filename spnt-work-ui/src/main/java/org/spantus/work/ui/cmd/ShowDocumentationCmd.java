@@ -19,31 +19,42 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
+
 package org.spantus.work.ui.cmd;
 
-import org.spantus.work.ui.container.chart.SampleChart;
+import java.awt.Frame;
+
+import org.spantus.work.ui.container.panel.SpantusAbout;
+import org.spantus.work.ui.container.panel.SpantusDocumentaionDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
  * 
- * 
  * @author Mindaugas Greibus
- *
- * @since 0.0.1
  * 
- * Created Aug 26, 2008
+ * @since 0.0.1
+ * Created Apr 9, 2009
  *
  */
-public class ZoomInCmd extends AbsrtactCmd {
+public class ShowDocumentationCmd extends AbsrtactCmd {
 
-	private SampleChart sampleChart;
-
-	public ZoomInCmd(SampleChart sampleChart) {
-		this.sampleChart = sampleChart;
+	private SpantusDocumentaionDialog docDialog;
+	private Frame frame;
+	
+	public ShowDocumentationCmd(Frame frame){
+		this.frame = frame;
 	}
 	
-	public String execute(SpantusWorkInfo ctx) {
-		sampleChart.getChart().changedZoom(ctx.getProject().getFrom(), ctx.getProject().getLength());
+	
+	public String execute(SpantusWorkInfo ctx){
+		getDocDialog().setVisible(true);
 		return null;
 	}
 
+	private SpantusDocumentaionDialog getDocDialog(){
+		if(docDialog == null){
+			docDialog = new SpantusDocumentaionDialog(frame);
+			docDialog.setModal(true);
+		}
+		return docDialog;
+	}
 }

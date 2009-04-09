@@ -146,7 +146,11 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			helpMenu = new JMenu();
 			helpMenu.setText(getResource(menuLabels.help.name()));
 			menuItems.put(menuLabels.help.name(), helpMenu);
+			helpMenu.add(createMenuItemp(GlobalCommands.help.userGuide.name(), 
+					KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0)));
+			helpMenu.addSeparator();
 			helpMenu.add(createMenuItemp(helpMenuLabels.about.name()));
+			
 			this.add(helpMenu);
 		}
 		return helpMenu;

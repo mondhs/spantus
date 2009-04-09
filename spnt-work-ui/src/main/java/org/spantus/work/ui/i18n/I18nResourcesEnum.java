@@ -31,7 +31,7 @@ package org.spantus.work.ui.i18n;
  */
 public enum I18nResourcesEnum {
 	appletAboutHtml("/org/spantus/work/ui/res/about.html"),
-	smallLogo("/org/spantus/work/ui/img/small_logo.gif");
+	smallLogo("/org/spantus/work/ui/img/small_logo.png");
 	
 	private String code;
 	
