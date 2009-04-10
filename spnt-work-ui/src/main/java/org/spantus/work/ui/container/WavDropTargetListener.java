@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.GlobalCommands;
-import org.spantus.work.ui.cmd.MainHandler;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 

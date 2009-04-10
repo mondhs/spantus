@@ -29,17 +29,7 @@ package org.spantus.work.ui.i18n;
  * Created 2008.06.10
  *
  */
-public enum I18nResourcesEnum {
-	appletAboutHtml("/org/spantus/work/ui/res/about.html"),
-	smallLogo("/org/spantus/work/ui/img/small_logo.png");
-	
-	private String code;
-	
-	private I18nResourcesEnum(String code){
-		this.code = code;
-	}
-	
-	public String getCode(){
-		return code;
-	}
+public enum HtmlResourcesEnum {
+	appletAboutHtml,
+	segmentUserGuideHtml,
 }

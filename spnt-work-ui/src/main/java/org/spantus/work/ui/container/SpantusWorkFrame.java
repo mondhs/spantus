@@ -1,12 +1,7 @@
 package org.spantus.work.ui.container;
 
 import java.awt.BorderLayout;
-import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
@@ -21,7 +16,9 @@ import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.container.panel.SampleRepresentationPanel;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
+import org.spantus.work.ui.i18n.ImageResourcesEnum;
 import org.spantus.work.ui.services.SpantusUIServiceImpl;
+import org.spantus.work.ui.services.WorkInfoManager;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
 
 public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
@@ -34,23 +31,24 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	private MainHandler handler = null;
 	private SampleRepresentationPanel sampleRepresentationPanel;
 	private Logger log= Logger.getLogger(SpantusWorkFrame.class);
+	
 	private SpantusUIServiceImpl spantusUIService;
-
+	private WorkInfoManager workInfoManager;
+	
 	/**
 	 * This is the default constructor
 	 */
 	public SpantusWorkFrame() {
 		super();
-		this.setTitle("Spantus 0.0.1");
+		this.setTitle("Spantus");
 		this.setIconImage(new ImageIcon(
-				this.getClass().getClassLoader().getResource("org/spantus/work/ui/img/icon.gif")
+				this.getClass().getClassLoader().getResource(
+						ImageResourcesEnum.spntIcon.getCode()
+						)
 				).getImage());
 		addWindowListener(new WindowAdapter() {
 		      public void windowClosing(WindowEvent e) {
-		    	  getInfo().getEnv().setClientWindow(e.getComponent().getSize());
-		    	  getInfo().getEnv().setLocation(e.getComponent().getLocation());
-
-		    	  WorkUIServiceFactory.createInfoManager().saveWorkInfo(getInfo());
+		    	  saveEnv();
 		      }
 		    });
 	}
@@ -61,13 +59,20 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	 * @return void
 	 */
 	public void initialize() {
+		getSpantusUIService().setupEnv(getInfo(),this);
 		getJJMenuBar().initialize();
 		getJJToolBarBar().initialize();
 		getSampleRepresentationPanel().initialize();
 		this.setJMenuBar(getJJMenuBar());
 		this.setContentPane(getJContentPane());
-		getSpantusUIService().setupEnv(getInfo(),this);
 		contructTitle();
+		log.info("Application started");
+	}
+	
+	public void saveEnv(){
+		getSpantusUIService().saveEnv(getInfo(),this);
+		getWorkInfoManager().saveWorkInfo(getInfo());
+		log.info("Application stoped");
 	}
 	public void reload() {
 		getJJMenuBar().reload();
@@ -137,7 +142,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 
 	public SpantusWorkInfo getInfo() {
 		if(info == null){
-			info = WorkUIServiceFactory.createInfoManager().openWorkInfo();
+			info = getWorkInfoManager().openWorkInfo();
 			I18nFactory.createI18n(info);
 		}
 		return info;
@@ -180,34 +185,13 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		return spantusUIService;
 	}
 
-	/*
-	 * 
-	 * Drag and drop functionality
-	 * 
-	 */
-	public void dragEnter(DropTargetDragEvent dtde) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
-	public void dragExit(DropTargetEvent dte) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void dragOver(DropTargetDragEvent dtde) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void drop(DropTargetDropEvent dtde) {
-		dtde.acceptDrop (DnDConstants.ACTION_COPY_OR_MOVE);
-		
-	}
-
-	public void dropActionChanged(DropTargetDragEvent dtde) {
-		// TODO Auto-generated method stub
-		
+	public WorkInfoManager getWorkInfoManager() {
+		if(workInfoManager == null){
+			workInfoManager = WorkUIServiceFactory.createInfoManager();
+		}
+		return workInfoManager;
 	}
 	
 	

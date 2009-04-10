@@ -43,9 +43,11 @@ import org.spantus.logger.Logger;
 public class DefaultI18n implements I18n {
 
 	public static final String PROPERTIES_FILE_NAME = "org.spantus.work.ui.res.messages";
+	public static final String HTML_PROPERTIES_FILE_NAME = "org.spantus.work.ui.res.html_resources";
 	public static final Locale LITHUANIAN = new Locale("lt", "LT");
 	private Locale locale;
 	private ResourceBundle bundle;
+	private ResourceBundle htmlBundle;
 	private Logger log = Logger.getLogger(getClass());
 
 	public Locale getLocale() {
@@ -54,7 +56,10 @@ public class DefaultI18n implements I18n {
 		}
 		return locale;
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	public ResourceBundle getBundle() {
 		if (bundle == null) {
 			log.debug("Creating new bundle on locale: " + getLocale());
@@ -63,24 +68,47 @@ public class DefaultI18n implements I18n {
 		}
 		return bundle;
 	}
-
+	public ResourceBundle getHtmlBundle() {
+		if (htmlBundle == null) {
+			log.debug("Creating new bundle on locale: " + getLocale());
+			htmlBundle = ResourceBundle
+					.getBundle(HTML_PROPERTIES_FILE_NAME, getLocale());
+		}
+		return htmlBundle;
+	}
+	/**
+	 * 
+	 */
 	public String getMessage(String key) {
 		String rtnStr = key;
-		if (key.equals(I18nResourcesEnum.appletAboutHtml.getCode())) {
-			return getMessageHtml(key);
+		String htmlMsg = getMessageHtml(key);
+		if(htmlMsg != null){
+			return htmlMsg;
 		}
+		
 		try {
 			rtnStr = getBundle().getString(key);
 		} catch (MissingResourceException e) {
-//			System.out.println(key + "=" + key);
 			log.error("Resource not fount: " + key);
-//			e.printStackTrace();
+//			log.error(e);
 		}
 		return rtnStr;
 	}
-
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public String getMessageHtml(String key) {
-		InputStream in = getClass().getResourceAsStream(key);
+		HtmlResourcesEnum htmlEnum = null;
+		try{
+			htmlEnum = HtmlResourcesEnum.valueOf(key);
+		}catch (IllegalArgumentException e) {
+			return null;
+		}
+		String htmlPath = getHtmlBundle().getString(htmlEnum.name());
+		
+		InputStream in = getClass().getResourceAsStream(htmlPath);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		StringBuilder sb = new StringBuilder();
 		String line = null;

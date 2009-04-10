@@ -27,7 +27,6 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
 /**
@@ -59,6 +58,13 @@ public class SpantusWorkSwingUtils {
         dialog.setLocation(x, y);
        
     }
+	public static Dimension currentWindowSize(double widthRatio, double heightRatio) {
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension rtnDim = new Dimension(); 
+		rtnDim.width = new Double(dim.getWidth()*widthRatio).intValue();
+		rtnDim.height = new Double(dim.getHeight()*heightRatio).intValue();
+        return rtnDim;
+	}
 	
 	public static void fullWindow(Frame frame) {
         //      Get the size of the screen

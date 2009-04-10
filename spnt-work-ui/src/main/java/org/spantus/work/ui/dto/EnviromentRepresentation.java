@@ -33,19 +33,20 @@ import java.awt.Point;
  *
  */
 public class EnviromentRepresentation {
-	private Dimension clientWindow;
+	private Dimension mainWindowDimension;
 	private Point location;
+	private int mainWindowState;//maximized or normal
 	private Boolean grid;
 	private Boolean popupNotifications;
 	
 	private String laf;
 
-	public Dimension getClientWindow() {
-		return clientWindow;
+	public Dimension getMainWindowDimension() {
+		return mainWindowDimension;
 	}
 
-	public void setClientWindow(Dimension clientWindow) {
-		this.clientWindow = clientWindow;
+	public void setMainWindowDimension(Dimension clientWindow) {
+		this.mainWindowDimension = clientWindow;
 	}
 
 	
@@ -80,6 +81,14 @@ public class EnviromentRepresentation {
 
 	public void setPopupNotifications(Boolean popupNotifications) {
 		this.popupNotifications = popupNotifications;
+	}
+
+	public int getMainWindowState() {
+		return mainWindowState;
+	}
+
+	public void setMainWindowState(int frameWindowState) {
+		this.mainWindowState = frameWindowState;
 	}
 
 

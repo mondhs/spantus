@@ -1,7 +1,10 @@
 package org.spantus.work.ui.services;
 
+import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Point;
 
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -26,9 +29,20 @@ public class SpantusUIServiceImpl {
 			info.getEnv().setLaf(
 					UIManager.getLookAndFeel().getClass().getName());
 		} else {
-			frame.setSize(env.getClientWindow().width,
-					env.getClientWindow().height);
+			if (isEmpty(env.getMainWindowDimension())) {
+				env.setMainWindowDimension(SpantusWorkSwingUtils.currentWindowSize(
+						.75, .75));
+				env.setMainWindowState(JFrame.MAXIMIZED_BOTH);
+			}
+			if (env.getMainWindowState() == JFrame.MAXIMIZED_BOTH) {
+				env.setMainWindowDimension(SpantusWorkSwingUtils.currentWindowSize(
+						.75, .75));
+			}
+			frame.setSize(env.getMainWindowDimension().width,
+					env.getMainWindowDimension().height);
 			frame.setLocation(env.getLocation());
+			frame.setExtendedState(env.getMainWindowState());
+
 			if (info.getEnv().getLaf() == null) {
 				info.getEnv().setLaf(getDefaultLAF());
 			}
@@ -52,6 +66,22 @@ public class SpantusUIServiceImpl {
 			info.getEnv().setPopupNotifications(Boolean.TRUE);
 		}
 	}
+
+	protected boolean isEmpty(Dimension d) {
+		return d == null || d.width == 0 || d.height == 0;
+	}
+
+	protected boolean isEmpty(Point d) {
+		return d == null || d.x == 0 || d.y == 0;
+	}
+
+	public void saveEnv(SpantusWorkInfo info, Frame frame) {
+		info.getEnv().setMainWindowDimension(frame.getSize());
+		info.getEnv().setLocation(frame.getLocation());
+		info.getEnv().setMainWindowState(frame.getExtendedState());
+		
+	}
+
 	/**
 	 * 
 	 * @return

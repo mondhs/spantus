@@ -4,33 +4,39 @@ import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
+import org.spantus.work.ui.i18n.HtmlResourcesEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
-import org.spantus.work.ui.i18n.I18nResourcesEnum;
+
 /**
  * 
  * 
  * 
  * @author Mindaugas Greibus
- *
+ * 
  * @since 0.0.1
  * 
- * Created Jun 11, 2008
- *
+ *        Created Jun 11, 2008
+ * 
  */
 public class SpantusDocumentaionDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JPanel jPanel = null;
-//	private JLabel jLabel = null;
+	// private JLabel jLabel = null;
 	private JButton jButton = null;
 	private JScrollPane jScrollPane = null;
 	private JEditorPane jEditorPane = null;
@@ -50,9 +56,18 @@ public class SpantusDocumentaionDialog extends JDialog {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(503, 215);
+//		this.setSize(503, 215);
+		this.setSize(SpantusWorkSwingUtils.currentWindowSize(0.75, 0.75));
 		SpantusWorkSwingUtils.centerWindow(this);
 		this.setContentPane(getJContentPane());
+	}
+
+	protected JRootPane createRootPane() {
+		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+		JRootPane rootPane = super.createRootPane();
+		rootPane.registerKeyboardAction(new DocActionListener(), stroke,
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
+		return rootPane;
 	}
 
 	/**
@@ -76,12 +91,12 @@ public class SpantusDocumentaionDialog extends JDialog {
 	 */
 	private JPanel getJPanel() {
 		if (jPanel == null) {
-//			jLabel = new JLabel();
-//			jLabel.setIcon(new ImageIcon(getClass().getResource(
-//					I18nResourcesEnum.smallLogo.getCode())));
+			// jLabel = new JLabel();
+			// jLabel.setIcon(new ImageIcon(getClass().getResource(
+			// I18nResourcesEnum.smallLogo.getCode())));
 			jPanel = new JPanel();
 			jPanel.setLayout(new BorderLayout());
-//			jPanel.add(jLabel, BorderLayout.WEST);
+			// jPanel.add(jLabel, BorderLayout.WEST);
 			jPanel.add(getJPanel1(), BorderLayout.SOUTH);
 			jPanel.add(getJScrollPane(), BorderLayout.CENTER);
 		}
@@ -97,11 +112,7 @@ public class SpantusDocumentaionDialog extends JDialog {
 		if (jButton == null) {
 			jButton = new JButton();
 			jButton.setText("Ok");
-			jButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent e) {
-					setVisible(false);
-				}
-			});
+			jButton.addActionListener(new DocActionListener());
 		}
 		return jButton;
 	}
@@ -134,7 +145,7 @@ public class SpantusDocumentaionDialog extends JDialog {
 			jEditorPane.setEditable(false);
 			jEditorPane.setContentType("text/html");
 			jEditorPane.setText(I18nFactory.createI18n().getMessage(
-					I18nResourcesEnum.appletAboutHtml.getCode()));
+					HtmlResourcesEnum.segmentUserGuideHtml.name()));
 			jEditorPane.setCaretPosition(0);
 		}
 		return jEditorPane;
@@ -157,5 +168,10 @@ public class SpantusDocumentaionDialog extends JDialog {
 		return jPanel1;
 	}
 
+	class DocActionListener implements ActionListener {
+		public void actionPerformed(java.awt.event.ActionEvent e) {
+			dispose();
+		}
+	}
 
 }
