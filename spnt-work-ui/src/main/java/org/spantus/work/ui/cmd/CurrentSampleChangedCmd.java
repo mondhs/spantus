@@ -28,6 +28,7 @@ import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.work.ui.container.SampleChangeListener;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.services.WorkInfoManager;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
 
 public class CurrentSampleChangedCmd extends AbsrtactCmd {
@@ -35,6 +36,7 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 	SampleChangeListener lisetener;
 	ProcessedFrameLinstener processedFrameLinstener;
 	SpantusWorkCommand handler;
+	WorkInfoManager workInfoManager;
 	
 	public CurrentSampleChangedCmd(SampleChangeListener lisetener, ProcessedFrameLinstener processedFrameLinstener, SpantusWorkCommand handler) {
 		this.lisetener = lisetener;
@@ -71,8 +73,17 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 			if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
 				Toolkit.getDefaultToolkit().beep();
 			}
+			getWorkInfoManager().increaseExperimentId(ctx);
 			handler.execute(GlobalCommands.tool.autoSegmentation.name(), ctx);
+			handler.execute(GlobalCommands.tool.reloadResources.name(), ctx);
 		}
+	}
+
+	public WorkInfoManager getWorkInfoManager() {
+		if(workInfoManager == null){
+			workInfoManager = WorkUIServiceFactory.createInfoManager();
+		}
+		return workInfoManager;
 	}
 	
 //	class  ReadingThread extends SwingWorker<Void, Void>{

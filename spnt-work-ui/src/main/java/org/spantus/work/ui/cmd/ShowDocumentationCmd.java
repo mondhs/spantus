@@ -24,7 +24,7 @@ package org.spantus.work.ui.cmd;
 
 import java.awt.Frame;
 
-import org.spantus.work.ui.container.panel.SpantusDocumentaionDialog;
+import org.spantus.work.ui.container.panel.SpantusDocumentationDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
  * 
@@ -36,7 +36,7 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
  */
 public class ShowDocumentationCmd extends AbsrtactCmd {
 
-	private SpantusDocumentaionDialog docDialog;
+	private SpantusDocumentationDialog docDialog;
 	private Frame frame;
 	
 	public ShowDocumentationCmd(Frame frame){
@@ -49,9 +49,9 @@ public class ShowDocumentationCmd extends AbsrtactCmd {
 		return null;
 	}
 
-	private SpantusDocumentaionDialog getDocDialog(){
+	private SpantusDocumentationDialog getDocDialog(){
 		if(docDialog == null){
-			docDialog = new SpantusDocumentaionDialog(frame);
+			docDialog = new SpantusDocumentationDialog(frame);
 			docDialog.setModal(true);
 		}
 		return docDialog;

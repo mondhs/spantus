@@ -42,7 +42,7 @@ public class OpenCmd extends AbsrtactCmd {
 	
 	public String execute(SpantusWorkInfo ctx) {
 		if(importSample(ctx)){
-			return GlobalCommands.tool.reloadResources.name();
+			return GlobalCommands.file.currentSampleChanged.name();
 		}
 		return null;
 		
@@ -64,7 +64,6 @@ public class OpenCmd extends AbsrtactCmd {
 				ctx.getProject().getCurrentSample().setCurrentFile(
 						selectedFile.toURI().toURL());
 				ctx.getProject().setWorkingDir(selectedFile.getParentFile());
-				getWorkInfoManager().increaseExperimentId(ctx);
 			} catch (MalformedURLException e1) {
 				throw new ProcessingException(e1);
 			}

@@ -28,10 +28,9 @@ import org.spantus.work.ui.i18n.I18nFactory;
  * 
  * @since 0.0.1
  * 
- *        Created Jun 11, 2008
  * 
  */
-public class SpantusDocumentaionDialog extends JDialog {
+public class SpantusDocumentationDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -45,7 +44,7 @@ public class SpantusDocumentaionDialog extends JDialog {
 	/**
 	 * @param owner
 	 */
-	public SpantusDocumentaionDialog(Frame owner) {
+	public SpantusDocumentationDialog(Frame owner) {
 		super(owner);
 		initialize();
 	}

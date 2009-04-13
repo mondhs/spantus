@@ -1,6 +1,7 @@
 package org.spantus.work.ui.container;
 
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
@@ -22,6 +23,7 @@ import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
+import org.spantus.work.ui.i18n.ImageResourcesEnum;
 /**
  * 
  * 
@@ -40,15 +42,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 	 */
 	private static final long serialVersionUID = 767468009839505233L;
 	
-	public static final String FILE_FIND_ICON = "org/spantus/work/ui/icon/filefind.png";
-	public static final String PLAY_ICON = "org/spantus/work/ui/icon/media-playback-start.png";
-	public static final String STOP_ICON = "org/spantus/work/ui/icon/media-playback-stop.png";
-	public static final String RECORD_ICON = "org/spantus/work/ui/icon/media-playback-record.png";
-	public static final String PREFERENCES_ICON = "org/spantus/work/ui/icon/gtk-preferences.png";
-
-	public static final String ZOOMIN_ICON = "org/spantus/work/ui/icon/gtk-zoom-in.png";
-	public static final String ZOOMOUT_ICON = "org/spantus/work/ui/icon/gtk-zoom-out.png";
-	
+		
 
 	Logger log = Logger.getLogger(getClass());
 	
@@ -125,9 +119,10 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		getPlayBtn().setEnabled(isPlayable);
 		getOpenBtn().setEnabled(isPlayable);
 		
-		this.add(new JToolBar.Separator());
+//		this.add(new JToolBar.Separator());
 		this.add(new JToolBar.Separator());
 		this.add(getPreferencesBtn());
+		this.add(getRefreshBtn());
 		
 	}	
 	
@@ -159,7 +154,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 
 	public JButton getOpenBtn() {
 		if (openBtn == null) {
-			ImageIcon icon = createIcon(FILE_FIND_ICON);
+			ImageIcon icon = createIcon(ImageResourcesEnum.open.getCode());
 			openBtn = createButton(icon, GlobalCommands.file.open.name());
 		}
 		return openBtn;
@@ -167,7 +162,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 
 	public JButton getPlayBtn() {
 		if (playBtn == null) {
-			ImageIcon icon = createIcon(PLAY_ICON);
+			ImageIcon icon = createIcon(ImageResourcesEnum.play.getCode());
 			playBtn = createButton(icon, GlobalCommands.sample.play.name());
 		}
 		
@@ -175,21 +170,21 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 	}
 	public JButton getPreferencesBtn() {
 		if (preferences == null) {
-			ImageIcon icon = createIcon(PREFERENCES_ICON);
+			ImageIcon icon = createIcon(ImageResourcesEnum.preferences.getCode());
 			preferences = createButton(icon, GlobalCommands.tool.option.name());
 		}
 		return preferences;
 	}
 	public JButton getRecordBtn() {
 		if (recordBtn == null) {
-			ImageIcon icon = createIcon(RECORD_ICON);
+			ImageIcon icon = createIcon(ImageResourcesEnum.record.getCode());
 			recordBtn = createButton(icon, GlobalCommands.sample.record.name());
 		}
 		return recordBtn;
 	}
 	public JButton getStopBtn() {
 		if (stopBtn == null) {
-			ImageIcon icon = createIcon(STOP_ICON);
+			ImageIcon icon = createIcon(ImageResourcesEnum.stop.getCode());
 			stopBtn = createButton(icon, GlobalCommands.sample.stop.name());
 		}
 		return stopBtn;
@@ -197,7 +192,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 
 	public JButton getZoomInBtn() {
 		if (zoomInBtn == null) {
-			ImageIcon icon = createIcon(ZOOMIN_ICON);
+			ImageIcon icon = createIcon(ImageResourcesEnum.zoomin.getCode());
 			zoomInBtn = createButton(icon, GlobalCommands.sample.zoomin.name());
 		}
 		return zoomInBtn;
@@ -205,10 +200,19 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 
 	public JButton getZoomOutBtn() {
 		if (zoomOutBtn == null) {
-			ImageIcon icon = createIcon(ZOOMOUT_ICON);
+			ImageIcon icon = createIcon(ImageResourcesEnum.zoomout.getCode());
 			zoomOutBtn = createButton(icon, GlobalCommands.sample.zoomout.name());
 		}
 		return zoomOutBtn;
+	}
+	
+	JButton refreshBtn;
+	public JButton getRefreshBtn() {
+		if (refreshBtn == null) {
+			ImageIcon icon = createIcon(ImageResourcesEnum.refresh.getCode());
+			refreshBtn = createButton(icon, GlobalCommands.file.currentSampleChanged.name(),"reload");
+		}
+		return refreshBtn;
 	}
 
 	
@@ -226,19 +230,23 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 //	}
 
 	protected ImageIcon createIcon(String name){
-		return new ImageIcon(
+		ImageIcon ii = new ImageIcon(
 				getClass().getClassLoader().getResource(name));
+		return new ImageIcon(ii.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
 	}
 
-	
 	protected JButton createButton(ImageIcon icon, String cmd){
+		return createButton(icon, cmd, cmd);
+	}
+	
+	protected JButton createButton(ImageIcon icon, String cmd, String name){
 		JButton btn = new JButton(icon);
 		btn.setActionCommand(cmd);
 		btn.setBorder(BorderFactory.createCompoundBorder()); 
 		btn.setMargin(new Insets(0, 0, 0, 0));
 		btn.setFocusable(false);
 		btn.setActionCommand(cmd);
-		btn.setToolTipText(getResource(cmd));
+		btn.setToolTipText(getResource(name));
 		btn.addActionListener(getToolbarActionListener());
 		return btn;
 	}

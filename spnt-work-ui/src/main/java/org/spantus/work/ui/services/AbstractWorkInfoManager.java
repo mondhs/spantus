@@ -85,7 +85,7 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		SpantusWorkProjectInfo project = createProject();
 		project.setWorkingDir(oldProject.getWorkingDir());
 		project.setExperimentId(oldProject.getExperimentId());
-		project.setCurrentType(oldProject.getCurrentType());
+		project.setCurrentType(type);
 		project.setThresholdType(oldProject.getThresholdType());
 		switch (ProjectTypeEnum.valueOf(type)) {
 		case feature:
