@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.i18n.HtmlResourcesEnum;
@@ -140,12 +142,20 @@ public class SpantusDocumentationDialog extends JDialog {
 	 */
 	private JEditorPane getJEditorPane() {
 		if (jEditorPane == null) {
+
+			HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
+			HTMLDocument htmlDocument =
+			(HTMLDocument)htmlEditorKit.createDefaultDocument( );
+			htmlDocument.setBase(getClass().getResource("/org/spantus/work/ui/res/help/"));
+			
 			jEditorPane = new JEditorPane();
 			jEditorPane.setEditable(false);
 			jEditorPane.setContentType("text/html");
+			jEditorPane.setDocument(htmlDocument);
 			jEditorPane.setText(I18nFactory.createI18n().getMessage(
 					HtmlResourcesEnum.segmentUserGuideHtml.name()));
 			jEditorPane.setCaretPosition(0);
+			
 		}
 		return jEditorPane;
 	}

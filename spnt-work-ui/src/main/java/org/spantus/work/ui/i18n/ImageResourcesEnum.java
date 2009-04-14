@@ -33,7 +33,7 @@ public enum ImageResourcesEnum {
 	smallLogo("/org/spantus/work/ui/img/small_logo.png"),
 	spntIcon("org/spantus/work/ui/img/icon.gif"),
 
-	segmentScreenshot("org/spantus/work/ui/help/segment_screenshot.png"),
+	segmentScreenshot("org/spantus/work/ui/res/help/img/spnt-segment-screen.png"),
 	
 	open("org/spantus/work/ui/icon/gtk-media-eject.png"),
 	refresh("org/spantus/work/ui/icon/gtk-view-refresh.png"),

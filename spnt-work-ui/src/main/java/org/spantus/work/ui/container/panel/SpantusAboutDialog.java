@@ -33,7 +33,7 @@ import org.spantus.work.ui.i18n.ImageResourcesEnum;
  * Created Jun 11, 2008
  *
  */
-public class SpantusAbout extends JDialog {
+public class SpantusAboutDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -47,7 +47,7 @@ public class SpantusAbout extends JDialog {
 	/**
 	 * @param owner
 	 */
-	public SpantusAbout(Frame owner) {
+	public SpantusAboutDialog(Frame owner) {
 		super(owner);
 		initialize();
 	}

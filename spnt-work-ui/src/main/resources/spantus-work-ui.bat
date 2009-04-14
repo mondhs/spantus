@@ -3,7 +3,7 @@ set JARS=%~dp0\..\lib
 set TMP_CP=.
 for %%i in ("%JARS%\*.jar") do (call :append_classpath "%%i")
 
-java -classpath %TMP_CP%;spnt-work-ui-0.0.1.jar org.spantus.work.ui.SpantusWorkMain
+java -classpath %TMP_CP%;../spnt-work-ui-0.0.1-SNAPSHOT.jar org.spantus.work.ui.SpantusWorkMain
 
 
 
