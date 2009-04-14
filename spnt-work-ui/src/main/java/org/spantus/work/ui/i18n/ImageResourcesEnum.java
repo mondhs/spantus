@@ -30,19 +30,19 @@ package org.spantus.work.ui.i18n;
  *
  */
 public enum ImageResourcesEnum {
-	smallLogo("/org/spantus/work/ui/img/small_logo.png"),
-	spntIcon("org/spantus/work/ui/img/icon.gif"),
+	smallLogo("/org/spantus/work/ui/res/img/small_logo.png"),
+	spntIcon("org/spantus/work/ui/res/img/icon.gif"),
 
 	segmentScreenshot("org/spantus/work/ui/res/help/img/spnt-segment-screen.png"),
 	
-	open("org/spantus/work/ui/icon/gtk-media-eject.png"),
-	refresh("org/spantus/work/ui/icon/gtk-view-refresh.png"),
-	play("org/spantus/work/ui/icon/gtk-media-playback-start.png"),
-	stop("org/spantus/work/ui/icon/gtk-media-playback-stop.png"),
-	record("org/spantus/work/ui/icon/gtk-media-playback-record.png"),
-	preferences("org/spantus/work/ui/icon/gtk-preferences-system.png"),
-	zoomin("org/spantus/work/ui/icon/gtk-zoom-in.png"),
-	zoomout("org/spantus/work/ui/icon/gtk-zoom-out.png");
+	open("org/spantus/work/ui/res/icon/gtk-media-eject.png"),
+	refresh("org/spantus/work/ui/res/icon/gtk-view-refresh.png"),
+	play("org/spantus/work/ui/res/icon/gtk-media-playback-start.png"),
+	stop("org/spantus/work/ui/res/icon/gtk-media-playback-stop.png"),
+	record("org/spantus/work/ui/res/icon/gtk-media-playback-record.png"),
+	preferences("org/spantus/work/ui/res/icon/gtk-preferences-system.png"),
+	zoomin("org/spantus/work/ui/res/icon/gtk-zoom-in.png"),
+	zoomout("org/spantus/work/ui/res/icon/gtk-zoom-out.png");
 	
 	private String code;
 	

@@ -51,7 +51,7 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 //	};
 
 	enum toolMenuLabels {
-		autoSegmentation, option, saveSegments
+		segmentation, saveSegments, option
 	};
 	enum helpMenuLabels {
 		about
@@ -105,15 +105,29 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			JMenu menu = new JMenu();
 			menu.setText(getResource(menuLabels.file.name()));
 			menuItems.put(menuLabels.file.name(), menu);
-			JMenuItem m = createMenuItemp(GlobalCommands.file.open.name(), KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK)); 
+			JMenuItem m = createMenuItem(
+					GlobalCommands.file.open,
+					GlobalCommands.file.open.name(),
+					KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK)); 
 			menu.add(m);
 			menu.addSeparator();
-			menu.add(createMenuItemp(GlobalCommands.file.newProject.name()));
-			menu.add(createMenuItemp(GlobalCommands.file.openProject.name()));
-			menu.add(createMenuItemp(GlobalCommands.file.saveProject.name()));
+			menu.add(createMenuItem(GlobalCommands.file.newProject,
+					KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK|Event.SHIFT_MASK)
+					));
+			menu.add(createMenuItem(GlobalCommands.file.openProject,
+					KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK|Event.SHIFT_MASK)));
+			menu.add(createMenuItem(GlobalCommands.file.saveProject,
+					KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK|Event.SHIFT_MASK)));
 			menu.addSeparator();
-			menu.add(createMenuItemp(GlobalCommands.file.exportFile.name()));
-			menu.add(createMenuItemp(GlobalCommands.file.importFile.name()));
+			menu.add(createMenuItem(GlobalCommands.file.exportFile,
+					KeyStroke.getKeyStroke(KeyEvent.VK_E, Event.CTRL_MASK|Event.SHIFT_MASK)));
+			menu.add(createMenuItem(GlobalCommands.file.importFile,
+					KeyStroke.getKeyStroke(KeyEvent.VK_I, Event.CTRL_MASK|Event.SHIFT_MASK)));
+			
+			menu.addSeparator();
+			
+			menu.add(createMenuItem(GlobalCommands.file.exit,
+					KeyStroke.getKeyStroke(KeyEvent.VK_Q, Event.CTRL_MASK)));
 			fileMenu = menu;
 			this.add(fileMenu);
 		}
@@ -123,16 +137,18 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 	private JMenu getToolMenu() {
 		if (toolMenu == null) {
 			JMenu menu = new JMenu();
-			menu.add(createMenuItemp(GlobalCommands.tool.autoSegmentation.name(), KeyStroke.getKeyStroke(KeyEvent.VK_U, Event.CTRL_MASK)));
+			menu.add(createMenuItem(
+					GlobalCommands.tool.autoSegmentation,
+					KeyStroke.getKeyStroke(KeyEvent.VK_U, Event.CTRL_MASK)));
 			menu.setText(getResource(menuLabels.tool.name()));
 			menuItems.put(menuLabels.tool.name(), menu);
-			menu.add(createMenuItemp(GlobalCommands.tool.saveSegments.name()));
+			menu.add(createMenuItem(GlobalCommands.tool.saveSegments,
+					KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK)));
 			
 			menu.addSeparator();
 			
-			JMenuItem m = createMenuItemp(toolMenuLabels.option.name()); 
-			m.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
-			menu.add(m);
+			menu.add(createMenuItem(GlobalCommands.tool.option,
+					KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK)));
 			
 			toolMenu = menu;
 			this.add(toolMenu);
@@ -146,25 +162,32 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			helpMenu = new JMenu();
 			helpMenu.setText(getResource(menuLabels.help.name()));
 			menuItems.put(menuLabels.help.name(), helpMenu);
-			helpMenu.add(createMenuItemp(GlobalCommands.help.userGuide.name(), 
-					KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0)));
+			helpMenu.add(createMenuItem(
+						GlobalCommands.help.userGuide,
+						KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0)));
 			helpMenu.addSeparator();
-			helpMenu.add(createMenuItemp(helpMenuLabels.about.name()));
+			helpMenu.add(createMenuItem(helpMenuLabels.about));
 			
 			this.add(helpMenu);
 		}
 		return helpMenu;
 	}
 	
-	public JMenuItem createMenuItemp(String key) {
-		JMenuItem item = new JMenuItem(getResource(key));
+	public JMenuItem createMenuItem(Enum<?> action) {
+		return createMenuItem(action, action.name());
+	}
+	public JMenuItem createMenuItem(Enum<?> action, String message) {
+		JMenuItem item = new JMenuItem(getResource(message));
 		item.addActionListener(getListener());
-		item.setActionCommand(key);
-		menuItems.put(key, item);
+		item.setActionCommand(action.name());
+		menuItems.put(message, item);
 		return item;
 	}
-	public JMenuItem createMenuItemp(String key, KeyStroke stroke) {
-		JMenuItem item = createMenuItemp(key);
+	public JMenuItem createMenuItem(Enum<?> action, KeyStroke stroke) {
+		return createMenuItem(action,action.name(), stroke);
+	}
+	public JMenuItem createMenuItem(Enum<?> action, String message, KeyStroke stroke) {
+		JMenuItem item = createMenuItem(action, message);
 		item.setAccelerator(stroke);
 		return item;
 	}

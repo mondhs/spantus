@@ -1,5 +1,6 @@
 package org.spantus.work.ui.cmd;
 
+import java.io.File;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Timer;
@@ -36,6 +37,7 @@ public class RecordCmd extends AbsrtactCmd {
 	
 	public static final String recordFinishedMessageHeader = "recordFinishedMessageHeader"; 
 	public static final String recordFinishedMessageBody = "recordFinishedMessageBody";
+	public static final String recordedSoundSavedMessageBody="recordedSoundSavedMessageBody";
 	
 	
 	protected Logger log = Logger.getLogger(getClass());
@@ -174,6 +176,7 @@ public class RecordCmd extends AbsrtactCmd {
 			String fullSingalFullPath = recordSegmentator.getPath() + "/" + getSignalName();
 			if(StringUtils.hasText(recordSegmentator.getPath())){
 				wavFile = recordSegmentator.saveFullSignal(fullSingalFullPath);
+				fullSingalFullPath = new File(fullSingalFullPath).getAbsolutePath();
 			}else{
 				fullSingalFullPath = "";
 			}
@@ -199,6 +202,10 @@ public class RecordCmd extends AbsrtactCmd {
 	}
 	protected void showMessage(MarkerSet words, String path){
 		String messageFormat = getMessage(recordFinishedMessageBody);
+		if(ProjectTypeEnum.segmenation.name().equals(ctx.getProject().getCurrentType())){
+			messageFormat = getMessage(recordedSoundSavedMessageBody);
+		}
+		
 		String messageBody = MessageFormat.format(messageFormat, 
 				words.getMarkers().size(),
 				path

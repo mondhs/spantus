@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -109,17 +110,21 @@ public class DefaultI18n implements I18n {
 		String htmlPath = getHtmlBundle().getString(htmlEnum.name());
 		
 		InputStream in = getClass().getResourceAsStream(htmlPath);
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		StringBuilder sb = new StringBuilder();
+		BufferedReader br;
 		String line = null;
+		StringBuilder sb = new StringBuilder();
 		try {
+			br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 			while ((line = br.readLine()) != null) {
-			sb.append(line + "\n");
+				sb.append(line + "\n");
 			}
 			br.close();
+		} catch (UnsupportedEncodingException e1) {
+			log.error(e1);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
+		
 		return sb.toString();
 	}
 

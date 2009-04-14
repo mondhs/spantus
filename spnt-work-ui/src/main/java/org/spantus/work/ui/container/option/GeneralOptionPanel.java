@@ -29,7 +29,7 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 	private MapComboBoxModel locales;
 
 	enum generalLabels {
-		locale, lookAndFeel, chartGrid, popupNotification
+		locale, lookAndFeel, chartGrid, popupNotification, autoSegmentation
 	}
 
 	/**
@@ -53,6 +53,9 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 				break;
 			case popupNotification:
 				getInfo().getEnv().setPopupNotifications(((JCheckBox)field.getValue()).isSelected());
+				break;
+			case autoSegmentation:
+				getInfo().getEnv().setAutoSegmentation(((JCheckBox)field.getValue()).isSelected());
 				break;
 			default:
 				throw new RuntimeException("Not impl: " + field.getKey());
@@ -105,6 +108,9 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 			case popupNotification:
 				((JCheckBox)field.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getPopupNotifications()));
 				break;
+			case autoSegmentation:
+				((JCheckBox)field.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getAutoSegmentation()));
+				break;
 			default:
 				throw new RuntimeException("Not impl: " + field.getKey());
 			}
@@ -137,6 +143,11 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 			popupNotificationOn.setSelected(Boolean.TRUE
 					.equals(getInfo().getEnv().getPopupNotifications()));
 			jComponents.put(generalLabels.popupNotification, popupNotificationOn);
+			
+			JCheckBox autoSegmentationChb = new JCheckBox();
+			popupNotificationOn.setSelected(Boolean.TRUE
+					.equals(getInfo().getEnv().getAutoSegmentation()));
+			jComponents.put(generalLabels.autoSegmentation, autoSegmentationChb);
 
 
 

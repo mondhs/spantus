@@ -38,6 +38,7 @@ public class EnviromentRepresentation {
 	private int mainWindowState;//maximized or normal
 	private Boolean grid;
 	private Boolean popupNotifications;
+	private Boolean autoSegmentation;
 	
 	private String laf;
 
@@ -89,6 +90,14 @@ public class EnviromentRepresentation {
 
 	public void setMainWindowState(int frameWindowState) {
 		this.mainWindowState = frameWindowState;
+	}
+
+	public Boolean getAutoSegmentation() {
+		return autoSegmentation;
+	}
+
+	public void setAutoSegmentation(Boolean autoSegmentation) {
+		this.autoSegmentation = autoSegmentation;
 	}
 
 

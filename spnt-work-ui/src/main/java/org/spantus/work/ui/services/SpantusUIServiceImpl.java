@@ -65,6 +65,9 @@ public class SpantusUIServiceImpl {
 		if (info.getEnv().getPopupNotifications() == null) {
 			info.getEnv().setPopupNotifications(Boolean.TRUE);
 		}
+		if (info.getEnv().getAutoSegmentation() == null) {
+			info.getEnv().setGrid(Boolean.TRUE);
+		}
 	}
 
 	protected boolean isEmpty(Dimension d) {

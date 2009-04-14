@@ -25,6 +25,8 @@ public class MainHandler implements SpantusWorkCommand {
 	private Map<String, SpantusWorkCommand> cmds;
 
 	public void initialize(SpantusWorkFrame frame) {
+		this.getCmds().put(GlobalCommands.file.exit.name(),
+				new ExitCmd(frame));
 		createSampleCmd(this, frame.getSampleRepresentationPanel()
 				.getSampleChart(), frame.getSampleRepresentationPanel());
 		createFileCmd(this, frame, frame, frame.getSampleRepresentationPanel()
