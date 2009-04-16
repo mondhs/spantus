@@ -63,7 +63,7 @@
 			<id>copyRuntime</id>
 			<activation>
 				<property>
-					<name>copy-runtime</name>
+					<name>copy-dependencies</name>
 				</property>
 			</activation>
 			<build>
