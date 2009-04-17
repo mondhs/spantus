@@ -10,11 +10,14 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import org.spantus.logger.Logger;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.dto.EnviromentRepresentation;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.dto.EnviromentRepresentation.SpntLogginLevel;
 
 public class SpantusUIServiceImpl {
+	Logger log = Logger.getLogger(SpantusUIServiceImpl.class);
 	/**
 	 * 
 	 * @param info
@@ -66,8 +69,22 @@ public class SpantusUIServiceImpl {
 			info.getEnv().setPopupNotifications(Boolean.TRUE);
 		}
 		if (info.getEnv().getAutoSegmentation() == null) {
-			info.getEnv().setGrid(Boolean.TRUE);
+			info.getEnv().setAutoSegmentation(Boolean.TRUE);
 		}
+		if (info.getEnv().getLoggingLevel() == null) {
+			info.getEnv().setLoggingLevel(SpntLogginLevel.info.name());
+		}
+		SpntLogginLevel logginLevel = SpntLogginLevel.valueOf(info.getEnv().getLoggingLevel());
+		int i = 0;
+		for (SpntLogginLevel lvl : SpntLogginLevel.values()) {
+			if(lvl.equals(logginLevel)){
+				log.setLogMode(i);
+				break;
+			}
+			i++;
+		}
+		
+		
 	}
 
 	protected boolean isEmpty(Dimension d) {

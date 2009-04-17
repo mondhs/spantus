@@ -48,7 +48,7 @@ public class Logger {
     private static PrintStream err =  System.err;
     
 
-    private int logMode = INFO;
+    private static int logMode = INFO;
     private Class<?> logClass = null;
     
     static{
@@ -144,5 +144,11 @@ public class Logger {
     public boolean isDebugMode() {
         return DEBUG >= getLogMode();
     }
+
+	@SuppressWarnings("static-access")
+	public void setLogMode(int logMode) {
+		this.logMode = logMode;
+//		debug("Log mode set to:" + logMode);
+	}
 
 }
