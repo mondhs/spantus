@@ -45,7 +45,7 @@ public class WorkUIExtractorConfig{
 	private Float recordSampleRate=8000F;
 	private String audioPathOutput="./";
 	private Integer thresholdLeaningPeriod=5000;
-	private Float thresholdCoef=6F;
+	private Float thresholdCoef=2F;
 	private Integer segmentationMinLength=91;
 	private Integer segmentationMinSpace=61;
 	private Integer segmentationExpandStart=60;

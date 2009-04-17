@@ -130,7 +130,7 @@ public class DefaultI18n implements I18n {
 
 	
 	public DecimalFormat getDecimalFormat() {
-		return new DecimalFormat("### ###.### ");
+		return new DecimalFormat("###.### ");
 	}
 	public DecimalFormat getPercentFormat() {
 		return new DecimalFormat("# %");

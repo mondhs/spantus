@@ -128,7 +128,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				field.setValue(Integer.valueOf(workConfig.getThresholdLeaningPeriod()));
 				break;
 			case thresholdCoef:
-				field.setValue(Float.valueOf(workConfig.getThresholdCoef()));
+				field.setValue(workConfig.getThresholdCoef());
 				break;
 			case segmentationMinLength:
 				field.setValue(Integer.valueOf(workConfig.getSegmentationMinLength()));
