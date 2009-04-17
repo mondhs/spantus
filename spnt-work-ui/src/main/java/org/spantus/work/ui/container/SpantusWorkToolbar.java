@@ -8,11 +8,14 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
@@ -46,7 +49,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 
 	Logger log = Logger.getLogger(getClass());
 	
-	String[] mode = new String[]{"Simple", "Full"};
+//	String[] mode = new String[]{"Simple", "Full"};
 	
 	SpantusWorkInfo info;
 	
@@ -54,7 +57,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 
 	private JButton playBtn = null;
 	
-	private JButton preferences = null;
+	private JButton preferencesBtn = null;
 	
 	private JButton recordBtn = null;
 
@@ -64,11 +67,15 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 	
 	private JButton zoomOutBtn = null;
 	
+	private JButton refreshBtn = null;
+	
 	private JTextField experimentIdTxt = null;
 	
 	private SpantusWorkCommand handler;
 	
 	private ToolbarListener toolbarActionListener;
+	
+	private Map<String, JComponent> toolBarComponents;
 
 	public SpantusWorkToolbar() {
 		super();
@@ -88,8 +95,6 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		FlowLayout layout = new FlowLayout(FlowLayout.LEFT, 3, 2);
 		this.setLayout(layout);
 
-		boolean isPlayable = false;
-
 		this.add(getOpenBtn());
 		this.add(new JToolBar.Separator());
 		this.add(getExperimentIdTxt());
@@ -103,6 +108,19 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		this.add(getZoomOutBtn());
 
 		
+//		this.add(new JToolBar.Separator());
+		this.add(new JToolBar.Separator());
+		this.add(getPreferencesBtn());
+		this.add(getRefreshBtn());
+		
+	}	
+	
+	public void reload() {
+//		removeAll();
+//		initialize(getInfo().getProject().getCurrentType());
+		
+		String projectType = getInfo().getProject().getCurrentType();
+		boolean isPlayable = false;
 		ProjectTypeEnum type = ProjectTypeEnum.valueOf(projectType);
 		switch (type) {
 		case feature:
@@ -118,17 +136,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		}
 		getPlayBtn().setEnabled(isPlayable);
 		getOpenBtn().setEnabled(isPlayable);
-		
-//		this.add(new JToolBar.Separator());
-		this.add(new JToolBar.Separator());
-		this.add(getPreferencesBtn());
-		this.add(getRefreshBtn());
-		
-	}	
-	
-	public void reload() {
-		removeAll();
-		initialize(getInfo().getProject().getCurrentType());
+		getExperimentIdTxt().setText(getInfo().getProject().getExperimentId());
 	}
 	
 	public ToolbarListener getToolbarActionListener() {
@@ -156,6 +164,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		if (openBtn == null) {
 			ImageIcon icon = createIcon(ImageResourcesEnum.open.getCode());
 			openBtn = createButton(icon, GlobalCommands.file.open.name());
+			getToolBarComponents().put(GlobalCommands.file.open.name(), openBtn);
 		}
 		return openBtn;
 	}
@@ -164,21 +173,24 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		if (playBtn == null) {
 			ImageIcon icon = createIcon(ImageResourcesEnum.play.getCode());
 			playBtn = createButton(icon, GlobalCommands.sample.play.name());
+			getToolBarComponents().put(GlobalCommands.sample.play.name(), playBtn);
 		}
 		
 		return playBtn;
 	}
 	public JButton getPreferencesBtn() {
-		if (preferences == null) {
+		if (preferencesBtn == null) {
 			ImageIcon icon = createIcon(ImageResourcesEnum.preferences.getCode());
-			preferences = createButton(icon, GlobalCommands.tool.option.name());
+			preferencesBtn = createButton(icon, GlobalCommands.tool.option.name());
+			getToolBarComponents().put(GlobalCommands.tool.option.name(), preferencesBtn);
 		}
-		return preferences;
+		return preferencesBtn;
 	}
 	public JButton getRecordBtn() {
 		if (recordBtn == null) {
 			ImageIcon icon = createIcon(ImageResourcesEnum.record.getCode());
 			recordBtn = createButton(icon, GlobalCommands.sample.record.name());
+			getToolBarComponents().put(GlobalCommands.sample.record.name(), recordBtn);
 		}
 		return recordBtn;
 	}
@@ -186,6 +198,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		if (stopBtn == null) {
 			ImageIcon icon = createIcon(ImageResourcesEnum.stop.getCode());
 			stopBtn = createButton(icon, GlobalCommands.sample.stop.name());
+			getToolBarComponents().put(GlobalCommands.sample.stop.name(), stopBtn);
 		}
 		return stopBtn;
 	}
@@ -194,6 +207,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		if (zoomInBtn == null) {
 			ImageIcon icon = createIcon(ImageResourcesEnum.zoomin.getCode());
 			zoomInBtn = createButton(icon, GlobalCommands.sample.zoomin.name());
+			getToolBarComponents().put(GlobalCommands.sample.zoomin.name(), zoomInBtn);
 		}
 		return zoomInBtn;
 	}
@@ -202,19 +216,50 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		if (zoomOutBtn == null) {
 			ImageIcon icon = createIcon(ImageResourcesEnum.zoomout.getCode());
 			zoomOutBtn = createButton(icon, GlobalCommands.sample.zoomout.name());
+			getToolBarComponents().put(GlobalCommands.sample.zoomout.name(), zoomOutBtn);
 		}
 		return zoomOutBtn;
 	}
 	
-	JButton refreshBtn;
 	public JButton getRefreshBtn() {
 		if (refreshBtn == null) {
 			ImageIcon icon = createIcon(ImageResourcesEnum.refresh.getCode());
 			refreshBtn = createButton(icon, GlobalCommands.file.currentSampleChanged.name(),"reload");
+			getToolBarComponents().put("reload", zoomOutBtn);
 		}
 		return refreshBtn;
 	}
 
+	
+	public JTextField getExperimentIdTxt() {
+		if(experimentIdTxt == null){
+			experimentIdTxt = new JTextField(getInfo().getProject().getExperimentId());
+			experimentIdTxt.setColumns(30);
+			experimentIdTxt.setFocusable(false);
+			experimentIdTxt.addMouseListener(new MouseAdapter(){
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					experimentIdTxt.setFocusable(true);
+					experimentIdTxt.requestFocus();
+					super.mouseEntered(e);
+				}
+				@Override
+				public void mouseExited(MouseEvent e) {
+					experimentIdTxt.setFocusable(false);
+					super.mouseExited(e);
+				}
+
+				
+			});
+			experimentIdTxt.addFocusListener( new FocusAdapter() {
+	            public void focusLost(FocusEvent evt) {
+	            	getInfo().getProject().setExperimentId(((JTextField)evt.getComponent()).getText().trim());
+	            }
+	        });
+		}
+		experimentIdTxt.setText(getInfo().getProject().getExperimentId());
+		return experimentIdTxt;
+	}
 	
 	
 //	public JComboBox getMode() {
@@ -281,34 +326,13 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		return I18nFactory.createI18n().getMessage(key);
 	}
 
-	public JTextField getExperimentIdTxt() {
-		if(experimentIdTxt == null){
-			experimentIdTxt = new JTextField(getInfo().getProject().getExperimentId());
-			experimentIdTxt.setColumns(30);
-			experimentIdTxt.setFocusable(false);
-			experimentIdTxt.addMouseListener(new MouseAdapter(){
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					experimentIdTxt.setFocusable(true);
-					experimentIdTxt.requestFocus();
-					super.mouseEntered(e);
-				}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					experimentIdTxt.setFocusable(false);
-					super.mouseExited(e);
-				}
+	
 
-				
-			});
-			experimentIdTxt.addFocusListener( new FocusAdapter() {
-	            public void focusLost(FocusEvent evt) {
-	            	getInfo().getProject().setExperimentId(((JTextField)evt.getComponent()).getText());
-	            }
-	        });
+	public Map<String, JComponent> getToolBarComponents() {
+		if(toolBarComponents == null){
+			toolBarComponents = new HashMap<String, JComponent>();
 		}
-		experimentIdTxt.setText(getInfo().getProject().getExperimentId());
-		return experimentIdTxt;
+		return toolBarComponents;
 	}
 	
 

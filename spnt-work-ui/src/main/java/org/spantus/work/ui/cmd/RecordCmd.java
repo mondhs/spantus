@@ -86,9 +86,8 @@ public class RecordCmd extends AbsrtactCmd {
 		capture.setFormat(getFormat(config));
 //		log.error("start capturing");
 		ctx.setPlaying(true);
-//		getTimer().schedule(new InitCapture(wrapReader.getReader()), 2000L);
 		getTimer().schedule(new UpdateCapture(recordSegmentator), 500L, 250L);
-
+		getWorkInfoManager().increaseExperimentId(ctx);
 		return null;
 	}
 	
@@ -173,10 +172,18 @@ public class RecordCmd extends AbsrtactCmd {
 			getCapture().finalize();
 //			isRecordInitialyzed = false;
 			URL wavFile = null;
-			String fullSingalFullPath = recordSegmentator.getPath() + "/" + getSignalName();
+			String fullSingalFullPath = getSignalName();
 			if(StringUtils.hasText(recordSegmentator.getPath())){
-				wavFile = recordSegmentator.saveFullSignal(fullSingalFullPath);
-				fullSingalFullPath = new File(fullSingalFullPath).getAbsolutePath();
+				File dir = new File(recordSegmentator.getPath());
+				if(!dir.exists()){
+					dir.mkdirs();
+				}
+				File file = new File(dir,getSignalName()+".wav");
+				if(file.exists()){
+					file = new File(dir,getSignalName()+"-"+System.currentTimeMillis()+".wav");
+				}
+				wavFile = recordSegmentator.saveFullSignal(file);
+				fullSingalFullPath = wavFile.getPath();
 			}else{
 				fullSingalFullPath = "";
 			}
@@ -194,7 +201,6 @@ public class RecordCmd extends AbsrtactCmd {
 		 */
 		public String getSignalName(){
 			String fullSingalName = ctx.getProject().getExperimentId();
-			getWorkInfoManager().increaseExperimentId(ctx);
 			return fullSingalName;
 			
 		}

@@ -73,7 +73,6 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 			if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
 				Toolkit.getDefaultToolkit().beep();
 			}
-			getWorkInfoManager().increaseExperimentId(ctx);
 			if(Boolean.TRUE.equals(ctx.getEnv().getAutoSegmentation())){
 				handler.execute(GlobalCommands.tool.autoSegmentation.name(), ctx);
 			}

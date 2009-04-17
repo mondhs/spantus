@@ -62,6 +62,7 @@ public class SaveSegmentCmd extends AbsrtactCmd{
 //			sb.append(path).append("\n");
 		}
 		String pathToSave = new File(ctx.getProject().getFeatureReader().getWorkConfig().getAudioPathOutput()).getAbsolutePath();
+		pathToSave += "/"+ctx.getProject().getExperimentId() + "_*.wav";
 		showMessage(words, pathToSave, ctx);
 		
 		return null;

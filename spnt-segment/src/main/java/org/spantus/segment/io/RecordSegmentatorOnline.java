@@ -79,24 +79,32 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 	}
 	
 	public URL saveSegmentAccepted(List<Byte> data, String name){
-	    InputStream bais = new ByteListInputStream(data);
-	    AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size());
-	    try {
-	    	if(path!= null && !"".equals(path)){
-	    		String path = getPath()+"/"+name+".wav";
-	    		File wavFile = new File(path);
-	    		AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
-	    		log.debug("[saveSegmentAccepted] saved{0}", path);
-	    		return wavFile.toURI().toURL();
-	    	}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		if(path!= null && !"".equals(path)){
+			String path = getPath()+"/"+name+".wav";
+    		File wavFile = new File(path);
+    		return saveFullSignal(wavFile);
 		}
 		return null;
 	}
 	
+	public URL saveSegmentAccepted(List<Byte> data, File file){
+	    InputStream bais = new ByteListInputStream(data);
+	    AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size());
+	    try {
+	    	AudioSystem.write(ais, AudioFileFormat.Type.WAVE, file);
+	    	log.debug("[saveSegmentAccepted] saved{0}", path);
+	    	return file.toURI().toURL();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public URL saveFullSignal(String name){
 		return saveSegmentAccepted(reader.getAudioBuffer(), name);
+	}
+	
+	public URL saveFullSignal(File file){
+		return saveSegmentAccepted(reader.getAudioBuffer(), file);
 	}
 	
 	@Override

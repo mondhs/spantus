@@ -42,6 +42,9 @@ public class RuleBaseServiceImpl implements RuleBaseService{
 				&& (noiseLength > param.getMinSpace()) 
 				&& !(ctx.getMarker().getLength() > param.getMinLength())){
 			return RuleBaseEnum.action.deleteSegment;
+		}else if(isNoiseFrame && ctx.isSegmentEndState() &&
+				noiseLength < param.getMinSpace()){
+			return RuleBaseEnum.action.processNoise;
 		}else if(isNoiseFrame && ctx.isSegmentEndState()){
 			return RuleBaseEnum.action.endSegmentApproved;
 		}

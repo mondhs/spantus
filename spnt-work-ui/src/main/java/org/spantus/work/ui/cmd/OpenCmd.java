@@ -42,6 +42,7 @@ public class OpenCmd extends AbsrtactCmd {
 	
 	public String execute(SpantusWorkInfo ctx) {
 		if(importSample(ctx)){
+			getWorkInfoManager().increaseExperimentId(ctx);
 			return GlobalCommands.file.currentSampleChanged.name();
 		}
 		return null;

@@ -20,16 +20,10 @@
  */
 package org.spantus.segment.online.test;
 
-import junit.framework.TestCase;
-
-import org.spantus.core.FrameValues;
-import org.spantus.core.extractor.ExtractorWrapper;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.logger.Logger;
-import org.spantus.segment.online.DecistionSegmentatorOnline;
 import org.spantus.segment.online.MultipleSegmentatorOnline;
-import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.segment.online.ThresholdSegmentatorOnline;
 /**
  * 
@@ -41,7 +35,7 @@ import org.spantus.segment.online.ThresholdSegmentatorOnline;
  * Created 2008.11.27
  *
  */
-public class OnlineSegmentatorTest extends TestCase {
+public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 	
 	Logger log = Logger.getLogger(getClass());
 	
@@ -79,7 +73,7 @@ public class OnlineSegmentatorTest extends TestCase {
 	public void testOnlineRuleSimple(){
 		MarkerSet markSet = 
 			segmentRuleBase(
-				new float[]{.5f, 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f});
+				new Float[]{.5f, 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f});
 		
 		log.debug("Markers: " + markSet.getMarkers());
 		assertEquals(2, markSet.getMarkers().size());
@@ -94,7 +88,7 @@ public class OnlineSegmentatorTest extends TestCase {
 	public void testOnlineRuleDelete(){
 		MarkerSet markSet = 
 			segmentRuleBase(
-				new float[]{.5f, 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 0f, 1f, 0f, 0f, 1f, 0f});
+				new Float[]{.5f, 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 0f, 1f, 0f, 0f, 1f, 0f});
 		
 		log.debug("Markers: " + markSet.getMarkers());
 		assertEquals(1, markSet.getMarkers().size());
@@ -106,7 +100,7 @@ public class OnlineSegmentatorTest extends TestCase {
 	public void testOnlineRuleJoin(){
 		MarkerSet markSet = 
 			segmentRuleBase(
-					new float[]{.5f, 0f, 0f, 1f, 0f, 1f, 1f, 0f, 1f, 0f, 0f });
+					new Float[]{.5f, 0f, 0f, 1f, 0f, 1f, 1f, 0f, 1f, 0f, 0f });
 		
 		log.debug("Markers: " + markSet.getMarkers());
 		assertEquals(1, markSet.getMarkers().size());
@@ -116,45 +110,5 @@ public class OnlineSegmentatorTest extends TestCase {
 	
 	}
 	
-	
-	protected MarkerSet segmentRuleBase(float[] vals){
-		DecistionSegmentatorOnline multipe = new DecistionSegmentatorOnline();
-		multipe.setParam(createParam());
-		ThresholdSegmentatorOnline segmentator = getSegmentator("extractor", multipe);
-		for (int i = 0; i < vals.length; i++) {
-			float f = vals[i];
-			Long l = Long.valueOf(i);
-			segmentator.calculate(l, getWindow(f));
-		}
-		return multipe.getMarkSet();
-	}
-	
-	protected OnlineDecisionSegmentatorParam createParam(){
-		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
-		param.setMinSpace(999L);
-		param.setMinLength(1999L);
-		return param;
-	}
-	
-	
-	public ThresholdSegmentatorOnline getSegmentator(String name, MultipleSegmentatorOnline multipe){
-		ThresholdSegmentatorOnline segmentator1 = new ThresholdSegmentatorOnline();
-		MockSegmentatorExtractor mockExtractor= new MockSegmentatorExtractor();
-		mockExtractor.setName(name);
-		ExtractorWrapper wraper = new ExtractorWrapper(mockExtractor);
-		segmentator1.setExtractor(wraper);
-		wraper.getListeners().add(segmentator1);
-		segmentator1.setConfig(new MockSegmentatorExtractorConfig());
-		mockExtractor.setExtractorSampleRate(1);
-		segmentator1.setLearningPeriod(1000L);
-		segmentator1.setOnlineSegmentator(multipe);
-		return segmentator1;
-		
-	}
-	public FrameValues getWindow(float i){
-		FrameValues fv = new FrameValues(new Float[]{i});
-		fv.setSampleRate(1);
-		return fv;
-	}
 	
 }

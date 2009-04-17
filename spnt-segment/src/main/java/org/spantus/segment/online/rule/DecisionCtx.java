@@ -11,6 +11,7 @@ public class DecisionCtx {
 	Boolean state;
 	Long sample;
 	RuleBaseEnum.state segmentState;
+	RuleBaseEnum.state previousState;
 	
 	private OnlineDecisionSegmentatorParam param;
 	
@@ -73,7 +74,12 @@ public class DecisionCtx {
 	}
 
 	public void setSegmentState(RuleBaseEnum.state segmentState) {
+		this.previousState = this.segmentState; 
 		this.segmentState = segmentState;
+	}
+	
+	public RuleBaseEnum.state getPreviousState() {
+		return previousState;
 	}
 	
 	public OnlineDecisionSegmentatorParam getParam() {
@@ -111,4 +117,5 @@ public class DecisionCtx {
 				(Boolean.TRUE.equals(getState())?"signal":"noise")
 					,getMarker());
 	}
+
 }

@@ -120,8 +120,8 @@ public class DecistionSegmentatorOnline extends MultipleSegmentatorOnline {
 		Long expandedLength = ctx.getMarker().getLength()+getParam().getExpandEnd();
 		ctx.getMarker().setStart(expandedStart);
 		ctx.getMarker().setLength(expandedLength);
-		onSegmentEnded(ctx.getMarker());
 		debugAction("onEndSegmentApproved", ctx);
+		onSegmentEnded(ctx.getMarker());
 		ctx.setMarker(null);
 		ctx.setSegmentState(null);
 	}
@@ -157,7 +157,11 @@ public class DecistionSegmentatorOnline extends MultipleSegmentatorOnline {
 	
 	protected void debugAction(String msg, DecisionCtx ctx){
 		if(log.isDebugMode()){
+			RuleBaseEnum.state previous = ctx.getPreviousState();
+			if(previous == null ||
+					!previous.equals(ctx.getSegmentState())){
 			log.debug("{0}: {1}",msg, ctx);
+			}
 		}
 	}
 }
