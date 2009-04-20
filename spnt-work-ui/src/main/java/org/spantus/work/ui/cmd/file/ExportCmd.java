@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javax.swing.JFileChooser;
 
@@ -20,7 +21,7 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class ExportCmd extends AbsrtactCmd {
 	
-	Logger log = Logger.getLogger(getClass());
+	private Logger log = Logger.getLogger(getClass());
 	
 	public static final String[] IMAGE_FILES = {"png"};
 	public static final String[] MARKER_FILES = {"mspnt.xml"};
@@ -29,10 +30,24 @@ public class ExportCmd extends AbsrtactCmd {
 	public static final String[] BUNDLE_FILES = {"spnt.zip"};
 	
 	
-	SampleChart chart;
+	private SampleChart chart;
 	
-	Component parent;
+	private Component parent;
 	
+	private JFileChooser chooser;
+	
+	public JFileChooser getChooser() {
+		if(chooser == null){
+			chooser = new JFileChooser();
+			chooser.setFileFilter(new UIFileFilter(IMAGE_FILES, ExportType.image.name()));
+			chooser.addChoosableFileFilter(new UIFileFilter(MARKER_FILES, ExportType.markers.name()));
+			chooser.addChoosableFileFilter(new UIFileFilter(SAMPLE_FILES, ExportType.sample.name()));
+			chooser.addChoosableFileFilter(new UIFileFilter(BUNDLE_FILES, ExportType.bundle.name()));
+			chooser.setAcceptAllFileFilterUsed(false);
+		}
+		return chooser;
+	}
+
 	enum ExportType{image, markers, sample, mpeg7, bundle}; 
 	
 	public ExportCmd(Frame frame, SampleChart chart) {
@@ -48,13 +63,18 @@ public class ExportCmd extends AbsrtactCmd {
 	}
 
 	protected boolean exportFile(SpantusWorkInfo ctx) {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setFileFilter(new UIFileFilter(IMAGE_FILES, ExportType.image.name()));
-		fileChooser.addChoosableFileFilter(new UIFileFilter(MARKER_FILES, ExportType.markers.name()));
-		fileChooser.addChoosableFileFilter(new UIFileFilter(SAMPLE_FILES, ExportType.sample.name()));
-		fileChooser.addChoosableFileFilter(new UIFileFilter(BUNDLE_FILES, ExportType.bundle.name()));
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		fileChooser.setCurrentDirectory(ctx.getProject().getWorkingDir());
+//		File file = null;
+//		try {
+//			file = new File(ctx.getProject().getCurrentSample().getCurrentFile().toURI());
+//			String fileName = file.getName();
+//		} catch (URISyntaxException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		JFileChooser fileChooser = getChooser();
+		fileChooser.getSelectedFile();
+		
 		
 		int returnValue = fileChooser.showSaveDialog(parent);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {

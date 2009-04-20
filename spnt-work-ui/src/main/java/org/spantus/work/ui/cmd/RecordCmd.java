@@ -174,10 +174,7 @@ public class RecordCmd extends AbsrtactCmd {
 			URL wavFile = null;
 			String fullSingalFullPath = getSignalName();
 			if(StringUtils.hasText(recordSegmentator.getPath())){
-				File dir = new File(recordSegmentator.getPath());
-				if(!dir.exists()){
-					dir.mkdirs();
-				}
+				File dir = checkDirs(recordSegmentator.getPath());
 				File file = new File(dir,getSignalName()+".wav");
 				if(file.exists()){
 					file = new File(dir,getSignalName()+"-"+System.currentTimeMillis()+".wav");
@@ -194,6 +191,14 @@ public class RecordCmd extends AbsrtactCmd {
 				handler.execute(GlobalCommands.file.currentSampleChanged.name(), ctx);
 			}
 			
+		}
+		
+		protected File checkDirs(String dirName){
+			File dir = new File(dirName);
+			if(!dir.exists()){
+				dir.mkdirs();
+			}
+			return dir;
 		}
 		/**
 		 * 

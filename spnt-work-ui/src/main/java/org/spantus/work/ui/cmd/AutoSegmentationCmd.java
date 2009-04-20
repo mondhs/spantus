@@ -21,7 +21,7 @@
 package org.spantus.work.ui.cmd;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
@@ -90,6 +92,10 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		param.setMinSpace(config.getSegmentationMinSpace().longValue());
 		param.setExpandEnd(config.getSegmentationExpandEnd().longValue());
 		param.setExpandStart(config.getSegmentationExpandStart().longValue());
+		if(threasholds == null || threasholds.size() == 0){
+			log.debug("Auto segmentaiton was not processed as there is no data.");
+			return null;
+		}
 		MarkerSet value = segmentator.extractSegments(threasholds, param);
 		ctx.getProject().getCurrentSample().getMarkerSetHolder()
 				.getMarkerSets().put(MarkerSetHolderEnum.word.name(), value);
@@ -112,25 +118,57 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		return GlobalCommands.sample.reloadSampleChart.name();
 	}
 	
+	protected String getDescriptionFileName(String wavFile){
+		String txtFile = wavFile;
+		if(new File(txtFile + ".txt").isFile()){
+			return txtFile + ".txt";
+		}
+		Pattern pattern = Pattern.compile("(.*)(\\.)(.*)");
+		Matcher matcher = pattern.matcher(txtFile);
+		if(matcher.matches()){
+			txtFile = matcher.replaceAll("$1"+".txt");
+			if(new File(txtFile).isFile()){
+				return txtFile;
+			}
+		}
+		return null;
+		
+	}
+	
 	public void putLabels(SpantusWorkInfo ctx){
-		String filePath = ctx.getProject().getCurrentSample().getCurrentFile().getFile();
-		filePath += ".txt";
+		String filePath = getDescriptionFileName(
+				ctx.getProject().getCurrentSample().getCurrentFile().getFile()
+				);
 		List<String> words = null;
-		try {
+		if(filePath == null){
+			log.debug("marker description file not found for " 
+					+ ctx.getProject().getCurrentSample().getCurrentFile().getFile());
+			return;
+		}
+
+		List<Marker> markers = ctx.getProject().getCurrentSample().getMarkerSetHolder().getMarkerSets().get(
+				MarkerSetHolderEnum.word.name()).getMarkers();
+
+		try{
 			BufferedReader reader = new BufferedReader(new FileReader(filePath));
 			String str = null;
 			words = new ArrayList<String>();
+			//Assume it is multi line format
 			while((str = reader.readLine()) != null){
 				words.add(str);
 			}
-			
-		} catch (FileNotFoundException e) {
-			log.debug("marker description file not found: " + e.getMessage());
+			//if only single one line is selected, assume it is single line format
+			if(words.size() == 1 && markers.size()>1){
+				String wordsString = words.get(0);
+				String[] strs = wordsString.split("\\s");
+				words.clear();
+				for (String strsVal : strs) {
+					words.add(strsVal);
+				}
+			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
-		List<Marker> markers = ctx.getProject().getCurrentSample().getMarkerSetHolder().getMarkerSets().get(
-				MarkerSetHolderEnum.word.name()).getMarkers();
 		int i = 0;
 		
 		if(words == null){
@@ -144,12 +182,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 				marker.setLabel(words.get(i));
 				i++;
 			}
-			
 		}
 		return;
-		
-		
-		
-
 	}
 }

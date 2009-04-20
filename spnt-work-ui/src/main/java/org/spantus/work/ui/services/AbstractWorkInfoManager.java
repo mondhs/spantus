@@ -142,7 +142,6 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		}
 		Pattern pattern = Pattern.compile("(.*?)(\\d+)(.*?)");
 		Matcher matcher = pattern.matcher(experimentId);
-//		String id = experimentId.matches(experimentId);
 		if(matcher.matches()){
 			String idStr = matcher.group(2);
 			Integer id = 0;

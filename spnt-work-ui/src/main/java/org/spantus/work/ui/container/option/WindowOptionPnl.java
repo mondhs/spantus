@@ -252,7 +252,9 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				workConfig.setBufferSize(bufferSize.intValue());
 				break;
 			case frameSize:
-				workConfig.setFrameSize((Integer)(field.getValue()));
+				workConfig.setFrameSize(
+						((Number)field.getValue()).intValue()
+						);
 				break;
 			case windowSize:
 				Number window = (Number)(field.getValue());

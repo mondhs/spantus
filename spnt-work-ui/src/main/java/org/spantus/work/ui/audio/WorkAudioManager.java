@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -77,12 +79,34 @@ public class WorkAudioManager implements AudioManager {
 			stream.read(data);
 			InputStream bais = new ByteArrayInputStream(data);
 			AudioInputStream ais = new AudioInputStream(bais, stream.getFormat(), data.length);
-			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(pathToSave));
+			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, checkPath(pathToSave));
 		} catch (IOException e) {
 			throw new ProcessingException(e);
 		}
-		
-
+	}
+	
+	protected File checkPath(String fileName){
+		File file = new File(fileName);
+		File dir = new File(file.getParent());
+		if(!dir.exists()){
+			dir.mkdirs();
+		}
+		if(file.exists()){
+			Pattern pattern = Pattern.compile("(.*)(\\.)(.*)");
+			Matcher matcher = pattern.matcher(fileName);
+			if(matcher.matches()){
+				for (int i = 2; i < 9999; i++) {
+					String newFileName = matcher.replaceAll("$1_"+i+".$3");
+					File newFile = new File(newFileName);
+					if(!newFile.exists()){
+						file = newFile;
+						break;
+					}
+				}
+				
+			}
+		}
+		return file;
 	}
 	
 	/**
