@@ -114,7 +114,7 @@ public class RecognitionPlot extends JFrame {
 		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
 		param.setMinLength(100L);
 		param.setMinSpace(80L);
-		param.setExpandMarkerInTime(50L);
+//		param.set(50L);
 		return param;
 	}
 
