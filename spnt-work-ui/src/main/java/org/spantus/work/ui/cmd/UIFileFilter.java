@@ -4,6 +4,8 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
+import org.spantus.work.ui.i18n.I18nFactory;
+
 public class UIFileFilter extends FileFilter {
 
 	private String[] extension;
@@ -32,9 +34,15 @@ public class UIFileFilter extends FileFilter {
 
 	@Override
 	public String getDescription() {
-		StringBuilder buffer = new StringBuilder( "*." + getExtension()[0] );
-	    for (int i=1; i<getExtension().length; ++i)
-	      buffer.append( ", *." + extension[i]);
+		StringBuilder buffer = new StringBuilder( );
+		String separator = "";
+		String extName = getMessage("extentionDescription_"+getExtension()[0]);
+		buffer.append(extName).append(" (");
+		for (String ext : getExtension()) {
+			buffer.append(separator).append("*.").append(ext);
+			separator = ",";
+		}
+		buffer.append(")");
 	    return buffer.toString();
 	}
 	
@@ -48,6 +56,10 @@ public class UIFileFilter extends FileFilter {
 
 	    return ext;
 	  }
+	
+	public String getMessage(String key){
+		return I18nFactory.createI18n().getMessage(key);
+	}
 	
 	public void setExtension(String[] extension) {
 		this.extension = extension;

@@ -63,17 +63,23 @@ public class ExportCmd extends AbsrtactCmd {
 	}
 
 	protected boolean exportFile(SpantusWorkInfo ctx) {
-//		File file = null;
-//		try {
-//			file = new File(ctx.getProject().getCurrentSample().getCurrentFile().toURI());
-//			String fileName = file.getName();
-//		} catch (URISyntaxException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
 		JFileChooser fileChooser = getChooser();
-		fileChooser.getSelectedFile();
+		File file = null;
+		//set file name for export file chooser
+		try {
+			file = new File(ctx.getProject().getCurrentSample().getCurrentFile().toURI());
+			String fileName = file.getName();
+			fileName = fileName.replaceAll("\\.\\w{3,4}$","");
+			File newFile = new File(file.getParent(),fileName);
+			if(file != null){
+				fileChooser.setSelectedFile(newFile);
+			}
+		} catch (URISyntaxException e) {
+			log.debug("[exportFile]"+e.getMessage());
+		}
+		
+
+		
 		
 		
 		int returnValue = fileChooser.showSaveDialog(parent);
