@@ -36,4 +36,4 @@ public class FastDTWTest {
 
 	} // end main()
 
-} // end class FastDTW
+} 

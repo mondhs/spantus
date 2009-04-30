@@ -20,6 +20,8 @@
  */
 package org.spantus.extractor.impl;
 
+import java.util.List;
+
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 /**
@@ -38,7 +40,7 @@ public class SpectralEntropy extends AbstractSpectralExtractor {
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameVectorValues val3d = calculateFFT(window);
 		FrameValues rtnValues = super.calculateWindow(window);
-		for (FrameValues fv : val3d) {
+		for (List<Float> fv : val3d) {
 			float bottom = 0;
 			for (Float current : fv) {
 				//|X[i]|^2

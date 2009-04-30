@@ -1,15 +1,17 @@
 package fastdtw.timeseries;
 
+import java.util.List;
+
 public interface ITimeSeries {
 
 //	public abstract void clear();
 
 	public abstract int size();
 	
-	public abstract double[] getMeasurementVector(int pointIndex);
+	public abstract List<Float> getMeasurementVector(int pointIndex);
 	
 	public abstract int numOfDimensions() ;
 	
-	public abstract Double getTimeAtNthPoint(int n);
+	public abstract Float getTimeAtNthPoint(int n);
 
 }

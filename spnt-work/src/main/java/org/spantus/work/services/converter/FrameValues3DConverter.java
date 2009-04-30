@@ -1,5 +1,7 @@
 package org.spantus.work.services.converter;
 
+import java.util.List;
+
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.utils.Assert;
@@ -30,7 +32,7 @@ public class FrameValues3DConverter implements Converter{
 		int size = 15;
 		int i = size;
 		
-		for (FrameValues fv : vals) {
+		for (List<Float> fv : vals) {
 			for (Float float2 : fv) {
 				sb.append(float2);
 				String separator = " ";

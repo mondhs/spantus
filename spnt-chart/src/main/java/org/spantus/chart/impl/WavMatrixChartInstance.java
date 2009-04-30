@@ -27,6 +27,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.text.Format;
+import java.util.List;
 
 import net.quies.math.plot.CoordinateBoundary;
 import net.quies.math.plot.GraphDomain;
@@ -109,7 +110,7 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 				BufferedImage.TYPE_INT_RGB);
 		int[] rgbArray = new int[vals.size() * vals.get(0).size()];
 		int x = 0, y = 0;
-		for (FrameValues fv : vals) {
+		for (List<Float> fv : vals) {
 			int delta = vals.size();
 			y = 0;
 			for (Float f1 : fv) {
@@ -173,7 +174,7 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	Float min = Float.MAX_VALUE;
 	Float max = Float.MIN_VALUE;
 	private void minmax(FrameVectorValues values){
-		for (FrameValues fv : values) {
+		for (List<Float> fv : values) {
 			for (Float f1 : fv) {
 				min = Math.min(min, f1);
 				max = Math.max(max, f1);

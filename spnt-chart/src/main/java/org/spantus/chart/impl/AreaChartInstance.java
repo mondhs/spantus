@@ -37,7 +37,6 @@ import net.quies.math.plot.ChartStyle;
 import net.quies.math.plot.CoordinateBoundary;
 import net.quies.math.plot.GraphDomain;
 
-import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 
 /**
@@ -71,7 +70,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 		this.description = description;
 		this.values = values;
 		this.style = style;
-		for (FrameValues frameValues : values) {
+		for (List<Float> frameValues : values) {
 			if (frameValues.size() != 2) {
 				throw new IllegalArgumentException(
 						"Area values should be from 2 vectors");
@@ -97,7 +96,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 		Float _max = Float.MIN_VALUE;
 		FrameVectorValues clonedValues = new FrameVectorValues(values);
 
-		for (FrameValues fv : clonedValues) {
+		for (List<Float> fv : clonedValues) {
 			int x = toCoordinateTime(j, xScalar.floatValue());
 			Float yMin = fv.get(0);
 			Point p = new Point(x, 0);
@@ -241,7 +240,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 	public void setOrder(float order) {
 		this.order = order;
 
-		for (FrameValues frameValues : values) {
+		for (List<Float> frameValues : values) {
 			if (frameValues.size() != 2) {
 				throw new IllegalArgumentException(
 						"Area values should be from 2 vectors");

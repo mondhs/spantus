@@ -22,6 +22,7 @@ package org.spantus.exp.segment.services.impl;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -76,15 +77,16 @@ public class ProcessReaderImpl implements ProcessReader {
 			if(!canBeProcessed(extractor3d))continue;
 			
 			int i = 0;
-			for (FrameValues frameValues : vals) {
-				frameValues.setSampleRate(vals.getSampleRate());
+			for (List<Float> values : vals) {
+				FrameValues fv = new FrameValues(values);
+				fv.setSampleRate(extractor3d.getConfig().getSampleRate());
 				DynamicThreshold threshold = new DynamicThreshold();
 				if(processReaderInfo.getThresholdCoef()!=null){
 					threshold.setCoef(processReaderInfo.getThresholdCoef().floatValue());
 				}
 				ExtractorOutputHolder extractor = new ExtractorOutputHolder();
 				extractor.setConfig(extractor3d.getConfig());
-				extractor.setOutputValues(frameValues);
+				extractor.setOutputValues(fv);
 				extractor.setName(extractor3d.getName()+(i++));
 				threshold.setExtractor(extractor);
 				threshold.getOutputValues();

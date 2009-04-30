@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -81,7 +82,7 @@ public class WorkAudioReader extends AbstractAudioReader{
 	}
 	public FrameVectorValues flip(FrameVectorValues values){
 		FrameVectorValues rtnVal = new FrameVectorValues(values);
-		for (FrameValues vals : values) {
+		for (List<Float> vals : values) {
 			Collections.reverse(vals);	
 		}
 		return rtnVal;

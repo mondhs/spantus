@@ -6,6 +6,7 @@
 package fastdtw.dtw;
 
 import java.util.Iterator;
+import java.util.List;
 
 import fastdtw.matrix.ColMajorCell;
 import fastdtw.timeseries.ITimeSeries;
@@ -260,14 +261,18 @@ public class DTW {
 		return new TimeWarpInfo(minimumCost, minCostPath);
 	}
 
-	private double euclideanDist(double vector1[], double vector2[]) {
-		if (vector1.length != vector2.length)
+	private double euclideanDist(List<Float> vector1, List<Float> vector2) {
+		if (vector1.size() != vector2.size())
 			throw new InternalError(
 					"ERROR:  cannot calculate the distance between vectors of different sizes.");
 		double sqSum = 0.0D;
-		for (int x = 0; x < vector1.length; x++)
-			sqSum += Math.pow(vector1[x] - vector2[x], 2D);
-
+		Iterator<Float> vector1Iter = vector1.iterator();
+		Iterator<Float> vector2Iter = vector2.iterator();
+		while (vector1Iter.hasNext()) {
+			Float float1 = vector1Iter.next();
+			Float float2 = vector2Iter.next();
+			sqSum += Math.pow(float1 - float2, 2D);	
+		}
 		return Math.pow(Math.sqrt(sqSum), 2D);
 	}
 }

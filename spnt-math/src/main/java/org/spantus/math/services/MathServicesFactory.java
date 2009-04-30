@@ -21,7 +21,7 @@
 package org.spantus.math.services;
 
 import org.spantus.math.dtw.DtwService;
-import org.spantus.math.dtw.DtwServiceImpl;
+import org.spantus.math.dtw.DtwServiceStansalvadorImpl;
 
 /**
  * 
@@ -41,7 +41,8 @@ public abstract class MathServicesFactory {
 	}
 
 	public static DtwService createDtwService(){
-		return new DtwServiceImpl();
+//		return new DtwServiceImpl();
+		return new DtwServiceStansalvadorImpl();
 	}
 	
 }

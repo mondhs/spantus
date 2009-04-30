@@ -11,11 +11,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import fastdtw.util.Arrays;
 
@@ -186,8 +185,8 @@ public class TimeSeries implements ITimeSeries {
 		return labels.size() - 1;
 	}
 
-	public Double getTimeAtNthPoint(int n) {
-		return timeReadings.get(n);
+	public Float getTimeAtNthPoint(int n) {
+		return timeReadings.get(n).floatValue();
 	}
 
 	public String getLabel(int index) {
@@ -247,8 +246,8 @@ public class TimeSeries implements ITimeSeries {
 			return getMeasurement(time, valueIndex);
 	}
 
-	public double[] getMeasurementVector(int pointIndex) {
-		return ((TimeSeriesPoint) tsArray.get(pointIndex)).toArray();
+	public List<Float> getMeasurementVector(int pointIndex) {
+		return ((TimeSeriesPoint) tsArray.get(pointIndex)).toList();
 	}
 
 	public double[] getMeasurementVector(double time) {

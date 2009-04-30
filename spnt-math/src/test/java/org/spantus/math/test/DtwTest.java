@@ -108,7 +108,7 @@ public class DtwTest extends TestCase {
 
 	}
 	
-	public void _testDtwPerformance(){
+	public void testDtwPerformance(){
 		StringBuffer sb = new StringBuffer();
 		for (int i = 7; i < 25; i++) {
 			sb.append(performance(i)).append("\n");
@@ -119,6 +119,6 @@ public class DtwTest extends TestCase {
 		
 	
 	private void debug(String str){
-		//System.out.println("[DtwTest]: " + str);
+		System.out.println("[DtwTest]: " + str);
 	}
 }

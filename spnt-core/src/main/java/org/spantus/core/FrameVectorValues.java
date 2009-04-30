@@ -32,7 +32,7 @@ import java.util.List;
  * Created 2008.02.29
  *
  */
-public class FrameVectorValues extends LinkedList<FrameValues>{
+public class FrameVectorValues extends LinkedList<List<Float>>{
 	
 	public static float max = Float.MIN_VALUE;
 	public static float min = Float.MAX_VALUE;
@@ -76,13 +76,13 @@ public class FrameVectorValues extends LinkedList<FrameValues>{
 		super.add(values);
 	}
 	
-	public void add(List<Float> floats) {
+	public boolean add(List<Float> floats) {
 //		for (int i = 0; i < floats.length; i++) {
 //			max = Math.max(floats[i], max);
 //			min = Math.min(floats[i], min);
 //		}
 		FrameValues values = new FrameValues(floats);
-		super.add(values);
+		return super.add(values);
 	}
 
 	
@@ -101,8 +101,8 @@ public class FrameVectorValues extends LinkedList<FrameValues>{
 		for (int i = 0; i < getFirst().size(); i++) {
 			fv3.add(new FrameValues());				
 		}
-		for (FrameValues fv : this) {
-			fv.setSampleRate(getSampleRate());
+		for (List<Float> fv : this) {
+//			fv.setSampleRate(getSampleRate());
 			for (int i = 0; i < fv.size(); i++) {
 				fv3.get(i).add(fv.get(i));
 			}

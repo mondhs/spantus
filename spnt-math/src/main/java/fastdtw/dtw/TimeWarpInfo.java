@@ -5,34 +5,29 @@
 
 package fastdtw.dtw;
 
-
 // Referenced classes of package dtw:
 //            WarpPath
 
-public class TimeWarpInfo
-{
+public class TimeWarpInfo {
+	
+	private final Double distance;
+	private final WarpPath path;
 
-    TimeWarpInfo(double dist, WarpPath wp)
-    {
-        distance = dist;
-        path = wp;
-    }
+	TimeWarpInfo(Double dist, WarpPath wp) {
+		distance = dist;
+		path = wp;
+	}
 
-    public double getDistance()
-    {
-        return distance;
-    }
+	public Double getDistance() {
+		return distance;
+	}
 
-    public WarpPath getPath()
-    {
-        return path;
-    }
+	public WarpPath getPath() {
+		return path;
+	}
 
-    public String toString()
-    {
-        return "(Warp Distance=" + distance + ", Warp Path=" + path + ")";
-    }
+	public String toString() {
+		return "(Warp Distance=" + distance + ", Warp Path=" + path + ")";
+	}
 
-    private final double distance;
-    private final WarpPath path;
 }
