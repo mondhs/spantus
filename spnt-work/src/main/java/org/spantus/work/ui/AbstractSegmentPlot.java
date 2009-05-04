@@ -27,17 +27,22 @@ public abstract class AbstractSegmentPlot extends JFrame {
 	WraperExtractorReader wraperExtractorReader = null;
 	AbstractSwingChart chart = null;	
 	
+	public WraperExtractorReader getWraperExtractorReader() {
+		if(wraperExtractorReader==null){
+			wraperExtractorReader =  new RecordWraperExtractorReader(reader);
+			wraperExtractorReader.setFormat(getFormat());
+		}
+		return wraperExtractorReader;
+	}
+
 	protected MultipleSegmentatorOnline getSegmentatorRecordable(){
-		wraperExtractorReader =  new RecordWraperExtractorReader(reader);
-		wraperExtractorReader.setFormat(getFormat());
 		RecordSegmentatorOnline multipleSegmentator = new RecordSegmentatorOnline();
 		multipleSegmentator.setParam(createParam());
-		multipleSegmentator.setReader((RecordWraperExtractorReader)wraperExtractorReader);
+		multipleSegmentator.setReader((RecordWraperExtractorReader)getWraperExtractorReader());
 		return multipleSegmentator;
 	}
 	
 	protected DecistionSegmentatorOnline getSegmentatorDefault(){
-		wraperExtractorReader = new WraperExtractorReader(reader);
 		DecistionSegmentatorOnline multipleSegmentator = new DecistionSegmentatorOnline();
 		multipleSegmentator.setParam(createParam());
 		return multipleSegmentator;

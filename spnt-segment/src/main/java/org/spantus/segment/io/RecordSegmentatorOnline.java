@@ -59,7 +59,15 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 	@Override
 	protected boolean onSegmentEnded(Marker marker) {
 		if(!super.onSegmentEnded(marker)) return false;
-		
+		processAcceptedSegment(marker);
+		return true;
+	}
+	/**
+	 * 
+	 * @param marker
+	 * @return
+	 */
+	public URL processAcceptedSegment(Marker marker){
 		int bytesPerSample = (reader.getFormat().getSampleSizeInBits()>>3);// 16bit==2; 8bit==1
 
 		long offset = (-reader.getOffset()); 
@@ -69,20 +77,25 @@ public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
 		try{
 			getWords().getMarkers().add(marker);
 			List<Byte> data = reader.getAudioBuffer().subList(fromIndex, toIndex);
-			saveSegmentAccepted(data, marker.getLabel());
+			return saveSegmentAccepted(data, marker.getLabel());
 		}catch (IndexOutOfBoundsException e) {
 			log.error(MessageFormat.format("buffer: {3}.marker: {0}. samples: [{1};{2}]", 
 					marker.toString(),fromIndex, toIndex, reader.getAudioBuffer().size()));
 			e.printStackTrace();
 		}
-		return true;
+		return null;
 	}
-	
+	/**
+	 * 
+	 * @param data
+	 * @param name
+	 * @return
+	 */
 	public URL saveSegmentAccepted(List<Byte> data, String name){
 		if(path!= null && !"".equals(path)){
 			String path = getPath()+"/"+name+".wav";
     		File wavFile = new File(path);
-    		return saveFullSignal(wavFile);
+    		return saveSegmentAccepted(data, wavFile);
 		}
 		return null;
 	}

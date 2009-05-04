@@ -18,6 +18,7 @@ import org.spantus.work.ui.cmd.AbsrtactCmd;
 import org.spantus.work.ui.cmd.UIFileFilter;
 import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.util.FileUtils;
 
 public class ExportCmd extends AbsrtactCmd {
 	
@@ -68,8 +69,7 @@ public class ExportCmd extends AbsrtactCmd {
 		//set file name for export file chooser
 		try {
 			file = new File(ctx.getProject().getCurrentSample().getCurrentFile().toURI());
-			String fileName = file.getName();
-			fileName = fileName.replaceAll("\\.\\w{3,4}$","");
+			String fileName = FileUtils.getOnlyFileName(file);
 			File newFile = new File(file.getParent(),fileName);
 			if(file != null){
 				fileChooser.setSelectedFile(newFile);

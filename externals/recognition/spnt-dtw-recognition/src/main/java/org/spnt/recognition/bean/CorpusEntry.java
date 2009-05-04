@@ -1,8 +1,9 @@
-package org.spnt.recognition.dtw;
+package org.spnt.recognition.bean;
 
 import org.spantus.core.FrameVectorValues;
 
-public class RecognitionModelEntry {
+public class CorpusEntry {
+	Long id;
 	String name;
 	FrameVectorValues vals;
 
@@ -20,5 +21,13 @@ public class RecognitionModelEntry {
 
 	public void setVals(FrameVectorValues vals) {
 		this.vals = vals;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

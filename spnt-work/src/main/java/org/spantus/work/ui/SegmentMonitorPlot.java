@@ -54,7 +54,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 
 		
 		reader = ExtractorsFactory
-				.createReader(format);
+				.createReader(format); 
 
 		reader.getConfig().setBufferSize(3000);
 		
@@ -64,10 +64,10 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 
 		ThresholdSegmentatorOnline segmentator = null;
 		
-		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.ENERGY_EXTRACTOR);
-		segmentator.setOnlineSegmentator(multipleSegmentator);
-		segmentator.setCoef(threshold_coef);
-		segmentator.setLearningPeriod(threshold_leaningPeriod);
+//		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.ENERGY_EXTRACTOR);
+//		segmentator.setOnlineSegmentator(multipleSegmentator);
+//		segmentator.setCoef(threshold_coef);
+//		segmentator.setLearningPeriod(threshold_leaningPeriod);
 
 		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
@@ -85,7 +85,8 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 //		segmentator.setCoef(6f);
 
 
-		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.WAVFORM_EXTRACTOR);
+//		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.WAVFORM_EXTRACTOR);
+		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.LPC_EXTRACTOR);
 
 		capture = new AudioCapture(wraperExtractorReader);
 		capture.setFormat(format);
@@ -94,7 +95,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 //		initGraph(reader);
 		timer.schedule(new TimerTask() {
 			public void run() {
-				log.debug("repaint");
+//				log.debug("repaint");
 //				chart.setPreferredSize(getSize());
 				repaint();
 				if( chart == null ){
@@ -140,14 +141,14 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		String path = ExtractorParamUtils.<String>getValue(param,
 				ConfigPropertiesDao.key_format_pathOutput);
 		RecordSegmentatorOnline segmentator = 
-			(RecordSegmentatorOnline)super.getSegmentatorRecordable();
+			(RecordSegmentatorOnline)getSegmentatorRecordable();
 		segmentator.setPath(path);
 		segmentator.setParam(createParam(param));
 		return segmentator;
 	}
 	
 	protected DecistionSegmentatorOnline getSegmentatorDefault(ExtractorParam param){
-		DecistionSegmentatorOnline segmentator = super.getSegmentatorDefault();
+		DecistionSegmentatorOnline segmentator = getSegmentatorDefault();
 		segmentator.setParam(createParam(param));
 		return segmentator; 
 	}

@@ -1,0 +1,94 @@
+package org.spnt.recognition.services;
+
+import java.text.MessageFormat;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.spantus.core.FrameVectorValues;
+import org.spantus.logger.Logger;
+import org.spantus.math.dtw.DtwService;
+import org.spantus.math.services.MathServicesFactory;
+import org.spnt.recognition.bean.CorpusEntry;
+import org.spnt.recognition.bean.RecognitionResult;
+import org.spnt.recognition.corpus.CorpusRepository;
+import org.spnt.recognition.corpus.CorpusRepositoryImpl;
+/**
+ * 
+ * @author Mindaugas Greibus
+ *
+ */
+public class CorpusServiceBaseImpl implements CorpusService {
+
+	private Logger log = Logger.getLogger(getClass()); 
+	
+	private DtwService dtwService;
+
+	private CorpusRepository corpus;
+	
+
+	public RecognitionResult match(FrameVectorValues target) {
+		RecognitionResult match = findBestMatch(target);
+		return match;
+	}
+	
+	public boolean learn(String label, FrameVectorValues target) {
+		CorpusEntry entry = new CorpusEntry();
+		entry.setName(label);
+		entry.setVals(target);
+		getCorpus().save(entry);
+		return true;
+	}
+
+	/**
+	 * find best match in the corpus
+	 * @param target
+	 * @return
+	 */
+	protected RecognitionResult findBestMatch(FrameVectorValues target){
+		Map<Float, RecognitionResult> results = new TreeMap<Float, RecognitionResult>();
+		Float min = Float.MAX_VALUE;
+		RecognitionResult match = null;
+		for (CorpusEntry sample : getCorpus().findAllEntries()) {
+			RecognitionResult res = compare(target, sample);
+			if(min > res.getDistance()){
+				min = res.getDistance();
+				match = res;
+			}
+//			if(log.isDebugMode()) 
+				results.put(res.getDistance(),res);
+		}
+		
+		if(log.isDebugMode()){
+			log.debug("[findBestMatch] sample: {0};[{1}]", match, results);
+		}
+		log.error(MessageFormat.format("[findBestMatch] sample: {0};[{1}]", match, results.values()));
+		return match;
+	}
+	
+	protected RecognitionResult compare(FrameVectorValues target,
+			CorpusEntry sample) {
+		RecognitionResult result = new RecognitionResult();
+		result.setInfo(sample);
+		result.setDistance(getDtwService().calculateDistanceVector(target, sample.getVals()));
+		return result;
+	}
+
+	public void setCorpus(CorpusRepository corpus) {
+		this.corpus = corpus;
+	}
+	
+	public CorpusRepository getCorpus() {
+		if(corpus == null){
+			corpus = new CorpusRepositoryImpl();
+		}
+		return corpus;
+	}
+
+	public DtwService getDtwService() {
+		if(dtwService == null){
+			dtwService = MathServicesFactory.createDtwService();
+		}
+		return dtwService;
+	}
+
+}

@@ -35,7 +35,7 @@ public class ReaderXmlDaoImpl implements ReaderDao {
 		try {
 			FileReader inFile = new FileReader(file);
 			reader = (IExtractorInputReader)getXsteam().fromXML(inFile);
-			log.debug("markers file read correctly. info: " + file.getAbsolutePath());
+			log.debug("extractors file read correctly. info: " + file.getAbsolutePath());
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -45,7 +45,7 @@ public class ReaderXmlDaoImpl implements ReaderDao {
 	public IExtractorInputReader read(InputStream inputStream) {
 		IExtractorInputReader reader = null;
 		reader = (IExtractorInputReader)getXsteam().fromXML(inputStream);
-		log.debug("markers file read correctly. info: ");
+		log.debug("extractors file read correctly. info ");
 		return reader;
 	}
 	

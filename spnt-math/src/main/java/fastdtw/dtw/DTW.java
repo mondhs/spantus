@@ -67,14 +67,14 @@ public class DTW {
 	}
 
 	public WarpPath getWarpPathBetween(ITimeSeries tsI, ITimeSeries tsJ) {
-		return DynamicTimeWarp(tsI, tsJ).getPath();
+		return dynamicTimeWarp(tsI, tsJ).getPath();
 	}
 
 	public TimeWarpInfo getWarpInfoBetween(ITimeSeries tsI, ITimeSeries tsJ) {
-		return DynamicTimeWarp(tsI, tsJ);
+		return dynamicTimeWarp(tsI, tsJ);
 	}
 
-	private TimeWarpInfo DynamicTimeWarp(ITimeSeries tsI, ITimeSeries tsJ) {
+	private TimeWarpInfo dynamicTimeWarp(ITimeSeries tsI, ITimeSeries tsJ) {
 		double costMatrix[][] = new double[tsI.size()][tsJ.size()];
 		int maxI = tsI.size() - 1;
 		int maxJ = tsJ.size() - 1;

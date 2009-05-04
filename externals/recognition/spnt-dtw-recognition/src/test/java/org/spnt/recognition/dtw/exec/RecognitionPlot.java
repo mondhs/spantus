@@ -59,9 +59,9 @@ public class RecognitionPlot extends JFrame {
 
 	public IExtractorInputReader readSignal()
 			throws UnsupportedAudioFileException, IOException {
-		File wavFile = new File("../data/t_1_2.wav");
+//		File wavFile = new File("../data/t_1_2.wav");
 //		File wavFile = new File("../data/test/1_2_l.wav");
-//		File wavFile = new File("/home/studijos/wav/ijunk_isjunk_wav/ijunk_isjunk.wav");
+		File wavFile = new File("/home/mindas/src/spnt-code/spnt-work-ui/ijunk_ishjunk/ijunk_isjunk.wav");
 		
 		URL urlFile = wavFile.toURI().toURL();
 		DefaultAudioReader audioReader = (DefaultAudioReader)AudioFactory.createAudioReader();
@@ -78,12 +78,12 @@ public class RecognitionPlot extends JFrame {
 		ThresholdSegmentatorOnline segmentator = null;
 		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
-		segmentator.setCoef(2f);
+		segmentator.setCoef(4f);
 		
-		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.WAVFORM_EXTRACTOR);
-		segmentator.setOnlineSegmentator(multipleSegmentator);
+//		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.WAVFORM_EXTRACTOR);
+//		segmentator.setOnlineSegmentator(multipleSegmentator);
 
-		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
+		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.LPC_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(2f);
 		
@@ -112,8 +112,9 @@ public class RecognitionPlot extends JFrame {
 	
 	protected OnlineDecisionSegmentatorParam createParam(){
 		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
-		param.setMinLength(100L);
-		param.setMinSpace(80L);
+		param.setMinLength(300L);
+		param.setMinSpace(100L);
+		param.setExpandStart(60L);
 //		param.set(50L);
 		return param;
 	}
