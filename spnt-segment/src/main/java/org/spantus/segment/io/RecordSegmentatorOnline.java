@@ -48,7 +48,7 @@ import org.spantus.segment.online.DecistionSegmentatorOnline;
  */
 
 public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
-	Logger log = Logger.getLogger(getClass());
+	private Logger log = Logger.getLogger(RecordSegmentatorOnline.class);
 	
 	RecordWraperExtractorReader reader;
 	

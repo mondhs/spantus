@@ -54,14 +54,14 @@ public class CorpusServiceBaseImpl implements CorpusService {
 				min = res.getDistance();
 				match = res;
 			}
-//			if(log.isDebugMode()) 
+			if(log.isDebugMode()) 
 				results.put(res.getDistance(),res);
 		}
 		
 		if(log.isDebugMode()){
 			log.debug("[findBestMatch] sample: {0};[{1}]", match, results);
 		}
-		log.error(MessageFormat.format("[findBestMatch] sample: {0};[{1}]", match, results.values()));
+		log.info(MessageFormat.format("[findBestMatch] sample: {0};[{1}]", match, results.values()));
 		return match;
 	}
 	

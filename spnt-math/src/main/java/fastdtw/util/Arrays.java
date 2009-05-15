@@ -7,7 +7,7 @@ package fastdtw.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
+@SuppressWarnings("unchecked")
 public class Arrays
 {
 
@@ -29,7 +29,8 @@ public class Arrays
         return toPrimitiveArray((Integer[])c.toArray(new Integer[0]));
     }
 
-    public static Collection toCollection(boolean arr[])
+    
+	public static Collection toCollection(boolean arr[])
     {
         ArrayList collection = new ArrayList(arr.length);
         for(int x = 0; x < arr.length; x++)

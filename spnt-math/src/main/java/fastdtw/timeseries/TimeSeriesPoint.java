@@ -5,7 +5,6 @@
 
 package fastdtw.timeseries;
 
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,6 +22,7 @@ public class TimeSeriesPoint {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public TimeSeriesPoint(Collection values) {
 		measurements = new double[values.size()];
 		hashCode = 0;

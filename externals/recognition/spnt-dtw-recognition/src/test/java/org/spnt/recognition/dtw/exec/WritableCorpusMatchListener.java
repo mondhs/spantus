@@ -17,7 +17,13 @@ public class WritableCorpusMatchListener implements CorpusMatchListener {
 	
 	public void matched(RecognitionResult result) {
 		if(result == null) return;
-		ControledLabels controledLabel = ControledLabels.valueOf(result.getInfo().getName());
+		ControledLabels controledLabel = null;
+		try{
+			controledLabel = ControledLabels.valueOf(result.getInfo().getName());
+		}catch (Exception e) {
+			log.error(e);
+			return;
+		}
 		switch (controledLabel) {
 		case sviesa:
 			write("H");

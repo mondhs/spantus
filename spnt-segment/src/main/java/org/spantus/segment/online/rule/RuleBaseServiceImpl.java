@@ -3,6 +3,8 @@ package org.spantus.segment.online.rule;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 
 public class RuleBaseServiceImpl implements RuleBaseService{
+	
+//	private Logger log = Logger.getLogger(RuleBaseServiceImpl.class);
 	/**
 	 * 
 	 */
@@ -32,6 +34,10 @@ public class RuleBaseServiceImpl implements RuleBaseService{
 			return RuleBaseEnum.action.joinToSegment;
 		}else if(isNoiseFrame && ctx.isSegmentStartState() 
 				&& !(noiseLength > param.getMinSpace())){
+			return RuleBaseEnum.action.deleteSegment;
+		}else if(isNoiseFrame && ctx.isSegmentStartState() 
+				&& segmentLength > param.getMinLength()
+				&& noiseLength > param.getMinSpace()){
 			return RuleBaseEnum.action.deleteSegment;
 		}else if(isNoiseFrame && ctx.isSegmentStartState() ){
 			return RuleBaseEnum.action.processNoise;

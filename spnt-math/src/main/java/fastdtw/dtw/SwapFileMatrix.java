@@ -144,7 +144,7 @@ class SwapFileMatrix
         }
     }
 
-    private static final double OUT_OF_WINDOW_VALUE = (1.0D / 0.0D);
+//    private static final double OUT_OF_WINDOW_VALUE = (1.0D / 0.0D);
     private static final Random RAND_GEN = new Random();
     private final SearchWindow window;
     private double lastCol[];

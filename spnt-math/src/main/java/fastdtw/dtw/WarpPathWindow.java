@@ -5,7 +5,6 @@
 
 package fastdtw.dtw;
 
-import fastdtw.matrix.ColMajorCell;
 
 // Referenced classes of package dtw:
 //            SearchWindow, WarpPath
@@ -22,5 +21,5 @@ public class WarpPathWindow extends SearchWindow
         super.expandWindow(searchRadius);
     }
 
-    private static final int defaultRadius = 0;
+//    private static final int defaultRadius = 0;
 }

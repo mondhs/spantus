@@ -45,4 +45,8 @@ public abstract class MathServicesFactory {
 		return new DtwServiceStansalvadorImpl();
 	}
 	
+	public static LPCService createLPCService(){
+		return new LPCServiceImpl();
+	}
+	
 }

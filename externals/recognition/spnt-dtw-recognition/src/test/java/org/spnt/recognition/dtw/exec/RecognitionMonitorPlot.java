@@ -21,7 +21,7 @@ public class RecognitionMonitorPlot extends SegmentMonitorPlot {
 	@Override
 	protected MultipleSegmentatorOnline getSegmentatorRecordable(){
 		RecordRecognitionSegmentatorOnline multipleSegmentator = new RecordRecognitionSegmentatorOnline();
-		multipleSegmentator.setCorpusMatchListener(new WritableCorpusMatchListener());
+//		multipleSegmentator.setCorpusMatchListener(new WritableCorpusMatchListener());
 		multipleSegmentator.setParam(createParam());
 		multipleSegmentator.setReader((RecordWraperExtractorReader)getWraperExtractorReader());
 		return multipleSegmentator;

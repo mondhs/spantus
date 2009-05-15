@@ -437,9 +437,9 @@ public class TimeSeries implements ITimeSeries {
 	}
 
 	private static final int ZERO_ARRAY[] = new int[0];
-	private static final boolean DEFAULT_IS_TIME_1ST_COL = true;
-	private static final char DEFAULT_DELIMITER = 44;
-	private static final boolean DEFAULT_IS_LABELED = true;
+//	private static final boolean DEFAULT_IS_TIME_1ST_COL = true;
+//	private static final char DEFAULT_DELIMITER = 44;
+//	private static final boolean DEFAULT_IS_LABELED = true;
 	private final ArrayList<String> labels;
 	private final ArrayList<Double> timeReadings;
 	private final ArrayList<TimeSeriesPoint> tsArray;

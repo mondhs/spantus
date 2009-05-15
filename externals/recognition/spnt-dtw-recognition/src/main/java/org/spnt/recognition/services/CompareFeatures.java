@@ -99,7 +99,7 @@ public class CompareFeatures {
 		File targetFile = new File(targetPath);
 		CompareFeatures compareFeatures = new CompareFeatures();
 		Float f = compareFeatures.compareValues(targetFile, sampleFile);
-		System.out.print(f);
+		System.out.print("[main] comparition result: " + f);
 
 	}
 

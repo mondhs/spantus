@@ -6,12 +6,12 @@ import org.spantus.core.marker.Marker;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 
 public class DecisionCtx {
-	Marker marker;
-	Long time;
-	Boolean state;
-	Long sample;
-	RuleBaseEnum.state segmentState;
-	RuleBaseEnum.state previousState;
+	private Marker marker;
+	private Long time;
+	private Boolean state;
+	private Long sample;
+	private RuleBaseEnum.state segmentState;
+	private RuleBaseEnum.state previousState;
 	
 	private OnlineDecisionSegmentatorParam param;
 	
@@ -22,7 +22,8 @@ public class DecisionCtx {
 	}
 
 	public boolean isSegmentStartState() {
-		return getSegmentState().equals(RuleBaseEnum.state.start);
+		return getSegmentState() != null && 
+			getSegmentState().equals(RuleBaseEnum.state.start);
 	}
 
 	public boolean isSegmentEndState() {
@@ -112,10 +113,11 @@ public class DecisionCtx {
 	
 	@Override
 	public String toString() {
-		return MessageFormat.format( "{0}:[{1} ms] state:{2};{3};marker:{4}", 
+		return MessageFormat.format( "{0}:[{1} ms] state:{2};{3};marker:{4}; length:{5}; noise:{6};", 
 				getClass().getSimpleName(), getTime(), getSegmentState(), 
 				(Boolean.TRUE.equals(getState())?"signal":"noise")
-					,getMarker());
+					,getMarker(),
+					getSegmentLength(), getNoiseLength());
 	}
 
 }

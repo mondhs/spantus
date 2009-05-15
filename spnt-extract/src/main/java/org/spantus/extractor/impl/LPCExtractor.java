@@ -26,9 +26,8 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.extractor.AbstractExtractor3D;
-import org.spantus.logger.Logger;
-import org.spantus.math.Autocorrelation;
-import org.spantus.math.LPC;
+import org.spantus.math.services.LPCService;
+import org.spantus.math.services.MathServicesFactory;
 /**
  * 
  * @author Mindaugas Greibus
@@ -39,8 +38,9 @@ import org.spantus.math.LPC;
  *
  */
 public class LPCExtractor extends AbstractExtractor3D {
-	Logger log = Logger.getLogger(LPCExtractor.class);
-	int step = 0;
+//	private Logger log = Logger.getLogger(LPCExtractor.class);
+//	private int step = 0;
+	private LPCService lpcService;
 	
 	public LPCExtractor() {
 		getParam().setClassName(LPCExtractor.class.getSimpleName());
@@ -61,14 +61,17 @@ public class LPCExtractor extends AbstractExtractor3D {
 
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameVectorValues calculatedValues = new FrameVectorValues();
-		
-		List<Float> autocorr = Autocorrelation.calc(window, getDimension());
-		List<Float> lpc = LPC.calcForAutocorr(autocorr);
-
+		List<Float> lpc = getLpcService().calculateLPC(window, getDimension());
 		calculatedValues.add(lpc);
-
 		return calculatedValues;
 
+	}
+
+	public LPCService getLpcService() {
+		if(lpcService == null){
+			lpcService = MathServicesFactory.createLPCService();
+		}
+		return lpcService;
 	}
 
 }

@@ -23,10 +23,10 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 	private CorpusMatchListener corpusMatchListener ;
 	
 	private Boolean learnMode =
-//		Boolean.FALSE;
-		Boolean.TRUE;
+		Boolean.FALSE;
+//		Boolean.TRUE;
 	
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = Logger.getLogger(RecordRecognitionSegmentatorOnline.class);
 
 	/**
 	 * 
@@ -65,7 +65,7 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 			//search for match
 			notifyCorpusMatchListener(getCorpusService().match(fvv), marker);
 		}
-		log.error(marker.toString());
+		log.info("[findBestMatach]" + marker);
 		
 	}
 

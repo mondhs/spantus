@@ -5,7 +5,6 @@
 
 package fastdtw.dtw;
 
-import java.io.PrintStream;
 
 // Referenced classes of package dtw:
 //            MemoryResidentMatrix, SwapFileMatrix, CostMatrix, SearchWindow

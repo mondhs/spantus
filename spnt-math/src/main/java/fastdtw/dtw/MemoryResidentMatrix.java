@@ -52,8 +52,8 @@ class MemoryResidentMatrix
         return cellValues.length;
     }
 
-    private static final double OUT_OF_WINDOW_VALUE = (1.0D / 0.0D);
+//    private static final double OUT_OF_WINDOW_VALUE = (1.0D / 0.0D);
     private final SearchWindow window;
-    private double cellValues[];
+    private double cellValues[]; 
     private int colOffsets[];
 }

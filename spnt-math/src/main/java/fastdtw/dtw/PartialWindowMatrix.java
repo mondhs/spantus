@@ -75,7 +75,7 @@ class PartialWindowMatrix
         return window.size();
     }
 
-    private static final double OUT_OF_WINDOW_VALUE = (1.0D / 0.0D);
+//    private static final double OUT_OF_WINDOW_VALUE = (1.0D / 0.0D);
     private double lastCol[];
     private double currCol[];
     private int currColIndex;

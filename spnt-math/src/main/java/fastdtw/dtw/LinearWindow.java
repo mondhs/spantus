@@ -39,5 +39,5 @@ public class LinearWindow extends SearchWindow
         this(tsI, tsJ, 0);
     }
 
-    private static final int defaultRadius = 0;
+//    private static final int defaultRadius = 0;
 }

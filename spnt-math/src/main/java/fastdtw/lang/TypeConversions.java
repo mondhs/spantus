@@ -23,7 +23,7 @@ public class TypeConversions
 
     public static byte[] doubleArrayToByteArray(double numbers[])
     {
-        int doubleSize = 8;
+//        int doubleSize = 8;
         byte byteArray[] = new byte[numbers.length * 8];
         for(int x = 0; x < numbers.length; x++)
             System.arraycopy(doubleToByteArray(numbers[x]), 0, byteArray, x * 8, 8);
