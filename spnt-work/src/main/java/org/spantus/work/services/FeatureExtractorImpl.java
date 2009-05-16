@@ -25,7 +25,7 @@ public class FeatureExtractorImpl implements FeatureExtractor{
 		}
 		AudioReader reader = AudioFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader.getAudioFormat(urlFile));
-		ExtractorUtils.register(bufferedReader, extractors);
+		ExtractorUtils.register(bufferedReader, extractors, null);
 		reader.readAudio(urlFile, bufferedReader);
 		WorkServiceFactory.createReaderDao().write(bufferedReader, createExtactorFile(file));
 	}

@@ -11,6 +11,7 @@ public abstract class OnlineSegmentationUtils {
 		ThresholdSegmentatorOnline segmentator  = new ThresholdSegmentatorOnline();
 		ExtractorUtils.registerThreshold(bufferedReader, 
 				extractorEnum,
+				null,
 				segmentator);
 		return segmentator;
 	}

@@ -5,12 +5,15 @@ import java.util.Map;
 import org.spantus.core.extractor.ExtractorParam;
 
 public abstract class ExtractorParamUtils {
-	public enum commonParam{thresholdType, threasholdCoef};
+	public enum commonParam{thresholdType, threasholdCoef,mean,smoothed};
 	
 	public static Boolean getBoolean(ExtractorParam param,String propertyName){
 		return (Boolean)param.getProperties().get(propertyName);
 	}
 	public static Boolean getBoolean(ExtractorParam param,String propertyName, Boolean defaultVal){
+		if(param == null){
+			return defaultVal;
+		}
 		Boolean val = getBoolean(param, propertyName);
 		if(val == null){
 			val = defaultVal;

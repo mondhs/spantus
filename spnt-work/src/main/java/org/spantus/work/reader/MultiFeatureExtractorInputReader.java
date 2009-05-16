@@ -128,6 +128,7 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 			ExtractorEnum extractorType, 
 			IExtractorConfig config){
 		
+		//threshold can not be applied to signal extractor and not sequen of scalar extractor
 		if(!ExtractorEnum.SIGNAL_EXTRACTOR.equals(extractorType) &&
 				ExtractorTypeEnum.SequenceOfScalar.equals(extractorType.getType())){
 
@@ -139,8 +140,10 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 					"");
 			if(StringUtils.hasText(tresholdType)){
 				ThresholdEnum thresholdEnum = ThresholdEnum.valueOf(tresholdType);
+				//construct extractor with threshold
 				IThreshold threshold = ExtractorUtils.registerThreshold(getDefaultReader(),
 						extractorType,
+						params.get(key),
 						thresholdEnum);
 				param = ExtractorParamUtils.getSafeParam(params, key);
 				Float threasholdCoef = ExtractorParamUtils.<Float>getValue(param, 
@@ -148,11 +151,11 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 				if(threshold instanceof AbstractThreshold){
 					((AbstractThreshold)threshold).setCoef(threasholdCoef);	
 				}
-				
 				return;
 			}
 		}
-		ExtractorUtils.register(getDefaultReader(), extractorType);
+		//construct regular extractor
+		ExtractorUtils.register(getDefaultReader(), extractorType, params.get(params.get(extractorType.name())));
 	}
 	
 	

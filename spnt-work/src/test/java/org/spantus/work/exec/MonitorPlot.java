@@ -37,7 +37,7 @@ public class MonitorPlot extends JFrame {
 					ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR,
 //					ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
 //					ExtractorEnum.WAVFORM_EXTRACTOR, 
-				});
+				}, null);
 		capture = new AudioCapture(new WraperExtractorReader(reader));
 		capture.setFormat(getFormat());
 		initGraph(reader);

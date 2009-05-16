@@ -82,7 +82,7 @@ public class PlotMergedWav extends JFrame {
 		IExtractorInputReader bufferedReader = new ExtractorInputReader();
 		ExtractorUtils.register(bufferedReader, new ExtractorEnum[]{
 				ExtractorEnum.SIGNAL_EXTRACTOR,
-		});
+		}, null);
 		reader.readAudio(mainSignal, noiseSignal, bufferedReader);
 		return bufferedReader;
 	}

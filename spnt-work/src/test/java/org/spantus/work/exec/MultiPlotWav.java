@@ -94,7 +94,7 @@ public class MultiPlotWav extends JFrame {
 				ExtractorEnum.ENERGY_EXTRACTOR,
 //				ExtractorEnum.SIGNAL_EXTRACTOR,
 
-		});
+		}, null);
 		reader.readAudio(urlFile, bufferedReader);
 		return bufferedReader;
 	}

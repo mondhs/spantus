@@ -48,8 +48,8 @@ public class WrappedChartDescriptionResolver implements
 		String resolvedStr = resolved.getName();
 		resolvedStr = resolvedStr.replaceAll("BUFFERED_", "");
 		resolvedStr = resolvedStr.replaceAll(TimeSeriesMultiChart.AREA_CHART_PREFIX, "");
-		resolvedStr = resolvedStr.replaceAll(TimeSeriesMultiChart.CHART_PREFIX, "");
 		resolvedStr = resolvedStr.replaceAll(TimeSeriesMultiChart.MATRIX_CHART_PREFIX, "");
+		resolvedStr = resolvedStr.replaceAll(TimeSeriesMultiChart.CHART_PREFIX, "");
 		resolvedStr = resolvedStr.replaceAll(TimeSeriesMultiChart.THRESHOLD_PREFIX, "");
 		resolved.setName(resolvedStr);
 //		log.debug("resolved: " + resolved );	

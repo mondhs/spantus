@@ -23,6 +23,7 @@ package org.spantus.extractor.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.ExtractorWrapper;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
@@ -37,6 +38,8 @@ import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.AbstractExtractor3D;
 import org.spantus.extractor.ExtractorResultBuffer;
 import org.spantus.extractor.ExtractorResultBufferFactory;
+import org.spantus.utils.ExtractorParamUtils;
+import org.spantus.utils.ExtractorParamUtils.commonParam;
 
 /**
  * 
@@ -92,17 +95,18 @@ public abstract class ExtractorUtils {
 	 * @param extractor
 	 */
 	public static void register(IExtractorInputReader bufferedReader,
-			ExtractorEnum extractor) {
+			ExtractorEnum extractor, ExtractorParam param) {
 		bufferedReader.registerExtractor(ExtractorResultBufferFactory
-				.create(createInstance(extractor)));
+				.create(createInstance(extractor, param)));
 	}
 
-	public static IGeneralExtractor createInstance(ExtractorEnum extractor) {
+	public static IGeneralExtractor createInstance(ExtractorEnum extractor, ExtractorParam param) {
 		try {
 			if (extractorMap.get(extractor) != null) {
 				IExtractor extractorInstance = extractorMap.get(extractor)
 						.newInstance();
-				if (extractor.name().startsWith("SMOOTHED_")) {
+				if(ExtractorParamUtils.getBoolean(param, 
+						commonParam.smoothed.name(), false)){
 					SmoothedExtractor smooted = new SmoothedExtractor();
 					smooted.setExtractor(extractorInstance);
 					extractorInstance = smooted;
@@ -126,8 +130,9 @@ public abstract class ExtractorUtils {
 
 	public static IThreshold registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
+			ExtractorParam param,
 			AbstractThreshold threshold) {
-		IGeneralExtractor generalExtr = createInstance(extractorType);
+		IGeneralExtractor generalExtr = createInstance(extractorType, param);
 		if (generalExtr instanceof IExtractor) {
 			ExtractorWrapper wraper = new ExtractorWrapper(
 					(IExtractor) generalExtr);
@@ -135,23 +140,24 @@ public abstract class ExtractorUtils {
 			wraper.getListeners().add(threshold);
 			bufferedReader.registerExtractor(threshold);
 		} else {
-			register(bufferedReader, extractorType);
+			register(bufferedReader, extractorType, param);
 		}
 		return threshold;
 
 	}
 
 	public static IThreshold registerThreshold(
-			IExtractorInputReader bufferedReader, ExtractorEnum extractorType) {
-		return registerThreshold(bufferedReader, extractorType, ThresholdEnum.online);
+			IExtractorInputReader bufferedReader, ExtractorEnum extractorType, ExtractorParam param) {
+		return registerThreshold(bufferedReader, extractorType, param, ThresholdEnum.online);
 	}
 
 	public static void registerThreshold(IExtractorInputReader bufferedReader,
-			ExtractorEnum[] extractors) {
-		registerThreshold(bufferedReader, extractors, ThresholdEnum.online);
+			ExtractorEnum[] extractors,Map<String, ExtractorParam> params) {
+		registerThreshold(bufferedReader, extractors, params, ThresholdEnum.online);
 	}
 	public static IThreshold registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
+			ExtractorParam param,
 			ThresholdEnum thresholdType) {
 		AbstractThreshold threshold = null;
 		
@@ -168,22 +174,24 @@ public abstract class ExtractorUtils {
 		default:
 			break;
 		}
-		return registerThreshold(bufferedReader, extractorType,
+		return registerThreshold(bufferedReader, extractorType, param,
 				threshold);
 	}
 
 	public static void registerThreshold(IExtractorInputReader bufferedReader,
 			ExtractorEnum[] extractors,
+			Map<String, ExtractorParam> params,
 			ThresholdEnum thresholdType) {
 		for (ExtractorEnum extractor : extractors) {
-			ExtractorUtils.registerThreshold(bufferedReader, extractor, thresholdType);
+			ExtractorUtils.registerThreshold(bufferedReader, extractor, 
+					params.get(extractor.name()), thresholdType);
 		}
 	}
 
 	public static void register(IExtractorInputReader bufferedReader,
-			ExtractorEnum[] extractors) {
+			ExtractorEnum[] extractors,Map<String, ExtractorParam> params) {
 		for (ExtractorEnum extractor : extractors) {
-			ExtractorUtils.register(bufferedReader, extractor);
+			ExtractorUtils.register(bufferedReader, extractor, params.get(extractor.name()));
 		}
 	}
 }
