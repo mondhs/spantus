@@ -6,22 +6,19 @@ import java.util.TimerTask;
 
 import javax.sound.sampled.AudioFormat;
 
-import org.spantus.chart.AbstractSwingChart;
-import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.DefaultExtractorConfig;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.ExtractorWrapper;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
-import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioCapture;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.online.DecistionSegmentatorOnline;
 import org.spantus.segment.online.MultipleSegmentatorOnline;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
+import org.spantus.segment.online.OnlineSegmentator;
 import org.spantus.segment.online.ThresholdSegmentatorOnline;
 import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.segment.OnlineSegmentationUtils;
@@ -35,7 +32,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Timer timer = new Timer("Sound Monitor Plot");
-	private Logger log = Logger.getLogger(getClass());
+//	private Logger log = Logger.getLogger(SegmentMonitorPlot.class);
 	private AudioCapture capture;
 	public static final String FILE_NAME = "./config.properties";
 	
@@ -47,29 +44,55 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		AudioFormat format = getFormat(config.getSampleRate());
 		
 		ExtractorParam param = config.getParameters().get(DefaultExtractorConfig.class.getName());
+
+		setReader(
+				ExtractorsFactory
+				.createReader(format)); 
+
+		getReader().getConfig().setBufferSize(3000);
+		
+		DecistionSegmentatorOnline multipleSegmentator = 
+			getSegmentatorRecordable(param);
+//			getSegmentatorDefault(param);
+
+		
+		
+		registerExtractors(param, multipleSegmentator);
+
+		capture = new AudioCapture(getWraperExtractorReader());
+		capture.setFormat(format);
+		capture.start();
+
+//		initGraph(reader);
+		timer.schedule(new TimerTask() {
+			public void run() {
+//				log.debug("repaint");
+//				chart.setPreferredSize(getSize());
+				repaint();
+				if( getChart() == null ){
+					if(getReader().getExtractorRegister().iterator().next().getOutputValues().size()>0){
+						initGraph(getReader());
+					}
+				}
+			}
+		}, 1000L, 1000L);
+
+	}
+	
+	public void registerExtractors(ExtractorParam param, OnlineSegmentator multipleSegmentator){
+		ThresholdSegmentatorOnline segmentator = null;
 		Float threshold_coef = ExtractorParamUtils.<Float>getValue(param,
 				ConfigPropertiesDao.key_threshold_coef);
 		Long threshold_leaningPeriod = ExtractorParamUtils.<Long>getValue(param,
 				ConfigPropertiesDao.key_threshold_leaningPeriod);
 
 		
-		reader = ExtractorsFactory
-				.createReader(format); 
-
-		reader.getConfig().setBufferSize(3000);
-		
-		DecistionSegmentatorOnline multipleSegmentator = 
-			getSegmentatorRecordable(param);
-//			getSegmentatorDefault(param);
-
-		ThresholdSegmentatorOnline segmentator = null;
-		
 //		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.ENERGY_EXTRACTOR);
 //		segmentator.setOnlineSegmentator(multipleSegmentator);
 //		segmentator.setCoef(threshold_coef);
 //		segmentator.setLearningPeriod(threshold_leaningPeriod);
 
-		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
+		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(threshold_coef);
 		segmentator.setLearningPeriod(threshold_leaningPeriod);
@@ -86,34 +109,10 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 
 
 //		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.WAVFORM_EXTRACTOR);
-		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.LPC_EXTRACTOR);
-
-		capture = new AudioCapture(wraperExtractorReader);
-		capture.setFormat(format);
-		capture.start();
-
-//		initGraph(reader);
-		timer.schedule(new TimerTask() {
-			public void run() {
-//				log.debug("repaint");
-//				chart.setPreferredSize(getSize());
-				repaint();
-				if( chart == null ){
-					if(reader.getExtractorRegister().iterator().next().getOutputValues().size()>0){
-						initGraph(reader);
-					}
-				}
-			}
-		}, 1000L, 1000L);
-
+		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.LPC_EXTRACTOR);
 	}
 	
-	private void initGraph(IExtractorInputReader reader) {
-		chart = ChartFactory.createChart(reader);
-//		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
-		getContentPane().add(chart);
-	}
-
+	
 
 	public AudioFormat getFormat(float sampleRate) {
 		int sampleSizeInBits = 16;
@@ -166,20 +165,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		return onlineParam;
 	}
 	
-	public void repaint() {
-		if (getChart() != null) {
-			try{
-				getChart().repaint();
-			}catch(Exception e){
-				log.error(e.getMessage());
-			}
-		}
-		super.repaint();
-	}
-
-	public AbstractSwingChart getChart() {
-		return chart;
-	}
+	
 
 	public static void main(String[] args) {
 		AbstractSegmentPlot monitorPlot = new SegmentMonitorPlot();

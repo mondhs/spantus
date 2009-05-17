@@ -1,5 +1,6 @@
 package org.spantus.utils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.spantus.core.extractor.ExtractorParam;
@@ -52,6 +53,9 @@ public abstract class ExtractorParamUtils {
 
 	
 	public static ExtractorParam getSafeParam(Map<String, ExtractorParam> paramMap, String key){
+		if(paramMap == null){
+			paramMap = new HashMap<String, ExtractorParam>();
+		}
 		ExtractorParam param = paramMap.get(key);
 		if(param == null){
 			param = new ExtractorParam();

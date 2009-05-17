@@ -191,7 +191,9 @@ public abstract class ExtractorUtils {
 	public static void register(IExtractorInputReader bufferedReader,
 			ExtractorEnum[] extractors,Map<String, ExtractorParam> params) {
 		for (ExtractorEnum extractor : extractors) {
-			ExtractorUtils.register(bufferedReader, extractor, params.get(extractor.name()));
+			ExtractorUtils.register(bufferedReader, extractor, 
+					ExtractorParamUtils.getSafeParam(params, extractor.name())
+					);
 		}
 	}
 }

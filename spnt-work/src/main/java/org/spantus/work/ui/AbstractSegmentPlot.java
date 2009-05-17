@@ -1,31 +1,40 @@
 package org.spantus.work.ui;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.sound.sampled.AudioFormat;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import org.spantus.chart.AbstractSwingChart;
+import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.WraperExtractorReader;
+import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.io.RecordWraperExtractorReader;
 import org.spantus.segment.online.DecistionSegmentatorOnline;
 import org.spantus.segment.online.MultipleSegmentatorOnline;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 
-public abstract class AbstractSegmentPlot extends JFrame {
+public abstract class AbstractSegmentPlot extends JPanel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	IExtractorInputReader reader = null;
-	WraperExtractorReader wraperExtractorReader = null;
-	AbstractSwingChart chart = null;	
+	private IExtractorInputReader reader = null;
+	private WraperExtractorReader wraperExtractorReader = null;
+	private AbstractSwingChart chart = null;	
+	private Logger log = Logger.getLogger(SegmentMonitorPlot.class);
+	
+	public AbstractSegmentPlot() {
+		setLayout(new BorderLayout());
+	}
 	
 	public WraperExtractorReader getWraperExtractorReader() {
 		if(wraperExtractorReader==null){
@@ -56,13 +65,21 @@ public abstract class AbstractSegmentPlot extends JFrame {
 		return param;
 	}
 	
+	protected void initGraph(IExtractorInputReader reader) {
+		chart = ChartFactory.createChart(reader);
+//		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
+		this.add(chart,BorderLayout.CENTER);
+	}
+	
 	public abstract AudioFormat getFormat();
 	
 	public void showChart(){
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(640, 480);
-		validate();
-		setVisible(true);
+		JFrame chartFrame = new JFrame();
+		chartFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		chartFrame.getContentPane().add(this);
+		chartFrame.setSize(640, 480);
+		chartFrame.validate();
+		chartFrame.setVisible(true);
 		Timer timer = new Timer(1000, new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				repaint();
@@ -70,11 +87,30 @@ public abstract class AbstractSegmentPlot extends JFrame {
 		});
 		timer.setRepeats(false);
 		timer.start();
+		this.setSize(640, 480);
+	}
+	
+	public AbstractSwingChart getChart() {
+		return chart;
 	}
 	
 	public void repaint() {
-		if (chart != null) chart.repaint();
+		if (getChart() != null) {
+			try{
+				getChart().repaint();
+			}catch(Exception e){
+				log.error(e);
+			}
+		}
 		super.repaint();
+	}
+	
+	public IExtractorInputReader getReader() {
+		return reader;
+	}
+
+	public void setReader(IExtractorInputReader reader) {
+		this.reader = reader;
 	}
 
 }

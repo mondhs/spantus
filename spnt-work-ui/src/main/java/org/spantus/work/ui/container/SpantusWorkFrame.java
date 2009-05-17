@@ -61,7 +61,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	public void initialize() {
 		getSpantusUIService().setupEnv(getInfo(),this);
 		getJJMenuBar().initialize();
-		getJJToolBarBar().initialize();
+		getToolBar().initialize();
 		getSampleRepresentationPanel().initialize();
 		this.setJMenuBar(getJJMenuBar());
 		this.setContentPane(getJContentPane());
@@ -76,7 +76,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	}
 	public void reload() {
 		getJJMenuBar().reload();
-		getJJToolBarBar().reload();
+		getToolBar().reload();
 		contructTitle();
 		this.setTitle(contructTitle());
 	}
@@ -104,7 +104,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getJJToolBarBar(), BorderLayout.NORTH);
+			jContentPane.add(getToolBar(), BorderLayout.NORTH);
 			jContentPane.add(getSampleRepresentationPanel(),BorderLayout.CENTER);
 			new DropTarget(jContentPane, new WavDropTargetListener(getHandler(),getInfo()));
 		}
@@ -127,7 +127,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	}
 	
 	
-	public SpantusWorkToolbar getJJToolBarBar() {
+	public SpantusWorkToolbar getToolBar() {
 		if (jJToolBarBar == null) {
 			jJToolBarBar = new SpantusWorkToolbar();
 //			demoToolBar.setActionListener(getListener());

@@ -42,10 +42,8 @@ public class RecognitionPlot extends JFrame {
 		try {
 			reader = readSignal();
 		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (reader == null) {

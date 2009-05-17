@@ -8,7 +8,6 @@ import java.net.URL;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioFactory;
 import org.spantus.core.io.DefaultAudioReader;
@@ -31,12 +30,12 @@ public class SegmentPlot extends AbstractSegmentPlot {
 	DefaultAudioReader audioReader = (DefaultAudioReader)AudioFactory.createAudioReader();
 
 	public static final String DEFAULT_FILE_NAME = 
-//		"../data/t_1_2.wav"
+		"../data/t_1_2.wav"
 //		"../data/test/1_2_l.wav"
 //		"/home/studijos/wav/ijunk_isjunk_wav/ijunk_isjunk.wav"
 //		"/home/studijos/wav/ijunk_isjunk_wav/white_ijunk_isjunk.wav"
 //		"/home/studijos/wav/on_off_up_down_wav/on_off_up_down.wav"
-		""
+//		""
 		;
 	
 //	private File wavFile = null;
@@ -55,43 +54,36 @@ public class SegmentPlot extends AbstractSegmentPlot {
 		try {
 			readSignal();
 		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (reader == null) {
+		if (getReader() == null) {
 			throw new RuntimeException();
 		}
-		chart = ChartFactory.createChart(reader);
-//		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
-		getContentPane().add(chart);
-
+		
+		initGraph(getReader());
 	}
 
 	public IExtractorInputReader readSignal()
 			throws UnsupportedAudioFileException, IOException {
-		reader = ExtractorsFactory.createReader(getFormat());
-		reader.getConfig().setBufferSize(3000);
+		setReader(ExtractorsFactory.createReader(getFormat()));
+		getReader().getConfig().setBufferSize(3000);
 		
 		DecistionSegmentatorOnline multipleSegmentator = 
 //			getSegmentatorRecordable();
 			getSegmentatorDefault();
 		
 		
-		
-		
-		
 		ThresholdSegmentatorOnline segmentator = null;
-		segmentator = OnlineSegmentationUtils.register(reader, ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
+		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(2f);
 		
-		segmentator = OnlineSegmentationUtils.register(reader, ExtractorEnum.WAVFORM_EXTRACTOR);
+		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.WAVFORM_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 
-		segmentator = OnlineSegmentationUtils.register(reader, ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
+		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(2f);
 		
@@ -111,11 +103,9 @@ public class SegmentPlot extends AbstractSegmentPlot {
 //		segmentator.setMultipleSegmentator(multipleSegmentator);
 //		segmentator.setCoef(0.9f);
 
-		
-		
-		audioReader.readAudio(getFileUrl(), wraperExtractorReader);
+		audioReader.readAudio(getFileUrl(), getWraperExtractorReader());
 		log.debug("Markers: " + multipleSegmentator.getMarkSet().getMarkers());
-		return reader;
+		return getReader();
 	}
 	/**
 	 * 
