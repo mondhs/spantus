@@ -25,6 +25,7 @@ import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
+import org.spantus.utils.FileUtils;
 
 public class DrawSignalCommon extends JFrame {
 	/**

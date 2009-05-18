@@ -99,7 +99,9 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 	public Boolean getLearnMode() {
 		return learnMode;
 	}
-
+	public void setLearnMode(Boolean learnMode) {
+		this.learnMode = learnMode;
+	}
 	
 	public CorpusMatchListener getCorpusMatchListener() {
 		return corpusMatchListener;
@@ -109,6 +111,7 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 	public void setCorpusMatchListener(CorpusMatchListener corpusMatchListener) {
 		this.corpusMatchListener = corpusMatchListener;
 	}
+	
 	
 	
 

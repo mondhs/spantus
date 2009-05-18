@@ -1,13 +1,10 @@
 package org.spantus.work.ui;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.sound.sampled.AudioFormat;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
@@ -31,6 +28,7 @@ public abstract class AbstractSegmentPlot extends JPanel {
 	private WraperExtractorReader wraperExtractorReader = null;
 	private AbstractSwingChart chart = null;	
 	private Logger log = Logger.getLogger(SegmentMonitorPlot.class);
+
 	
 	public AbstractSegmentPlot() {
 		setLayout(new BorderLayout());
@@ -44,14 +42,14 @@ public abstract class AbstractSegmentPlot extends JPanel {
 		return wraperExtractorReader;
 	}
 
-	protected MultipleSegmentatorOnline getSegmentatorRecordable(){
+	protected MultipleSegmentatorOnline createSegmentatorRecordable(){
 		RecordSegmentatorOnline multipleSegmentator = new RecordSegmentatorOnline();
 		multipleSegmentator.setParam(createParam());
 		multipleSegmentator.setReader((RecordWraperExtractorReader)getWraperExtractorReader());
 		return multipleSegmentator;
 	}
 	
-	protected DecistionSegmentatorOnline getSegmentatorDefault(){
+	protected DecistionSegmentatorOnline createSegmentatorDefault(){
 		DecistionSegmentatorOnline multipleSegmentator = new DecistionSegmentatorOnline();
 		multipleSegmentator.setParam(createParam());
 		return multipleSegmentator;
@@ -67,27 +65,26 @@ public abstract class AbstractSegmentPlot extends JPanel {
 	
 	protected void initGraph(IExtractorInputReader reader) {
 		chart = ChartFactory.createChart(reader);
-//		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
 		this.add(chart,BorderLayout.CENTER);
 	}
 	
 	public abstract AudioFormat getFormat();
 	
-	public void showChart(){
+	public void showChartFrame(){
 		JFrame chartFrame = new JFrame();
 		chartFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		chartFrame.getContentPane().add(this);
 		chartFrame.setSize(640, 480);
 		chartFrame.validate();
 		chartFrame.setVisible(true);
-		Timer timer = new Timer(1000, new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				repaint();
-			}
-		});
-		timer.setRepeats(false);
-		timer.start();
 		this.setSize(640, 480);
+	}
+	
+	public void stopRecognition(){
+//		timer.cancel();
+	}
+	
+	public void startRecognition(){
 	}
 	
 	public AbstractSwingChart getChart() {

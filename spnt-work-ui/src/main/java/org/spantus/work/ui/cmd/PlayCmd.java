@@ -1,7 +1,7 @@
 package org.spantus.work.ui.cmd;
 
-import org.spantus.work.ui.audio.AudioManagerFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.wav.AudioManagerFactory;
 
 public class PlayCmd extends AbsrtactCmd {
 	

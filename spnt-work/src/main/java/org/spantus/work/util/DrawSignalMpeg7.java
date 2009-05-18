@@ -25,6 +25,7 @@ import org.spantus.mpeg7.Mpeg7ExtractorEnum;
 import org.spantus.mpeg7.config.Mpeg7ConfigUtil;
 import org.spantus.mpeg7.extractors.Mpeg7ExtractorInputReader;
 import org.spantus.mpeg7.io.Mpeg7Factory;
+import org.spantus.utils.FileUtils;
 
 public class DrawSignalMpeg7 extends JFrame {
 	/**

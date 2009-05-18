@@ -18,7 +18,7 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.work.ui.audio;
+package org.spantus.work.wav;
 
 import java.net.URL;
 /**

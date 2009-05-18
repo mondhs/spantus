@@ -71,6 +71,7 @@ public class AudioCapture extends Thread {
 			}
 			line.drain();
 			line.close();
+			line.stop();
 //			log.error("line closed");
 		} catch (LineUnavailableException e1) {
 			log.error(e1);

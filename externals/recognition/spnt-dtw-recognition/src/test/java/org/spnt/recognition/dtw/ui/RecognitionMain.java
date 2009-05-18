@@ -9,6 +9,7 @@ public class RecognitionMain {
 	 */
 	public static void main(String[] args) {
 		RecognitionAppFrame app = new RecognitionAppFrame();
+		app.setSize(640, 480);
 		app.initialize();
 		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		app.setVisible(true);

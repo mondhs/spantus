@@ -8,15 +8,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.spantus.exception.ProcessingException;
+import org.spantus.utils.FileUtils;
 import org.spantus.work.services.converter.FrameValues3DConverter;
 import org.spantus.work.services.converter.FrameValuesConverter;
-import org.spantus.work.util.FileUtils;
 import org.spnt.recognition.bean.CorpusEntry;
+import org.spnt.recognition.bean.CorpusFileEntry;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;
 
-public class CorpusRepositoryImpl implements CorpusRepository {
+public class CorpusRepositoryFileImpl implements CorpusRepository {
 
 	private XStream xstream;
 	
@@ -40,6 +42,17 @@ public class CorpusRepositoryImpl implements CorpusRepository {
 			}
 		}
 		return repo;
+	}
+	public List<CorpusFileEntry> findAllFileEntries() {
+			List<CorpusFileEntry> repoFiles = new ArrayList<CorpusFileEntry>();
+			if(getRepoDir().isDirectory()){
+				for (String fileName : getRepoDir().list()) {
+					if(fileName.endsWith(CORPUS_ENTRY_FILE_EXT)){
+						repoFiles.add(readFileEntry(new File(repoDir,fileName)));
+					}
+				}
+			}
+		return repoFiles;
 	}
 
 	public void save(CorpusEntry entry) {
@@ -66,6 +79,24 @@ public class CorpusRepositoryImpl implements CorpusRepository {
 			throw new RuntimeException(e);
 		}
 		return entry;
+		
+	}
+	protected CorpusFileEntry readFileEntry(File entryFile) {
+		CorpusFileEntry fileEntry = null;
+		try {
+			FileReader inFile = new FileReader(entryFile);
+			CorpusEntry corpusEntry = (CorpusEntry)getXsteam().fromXML(inFile);
+			fileEntry = new CorpusFileEntry();
+			fileEntry.setCorpusEntry(corpusEntry);
+			fileEntry.setEntryFile(entryFile);
+			File wavFile = new File(entryFile.getParent(),
+					FileUtils.getOnlyFileName(
+							FileUtils.getOnlyFileName(entryFile))+".wav");
+			fileEntry.setWavFile(wavFile);
+		} catch (FileNotFoundException e) {
+			throw new ProcessingException(e);
+		}
+		return fileEntry;
 		
 	}
 	

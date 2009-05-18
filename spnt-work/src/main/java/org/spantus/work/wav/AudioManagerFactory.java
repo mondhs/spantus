@@ -1,4 +1,4 @@
-package org.spantus.work.ui.audio;
+package org.spantus.work.wav;
 
 public abstract class AudioManagerFactory {
 	public static AudioManager createAudioManager(){

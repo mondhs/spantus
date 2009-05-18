@@ -33,9 +33,10 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 	private static final long serialVersionUID = 1L;
 	private Timer timer = new Timer("Sound Monitor Plot");
 //	private Logger log = Logger.getLogger(SegmentMonitorPlot.class);
+	private DecistionSegmentatorOnline multipleSegmentator;
 	private AudioCapture capture;
+//	private boolean recording;
 	public static final String FILE_NAME = "./config.properties";
-	
 
 	public SegmentMonitorPlot() {
 		ConfigDao configDao = new ConfigPropertiesDao();
@@ -51,9 +52,9 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 
 		getReader().getConfig().setBufferSize(3000);
 		
-		DecistionSegmentatorOnline multipleSegmentator = 
-			getSegmentatorRecordable(param);
-//			getSegmentatorDefault(param);
+		multipleSegmentator = 
+			createSegmentatorRecordable(param);
+//			createSegmentatorDefault(param);
 
 		
 		
@@ -61,13 +62,28 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 
 		capture = new AudioCapture(getWraperExtractorReader());
 		capture.setFormat(format);
+	}
+	
+	@Override
+	public void startRecognition(){
+		startRecord();
+		super.startRecognition();
+	}
+	
+	public void stopRecognition(){
+		stopRecord();
+		super.stopRecognition();
+	}
+	
+	public void stopRecord(){
+		timer.cancel();
+		capture.finalize();
+	}
+	
+	public void startRecord(){
 		capture.start();
-
-//		initGraph(reader);
 		timer.schedule(new TimerTask() {
 			public void run() {
-//				log.debug("repaint");
-//				chart.setPreferredSize(getSize());
 				repaint();
 				if( getChart() == null ){
 					if(getReader().getExtractorRegister().iterator().next().getOutputValues().size()>0){
@@ -76,7 +92,6 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 				}
 			}
 		}, 1000L, 1000L);
-
 	}
 	
 	public void registerExtractors(ExtractorParam param, OnlineSegmentator multipleSegmentator){
@@ -136,18 +151,18 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		
 	}
 	
-	protected DecistionSegmentatorOnline getSegmentatorRecordable(ExtractorParam param){
+	protected DecistionSegmentatorOnline createSegmentatorRecordable(ExtractorParam param){
 		String path = ExtractorParamUtils.<String>getValue(param,
 				ConfigPropertiesDao.key_format_pathOutput);
 		RecordSegmentatorOnline segmentator = 
-			(RecordSegmentatorOnline)getSegmentatorRecordable();
+			(RecordSegmentatorOnline)createSegmentatorRecordable();
 		segmentator.setPath(path);
 		segmentator.setParam(createParam(param));
 		return segmentator;
 	}
 	
-	protected DecistionSegmentatorOnline getSegmentatorDefault(ExtractorParam param){
-		DecistionSegmentatorOnline segmentator = getSegmentatorDefault();
+	protected DecistionSegmentatorOnline createSegmentatorDefault(ExtractorParam param){
+		DecistionSegmentatorOnline segmentator = createSegmentatorDefault();
 		segmentator.setParam(createParam(param));
 		return segmentator; 
 	}
@@ -169,7 +184,12 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 
 	public static void main(String[] args) {
 		AbstractSegmentPlot monitorPlot = new SegmentMonitorPlot();
-		monitorPlot.showChart();
+		monitorPlot.showChartFrame();
+		monitorPlot.startRecognition();
+	}
+
+	public DecistionSegmentatorOnline getMultipleSegmentator() {
+		return multipleSegmentator;
 	}
 
 

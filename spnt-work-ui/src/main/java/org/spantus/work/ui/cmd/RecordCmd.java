@@ -22,6 +22,7 @@ import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.io.RecordWraperExtractorReader;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.segment.online.ThresholdSegmentatorOnline;
+import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.reader.SupportableReaderEnum;
 import org.spantus.work.segment.OnlineSegmentationUtils;
@@ -32,7 +33,6 @@ import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.work.ui.services.WorkInfoManager;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
 import org.spantus.work.ui.util.WorkUIExtractorConfigUtil;
-import org.spantus.work.util.FileUtils;
 
 public class RecordCmd extends AbsrtactCmd {
 	

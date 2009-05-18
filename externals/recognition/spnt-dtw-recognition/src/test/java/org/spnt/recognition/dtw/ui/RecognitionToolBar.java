@@ -1,12 +1,16 @@
 package org.spnt.recognition.dtw.ui;
 
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JToolBar;
 
 public class RecognitionToolBar extends JToolBar {
@@ -15,12 +19,20 @@ public class RecognitionToolBar extends JToolBar {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	enum LabelEnum{start, stop, train};
+	enum LabelEnum{start, stop, train, admin};
 
+	RecognitionUIActionListener recognitionUIActionListener;
+	ToolbarActionListener toolbarActionListener;
 	
 	private JButton recordBtn = null;
 
 	private JButton stopBtn = null;
+	
+	private JButton adminBtn = null;
+	
+	private JCheckBox train;
+	
+	private boolean learnMode = false;
 	
 	protected void initialize() {
 		FlowLayout layout = new FlowLayout(FlowLayout.LEFT, 3, 2);
@@ -28,6 +40,7 @@ public class RecognitionToolBar extends JToolBar {
 		this.add(getRecordBtn());
 		this.add(getStopBtn());
 		this.add(getTrainCheckbox());
+		this.add(getAdminBtn());
 		
 	}
 	
@@ -46,11 +59,20 @@ public class RecognitionToolBar extends JToolBar {
 		return stopBtn;
 	}
 	
-	JCheckBox train;
+	public JButton getAdminBtn() {
+		if (adminBtn == null) {
+//			ImageIcon icon = createIcon(ImageResourcesEnum.stop.getCode());
+			adminBtn = createButton(null, LabelEnum.admin.name());
+		}
+		return adminBtn;
+	}
+	
 	public JCheckBox getTrainCheckbox() {
 		if (train == null) {
 //			ImageIcon icon = createIcon(ImageResourcesEnum.stop.getCode());
 			train = new JCheckBox(getResource(LabelEnum.train.name())); 
+			train.setSelected(learnMode);
+			train.addActionListener(getToolbarActionListener());
 		}
 		return train;
 	}
@@ -67,10 +89,70 @@ public class RecognitionToolBar extends JToolBar {
 		btn.setFocusable(false);
 		btn.setActionCommand(cmd);
 		btn.setToolTipText(getResource(name));
-//		btn.addActionListener(getToolbarActionListener());
+		btn.addActionListener(getToolbarActionListener());
 		return btn;
 	}
 	public String getResource(String key) {
 		return key;
+	}
+
+	
+	public RecognitionUIActionListener getRecognitionUIActionListener() {
+		return recognitionUIActionListener;
+	}
+
+	public void setRecognitionUIActionListener(
+			RecognitionUIActionListener recognitionUIActionListener) {
+		this.recognitionUIActionListener = recognitionUIActionListener;
+	}
+
+	public ToolbarActionListener getToolbarActionListener() {
+		if(toolbarActionListener == null){
+			toolbarActionListener =  new ToolbarActionListener();
+		}
+		return toolbarActionListener;
+	}
+	
+	
+	public class ToolbarActionListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			LabelEnum cmd = LabelEnum.valueOf(e.getActionCommand());
+			switch (cmd) {
+			case start:
+				getRecognitionUIActionListener().start();
+				break;
+			case stop:
+				getRecognitionUIActionListener().stop();
+				break;
+			case train:
+				learnMode = ((JCheckBox)e.getSource()).isSelected();
+				getRecognitionUIActionListener().changeLearningStatus(learnMode);
+				break;
+			case admin:
+				getRecognitionUIActionListener().stop();
+				
+				JDialog adminDialog = new JDialog(
+						(Frame)getParent().getParent().getParent().getParent());
+				adminDialog.setContentPane(new AdminPanel());
+				adminDialog.setModal(true);
+				adminDialog.setVisible(true);
+				break;
+			default:
+				break;
+			}
+			
+		}
+		
+	}
+
+
+	public boolean isLearnMode() {
+		return learnMode;
+	}
+
+	public void setLearnMode(boolean learnMode) {
+		this.learnMode = learnMode;
 	}
 }

@@ -11,7 +11,7 @@ import org.spantus.math.services.MathServicesFactory;
 import org.spnt.recognition.bean.CorpusEntry;
 import org.spnt.recognition.bean.RecognitionResult;
 import org.spnt.recognition.corpus.CorpusRepository;
-import org.spnt.recognition.corpus.CorpusRepositoryImpl;
+import org.spnt.recognition.corpus.CorpusRepositoryFileImpl;
 /**
  * 
  * @author Mindaugas Greibus
@@ -79,7 +79,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	
 	public CorpusRepository getCorpus() {
 		if(corpus == null){
-			corpus = new CorpusRepositoryImpl();
+			corpus = new CorpusRepositoryFileImpl();
 		}
 		return corpus;
 	}

@@ -71,8 +71,8 @@ public class SegmentPlot extends AbstractSegmentPlot {
 		getReader().getConfig().setBufferSize(3000);
 		
 		DecistionSegmentatorOnline multipleSegmentator = 
-//			getSegmentatorRecordable();
-			getSegmentatorDefault();
+//			createSegmentatorRecordable();
+			createSegmentatorDefault();
 		
 		
 		ThresholdSegmentatorOnline segmentator = null;
@@ -131,7 +131,7 @@ public class SegmentPlot extends AbstractSegmentPlot {
 		
 		
 		AbstractSegmentPlot segmentPlot = new SegmentPlot(urlFile);
-		segmentPlot.showChart();
+		segmentPlot.showChartFrame();
 	}
 
 	public URL getFileUrl() {
