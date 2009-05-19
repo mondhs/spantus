@@ -70,6 +70,23 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 		}
 	}
 	
+	public void update(CorpusFileEntry entry){
+		if(entry.getEntryFile().exists()){
+			entry.getEntryFile().delete();
+			save(entry.getCorpusEntry());
+		}
+		if(entry.getWavFile().exists()){
+			String name = FileUtils.getOnlyFileName(entry.getWavFile());
+			if(!name.equals(entry.getCorpusEntry().getName())){
+				File dest = new File(entry.getWavFile().getParent(),
+						entry.getCorpusEntry().getName()
+						+".wav");
+				entry.getWavFile().renameTo(dest);		
+			}
+			
+		}
+	}
+	
 	protected CorpusEntry read(File entryFile) {
 		CorpusEntry entry = null;
 		try {

@@ -6,7 +6,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
+import javax.swing.BorderFactory; 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -136,8 +136,10 @@ public class RecognitionToolBar extends JToolBar {
 				JDialog adminDialog = new JDialog(
 						(Frame)getParent().getParent().getParent().getParent());
 				adminDialog.setContentPane(new AdminPanel());
+				adminDialog.setSize(640,480);
 				adminDialog.setModal(true);
 				adminDialog.setVisible(true);
+				
 				break;
 			default:
 				break;
