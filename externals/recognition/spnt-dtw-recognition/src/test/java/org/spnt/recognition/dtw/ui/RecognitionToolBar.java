@@ -116,7 +116,6 @@ public class RecognitionToolBar extends JToolBar {
 	
 	public class ToolbarActionListener implements ActionListener{
 
-		@Override
 		public void actionPerformed(ActionEvent e) {
 			LabelEnum cmd = LabelEnum.valueOf(e.getActionCommand());
 			switch (cmd) {

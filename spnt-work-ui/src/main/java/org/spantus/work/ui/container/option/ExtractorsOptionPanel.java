@@ -28,17 +28,12 @@ import org.spantus.work.ui.i18n.I18nFactory;
 public class ExtractorsOptionPanel extends AbstractOptionPanel {
 
 	private static final long serialVersionUID = 1L;
-//	private JPanel commonPnl = null;
-//	private JPanel mpeg7Pnl = null;
-//	private JPanel selectionPnl;
 	private ShuttleSelectionPanel shuttle;
 	private JPanel propetiesPnl;
 	
 	JCheckBox smoothedCmb = new JCheckBox();
 	JCheckBox meanCmb = new JCheckBox();
 	
-//	public static final String MEAN_KEY = "mean";
-//	public static final String SMOOTHED_KEY = "smoothed";
 	
 	ExtractorParam selectedExtractorParam;
 	
@@ -126,7 +121,6 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 			meanCmb.setName(commonParam.mean.name());
 			meanCmb.setText(getMessage(meanCmb.getName()));
 			meanCmb.addItemListener(new ItemListener(){
-				@Override
 				public void itemStateChanged(ItemEvent e) {
 					boolean meanInd = ((JCheckBox)e.getSource()).isSelected();	
 					if(selectedExtractorParam != null){
@@ -136,7 +130,6 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 				}
 			});
 			smoothedCmb.addItemListener(new ItemListener(){
-				@Override
 				public void itemStateChanged(ItemEvent e) {
 					boolean meanInd = ((JCheckBox)e.getSource()).isSelected();	
 					if(selectedExtractorParam != null){
@@ -152,97 +145,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 		return propetiesPnl;
 	}
 	
-//	/**
-//	 * This method initializes jPanel
-//	 * 
-//	 * @return javax.swing.JPanel
-//	 */
-//	private JPanel getCommonPnl() {
-//		if (commonPnl == null) {
-//			LayoutManager gridLayout = new GridLayout(0, 3);
-//			commonPnl = new JPanel();
-//			commonPnl.setName("Comon Panel");
-//			commonPnl.setLayout(gridLayout);
-//			commonPnl.setBorder(BorderFactory.createTitledBorder(null,
-//					getMessage(SupportableReaderEnum.spantus.name()),
-//					TitledBorder.DEFAULT_JUSTIFICATION,
-//					TitledBorder.DEFAULT_POSITION));
-//			commonPnl.add(createSelectAllCombobox(SupportableReaderEnum.spantus));
-//			for (JCheckBox cmb : getReadersChoises().get(
-//					SupportableReaderEnum.spantus)) {
-//				commonPnl.add(cmb);
-//			}
-//		}
-//		return commonPnl;
-//	}
-//
-//	/**
-//	 * This method initializes jPanel1
-//	 * 
-//	 * @return javax.swing.JPanel
-//	 */
-//	private JPanel getMpeg7Pnl() {
-//		if (mpeg7Pnl == null) {
-//			GridLayout gridLayout1 = new GridLayout(0, 3);
-//			mpeg7Pnl = new JPanel();
-//			mpeg7Pnl.setLayout(gridLayout1);
-//			mpeg7Pnl.setBorder(BorderFactory.createTitledBorder(null, 
-//					getMessage(SupportableReaderEnum.mpeg7.name()),
-//					TitledBorder.DEFAULT_JUSTIFICATION,
-//					TitledBorder.DEFAULT_POSITION));
-//			mpeg7Pnl.add(createSelectAllCombobox(SupportableReaderEnum.mpeg7));
-//			for (JCheckBox cmb : getReadersChoises().get(
-//					SupportableReaderEnum.mpeg7)) {
-//				mpeg7Pnl.add(cmb);
-//			}
-//		}
-//		return mpeg7Pnl;
-//	}
 
-//	private Map<SupportableReaderEnum, List<JCheckBox>> getReadersChoises() {
-//		if (readersChoises == null) {
-//			readersChoises = new HashMap<SupportableReaderEnum, List<JCheckBox>>();
-//			List<JCheckBox> extractors = new ArrayList<JCheckBox>();
-//			for (ExtractorEnum extractor : ExtractorEnum.values()) {
-//				JCheckBox cb = new JCheckBox();
-//				cb.setText(I18nFactory.createI18n()
-//						.getMessage(extractor.name()));
-//				cb.setName(extractor.name());
-//				extractors.add(cb);
-//			}
-//			readersChoises.put(SupportableReaderEnum.spantus, extractors);
-//			extractors = new ArrayList<JCheckBox>();
-//			for (Mpeg7ExtractorEnum extractor : Mpeg7ExtractorEnum.values()) {
-//				JCheckBox cb = new JCheckBox();
-//				cb.setText(I18nFactory.createI18n()
-//						.getMessage(extractor.name()));
-//				cb.setName(extractor.name());
-//				extractors.add(cb);
-//			}
-//			readersChoises.put(SupportableReaderEnum.mpeg7, extractors);
-//		}
-//		return readersChoises;
-//	}
-
-//	private JCheckBox createSelectAllCombobox(SupportableReaderEnum name){
-//		JCheckBox selectAllCmb = new JCheckBox();
-//		selectAllCmb.setText(I18nFactory.createI18n()
-//				.getMessage("selectAll"));
-//		selectAllCmb.setName(name.name());
-//		selectAllCmb.addActionListener(new ActionListener(){
-//			public void actionPerformed(ActionEvent e) {
-//				JCheckBox thisCmb = (JCheckBox)e.getSource();
-//				boolean selected = thisCmb.isSelected();
-//				for (JCheckBox cmb : getReadersChoises().get(
-//						SupportableReaderEnum.valueOf(
-//								thisCmb.getName()
-//								))) {
-//					cmb.setSelected(selected);
-//				}
-//			}
-//		});
-//		return selectAllCmb;
-//	}
 	
 	public SpantusWorkInfo getConfig() {
 		return config;
@@ -275,28 +178,6 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 			modelEntry.setOrder(order++);
 		}
 	}
-//	/**
-//	 * 
-//	 * @param extractors
-//	 */
-//	public void selectCheckboxes(Set<String> extractors){
-//		for (Entry<SupportableReaderEnum, List<JCheckBox>> entryExtractors : getReadersChoises().entrySet()) {
-//			for (JCheckBox cbx : entryExtractors.getValue()) {
-//				cbx.setSelected(false);
-//			}
-//		}
-//		
-//		for (String extr : extractors) {
-//			String[] extractor = extr.split(":");
-//			SupportableReaderEnum reader = SupportableReaderEnum.valueOf(extractor[0]);
-//			for (JCheckBox cbx: getReadersChoises().get(reader)) {
-//				if(extractor[1].equals(cbx.getName())){
-//					cbx.setSelected(true);
-//					break;
-//				}
-//			}
-//		}
-//	}
 	/**
 	 * 
 	 */
@@ -306,19 +187,10 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 		for (ModelEntry modelEntry : getShuttle().getDestListModel().iteratable()) {
 			getConfig().getProject().getFeatureReader().getExtractors().add(modelEntry.getValue().toString());
 		}
-//		for (Entry<SupportableReaderEnum, List<JCheckBox>> entryExtractors : getReadersChoises().entrySet()) {
-//			for (JCheckBox cbx : entryExtractors.getValue()) {
-//				if(cbx.isSelected()){
-//					getConfig().getProject().getFeatureReader().getExtractors().add(entryExtractors.getKey()+":"+ cbx.getName());
-//				}
-//			}
-//		}
-		
 	}
 	
 	public class SelectionListSelectionListener implements
 			ListSelectionListener {
-		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			boolean propertiesInd = false;
 			Object obj = getShuttle().getDestList().getSelectedValue();

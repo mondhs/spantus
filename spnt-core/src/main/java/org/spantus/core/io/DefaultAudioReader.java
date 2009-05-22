@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -67,19 +68,21 @@ public class DefaultAudioReader extends AbstractAudioReader {
 
 	public void readAudioInternal(URL url)
 			throws UnsupportedAudioFileException, IOException {
-
-		DataInputStream dis = new DataInputStream(new BufferedInputStream(
-				AudioSystem.getAudioInputStream(url)));
+		AudioFileFormat audioFileFormat= AudioSystem.getAudioFileFormat(url);
+		AudioInputStream ais = AudioSystem.getAudioInputStream(url); 
+		DataInputStream dis = new DataInputStream(new BufferedInputStream(ais));
 		
 //		int bitsPerSample = wraperExtractorReader.getFormat().getSampleSizeInBits();
-		long size = dis.available();
+		Long size = Long.valueOf(audioFileFormat.getFrameLength()*audioFileFormat.getFormat().getFrameSize()); 
+//			dis.available();
 //		/(bitsPerSample>>3);// 16bit==2; 8bit==1
 		started(size);
 		for (long index = 0; index < size; index++) {
 			wraperExtractorReader.put(dis.readByte());
-			processed(Long.valueOf(index), Long.valueOf(size));
+			processed(Long.valueOf(index), size);
 		}
 		wraperExtractorReader.pushValues();
+		dis.close();
 		ended();
 
 	}

@@ -5,9 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.spantus.work.ui.AbstractSegmentPlot;
 import org.spnt.recognition.dtw.exec.RecognitionMonitorPlot;
-import org.spnt.recognition.segment.RecordRecognitionSegmentatorOnline;
 
 public class RecognitionAppFrame extends JFrame {
 	/**

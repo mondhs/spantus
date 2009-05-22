@@ -110,7 +110,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 			if (vectorVals.size() == 1) {
 				AudioDescriptorExtractor extractor = new AudioDescriptorExtractor();
 				extractor.setName(type);
-				extractor.putValues(0L, vectorVals.getFirst());
+				extractor.putValues(0L, new FrameValues(vectorVals.getFirst()));
 				extractor.getOutputValues().setSampleRate(vectorVals.getSampleRate());
 				extractor.getConfig().setSampleRate(vectorVals.getSampleRate());
 				return extractor;

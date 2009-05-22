@@ -34,7 +34,6 @@ import net.quies.math.plot.GraphDomain;
 
 import org.spantus.chart.bean.VectorSeriesColorEnum;
 import org.spantus.chart.util.ColorLookup;
-import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.logger.Logger;
 /**

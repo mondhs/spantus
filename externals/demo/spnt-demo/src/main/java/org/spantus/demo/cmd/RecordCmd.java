@@ -70,7 +70,7 @@ public class RecordCmd {
 
 	public void execute() {
 		RecordWraperExtractorReader wrapReader = createReader();
-		ExtractorUtils.register(wrapReader.getReader(), ExtractorEnum.WAVFORM_EXTRACTOR);
+		ExtractorUtils.register(wrapReader.getReader(), ExtractorEnum.WAVFORM_EXTRACTOR, null);
 		capture = new AudioCapture(wrapReader);
 		capture.setFormat(getFormat());
 		capture.start();

@@ -13,14 +13,12 @@ public class RecognitionUIActionListenerImpl implements
 		this.recognitionAppFrame = recognitionAppFrame;
 	}
 
-	@Override
 	public void start() {
 		recognitionAppFrame.getMainContentPane().add(
 				recognitionAppFrame.getRecognitionPlot(),BorderLayout.CENTER);
 		recognitionAppFrame.getRecognitionPlot().startRecognition();
 	}
 
-	@Override
 	public void stop() {
 		recognitionAppFrame.getRecognitionPlot().stopRecognition();
 		recognitionAppFrame.getMainContentPane().remove(
@@ -28,7 +26,6 @@ public class RecognitionUIActionListenerImpl implements
 		recognitionAppFrame.setRecognitionPlot(null);
 	}
 
-	@Override
 	public void changeLearningStatus(boolean status) {
 		recognitionAppFrame.setLearnMode(status);
 	}

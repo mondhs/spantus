@@ -10,9 +10,7 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -88,17 +86,11 @@ public class WavDropTargetListener implements DropTargetListener {
 
 		event.acceptDrop(DnDConstants.ACTION_COPY);
 
-		File file = getFile(event.getTransferable());
+		URL file = getFile(event.getTransferable());
 		if (file != null) {
-			try {
-				this.info.getProject().getCurrentSample().setCurrentFile(
-						file.toURI().toURL());
-				this.handler.execute(GlobalCommands.file.currentSampleChanged
+			this.info.getProject().getCurrentSample().setCurrentFile(file);
+			this.handler.execute(GlobalCommands.file.currentSampleChanged
 						.name(), this.info);
-			} catch (MalformedURLException e) {
-				log.error(e);
-			}
-
 		}
 		event.dropComplete(true);
 	}
@@ -108,7 +100,7 @@ public class WavDropTargetListener implements DropTargetListener {
 	 * @return
 	 */
 	public boolean isDragAcceptable(DropTargetDragEvent event) {
-		File file = getFile(event.getTransferable());
+		URL file = getFile(event.getTransferable());
 		if (file != null) {
 			return true;
 		}
@@ -119,12 +111,11 @@ public class WavDropTargetListener implements DropTargetListener {
 	 * @param transferable
 	 * @return
 	 */
-	protected File getFile(Transferable transferable) {
-		List<File> files = getFiles(transferable);
+	protected URL getFile(Transferable transferable) {
+		List<URL> files = getFiles(transferable);
 		
 		if (files == null) return null;
-		
-		for (File file : files) {
+		for (URL file : files) {
 			if (isSupportedFile(file)) {
 				return file;
 			}
@@ -138,44 +129,41 @@ public class WavDropTargetListener implements DropTargetListener {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	protected List<File> getFiles(Transferable transferable) {
+	protected List<URL> getFiles(Transferable transferable) {
+		List<URL> urls = new LinkedList<URL>();
 		try {
 			if (transferable
 					.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-				return (List<File>) transferable
-						.getTransferData(DataFlavor.javaFileListFlavor);
-			}
-			if (transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-				String urls;
-
-				urls = (String) transferable
-						.getTransferData(DataFlavor.stringFlavor);
-				List<File> files = new LinkedList<File>();
-				StringTokenizer tokens = new StringTokenizer(urls);
-				while (tokens.hasMoreTokens()) {
-					String urlString = tokens.nextToken();
-					URL url = new URL(urlString);
-					File file = new File(URLDecoder.decode(url.getFile(),
-							"UTF-8"));
-					files.add(file);
+				List<File> files = (List<File>) transferable
+				.getTransferData(DataFlavor.javaFileListFlavor);
+				for (File file : files) {
+					urls.add(file.toURL());
 				}
-				return files;
+			}else if (transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+				String urlString = (String) transferable
+						.getTransferData(DataFlavor.stringFlavor);
+				StringTokenizer tokens = new StringTokenizer(urlString);
+				while (tokens.hasMoreTokens()) {
+					String urlEntry = tokens.nextToken();
+					URL url = new URL(urlEntry);
+					urls.add(url);
+				}
+				
 			}
 		} catch (UnsupportedFlavorException e) {
 			log.error(e);
 		} catch (IOException e) {
 			log.error(e);
 		}
-
-		return null;
+		return urls;
 	}
 	/**
 	 * 
 	 * @param file
 	 * @return
 	 */
-	protected boolean isSupportedFile(File file) {
-		return file != null && file.getName().endsWith(".wav");
+	protected boolean isSupportedFile(URL file) {
+		return file != null && file.getFile().endsWith(".wav");
 	}
 	/**
 	 * 

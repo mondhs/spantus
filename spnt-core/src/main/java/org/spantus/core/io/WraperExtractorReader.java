@@ -23,7 +23,9 @@ public class WraperExtractorReader {
 	public void put(byte value){
 		switch (format.getSampleSizeInBits()) {
 		case 8:
-				reader.put(sample++, AudioUtil.read8(value, getFormat()) / getAmplitude());
+				reader.put(sample++, preemphasis( 
+						AudioUtil.read8(value, getFormat()) / getAmplitude()
+						));
 				break;
 		case 16:
 			shortBuffer.add(value);
@@ -31,7 +33,7 @@ public class WraperExtractorReader {
 				float f = AudioUtil.read16(shortBuffer.get(0), 
 						shortBuffer.get(1), 
 						getFormat())/getAmplitude();
-				reader.put(sample++, f);
+				reader.put(sample++, preemphasis(f));
 				shortBuffer.clear();
 			}
 			break;
@@ -41,6 +43,17 @@ public class WraperExtractorReader {
 		}
 		
 	}
+	
+	Float previousValue;
+	
+	protected Float preemphasis(Float currentValue){
+		previousValue = previousValue == null?currentValue:previousValue;
+		Double val = currentValue - (previousValue*0.95);
+		previousValue = currentValue;
+		return val.floatValue();
+		
+	}
+	
 	public void pushValues(){
 		reader.pushValues(sample);
 	}

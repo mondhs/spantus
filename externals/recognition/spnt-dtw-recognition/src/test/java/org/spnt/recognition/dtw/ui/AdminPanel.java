@@ -59,7 +59,7 @@ public class AdminPanel extends JPanel {
 		if (table == null) {
 			table = new JTable(new CorpusEntryTableModel(corpusFileEntries));
 			table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-			table.setFillsViewportHeight(true);
+//			table.setFillsViewportHeight(true);
 		}
 		return table;
 	}
@@ -70,14 +70,12 @@ public class AdminPanel extends JPanel {
 			toolbar.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 2));
 			JButton playBtn = new JButton("play");
 			playBtn.addActionListener(new ActionListener(){
-				@Override
 				public void actionPerformed(ActionEvent e) {
 					play();					
 				}
 			});
 			JButton saveCloseBtn = new JButton("save");
 			saveCloseBtn.addActionListener(new ActionListener(){
-				@Override
 				public void actionPerformed(ActionEvent e) {
 					save();					
 				}

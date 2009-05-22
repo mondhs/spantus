@@ -22,27 +22,22 @@ public class CorpusEntryTableModel implements TableModel {
 	}
 
 
-	@Override
 	public Class<?> getColumnClass(int i) {
 		return columnClasses[i];
 	}
 
-	@Override
 	public int getColumnCount() {
 		return columnClasses.length;
 	}
 
-	@Override
 	public String getColumnName(int i) {
 		return columnNames[i];
 	}
 
-	@Override
 	public int getRowCount() {
 		return corpusEntries.size();
 	}
 
-	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Object obj = null;
 		CorpusFileEntry entry = corpusEntries.get(rowIndex);
@@ -59,13 +54,11 @@ public class CorpusEntryTableModel implements TableModel {
 		return obj;
 	}
 
-	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		return columnIndex > 0;
 	}
 
 
-	@Override
 	public void setValueAt(Object obj, int rowIndex, int columnIndex) {
 		CorpusFileEntry entry = corpusEntries.get(rowIndex);
 		switch (columnIndex) {
@@ -80,12 +73,10 @@ public class CorpusEntryTableModel implements TableModel {
 	}
 
 
-	@Override
 	public void addTableModelListener(TableModelListener l) {
 	}
 
 
-	@Override
 	public void removeTableModelListener(TableModelListener l) {
 	}
 

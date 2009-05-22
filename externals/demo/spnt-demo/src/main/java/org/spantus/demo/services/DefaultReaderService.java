@@ -103,7 +103,8 @@ public class DefaultReaderService implements ReaderService {
 			ExtractorConfigUtil.defaultConfig(format)
 		);
 		for (String demoExtractorEnum : readerDto.getExtractors()) {
-			ExtractorUtils.register(reader, ExtractorEnum.valueOf(demoExtractorEnum));
+			ExtractorUtils.register(reader, ExtractorEnum.valueOf(demoExtractorEnum), 
+			null);
 		}
 		audioReader.readAudio(url, reader);
 		return reader;
