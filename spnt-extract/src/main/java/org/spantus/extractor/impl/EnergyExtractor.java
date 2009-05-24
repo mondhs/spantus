@@ -41,7 +41,7 @@ public class EnergyExtractor extends AbstractExtractor {
 	final String PARAM_WINDOW_SIZE = this.getClass().getSimpleName() + ".windowSize";  
 	final String PARAM_LOGARITMIC = "EnergyExtractor.logaritmic";
 	
-	static final boolean DEFAULT_LOGARITMIC = true;
+	static final boolean DEFAULT_LOGARITMIC = false;
 	
 	public EnergyExtractor() {
 		getParam().setClassName(EnergyExtractor.class.getSimpleName());

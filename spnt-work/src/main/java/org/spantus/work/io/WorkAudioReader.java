@@ -1,5 +1,7 @@
 package org.spantus.work.io;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,8 +14,8 @@ import javax.sound.sampled.AudioFileFormat;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.io.AbstractAudioReader;
 import org.spantus.core.io.AudioFactory;

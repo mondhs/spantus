@@ -50,7 +50,11 @@ import java.util.List;
  */
 public class MFCC {
 
-	static int m_nnumberOfFilters = 12 + 1;
+	static int m_nnumberOfFilters = 24;
+	
+	static int nlifteringCoefficient = 22;
+	
+	static int nnumberOfParameters = 12;
 	/**
 	 * Minimum value of filter output, otherwise the log is not calculated and
 	 * m_dlogFilterOutputFloor is adopted. ISIP implementation assumes
@@ -62,6 +66,11 @@ public class MFCC {
 	 * here.
 	 */
 	private static final float m_dlogFilterOutputFloor = 0.0f;
+	/**Coefficient of filtering performing in cepstral domain 
+	 * (called 'liftering' operation). It is not used if 
+	 * m_oisLifteringEnabled is false. 
+	 */ 
+	private static boolean oisLifteringEnabled = true;
 
 
 	/**
@@ -72,6 +81,7 @@ public class MFCC {
 	 */
 	public static List<Float> calculateMFCC(List<Float> fspeechFrame, double dsamplingFrequency) {
 
+		
 		List<Float> dfilterOutput = MatrixUtils.zeros(m_nnumberOfFilters);
 		double[][] dweights = calculateMelBasedFilterBank(dsamplingFrequency, m_nnumberOfFilters, fspeechFrame.size());
 		List<List<Float>> nboundariesDFTBins = new ArrayList<List<Float>>(
@@ -110,7 +120,6 @@ public class MFCC {
 				dfilterOutput.set(i, m_dlogFilterOutputFloor);
 			}
 		}
-		int nnumberOfParameters = m_nnumberOfFilters;
 		// need to allocate space for output array
 		// because it allows the user to call this method
 		// many times, without having to do a deep copy
@@ -150,21 +159,63 @@ public class MFCC {
 		// System.out.println("MFCC before liftering");
 		// IO.DisplayVector(dMFCCParameters);
 
-//		if (m_oisLifteringEnabled) {
-			// Implements liftering to smooth the cepstral coefficients
-			// according to
-			// [1] Rabiner, Juang, Fundamentals of Speech Recognition, pp. 169,
-			// [2] The HTK Book, pp 68 and
-			// [3] ISIP package - Mississipi Univ. Picone's group.
-			// if 0-th coefficient is included, it is not liftered
-//			for (int i = 0; i < m_nnumberOfParameters; i++) {
-//				dMFCCParameters[i] *= m_nlifteringMultiplicationFactor[i];
-//			}
-//		}
+		if (oisLifteringEnabled) {
+//			 Implements liftering to smooth the cepstral coefficients
+//			 according to
+//			 [1] Rabiner, Juang, Fundamentals of Speech Recognition, pp. 169,
+//			 [2] The HTK Book, pp 68 and
+//			 [3] ISIP package - Mississipi Univ. Picone's group.
+//			 if 0-th coefficient is included, it is not liftered
+			for (int i = 0; i < nnumberOfParameters; i++) {
+				dMFCCParameters.set(i, new Float(dMFCCParameters.get(i) * calculateLifteringFactor()[i]));
+			}
+		}
 
 		return dMFCCParameters;
 	}
 
+	static double[] nlifteringMultiplicationFactor = null;
+	
+	public static double[] calculateLifteringFactor() {
+		if(nlifteringMultiplicationFactor != null){
+			return nlifteringMultiplicationFactor;
+		}
+		
+		// for liftering method
+		if (oisLifteringEnabled) {
+			// note that:
+//			int nnumberOfCoefficientsToLift = nnumberOfParameters;
+			// even when m_oisZeroThCepstralCoefficientCalculated is true
+			// because if 0-th cepstral coefficient is included,
+			// it is not liftered
+			nlifteringMultiplicationFactor = new double[nlifteringCoefficient];
+			double dfactor = nlifteringCoefficient / 2.0;
+			double dfactor2 = Math.PI / nlifteringCoefficient;
+			for (int i = 0; i < nlifteringCoefficient; i++) {
+				nlifteringMultiplicationFactor[i] = 1.0 + dfactor
+						* Math.sin(dfactor2 * (i + 1));
+			}
+			if (nnumberOfParameters > nlifteringCoefficient) {
+				new Error(
+						"Liftering is enabled and the number "
+								+ "of parameters = "
+								+ nnumberOfParameters
+								+ ", while "
+								+ "the liftering coefficient is "
+								+ nlifteringCoefficient
+								+ ". In this case some cepstrum coefficients would be made "
+								+ "equal to zero due to liftering, what does not make much "
+								+ "sense in a speech recognition system. You may want to "
+								+ "increase the liftering coefficient or decrease the number "
+								+ "of MFCC parameters.");
+			}
+		} else {
+			nlifteringMultiplicationFactor = new double[]{};
+		}
+		return nlifteringMultiplicationFactor;
+	}
+
+	
 	/**
 	 * Converts frequencies in Hz to mel scale according to mel frequency = 2595
 	 * log(1 + (f/700)), where log is base 10 and f is the frequency in Hz.

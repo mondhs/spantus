@@ -22,6 +22,7 @@ package org.spantus.work.ui.cmd;
 
 import java.awt.Toolkit;
 
+import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
@@ -68,8 +69,14 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 			this.ctx = ctx;
 		}
 		public void run() {
-			lisetener.changedReader(WorkUIServiceFactory.constructReader(ctx, 
-					processedFrameLinstener));
+			IExtractorInputReader reader = WorkUIServiceFactory.constructReader(ctx, 
+					processedFrameLinstener);
+			if(reader.getExtractorRegister().size() == 0 && 
+					reader.getExtractorRegister3D().size() == 0){
+				handler.execute(GlobalCommands.tool.reloadResources.name(), ctx);
+				return;
+			}
+			lisetener.changedReader(reader);
 			if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
 				Toolkit.getDefaultToolkit().beep();
 			}

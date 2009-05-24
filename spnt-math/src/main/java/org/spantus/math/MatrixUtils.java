@@ -21,6 +21,7 @@
 package org.spantus.math;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,6 +47,10 @@ public class MatrixUtils {
 			zeros.add(new Float(0));
 		}
 		return zeros;
+	}
+	public static List<Float> reverseVector(List<Float> vector){
+		Collections.reverse(vector);
+		return vector;
 	}
 
 }

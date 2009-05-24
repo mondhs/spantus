@@ -1,6 +1,6 @@
 /*
  * Part of program for analyze speech signal 
- * Copyright (c) 2007 Mindaugas Greibus (spantus@gmail.com)
+ * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
  * http://code.google.com/p/spantus/
  * 
  * This program is free software; you can redistribute it and/or modify it
@@ -21,52 +21,63 @@
 package org.spantus.extractor.impl;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.extractor.IExtractor;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.logger.Logger;
 /**
  * 
+ * Params logaritmic
  * 
  * @author Mindaugas Greibus
  *
  * @since 0.0.1
  * 
- * Created 2008.04.13
+ * Created 2008.08.13
  *
  */
-public class CrossingZeroExtractor extends AbstractExtractor {
-
-	Logger log = Logger.getLogger(CrossingZeroExtractor.class);
-
-	static final String PARAM_WINDOW_SIZE = "CrossingZeroExtractor.windowSize";
-
-
-
-	float lastValue;
-
-	public CrossingZeroExtractor() {
-		getParam().setClassName(EnergyExtractor.class.getSimpleName());
-	}
+public class DeltaExtractor extends AbstractExtractor {
+	Logger log = Logger.getLogger(getClass());
 	
+
+	private IExtractor extractor;
+	
+	private Float previous;
+
+	
+	
+	public DeltaExtractor() {
+		getParam().setClassName(DeltaExtractor.class.getSimpleName());
+	}
+
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues calculatedValues = new FrameValues();
-		int cross = 0, i = 0;
-		for (Float float1 : window) {
-			i++;
-			cross += Math.abs((float1>0?1:0)-(lastValue>0?1:0));
-//			cross += Math.abs(Math.signum(float1)-Math.signum(lastValue));
-			lastValue = float1;
-		}
-		calculatedValues.add(((float)cross/window.size()));
-//		calculatedValues.add(1-((float)cross/window.size()));
+		FrameValues fv = getExtractor().calculateWindow(window);
 		
-		return calculatedValues;
-	}
-	
-	
+		if(fv.size()==1){
+			Float val = fv.get(0);
+			if(previous==null){
+				previous = val;
+			}
+			calculatedValues.add(Math.abs(val-(previous*.95f)));
+			previous = val;
+		}
 
+		return calculatedValues;
+	}	
+	
 	public String getName() {
-		return ExtractorEnum.CROSSING_ZERO_EXTRACTOR.toString();
+		return "DELTA_" + getExtractor().getName();
 	}
 	
+	public IExtractor getExtractor() {
+		if(extractor == null){
+			extractor = new EnergyExtractor();
+		}
+		return extractor;
+	}
+
+	public void setExtractor(IExtractor extractor) {
+		this.extractor = extractor;
+	}
 
 }

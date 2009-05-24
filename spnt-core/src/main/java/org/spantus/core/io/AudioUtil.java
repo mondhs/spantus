@@ -25,6 +25,6 @@ public abstract class AudioUtil {
 		} else {
 			value = (hiByte << 8) | loByte;
 		}
-		return (float) value / Short.MAX_VALUE;
+		return (float) value ;// Short.MAX_VALUE;
 	}
 }

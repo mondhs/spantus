@@ -49,7 +49,7 @@ public class SpectralCentroid extends AbstractSpectralExtractor {
 				upper += (coefFunction(k++)/normalizeCoef) * f1;
 				bottom += f1;
 			}
-			rtnValues.add(upper/bottom);
+			rtnValues.add(1-(upper/bottom));
 		}
 		return rtnValues;
 	}

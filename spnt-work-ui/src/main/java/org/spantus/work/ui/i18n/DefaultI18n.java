@@ -49,7 +49,7 @@ public class DefaultI18n implements I18n {
 	private Locale locale;
 	private ResourceBundle bundle;
 	private ResourceBundle htmlBundle;
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = Logger.getLogger(DefaultI18n.class);
 
 	public Locale getLocale() {
 		if (locale == null) {
@@ -90,7 +90,7 @@ public class DefaultI18n implements I18n {
 		try {
 			rtnStr = getBundle().getString(key);
 		} catch (MissingResourceException e) {
-			log.error("Resource not fount: " + key);
+			log.debug("Resource not fount: " + key);
 //			log.error(e);
 		}
 		return rtnStr;

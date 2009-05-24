@@ -31,7 +31,7 @@ import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioFactory;
-import org.spantus.core.io.MultipleAudioReader;
+import org.spantus.core.io.AudioReader;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
@@ -76,14 +76,14 @@ public class PlotMergedWav extends JFrame {
 
 	public IExtractorInputReader readSignal()
 			throws UnsupportedAudioFileException, IOException {
-		URL mainSignal = new File("./target/test-classes/text1.wav").toURI().toURL();
-		URL noiseSignal = new File("./target/test-classes/text1.wav").toURI().toURL();
-		MultipleAudioReader reader = AudioFactory.createMultipleAudioReader();
+		URL mainSignal = new File("/home/mindas/temp/521.wav").toURI().toURL();
+		URL noiseSignal = new File("/home/mindas/temp/noise11k.wav").toURI().toURL();
+		AudioReader reader = AudioFactory.createAudioReader(noiseSignal);
 		IExtractorInputReader bufferedReader = new ExtractorInputReader();
 		ExtractorUtils.register(bufferedReader, new ExtractorEnum[]{
 				ExtractorEnum.SIGNAL_EXTRACTOR,
 		}, null);
-		reader.readAudio(mainSignal, noiseSignal, bufferedReader);
+		reader.readAudio(mainSignal, bufferedReader);
 		return bufferedReader;
 	}
 

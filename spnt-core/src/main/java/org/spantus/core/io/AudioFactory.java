@@ -19,6 +19,9 @@
  * 
  */
 package org.spantus.core.io;
+
+import java.net.URL;
+
 /**
  * 
  * 
@@ -33,8 +36,10 @@ public abstract class AudioFactory {
 	public static AudioReader createAudioReader(){
 		return new DefaultAudioReader();
 	}
-	public static MultipleAudioReader createMultipleAudioReader(){
-		return new MergeMultipleAudioReader();
+	public static AudioReader createAudioReader(URL noiseUrl){
+		MergeMultipleAudioReader audioReader = new MergeMultipleAudioReader();
+		audioReader.setNoiseUrl(noiseUrl);
+		return audioReader;
 	}
 
 }

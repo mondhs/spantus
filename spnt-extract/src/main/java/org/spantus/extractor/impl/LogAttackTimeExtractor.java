@@ -36,7 +36,7 @@ import org.spantus.logger.Logger;
  */
 public class LogAttackTimeExtractor extends AbstractExtractor {
 	Logger log = Logger.getLogger(getClass());
-	float threshold = 0.3f;
+	float threshold = 10.1f;
 	
 
 	
@@ -61,7 +61,7 @@ public class LogAttackTimeExtractor extends AbstractExtractor {
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues fv = new FrameValues();
 		float lat = 0;
-		float max = Float.MIN_VALUE;
+		float max = -Float.MAX_VALUE;
 		int maxIndex =0, i= 0;
 		for (Float fw : window) {
 			if(fw > max){
@@ -70,9 +70,10 @@ public class LogAttackTimeExtractor extends AbstractExtractor {
 			}
 			i++;
 		}
+		Float maxthresholded = max/(1+getThreshold());
 		for (int j = maxIndex; j > 0; --j) {
 			float fm = window.get(j); 
-			if( fm < max*threshold){
+			if( fm <= maxthresholded){
 				lat = (float)Math.log10(maxIndex-j);
 				break;
 			}

@@ -8,6 +8,7 @@ import org.spantus.work.ui.i18n.I18nFactory;
 public class I18NChartDescriptionResolver extends
 		WrappedChartDescriptionResolver {
 	
+	public static final String SMOOTHED = "SMOOTHED_";
 	
 	@Override
 	public ChartDescriptionResolver getInstance(
@@ -23,7 +24,9 @@ public class I18NChartDescriptionResolver extends
 		if(resolved == null){
 			return null;
 		}
-		resolved.setName(I18nFactory.createI18n().getMessage(resolved.getName()));
+		String name = resolved.getName();
+		name.replaceAll(SMOOTHED, "");
+		resolved.setName(I18nFactory.createI18n().getMessage(name));
 		return resolved;
 	}
 }

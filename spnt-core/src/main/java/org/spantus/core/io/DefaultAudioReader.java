@@ -50,9 +50,13 @@ public class DefaultAudioReader extends AbstractAudioReader {
 	WraperExtractorReader wraperExtractorReader;
 	
 	public void readAudio(URL url, IExtractorInputReader bufferedReader) {
-		wraperExtractorReader = new WraperExtractorReader(bufferedReader);
+		wraperExtractorReader = createWraperExtractorReader(bufferedReader);
 		wraperExtractorReader.setFormat(getAudioFormat(url).getFormat());
 		readAudio(url, wraperExtractorReader);
+	}
+	
+	public WraperExtractorReader createWraperExtractorReader(IExtractorInputReader bufferedReader){
+		return new WraperExtractorReader(bufferedReader);
 	}
 	
 	public void readAudio(URL url, WraperExtractorReader wraperExtractorReader) {
@@ -69,16 +73,14 @@ public class DefaultAudioReader extends AbstractAudioReader {
 	public void readAudioInternal(URL url)
 			throws UnsupportedAudioFileException, IOException {
 		AudioFileFormat audioFileFormat= AudioSystem.getAudioFileFormat(url);
-		AudioInputStream ais = AudioSystem.getAudioInputStream(url); 
-		DataInputStream dis = new DataInputStream(new BufferedInputStream(ais));
-		
-//		int bitsPerSample = wraperExtractorReader.getFormat().getSampleSizeInBits();
+		DataInputStream dis = new DataInputStream(new BufferedInputStream(
+				AudioSystem.getAudioInputStream(url)));
 		Long size = Long.valueOf(audioFileFormat.getFrameLength()*audioFileFormat.getFormat().getFrameSize()); 
-//			dis.available();
-//		/(bitsPerSample>>3);// 16bit==2; 8bit==1
 		started(size);
 		for (long index = 0; index < size; index++) {
-			wraperExtractorReader.put(dis.readByte());
+			int readByte = dis.read();
+			if(readByte == -1) break;
+			wraperExtractorReader.put((byte)readByte);
 			processed(Long.valueOf(index), size);
 		}
 		wraperExtractorReader.pushValues();

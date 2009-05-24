@@ -20,7 +20,9 @@
  */
 package org.spantus.core.io;
 
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -29,8 +31,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.exception.ProcessingException;
-import org.spantus.logger.Logger;
+import org.spantus.utils.Assert;
 
 /**
  * 
@@ -39,98 +40,68 @@ import org.spantus.logger.Logger;
  * 
  * @since 0.0.1
  * 
- * Created 2008.04.11
+ *        Created 2008.04.11
  * 
  */
-public class MergeMultipleAudioReader extends DefaultAudioReader implements MultipleAudioReader {
-	Logger log = Logger.getLogger(getClass());
+public class MergeMultipleAudioReader extends DefaultAudioReader {
 
+	// private Logger log = Logger.getLogger(getClass());
+
+	private URL noiseUrl;
 	
-	public void readAudio(URL mainSignal, URL noisesUrl, IExtractorInputReader bufferedReader) {
-		try {
-			readAudioInternal(mainSignal, noisesUrl, bufferedReader);
-		} catch (UnsupportedAudioFileException e) {
-			throw new ProcessingException(e);
-		} catch (IOException e) {
-			throw new ProcessingException(e);
-		}
+	@Override
+	public WraperExtractorReader createWraperExtractorReader(
+			IExtractorInputReader bufferedReader) {
+		return new MergedWraperExtractorReader(bufferedReader);
 	}
 
-	public void readAudioInternal(URL mainSignal, URL noisesUrl, IExtractorInputReader reader)
+	public void readAudioInternal(URL url)
 			throws UnsupportedAudioFileException, IOException {
+		Assert.isTrue(getNoiseUrl()!=null);
+		AudioFileFormat audioFileFormat = AudioSystem.getAudioFileFormat(url);
+		AudioFileFormat noiseAudioFileFormat = AudioSystem.getAudioFileFormat(getNoiseUrl());
+		Assert.isTrue(audioFileFormat.getFormat().getSampleRate() ==
+			noiseAudioFileFormat.getFormat().getSampleRate(), "sample rate is not the same");
+		Assert.isTrue(audioFileFormat.getFormat().getSampleSizeInBits() ==
+			noiseAudioFileFormat.getFormat().getSampleSizeInBits());
+		Assert.isTrue(audioFileFormat.getFormat().isBigEndian() ==
+			noiseAudioFileFormat.getFormat().isBigEndian());
+		MergedWraperExtractorReader mergedWraperExtractorReader = ((MergedWraperExtractorReader)wraperExtractorReader);
+		
+		DataInputStream dis = new DataInputStream(new BufferedInputStream(AudioSystem.getAudioInputStream(url)));
+		DataInputStream noiseDis = 
+			new DataInputStream(new BufferedInputStream(AudioSystem.getAudioInputStream(getNoiseUrl())));
 
-//		AudioFileFormat mainFormat = getAudioFormat(mainSignal);
-//		AudioFileFormat noiseFormat = getAudioFormat(noisesUrl);
-////		if(mainFormat.getFormat().getSampleSizeInBits() != noiseFormat.getFormat().getSampleSizeInBits() ){
-////			throw new IllegalArgumentException(
-////					"There is no impl for merging 2 different formats " + 
-////					mainFormat.getFormat().getSampleSizeInBits() != noiseFormat.getFormat().getSampleSizeInBits());
-////		}
-//		
-//		DataInputStream mainDis = new DataInputStream(new BufferedInputStream(
-//				AudioSystem.getAudioInputStream(mainSignal)));
-//		DataInputStream noiseDis = new DataInputStream(new BufferedInputStream(
-//				AudioSystem.getAudioInputStream(noisesUrl)));		
-//
-//		int index = 0;
-//		int bitsPerSample = mainFormat.getFormat().getSampleSizeInBits();
-//		int size = mainDis.available();
-//
-//		float amplitude = 1 << (bitsPerSample - 1);
-////		try {
-////			switch (bitsPerSample) {
-////			case 8:
-////				for (index = 0; index < size; ++index)
-//////					reader.put( read8(mainDis, noiseDis, noiseFormat)/ amplitude);
-////				break;
-////			case 16:
-////				for (index = 0; index < (size/2); ++index){
-//////					float f = read16(mainDis, noiseDis, noiseFormat) / amplitude;
-//////					reader.put(f);
-////				}
-////				break;
-////			default:
-////				throw new java.lang.IllegalArgumentException(bitsPerSample
-////						+ " bits/sample not supported");
-////
-////			}
-////		} catch (EOFException e) {
-////			throw new ProcessingException("try to read size of sample: " + size + ", eof on index: " + index, e);
-////		}finally{
-////			reader.pushValues();
-////		}
+		Long size = Long.valueOf(audioFileFormat.getFrameLength()
+				* audioFileFormat.getFormat().getFrameSize());
+		started(size);
+		for (long index = 0; index < size; index++) {
+			int noiseByte = noiseDis.read();
+			if(noiseByte ==-1){
+				noiseDis.close();
+				noiseDis = new DataInputStream(
+					new BufferedInputStream(AudioSystem.getAudioInputStream(getNoiseUrl())));
+				noiseByte = noiseDis.read();
+			}
+			
+			mergedWraperExtractorReader.put(dis.readByte(), (byte)noiseByte);
+			
+			processed(Long.valueOf(index), size);
+		}
+		wraperExtractorReader.pushValues();
+		mergedWraperExtractorReader.saveMerged(new File("./target/saved.wav"), audioFileFormat.getFormat());
+		dis.close();
+		noiseDis.close();
+		ended();
 
 	}
-	protected float readNoise(DataInputStream noiseDis, AudioFileFormat noiseFormat) throws IOException{
-		float noiseValue = 0; 
-		switch (noiseFormat.getFormat().getSampleSizeInBits()) {
-		case 8:
-//			noiseValue = super.read8(noiseDis, noiseFormat.getFormat());
-			break;
-		case 16:
-//			noiseValue = super.read16(noiseDis, noiseFormat.getFormat());
-			break;
-		}
-		return noiseValue;
-	}
-	
-//	protected float read8(DataInputStream mainDis, DataInputStream noiseDis, AudioFileFormat noiseFormat) throws IOException{
-//		float noiseValue = readNoise(noiseDis, noiseFormat);
-//		return (super.read8(mainDis, noiseFormat.getFormat())+noiseValue)/2;
-//	}
-//	protected float read16(DataInputStream mainDis, DataInputStream noiseDis, AudioFileFormat noiseFormat) throws IOException{
-//		float noiseValue = readNoise(noiseDis, noiseFormat);
-//		return (super.read16(mainDis, noiseFormat.getFormat())+noiseValue)/2;
-//	}
 
-	public AudioFileFormat getAudioFormat(URL mainSignal) {
-		try {
-			return AudioSystem.getAudioFileFormat(mainSignal);
-		} catch (UnsupportedAudioFileException e) {
-			throw new ProcessingException(e);
-		} catch (IOException e) {
-			throw new ProcessingException(e);
-		}
+	public URL getNoiseUrl() {
+		return noiseUrl;
+	}
+
+	public void setNoiseUrl(URL noiseUrl) {
+		this.noiseUrl = noiseUrl;
 	}
 
 }

@@ -1,6 +1,6 @@
 package org.spnt.recognition.dtw.exec;
 
-import org.spantus.segment.io.RecordWraperExtractorReader;
+import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.segment.online.MultipleSegmentatorOnline;
 import org.spantus.work.ui.AbstractSegmentPlot;
 import org.spantus.work.ui.SegmentMonitorPlot;

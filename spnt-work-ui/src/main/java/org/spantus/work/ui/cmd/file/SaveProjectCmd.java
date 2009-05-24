@@ -8,6 +8,7 @@ import javax.swing.JFileChooser;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.services.WorkUIServiceFactory;
 
 import de.crysandt.util.FileFilterExtension;
 
@@ -34,6 +35,9 @@ public class SaveProjectCmd extends AbsrtactCmd {
 			fileChooser.getSelectedFile().getName();
 			File selectedFile = fileChooser.getSelectedFile();
 			selectedFile = addExtention(selectedFile);
+			WorkUIServiceFactory.createInfoManager().saveProject(
+					ctx.getProject(),
+					selectedFile.getAbsolutePath());
 		}
 		return null;
 	}

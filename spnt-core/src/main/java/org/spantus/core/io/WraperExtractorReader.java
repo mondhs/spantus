@@ -11,8 +11,10 @@ public class WraperExtractorReader {
 	AudioFormat format;
 	IExtractorInputReader reader;
 	List<Byte> shortBuffer;
+	
 	Long sample;
-	Float amplitude;
+//	Float amplitude;
+	Float previousValue;
 	
 	public WraperExtractorReader(IExtractorInputReader reader) {
 		this.reader = reader;
@@ -24,7 +26,7 @@ public class WraperExtractorReader {
 		switch (format.getSampleSizeInBits()) {
 		case 8:
 				reader.put(sample++, preemphasis( 
-						AudioUtil.read8(value, getFormat()) / getAmplitude()
+						AudioUtil.read8(value, getFormat()) 
 						));
 				break;
 		case 16:
@@ -32,7 +34,7 @@ public class WraperExtractorReader {
 			if(shortBuffer.size() == 2){
 				float f = AudioUtil.read16(shortBuffer.get(0), 
 						shortBuffer.get(1), 
-						getFormat())/getAmplitude();
+						getFormat());
 				reader.put(sample++, preemphasis(f));
 				shortBuffer.clear();
 			}
@@ -43,8 +45,6 @@ public class WraperExtractorReader {
 		}
 		
 	}
-	
-	Float previousValue;
 	
 	protected Float preemphasis(Float currentValue){
 		previousValue = previousValue == null?currentValue:previousValue;
@@ -58,16 +58,16 @@ public class WraperExtractorReader {
 		reader.pushValues(sample);
 	}
 	public void setFormat(AudioFormat format) {
-		float a = 1 << (format.getSampleSizeInBits() - 1);
-		amplitude = a;
+//		float a = 1 << (format.getSampleSizeInBits() - 1);
+//		amplitude = a;
 		this.format = format;
 	}
-	public Float getAmplitude() {
-		if(amplitude == null ){
-			return 1f;
-		}
-		return amplitude;
-	}
+//	public Float getAmplitude() {
+//		if(amplitude == null ){
+//			return 1f;
+//		}
+//		return amplitude;
+//	}
 
 	public AudioFormat getFormat() {
 		return format;

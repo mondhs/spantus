@@ -137,7 +137,7 @@ public class WavDropTargetListener implements DropTargetListener {
 				List<File> files = (List<File>) transferable
 				.getTransferData(DataFlavor.javaFileListFlavor);
 				for (File file : files) {
-					urls.add(file.toURL());
+					urls.add(file.toURI().toURL());
 				}
 			}else if (transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
 				String urlString = (String) transferable

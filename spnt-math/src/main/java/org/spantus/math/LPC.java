@@ -72,7 +72,8 @@ public class LPC {
 				throw new ArithmeticException("no power left in signal! Error is less than 0: " + error);
 			}
 		}
-		
+//		List<Float> trimmed = lpc;//.subList(1, lpc.size()-1);
+//		List<Float> reversed = MatrixUtils.reverseVector(trimmed);
 		return lpc;
 		
 	}

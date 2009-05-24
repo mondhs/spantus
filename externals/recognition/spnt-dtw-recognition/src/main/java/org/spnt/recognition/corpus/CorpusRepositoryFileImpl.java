@@ -56,30 +56,44 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 	}
 
 	public void save(CorpusEntry entry) {
+		saveFile(entry);
+	}
+	
+	public File saveFile(CorpusEntry entry) {
+		if(entry.getId() == null){
+			entry.setId(System.currentTimeMillis());
+		}
 		File file = new File(getRepoDir(),entry.getName() + CORPUS_ENTRY_FILE_EXT);
 		if(file.exists()){
 			file = new File(getRepoDir(),
 					entry.getName() + "-" + System.currentTimeMillis() + CORPUS_ENTRY_FILE_EXT);
 		}
-		entry.setId(System.currentTimeMillis());
+		
 		try {
 			FileWriter outputFile = new FileWriter(file,false);	
 			getXsteam().toXML(entry, outputFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return file;
 	}
-	
+	/**
+	 * 
+	 * @param entry
+	 */
 	public void update(CorpusFileEntry entry){
+		File file = null;
 		if(entry.getEntryFile().exists()){
 			entry.getEntryFile().delete();
-			save(entry.getCorpusEntry());
+			file = saveFile(entry.getCorpusEntry());
 		}
 		if(entry.getWavFile().exists()){
-			String name = FileUtils.getOnlyFileName(entry.getWavFile());
-			if(!name.equals(entry.getCorpusEntry().getName())){
+			String wavName = FileUtils.getOnlyFileName(entry.getWavFile());
+			String entryName = FileUtils.getOnlyFileName(
+					FileUtils.getOnlyFileName(file.getName())); 
+			if(!wavName.equals(entryName)){
 				File dest = new File(entry.getWavFile().getParent(),
-						entry.getCorpusEntry().getName()
+						entryName
 						+".wav");
 				entry.getWavFile().renameTo(dest);		
 			}

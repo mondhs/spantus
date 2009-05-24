@@ -34,6 +34,7 @@ public enum ExtractorEnum {
 	SMOOTHED_ENERGY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	SIGNAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	LOUDNESS_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
+	PEAK_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	CROSSING_ZERO_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	SIGNAL_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	LOG_ATTACK_TIME(ExtractorTypeEnum.SequenceOfScalar),
@@ -45,7 +46,8 @@ public enum ExtractorEnum {
 	ENVELOPE_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	SPECTRAL_CENTROID_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	SPECTRAL_FLUX_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	SPECTRAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar)
+	SPECTRAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
+	HarmonicProductSpectrum(ExtractorTypeEnum.SequenceOfScalar)
 	;
 	
 	ExtractorEnum(ExtractorTypeEnum type) {

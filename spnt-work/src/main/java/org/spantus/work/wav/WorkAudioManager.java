@@ -118,9 +118,9 @@ public class WorkAudioManager implements AudioManager {
 				format = newFormat;
 			}
 		} catch (UnsupportedAudioFileException e) {
-			e.printStackTrace();
+			log.error(e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 		return stream;
 	} // end of createInput()
@@ -184,7 +184,7 @@ public class WorkAudioManager implements AudioManager {
 				line = (SourceDataLine) AudioSystem.getLine(info);
 				line.open(format);
 			} catch (Exception e) {
-				log.error("create output throwed exception" + e);
+				log.error(e);
 			}
 			return line;
 		}
@@ -238,7 +238,7 @@ public class WorkAudioManager implements AudioManager {
 			} catch (IOException e) {
 				setPlaying(false);
 				e.printStackTrace();
-				log.error("[playback(long,long)]: " + e.getMessage());
+				log.error(e);
 			}
 
 		}

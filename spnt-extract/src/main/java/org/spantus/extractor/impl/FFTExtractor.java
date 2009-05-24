@@ -56,7 +56,7 @@ public class FFTExtractor extends AbstractExtractor3D {
 		List<Float> floats = service.calculateFFTMagnitude(window);
 		double coef = getUpperFrequency() / getConfig().getSampleRate();
 		double from = floats.size() - (coef*floats.size());
-		floats = floats.subList((int)from, floats.size());
+//		floats = floats.subList((int)from, floats.size());
 		calculatedValues.add(floats);
 		return calculatedValues;
 	}

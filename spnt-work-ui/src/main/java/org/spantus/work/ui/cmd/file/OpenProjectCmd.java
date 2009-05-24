@@ -2,7 +2,6 @@ package org.spantus.work.ui.cmd.file;
 
 import java.awt.Component;
 import java.io.File;
-import java.net.MalformedURLException;
 
 import javax.swing.JFileChooser;
 
@@ -10,6 +9,8 @@ import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
 import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
+import org.spantus.work.ui.services.WorkUIServiceFactory;
 
 import de.crysandt.util.FileFilterExtension;
 
@@ -33,13 +34,11 @@ public class OpenProjectCmd extends AbsrtactCmd {
 		int returnValue = fileChooser.showOpenDialog(parent);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
-			try {
-				ctx.getProject().getCurrentSample().setCurrentFile(
-						selectedFile.toURI().toURL());
-				ctx.getProject().setWorkingDir(selectedFile.getParentFile());
-			} catch (MalformedURLException e1) {
-				e1.printStackTrace();
-			}
+				if(!selectedFile.exists()) return false;
+				SpantusWorkProjectInfo project = 
+					WorkUIServiceFactory.createInfoManager().openProject(
+						selectedFile.getAbsolutePath());
+				ctx.setProject(project);
 			return true;
 		}
 		return false;

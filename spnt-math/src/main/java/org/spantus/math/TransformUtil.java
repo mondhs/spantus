@@ -78,7 +78,7 @@ public class TransformUtil {
 		n = 1 << logm;
 
 		if (x.size() > n) {
-			throw new Error("Tried to use a " + n
+			throw new IllegalArgumentException("Tried to use a " + n
 					+ "-points FFT for a vector with " + x.size() + " samples!");
 		}
 

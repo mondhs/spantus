@@ -138,6 +138,10 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		if (toolMenu == null) {
 			JMenu menu = new JMenu();
 			menu.add(createMenuItem(
+					GlobalCommands.file.currentSampleChanged,
+					SpantusWorkToolbar.RELOAD,
+					KeyStroke.getKeyStroke(KeyEvent.VK_R, Event.CTRL_MASK)));
+			menu.add(createMenuItem(
 					GlobalCommands.tool.autoSegmentation,
 					KeyStroke.getKeyStroke(KeyEvent.VK_U, Event.CTRL_MASK)));
 			menu.setText(getResource(menuLabels.tool.name()));

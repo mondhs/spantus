@@ -37,7 +37,7 @@ public class EnvelopeExtractor extends AbstractExtractor {
 	
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues calculatedValues = new FrameValues();
-		float env = Float.MIN_VALUE;
+		float env = -Float.MAX_VALUE;
 		for (Float float1 : window) {
 			env = Math.max(env, Math.abs(float1));
 		}

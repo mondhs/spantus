@@ -96,6 +96,8 @@ public class AdminPanel extends JPanel {
 				} catch (MalformedURLException e) {
 					log.error(e);
 				}
+			}else{
+				log.debug("File not exists " + entry.getWavFile());
 			}
 		}
 	}

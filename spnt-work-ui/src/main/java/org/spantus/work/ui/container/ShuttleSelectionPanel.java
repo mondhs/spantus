@@ -191,10 +191,10 @@ public class ShuttleSelectionPanel extends JPanel {
 	}
 
 	private void clearSourceSelected() {
-		Object selected[] = sourceList.getSelectedValues();
-		for (int i = selected.length - 1; i >= 0; --i) {
-			sourceListModel.removeElement(selected[i]);
-		}
+//		Object selected[] = sourceList.getSelectedValues();
+//		for (int i = selected.length - 1; i >= 0; --i) {
+//			sourceListModel.removeElement(selected[i]);
+//		}
 		sourceList.getSelectionModel().clearSelection();
 	}
 

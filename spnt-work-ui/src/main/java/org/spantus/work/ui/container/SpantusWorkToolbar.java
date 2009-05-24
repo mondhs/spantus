@@ -49,6 +49,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 
 	Logger log = Logger.getLogger(getClass());
 	
+	public static final String RELOAD = "reload";
 //	String[] mode = new String[]{"Simple", "Full"};
 	
 	SpantusWorkInfo info;
@@ -224,8 +225,8 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 	public JButton getRefreshBtn() {
 		if (refreshBtn == null) {
 			ImageIcon icon = createIcon(ImageResourcesEnum.refresh.getCode());
-			refreshBtn = createButton(icon, GlobalCommands.file.currentSampleChanged.name(),"reload");
-			getToolBarComponents().put("reload", zoomOutBtn);
+			refreshBtn = createButton(icon, GlobalCommands.file.currentSampleChanged.name(),RELOAD);
+			getToolBarComponents().put(RELOAD, refreshBtn);
 		}
 		return refreshBtn;
 	}

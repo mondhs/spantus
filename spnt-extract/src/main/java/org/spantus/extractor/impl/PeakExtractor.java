@@ -20,8 +20,12 @@
  */
 package org.spantus.extractor.impl;
 
+import java.util.List;
+
 import org.spantus.core.FrameValues;
+import org.spantus.core.FrameVectorValues;
 import org.spantus.extractor.AbstractExtractor;
+import org.spantus.extractor.AbstractExtractor3D;
 /**
  * 
  * 
@@ -29,36 +33,55 @@ import org.spantus.extractor.AbstractExtractor;
  *
  * @since 0.0.1
  * 
- * Created 2008.09.22
+ * Created 2008.04.13
  *
  */
-public class SignalEntropyExtractor extends AbstractExtractor{
+public class PeakExtractor extends AbstractExtractor {
 
 	
+	AbstractExtractor3D extractor3D = 
+		new FFTExtractor();
+//		new MFCCExtractor();
+//		new LPCExtractor();
+
+	protected FrameVectorValues calculateExtr3D(FrameValues window){
+		syncLPCParams();
+		return extractor3D.calculateWindow(window);
+	}
+	
+	private void syncLPCParams(){
+		extractor3D.setConfig(getConfig());
+	}
+	
+	
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues rtnValues = new FrameValues();
-
-//		float bottom = 0;
-//		for (Float current : window) {
-//			//|X[i]|^2
-//			bottom += Math.pow(Math.abs(current),2);
-//		}
-		float entropy = 0;
-		for (Float current : window) {
-//			double part = (Math.pow(Math.abs(current),2)/bottom);
-			double part = Math.abs(current);
-			if(part == 0) continue;
-			entropy += (part) * Math.log10(part) ;
+		FrameVectorValues extrValues = calculateExtr3D(window);
+		FrameValues calculatedValues = new FrameValues();
+		float peak = -Float.MAX_VALUE;
+		for (List<Float> vector : extrValues) {
+			Integer maxIndex = 0;
+			int i = 0;
+			for (Float float2 : vector) {
+				if(peak<float2){
+					peak = float2;
+					maxIndex = i;
+					
+				}
+				i++;
+			}
+			calculatedValues.add(
+					maxIndex.floatValue());
+			peak = -Float.MAX_VALUE;
+			maxIndex = 0;
 		}
-		rtnValues.add(entropy);
 		
-		return rtnValues;
-
+		
+		return calculatedValues;
 	}
 
 	
 	public String getName() {
-		return ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.toString();
+		return ExtractorEnum.PEAK_EXTRACTOR.toString();
 	}
 
 }

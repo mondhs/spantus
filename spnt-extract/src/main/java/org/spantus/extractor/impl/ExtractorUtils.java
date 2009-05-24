@@ -59,6 +59,8 @@ public abstract class ExtractorUtils {
 	static {
 		extractorMap.put(ExtractorEnum.SIGNAL_EXTRACTOR, SignalExtractor.class);
 		extractorMap.put(ExtractorEnum.ENERGY_EXTRACTOR, EnergyExtractor.class);
+		extractorMap.put(ExtractorEnum.PEAK_EXTRACTOR, PeakExtractor.class);
+
 		extractorMap.put(ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR,
 				EnergyExtractor.class);
 		extractorMap.put(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
@@ -75,6 +77,8 @@ public abstract class ExtractorUtils {
 				SpectralEntropy.class);
 		extractorMap.put(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
 				SpectralFlux.class);
+		extractorMap.put(ExtractorEnum.HarmonicProductSpectrum,
+				HarmonicProductSpectrum.class);
 		extractorMap.put(ExtractorEnum.LOUDNESS_EXTRACTOR, Loudness.class);
 		extractorMap.put(ExtractorEnum.LOG_ATTACK_TIME,
 				LogAttackTimeExtractor.class);
@@ -110,6 +114,12 @@ public abstract class ExtractorUtils {
 					SmoothedExtractor smooted = new SmoothedExtractor();
 					smooted.setExtractor(extractorInstance);
 					extractorInstance = smooted;
+				}
+				if(ExtractorParamUtils.getBoolean(param, 
+						commonParam.delta.name(), false)){
+					DeltaExtractor delta = new DeltaExtractor();
+					delta.setExtractor(extractorInstance);
+					extractorInstance = delta;
 				}
 				return extractorInstance;
 			} else if (extractor3DMap.get(extractor) != null) {
