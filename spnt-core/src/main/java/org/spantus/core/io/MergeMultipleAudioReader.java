@@ -22,8 +22,9 @@ package org.spantus.core.io;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -40,7 +41,7 @@ import org.spantus.utils.Assert;
  * 
  * @since 0.0.1
  * 
- *        Created 2008.04.11
+ * Created 2008.04.11
  * 
  */
 public class MergeMultipleAudioReader extends DefaultAudioReader {
@@ -66,6 +67,7 @@ public class MergeMultipleAudioReader extends DefaultAudioReader {
 			noiseAudioFileFormat.getFormat().getSampleSizeInBits());
 		Assert.isTrue(audioFileFormat.getFormat().isBigEndian() ==
 			noiseAudioFileFormat.getFormat().isBigEndian());
+		
 		MergedWraperExtractorReader mergedWraperExtractorReader = ((MergedWraperExtractorReader)wraperExtractorReader);
 		
 		DataInputStream dis = new DataInputStream(new BufferedInputStream(AudioSystem.getAudioInputStream(url)));
@@ -89,11 +91,26 @@ public class MergeMultipleAudioReader extends DefaultAudioReader {
 			processed(Long.valueOf(index), size);
 		}
 		wraperExtractorReader.pushValues();
-		mergedWraperExtractorReader.saveMerged(new File("./target/saved.wav"), audioFileFormat.getFormat());
+		
+		log.debug("SNR: {0}", calculateSnr(mergedWraperExtractorReader.getTotalSignalEnergy(),
+				mergedWraperExtractorReader.getTotalNoiseEnergy(), audioFileFormat.getFrameLength()));
+		//signal/noise
+	
+//		mergedWraperExtractorReader.saveMerged(new File("./target/saved.wav"), audioFileFormat.getFormat());
 		dis.close();
 		noiseDis.close();
 		ended();
 
+	}
+	protected double calculateSnr(BigDecimal totalSignalEnergy, BigDecimal totalNoiseEnergy, long size){
+//		totalSignalEnergy = totalSignalEnergy.divide(BigDecimal.valueOf(size),RoundingMode.HALF_UP);
+//		totalNoiseEnergy = totalNoiseEnergy.divide(BigDecimal.valueOf(size),RoundingMode.HALF_UP);
+//		Double totalSignalEnergyRMS = Math.sqrt(totalSignalEnergy.doubleValue());
+//		Double totalNoiseEnergyRMS = Math.sqrt(totalNoiseEnergy.doubleValue());
+//		Double ratio =totalSignalEnergyRMS/totalNoiseEnergyRMS;
+		BigDecimal ratio = totalSignalEnergy.divide(totalNoiseEnergy,RoundingMode.HALF_UP);
+		double snr = 10*Math.log10(ratio.doubleValue());
+		return snr;
 	}
 
 	public URL getNoiseUrl() {

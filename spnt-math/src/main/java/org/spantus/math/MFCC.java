@@ -54,7 +54,7 @@ public class MFCC {
 	
 	static int nlifteringCoefficient = 22;
 	
-	static int nnumberOfParameters = 12;
+	static int nnumberOfParameters = 12+1;
 	/**
 	 * Minimum value of filter output, otherwise the log is not calculated and
 	 * m_dlogFilterOutputFloor is adopted. ISIP implementation assumes

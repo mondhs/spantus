@@ -27,9 +27,9 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.text.Format;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import net.quies.math.plot.CoordinateBoundary;
 import net.quies.math.plot.GraphDomain;
@@ -115,9 +115,8 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 			int delta = vals.size();
 			y = 0;
 			LinkedList<Float> lf = new LinkedList<Float>(fv);
-//			for (Float f1 : fv) {
-			for (Iterator<Float> iterator = lf.descendingIterator(); iterator.hasNext();) {
-				Float f1 = (Float) iterator.next();
+			for (ListIterator<Float> iterator2 = lf.listIterator(fv.size()); iterator2.hasPrevious();) {
+				Float f1 = (Float) iterator2.previous();
 				rgbArray[x + (y * delta)] = lookupColor(f1);
 				y++;
 			}

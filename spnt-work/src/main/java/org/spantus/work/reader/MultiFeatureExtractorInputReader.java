@@ -14,6 +14,7 @@ import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.IThreshold;
 import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.exception.ProcessingException;
+import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorTypeEnum;
@@ -86,8 +87,8 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 	
 	public void setConfig(IExtractorConfig config) {
 		
-		IExtractorConfig mp7Config = clone(config);
-		IExtractorConfig spntConfig = clone(config);
+		IExtractorConfig mp7Config = ExtractorConfigUtil.clone(config);
+		IExtractorConfig spntConfig = ExtractorConfigUtil.clone(config);
 		
 		for (String extr : config.getExtractors()) {
 			String[] extractor = extr.split(":");
@@ -160,22 +161,7 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 	
 	
 	
-	public IExtractorConfig clone(IExtractorConfig config) {
-		IExtractorConfig cloned = null;
-		try {
-			cloned = config.getClass().newInstance();
-		} catch (InstantiationException e) {
-			throw new ProcessingException(e);
-		} catch (IllegalAccessException e) {
-			throw new ProcessingException(e);
-		}
-		cloned.setFrameSize(config.getFrameSize());
-		cloned.setBufferSize(config.getBufferSize());
-		cloned.setWindowSize(config.getWindowSize());
-		cloned.setWindowOverlap(config.getWindowOverlap());
-		cloned.setSampleRate(config.getSampleRate());
-		return cloned;
-	}
+	
 
 	public IExtractorConfig getConfig() {
 		return getDefaultReader().getConfig();

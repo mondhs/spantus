@@ -34,5 +34,7 @@ public class ConfigDaoTest extends TestCase {
 				ConfigPropertiesDao.key_threshold_leaningPeriod);
 		assertEquals(6F, threshold_coef);
 		assertEquals(5000, threshold_leaningPeriod.longValue());
+		assertEquals(461, config.getWindowOverlap());
+		assertEquals(512, config.getWindowSize());
 	}
 }

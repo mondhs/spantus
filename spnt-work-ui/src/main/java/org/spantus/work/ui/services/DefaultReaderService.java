@@ -29,7 +29,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioReader;
 import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.work.WorkReadersEnum;
-import org.spantus.work.io.AudioFactory;
+import org.spantus.work.io.WorkAudioFactory;
 import org.spantus.work.reader.MultiFeatureExtractorInputReader;
 import org.spantus.work.ui.dto.FeatureReader;
 import org.spantus.work.ui.util.WorkUIExtractorConfigUtil;
@@ -65,7 +65,7 @@ public class DefaultReaderService implements ReaderService {
 					+ readerDto.getReaderPerspective());
 		}
 		
-		AudioReader audioReader = AudioFactory.createAudioReader(readerDto.getReaderPerspective());
+		AudioReader audioReader = WorkAudioFactory.createAudioReader(readerDto.getReaderPerspective());
 		if(processedFrameLinstener != null && audioReader instanceof ProcessedFrameLinstener){
 			((ProcessedFrameLinstener)audioReader).registerProcessedFrameLinstener(processedFrameLinstener);
 		}
@@ -73,11 +73,11 @@ public class DefaultReaderService implements ReaderService {
 		return extractor;
 	}
 	public AudioFileFormat getFormat(URL url){
-		return AudioFactory.createAudioReader(WorkReadersEnum.multiFeature).getAudioFormat(url);
+		return WorkAudioFactory.createAudioReader(WorkReadersEnum.multiFeature).getAudioFormat(url);
 	}
 	
 	protected void setConfig(URL url, IExtractorInputReader extractor,FeatureReader readerDto){
-		AudioFileFormat format = AudioFactory.createAudioReader(readerDto.getReaderPerspective())
+		AudioFileFormat format = WorkAudioFactory.createAudioReader(readerDto.getReaderPerspective())
 		.getAudioFormat(url);
 		IExtractorConfig config = WorkUIExtractorConfigUtil.convert(readerDto.getWorkConfig(), format.getFormat().getSampleRate());
 		config.getExtractors().addAll(readerDto.getExtractors());

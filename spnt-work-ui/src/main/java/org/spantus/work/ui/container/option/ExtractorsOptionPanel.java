@@ -146,7 +146,6 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 				}
 			});
 			deltaCmb.addItemListener(new ItemListener(){
-				@Override
 				public void itemStateChanged(ItemEvent e) {
 					boolean deltaInd = ((JCheckBox)e.getSource()).isSelected();	
 					if(selectedExtractorParam != null){

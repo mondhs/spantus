@@ -54,9 +54,11 @@ public class FFTExtractor extends AbstractExtractor3D {
 		FrameVectorValues calculatedValues = new FrameVectorValues();
 
 		List<Float> floats = service.calculateFFTMagnitude(window);
-		double coef = getUpperFrequency() / getConfig().getSampleRate();
-		double from = floats.size() - (coef*floats.size());
-//		floats = floats.subList((int)from, floats.size());
+		if(getUpperFrequency() != null){
+			double coef = getUpperFrequency() / getConfig().getSampleRate();
+			double from = floats.size() - (coef*floats.size());
+			floats = floats.subList((int)from, floats.size());
+		}
 		calculatedValues.add(floats);
 		return calculatedValues;
 	}
@@ -66,9 +68,9 @@ public class FFTExtractor extends AbstractExtractor3D {
 
 
 	public Integer getUpperFrequency(){
-		if(upperFrequency == null){
-			upperFrequency = 6600;
-		}
+//		if(upperFrequency == null){
+//			upperFrequency = 6600;
+//		}
 		return upperFrequency;
 	}
 

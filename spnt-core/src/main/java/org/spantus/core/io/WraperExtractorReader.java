@@ -58,16 +58,8 @@ public class WraperExtractorReader {
 		reader.pushValues(sample);
 	}
 	public void setFormat(AudioFormat format) {
-//		float a = 1 << (format.getSampleSizeInBits() - 1);
-//		amplitude = a;
 		this.format = format;
 	}
-//	public Float getAmplitude() {
-//		if(amplitude == null ){
-//			return 1f;
-//		}
-//		return amplitude;
-//	}
 
 	public AudioFormat getFormat() {
 		return format;

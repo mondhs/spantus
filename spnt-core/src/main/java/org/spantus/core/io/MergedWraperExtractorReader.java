@@ -1,8 +1,29 @@
+/**
+ * Part of program for analyze speech signal 
+ * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
+ * http://spantus.sourceforge.net
+ * 
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 675 Mass Ave, Cambridge, MA 02139, USA.
+ * 
+ */
 package org.spantus.core.io;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -14,11 +35,20 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
 import org.spantus.core.extractor.IExtractorInputReader;
-
+/**
+ * 
+ * @author Mindaugas Greibus
+ * 
+ * @since 0.0.1
+ * Created May 25, 2009
+ *
+ */
 public class MergedWraperExtractorReader extends WraperExtractorReader{
 	
 	List<Byte> noiseShortBuffer;
 	List<Byte> mergedBuffer;
+	BigDecimal totalNoiseEnergy = BigDecimal.ZERO.setScale(3);
+	BigDecimal totalSignalEnergy = BigDecimal.ZERO.setScale(3);
 	
 
 	public MergedWraperExtractorReader(IExtractorInputReader reader) {
@@ -30,14 +60,15 @@ public class MergedWraperExtractorReader extends WraperExtractorReader{
 	public void put(byte value) {
 		throw new IllegalArgumentException("not impl");
 	}
+	
 	public void put(byte signalByte, byte noiseByte) {
 		float signal,noise = 0;
-		mergedBuffer.add((byte)((signalByte+noiseByte)/2));
+		mergedBuffer.add((byte)((signalByte+noiseByte)));
 		switch (format.getSampleSizeInBits()) {
 		case 8:
 			signal = preemphasis(AudioUtil.read8(signalByte, getFormat()));
 			noise = preemphasis(AudioUtil.read8(noiseByte, getFormat()));
-			reader.put(sample++, (signal+noise/2));
+			reader.put(sample++, (signal+noise));
 			break;
 		case 16:
 			shortBuffer.add(signalByte);
@@ -53,7 +84,8 @@ public class MergedWraperExtractorReader extends WraperExtractorReader{
 //								((shortBuffer.get(0)+noiseShortBuffer.get(0))/2),
 //								((shortBuffer.get(1)+noiseShortBuffer.get(1))/2),
 //						getFormat());
-				float f = (signal+noise)/2;
+				snrEstimation(signal, noise);
+				float f = signal+noise;
 				reader.put(sample++, preemphasis(f));
 				shortBuffer.clear();
 				noiseShortBuffer.clear();
@@ -63,6 +95,11 @@ public class MergedWraperExtractorReader extends WraperExtractorReader{
 			throw new java.lang.IllegalArgumentException(format.getSampleSizeInBits()
 					+ " bits/sample not supported");
 		}
+	}
+	
+	protected void snrEstimation(float signal, float noise){
+		totalNoiseEnergy = totalNoiseEnergy.add(BigDecimal.valueOf(Math.pow(noise, 2)));
+		totalSignalEnergy = totalSignalEnergy.add(BigDecimal.valueOf(Math.pow(signal, 2)));
 	}
 	
 	public URL saveMerged(File file, AudioFormat audioFormat){
@@ -75,6 +112,12 @@ public class MergedWraperExtractorReader extends WraperExtractorReader{
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	public BigDecimal getTotalNoiseEnergy() {
+		return totalNoiseEnergy;
+	}
+	public BigDecimal getTotalSignalEnergy() {
+		return totalSignalEnergy;
 	}
 	
 }

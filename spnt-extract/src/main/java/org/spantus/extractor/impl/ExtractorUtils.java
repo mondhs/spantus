@@ -77,8 +77,8 @@ public abstract class ExtractorUtils {
 				SpectralEntropy.class);
 		extractorMap.put(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
 				SpectralFlux.class);
-		extractorMap.put(ExtractorEnum.HarmonicProductSpectrum,
-				HarmonicProductSpectrum.class);
+//		extractorMap.put(ExtractorEnum.HarmonicProductSpectrum,
+//				HarmonicProductSpectrum.class);
 		extractorMap.put(ExtractorEnum.LOUDNESS_EXTRACTOR, Loudness.class);
 		extractorMap.put(ExtractorEnum.LOG_ATTACK_TIME,
 				LogAttackTimeExtractor.class);
