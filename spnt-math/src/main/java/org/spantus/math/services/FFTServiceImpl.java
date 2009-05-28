@@ -44,7 +44,6 @@ public class FFTServiceImpl implements FFTService{
 		int missingSamples = n - x.size();
 		x.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
 		List<Float> floats = TransformUtil.calculateFFTMagnitude(x);
-		Collections.reverse(floats);
 		return floats;
 	}
 }

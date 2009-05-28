@@ -106,8 +106,8 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 
 		}
 		minmax(vals);
-		
-		image = new BufferedImage(vals.size(), vals.get(0).size(),
+		int height = vals.get(0).size()==0?1:vals.get(0).size();
+		image = new BufferedImage(vals.size(), height,
 				BufferedImage.TYPE_INT_RGB);
 		int[] rgbArray = new int[vals.size() * vals.get(0).size()];
 		int x = 0, y = 0;

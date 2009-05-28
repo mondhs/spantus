@@ -20,6 +20,7 @@
  */
 package org.spantus.extractor.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.spantus.core.FrameValues;
@@ -53,13 +54,23 @@ public class FFTExtractor extends AbstractExtractor3D {
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameVectorValues calculatedValues = new FrameVectorValues();
 
-		List<Float> floats = service.calculateFFTMagnitude(window);
+		List<Float> fft = service.calculateFFTMagnitude(window);
 		if(getUpperFrequency() != null){
 			double coef = getUpperFrequency() / getConfig().getSampleRate();
-			double from = floats.size() - (coef*floats.size());
-			floats = floats.subList((int)from, floats.size());
+			double from = fft.size() - (coef*fft.size());
+			fft = fft.subList((int)from, fft.size());
 		}
-		calculatedValues.add(floats);
+//		List<Float> fftDB = new LinkedList<Float>(); 
+//		//convert to decibels
+//		for (Float float1 : fft) {
+//			Float fdb = 0F;
+//			if(float1 >0){
+//				fdb = 10f * (float)Math.log1p(float1);
+//			}
+//			fftDB.add(fdb);	
+//		}
+//		fft = fftDB; 
+		calculatedValues.add(fft);
 		return calculatedValues;
 	}
 	public void setUpperFrequency(Integer upperFrequency) {

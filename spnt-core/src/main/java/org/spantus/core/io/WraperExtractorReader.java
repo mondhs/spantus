@@ -14,7 +14,8 @@ public class WraperExtractorReader {
 	
 	Long sample;
 //	Float amplitude;
-	Float previousValue;
+	Float previousValueZ1 = 0F;
+	Float previousValueZ2 = 0F;
 	
 	public WraperExtractorReader(IExtractorInputReader reader) {
 		this.reader = reader;
@@ -46,10 +47,23 @@ public class WraperExtractorReader {
 		
 	}
 	
+//	protected Float preemphasis(Float currentValue){
+//		Double val = currentValue.doubleValue();
+//		val -=  (previousValueZ1*0.95);
+//		previousValueZ1 = currentValue;
+//		return val.floatValue();
+//		
+//	}
+	/**
+	 * 		y[n] = b0 x[n] + b1 x[n-1] + b2 x[n-2]
+	 *	b0 = 0.3426, b1 = 0.4945 and b2 = -0.64
+	 */
 	protected Float preemphasis(Float currentValue){
-		previousValue = previousValue == null?currentValue:previousValue;
-		Double val = currentValue - (previousValue*0.95);
-		previousValue = currentValue;
+		Double val = currentValue.doubleValue();
+		float b0 = 0.3426f, b1 = 0.4945f, b2 = -0.64f;
+		val = b0*val+b1*previousValueZ1+b2*previousValueZ2;
+		previousValueZ2 = previousValueZ1;
+		previousValueZ1 = currentValue;
 		return val.floatValue();
 		
 	}
