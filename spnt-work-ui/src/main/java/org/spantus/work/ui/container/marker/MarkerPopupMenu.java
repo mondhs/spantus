@@ -97,10 +97,10 @@ public class MarkerPopupMenu extends JPopupMenu {
 	public void remove(JComponent source) {
 		Component invoker = getInvoker(source);
 		if (invoker instanceof MarkerSetComponent) {
-			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
+//			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
 			MarkerComponentEventHandler ml = getShower(source);
-			Marker marker = getMarkerComponentService().remove(_markerSetComponent, ml.getCurrentMarker());
-			log.debug("mark as removed: " + marker);
+			ml.removeMarker(ml.getCurrentMarker());
+//			Marker marker = getMarkerComponentService().remove(_markerSetComponent, ml.getCurrentMarker());
 		}
 	}
 	/**
