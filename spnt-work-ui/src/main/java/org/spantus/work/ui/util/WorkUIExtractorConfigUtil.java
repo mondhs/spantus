@@ -52,8 +52,8 @@ public abstract class WorkUIExtractorConfigUtil {
 		return config;
 	}
 	
-	public static IExtractorConfig convert(WorkUIExtractorConfig workConfig, int sampleRate){
-		return convert(workConfig, (float)sampleRate);
-	}
+//	public static IExtractorConfig convert(WorkUIExtractorConfig workConfig, int sampleRate){
+//		return convert(workConfig, (float)sampleRate);
+//	}
 
 }

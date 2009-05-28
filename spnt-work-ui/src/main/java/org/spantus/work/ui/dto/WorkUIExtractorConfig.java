@@ -42,7 +42,7 @@ public class WorkUIExtractorConfig{
 	private Integer windowOverlap = 66; //66%
 	private Integer bufferSize = 800; //5s	
 	
-	private Float recordSampleRate=8000F;
+	private Float recordSampleRate=11025F;
 	private String audioPathOutput="./";
 	private Integer thresholdLeaningPeriod=5000;
 	private Float thresholdCoef=2F;
