@@ -22,6 +22,7 @@ package org.spantus.extractor.impl;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
+import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.logger.Logger;
 import org.spantus.math.VectorUtils;
@@ -72,6 +73,14 @@ public class SmoothedExtractor extends AbstractExtractor {
 			extractor = new EnergyExtractor();
 		}
 		return extractor;
+	}
+	@Override
+	public void setConfig(IExtractorConfig config) {
+		extractor.setConfig(config);
+	}
+	@Override
+	public IExtractorConfig getConfig() {
+		return extractor.getConfig();
 	}
 
 	public void setExtractor(IExtractor extractor) {

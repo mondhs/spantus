@@ -21,29 +21,30 @@ import javax.swing.ListModel;
 import javax.swing.event.ListSelectionListener;
 
 import org.spantus.ui.ModelEntry;
-
+import org.spantus.work.ui.i18n.I18nFactory;
+ 
 public class ShuttleSelectionPanel extends JPanel {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L; 
 
 	private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
 
-	private static final String ADD_BUTTON_LABEL = "Add >>";
+	private static final String ADD_BUTTON_LABEL = "shuttleAddButton";
 
-	private static final String REMOVE_BUTTON_LABEL = "<< Remove";
+	private static final String REMOVE_BUTTON_LABEL = "shuttleRemoveButton";
 
-	private static final String DEFAULT_SOURCE_CHOICE_LABEL = "Available Choices";
+	private static final String DEFAULT_SOURCE_CHOICE_LABEL = "shuttleAvailableChoises";
 
-	private static final String DEFAULT_DEST_CHOICE_LABEL = "Your Choices";
+	private static final String DEFAULT_DEST_CHOICE_LABEL = "shuttleSelectedChoises";
 
 	private JLabel sourceLabel;
 
 	private JList sourceList;
 
 	private SortedListModel sourceListModel;
-
+ 
 	private JList destList;
 
 	private SortedListModel destListModel;
@@ -209,7 +210,7 @@ public class ShuttleSelectionPanel extends JPanel {
 	private void initScreen() {
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridBagLayout());
-		sourceLabel = new JLabel(DEFAULT_SOURCE_CHOICE_LABEL);
+		sourceLabel = new JLabel(getMessage(DEFAULT_SOURCE_CHOICE_LABEL));
 		sourceListModel = new SortedListModel();
 		sourceList = new JList(sourceListModel);
 		add(sourceLabel, new GridBagConstraints(0, 0, 1, 1, 0, 0,
@@ -219,18 +220,18 @@ public class ShuttleSelectionPanel extends JPanel {
 				1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				EMPTY_INSETS, 0, 0));
 
-		addButton = new JButton(ADD_BUTTON_LABEL);
+		addButton = new JButton(getMessage(getMessage(ADD_BUTTON_LABEL)));
 		add(addButton, new GridBagConstraints(1, 2, 1, 2, 0, .25,
 				GridBagConstraints.CENTER, GridBagConstraints.NONE,
 				EMPTY_INSETS, 0, 0));
 		addButton.addActionListener(new AddListener());
-		removeButton = new JButton(REMOVE_BUTTON_LABEL);
+		removeButton = new JButton(getMessage(REMOVE_BUTTON_LABEL));
 		add(removeButton, new GridBagConstraints(1, 4, 1, 2, 0, .25,
 				GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
 						0, 5, 0, 5), 0, 0));
 		removeButton.addActionListener(new RemoveListener());
 
-		destLabel = new JLabel(DEFAULT_DEST_CHOICE_LABEL);
+		destLabel = new JLabel(getMessage(DEFAULT_DEST_CHOICE_LABEL));
 		destListModel = new SortedListModel();
 		destList = new JList(destListModel);
 		add(destLabel, new GridBagConstraints(2, 0, 1, 1, 0, 0,
@@ -307,6 +308,10 @@ public class ShuttleSelectionPanel extends JPanel {
 	
 	public void addListSelectionListener(ListSelectionListener listSelectionListener ){
 		destList.getSelectionModel().addListSelectionListener(listSelectionListener);
+	}
+	
+	private static String getMessage(String key){
+		return I18nFactory.createI18n().getMessage(key);
 	}
 	
 	public static void main(String args[]) {

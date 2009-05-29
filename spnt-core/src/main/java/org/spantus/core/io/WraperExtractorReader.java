@@ -46,27 +46,31 @@ public class WraperExtractorReader {
 		}
 		
 	}
-	
 //	protected Float preemphasis(Float currentValue){
-//		Double val = currentValue.doubleValue();
-//		val -=  (previousValueZ1*0.95);
-//		previousValueZ1 = currentValue;
-//		return val.floatValue();
+//		return currentValue;
 //		
 //	}
-	/**
-	 * 		y[n] = b0 x[n] + b1 x[n-1] + b2 x[n-2]
-	 *	b0 = 0.3426, b1 = 0.4945 and b2 = -0.64
-	 */
+	
 	protected Float preemphasis(Float currentValue){
 		Double val = currentValue.doubleValue();
-		float b0 = 0.3426f, b1 = 0.4945f, b2 = -0.64f;
-		val = b0*val+b1*previousValueZ1+b2*previousValueZ2;
-		previousValueZ2 = previousValueZ1;
+		val -=  (previousValueZ1*0.95);
 		previousValueZ1 = currentValue;
 		return val.floatValue();
 		
 	}
+	/**
+	 * 		y[n] = b0 x[n] + b1 x[n-1] + b2 x[n-2]
+	 *	b0 = 0.3426, b1 = 0.4945 and b2 = -0.64
+	 */
+//	protected Float preemphasis(Float currentValue){
+//		Double val = currentValue.doubleValue();
+//		float b0 = 0.3426f, b1 = 0.4945f, b2 = -0.64f;
+//		val = b0*val+b1*previousValueZ1+b2*previousValueZ2;
+//		previousValueZ2 = previousValueZ1;
+//		previousValueZ1 = currentValue;
+//		return val.floatValue();
+//		
+//	}
 	
 	public void pushValues(){
 		reader.pushValues(sample);

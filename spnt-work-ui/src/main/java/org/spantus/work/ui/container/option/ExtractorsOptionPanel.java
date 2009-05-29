@@ -59,7 +59,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 //		this.setSize(300, 200);
 //		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.setLayout(new BorderLayout());
-		this.add(getSelectionPnl(), BorderLayout.NORTH);
+		this.add(getSelectionPnl(), BorderLayout.CENTER);
 		this.add(getPropertiesPnl(),BorderLayout.SOUTH);
 		getPropertiesPnl().setVisible(false);
 //		this.add(getCommonPnl(), null);

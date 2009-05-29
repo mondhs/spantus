@@ -20,7 +20,9 @@
  */
 package org.spantus.extractor.impl;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
@@ -61,7 +63,8 @@ public class PeakExtractor extends AbstractExtractor {
 		for (List<Float> vector : extrValues) {
 			Integer maxIndex = 0;
 			int i = 0;
-			for (Float float2 : vector) {
+			for (ListIterator<Float> iterator = vector.listIterator(vector.size()); iterator.hasPrevious();) {
+				Float float2 = (Float) iterator.previous();
 				if(peak<float2){
 					peak = float2;
 					maxIndex = i;

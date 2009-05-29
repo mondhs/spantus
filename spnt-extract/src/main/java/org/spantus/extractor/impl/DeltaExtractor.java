@@ -22,6 +22,7 @@ package org.spantus.extractor.impl;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
+import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.logger.Logger;
 /**
@@ -67,6 +68,15 @@ public class DeltaExtractor extends AbstractExtractor {
 	
 	public String getName() {
 		return "DELTA_" + getExtractor().getName();
+	}
+	
+	@Override
+	public void setConfig(IExtractorConfig conf) {
+		extractor.setConfig(conf);
+	}
+	@Override
+	public IExtractorConfig getConfig() {
+		return extractor.getConfig();
 	}
 	
 	public IExtractor getExtractor() {
