@@ -37,13 +37,13 @@ import org.spantus.segment.online.rule.RuleServiceFactory;
  * 
  */
 
-public class DecistionSegmentatorOnline extends MultipleSegmentatorOnline {
+public class DecisionSegmentatorOnline extends MultipleSegmentatorOnline {
 
 	
 	private DecisionCtx decisionContext;
 	
 	
-	private Logger log = Logger.getLogger(DecistionSegmentatorOnline.class);
+	private Logger log = Logger.getLogger(DecisionSegmentatorOnline.class);
 	
 	@Override
 	public void processState(Long sample, IGeneralExtractor extractor, Float val) {

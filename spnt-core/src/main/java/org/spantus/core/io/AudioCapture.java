@@ -58,7 +58,7 @@ public class AudioCapture extends Thread {
 			line = (TargetDataLine) AudioSystem.getLine(info);
 			line.open(format);
 			line.start();
-//			log.error("grabing line. " + running + ": " + this.hashCode());
+			log.error("grabing line. " + running + ": " + AudioSystem.getMixerInfo()[0]);
 			int bufferSize = (int) format.getSampleRate()
 					* format.getFrameSize();
 			byte buffer[] = new byte[bufferSize];

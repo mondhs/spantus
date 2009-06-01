@@ -35,7 +35,7 @@ import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.logger.Logger;
-import org.spantus.segment.online.DecistionSegmentatorOnline;
+import org.spantus.segment.online.DecisionSegmentatorOnline;
 
 /**
  * 
@@ -48,7 +48,7 @@ import org.spantus.segment.online.DecistionSegmentatorOnline;
  * 
  */
 
-public class RecordSegmentatorOnline extends DecistionSegmentatorOnline {
+public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 	private Logger log = Logger.getLogger(RecordSegmentatorOnline.class);
 	
 	RecordWraperExtractorReader reader;

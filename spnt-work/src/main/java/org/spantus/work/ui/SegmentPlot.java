@@ -14,7 +14,7 @@ import org.spantus.core.io.DefaultAudioReader;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
-import org.spantus.segment.online.DecistionSegmentatorOnline;
+import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.segment.online.ThresholdSegmentatorOnline;
 import org.spantus.utils.Assert;
 import org.spantus.work.segment.OnlineSegmentationUtils;
@@ -70,7 +70,7 @@ public class SegmentPlot extends AbstractSegmentPlot {
 		setReader(ExtractorsFactory.createReader(getFormat()));
 		getReader().getConfig().setBufferSize(3000);
 		
-		DecistionSegmentatorOnline multipleSegmentator = 
+		DecisionSegmentatorOnline multipleSegmentator = 
 //			createSegmentatorRecordable();
 			createSegmentatorDefault();
 		

@@ -9,6 +9,7 @@ import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.work.services.FeatureExtractor;
 import org.spantus.work.services.FeatureExtractorImpl;
+import org.spnt.recognition.bean.FeatureData;
 import org.spnt.recognition.bean.RecognitionResult;
 import org.spnt.recognition.corpus.CorpusMatchListener;
 import org.spnt.recognition.services.CorpusService;
@@ -44,27 +45,24 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 	 * @param marker
 	 */
 	protected void findBestMatach(Marker marker){
-		FrameVectorValues values = 
-			((IExtractorVector)getFeatureExtractor().findExtractorByName(
-					"LPC", getReader().getReader()))
-			.getOutputValues();
-		Float fromIndex = (marker.getStart().floatValue()*values.getSampleRate())/1000;
-		Float toIndex = fromIndex+(marker.getLength().floatValue()*values.getSampleRate())/1000;
-		if(toIndex>=values.size()){
-			//calculating offset for cleaned up buffer
-			int bufferIndex = (toIndex.intValue()/values.size())-1;
-			int offset = toIndex.intValue()%values.size() 
-				+ (values.size() * bufferIndex);
-			fromIndex-=offset;
-			toIndex-=offset;
+		for (IExtractorVector extractor : getReader().getReader().getExtractorRegister3D()) {
+			
+			FrameVectorValues values = extractor.getOutputValues();
+			Float fromIndex = (marker.getStart().floatValue()*values.getSampleRate())/1000;
+			Float toIndex = fromIndex+(marker.getLength().floatValue()*values.getSampleRate())/1000;
+			FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
+			
+			FeatureData featureData = new FeatureData();
+			featureData.setName(extractor.getName());
+			featureData.setValues(fvv);
+			
+			if(getLearnMode()){
+				getCorpusService().learn(marker.getLabel(),featureData);
+			}else{
+				marker.setLabel(getCorpusService().match(featureData).getInfo().getName());
+			}
 		}
-		FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
-		if(getLearnMode()){
-			getCorpusService().learn(marker.getLabel(), fvv);
-		}else{
-			//search for match
-			notifyCorpusMatchListener(getCorpusService().match(fvv), marker);
-		}
+		
 		log.info("[findBestMatach]" + marker);
 		
 	}

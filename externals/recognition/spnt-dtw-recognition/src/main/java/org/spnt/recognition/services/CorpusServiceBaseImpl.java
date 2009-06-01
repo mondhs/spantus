@@ -4,11 +4,11 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.spantus.core.FrameVectorValues;
 import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.services.MathServicesFactory;
 import org.spnt.recognition.bean.CorpusEntry;
+import org.spnt.recognition.bean.FeatureData;
 import org.spnt.recognition.bean.RecognitionResult;
 import org.spnt.recognition.corpus.CorpusRepository;
 import org.spnt.recognition.corpus.CorpusRepositoryFileImpl;
@@ -26,15 +26,15 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	private CorpusRepository corpus;
 	
 
-	public RecognitionResult match(FrameVectorValues target) {
-		RecognitionResult match = findBestMatch(target);
+	public RecognitionResult match(FeatureData featureData) {
+		RecognitionResult match = findBestMatch(featureData);
 		return match;
 	}
 	
-	public boolean learn(String label, FrameVectorValues target) {
+	public boolean learn(String label, FeatureData featureData) {
 		CorpusEntry entry = new CorpusEntry();
 		entry.setName(label);
-		entry.setVals(target);
+		entry.getFeatureMap().put(featureData.getName(), featureData);
 		getCorpus().save(entry);
 		return true;
 	}
@@ -44,7 +44,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param target
 	 * @return
 	 */
-	protected RecognitionResult findBestMatch(FrameVectorValues target){
+	protected RecognitionResult findBestMatch(FeatureData target){
 		Map<Float, RecognitionResult> results = new TreeMap<Float, RecognitionResult>();
 		Float min = Float.MAX_VALUE;
 		RecognitionResult match = null;
@@ -65,11 +65,13 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		return match;
 	}
 	
-	protected RecognitionResult compare(FrameVectorValues target,
+	protected RecognitionResult compare(FeatureData target,
 			CorpusEntry sample) {
 		RecognitionResult result = new RecognitionResult();
 		result.setInfo(sample);
-		result.setDistance(getDtwService().calculateDistanceVector(target, sample.getVals()));
+		result.setDistance(getDtwService().calculateDistanceVector(target.getValues(), 
+				sample.getFeatureMap().get(target.getName()).getValues()
+		));
 		return result;
 	}
 

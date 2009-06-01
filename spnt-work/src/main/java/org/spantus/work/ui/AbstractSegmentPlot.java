@@ -13,7 +13,7 @@ import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.core.io.WraperExtractorReader;
 import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
-import org.spantus.segment.online.DecistionSegmentatorOnline;
+import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.segment.online.MultipleSegmentatorOnline;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 
@@ -49,8 +49,8 @@ public abstract class AbstractSegmentPlot extends JPanel {
 		return multipleSegmentator;
 	}
 	
-	protected DecistionSegmentatorOnline createSegmentatorDefault(){
-		DecistionSegmentatorOnline multipleSegmentator = new DecistionSegmentatorOnline();
+	protected DecisionSegmentatorOnline createSegmentatorDefault(){
+		DecisionSegmentatorOnline multipleSegmentator = new DecisionSegmentatorOnline();
 		multipleSegmentator.setParam(createParam());
 		return multipleSegmentator;
 	}

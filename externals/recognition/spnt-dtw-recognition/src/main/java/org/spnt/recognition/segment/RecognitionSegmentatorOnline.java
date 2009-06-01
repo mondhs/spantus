@@ -6,13 +6,14 @@ import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.marker.Marker;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
-import org.spantus.segment.online.DecistionSegmentatorOnline;
+import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.work.services.FeatureExtractor;
 import org.spantus.work.services.FeatureExtractorImpl;
+import org.spnt.recognition.bean.FeatureData;
 import org.spnt.recognition.services.CorpusService;
 import org.spnt.recognition.services.CorpusServiceBaseImpl;
 
-public class RecognitionSegmentatorOnline extends DecistionSegmentatorOnline {
+public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 	
 	private ExtractorInputReader bufferedReader;
 	
@@ -31,17 +32,28 @@ public class RecognitionSegmentatorOnline extends DecistionSegmentatorOnline {
 	@Override
 	protected boolean onSegmentEnded(Marker marker) {
 		if(!super.onSegmentEnded(marker)) return false; 
-		FrameVectorValues values = 
-			((IExtractorVector)getFeatureExtractor().findExtractorByName("LPC", bufferedReader))
-			.getOutputValues();
-		Float fromIndex = (marker.getStart().floatValue()*values.getSampleRate())/1000;
-		Float toIndex = fromIndex+(marker.getLength().floatValue()*values.getSampleRate())/1000;
-		FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
-		if(getLearnMode()){
-			getCorpusService().learn(marker.getLabel(),fvv);
-		}else{
-			marker.setLabel(getCorpusService().match(fvv).getInfo().getName());
+
+		for (IExtractorVector extractor : bufferedReader.getExtractorRegister3D()) {
+			
+			FrameVectorValues values = extractor.getOutputValues();
+			Float fromIndex = (marker.getStart().floatValue()*values.getSampleRate())/1000;
+			Float toIndex = fromIndex+(marker.getLength().floatValue()*values.getSampleRate())/1000;
+			FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
+			
+			FeatureData featureData = new FeatureData();
+			featureData.setName(extractor.getName());
+			featureData.setValues(fvv);
+			
+			if(getLearnMode()){
+				getCorpusService().learn(marker.getLabel(),featureData);
+			}else{
+				marker.setLabel(getCorpusService().match(featureData).getInfo().getName());
+			}
 		}
+		
+		
+		
+		
 		log.error(marker.toString());
 		return true;
 	}

@@ -1,11 +1,12 @@
 package org.spnt.recognition.bean;
 
-import org.spantus.core.FrameVectorValues;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CorpusEntry {
 	Long id;
 	String name;
-	FrameVectorValues vals;
+	Map<String, FeatureData> featureMap;
 
 	public String getName() {
 		return name;
@@ -15,13 +16,6 @@ public class CorpusEntry {
 		this.name = name;
 	}
 
-	public FrameVectorValues getVals() {
-		return vals;
-	}
-
-	public void setVals(FrameVectorValues vals) {
-		this.vals = vals;
-	}
 
 	public Long getId() {
 		return id;
@@ -29,5 +23,12 @@ public class CorpusEntry {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Map<String, FeatureData> getFeatureMap() {
+		if(featureMap == null){
+			featureMap = new HashMap<String, FeatureData>();
+		}
+		return featureMap;
 	}
 }

@@ -15,6 +15,7 @@ import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.utils.ExtractorParamUtils;
+import org.spantus.utils.StringUtils;
 
 public class ConfigPropertiesDao implements ConfigDao {
 	
@@ -79,8 +80,10 @@ public class ConfigPropertiesDao implements ConfigDao {
 		setStringValue(param, key_format_pathOutput, properties);
 		config.getParameters().put(param.getClassName(), param);
 		String extractorStr = properties.getProperty(key_format_extractors);
-		for (String extr : extractorStr.split(",")) {
-			config.getExtractors().add(extr);
+		if(StringUtils.hasText(extractorStr)){
+			for (String extr : extractorStr.split(",")) {
+				config.getExtractors().add(extr);
+			}
 		}
 		
 	}

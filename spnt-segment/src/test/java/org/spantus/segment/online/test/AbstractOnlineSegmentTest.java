@@ -3,7 +3,7 @@ package org.spantus.segment.online.test;
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.ExtractorWrapper;
 import org.spantus.core.marker.MarkerSet;
-import org.spantus.segment.online.DecistionSegmentatorOnline;
+import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.segment.online.MultipleSegmentatorOnline;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.segment.online.ThresholdSegmentatorOnline;
@@ -16,7 +16,7 @@ public abstract class AbstractOnlineSegmentTest extends TestCase {
 	}
 
 	protected MarkerSet segmentRuleBase(Float[] vals, int step, float sampleRate) {
-		DecistionSegmentatorOnline multipe = new DecistionSegmentatorOnline();
+		DecisionSegmentatorOnline multipe = new DecisionSegmentatorOnline();
 		multipe.setParam(createParam());
 		ThresholdSegmentatorOnline segmentator = getSegmentator("extractor",
 				multipe);

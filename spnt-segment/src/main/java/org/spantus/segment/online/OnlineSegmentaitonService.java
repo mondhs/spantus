@@ -19,7 +19,7 @@ public class OnlineSegmentaitonService implements ISegmentatorService {
 
 	public MarkerSet extractSegments(Set<IThreshold> thresholds,
 			SegmentatorParam param) {
-		DecistionSegmentatorOnline multipleSegmentator = new DecistionSegmentatorOnline();
+		DecisionSegmentatorOnline multipleSegmentator = new DecisionSegmentatorOnline();
 		if(param != null){
 			multipleSegmentator.setParam((OnlineDecisionSegmentatorParam)param);
 		}

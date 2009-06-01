@@ -15,7 +15,7 @@ import org.spantus.core.io.AudioCapture;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.segment.io.RecordSegmentatorOnline;
-import org.spantus.segment.online.DecistionSegmentatorOnline;
+import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.segment.online.MultipleSegmentatorOnline;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.segment.online.OnlineSegmentator;
@@ -33,7 +33,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 	private static final long serialVersionUID = 1L;
 	private Timer timer = new Timer("Sound Monitor Plot");
 //	private Logger log = Logger.getLogger(SegmentMonitorPlot.class);
-	private DecistionSegmentatorOnline multipleSegmentator;
+	private DecisionSegmentatorOnline multipleSegmentator;
 	private AudioCapture capture;
 //	private boolean recording;
 	public static final String FILE_NAME = "./config.properties";
@@ -107,7 +107,11 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 //		segmentator.setCoef(threshold_coef);
 //		segmentator.setLearningPeriod(threshold_leaningPeriod);
 
-		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR);
+		ExtractorParam paramEnergy = new ExtractorParam();
+		ExtractorParamUtils.setBoolean(paramEnergy, 
+				ExtractorParamUtils.commonParam.smoothed.name(), Boolean.TRUE);
+
+		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(threshold_coef);
 		segmentator.setLearningPeriod(threshold_leaningPeriod);
@@ -124,7 +128,9 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 
 
 //		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.WAVFORM_EXTRACTOR);
-		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.LPC_EXTRACTOR);
+//		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.LPC_EXTRACTOR);
+		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.MFCC_EXTRACTOR);
+
 	}
 	
 	
@@ -151,7 +157,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		
 	}
 	
-	protected DecistionSegmentatorOnline createSegmentatorRecordable(ExtractorParam param){
+	protected DecisionSegmentatorOnline createSegmentatorRecordable(ExtractorParam param){
 		String path = ExtractorParamUtils.<String>getValue(param,
 				ConfigPropertiesDao.key_format_pathOutput);
 		RecordSegmentatorOnline segmentator = 
@@ -161,8 +167,8 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		return segmentator;
 	}
 	
-	protected DecistionSegmentatorOnline createSegmentatorDefault(ExtractorParam param){
-		DecistionSegmentatorOnline segmentator = createSegmentatorDefault();
+	protected DecisionSegmentatorOnline createSegmentatorDefault(ExtractorParam param){
+		DecisionSegmentatorOnline segmentator = createSegmentatorDefault();
 		segmentator.setParam(createParam(param));
 		return segmentator; 
 	}
@@ -188,7 +194,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		monitorPlot.startRecognition();
 	}
 
-	public DecistionSegmentatorOnline getMultipleSegmentator() {
+	public DecisionSegmentatorOnline getMultipleSegmentator() {
 		return multipleSegmentator;
 	}
 

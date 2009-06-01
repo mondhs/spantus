@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 
 import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioFactory;
 import org.spantus.core.io.DefaultAudioReader;
@@ -19,6 +20,7 @@ import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.segment.online.ThresholdSegmentatorOnline;
+import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.segment.OnlineSegmentationUtils;
 import org.spnt.recognition.segment.RecognitionSegmentatorOnline;
 
@@ -74,7 +76,10 @@ public class RecognitionPlot extends JFrame {
 		multipleSegmentator.setParam(createParam());
 		
 		ThresholdSegmentatorOnline segmentator = null;
-		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.ENERGY_EXTRACTOR);
+		ExtractorParam param = new ExtractorParam();
+		ExtractorParamUtils.setBoolean(param, 
+				ExtractorParamUtils.commonParam.smoothed.name(), Boolean.TRUE);
+		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.ENERGY_EXTRACTOR, param);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(4f);
 		
