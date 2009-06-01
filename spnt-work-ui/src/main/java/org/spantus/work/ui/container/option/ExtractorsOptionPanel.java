@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -32,6 +33,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 	private ShuttleSelectionPanel shuttle;
 	private JPanel propetiesPnl;
 	
+	private JLabel extractorLabel = new JLabel();
 	private JCheckBox smoothedCmb = new JCheckBox();
 	private JCheckBox meanCmb = new JCheckBox();
 	private JCheckBox deltaCmb = new JCheckBox();
@@ -118,7 +120,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 					TitledBorder.DEFAULT_JUSTIFICATION,
 					TitledBorder.DEFAULT_POSITION));
 			
-			
+			extractorLabel.setText(selectedExtractorParam==null?"<none>":selectedExtractorParam.getClassName());
 			smoothedCmb.setName(commonParam.smoothed.name());
 			smoothedCmb.setText(getMessage(smoothedCmb.getName()));
 			meanCmb.setName(commonParam.mean.name());
@@ -154,6 +156,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 					}
 				}
 			});
+			propetiesPnl.add(extractorLabel);
 			propetiesPnl.add(smoothedCmb);
 //			propetiesPnl.add(meanCmb);
 			propetiesPnl.add(deltaCmb);
@@ -225,6 +228,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 								getConfig().getProject().getFeatureReader().getParameters(),
 								extractorName);
 						selectedExtractorParam.setClassName(extractorName);
+						extractorLabel.setText(extractorName);
 						boolean meanInd = ExtractorParamUtils.getBoolean(selectedExtractorParam,
 							 commonParam.mean.name(),false);
 						boolean smoothedInd = ExtractorParamUtils.getBoolean(selectedExtractorParam, 

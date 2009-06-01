@@ -3,8 +3,7 @@ package org.spantus.work.ui.container;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.LinkedList;
 
 import javax.swing.AbstractListModel;
 
@@ -16,10 +15,10 @@ public class SortedListModel extends AbstractListModel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	Set<ModelEntry> model;
+	Collection<ModelEntry> model;
 
 	public SortedListModel() {
-		model = new TreeSet<ModelEntry>();
+		model = new LinkedList<ModelEntry>();
 	}
 
 	public int getSize() {

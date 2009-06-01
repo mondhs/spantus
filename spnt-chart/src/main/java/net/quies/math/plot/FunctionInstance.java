@@ -55,6 +55,8 @@ public interface FunctionInstance {
 
 	public BigDecimal[] getYCoordinates();
 	
+	public String getValueOn(BigDecimal x);
+	
 	public void	paint(Graphics g);
 	
 	public CoordinateBoundary getCoordinateBoundary();

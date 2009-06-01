@@ -55,7 +55,7 @@ public class MFCCKlautauServiceImpl implements MFCCService {
          boolean oisZeroThCepstralCoefficientCalculated = false; 
          int nnumberOfMFCCParameters = 12; //without considering 0-th 
          double dsamplingFrequency = sampleRate; 
-         int nFFTLength = n ; 
+         int nFFTLength = x.size() ; 
          if (oisZeroThCepstralCoefficientCalculated) { 
            //take in account the zero-th MFCC 
            nnumberOfMFCCParameters = nnumberOfMFCCParameters + 1; 

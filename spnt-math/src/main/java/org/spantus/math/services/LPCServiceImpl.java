@@ -4,12 +4,13 @@ import java.util.List;
 
 import org.spantus.math.Autocorrelation;
 import org.spantus.math.LPC;
+import org.spantus.math.LPCResult;
 
 public class LPCServiceImpl implements LPCService {
 
-	public List<Float> calculateLPC(List<Float> x, int order) {
+	public LPCResult calculateLPC(List<Float> x, int order) {
 		List<Float> autocorr = Autocorrelation.calc(x, order);
-		List<Float> lpc = LPC.calcForAutocorr(autocorr);
+		LPCResult lpc = LPC.calcForAutocorr(autocorr);
 		return lpc;
 	}
 

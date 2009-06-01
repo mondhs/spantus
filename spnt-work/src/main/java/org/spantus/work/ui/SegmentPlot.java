@@ -76,14 +76,14 @@ public class SegmentPlot extends AbstractSegmentPlot {
 		
 		
 		ThresholdSegmentatorOnline segmentator = null;
-		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
+		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(2f);
 		
 		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.WAVFORM_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 
-		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
+		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(2f);
 		

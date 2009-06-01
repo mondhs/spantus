@@ -75,12 +75,15 @@ public class InteractiveChart extends InteractiveGraph {
 			return "";
 		Point mousePosition = event.getPoint();
 		StringBuffer buffer = new StringBuffer(80);
-		buffer.append('(');
+		buffer.append("<html><body>");
+//		buffer.append('(');
+		buffer.append("Time: ");
 		buffer.append(getXAxis().getFormat().format(
 				render.getXValue(mousePosition.x)));
-		buffer.append(", ");
-		buffer.append(resolveChart(mousePosition.y));
-		buffer.append(')');
+		buffer.append("s, \n ");
+		buffer.append(resolveChart(mousePosition.x, mousePosition.y).replaceAll("\n", "<br\\>"));
+//		buffer.append(')');
+		buffer.append("</body></html>");
 		return buffer.toString();
 	}
 	/**
@@ -88,20 +91,21 @@ public class InteractiveChart extends InteractiveGraph {
 	 * @param y
 	 * @return
 	 */
-	private String resolveChart(int y) {
+	private String resolveChart(int x, int y) {
 		GraphInstance render = getRender();
 		List<String> descs = new ArrayList<String>();
 		for (ChartDescriptionResolver resolver : getResolvers()) {
 			ChartDescriptionInfo resolved = resolver
-					.resolve(render.getYValue(y).floatValue());
+					.resolve(render.getXValue(x).floatValue(),
+							render.getYValue(y).floatValue());
 			if (resolved != null) {
-				descs.add(resolved.getName());
+				descs.add("\n"+resolved.getName()+": "+resolved.getValue());
 			}
 		}
 		if (descs.size() == 0) {
 			return getYAxis().getFormat().format(render.getYValue(y));
 		}
-		return descs.toString();
+		return descs.size()==0?"":descs.get(0);
 	}
 	/**
 	 * Getter 

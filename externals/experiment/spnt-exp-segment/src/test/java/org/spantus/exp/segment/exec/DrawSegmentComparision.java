@@ -117,7 +117,7 @@ public class DrawSegmentComparision extends ApplicationFrame {
 			IExtractorInputReader bufferedReader = ExtractorsFactory
 					.createReader(reader.getAudioFormat(urlFile));
 			ExtractorUtils.registerThreshold(bufferedReader, new ExtractorEnum[] {
-					ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR,
+					ExtractorEnum.ENERGY_EXTRACTOR,
 			}, null, ThresholdEnum.offline);
 			reader.readAudio(urlFile, bufferedReader);
 			return bufferedReader;

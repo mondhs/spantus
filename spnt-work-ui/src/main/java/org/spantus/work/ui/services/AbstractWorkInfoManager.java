@@ -97,7 +97,7 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 					ExtractorEnum.WAVFORM_EXTRACTOR.name());
 			project.getFeatureReader().getExtractors().add(
 					SupportableReaderEnum.spantus.name() + ":" + 
-					ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR.name());
+					ExtractorEnum.ENERGY_EXTRACTOR.name());
 			project.getFeatureReader().getExtractors().add(
 					SupportableReaderEnum.spantus.name() + ":" + 
 					ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name());

@@ -92,7 +92,7 @@ public abstract class AbstractExtractor implements IExtractor {
 				FrameValues windowedWindow = new FrameValues(getWindowValues());
 				getWindowing().apply(windowedWindow);
 				//Calculating features values for the window
-				calculatedValues.addAll(calculateWindow(windowedWindow));
+				calculatedValues.addAll(calculateWindow(windowedWindow, getWindowValues()));
 				windowsIndex = getConfig().getWindowOverlap();
 			}
 			getWindowValues().add(f1);
@@ -105,6 +105,10 @@ public abstract class AbstractExtractor implements IExtractor {
 		return calculatedValues;
 	}
 
+	protected FrameValues calculateWindow(FrameValues windowedWindow, FrameValues realValues){
+		return calculateWindow(windowedWindow);
+	}
+	
 	public int getDimension() {
 		return 1;
 	}

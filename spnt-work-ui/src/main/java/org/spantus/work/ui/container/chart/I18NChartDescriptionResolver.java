@@ -20,8 +20,8 @@ public class I18NChartDescriptionResolver extends
 	}
 	
 	@Override
-	public ChartDescriptionInfo resolve(float val) {
-		ChartDescriptionInfo resolved = super.resolve(val);
+	public ChartDescriptionInfo resolve(float time, float value) {
+		ChartDescriptionInfo resolved = super.resolve(time, value);
 		if(resolved == null){
 			return null;
 		}

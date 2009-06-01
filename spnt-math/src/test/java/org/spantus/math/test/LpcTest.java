@@ -55,7 +55,7 @@ public class LpcTest extends TestCase {
 		assertEquals(order, autocorr.size());
 		assertCollectionEqual(autocorr, autoCorrData);
 	
-		List<Float> lpc = LPC.calcForAutocorr(autocorr);
+		List<Float> lpc = LPC.calcForAutocorr(autocorr).getResult();
 		log.log(Level.SEVERE, "lpc: " + lpc);
 		assertEquals(autocorr.size(), lpc.size());
 		assertCollectionEqual(lpc, lpcData);

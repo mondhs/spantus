@@ -42,8 +42,8 @@ public class WrappedChartDescriptionResolver implements
 		this.localResolver = localResolver;
 	}
 	
-	public ChartDescriptionInfo resolve(float val) {
-		ChartDescriptionInfo resolved = localResolver.resolve(val);
+	public ChartDescriptionInfo resolve(float time, float value) {
+		ChartDescriptionInfo resolved = localResolver.resolve(time,value);
 		if(resolved == null) return null;
 		String resolvedStr = resolved.getName();
 		resolvedStr = resolvedStr.replaceAll("BUFFERED_", "");

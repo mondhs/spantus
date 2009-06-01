@@ -61,8 +61,10 @@ public abstract class ExtractorUtils {
 		extractorMap.put(ExtractorEnum.ENERGY_EXTRACTOR, EnergyExtractor.class);
 		extractorMap.put(ExtractorEnum.PEAK_EXTRACTOR, PeakExtractor.class);
 
-		extractorMap.put(ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR,
-				EnergyExtractor.class);
+//		extractorMap.put(ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR,
+//				EnergyExtractor.class);
+		extractorMap.put(ExtractorEnum.LPC_RESIDUAL_EXTRACTOR,
+				LPCResidualExtractor.class);
 		extractorMap.put(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
 				SignalEntropyExtractor.class);
 		extractorMap.put(ExtractorEnum.CROSSING_ZERO_EXTRACTOR,
@@ -82,8 +84,8 @@ public abstract class ExtractorUtils {
 		extractorMap.put(ExtractorEnum.LOUDNESS_EXTRACTOR, Loudness.class);
 		extractorMap.put(ExtractorEnum.LOG_ATTACK_TIME,
 				LogAttackTimeExtractor.class);
-		extractorMap.put(ExtractorEnum.SMOOTHED_LOG_ATTACK_TIME,
-				LogAttackTimeExtractor.class);
+//		extractorMap.put(ExtractorEnum.SMOOTHED_LOG_ATTACK_TIME,
+//				LogAttackTimeExtractor.class);
 
 		extractor3DMap.put(ExtractorEnum.WAVFORM_EXTRACTOR,
 				WavformExtractor.class);

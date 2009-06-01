@@ -65,8 +65,8 @@ public class EnergyExtractor extends AbstractExtractor {
 		float windowVal = 0f;
 		for (Float float1 : window) {
 			float1 = (float)Math.pow(float1, 2);
-			if(getLogaritmic()){
-				 float fE = (float) (float1 * -(Math.log(float1)));
+			if(getLogaritmic() && float1 != 0){
+				 float fE = (float) (10*Math.log10(float1));
 				 float1 = Float.isNaN(fE) ? 0 : fE;
 			}
 			windowVal += float1;

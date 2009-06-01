@@ -40,7 +40,8 @@ public class LPC {
 	/**
 	 * 
 	 */
-	public static List<Float> calcForAutocorr(List<Float> autocorr){
+	public static LPCResult calcForAutocorr(List<Float> autocorr){
+		LPCResult result = new LPCResult();
 		int order = autocorr.size()-1;
 		List<Float> lpc = MatrixUtils.zeros(order+1);//intialize all lpc coef to 0 //LPC coef
 		List<Float> reflection = MatrixUtils.zeros(order+1);//Reflection coef. should be always < 1 to have stable system
@@ -74,7 +75,9 @@ public class LPC {
 		}
 //		List<Float> trimmed = lpc;//.subList(1, lpc.size()-1);
 //		List<Float> reversed = MatrixUtils.reverseVector(trimmed);
-		return lpc;
+		result.setResult(lpc);
+		result.setError(error);
+		return result;
 		
 	}
 	

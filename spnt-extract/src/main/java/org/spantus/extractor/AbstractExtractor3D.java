@@ -103,7 +103,7 @@ public abstract class AbstractExtractor3D implements IExtractorVector {
 			if(windowsIndex == 0){
 				FrameValues windowedWindow = new FrameValues(getWindowValues());
 				getWindowing().apply(windowedWindow);
-				calculatedValues.addAll(calculateWindow(windowedWindow));
+				calculatedValues.addAll(calculateWindow(windowedWindow, getWindowValues()));
 				windowsIndex = getConfig().getWindowOverlap();
 			}
 			getWindowValues().add(f1);
@@ -116,6 +116,10 @@ public abstract class AbstractExtractor3D implements IExtractorVector {
 		return calculatedValues;
 	}
 
+	protected FrameVectorValues calculateWindow(FrameValues windowedWindow, FrameValues realValues){
+		return calculateWindow(windowedWindow);
+	}
+	
 	public int getWinowSize() {
 		return getConfig().getWindowSize();
 	}

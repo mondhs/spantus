@@ -34,7 +34,7 @@ public class MonitorPlot extends JFrame {
 		ExtractorUtils.registerThreshold(reader,
 				new ExtractorEnum[] { 
 					ExtractorEnum.ENERGY_EXTRACTOR, 
-					ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR,
+					ExtractorEnum.ENERGY_EXTRACTOR,
 //					ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
 //					ExtractorEnum.WAVFORM_EXTRACTOR, 
 				}, null);

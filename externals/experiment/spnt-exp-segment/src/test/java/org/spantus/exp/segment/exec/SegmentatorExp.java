@@ -34,7 +34,7 @@ public class SegmentatorExp extends AbstractGraphGenerator {
 		Set<IThreshold> set = info.getThresholds();
 		info.getThresholds().retainAll(getProcessReader().getFilterThresholdByName(
 				set, 
-				ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR.name())
+				ExtractorEnum.ENERGY_EXTRACTOR.name())
 				);
 
 		SimpleDecisionSegmentatorParam param = new SimpleDecisionSegmentatorParam();

@@ -56,10 +56,11 @@ public class ModelEntry implements Entry<String, Object>,Comparable<ModelEntry> 
 	}
 
 	public int compareTo(ModelEntry modelEntry) {
-		int compare = this.getOrder().compareTo(modelEntry.getOrder());
-		if(compare == 0){
+		int compare = 0;
+//		this.getOrder().compareTo(modelEntry.getOrder());
+//		if(compare == 0){
 			compare = this.getKey().compareTo(modelEntry.getKey());
-		}
+//		}
 //		else if(this.getKey().compareTo(modelEntry.getKey()) == 0){
 //			throw new IllegalArgumentException("Two same entries exists");
 //		}

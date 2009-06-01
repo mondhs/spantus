@@ -74,7 +74,7 @@ public class RecognitionPlot extends JFrame {
 		multipleSegmentator.setParam(createParam());
 		
 		ThresholdSegmentatorOnline segmentator = null;
-		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
+		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.ENERGY_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(4f);
 		

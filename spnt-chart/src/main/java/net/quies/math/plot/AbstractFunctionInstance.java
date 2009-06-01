@@ -172,6 +172,11 @@ paintTerminators(Graphics2D g2) {
 		g2.draw(terminators.get(i));
 }
 
+public String getValueOn(BigDecimal x) {
+	return "";
+}
+
+
 
 private final String DESCRIPTION;
 private final BigDecimal[] X_COORDINATE;

@@ -20,7 +20,6 @@
  */
 package org.spantus.extractor.impl;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.spantus.core.FrameValues;

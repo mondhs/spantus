@@ -190,4 +190,11 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 		}
 		coordinateBoundary = getCoordinateBoundary(values);
 	}
+	
+	public String getValueOn(BigDecimal x) {
+		int index = values.toIndex(x.floatValue());
+		Float value = values.get(index);
+		return value.toString();
+	}
+
 }

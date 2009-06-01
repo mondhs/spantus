@@ -2,11 +2,11 @@ package org.spantus.chart.impl;
 
 import java.math.BigDecimal;
 
+import net.quies.math.plot.FunctionInstance;
+
 import org.spantus.chart.ChartDescriptionInfo;
 import org.spantus.chart.ChartDescriptionResolver;
 import org.spantus.logger.Logger;
-
-import net.quies.math.plot.FunctionInstance;
 
 public abstract class TimeSeriesFunctionInstance implements FunctionInstance, ChartDescriptionResolver{
 
@@ -15,10 +15,12 @@ public abstract class TimeSeriesFunctionInstance implements FunctionInstance, Ch
 	String description;
 	
 	
-	public ChartDescriptionInfo resolve(float val) {
-		if(getCoordinateBoundary().getYMin().floatValue()<val && 
-				getCoordinateBoundary().getYMax().floatValue()>val){
-			return new ChartDescriptionInfo(getDescription(), BigDecimal.valueOf(val));
+	public ChartDescriptionInfo resolve(float time, float verticalPossition) {
+		if(getCoordinateBoundary().getYMin().floatValue()<verticalPossition && 
+				getCoordinateBoundary().getYMax().floatValue()>verticalPossition){
+			String value = getValueOn(BigDecimal.valueOf(time));
+			return new ChartDescriptionInfo(getDescription(), BigDecimal.valueOf(time), 
+					value);
 		}
 		return null;
 	}

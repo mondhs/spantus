@@ -107,7 +107,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 //		segmentator.setCoef(threshold_coef);
 //		segmentator.setLearningPeriod(threshold_leaningPeriod);
 
-		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR);
+		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(threshold_coef);
 		segmentator.setLearningPeriod(threshold_leaningPeriod);

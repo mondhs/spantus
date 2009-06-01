@@ -218,4 +218,14 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	public void setColorType(VectorSeriesColorEnum colorType) {
 		this.colorType = colorType;
 	}
+	public String getValueOn(BigDecimal x) {
+		int index = values.toIndex(x.floatValue());
+		if(index> values.size()-1){
+			index = values.size()-1;
+		}
+		List<Float> value = values.get(index);
+		
+		return value.toString();
+	}
+
 }

@@ -256,5 +256,14 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 	protected ThresholdChartContext getCtx() {
 		return ctx;
 	}
+	
+	public String getValueOn(BigDecimal x) {
+		int index = getCtx().getValues().toIndex(x.floatValue());
+		Float value = getCtx().getValues().get(index);
+		Float thresholdValue = getCtx().getThreshold().get(index);
+		
+		return  value.toString() + "\n Threshold:" + thresholdValue;
+	}
+
 
 }

@@ -6,14 +6,13 @@ import java.util.Set;
 
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.IThreshold;
 import org.spantus.core.threshold.ThresholdEnum;
-import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;

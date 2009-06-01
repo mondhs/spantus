@@ -135,7 +135,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 	 */
 	private TimeSeriesFunctionInstance addFunction(Graph graphChart, IExtractor extr,
 			int order) {
-		ChartStyle style1 = new ChartStyle();
+		ChartStyle style1 = createChartStyle();
 		style1.setPaint(getColorResolver().resolveColor(extr));
 		FrameValueFuncton function = new FrameValueFuncton(extr.getName() + CHART_PREFIX,
 				extr.getOutputValues(), style1);
@@ -151,7 +151,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 	}
 	private TimeSeriesFunctionInstance addFunction(Graph graphChart, IThreshold extr,
 			int order) {
-		ChartStyle style1 = new ChartStyle();
+		ChartStyle style1 = createChartStyle();
 		style1.setPaint(getColorResolver().resolveColor(extr));
 		
 		ThresholdChartContext ctx = new ThresholdChartContext();
@@ -182,7 +182,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 	 */
 	private TimeSeriesFunctionInstance addAreaFunction(Graph graphChart, IExtractorVector extr,
 			int order) {
-		ChartStyle style1 = new ChartStyle();
+		ChartStyle style1 = createChartStyle();
 		style1.setPaint(getColorResolver().resolveColor(extr));
 		FrameValueAreaFunction function = new FrameValueAreaFunction(extr.getName()
 				+ AREA_CHART_PREFIX, extr.getOutputValues(), style1);
@@ -210,7 +210,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		} else {
 			FrameValueMatrixFuncton function = new FrameValueMatrixFuncton(extr.getName()
 					+ MATRIX_CHART_PREFIX , extr.getOutputValues());
-			ChartStyle style1 = new ChartStyle();
+			ChartStyle style1 = createChartStyle();
 			style1.setPaint(getColorResolver().resolveColor(extr));
 			function.setOrder(order);
 			charType = function.getCharType();
@@ -220,6 +220,11 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		return charType;
 	}
 
+	protected ChartStyle createChartStyle(){
+		ChartStyle chartStyle = new ChartStyle();
+//		chartStyle.setUpperLimitEnabled(true);
+		return chartStyle;
+	}
 	private VectorSeriesColorEnum getColorType(int i){
 		return VectorSeriesColorEnum.blackWhite;
 	}
@@ -318,6 +323,10 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 
 	@Override
 	public void changedZoom(float from, float length) {
+		if(from ==0 && length == 0){
+			log.debug("Nothing to zoom");
+			return;
+		}
 		GraphDomain domain = new GraphDomain(from, from+length);
 		graph.setDomain(domain);
 		graph.setZoomSelection(null);

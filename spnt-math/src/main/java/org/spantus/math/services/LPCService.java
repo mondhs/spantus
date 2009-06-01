@@ -2,6 +2,8 @@ package org.spantus.math.services;
 
 import java.util.List;
 
+import org.spantus.math.LPCResult;
+
 public interface LPCService {
-	public List<Float> calculateLPC(List<Float> x, int order);
+	public LPCResult calculateLPC(List<Float> x, int order);
 }
