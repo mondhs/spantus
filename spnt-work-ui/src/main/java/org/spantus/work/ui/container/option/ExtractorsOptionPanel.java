@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -16,12 +18,12 @@ import javax.swing.event.ListSelectionListener;
 
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.extractor.impl.ExtractorTypeEnum;
 import org.spantus.logger.Logger;
 import org.spantus.mpeg7.Mpeg7ExtractorEnum;
 import org.spantus.ui.ModelEntry;
 import org.spantus.utils.ExtractorParamUtils;
-import org.spantus.utils.ExtractorParamUtils.commonParam;
 import org.spantus.work.reader.SupportableReaderEnum;
 import org.spantus.work.ui.container.ShuttleSelectionPanel;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -34,9 +36,11 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 	private JPanel propetiesPnl;
 	
 	private JLabel extractorLabel = new JLabel();
-	private JCheckBox smoothedCmb = new JCheckBox();
-	private JCheckBox meanCmb = new JCheckBox();
-	private JCheckBox deltaCmb = new JCheckBox();
+	private Map<String, JCheckBox> modifiers = new HashMap<String, JCheckBox>();
+//	private JCheckBox smoothedCmb ;
+//	private JCheckBox meanCmb ;
+//	private JCheckBox deltaCmb;
+//	private JCheckBox stdevCmb;
 	private Logger log = Logger.getLogger(ExtractorsOptionPanel.class);
 	
 	
@@ -121,48 +125,31 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 					TitledBorder.DEFAULT_POSITION));
 			
 			extractorLabel.setText(selectedExtractorParam==null?"<none>":selectedExtractorParam.getClassName());
-			smoothedCmb.setName(commonParam.smoothed.name());
-			smoothedCmb.setText(getMessage(smoothedCmb.getName()));
-			meanCmb.setName(commonParam.mean.name());
-			meanCmb.setText(getMessage(meanCmb.getName()));
-			deltaCmb.setName(commonParam.delta.name());
-			deltaCmb.setText(getMessage(deltaCmb.getName()));
-			meanCmb.addItemListener(new ItemListener(){
-				public void itemStateChanged(ItemEvent e) {
-					boolean meanInd = ((JCheckBox)e.getSource()).isSelected();	
-					if(selectedExtractorParam != null){
-						ExtractorParamUtils.setValue(selectedExtractorParam,
-						meanCmb.getName(), meanInd);
-						log.debug(selectedExtractorParam.toString());
-					}
-				}
-			});
-			smoothedCmb.addItemListener(new ItemListener(){
-				public void itemStateChanged(ItemEvent e) {
-					boolean meanInd = ((JCheckBox)e.getSource()).isSelected();	
-					if(selectedExtractorParam != null){
-						ExtractorParamUtils.setValue(selectedExtractorParam,
-						 smoothedCmb.getName(), meanInd);
-						log.debug(selectedExtractorParam.toString());
-					}
-				}
-			});
-			deltaCmb.addItemListener(new ItemListener(){
-				public void itemStateChanged(ItemEvent e) {
-					boolean deltaInd = ((JCheckBox)e.getSource()).isSelected();	
-					if(selectedExtractorParam != null){
-						ExtractorParamUtils.setValue(selectedExtractorParam,
-						 deltaCmb.getName(), deltaInd);
-					}
-				}
-			});
 			propetiesPnl.add(extractorLabel);
-			propetiesPnl.add(smoothedCmb);
-//			propetiesPnl.add(meanCmb);
-			propetiesPnl.add(deltaCmb);
+			for (ExtractorModifiersEnum modifier : ExtractorModifiersEnum.values()) {
+				JCheckBox chb = createChb(modifier.name());
+				modifiers.put(modifier.name(), chb);
+				propetiesPnl.add(chb);
+			}
 			
 		}
 		return propetiesPnl;
+	}
+	protected JCheckBox createChb(String name){
+		JCheckBox chb = new JCheckBox();
+		chb.setName(name);
+		chb.setText(getMessage(chb.getName()));
+		chb.addItemListener(new ItemListener(){
+			public void itemStateChanged(ItemEvent e) {
+				boolean valInd = ((JCheckBox)e.getSource()).isSelected();	
+				if(selectedExtractorParam != null){
+					ExtractorParamUtils.setValue(selectedExtractorParam,
+					((JCheckBox)e.getSource()).getName(), valInd);
+					log.debug(selectedExtractorParam.toString());
+				}
+			}
+		});
+		return chb;
 	}
 	
 
@@ -229,12 +216,11 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 								extractorName);
 						selectedExtractorParam.setClassName(extractorName);
 						extractorLabel.setText(extractorName);
-						boolean meanInd = ExtractorParamUtils.getBoolean(selectedExtractorParam,
-							 commonParam.mean.name(),false);
-						boolean smoothedInd = ExtractorParamUtils.getBoolean(selectedExtractorParam, 
-							commonParam.smoothed.name(),false);
-						meanCmb.setSelected(meanInd);
-						smoothedCmb.setSelected(smoothedInd);
+						for (ExtractorModifiersEnum modifier : ExtractorModifiersEnum.values()) {
+							boolean valInd = ExtractorParamUtils.getBoolean(selectedExtractorParam,
+									modifier.name(),false);
+							modifiers.get(modifier.name()).setSelected(valInd);
+						}
 					}
 				}
 			}

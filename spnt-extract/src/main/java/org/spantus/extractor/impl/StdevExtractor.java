@@ -1,7 +1,7 @@
-/**
+/*
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://spantus.sourceforge.net
+ * http://code.google.com/p/spantus/
  * 
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -33,41 +33,32 @@ import org.spantus.logger.Logger;
  *
  * @since 0.0.1
  * 
- * Created 2009.05.24
+ * Created 2009.06.02
  *
  */
-public class DeltaExtractor extends AbstractExtractor {
+public class StdevExtractor extends AbstractExtractor {
 	Logger log = Logger.getLogger(getClass());
 	
 
 	private IExtractor extractor;
-	
-	private Float previous;
-
+	private MeanExtractor meanExtractor;
 	
 	
-	public DeltaExtractor() {
-		getParam().setClassName(DeltaExtractor.class.getSimpleName());
+	
+	
+	public StdevExtractor() {
+		getParam().setClassName(StdevExtractor.class.getSimpleName());
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues calculatedValues = new FrameValues();
-		FrameValues fv = getExtractor().calculateWindow(window);
-		
-		if(fv.size()==1){
-			Float val = fv.get(0);
-			if(previous==null){
-				previous = val;
-			}
-			calculatedValues.add(Math.abs(val-previous));
-			previous = val;
-		}
-
+		meanExtractor.calculateWindow(window);
+		calculatedValues.add(meanExtractor.getStdev());
 		return calculatedValues;
 	}	
 	
 	public String getName() {
-		return ExtractorModifiersEnum.delta.name()+"_"+ getExtractor().getName();
+		return ExtractorModifiersEnum.stdev.name()+"_" + getExtractor().getName();
 	}
 	
 	@Override
@@ -87,6 +78,8 @@ public class DeltaExtractor extends AbstractExtractor {
 	}
 
 	public void setExtractor(IExtractor extractor) {
+		meanExtractor = new MeanExtractor();
+		meanExtractor.setExtractor(extractor);
 		this.extractor = extractor;
 	}
 

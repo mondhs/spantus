@@ -14,6 +14,7 @@ import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.io.AudioCapture;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.segment.online.MultipleSegmentatorOnline;
@@ -109,7 +110,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 
 		ExtractorParam paramEnergy = new ExtractorParam();
 		ExtractorParamUtils.setBoolean(paramEnergy, 
-				ExtractorParamUtils.commonParam.smoothed.name(), Boolean.TRUE);
+				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
 
 		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy);
 		segmentator.setOnlineSegmentator(multipleSegmentator);

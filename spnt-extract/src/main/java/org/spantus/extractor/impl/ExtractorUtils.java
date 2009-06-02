@@ -29,8 +29,8 @@ import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractThreshold;
-import org.spantus.core.threshold.IThreshold;
 import org.spantus.core.threshold.DynamicThreshold;
+import org.spantus.core.threshold.IThreshold;
 import org.spantus.core.threshold.OfflineThreshold;
 import org.spantus.core.threshold.StaticThreshold;
 import org.spantus.core.threshold.ThresholdEnum;
@@ -39,7 +39,6 @@ import org.spantus.extractor.AbstractExtractor3D;
 import org.spantus.extractor.ExtractorResultBuffer;
 import org.spantus.extractor.ExtractorResultBufferFactory;
 import org.spantus.utils.ExtractorParamUtils;
-import org.spantus.utils.ExtractorParamUtils.commonParam;
 
 /**
  * 
@@ -84,6 +83,8 @@ public abstract class ExtractorUtils {
 		extractorMap.put(ExtractorEnum.LOUDNESS_EXTRACTOR, Loudness.class);
 		extractorMap.put(ExtractorEnum.LOG_ATTACK_TIME,
 				LogAttackTimeExtractor.class);
+		extractorMap.put(ExtractorEnum.NOISE_LEVEL_EXTRACTOR,
+				NoiseLevelExtractor.class);
 //		extractorMap.put(ExtractorEnum.SMOOTHED_LOG_ATTACK_TIME,
 //				LogAttackTimeExtractor.class);
 
@@ -112,16 +113,28 @@ public abstract class ExtractorUtils {
 				IExtractor extractorInstance = extractorMap.get(extractor)
 						.newInstance();
 				if(ExtractorParamUtils.getBoolean(param, 
-						commonParam.smoothed.name(), false)){
+						ExtractorModifiersEnum.smooth.name(), false)){
 					SmoothedExtractor smooted = new SmoothedExtractor();
 					smooted.setExtractor(extractorInstance);
 					extractorInstance = smooted;
 				}
 				if(ExtractorParamUtils.getBoolean(param, 
-						commonParam.delta.name(), false)){
+						ExtractorModifiersEnum.delta.name(), false)){
 					DeltaExtractor delta = new DeltaExtractor();
 					delta.setExtractor(extractorInstance);
 					extractorInstance = delta;
+				}
+				if(ExtractorParamUtils.getBoolean(param, 
+						ExtractorModifiersEnum.mean.name(), false)){
+					MeanExtractor mean = new MeanExtractor();
+					mean.setExtractor(extractorInstance);
+					extractorInstance = mean;
+				}
+				if(ExtractorParamUtils.getBoolean(param, 
+						ExtractorModifiersEnum.stdev.name(), false)){
+					StdevExtractor stdev = new StdevExtractor();
+					stdev.setExtractor(extractorInstance);
+					extractorInstance = stdev;
 				}
 				return extractorInstance;
 			} else if (extractor3DMap.get(extractor) != null) {

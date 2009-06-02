@@ -6,7 +6,7 @@ import java.util.Map;
 import org.spantus.core.extractor.ExtractorParam;
 
 public abstract class ExtractorParamUtils {
-	public enum commonParam{thresholdType, threasholdCoef,mean,smoothed, delta};
+	public enum commonParam{thresholdType, threasholdCoef};
 	
 	public static Boolean getBoolean(ExtractorParam param,String propertyName){
 		return (Boolean)param.getProperties().get(propertyName);

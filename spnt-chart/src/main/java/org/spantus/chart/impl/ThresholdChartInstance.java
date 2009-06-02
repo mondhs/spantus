@@ -259,6 +259,9 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 	
 	public String getValueOn(BigDecimal x) {
 		int index = getCtx().getValues().toIndex(x.floatValue());
+		if(index > getCtx().getValues().size()-1){
+			return "";
+		}
 		Float value = getCtx().getValues().get(index);
 		Float thresholdValue = getCtx().getThreshold().get(index);
 		

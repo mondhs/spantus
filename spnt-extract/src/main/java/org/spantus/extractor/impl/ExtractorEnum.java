@@ -1,7 +1,7 @@
-/*
+/**
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://code.google.com/p/spantus/
+ * http://spantus.sourceforge.net
  * 
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -31,7 +31,7 @@ package org.spantus.extractor.impl;
 public enum ExtractorEnum {
 	FFT_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector),
 	ENERGY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-//	SMOOTHED_ENERGY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
+	NOISE_LEVEL_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	LPC_RESIDUAL_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	SIGNAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	LOUDNESS_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
@@ -39,7 +39,6 @@ public enum ExtractorEnum {
 	CROSSING_ZERO_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	SIGNAL_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	LOG_ATTACK_TIME(ExtractorTypeEnum.SequenceOfScalar),
-//	SMOOTHED_LOG_ATTACK_TIME(ExtractorTypeEnum.SequenceOfScalar),
 	WAVFORM_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector),
 	LPC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector),
 	MFCC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector),

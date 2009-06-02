@@ -11,6 +11,7 @@ public class LPCServiceImpl implements LPCService {
 	public LPCResult calculateLPC(List<Float> x, int order) {
 		List<Float> autocorr = Autocorrelation.calc(x, order);
 		LPCResult lpc = LPC.calcForAutocorr(autocorr);
+		lpc.setResult(MathServicesFactory.createFFTService().calculateFFTMagnitude(lpc.getResult()));
 		return lpc;
 	}
 

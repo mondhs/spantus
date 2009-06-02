@@ -3,6 +3,7 @@ package org.spantus.work.ui.container.chart;
 import org.spantus.chart.ChartDescriptionInfo;
 import org.spantus.chart.ChartDescriptionResolver;
 import org.spantus.chart.WrappedChartDescriptionResolver;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
 
 public class I18NChartDescriptionResolver extends
@@ -27,13 +28,11 @@ public class I18NChartDescriptionResolver extends
 		}
 		String name = resolved.getName();
 		StringBuilder modifiers = new StringBuilder();
-		if(name.contains(SMOOTHED)){
-			name = name.replaceAll(SMOOTHED+"_", "");	
-			modifiers.append(I18nFactory.createI18n().getMessage(SMOOTHED)).append(" ");
-		}
-		if(name.contains(DELTA)){
-			name = name.replaceAll(DELTA+"_", "");
-			modifiers.append(I18nFactory.createI18n().getMessage(DELTA)).append(" ");
+		for (ExtractorModifiersEnum modifier : ExtractorModifiersEnum.values()) {
+			if(name.contains(modifier.name())){
+				name = name.replaceAll(modifier.name()+"_", "");	
+				modifiers.append(I18nFactory.createI18n().getMessage(modifier.name())).append(" ");
+			}
 		}
 		modifiers.append(I18nFactory.createI18n().getMessage(name));
 		resolved.setName(modifiers.toString());

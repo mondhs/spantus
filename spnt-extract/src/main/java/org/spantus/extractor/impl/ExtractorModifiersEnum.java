@@ -19,34 +19,15 @@
  * 
  */
 package org.spantus.extractor.impl;
-
-import org.spantus.core.FrameValues;
-import org.spantus.extractor.AbstractExtractor;
-import org.spantus.math.Autocorrelation;
 /**
  * 
- * 
  * @author Mindaugas Greibus
- *
  * @since 0.0.1
+ * Created 2009.06.02
  * 
- * Created 2008.04.13
  *
  */
-public class AutocorrelationExtractor extends AbstractExtractor{
-
-	
-	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues calculatedValues = new FrameValues();
-		float ac= Autocorrelation.calc(window, 2).get(1);
-		calculatedValues.add(1+ac);//ac is negative and more than -1
-		return calculatedValues;
-
-	}
-
-	
-	public String getName() {
-		return ExtractorEnum.AUTOCORRELATION_EXTRACTOR.toString();
-	}
+public enum ExtractorModifiersEnum {
+	mean, stdev, delta, smooth
 
 }

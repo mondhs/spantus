@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import org.spantus.core.FrameValues;
 import org.spantus.extractor.ExtractorConfig;
+import org.spantus.extractor.impl.MeanExtractor;
 import org.spantus.extractor.impl.SignalExtractor;
 import org.spantus.logger.Logger;
 
@@ -32,7 +33,15 @@ public class SignalExtractorTest extends TestCase{
 		log.debug(extractor.getName() + ": " + y);
 		assertEquals(expectedSize, y.size());
 		assertEquals(extractor.getExtractorSampleRate(), extractor.getConfig().getSampleRate());
-		
+	}
+	
+	public void testMean(){
+		MeanExtractor meanExtractor = new MeanExtractor();
+		for (int i = 1; i < 10; i++) {
+			meanExtractor.calculateMean((float)i);
+		}
+		assertEquals(5F, meanExtractor.getMean()) ;
+		assertEquals(2.738613F, meanExtractor.getStdev()) ;
 		
 	}
 	

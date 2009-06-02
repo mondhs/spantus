@@ -17,6 +17,7 @@ import org.spantus.core.io.WraperExtractorReader;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.segment.online.ThresholdSegmentatorOnline;
@@ -78,7 +79,7 @@ public class RecognitionPlot extends JFrame {
 		ThresholdSegmentatorOnline segmentator = null;
 		ExtractorParam param = new ExtractorParam();
 		ExtractorParamUtils.setBoolean(param, 
-				ExtractorParamUtils.commonParam.smoothed.name(), Boolean.TRUE);
+				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
 		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.ENERGY_EXTRACTOR, param);
 		segmentator.setOnlineSegmentator(multipleSegmentator);
 		segmentator.setCoef(4f);
