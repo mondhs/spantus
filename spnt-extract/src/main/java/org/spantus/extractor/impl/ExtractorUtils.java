@@ -83,8 +83,6 @@ public abstract class ExtractorUtils {
 		extractorMap.put(ExtractorEnum.LOUDNESS_EXTRACTOR, Loudness.class);
 		extractorMap.put(ExtractorEnum.LOG_ATTACK_TIME,
 				LogAttackTimeExtractor.class);
-		extractorMap.put(ExtractorEnum.NOISE_LEVEL_EXTRACTOR,
-				NoiseLevelExtractor.class);
 //		extractorMap.put(ExtractorEnum.SMOOTHED_LOG_ATTACK_TIME,
 //				LogAttackTimeExtractor.class);
 

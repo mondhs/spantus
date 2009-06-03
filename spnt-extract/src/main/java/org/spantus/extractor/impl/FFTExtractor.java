@@ -20,12 +20,15 @@
  */
 package org.spantus.extractor.impl;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.extractor.AbstractExtractor3D;
 import org.spantus.logger.Logger;
+import org.spantus.math.MatrixUtils;
 import org.spantus.math.services.FFTService;
 import org.spantus.math.services.MathServicesFactory;
 
@@ -41,6 +44,18 @@ import org.spantus.math.services.MathServicesFactory;
 public class FFTExtractor extends AbstractExtractor3D {
 	static Logger log = Logger.getLogger(FFTExtractor.class);
 
+	private AbstractExtractor3D extractor3D = 
+		new LPCExtractor();
+
+	protected FrameVectorValues calculateExtr3D(FrameValues window){
+		syncLPCParams();
+		return extractor3D.calculateWindow(window);
+	}
+	
+	private void syncLPCParams(){
+		extractor3D.setConfig(getConfig());
+	}
+	
 	Integer upperFrequency;
 
 	FFTService service = MathServicesFactory.createFFTService();
@@ -49,29 +64,52 @@ public class FFTExtractor extends AbstractExtractor3D {
 		return ExtractorEnum.FFT_EXTRACTOR.toString();
 	}
 	
-
+	
 	public FrameVectorValues calculateWindow(FrameValues window) {
+		FrameVectorValues extrValues = calculateExtr3D(window);
+		FrameValues calculatedLPCValues = new FrameValues();
 		FrameVectorValues calculatedValues = new FrameVectorValues();
-
-		List<Float> fft = service.calculateFFTMagnitude(window);
-		if(getUpperFrequency() != null){
-			double coef = getUpperFrequency() / getConfig().getSampleRate();
-			double from = fft.size() - (coef*fft.size());
-			fft = fft.subList((int)from, fft.size());
+		int order = extrValues.get(0).size();
+		LinkedList<Float> bufferValues = getBuffer(order);
+		for (Float value : window) {
+			bufferValues.poll();
+			bufferValues.add(value);
+			Float predicted = 0F;
+			Iterator<Float> coefIter = extrValues.get(0).iterator();
+			for (Float bufferedVal : getBuffer(order)) {
+				predicted += bufferedVal * coefIter.next();
+			}
+			calculatedLPCValues.add(predicted);
 		}
-//		List<Float> fftDB = new LinkedList<Float>(); 
-//		//convert to decibels
-//		for (Float float1 : fft) {
-//			Float fdb = 0F;
-//			if(float1 >0){
-//				fdb = 10f * (float)Math.log1p(float1);
-//			}
-//			fftDB.add(fdb);	
-//		}
-//		fft = fftDB; 
-		calculatedValues.add(fft);
-		return calculatedValues;
+		
+		calculatedValues.add(
+				MathServicesFactory.createFFTService().calculateFFTMagnitude(calculatedLPCValues)
+		);
+		
+		return  calculatedValues;
 	}
+	
+	private LinkedList<Float> buffer;
+	LinkedList<Float> getBuffer(int order){
+		if(buffer == null){
+			buffer = new LinkedList<Float>();
+			buffer.addAll(MatrixUtils.zeros(order));
+		}
+		return buffer;
+	}
+
+//	public FrameVectorValues calculateWindow(FrameValues window) {
+//		FrameVectorValues calculatedValues = new FrameVectorValues();
+//
+//		List<Float> fft = service.calculateFFTMagnitude(window);
+//		if(getUpperFrequency() != null){
+//			double coef = getUpperFrequency() / getConfig().getSampleRate();
+//			double from = fft.size() - (coef*fft.size());
+//			fft = fft.subList((int)from, fft.size());
+//		}
+//		calculatedValues.add(fft);
+//		return calculatedValues;
+//	}
 	public void setUpperFrequency(Integer upperFrequency) {
 		this.upperFrequency = upperFrequency;
 	}

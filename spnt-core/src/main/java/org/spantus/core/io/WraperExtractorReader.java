@@ -5,17 +5,19 @@ import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
 
+import org.spantus.core.extractor.HighPreemphasis;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.Preemphasis;
 
 public class WraperExtractorReader {
 	AudioFormat format;
 	IExtractorInputReader reader;
 	List<Byte> shortBuffer;
 	
+	Preemphasis preemphasis;
+	
 	Long sample;
-//	Float amplitude;
-	Float previousValueZ1 = 0F;
-	Float previousValueZ2 = 0F;
+
 	
 	public WraperExtractorReader(IExtractorInputReader reader) {
 		this.reader = reader;
@@ -46,31 +48,19 @@ public class WraperExtractorReader {
 		}
 		
 	}
-//	protected Float preemphasis(Float currentValue){
-//		return currentValue;
-//		
-//	}
+	
+	Preemphasis preemphasisFilter;
 	
 	protected Float preemphasis(Float currentValue){
-		Double val = currentValue.doubleValue();
-		val -=  (previousValueZ1*0.95);
-		previousValueZ1 = currentValue;
-		return val.floatValue();
+		if(preemphasisFilter == null){
+			preemphasisFilter = new HighPreemphasis();
+//			preemphasisFilter = new MiddlePreemphasis();
+//			preemphasisFilter = new FullPreemphasis();
+		}
+		return preemphasisFilter.process(currentValue);
 		
 	}
-	/**
-	 * 		y[n] = b0 x[n] + b1 x[n-1] + b2 x[n-2]
-	 *	b0 = 0.3426, b1 = 0.4945 and b2 = -0.64
-	 */
-//	protected Float preemphasis(Float currentValue){
-//		Double val = currentValue.doubleValue();
-//		float b0 = 0.3426f, b1 = 0.4945f, b2 = -0.64f;
-//		val = b0*val+b1*previousValueZ1+b2*previousValueZ2;
-//		previousValueZ2 = previousValueZ1;
-//		previousValueZ1 = currentValue;
-//		return val.floatValue();
-//		
-//	}
+
 	
 	public void pushValues(){
 		reader.pushValues(sample);

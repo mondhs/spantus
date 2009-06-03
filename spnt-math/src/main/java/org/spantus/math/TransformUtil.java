@@ -42,7 +42,7 @@ public class TransformUtil {
 	/** Calculates the power (magnitude squared) spectrum of a real signal.
 	  * The returned vector contains only the positive frequencies.
 	  */
-	  public List<Float> calculateFFTPower(List<Float> x) {
+	  public static List<Float> calculateFFTPower(List<Float> x) {
 			int i,n;
 			int logm = (int) (Math.log(x.size()) / Math.log(2));
 			n=1<<logm;
@@ -54,7 +54,7 @@ public class TransformUtil {
 			//System.out.println("FFT before magnitude");
 			//IO.DisplayVector(x);
 
-			List<Float> mag = new ArrayList<Float>(n/2 + 1);
+			List<Float> mag = MatrixUtils.zeros(n/2 + 1);
 			mag.add( x.get(0)); //DC frequency must be positive always
 
 			if (n==1) {

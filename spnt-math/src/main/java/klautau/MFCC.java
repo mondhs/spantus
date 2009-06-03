@@ -215,6 +215,7 @@ public class MFCC {
 			//notice the loop below doesn't include the first and last FFT samples 
 			for (int j=1; j<dfftFrequenciesInMel.length-1; j++) { 
 				//see if frequency j is inside the bandwidth of filter i 
+				
 				if ( (dfftFrequenciesInMel[j] >= dfilterCenterFrequencies[i-1]) & 
 					 (dfftFrequenciesInMel[j] <= dfilterCenterFrequencies[i+1]) ) { 
 					//the i-1 below is due to the fact that we discard the first filter i=0 

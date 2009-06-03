@@ -44,6 +44,9 @@ public class MFCCKlautauServiceImpl implements MFCCService {
 		if(x.size() > n){
 			n = 1 << (logm+1);
 		}
+		if(n < 128){
+			n = 128;
+		}
 		int missingSamples = n - x.size();
 		x.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
 //
@@ -51,11 +54,11 @@ public class MFCCKlautauServiceImpl implements MFCCService {
 //				sampleRate);
 		 int nnumberofFilters = 24; 
          int nlifteringCoefficient = 22; 
-         boolean oisLifteringEnabled = true; 
+         boolean oisLifteringEnabled = false; 
          boolean oisZeroThCepstralCoefficientCalculated = false; 
          int nnumberOfMFCCParameters = 12; //without considering 0-th 
          double dsamplingFrequency = sampleRate; 
-         int nFFTLength = x.size() ; 
+         int nFFTLength = x.size(); 
          if (oisZeroThCepstralCoefficientCalculated) { 
            //take in account the zero-th MFCC 
            nnumberOfMFCCParameters = nnumberOfMFCCParameters + 1; 

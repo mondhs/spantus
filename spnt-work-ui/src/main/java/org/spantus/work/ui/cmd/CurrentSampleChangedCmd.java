@@ -1,4 +1,4 @@
-/*
+/**
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
  * http://spantus.sourceforge.net

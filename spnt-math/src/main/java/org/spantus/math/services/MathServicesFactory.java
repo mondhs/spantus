@@ -33,21 +33,38 @@ import org.spantus.math.dtw.DtwServiceStansalvadorImpl;
  *  
  */
 public abstract class MathServicesFactory {
+	static FFTService fftService;
+	static MFCCService mfccService;
+	static LPCService lpcService;
+	static DtwService dtwService;
+	
 	public static FFTService createFFTService(){
-		return new FFTServiceImpl();
+		if(fftService == null){
+			fftService = new FFTServiceImpl();
+		}
+		return fftService;
 	}
 	public static MFCCService createMFCCService(){
-		return new MFCCKlautauServiceImpl();
-//		return new MFCCServiceImpl();
+		if(mfccService == null){
+			mfccService = new MFCCKlautauServiceImpl();
+//			return new MFCCServiceImpl();
+		}
+		return mfccService;
 	}
 
 	public static DtwService createDtwService(){
-//		return new DtwServiceImpl();
-		return new DtwServiceStansalvadorImpl();
+		if(dtwService == null){
+			dtwService = new DtwServiceStansalvadorImpl();
+//			return new DtwServiceImpl();
+		}
+		return dtwService;
 	}
 	
 	public static LPCService createLPCService(){
-		return new LPCServiceImpl();
+		if(lpcService == null){
+			lpcService = new LPCServiceImpl();
+		}
+		return lpcService;
 	}
 	
 }

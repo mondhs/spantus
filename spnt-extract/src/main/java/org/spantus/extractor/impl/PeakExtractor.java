@@ -20,13 +20,17 @@
  */
 package org.spantus.extractor.impl;
 
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.AbstractExtractor3D;
+import org.spantus.math.MatrixUtils;
+import org.spantus.math.services.MathServicesFactory;
 /**
  * 
  * 
@@ -54,34 +58,84 @@ public class PeakExtractor extends AbstractExtractor {
 		extractor3D.setConfig(getConfig());
 	}
 	
-	
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameVectorValues extrValues = calculateExtr3D(window);
 		FrameValues calculatedValues = new FrameValues();
-		float peak = -Float.MAX_VALUE;
-		for (List<Float> vector : extrValues) {
-			Integer maxIndex = 0;
-			int i = 0;
-//			for (ListIterator<Float> iterator = vector.listIterator(vector.size()); iterator.hasPrevious();) {
-//			Float float2 = (Float) iterator.previous();
-			for (Iterator<Float> iterator = vector.iterator(); iterator.hasNext();) {
-				Float float2 = (Float) iterator.next();
-				if(peak<float2){
-					peak = float2;
-					maxIndex = i;
-					
-				}
-				i++;
+		int order = extrValues.get(0).size();
+		LinkedList<Float> bufferValues = getBuffer(order);
+		LinkedList<Float> predictedValues = new FrameValues();
+		for (Float value : window) {
+			bufferValues.poll();
+			bufferValues.add(value);
+			Float predicted = 0F;
+			Iterator<Float> coefIter = extrValues.get(0).iterator();
+			for (Float bufferedVal : getBuffer(order)) {
+				predicted += bufferedVal * coefIter.next();
 			}
-			calculatedValues.add(
-					maxIndex.floatValue());
-			peak = -Float.MAX_VALUE;
-			maxIndex = 0;
+			calculatedValues.add(predicted);
 		}
 		
+		List<Float> calculatedFFTValues = MathServicesFactory.createFFTService().calculateFFTMagnitude(calculatedValues);
 		
+		float peak = -Float.MAX_VALUE;
+		Float sum = 0F;
+		Integer maxIndex = 0;
+		int i = 0;
+		for (Iterator<Float> iterator = calculatedFFTValues.iterator(); iterator.hasNext();) {
+			Float float2 = (Float) iterator.next();
+			sum += float2; 
+			if(peak<float2){
+				peak = float2;
+				maxIndex = i;
+				
+			}
+			i++;
+		}
+		Float mean = sum/calculatedFFTValues.size();
+		if(peak>.5*mean*mean){
+			maxIndex = 0;
+		}
+		calculatedValues = new FrameValues();
+		calculatedValues.add(maxIndex.floatValue());
 		return calculatedValues;
 	}
+	
+	private LinkedList<Float> buffer;
+	LinkedList<Float> getBuffer(int order){
+		if(buffer == null){
+			buffer = new LinkedList<Float>();
+			buffer.addAll(MatrixUtils.zeros(order));
+		}
+		return buffer;
+	}
+	
+//	public FrameValues calculateWindow(FrameValues window) {
+//		FrameVectorValues extrValues = calculateExtr3D(window);
+//		FrameValues calculatedValues = new FrameValues();
+//		float peak = -Float.MAX_VALUE;
+//		for (List<Float> vector : extrValues) {
+//			Integer maxIndex = 0;
+//			int i = 0;
+////			for (ListIterator<Float> iterator = vector.listIterator(vector.size()); iterator.hasPrevious();) {
+////			Float float2 = (Float) iterator.previous();
+//			for (Iterator<Float> iterator = vector.iterator(); iterator.hasNext();) {
+//				Float float2 = (Float) iterator.next();
+//				if(peak<float2){
+//					peak = float2;
+//					maxIndex = i;
+//					
+//				}
+//				i++;
+//			}
+//			calculatedValues.add(
+//					maxIndex.floatValue());
+//			peak = -Float.MAX_VALUE;
+//			maxIndex = 0;
+//		}
+//		
+//		
+//		return calculatedValues;
+//	}
 
 	
 	public String getName() {
