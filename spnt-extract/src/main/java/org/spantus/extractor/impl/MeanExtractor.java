@@ -72,7 +72,7 @@ public class MeanExtractor extends AbstractExtractor {
 	}
 	
 	public Float calculateMean(Float value){
-		LinkedList<Float> bufferValues = getBuffer(order);
+		LinkedList<Float> bufferValues = getBuffer(getOrder());
 		bufferValues.poll();
 		bufferValues.add(value);
 		int n = 0;
@@ -171,6 +171,14 @@ public class MeanExtractor extends AbstractExtractor {
 //		}
 //		return variance.divide(divisor, RoundingMode.HALF_UP).floatValue();
 		return stdev;
+	}
+
+	public int getOrder() {
+		return order;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 

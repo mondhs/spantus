@@ -41,7 +41,7 @@ public class LogAttackTimeExtractor extends AbstractExtractor {
 
 	
 	public float getThreshold() {
-		return .1f;
+		return .7f;
 	}
 
 	public void setThreshold(float threshold) {
@@ -72,7 +72,7 @@ public class LogAttackTimeExtractor extends AbstractExtractor {
 		Float maxthresholded = max*getThreshold();
 		for (int j = maxIndex-1; j > 0; --j) {
 			float fm = window.get(j); 
-			if( fm > maxthresholded){
+			if( fm < maxthresholded){
 				lat = (float)Math.log10(maxIndex-j);
 				lat *=10;
 				break;

@@ -24,7 +24,7 @@ public class LogAttackTimeExtractorTest extends TestCase {
 				1, 2, 3, 4, 5, 6, 5 ,4 ,3
 		};
 		FrameValues fv = latExtractor.calculateWindow(convert(dArr));
-		assertEquals(new Double(Math.log10(2)).floatValue(), fv.get(0));
+		assertTrue(3F < fv.get(0));
 	}
 	
 	public FrameValues convert(Integer[] intArr){

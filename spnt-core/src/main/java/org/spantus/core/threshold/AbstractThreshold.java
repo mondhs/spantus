@@ -71,23 +71,29 @@ public abstract class AbstractThreshold implements IThreshold, IExtractorListene
 	public void afterCalculated(Long sample, FrameValues result) {
 		getThresholdValues().setSampleRate(getExtractorSampleRate());
 		for (Float float1 : result) {
-			Float threshold = calculateThreshold(float1);
-			getThresholdValues().add(threshold);
-			getState().add(calculateState(sample, float1, threshold));
+			processDiscriminator(sample, float1);
 		}
+		cleanup();
+	}
+	protected void cleanup(){
 		getState().setSampleRate(getExtractorSampleRate());
-		Assert.isTrue(getConfig() != null, getName() + " cofiguration not set");
+		Assert.isTrue(getConfig() != null, "cofiguration not set");
 		int i = getThresholdValues().size() - getConfig().getBufferSize();
 		while( i > 0 ){
 			getThresholdValues().poll();
 			getState().poll();
 			i--;
 		}
-
-		
-		
 	}
-
+	/**
+	 * 
+	 */
+	protected void processDiscriminator(Long sample, Float float1){
+		Float threshold = calculateThreshold(float1);
+		getThresholdValues().add(threshold);
+		getState().add(calculateState(sample, float1, threshold));
+	}
+	
 	/**
 	 * 
 	 */

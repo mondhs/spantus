@@ -29,6 +29,7 @@ import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractThreshold;
+import org.spantus.core.threshold.DeltaThreshold;
 import org.spantus.core.threshold.DynamicThreshold;
 import org.spantus.core.threshold.IThreshold;
 import org.spantus.core.threshold.OfflineThreshold;
@@ -111,12 +112,6 @@ public abstract class ExtractorUtils {
 				IExtractor extractorInstance = extractorMap.get(extractor)
 						.newInstance();
 				if(ExtractorParamUtils.getBoolean(param, 
-						ExtractorModifiersEnum.smooth.name(), false)){
-					SmoothedExtractor smooted = new SmoothedExtractor();
-					smooted.setExtractor(extractorInstance);
-					extractorInstance = smooted;
-				}
-				if(ExtractorParamUtils.getBoolean(param, 
 						ExtractorModifiersEnum.delta.name(), false)){
 					DeltaExtractor delta = new DeltaExtractor();
 					delta.setExtractor(extractorInstance);
@@ -133,6 +128,12 @@ public abstract class ExtractorUtils {
 					StdevExtractor stdev = new StdevExtractor();
 					stdev.setExtractor(extractorInstance);
 					extractorInstance = stdev;
+				}
+				if(ExtractorParamUtils.getBoolean(param, 
+						ExtractorModifiersEnum.smooth.name(), false)){
+					SmoothedExtractor smooted = new SmoothedExtractor();
+					smooted.setExtractor(extractorInstance);
+					extractorInstance = smooted;
 				}
 				return extractorInstance;
 			} else if (extractor3DMap.get(extractor) != null) {
@@ -193,6 +194,9 @@ public abstract class ExtractorUtils {
 			break;
 		case offline:
 			threshold = new OfflineThreshold();
+			break;
+		case delta:
+			threshold = new DeltaThreshold();
 			break;
 		default:
 			break;

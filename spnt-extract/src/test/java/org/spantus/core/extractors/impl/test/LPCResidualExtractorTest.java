@@ -47,7 +47,7 @@ public class LPCResidualExtractorTest extends TestCase {
 			dArr[i]=i;
 		}
 		FrameValues fv = lpcResidualExtractor.calculateWindow(convert(dArr));
-		assertEquals(0F, fv.get(0));
+		assertTrue( fv.get(0)>0F);
 	}
 	
 	public FrameValues convert(Integer[] intArr){
