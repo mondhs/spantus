@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.ListModel;
 import javax.swing.event.ListSelectionListener;
 
 import org.spantus.ui.ModelEntry;
+import org.spantus.ui.ModelEntryByNameComparator;
 import org.spantus.work.ui.i18n.I18nFactory;
  
 public class ShuttleSelectionPanel extends JPanel {
@@ -211,7 +213,10 @@ public class ShuttleSelectionPanel extends JPanel {
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridBagLayout());
 		sourceLabel = new JLabel(getMessage(DEFAULT_SOURCE_CHOICE_LABEL));
-		sourceListModel = new SortedListModel();
+		//source list should be sorting by name
+		sourceListModel = new SortedListModel(
+				new TreeSet<ModelEntry>(new ModelEntryByNameComparator())
+				);
 		sourceList = new JList(sourceListModel);
 		add(sourceLabel, new GridBagConstraints(0, 0, 1, 1, 0, 0,
 				GridBagConstraints.CENTER, GridBagConstraints.NONE,

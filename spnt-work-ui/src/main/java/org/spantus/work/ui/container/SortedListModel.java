@@ -2,8 +2,11 @@ package org.spantus.work.ui.container;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.AbstractListModel;
 
@@ -17,12 +20,23 @@ public class SortedListModel extends AbstractListModel {
 	private static final long serialVersionUID = 1L;
 	Collection<ModelEntry> model;
 
+	public SortedListModel(Collection<ModelEntry> collectionModelEntries) {
+		model = collectionModelEntries;
+	}
+	
 	public SortedListModel() {
 		model = new LinkedList<ModelEntry>();
 	}
 
 	public int getSize() {
 		return model.size();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void sort(Comparator<ModelEntry> comparator){
+		if(model instanceof List<?>){
+			Collections.sort((List)model,comparator);
+		}
 	}
 
 	public Object getElementAt(int index) {

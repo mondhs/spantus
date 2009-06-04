@@ -8,7 +8,7 @@ import java.util.Map.Entry;
  * @since 0.0.1 Created Apr 2, 2009
  * 
  */
-public class ModelEntry implements Entry<String, Object>,Comparable<ModelEntry> {
+public class ModelEntry implements Entry<String, Object> {
 	private String key;
 	private Object value;
 	private Integer order = 0;
@@ -50,23 +50,8 @@ public class ModelEntry implements Entry<String, Object>,Comparable<ModelEntry> 
 
 	@Override
 	public String toString() {
-		return 
-//				getOrder() + ":" + 
-				getKey();
+		return getKey();
 	}
 
-	public int compareTo(ModelEntry modelEntry) {
-		int compare = 0;
-//		this.getOrder().compareTo(modelEntry.getOrder());
-//		if(compare == 0){
-			compare = this.getKey().compareTo(modelEntry.getKey());
-//		}
-//		else if(this.getKey().compareTo(modelEntry.getKey()) == 0){
-//			throw new IllegalArgumentException("Two same entries exists");
-//		}
-		return compare;
-	}
-
-	
 
 }

@@ -23,6 +23,7 @@ import org.spantus.extractor.impl.ExtractorTypeEnum;
 import org.spantus.logger.Logger;
 import org.spantus.mpeg7.Mpeg7ExtractorEnum;
 import org.spantus.ui.ModelEntry;
+import org.spantus.ui.ModelEntryByOrderComparator;
 import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.reader.SupportableReaderEnum;
 import org.spantus.work.ui.container.ShuttleSelectionPanel;
@@ -68,8 +69,6 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 		this.add(getSelectionPnl(), BorderLayout.CENTER);
 		this.add(getPropertiesPnl(),BorderLayout.SOUTH);
 		getPropertiesPnl().setVisible(false);
-//		this.add(getCommonPnl(), null);
-//		this.add(getMpeg7Pnl(), null);
 	}
 	public void reload() {
 		// TODO Auto-generated method stub
@@ -184,6 +183,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 			}
 			modelEntry.setOrder(order++);
 		}
+		getShuttle().getDestListModel().sort(new ModelEntryByOrderComparator());
 	}
 	/**
 	 * 
@@ -195,7 +195,10 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 			getConfig().getProject().getFeatureReader().getExtractors().add(modelEntry.getValue().toString());
 		}
 	}
-	
+	/**
+	 *Listener update model with UI selection  
+	 *
+	 */
 	public class SelectionListSelectionListener implements
 			ListSelectionListener {
 		public void valueChanged(ListSelectionEvent e) {
@@ -206,7 +209,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 				String[] extractor = extractorName.split(":");
 				if (extractor[0].startsWith(SupportableReaderEnum.spantus
 						.name())) {
-
+					
 					ExtractorEnum exEnum = ExtractorEnum.valueOf(extractor[1]);
 					propertiesInd = ExtractorTypeEnum.SequenceOfScalar
 							.equals(exEnum.getType());
@@ -228,6 +231,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 			if(!propertiesInd){
 				selectedExtractorParam = null;
 			}
+			getShuttle().getDestListModel().sort(new ModelEntryByOrderComparator());
 		}
 	}
 }

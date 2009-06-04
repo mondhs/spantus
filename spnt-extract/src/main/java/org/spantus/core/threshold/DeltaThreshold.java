@@ -34,10 +34,15 @@ import org.spantus.logger.Logger;
  */
 public class DeltaThreshold extends StaticThreshold {
 	
+//	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(DeltaThreshold.class);
 	
 	private Float previous;
 	private MeanExtractor meanExtractor;
+	
+	int previousRising = 0;
+	int previousDecreasing = 0;
+
 	
 	public DeltaThreshold() {
 		meanExtractor = new MeanExtractor();
@@ -62,32 +67,79 @@ public class DeltaThreshold extends StaticThreshold {
 		}
 		Float changeRate = (countChanges/(float)statesInCount);
 //		log.debug("changeRate:{0};", changeRate);
-		Float coef = 0F;
-		if(changeRate>.3){
-			coef = .8F;
-		}else{
-			coef =.1F; 	
-		}
+		Float coef = .75F;
+//		if(changeRate>.3){
+//			coef = .8F;
+//		}else{
+//			coef =.1F; 	
+//		}
 		
 		
 		previous = previous==null?value+value:previous;
-		Float delta = Math.abs(value-previous);
+		Float delta = (value-previous);
 		meanExtractor.calculateMean(delta);
 		Float threshold = meanExtractor.getMean()+coef*meanExtractor.getStdev();
-//		log.debug("i:{4, number,####}; value:{3,number,#.####}; " +
-//				"delta {0,number,#.####}; threshold:{5}"//mean:{1,number,#.####}; stdev:{2,number,#.####}"
-//				,delta, meanExtractor.getMean(), meanExtractor.getStdev()
-//				,value
-//				,sample
-//				,threshold);
+		
 
+		boolean currentRising = Math.abs(delta)>threshold && delta > 0;
+		boolean currentDecreasing = Math.abs(delta)>threshold && delta < 0;
+		Float state = 0F;
+		int prevIncThr = 3; 
+		int prevDecThr = 3;
+		if(currentRising && previousRising<=prevIncThr){
+			state = 0F;
+			previousRising++;
+		}else if(currentRising && previousRising>prevIncThr){
+			state = 1F;
+			previousRising++;
+			previousDecreasing = 0;
+			
+		}else if(currentDecreasing && previousDecreasing<=prevDecThr){
+			state = 1F;
+			previousRising++;
+			previousDecreasing++;
+		}else if(currentDecreasing && previousDecreasing>prevDecThr){
+			state = 0F;
+			previousRising=0;
+			previousDecreasing++;
+		}else if(!currentRising && !currentDecreasing &&
+				previousRising > 0 &&
+				previousRising>previousDecreasing){
+			state = 1F;
+			previousRising++;
+			previousDecreasing++;
+		}else{
+			state = 0F;
+			previousDecreasing--;
+		}
+//			else{
+//			//stable
+//			if(previousRising==0){
+////				state = 1F;
+//				previousRising++;
+//				previousDecreasing=0;
+//			}else{
+//				//was decreased
+////				state = 0F;
+//			}
+//		}
+		
+		log.debug(
+//				"i:{0, number,###}; value:{1,number,#.000}; " +
+				"rising:{3}; \t decreasing:{4}"+
+				"; delta {2,number,#.000}; "
+				,sample
+				,value
+				,delta
+				,currentRising
+				,currentDecreasing
+				);
+		
+		getState().add(state);
+		getThresholdValues().add(0F);
 		previous = value;
 		
 		
-		Float state = (value>threshold)?Float.valueOf(1f):Float.valueOf(0f);
-		getState().add(state);
-		
-		getThresholdValues().add(changeRate);
 	}
 	
 	
