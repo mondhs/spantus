@@ -24,132 +24,129 @@ import java.util.ListIterator;
 
 import org.spantus.extractor.impl.MeanExtractor;
 import org.spantus.logger.Logger;
+
 /**
  * 
  * @author Mindaugas Greibus
  * 
- * @since 0.0.1
- * Created 2009.06.03
- *
+ * @since 0.0.1 Created 2009.06.03
+ * 
  */
 public class DeltaThreshold extends StaticThreshold {
-	
-//	@SuppressWarnings("unused")
+
+	 @SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(DeltaThreshold.class);
-	
+
 	private Float previous;
 	private MeanExtractor meanExtractor;
-	
-	int previousRising = 0;
-	int previousDecreasing = 0;
 
-	
+	int increased = 0;
+	int stableCount = 0;
+
+	enum ChangeStatus {
+		increased, decreased, stable
+	}
+
+	ChangeStatus changeStatus = ChangeStatus.stable;
+
 	public DeltaThreshold() {
 		meanExtractor = new MeanExtractor();
 		meanExtractor.setOrder(50);
 	}
-	
-	
 
-	protected void processDiscriminator(Long sample, Float value){
+	protected void processDiscriminator(Long sample, Float value) {
 		Float prevState = 0F;
 		Integer countChanges = 0;
+		Integer countHits = 0;
 		int i = 0;
-		int statesInCount = Math.min(meanExtractor.getOrder(),getState().size());
-		for (ListIterator<Float> stateSubIter = getState().listIterator(getState().size()); stateSubIter.hasPrevious();) {
-			Float iState = stateSubIter.previous(); 
-			countChanges += !iState.equals(prevState)?1:0;
-			if(i>statesInCount){ 
+		int statesInCount = Math.min(meanExtractor.getOrder(), getState()
+				.size());
+		for (ListIterator<Float> stateSubIter = getState().listIterator(
+				getState().size()); stateSubIter.hasPrevious();) {
+			Float iState = stateSubIter.previous();
+			countChanges += iState-prevState != 0 ? 1 : 0;
+			countHits += iState;
+			if (i > statesInCount) {
 				break;
 			}
 			i++;
 			prevState = iState;
 		}
-		Float changeRate = (countChanges/(float)statesInCount);
-//		log.debug("changeRate:{0};", changeRate);
+		Float changeRate = (countChanges / (float) (statesInCount+2));
+		Float hitRate = (countHits / (float) (statesInCount+2));
+		// log.debug("changeRate:{0};", changeRate);
 		Float coef = .75F;
-//		if(changeRate>.3){
-//			coef = .8F;
-//		}else{
-//			coef =.1F; 	
-//		}
-		
-		
-		previous = previous==null?value+value:previous;
-		Float delta = (value-previous);
-		meanExtractor.calculateMean(delta);
-		Float threshold = meanExtractor.getMean()+coef*meanExtractor.getStdev();
-		
+		// if(changeRate>.3){
+		// coef = .8F;
+		// }else{
+		// coef =.1F;
+		// }
 
-		boolean currentRising = Math.abs(delta)>threshold && delta > 0;
-		boolean currentDecreasing = Math.abs(delta)>threshold && delta < 0;
+		previous = previous == null ? Float.MAX_VALUE : previous;
+		Float delta = (value - previous);
+		meanExtractor.calculateMean(delta);
+		Float maxThreshold = meanExtractor.getMean() + coef
+				* meanExtractor.getStdev();
+		Float minThreshold = meanExtractor.getMean() - (1.4F - coef)
+				* meanExtractor.getStdev();
+
+		boolean currentIncreasing = Math.abs(delta) > maxThreshold && delta > 0;
+		boolean currentStabe = Math.abs(delta) > minThreshold
+				&& Math.abs(delta) < maxThreshold;
+		boolean currentDecreasing = Math.abs(delta) > maxThreshold && delta < 0;
 		Float state = 0F;
-		int prevIncThr = 3; 
-		int prevDecThr = 3;
-		if(currentRising && previousRising<=prevIncThr){
+		int prevIncThr = 30;
+		int prevStableThr = 10;
+		if (currentIncreasing && increased<prevIncThr) {
 			state = 0F;
-			previousRising++;
-		}else if(currentRising && previousRising>prevIncThr){
+			increased++;
+		}else if (currentIncreasing) {
 			state = 1F;
-			previousRising++;
-			previousDecreasing = 0;
-			
-		}else if(currentDecreasing && previousDecreasing<=prevDecThr){
+			changeStatus = ChangeStatus.increased;
+			stableCount = 0; 
+			// increased++;
+		} else if (currentStabe && changeStatus == ChangeStatus.increased) {
 			state = 1F;
-			previousRising++;
-			previousDecreasing++;
-		}else if(currentDecreasing && previousDecreasing>prevDecThr){
+			stableCount++;
+			changeStatus = ChangeStatus.stable;
+		} else if (currentStabe && changeStatus == ChangeStatus.stable
+				&& stableCount < prevStableThr && hitRate > .4) {
+			state = 1F;
+			stableCount++;
+		} else if (currentStabe && changeStatus == ChangeStatus.stable
+				&& stableCount >= prevStableThr) {
 			state = 0F;
-			previousRising=0;
-			previousDecreasing++;
-		}else if(!currentRising && !currentDecreasing &&
-				previousRising > 0 &&
-				previousRising>previousDecreasing){
+			stableCount++;
+		} else if (currentDecreasing) {
 			state = 1F;
-			previousRising++;
-			previousDecreasing++;
-		}else{
-			state = 0F;
-			previousDecreasing--;
+			stableCount = 0;
+			changeStatus = ChangeStatus.decreased;
+		} else if (currentStabe && changeStatus == ChangeStatus.decreased) {
+			state = 1F;
+			changeStatus = ChangeStatus.stable;
 		}
-//			else{
-//			//stable
-//			if(previousRising==0){
-////				state = 1F;
-//				previousRising++;
-//				previousDecreasing=0;
-//			}else{
-//				//was decreased
-////				state = 0F;
-//			}
-//		}
-		
-		log.debug(
-//				"i:{0, number,###}; value:{1,number,#.000}; " +
-				"rising:{3}; \t decreasing:{4}"+
-				"; delta {2,number,#.000}; "
-				,sample
-				,value
-				,delta
-				,currentRising
-				,currentDecreasing
-				);
-		
+
+//		log.debug(
+//				// "i:{0, number,###}; value:{1,number,#.000}; " +
+//				"increasing:{3}; \t decreasing:{4}"
+//						+ "; delta {2,number,#.000}; ", sample, value, delta,
+//				currentIncreasing, currentDecreasing);
+
 		getState().add(state);
-		getThresholdValues().add(0F);
+		getThresholdValues().add(
+		// 0F
+//				 delta
+				 changeRate
+//				 hitRate
+//				(float) changeStatus.ordinal()
+				 );
 		previous = value;
-		
-		
+
 	}
-	
-	
-		
-	
+
 	@Override
-	protected boolean isTrained(){
+	protected boolean isTrained() {
 		return true;
 	}
-	
 
-	
 }
