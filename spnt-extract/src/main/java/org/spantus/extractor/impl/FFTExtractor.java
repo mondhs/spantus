@@ -1,7 +1,7 @@
-/*
+/**
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://code.google.com/p/spantus/
+ * http://spantus.sourceforge.net
  * 
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -22,7 +22,6 @@ package org.spantus.extractor.impl;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
@@ -33,6 +32,8 @@ import org.spantus.math.services.FFTService;
 import org.spantus.math.services.MathServicesFactory;
 
 /**
+ * 
+ * Fast Fourier transform feature
  * 
  * @author Mindaugas Greibus
  *

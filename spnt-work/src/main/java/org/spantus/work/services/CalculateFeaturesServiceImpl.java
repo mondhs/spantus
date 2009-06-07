@@ -1,4 +1,4 @@
-package org.spantus.work.util;
+package org.spantus.work.services;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,9 +25,12 @@ import org.spantus.work.WorkReadersEnum;
 import org.spantus.work.io.WorkAudioFactory;
 import org.spantus.work.reader.MultiFeatureExtractorInputReader;
 import org.spantus.work.reader.SupportableReaderEnum;
-import org.spantus.work.services.ReaderDao;
-import org.spantus.work.services.WorkServiceFactory;
-
+/**
+ * 
+ * @author Mindaugas Greibus
+ * @since 0.0.1
+ *
+ */
 public class CalculateFeaturesServiceImpl{
 
 	private ReaderDao readerDao;

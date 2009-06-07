@@ -14,6 +14,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.MergeMultipleAudioReader;
 import org.spantus.exception.ProcessingException;
 import org.spantus.utils.FileUtils;
+import org.spantus.work.services.CalculateFeaturesServiceImpl;
 import org.spantus.work.services.ConfigDao;
 import org.spantus.work.services.ConfigPropertiesDao;
 

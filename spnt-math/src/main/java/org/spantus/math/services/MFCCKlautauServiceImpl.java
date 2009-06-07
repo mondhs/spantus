@@ -20,6 +20,7 @@
  */
 package org.spantus.math.services;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,16 +40,17 @@ public class MFCCKlautauServiceImpl implements MFCCService {
 
 	
 	public List<Float> calculateMFCC(List<Float> x, double sampleRate) {
+		List<Float> mfccInput= new LinkedList<Float>(x);
 		int logm = (int) (Math.log(x.size()) / Math.log(2));
 		int n = 1 << logm;
-		if(x.size() > n){
+		if(mfccInput.size() > n){
 			n = 1 << (logm+1);
 		}
 		if(n < 128){
 			n = 128;
 		}
-		int missingSamples = n - x.size();
-		x.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
+		int missingSamples = n - mfccInput.size();
+		mfccInput.addAll(Collections.nCopies(missingSamples, 0F));
 //
 //		List<Float> floats = MFCC.calculateMFCC(x,
 //				sampleRate);
@@ -58,7 +60,7 @@ public class MFCCKlautauServiceImpl implements MFCCService {
          boolean oisZeroThCepstralCoefficientCalculated = false; 
          int nnumberOfMFCCParameters = 12; //without considering 0-th 
          double dsamplingFrequency = sampleRate; 
-         int nFFTLength = x.size(); 
+         int nFFTLength = mfccInput.size(); 
          if (oisZeroThCepstralCoefficientCalculated) { 
            //take in account the zero-th MFCC 
            nnumberOfMFCCParameters = nnumberOfMFCCParameters + 1; 
@@ -71,19 +73,15 @@ public class MFCCKlautauServiceImpl implements MFCCService {
                               oisLifteringEnabled, 
                               nlifteringCoefficient, 
                               oisZeroThCepstralCoefficientCalculated); 
-        double[] fspeechFrame = new double[x.size()];
-        int i = 0;
-        for (Float float1 : x) {
-			fspeechFrame[i++]=float1.doubleValue();
-		}
+
        
-        double[] mfccVal = mfcc.getParameters(fspeechFrame);
+        Float[] mfccVal = mfcc.getParameters(mfccInput.toArray(new Float[0]));
         
-        List<Float> mfccList = new LinkedList<Float>();
-        for (Double d : mfccVal) {
-        	mfccList.add(d.floatValue());
-		}
-		return mfccList;
+//        List<Float> mfccList = new LinkedList<Float>();
+//        for (Float d : mfccVal) {
+//        	mfccList.add(d.floatValue());
+//		}
+		return Arrays.asList(mfccVal);
 	}
 
 }

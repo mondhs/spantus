@@ -1,4 +1,4 @@
-/*
+/**
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
  * http://code.google.com/p/spantus/
@@ -29,6 +29,7 @@ import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.AbstractExtractor3D;
 import org.spantus.math.MatrixUtils;
 /**
+ *  Linear predictive coding residual energy
  * 
  * @author Mindaugas Greibus
  *

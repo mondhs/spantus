@@ -1,7 +1,7 @@
-/*
+/**
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://code.google.com/p/spantus/
+ * http://spantus.sourceforge.net
  * 
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -30,6 +30,8 @@ import org.spantus.math.services.MFCCService;
 import org.spantus.math.services.MathServicesFactory;
 
 /**
+ * 
+ * Mel-frequency cepstral coefficients feature value extractor
  * 
  * @author Mindaugas Greibus
  *

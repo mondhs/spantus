@@ -1,7 +1,7 @@
 /*
  * Part of program for analyze speech signal 
  * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://spantus.sourceforge.net
+ * http://code.google.com/p/spantus/
  * 
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,9 +18,12 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.work.wav;
+package org.spantus.extractor.impl;
 
-import java.net.URL;
+import java.util.List;
+
+import org.spantus.core.FrameValues;
+import org.spantus.core.FrameVectorValues;
 /**
  * 
  * 
@@ -28,10 +31,36 @@ import java.net.URL;
  *
  * @since 0.0.1
  * 
- * Created Aug 26, 2008
+ * Created 2009.06.07
  *
  */
-public interface AudioManager {
-	public void play(URL file, Float starts, Float length);
-	public void save(URL file, Float starts, Float length, String pathToSave);
+public class SpectrumPower extends AbstractSpectralExtractor {
+
+	
+	public FrameValues calculateWindow(FrameValues window) {
+		FrameVectorValues val3d = calculateFFT(window);
+		FrameValues rtnValues = super.calculateWindow(window);
+		for (List<Float> fv : val3d) {
+			float entropy = 0;
+			for (Float current : fv) {
+				if(current == 0) continue;
+				entropy += (current) * Math.log10(current) ;
+				if(Float.isNaN(entropy)){
+					Float.isNaN(entropy);
+				}
+				;
+			}
+			rtnValues.add(entropy);
+		}
+		return rtnValues;
+	}
+
+
+	
+	public String getName() {
+		return ExtractorEnum.SPECTRUM_POWER_EXTRACTOR.toString();
+	}
+
+
+
 }

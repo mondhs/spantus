@@ -20,8 +20,12 @@
  */
 package org.spantus.math.services;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+
+import klautau.FFT;
 
 import org.spantus.math.TransformUtil;
 /**
@@ -36,14 +40,18 @@ import org.spantus.math.TransformUtil;
 public class FFTServiceImpl implements FFTService{
 
 	public List<Float> calculateFFTMagnitude(List<Float> x) {
-		int logm = (int) (Math.log(x.size()) / Math.log(2));
+		List<Float> fftInput= new LinkedList<Float>(x);
+		int logm = (int) (Math.log(fftInput.size()) / Math.log(2));
 		int n = 1 << logm;
-		if(x.size() > n){
+		if(fftInput.size() > n){
 			n = 1 << (logm+1);
 		}
 		int missingSamples = n - x.size();
-		x.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
-		List<Float> floats = TransformUtil.calculateFFTMagnitude(x);
-		return floats;
+		fftInput.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
+		Float[] fftArr = fftInput.toArray(new Float[fftInput.size()]);
+		FFT m_fft = new FFT(n);
+		
+		Float[] fftOutput = m_fft.calculateFFTPower(fftArr);
+		return Arrays.asList(fftOutput).subList(1, fftOutput.length);
 	}
 }

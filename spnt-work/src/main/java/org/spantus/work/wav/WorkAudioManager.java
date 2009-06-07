@@ -16,74 +16,90 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
 import org.spantus.utils.FileUtils;
-
+/**
+ * 
+ * @author Mindaugas Greibus
+ * @since 0.0.1
+ *
+ */
 public class WorkAudioManager implements AudioManager {
 
 	Logger log = Logger.getLogger(getClass());
 
+//	public void play(URL fileURL) {
+//		AudioInputStream stream = createInput(fileURL);
+//		play(stream, 0, getTotalTime(stream));
+//	}
 	
-	public void play(URL fileURL) {
+	public void play(URL fileURL, Float from, Float length) {
 		AudioInputStream stream = createInput(fileURL);
-		play(stream, 0, getTotalTime(stream));
+		float fromVal = from == null?0:from.floatValue();
+		float lengthVal = length == null?getTotalTime(stream):length.floatValue();
+//		if (from == null && length == null) {
+//			length = getTotalTime(stream);
+//		}
+		play(stream, fromVal, lengthVal);
 	}
 
-
-	
-	public void play(URL fileURL, float from, float length) {
-		AudioInputStream stream = createInput(fileURL);
-		if(from == 0 && length == 0){
-			length = getTotalTime(stream);
-		}
-		play(stream, from, length);
-	}
-	
-	private void play(AudioInputStream stream, float starts, float length) {
-		log.debug("[play] from: " + starts +"; length=" + length);
+	private void play(AudioInputStream stream, Float from, Float length) {
+		log.debug("[play] from:{0}; length= {1} ", from, length);
 		double totalTime = getTotalTime(stream);
-		double ends = starts + length;
-		double adaptedLength = ends > totalTime?totalTime-starts:length;
-		if (starts > totalTime) {
-			log.error("[play] Cannot play due start is more than total time" + starts +">"+ totalTime);
+		double ends = from + length;
+		double adaptedLength = ends > totalTime ? totalTime - from : length;
+		if (from > totalTime) {
+			log.error("[play] Cannot play due start is more than total time"
+					+ from + ">" + totalTime);
 			return;
 		}
-		long startsBytes = (long) ((starts * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());
-		long lengthBytes = (long) ((adaptedLength  * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());
+		long startsBytes = (long) ((from * stream.getFormat().getFrameRate()) * stream
+				.getFormat().getFrameSize());
+		long lengthBytes = (long) ((adaptedLength * stream.getFormat()
+				.getFrameRate()) * stream.getFormat().getFrameSize());
 		Playback pl = new Playback(stream, startsBytes, lengthBytes);
 		pl.start();
 	}
+
 	/**
 	 * 
 	 */
-	public void save(URL fileURL, float starts, float length, String pathToSave) {
-		log.debug("[save] from:{0}; lenght:{1}; pathToSave:{2}", starts, length, pathToSave );
+	public void save(URL fileURL, Float startsObj, Float lengthObj, String pathToSave) {
+		log.debug("[save] from:{0}; lenght:{1}; pathToSave:{2}", startsObj,
+				lengthObj, pathToSave);
 		AudioInputStream stream = createInput(fileURL);
+		float starts = startsObj == null?0:startsObj.floatValue();
+		float length = lengthObj == null?getTotalTime(stream):lengthObj.floatValue();
+		
 		double totalTime = getTotalTime(stream);
 		double ends = starts + length;
-		double adaptedLength = ends > totalTime?totalTime-starts:length;
+		double adaptedLength = ends > totalTime ? totalTime - starts : length;
 		if (starts > totalTime) {
-			log.error("[save] Cannot save due stars:"+starts+" more than total time:"+totalTime );
+			log.error("[save] Cannot save due stars:" + starts
+					+ " more than total time:" + totalTime);
 			return;
 		}
-		Long startsBytes = (long) ((starts * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());
-		Long lengthBytes = (long) ((adaptedLength  * stream.getFormat().getFrameRate())*stream.getFormat().getFrameSize());
-		
+		Long startsBytes = (long) ((starts * stream.getFormat().getFrameRate()) * stream
+				.getFormat().getFrameSize());
+		Long lengthBytes = (long) ((adaptedLength * stream.getFormat()
+				.getFrameRate()) * stream.getFormat().getFrameSize());
+
 		try {
 			long skipedByteTotal = startsBytes;
 			long skipedByte = stream.available();
-			while((skipedByte=stream.skip(skipedByteTotal)) != 0 ){
+			while ((skipedByte = stream.skip(skipedByteTotal)) != 0) {
 				skipedByteTotal -= skipedByte;
 			}
 			byte[] data = new byte[lengthBytes.intValue()];
 			stream.read(data);
 			InputStream bais = new ByteArrayInputStream(data);
-			AudioInputStream ais = new AudioInputStream(bais, stream.getFormat(), data.length);
-			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, FileUtils.findNextAvaibleFile(pathToSave));
+			AudioInputStream ais = new AudioInputStream(bais, stream
+					.getFormat(), data.length);
+			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, FileUtils
+					.findNextAvaibleFile(pathToSave));
 		} catch (IOException e) {
 			throw new ProcessingException(e);
 		}
 	}
-	
-	
+
 	/**
 	 * 
 	 * @return
@@ -125,25 +141,22 @@ public class WorkAudioManager implements AudioManager {
 		return stream;
 	} // end of createInput()
 
-
-
 	private class Playback extends Thread {
 
 		private long starts;
 
 		private long length;
-		
+
 		private AudioInputStream stream;
 
 		private boolean playing;
-		
-//		 private static ThreadLocal playingStatus = new ThreadLocal() {
-//	         protected synchronized Object initialValue() {
-//	             return Boolean.valueOf(playing);
-//	         }
-//	     };
 
-		
+		// private static ThreadLocal playingStatus = new ThreadLocal() {
+		// protected synchronized Object initialValue() {
+		// return Boolean.valueOf(playing);
+		// }
+		// };
+
 		/**
 		 * 
 		 */
@@ -162,12 +175,12 @@ public class WorkAudioManager implements AudioManager {
 		 * 
 		 * @see java.lang.Runnable#run()
 		 */
-		
+
 		public void run() {
 			playback(stream, starts, length);
 			// playing = false;
 		}
-		
+
 		/**
 		 * set up the SourceDataLine going to the JVM's mixer
 		 * 
@@ -175,8 +188,10 @@ public class WorkAudioManager implements AudioManager {
 		private SourceDataLine createOutput(AudioFormat format) {
 			SourceDataLine line = null;
 			try {
-				DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-				log.debug("[createOutput] opened output line: " + info.toString());
+				DataLine.Info info = new DataLine.Info(SourceDataLine.class,
+						format);
+				log.debug("[createOutput] opened output line: "
+						+ info.toString());
 				if (!AudioSystem.isLineSupported(info)) {
 					log.error("[createOutput]Line does not support: " + format);
 				}
@@ -188,6 +203,7 @@ public class WorkAudioManager implements AudioManager {
 			}
 			return line;
 		}
+
 		/**
 		 * 
 		 * @param stream
@@ -225,12 +241,17 @@ public class WorkAudioManager implements AudioManager {
 					}
 
 					totalByte += byteCount;
-					// if ((starts - (totalByte + buffer.length)) <
-					// buffer.length) {
-					// readSize = length - totalByte;
-					// }
 					readSize = Math.min((length - totalByte), readSize);
 				}
+//				int i = 0;
+//				while (i<100) {
+					try {
+						sleep(1000);
+					} catch (InterruptedException e) {
+						log.error(e);
+					}
+//					i++;
+//				}
 
 				line.drain();
 				line.stop();
@@ -244,18 +265,17 @@ public class WorkAudioManager implements AudioManager {
 		}
 
 		private byte[] preprocessSamples(byte[] samples, int numBytes) {
-	        //		log.debug("[processSamples]++++");
-	        //
-	        //		short sample, newSample;
-	        //		byte[] newSamples = new byte[numBytes];
-	        //		for (int i = 1; i < numBytes; i++) {
-	        //			newSamples[i] = (byte) ((short)samples[i]);
-	        //			
-	        //		}
-	        //		log.debug("[processSamples]---- ");
-	        //		return newSamples;
-	        return samples;
-	    } 
+			// log.debug("[processSamples]++++");
+			//
+//			byte[] newSamples = new byte[numBytes];
+//			for (int i = 1; i < numBytes; i++) {
+//				newSamples[i] = (byte) ((short) samples[i]);
+//			}
+//			// log.debug("[processSamples]---- ");
+//			return newSamples;
+			return samples;
+		}
+
 		public boolean isPlaying() {
 			return playing;
 		}
@@ -265,5 +285,6 @@ public class WorkAudioManager implements AudioManager {
 		}
 
 	}
+
 
 }

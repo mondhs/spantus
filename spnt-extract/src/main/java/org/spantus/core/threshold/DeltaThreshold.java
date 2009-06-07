@@ -38,20 +38,25 @@ public class DeltaThreshold extends StaticThreshold {
 	private Logger log = Logger.getLogger(DeltaThreshold.class);
 
 	private Float previous;
-	private MeanExtractor meanExtractor;
+	private Float maxThresholdPrevious;
+	private MeanExtractor deltaMeanExtractor;
+	private MeanExtractor valMeanExtractor;
 
 	int increased = 0;
 	int stableCount = 0;
 
 	enum ChangeStatus {
-		increased, decreased, stable
+		decreased, increased, stable
 	}
 
 	ChangeStatus changeStatus = ChangeStatus.stable;
 
 	public DeltaThreshold() {
-		meanExtractor = new MeanExtractor();
-		meanExtractor.setOrder(50);
+		deltaMeanExtractor = new MeanExtractor();
+		deltaMeanExtractor.setOrder(20);
+		valMeanExtractor = new MeanExtractor();
+		valMeanExtractor.setOrder(20);
+		valMeanExtractor.calculateMean(0F);
 	}
 
 	protected void processDiscriminator(Long sample, Float value) {
@@ -59,7 +64,7 @@ public class DeltaThreshold extends StaticThreshold {
 		Integer countChanges = 0;
 		Integer countHits = 0;
 		int i = 0;
-		int statesInCount = Math.min(meanExtractor.getOrder(), getState()
+		int statesInCount = Math.min(4, getState()
 				.size());
 		for (ListIterator<Float> stateSubIter = getState().listIterator(
 				getState().size()); stateSubIter.hasPrevious();) {
@@ -75,56 +80,67 @@ public class DeltaThreshold extends StaticThreshold {
 		Float changeRate = (countChanges / (float) (statesInCount+2));
 		Float hitRate = (countHits / (float) (statesInCount+2));
 		// log.debug("changeRate:{0};", changeRate);
-		Float coef = .75F;
+		Float coef = .4F;
 		// if(changeRate>.3){
 		// coef = .8F;
 		// }else{
 		// coef =.1F;
 		// }
 
+		maxThresholdPrevious = maxThresholdPrevious == null? 0:maxThresholdPrevious;
 		previous = previous == null ? Float.MAX_VALUE : previous;
 		Float delta = (value - previous);
-		meanExtractor.calculateMean(delta);
-		Float maxThreshold = meanExtractor.getMean() + coef
-				* meanExtractor.getStdev();
-		Float minThreshold = meanExtractor.getMean() - (1.4F - coef)
-				* meanExtractor.getStdev();
+		deltaMeanExtractor.calculateMean(Math.abs(delta));
+		Float maxThreshold = deltaMeanExtractor.getMean() - coef
+				* deltaMeanExtractor.getStdev();
+		
+//		Float minThreshold = deltaMeanExtractor.getMean() - (coef)
+//				* deltaMeanExtractor.getStdev();
+		Float noiseEstimation = valMeanExtractor.getMean() + .35F
+		* valMeanExtractor.getStdev();
+		noiseEstimation = Float.isInfinite(noiseEstimation)?Float.MAX_VALUE:noiseEstimation;
 
-		boolean currentIncreasing = Math.abs(delta) > maxThreshold && delta > 0;
-		boolean currentStabe = Math.abs(delta) > minThreshold
-				&& Math.abs(delta) < maxThreshold;
-		boolean currentDecreasing = Math.abs(delta) > maxThreshold && delta < 0;
+		float changeVal = (maxThreshold-maxThresholdPrevious)/maxThreshold;
+		changeVal = Float.isNaN(changeVal)?0F:changeVal;
+		changeVal = Float.isInfinite(changeVal)?0F:changeVal;
+		
+		boolean currentIncreasing = changeVal > .4;
+//		boolean currentStabe = Math.abs(delta) > minThreshold
+//				&& Math.abs(delta) < maxThreshold;
+		boolean currentDecreasing =changeVal < - .4;
+//		boolean currentStabe = !currentIncreasing && !currentDecreasing;
 		Float state = 0F;
 		int prevIncThr = 30;
 		int prevStableThr = 10;
-		if (currentIncreasing && increased<prevIncThr) {
-			state = 0F;
-			increased++;
+		if(false){
+			
 		}else if (currentIncreasing) {
-			state = 1F;
 			changeStatus = ChangeStatus.increased;
-			stableCount = 0; 
-			// increased++;
-		} else if (currentStabe && changeStatus == ChangeStatus.increased) {
-			state = 1F;
-			stableCount++;
-			changeStatus = ChangeStatus.stable;
-		} else if (currentStabe && changeStatus == ChangeStatus.stable
-				&& stableCount < prevStableThr && hitRate > .4) {
-			state = 1F;
-			stableCount++;
-		} else if (currentStabe && changeStatus == ChangeStatus.stable
-				&& stableCount >= prevStableThr) {
-			state = 0F;
-			stableCount++;
+//			stableCount++;
+//			increased = 1;
+			stableCount = 1;
+				
 		} else if (currentDecreasing) {
-			state = 1F;
-			stableCount = 0;
+//			increased = -1;
 			changeStatus = ChangeStatus.decreased;
-		} else if (currentStabe && changeStatus == ChangeStatus.decreased) {
-			state = 1F;
+			stableCount = 0;
+
+		}else{
 			changeStatus = ChangeStatus.stable;
 		}
+		if(stableCount>0){
+			stableCount+=statesInCount>2?1:0;
+			if(value>valMeanExtractor.getStdev())
+//			if (value > noiseEstimation*.1) {
+				state=1F;
+//			}else{
+////				stableCount=0;
+//			}
+		}else{
+			maxThresholdPrevious = 0F;
+			valMeanExtractor.calculateMean(value);
+		}
+		
 
 //		log.debug(
 //				// "i:{0, number,###}; value:{1,number,#.000}; " +
@@ -136,11 +152,24 @@ public class DeltaThreshold extends StaticThreshold {
 		getThresholdValues().add(
 		// 0F
 //				 delta
-				 changeRate
-//				 hitRate
+//				 changeRate
+//				changeRate
 //				(float) changeStatus.ordinal()
+//				((float) changeStatus.ordinal()*(float)deltaMeanExtractor.getStdev())
+//				(changeVal)
+//				(float)stableCount
+				valMeanExtractor.getStdev()
+//				noiseEstimation*.1F
+//				(float)(deltaMeanExtractor.getStdev())
+//				(100000F +(currentIncreasing?3000000F:0F)+(currentDecreasing?2000000F:0F))
+//				(float)increased
+//				(currentStabe?1000F:0F)
+//				maxThreshold
+//				Math.abs(delta)
+//				delta
 				 );
 		previous = value;
+		maxThresholdPrevious = maxThreshold;
 
 	}
 

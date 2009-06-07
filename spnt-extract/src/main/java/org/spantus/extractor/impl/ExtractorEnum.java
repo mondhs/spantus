@@ -47,6 +47,7 @@ public enum ExtractorEnum {
 	SPECTRAL_CENTROID_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	SPECTRAL_FLUX_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	SPECTRAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
+	SPECTRUM_POWER_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	HarmonicProductSpectrum(ExtractorTypeEnum.SequenceOfScalar)
 	;
 	

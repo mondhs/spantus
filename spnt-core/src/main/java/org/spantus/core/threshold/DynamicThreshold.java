@@ -39,7 +39,8 @@ public class DynamicThreshold extends StaticThreshold {
 	Float bufferedSampleSize;
 	Integer numberOfBins;
 	LinkedList<Float> firstBin = null;
-	Map<histogramEnum, Float> map = null; 
+	Map<histogramEnum, Float> map = null;
+	Float prev = null;
 	
 	
 	public DynamicThreshold() {
@@ -52,7 +53,21 @@ public class DynamicThreshold extends StaticThreshold {
 
 	}
 
+//	@Override
+//	protected Float calculateState(Long sample, Float windowValue,
+//			Float threshold) {
+//		Float calcThreshold = (prev-getCurrentThresholdValue());
+//		calcThreshold = calcThreshold.isInfinite()?0F:calcThreshold;
+//		return Math.abs(calcThreshold)>7000?1F:0F;//super.calculateState(sample, windowValue, threshold);
+//	}
 	
+//	@Override
+//	public Float calculateThreshold(Float windowValue) {
+//		Float threshold = (prev-getCurrentThresholdValue());
+//		threshold = threshold.isInfinite()?0F:threshold;
+//		return Math.abs(threshold);
+//		//super.calculateThreshold(windowValue);
+//	}
 	
 	
 	protected void recacluclateCurrentThreashold(FrameValues result){
@@ -83,6 +98,7 @@ public class DynamicThreshold extends StaticThreshold {
 		}
 		
 		if(f != null){
+			prev = getCurrentThresholdValue();
 			setCurrentThresholdValue(f);	
 		}
 		
