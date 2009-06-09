@@ -77,6 +77,8 @@ public abstract class ExtractorUtils {
 				SpectralCentroid.class);
 		extractorMap.put(ExtractorEnum.SPECTRAL_ENTROPY_EXTRACTOR,
 				SpectralEntropy.class);
+		extractorMap.put(ExtractorEnum.NOISE_LEVEL_EXTRACTOR,
+				NoiseLevelExtractor.class);
 		extractorMap.put(ExtractorEnum.SPECTRUM_POWER_EXTRACTOR,
 				SpectrumPower.class);
 		extractorMap.put(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
@@ -88,12 +90,15 @@ public abstract class ExtractorUtils {
 				LogAttackTimeExtractor.class);
 //		extractorMap.put(ExtractorEnum.SMOOTHED_LOG_ATTACK_TIME,
 //				LogAttackTimeExtractor.class);
-
+		
 		extractor3DMap.put(ExtractorEnum.WAVFORM_EXTRACTOR,
 				WavformExtractor.class);
 		extractor3DMap.put(ExtractorEnum.FFT_EXTRACTOR, FFTExtractor.class);
 		extractor3DMap.put(ExtractorEnum.LPC_EXTRACTOR, LPCExtractor.class);
 		extractor3DMap.put(ExtractorEnum.MFCC_EXTRACTOR, MFCCExtractor.class);
+		extractor3DMap.put(ExtractorEnum.SPECTRAL_GAIN_FACTOR,
+				SpectralGainFactorExtractor.class);
+
 
 	}
 

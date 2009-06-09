@@ -44,11 +44,11 @@ public class SpectralEntropy extends AbstractSpectralExtractor {
 			float bottom = 0;
 			for (Float current : fv) {
 				//|X[i]|^2
-				bottom += Math.pow(Math.abs(current),2);
+				bottom += Math.pow(current,2);
 			}
 			float entropy = 0;
 			for (Float current : fv) {
-				double part = (Math.pow(Math.abs(current),2)/bottom);
+				double part = Math.pow(current,2)/bottom;
 				if(part == 0) continue;
 				entropy += (part) * Math.log10(part) ;
 			}

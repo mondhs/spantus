@@ -48,7 +48,8 @@ public enum ExtractorEnum {
 	SPECTRAL_FLUX_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	SPECTRAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
 	SPECTRUM_POWER_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	HarmonicProductSpectrum(ExtractorTypeEnum.SequenceOfScalar)
+	HarmonicProductSpectrum(ExtractorTypeEnum.SequenceOfScalar),
+	SPECTRAL_GAIN_FACTOR(ExtractorTypeEnum.SequenceOfVector)
 	;
 	
 	ExtractorEnum(ExtractorTypeEnum type) {

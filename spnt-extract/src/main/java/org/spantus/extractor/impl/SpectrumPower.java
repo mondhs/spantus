@@ -40,18 +40,18 @@ public class SpectrumPower extends AbstractSpectralExtractor {
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameVectorValues val3d = calculateFFT(window);
 		FrameValues rtnValues = super.calculateWindow(window);
+		int bin = 10;
 		for (List<Float> fv : val3d) {
-			float entropy = 0;
+			rtnValues.clear();
+			int i = 0;
 			for (Float current : fv) {
-				if(current == 0) continue;
-				entropy += (current) * Math.log10(current) ;
-				if(Float.isNaN(entropy)){
-					Float.isNaN(entropy);
-				}
-				;
+				i++;
+				rtnValues.add(current);
+				if(i != bin) continue;
 			}
-			rtnValues.add(entropy);
+			
 		}
+
 		return rtnValues;
 	}
 

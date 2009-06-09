@@ -36,17 +36,17 @@ import org.spantus.extractor.AbstractExtractor3D;
  */
 public abstract class AbstractSpectralExtractor extends AbstractExtractor {
 	
-	AbstractExtractor3D fft = new FFTExtractor();
+	AbstractExtractor3D abstractExtractor3D;
 	float signalSampleRate;
 	
 	protected FrameVectorValues calculateFFT(FrameValues window){
 		syncFFTParams();
 		
-		return fft.calculateWindow(window);
+		return getAbstractExtractor3D().calculateWindow(window);
 	}
 	
 	private void syncFFTParams(){
-		fft.setConfig(getConfig());
+		getAbstractExtractor3D().setConfig(getConfig());
 	}
 	
 	
@@ -54,8 +54,6 @@ public abstract class AbstractSpectralExtractor extends AbstractExtractor {
 		FrameValues rtnValues = new FrameValues();
 		return rtnValues;
 	}
-	
-
 	
 	
 	public int getDimension() {
@@ -67,6 +65,13 @@ public abstract class AbstractSpectralExtractor extends AbstractExtractor {
 //		return (getConfig().getSampleRate()/(getWinowSize()*.85f));
 		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()));
 
+	}
+
+	public AbstractExtractor3D getAbstractExtractor3D() {
+		if(abstractExtractor3D == null){
+			abstractExtractor3D = new FFTExtractor();
+		}
+		return abstractExtractor3D;
 	}
 
 	
