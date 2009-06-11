@@ -114,16 +114,22 @@ public class SampleChart extends JPanel {
 					&&
 					getInfo().getProject().getCurrentSample().getMarkerSetHolder() != null){
 				if( chart instanceof MarkeredTimeSeriesMultiChart ){
-					getMarkerComponentEventHandler().setChart(((MarkeredTimeSeriesMultiChart) chart));
 					MarkeredTimeSeriesMultiChart _chart = ((MarkeredTimeSeriesMultiChart)chart);
+					getMarkerComponentEventHandler().setChart(_chart);
 					_chart.initialize(getInfo().getProject().getCurrentSample().getMarkerSetHolder()
 							,getMarkerComponentEventHandler()
 							,getMarkerComponentEventHandler()
 							,getMarkerComponentEventHandler());
 //					_chart.addMouseListener(getMarkerComponentEventHandler());
 //					_chart.addKeyListener(getMarkerComponentEventHandler());
+					
+				}else{
+					chart.initialize();
 				}
 				
+				
+			}else{
+				chart.initialize();
 			}
 			
 			
@@ -145,6 +151,7 @@ public class SampleChart extends JPanel {
 		ChartInfo chartInfo = new ChartInfo();
 		chartInfo.setGrid(Boolean.TRUE.equals(getInfo().getEnv().getGrid()));
 		chartInfo.setSelfZoomable(false);
+		chartInfo.setColorSchema(getInfo().getEnv().getVectorChartColorTypes());
 		return chartInfo;
 	}
 

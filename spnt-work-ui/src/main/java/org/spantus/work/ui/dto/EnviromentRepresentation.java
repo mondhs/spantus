@@ -39,7 +39,8 @@ public class EnviromentRepresentation {
 	private Dimension mainWindowDimension;
 	private Point location;
 	private int mainWindowState;//maximized or normal
-	private Boolean grid;
+	private Boolean grid;//chart grids
+	private String vectorChartColorTypes;//chart vector colors
 	private Boolean popupNotifications;
 	private Boolean autoSegmentation;
 	private String loggingLevel;
@@ -110,6 +111,14 @@ public class EnviromentRepresentation {
 
 	public void setLoggingLevel(String loggingLevel) {
 		this.loggingLevel = loggingLevel;
+	}
+
+	public String getVectorChartColorTypes() {
+		return vectorChartColorTypes;
+	}
+
+	public void setVectorChartColorTypes(String vectorChartColorTypes) {
+		this.vectorChartColorTypes = vectorChartColorTypes;
 	}
 
 

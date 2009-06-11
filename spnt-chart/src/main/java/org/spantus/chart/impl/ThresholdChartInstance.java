@@ -97,7 +97,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 
 	}
 
-	public void paintFunction(Graphics g) {
+	public synchronized void paintFunction(Graphics g) {
 //		log.severe("paint: " + description);
 //		int i = polylinesX.size();
 //		while (--i >= 0) {

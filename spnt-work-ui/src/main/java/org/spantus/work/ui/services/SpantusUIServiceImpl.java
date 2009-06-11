@@ -10,6 +10,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import org.spantus.chart.bean.VectorSeriesColorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.dto.EnviromentRepresentation;
@@ -73,6 +74,9 @@ public class SpantusUIServiceImpl {
 		}
 		if (info.getEnv().getLoggingLevel() == null) {
 			info.getEnv().setLoggingLevel(SpntLogginLevel.info.name());
+		}
+		if (info.getEnv().getVectorChartColorTypes() == null) {
+			info.getEnv().setVectorChartColorTypes(VectorSeriesColorEnum.blackWhite.name());
 		}
 		SpntLogginLevel logginLevel = SpntLogginLevel.valueOf(info.getEnv().getLoggingLevel());
 		int i = 0;

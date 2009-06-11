@@ -59,17 +59,21 @@ public class TimeSeriesChart extends AbstractSwingChart{
 		graph.getYAxis().setZigZaginess(BigDecimal.valueOf(7L, 1));
 		graph.setBackground(Color.WHITE);
 		
-		ChartStyle style1 = new ChartStyle();
-		style1.setUpperLimitEnabled(true);
-		style1.setLowerLimitEnabled(true);
-		style1.setPaint(Color.RED);
-		function = new FrameValueFuncton("function", new FrameValues(), style1);
-		graph.addFunction(function, style1);
 		
 		add(graph, BorderLayout.CENTER);
 		
 	}
 
+	@Override
+	public void initialize() {
+		ChartStyle style1 = new ChartStyle();
+		style1.setUpperLimitEnabled(true);
+		style1.setLowerLimitEnabled(true);
+		style1.setPaint(Color.RED);
+		function = new FrameValueFuncton("function", new FrameValues(), style1);
+		graph.addFunction(function, style1);		
+	}
+	
 	public void addFrameValues(FrameValues newvals) {
 		function.addFrameValues(newvals);
 	}

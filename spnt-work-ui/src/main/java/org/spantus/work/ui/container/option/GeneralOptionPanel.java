@@ -13,6 +13,7 @@ import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import org.spantus.chart.bean.VectorSeriesColorEnum;
 import org.spantus.ui.MapComboBoxModel;
 import org.spantus.ui.ModelEntry;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
@@ -29,7 +30,7 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 	private MapComboBoxModel locales;
 
 	enum generalLabels {
-		locale, lookAndFeel, chartGrid, popupNotification, autoSegmentation
+		locale, lookAndFeel, chartGrid, vectorChartColorType, popupNotification, autoSegmentation
 	}
 
 	/**
@@ -50,6 +51,9 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 				break;
 			case chartGrid:
 				getInfo().getEnv().setGrid(((JCheckBox)field.getValue()).isSelected());
+				break;
+			case vectorChartColorType:
+				getInfo().getEnv().setVectorChartColorTypes((String)getChartColorTypeModel().getSelectedObject());
 				break;
 			case popupNotification:
 				getInfo().getEnv().setPopupNotifications(((JCheckBox)field.getValue()).isSelected());
@@ -105,6 +109,9 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 			case chartGrid:
 				((JCheckBox)field.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getGrid()));
 				break;
+			case vectorChartColorType:
+				getChartColorTypeModel().setSelectedObject(getInfo().getEnv().getVectorChartColorTypes());
+				break;
 			case popupNotification:
 				((JCheckBox)field.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getPopupNotifications()));
 				break;
@@ -139,6 +146,12 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 					.equals(getInfo().getEnv().getGrid()));
 			jComponents.put(generalLabels.chartGrid, gridOn);
 			
+			JComboBox vectorCharColorTypeCmb = new JComboBox(getChartColorTypeModel());	
+			vectorCharColorTypeCmb.setSelectedItem(getChartColorTypeModel().getLabel(getInfo().getEnv().getVectorChartColorTypes()));
+			vectorCharColorTypeCmb.getSelectedItem();
+			vectorCharColorTypeCmb.setName(generalLabels.vectorChartColorType.name());
+			jComponents.put(generalLabels.vectorChartColorType, vectorCharColorTypeCmb);
+			
 			JCheckBox popupNotificationOn = new JCheckBox();
 			popupNotificationOn.setSelected(Boolean.TRUE
 					.equals(getInfo().getEnv().getPopupNotifications()));
@@ -170,7 +183,20 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 		}
 		return laf;
 	}
+	MapComboBoxModel chartColorTypes;
 
+	protected MapComboBoxModel getChartColorTypeModel() {
+		if(chartColorTypes == null){
+			chartColorTypes = new MapComboBoxModel();	
+			for (VectorSeriesColorEnum colorType : VectorSeriesColorEnum.values()) {
+				String label = getMessage("colorType_" + colorType.name());
+				chartColorTypes.addElement(new ModelEntry(label, colorType.name()));
+			}
+		}
+		return chartColorTypes;
+		 
+	}
+	
 	protected MapComboBoxModel getLocaleModel() {
 		if (locales == null) {
 			locales = new MapComboBoxModel();

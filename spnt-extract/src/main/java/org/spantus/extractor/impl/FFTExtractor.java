@@ -20,7 +20,6 @@
  */
 package org.spantus.extractor.impl;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.spantus.core.FrameValues;
@@ -67,24 +66,25 @@ public class FFTExtractor extends AbstractExtractor3D {
 	
 	
 	public FrameVectorValues calculateWindow(FrameValues window) {
-		FrameVectorValues extrValues = calculateExtr3D(window);
-		FrameValues calculatedLPCValues = new FrameValues();
+		FrameValues calculatedTempValues = window;
 		FrameVectorValues calculatedValues = new FrameVectorValues();
-		int order = extrValues.get(0).size();
-		LinkedList<Float> bufferValues = getBuffer(order);
-		for (Float value : window) {
-			bufferValues.poll();
-			bufferValues.add(value);
-			Float predicted = 0F;
-			Iterator<Float> coefIter = extrValues.get(0).iterator();
-			for (Float bufferedVal : getBuffer(order)) {
-				predicted += bufferedVal * coefIter.next();
-			}
-			calculatedLPCValues.add(predicted);
-		}
+//		FrameVectorValues extrValues = calculateExtr3D(window);
+//		calculatedTempValues = new FrameValues();
+//		int order = extrValues.get(0).size();
+//		LinkedList<Float> bufferValues = getBuffer(order);
+//		for (Float value : window) {
+//			bufferValues.poll();
+//			bufferValues.add(value);
+//			Float predicted = 0F;
+//			Iterator<Float> coefIter = extrValues.get(0).iterator();
+//			for (Float bufferedVal : getBuffer(order)) {
+//				predicted += bufferedVal * coefIter.next();
+//			}
+//			calculatedTempValues.add(predicted);
+//		}
 		
 		calculatedValues.add(
-				MathServicesFactory.createFFTService().calculateFFTMagnitude(calculatedLPCValues)
+				MathServicesFactory.createFFTService().calculateFFTMagnitude(calculatedTempValues)
 		);
 		
 		return  calculatedValues;

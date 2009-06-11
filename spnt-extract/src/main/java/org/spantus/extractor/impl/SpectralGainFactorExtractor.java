@@ -175,9 +175,9 @@ public class SpectralGainFactorExtractor extends AbstractExtractor3D {
 	protected List<Float> getGainValues(List<Float> currentSpectrum){
 		aNoiseCoefs = aNoiseCoefs == null?MatrixUtils.zeros(currentSpectrum.size()):aNoiseCoefs;
 		List<Float> gains = new LinkedList<Float>();
-		Iterator<Float> aNoiseCoefs = new LinkedList<Float>(currentSpectrum).iterator();
+		Iterator<Float> aNoiseCoefsIter = new LinkedList<Float>(currentSpectrum).iterator();
 		for (Float power : currentSpectrum) {
-			Float noiseCoef = aNoiseCoefs.next();
+			Float noiseCoef = aNoiseCoefsIter.next();
 			Double gain = 1 - Math.sqrt(noiseCoef/power);
 			gains.add(gain.floatValue());
 		}
@@ -192,7 +192,6 @@ public class SpectralGainFactorExtractor extends AbstractExtractor3D {
 	protected List<Boolean> calculateNoiseFloor(List<Float> smoothedSpectrum, List<Float> minNoise,
 			List<Float> currentSpectrum){
 		List<Boolean> rtnNoiseFloor = new LinkedList<Boolean>();
-		int binNum = 0;
 		Iterator<Float> smoothedIter = smoothedSpectrum.iterator();
 		Iterator<Float> gainIter = getGainValues(currentSpectrum).iterator();
 		for (Float noise1 : minNoise) {
@@ -202,7 +201,6 @@ public class SpectralGainFactorExtractor extends AbstractExtractor3D {
 			threshold *= noise1; 
 			Float smoothedVal = smoothedIter.next();
 			rtnNoiseFloor.add(smoothedVal>threshold);
-			binNum++;
 		}
 		return rtnNoiseFloor;
 	}

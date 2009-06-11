@@ -31,6 +31,7 @@ import java.math.RoundingMode;
 import net.quies.math.plot.AxisInstance;
 
 import org.spantus.chart.WrappedChartDescriptionResolver;
+import org.spantus.chart.bean.ChartInfo;
 import org.spantus.chart.marker.MarkerGraph;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.MarkerSetHolder;
@@ -50,6 +51,7 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 	}
 	
 	public void initialize(MarkerSetHolder holder, MouseAdapter mouseListener, MouseMotionListener mouseMotionListener, KeyListener keyListener){
+		initialize();
 		add(getMarkerGraph(), BorderLayout.NORTH);
 		AxisInstance axisX = getGraph().getXAxisInstance();
 		getMarkerGraph().getCtx().setXScalar(axisX.getGraphichsScalar().setScale(4, RoundingMode.HALF_UP));

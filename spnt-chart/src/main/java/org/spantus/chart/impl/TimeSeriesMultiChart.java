@@ -75,7 +75,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 	private Set<SignalSelectionListener> listeners;
 	private SpantusChartToolbar toolbar = null;
 	private IColorResolver colorResolver;
-
+	private IExtractorInputReader reader;
 
 	public static int VIEW_MATRIX_MIN_SIZE = 5;
 	public static int VIEW_AREA_SIZE = 2;
@@ -93,13 +93,16 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 
 	public TimeSeriesMultiChart(IExtractorInputReader reader, WrappedChartDescriptionResolver globalMessageResolver) {
 		this.globalMessageResolver = globalMessageResolver;
+		this.reader = reader;
+		setBackground(Color.WHITE);
+	}
+	public void initialize(){
 		InteractiveChart interactiveChart = new InteractiveChart();
 		interactiveChart.setSize(getSize());
 		interactiveChart.addZoomListeners(new WrapedZoomlistener());
+		interactiveChart.setBackground(Color.WHITE);
 		// graph.getXAxis().setZigZaginess(BigDecimal.valueOf(7L, 1));
 		// graph.getYAxis().setZigZaginess(BigDecimal.valueOf(7L, 1));
-		setBackground(Color.WHITE);
-		interactiveChart.setBackground(Color.WHITE);
 		int i = 0;
 		for (IExtractor buff : reader.getExtractorRegister()) {
 			ChartDescriptionResolver resolver = null;
@@ -126,6 +129,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 			listeners = toolbar.getSignalSelectionListeners();
 		}
 	}
+	
 	/**
 	 * 
 	 * @param graph
@@ -226,7 +230,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		return chartStyle;
 	}
 	private VectorSeriesColorEnum getColorType(int i){
-		return VectorSeriesColorEnum.blackWhite;
+		return VectorSeriesColorEnum.valueOf(getCharInfo().getColorSchema());
 	}
 
 	

@@ -42,6 +42,7 @@ public class ChartInfo {
 	
 	private Boolean grid = null;
 	
+	private String colorSchema = VectorSeriesColorEnum.blackWhite.name();
 	
 	public boolean isPlayable() {
 		return playable;
@@ -80,6 +81,14 @@ public class ChartInfo {
 
 	public void setGrid(Boolean grid) {
 		this.grid = grid;
+	}
+
+	public String getColorSchema() {
+		return colorSchema;
+	}
+
+	public void setColorSchema(String colorSchema) {
+		this.colorSchema = colorSchema;
 	}
 	
 }
