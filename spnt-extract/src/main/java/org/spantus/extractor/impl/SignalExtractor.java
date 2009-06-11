@@ -20,8 +20,6 @@
  */
 package org.spantus.extractor.impl;
 
-import java.text.MessageFormat;
-
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.extractor.AbstractExtractor;
@@ -53,10 +51,10 @@ public class SignalExtractor extends AbstractExtractor {
 	
 	@Override
 	public FrameValues calculate(Long sampleNum, FrameValues values) {
-		log.debug(MessageFormat.format(
-				"[calculate]+++  name:{0}; sampleRate:{1}; windowSize:{2}",
-				getName(), getConfig().getSampleRate()/1000, getConfig()
-						.getWindowSize()));
+//		log.debug(MessageFormat.format(
+//				"[calculate]+++  name:{0}; sampleRate:{1}; windowSize:{2}",
+//				getName(), getConfig().getSampleRate()/1000, getConfig()
+//						.getWindowSize()));
 
 		FrameValues calculatedValues = new FrameValues();
 		int i=0 ;
@@ -70,7 +68,7 @@ public class SignalExtractor extends AbstractExtractor {
 				fWork = 0; i = 0;
 			}
 		}
-		log.debug("[calculate]---");
+//		log.debug("[calculate]---");
 //		calculatedValues.addAll(values);
 		return calculatedValues;
 	}
