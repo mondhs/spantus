@@ -226,6 +226,7 @@ public class MarkerGraph extends JComponent {
 	public MarkerGraphCtx getCtx() {
 		if(ctx == null){
 			ctx = new MarkerGraphCtx();
+			ctx.setXOffset(BigDecimal.valueOf(0));
 			ctx.setXScalar(BigDecimal.valueOf(1));
 		}
 		return ctx;

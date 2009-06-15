@@ -26,6 +26,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import net.quies.math.plot.AxisInstance;
@@ -74,6 +75,11 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 		super.repaint();
 		if(getGraph() != null && getMarkerGraph() != null){
 			AxisInstance axisX = getGraph().getXAxisInstance();
+			BigDecimal zigZagLength = BigDecimal.ZERO;
+			if(axisX.getMin().compareTo(BigDecimal.ZERO)>0){
+				zigZagLength = axisX.getMin().subtract(axisX.getMax()).movePointLeft(1);
+			}
+			getMarkerGraph().getCtx().setXOffset(axisX.getMin().add(zigZagLength));
 			getMarkerGraph().getCtx().setXScalar(axisX.getGraphichsScalar().setScale(4, RoundingMode.HALF_UP));
 			getMarkerGraph().resetScreenCoord();
 		}

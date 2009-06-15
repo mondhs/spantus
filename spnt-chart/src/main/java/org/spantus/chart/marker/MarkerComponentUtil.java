@@ -29,12 +29,16 @@ package org.spantus.chart.marker;
 public abstract class MarkerComponentUtil {
 	
 	public static int timeToScreen(MarkerGraphCtx ctx, Long val){
-		Double startX = val/ctx.getXScalar().doubleValue();
-		return (int)(startX/1000.0);
+		Double offset = ctx.getXOffset().doubleValue();
+		Double startX = (val)/1000.0;
+		startX -= offset;
+		return (int)((startX/ctx.getXScalar().doubleValue()));
 	}
 	
 	public static Long screenToTime(MarkerGraphCtx ctx, int val){
-		Double start = val*1000.0*ctx.getXScalar().doubleValue();
+		Double offset = ctx.getXOffset().doubleValue();
+		Double start = (val)*1000.0*ctx.getXScalar().doubleValue();
+		start += offset;
 		return start.longValue();
 	}
 

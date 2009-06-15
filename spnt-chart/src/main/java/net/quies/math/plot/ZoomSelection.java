@@ -161,6 +161,27 @@ public void setCurrent(Point current) {
 public Point getOrigin() {
 	return origin;
 }
+public BigDecimal getStartValue() {
+	GraphInstance render = graph.getRender();
+	if (render == null)
+		return null;
+	if(origin == null || current == null){
+		return null;
+	}
+	return render.getXValue(Math.min(origin.x, current.x));
+}
+
+public BigDecimal getEndValue() {
+	GraphInstance render = graph.getRender();
+	if (render == null)
+		return null;
+	if(origin == null || current == null){
+		return null;
+	}
+	return render.getXValue(Math.max(origin.x, current.x));
+}
+
+
 public void setOrigin(Point origin) {
 	this.origin.x = origin.x;
 	this.origin.y = origin.y;

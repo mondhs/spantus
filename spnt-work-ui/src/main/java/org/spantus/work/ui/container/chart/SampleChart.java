@@ -108,7 +108,6 @@ public class SampleChart extends JPanel {
 					new I18NChartDescriptionResolver());
 			chart.setCharInfo(createChartInfo());
 			chart.setPreferredSize(getSize());
-			chart.addSignalSelectionListener(getSelectionListener());
 			add(chart, BorderLayout.CENTER);
 			if(!ProjectTypeEnum.feature.name().equals(getInfo().getProject().getCurrentType())
 					&&
@@ -131,6 +130,8 @@ public class SampleChart extends JPanel {
 			}else{
 				chart.initialize();
 			}
+			chart.addSignalSelectionListener(getSelectionListener());
+
 			
 			
 		}else{
