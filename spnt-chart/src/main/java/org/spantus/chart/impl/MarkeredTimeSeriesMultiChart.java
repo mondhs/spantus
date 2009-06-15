@@ -31,7 +31,6 @@ import java.math.RoundingMode;
 import net.quies.math.plot.AxisInstance;
 
 import org.spantus.chart.WrappedChartDescriptionResolver;
-import org.spantus.chart.bean.ChartInfo;
 import org.spantus.chart.marker.MarkerGraph;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.MarkerSetHolder;

@@ -26,8 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import klautau.FFT;
-
-import org.spantus.math.TransformUtil;
 /**
  * 
  * @author Mindaugas Greibus

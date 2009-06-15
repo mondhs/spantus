@@ -1,6 +1,8 @@
 package org.spantus.work.ui.container.option;
 
-import java.util.HashMap;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,28 +11,35 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.SpringLayout;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.spantus.chart.bean.VectorSeriesColorEnum;
+import org.spantus.logger.Logger;
 import org.spantus.ui.MapComboBoxModel;
 import org.spantus.ui.ModelEntry;
-import org.spantus.work.ui.container.SpantusWorkSwingUtils;
-import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18n;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.debug.FormDebugPanel;
+import com.jgoodies.forms.layout.FormLayout;
+
 public class GeneralOptionPanel extends AbstractOptionPanel {
-
-	private SpantusWorkInfo info;
-
-	private Map<generalLabels, JComponent> jComponents;
+	
+	Logger log = Logger.getLogger(GeneralOptionPanel.class);
+	private Map<generalLabels, LabelControlEntry> jComponents;
 
 	private MapComboBoxModel laf;
 	private MapComboBoxModel locales;
 
+	public GeneralOptionPanel() {
+		super();
+	}
+	
 	enum generalLabels {
-		locale, lookAndFeel, chartGrid, vectorChartColorType, popupNotification, autoSegmentation
+		advancedMode, locale, lookAndFeel, chartGrid, vectorChartColorType, popupNotification, 
+		
 	}
 
 	/**
@@ -39,9 +48,10 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 	private static final long serialVersionUID = 1L;
 
 	public void save() {
-		for (Entry<generalLabels, JComponent> field : getJComponents().entrySet()) {
+		for (Entry<generalLabels, LabelControlEntry> fieldEntry : getJComponents().entrySet()) {
+			JComponent cmp = fieldEntry.getValue().getControl();
 
-			switch (field.getKey()) {
+			switch (fieldEntry.getKey()) {
 			case locale:
 				Object locale = getLocaleModel().getSelectedObject();
 				getInfo().setLocale((Locale) locale);
@@ -49,55 +59,62 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 			case lookAndFeel:
 				getInfo().getEnv().setLaf((String)getLAFModel().getSelectedObject());
 				break;
+			case advancedMode:
+				getInfo().getEnv().setAdvancedMode(((JCheckBox)cmp).isSelected());
+				break;
+				
 			case chartGrid:
-				getInfo().getEnv().setGrid(((JCheckBox)field.getValue()).isSelected());
+				getInfo().getEnv().setGrid(((JCheckBox)cmp).isSelected());
 				break;
 			case vectorChartColorType:
 				getInfo().getEnv().setVectorChartColorTypes((String)getChartColorTypeModel().getSelectedObject());
 				break;
 			case popupNotification:
-				getInfo().getEnv().setPopupNotifications(((JCheckBox)field.getValue()).isSelected());
-				break;
-			case autoSegmentation:
-				getInfo().getEnv().setAutoSegmentation(((JCheckBox)field.getValue()).isSelected());
+				getInfo().getEnv().setPopupNotifications(((JCheckBox)cmp).isSelected());
 				break;
 			default:
-				throw new RuntimeException("Not impl: " + field.getKey());
+				throw new RuntimeException("Not impl: " + fieldEntry.getKey());
 			}
 		}
 	}
 
-	public void setInfo(SpantusWorkInfo info) {
-		this.info = info;
-	}
-
-	public SpantusWorkInfo getInfo() {
-		return info;
-	}
+	
 
 	public void initialize() {
-		SpringLayout layout = new SpringLayout();
-		this.setLayout(layout);
-		for (generalLabels label : generalLabels.values()) {
-			JLabel l = new JLabel(getMessage(label.name()), JLabel.TRAILING);
-			this.add(l);
-			JComponent edit = getJComponents().get(label);
-			l.setLabelFor(edit);
-			this.add(edit);
-		}
-		
+		FormLayout layout = new FormLayout(
+			    "right:max(40dlu;p), 4dlu, 80dlu, 7dlu, "
+//			    +"right:max(40dlu;p), 4dlu, 80dlu"
+			    ,
+			    "");
 
-		SpantusWorkSwingUtils.makeCompactGrid(this,
-				generalLabels.values().length, 2, // rows, cols
-				6, 6, // initX, initY
-				6, 6); // xPad, yPad
+		JPanel panelContainer = new JPanel();
+		if(log.isDebugMode()){
+			panelContainer = new FormDebugPanel();
+		}
+		DefaultFormBuilder builder = new DefaultFormBuilder(layout, panelContainer);
+		builder.setDefaultDialogBorder();
+
+
+		for (generalLabels label : generalLabels.values()) {
+			LabelControlEntry entry = getJComponents().get(label);
+			builder.append(entry.getLabel(), entry.getControl());
+		}
+		add(builder.getPanel());
 		reload();
 	}
 
 	public void reload() {
-		for (Entry<generalLabels, JComponent> field : getJComponents()
+		onShowEvent();
+	}
+	
+	//Override
+	public void onShowEvent() {
+		for (Entry<generalLabels, LabelControlEntry> fieldEntry : getJComponents()
 				.entrySet()) {
-			switch (field.getKey()) {
+			
+			JComponent cmp = fieldEntry.getValue().getControl();
+			
+			switch (fieldEntry.getKey()) {
 			case locale:
 				getLocaleModel().setSelectedObject(
 						getInfo().getLocale()
@@ -105,65 +122,87 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 				break;
 			case lookAndFeel:
 				getLAFModel().setSelectedObject(getInfo().getEnv().getLaf());
+				fieldEntry.getValue().setVisible(isAdvanced());
 				break;
 			case chartGrid:
-				((JCheckBox)field.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getGrid()));
+				((JCheckBox)cmp).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getGrid()));
+				fieldEntry.getValue().setVisible(isAdvanced());
+				break;
+			case advancedMode:
+				((JCheckBox)cmp).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getAdvancedMode()));
 				break;
 			case vectorChartColorType:
 				getChartColorTypeModel().setSelectedObject(getInfo().getEnv().getVectorChartColorTypes());
+				fieldEntry.getValue().setVisible(getInfo().getEnv().getAdvancedMode());
 				break;
 			case popupNotification:
-				((JCheckBox)field.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getPopupNotifications()));
-				break;
-			case autoSegmentation:
-				((JCheckBox)field.getValue()).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getAutoSegmentation()));
+				((JCheckBox)cmp).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getPopupNotifications()));
+				fieldEntry.getValue().setVisible(isAdvanced());
 				break;
 			default:
-				throw new RuntimeException("Not impl: " + field.getKey());
+				throw new RuntimeException("Not impl: " + fieldEntry.getKey());
 			}
 		}
 
 	}
 
-	private Map<generalLabels, JComponent> getJComponents() {
+	public boolean  isAdvanced(){
+		return Boolean.TRUE.equals(getInfo().getEnv().getAdvancedMode());
+	}
+	
+	public void addFieldList(JComponent component, String labelName ){
+		generalLabels labelNameEnum = generalLabels.valueOf(labelName);
+		component.setName(labelName);
+		JLabel label = new JLabel(getMessage(labelName), JLabel.TRAILING);
+		label.setLabelFor(component);
+		jComponents.put(labelNameEnum, 
+				new LabelControlEntry(label, component));
+	}
+	
+	private Map<generalLabels, LabelControlEntry> getJComponents() {
 		if (jComponents == null) {
-			jComponents = new HashMap<generalLabels, JComponent>();
+			jComponents = new LinkedHashMap<generalLabels, LabelControlEntry>();
 
-			JComboBox input = new JComboBox();
-			input.setModel(getLocaleModel());
-			input.setSelectedItem(getLocaleModel().getLabel(getInfo().getLocale()));
-			input.setName(generalLabels.locale.name());
-			jComponents.put(generalLabels.locale, input);
-
+			JCheckBox advancedModeOn = new JCheckBox();
+			advancedModeOn.setSelected(Boolean.TRUE
+					.equals(getInfo().getEnv().getAdvancedMode()));
+			advancedModeOn.setToolTipText(getMessage(generalLabels.advancedMode.name()+"_tooltip"));
+			advancedModeOn.addItemListener(new ItemListener(){
+				public void itemStateChanged(ItemEvent e) {
+					boolean valInd = ((JCheckBox)e.getSource()).isSelected();	
+					getInfo().getEnv().setAdvancedMode(valInd);
+					onShowEvent();
+				}
+			});
+			addFieldList(advancedModeOn, generalLabels.advancedMode.name());
+			
+			JComboBox localeCmb = new JComboBox();
+			localeCmb.setModel(getLocaleModel());
+			localeCmb.setSelectedItem(getLocaleModel().getLabel(getInfo().getLocale()));
+			addFieldList(localeCmb, generalLabels.locale.name());
+			
+			
+			
 			JComboBox lookAndFeel = new JComboBox(getLAFModel());	
 			lookAndFeel.setSelectedItem(getLAFModel().getLabel(getInfo().getEnv().getLaf()));
 			lookAndFeel.getSelectedItem();
-			lookAndFeel.setName(generalLabels.lookAndFeel.name());
-			jComponents.put(generalLabels.lookAndFeel, lookAndFeel);
+			addFieldList(lookAndFeel, generalLabels.lookAndFeel.name());
 			
 			JCheckBox gridOn = new JCheckBox();
 			gridOn.setSelected(Boolean.TRUE
 					.equals(getInfo().getEnv().getGrid()));
-			jComponents.put(generalLabels.chartGrid, gridOn);
+			addFieldList(gridOn, generalLabels.chartGrid.name());
 			
 			JComboBox vectorCharColorTypeCmb = new JComboBox(getChartColorTypeModel());	
 			vectorCharColorTypeCmb.setSelectedItem(getChartColorTypeModel().getLabel(getInfo().getEnv().getVectorChartColorTypes()));
-			vectorCharColorTypeCmb.getSelectedItem();
-			vectorCharColorTypeCmb.setName(generalLabels.vectorChartColorType.name());
-			jComponents.put(generalLabels.vectorChartColorType, vectorCharColorTypeCmb);
+			addFieldList(vectorCharColorTypeCmb, generalLabels.vectorChartColorType.name());
 			
 			JCheckBox popupNotificationOn = new JCheckBox();
 			popupNotificationOn.setSelected(Boolean.TRUE
 					.equals(getInfo().getEnv().getPopupNotifications()));
-			jComponents.put(generalLabels.popupNotification, popupNotificationOn);
+			popupNotificationOn.setToolTipText(getMessage(generalLabels.popupNotification.name()+"_tooltip"));
+			addFieldList(popupNotificationOn, generalLabels.popupNotification.name());
 			
-			JCheckBox autoSegmentationChb = new JCheckBox();
-			popupNotificationOn.setSelected(Boolean.TRUE
-					.equals(getInfo().getEnv().getAutoSegmentation()));
-			jComponents.put(generalLabels.autoSegmentation, autoSegmentationChb);
-
-
-
 		}
 		return jComponents;
 	}

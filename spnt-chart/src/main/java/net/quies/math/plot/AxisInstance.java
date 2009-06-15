@@ -220,10 +220,10 @@ public Shape[] getNailRender() {
 }
 
 /** The lowest value on the axis. */
-final BigDecimal MIN;
+protected final BigDecimal MIN;
 
 /** The highest value on the axis. */
-final BigDecimal MAX;
+protected final BigDecimal MAX;
 
 /** The location of zero. This is zero unless there is a zig-zag. */
 final BigDecimal ZERO;

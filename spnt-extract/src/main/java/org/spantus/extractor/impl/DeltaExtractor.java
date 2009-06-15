@@ -43,6 +43,7 @@ public class DeltaExtractor extends AbstractExtractor {
 	private IExtractor extractor;
 	
 	private Float previous;
+	private Float previousDelta;
 
 	
 	
@@ -56,11 +57,15 @@ public class DeltaExtractor extends AbstractExtractor {
 		
 		if(fv.size()==1){
 			Float val = fv.get(0);
-			if(previous==null){
-				previous = val;
-			}
-			calculatedValues.add(Math.abs(val-previous));
+			previous = previous==null?val:previous;
+			Float delta = val-previous;
+			previousDelta = previousDelta==null?delta:previousDelta;
+			Float deltaDelta = delta - previousDelta;
 			previous = val;
+			previousDelta=delta;
+			calculatedValues.add(delta);
+//			calculatedValues.add(deltaDelta);
+
 		}
 
 		return calculatedValues;

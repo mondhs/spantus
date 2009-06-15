@@ -225,7 +225,7 @@ public class ShuttleSelectionPanel extends JPanel {
 				1, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				EMPTY_INSETS, 0, 0));
 
-		addButton = new JButton(getMessage(getMessage(ADD_BUTTON_LABEL)));
+		addButton = new JButton(getMessage(ADD_BUTTON_LABEL));
 		add(addButton, new GridBagConstraints(1, 2, 1, 2, 0, .25,
 				GridBagConstraints.CENTER, GridBagConstraints.NONE,
 				EMPTY_INSETS, 0, 0));

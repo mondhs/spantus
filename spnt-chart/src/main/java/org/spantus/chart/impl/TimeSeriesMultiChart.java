@@ -95,9 +95,11 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		this.globalMessageResolver = globalMessageResolver;
 		this.reader = reader;
 		setBackground(Color.WHITE);
+		graph = new InteractiveChart();
+		toolbar = graph.getToolBar();
 	}
 	public void initialize(){
-		InteractiveChart interactiveChart = new InteractiveChart();
+		InteractiveChart interactiveChart = graph;
 		interactiveChart.setSize(getSize());
 		interactiveChart.addZoomListeners(new WrapedZoomlistener());
 		interactiveChart.setBackground(Color.WHITE);
@@ -123,7 +125,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 			interactiveChart.addResolver(getGlobalMessageResolver().getInstance(resolver));
 		}
 		add(interactiveChart, BorderLayout.CENTER);
-		graph = interactiveChart;
+		
 		if(interactiveChart.getToolBar() instanceof SpantusChartToolbar){
 			toolbar = (SpantusChartToolbar)interactiveChart.getToolBar(); 
 			listeners = toolbar.getSignalSelectionListeners();

@@ -78,6 +78,14 @@ public class SpantusUIServiceImpl {
 		if (info.getEnv().getVectorChartColorTypes() == null) {
 			info.getEnv().setVectorChartColorTypes(VectorSeriesColorEnum.blackWhite.name());
 		}
+		if (info.getEnv().getAdvancedMode() == null) {
+			info.getEnv().setAdvancedMode(Boolean.FALSE);
+		}
+		if (info.getEnv().getSpantusVersion() == null) {
+			info.getEnv().setSpantusVersion("0.0.1");
+		}
+
+		
 		SpntLogginLevel logginLevel = SpntLogginLevel.valueOf(info.getEnv().getLoggingLevel());
 		int i = 0;
 		for (SpntLogginLevel lvl : SpntLogginLevel.values()) {

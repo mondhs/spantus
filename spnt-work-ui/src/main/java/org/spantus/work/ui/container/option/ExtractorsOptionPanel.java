@@ -1,16 +1,9 @@
 package org.spantus.work.ui.container.option;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -18,9 +11,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.extractor.impl.ExtractorTypeEnum;
-import org.spantus.logger.Logger;
 import org.spantus.mpeg7.Mpeg7ExtractorEnum;
 import org.spantus.ui.ModelEntry;
 import org.spantus.ui.ModelEntryByOrderComparator;
@@ -34,18 +25,13 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 
 	private static final long serialVersionUID = 1L;
 	private ShuttleSelectionPanel shuttle;
-	private JPanel propetiesPnl;
-	
-	private JLabel extractorLabel = new JLabel();
-	private Map<String, JCheckBox> modifiers = new HashMap<String, JCheckBox>();
-//	private JCheckBox smoothedCmb ;
-//	private JCheckBox meanCmb ;
-//	private JCheckBox deltaCmb;
-//	private JCheckBox stdevCmb;
-	private Logger log = Logger.getLogger(ExtractorsOptionPanel.class);
+	private ExtractorPropetiesPnl propetiesPnl;
 	
 	
-	ExtractorParam selectedExtractorParam;
+//	private Logger log = Logger.getLogger(ExtractorsOptionPanel.class);
+	
+	
+//	ExtractorParam selectedExtractorParam;
 	
 //	Map<SupportableReaderEnum, List<JCheckBox>> readersChoises = null;
 	SpantusWorkInfo config;
@@ -70,9 +56,14 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 		this.add(getPropertiesPnl(),BorderLayout.SOUTH);
 		getPropertiesPnl().setVisible(false);
 	}
+
 	public void reload() {
-		// TODO Auto-generated method stub
-		
+		onShowEvent();
+	}
+	
+	//Override
+	public void onShowEvent() {
+	
 	}
 
 	
@@ -115,41 +106,27 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 		return getShuttle();
 	}
 	
-	private JPanel getPropertiesPnl() {
+	private ExtractorPropetiesPnl getPropertiesPnl() {
 		if(propetiesPnl == null){
-			propetiesPnl = new JPanel(new GridLayout(0, 3));
-			propetiesPnl.setBorder(BorderFactory.createTitledBorder(null, 
-					getMessage("properties"),
-					TitledBorder.DEFAULT_JUSTIFICATION,
-					TitledBorder.DEFAULT_POSITION));
-			
-			extractorLabel.setText(selectedExtractorParam==null?"<none>":selectedExtractorParam.getClassName());
-			propetiesPnl.add(extractorLabel);
-			for (ExtractorModifiersEnum modifier : ExtractorModifiersEnum.values()) {
-				JCheckBox chb = createChb(modifier.name());
-				modifiers.put(modifier.name(), chb);
-				propetiesPnl.add(chb);
-			}
+			propetiesPnl = new ExtractorPropetiesPnl();
+//				new JPanel(new GridLayout(0, 3));
+//			propetiesPnl.setBorder(BorderFactory.createTitledBorder(null, 
+//					getMessage("properties"),
+//					TitledBorder.DEFAULT_JUSTIFICATION,
+//					TitledBorder.DEFAULT_POSITION));
+//			
+//			extractorLabel.setText(selectedExtractorParam==null?"<none>":selectedExtractorParam.getClassName());
+//			propetiesPnl.add(extractorLabel);
+//			for (ExtractorModifiersEnum modifier : ExtractorModifiersEnum.values()) {
+//				JCheckBox chb = createChb(modifier.name());
+//				modifiers.put(modifier.name(), chb);
+//				propetiesPnl.add(chb);
+//			}
 			
 		}
 		return propetiesPnl;
 	}
-	protected JCheckBox createChb(String name){
-		JCheckBox chb = new JCheckBox();
-		chb.setName(name);
-		chb.setText(getMessage(chb.getName()));
-		chb.addItemListener(new ItemListener(){
-			public void itemStateChanged(ItemEvent e) {
-				boolean valInd = ((JCheckBox)e.getSource()).isSelected();	
-				if(selectedExtractorParam != null){
-					ExtractorParamUtils.setValue(selectedExtractorParam,
-					((JCheckBox)e.getSource()).getName(), valInd);
-					log.debug(selectedExtractorParam.toString());
-				}
-			}
-		});
-		return chb;
-	}
+	
 	
 
 	
@@ -214,22 +191,18 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 					propertiesInd = ExtractorTypeEnum.SequenceOfScalar
 							.equals(exEnum.getType());
 					if(propertiesInd){
-						selectedExtractorParam = ExtractorParamUtils.getSafeParam(
+						ExtractorParam selectedExtractorParam = ExtractorParamUtils.getSafeParam(
 								getConfig().getProject().getFeatureReader().getParameters(),
 								extractorName);
 						selectedExtractorParam.setClassName(extractorName);
-						extractorLabel.setText(extractorName);
-						for (ExtractorModifiersEnum modifier : ExtractorModifiersEnum.values()) {
-							boolean valInd = ExtractorParamUtils.getBoolean(selectedExtractorParam,
-									modifier.name(),false);
-							modifiers.get(modifier.name()).setSelected(valInd);
-						}
+						propetiesPnl.setSelectedExtractorParam(selectedExtractorParam);
 					}
 				}
 			}
 			getPropertiesPnl().setVisible(propertiesInd);
 			if(!propertiesInd){
-				selectedExtractorParam = null;
+				propetiesPnl.setSelectedExtractorParam(null);
+
 			}
 			getShuttle().getDestListModel().sort(new ModelEntryByOrderComparator());
 		}

@@ -44,6 +44,8 @@ public class EnviromentRepresentation {
 	private Boolean popupNotifications;
 	private Boolean autoSegmentation;
 	private String loggingLevel;
+	private Boolean advancedMode;
+	private String spantusVersion;
 	
 	private String laf;
 
@@ -119,6 +121,22 @@ public class EnviromentRepresentation {
 
 	public void setVectorChartColorTypes(String vectorChartColorTypes) {
 		this.vectorChartColorTypes = vectorChartColorTypes;
+	}
+
+	public Boolean getAdvancedMode() {
+		return advancedMode;
+	}
+
+	public void setAdvancedMode(Boolean advancedMode) {
+		this.advancedMode = advancedMode;
+	}
+
+	public String getSpantusVersion() {
+		return spantusVersion;
+	}
+
+	public void setSpantusVersion(String spantusVersion) {
+		this.spantusVersion = spantusVersion;
 	}
 
 

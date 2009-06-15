@@ -20,10 +20,7 @@
  */
 package org.spantus.extractor.impl;
 
-import java.util.List;
-
 import org.spantus.core.FrameValues;
-import org.spantus.core.FrameVectorValues;
 import org.spantus.extractor.AbstractExtractor3D;
 /**
  * 
@@ -37,26 +34,67 @@ import org.spantus.extractor.AbstractExtractor3D;
  */
 public class NoiseLevelExtractor extends AbstractSpectralExtractor {
 
+	private Double estimate = 0D;
+	private Double noiseEstimate = 0D;
+	private Double noiseThreshold = 0D;
+	private Float previous;
+	
+	protected FrameValues calculateWindow(FrameValues windowedWindow, FrameValues realValues){
+		return calculateWindow(realValues);
+	}
 	
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameVectorValues val3d = calculateFFT(window);
 		FrameValues rtnValues = super.calculateWindow(window);
-		for (List<Float> fv : val3d) {
-			float entropy = 0;
-			for (Float current : fv) {
-				if(current == 0) continue;
-				entropy += (current) * Math.log10(current) ;
-				if(Float.isNaN(entropy)){
-					Float.isNaN(entropy);
-				}
-				;
-			}
-			rtnValues.add(entropy);
+		Float max = -Float.MAX_VALUE;
+		for (Float value : window) {
+			max = Math.max(max, estimate(value));
+//			rtnValues.add(estimate(value));
 		}
+		rtnValues.add(max);
 		return rtnValues;
 	}
 
+	protected Float estimate(Float value){
+		previous = previous == null ? value : previous;
+		Double BEstimateCoef = 
+//			(getConfig().getSampleRate()* .989992)/8000F; 
+		.9; 
+//			1.0F;
+		Double BNoiseCoef = 
+//			(getConfig().getSampleRate()* .9922)/8000F;
+			.9922;
+//			.999999	;
+		Double BThresholdCoef = 
+//			(getConfig().getSampleRate()* .98975)/8000F;
+			.98975;
 
+		
+		//emphaseValue  - u(k)
+		Double emphaseValue = Math.abs(value- .95*previous);//Math.abs(value - .95F*previous);
+		//estimate - s(k)
+		if(estimate>emphaseValue){
+			estimate = emphaseValue;			
+		}else{
+			estimate = (1-BEstimateCoef) * emphaseValue + BEstimateCoef * estimate;
+		}
+		
+		
+		//noiseEstimate - n(k)
+		if(noiseEstimate>emphaseValue){
+			noiseEstimate = emphaseValue;
+		}else{
+			noiseEstimate = (1-BNoiseCoef) * emphaseValue + BNoiseCoef * noiseEstimate;
+		}
+		
+		
+		//noiseThreshold - tn(k)
+		if(noiseThreshold>noiseEstimate){
+			noiseThreshold = (1-BThresholdCoef) * noiseEstimate + BThresholdCoef * noiseThreshold;
+		}else{
+			noiseThreshold = noiseEstimate;
+		}
+		return noiseThreshold.floatValue();
+	}
 	
 	public String getName() {
 		return ExtractorEnum.NOISE_LEVEL_EXTRACTOR.toString();

@@ -38,9 +38,9 @@ public class DeltaThreshold extends StaticThreshold {
 	private Logger log = Logger.getLogger(DeltaThreshold.class);
 
 	private Float previous;
-	private Float estimate = 0F;
-	private Float noiseEstimate = 0F;
-	private Float noiseThreshold = 0F;
+	private Double estimate = 0D;
+	private Double noiseEstimate = 0D;
+	private Double noiseThreshold = 0D;
 	private Float previousDelta = 0F;
 	private MeanExtractor meanExtractor;
 
@@ -88,20 +88,20 @@ public class DeltaThreshold extends StaticThreshold {
 
 		previous = previous == null ? 2*value : previous;
 		Float delta = (value - previous);
-		meanExtractor.calculateMean(delta);
-		Float maxThreshold = meanExtractor.getMean() + coef
-				* meanExtractor.getStdev();
-		Float minThreshold = meanExtractor.getMean() - (1.4F - coef)
-				* meanExtractor.getStdev();
-		
-
-		boolean currentIncreasing = Math.abs(delta) > maxThreshold && delta > 0;
-		boolean currentStabe = Math.abs(delta) > minThreshold
-				&& Math.abs(delta) < maxThreshold;
-		boolean currentDecreasing = Math.abs(delta) > maxThreshold && delta < 0;
+//		meanExtractor.calculateMean(delta);
+//		Float maxThreshold = meanExtractor.getMean() + coef
+//				* meanExtractor.getStdev();
+//		Float minThreshold = meanExtractor.getMean() - (1.4F - coef)
+//				* meanExtractor.getStdev();
+//		
+//
+//		boolean currentIncreasing = Math.abs(delta) > maxThreshold && delta > 0;
+//		boolean currentStabe = Math.abs(delta) > minThreshold
+//				&& Math.abs(delta) < maxThreshold;
+//		boolean currentDecreasing = Math.abs(delta) > maxThreshold && delta < 0;
 		Float state = 0F;
-		int prevIncThr = 30;
-		int prevStableThr = 10;
+//		int prevIncThr = 30;
+//		int prevStableThr = 10;
 	
 
 //		log.debug(
@@ -110,13 +110,21 @@ public class DeltaThreshold extends StaticThreshold {
 //						+ "; delta {2,number,#.000}; ", sample, value, delta,
 //				currentIncreasing, currentDecreasing);
 
-		Float BEstimateCoef = 0.9992F; 
-		Float BNoiseCoef = 0.9922F;
-		Float BThresholdCoef = 0.799975F;
+		Double BEstimateCoef = 
+//			(getConfig().getSampleRate()* .989992)/8000F; 
+		.989992; 
+//			1.0F;
+		Double BNoiseCoef = 
+//			(getConfig().getSampleRate()* .9922)/8000F;
+			.9922;
+//			.999999	;
+		Double BThresholdCoef = 
+//			(getConfig().getSampleRate()* .98975)/8000F;
+			.98975;
 
 		
 		//emphaseValue  - u(k)
-		Float emphaseValue = Math.abs(value);//Math.abs(value - .95F*previous);
+		Double emphaseValue = Math.abs(value- .95*previous);//Math.abs(value - .95F*previous);
 		//estimate - s(k)
 		if(estimate>emphaseValue){
 			estimate = emphaseValue;			
@@ -140,10 +148,10 @@ public class DeltaThreshold extends StaticThreshold {
 			noiseThreshold = noiseEstimate;
 		}
 		//thresholdSpeech - T_s
-		Float ThresholdSpeech = 2.0F;
+		Double ThresholdSpeech = 9.0;
 		//thresholdSpeech - T_n
-		Float ThresholdNose = 1.414F;
-		Float ThresholdMin = 1F;
+		Double ThresholdNose = 1.414;
+		Double ThresholdMin = 1.0;
 		//s(k)> T_s*tn(k)+T_min
 //		if(estimate>ThresholdSpeech*noiseThreshold+ThresholdMin){
 //			state = 1F;
@@ -153,7 +161,7 @@ public class DeltaThreshold extends StaticThreshold {
 //			//do nothing
 //			getClass();
 //		}
-		if(estimate*2<value){
+		if(value>noiseThreshold*ThresholdSpeech){
 			state = 1F;	
 		}
 		
@@ -165,7 +173,8 @@ public class DeltaThreshold extends StaticThreshold {
 //				 hitRate
 //				(float) changeStatus.ordinal()
 //				 meanExtractor.getStdev()
-				estimate*2
+				(float)(ThresholdSpeech*noiseThreshold)
+//				estimate.floatValue()*100
 				 );
 		
 		previousDelta =delta;

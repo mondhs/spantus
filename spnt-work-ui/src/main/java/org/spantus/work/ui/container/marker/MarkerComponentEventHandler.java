@@ -117,11 +117,12 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
 		// TODO Auto-generated method stub
 		
 	}
+	//Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
-    
+	//Override
 	public void keyTyped(KeyEvent e) {
          int keyChar = e.getKeyChar();
          if(32 == keyChar){
@@ -139,7 +140,7 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
          		removeMarker(markerComponent);
          	}
          }else{
-         	log.error("[keyTyped] name" + popup.getName()+ "; keyChar" + keyChar);	
+//         	log.error("[keyTyped] name" + popup.getName()+ "; keyChar" + keyChar);	
          }
      }
 	

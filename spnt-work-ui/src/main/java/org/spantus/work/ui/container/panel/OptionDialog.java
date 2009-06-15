@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -18,6 +20,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.spantus.logger.Logger;
 import org.spantus.work.ui.container.I18nTreeNode;
 import org.spantus.work.ui.container.ReloadableComponent;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
@@ -28,9 +31,15 @@ import org.spantus.work.ui.container.option.SaveableOptionPanel;
 import org.spantus.work.ui.container.option.WindowOptionPnl;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
+/**
+ * 
+ * @author Mindaugas Greibus
+ * 
+ *
+ */
+public class OptionDialog extends JDialog implements ReloadableComponent, KeyListener{
 
-public class OptionDialog extends JDialog implements ReloadableComponent{
-
+	private Logger log = Logger.getLogger(OptionDialog.class);
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private JTree jTree = null;
@@ -157,7 +166,9 @@ public class OptionDialog extends JDialog implements ReloadableComponent{
 			Object selection = ((DefaultMutableTreeNode)e.getPath().getLastPathComponent()).getUserObject();
 			optionsPanelEnum panelEntity = optionsPanelEnum.valueOf(selection.toString());
 			if(getSaveablePanels().get(panelEntity) != null){
-				getJScrollPane().setViewportView(setPanel(getSaveablePanels().get(panelEntity)));
+				AbstractOptionPanel abstractOptionPanel = getSaveablePanels().get(panelEntity);
+				getJScrollPane().setViewportView(setPanel(abstractOptionPanel));
+				abstractOptionPanel.onShowEvent();
 			}
 		}
 		
@@ -172,8 +183,6 @@ public class OptionDialog extends JDialog implements ReloadableComponent{
 			saveablePanels.put(optionsPanelEnum.general, generalOptionPnl);
 			saveablePanels.put(optionsPanelEnum.parameters, parametersPnl);
 			saveablePanels.put(optionsPanelEnum.feature, extractorsOptionPnl);
-			
-			
 		}
 		return saveablePanels;
 	}
@@ -246,6 +255,22 @@ public class OptionDialog extends JDialog implements ReloadableComponent{
 		for (AbstractOptionPanel optionPnl : getSaveablePanels().values()) {
 			optionPnl.setInfo(info);
 		}
+	}
+
+	//Override
+	public void keyPressed(KeyEvent e) {
+		// Do nothing
+	}
+
+	//Override
+	public void keyReleased(KeyEvent e) {
+		// Do nothing
+	}
+
+	//Override
+	public void keyTyped(KeyEvent e) {
+		int keyChar = e.getKeyChar();
+		log.error("[keyTyped] name ; keyChar" + keyChar);			
 	}
 
 
