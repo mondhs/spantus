@@ -16,10 +16,10 @@ public class MapComboBoxModel extends DefaultComboBoxModel {
 	
 	private Map<String, Object> objectMap;
 	private String selectedObject;
-	
+
+	@SuppressWarnings("unchecked")
 	public void addElement(Object obj) {
 		if(obj instanceof Entry){
-			@SuppressWarnings("unchecked")
 			Entry<String, Object> entry = (Entry<String,Object>)obj;
 			getObjectMap().put(entry.getKey(), entry.getValue());
 		}else{

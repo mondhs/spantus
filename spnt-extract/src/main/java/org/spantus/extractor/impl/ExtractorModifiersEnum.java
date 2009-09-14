@@ -28,6 +28,6 @@ package org.spantus.extractor.impl;
  *
  */
 public enum ExtractorModifiersEnum {
-	mean, stdev, delta, smooth
+	mean, stdev, delta, smooth, log
 
 }

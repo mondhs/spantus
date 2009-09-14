@@ -27,52 +27,41 @@ import org.spantus.extractor.AbstractExtractor;
 import org.spantus.logger.Logger;
 /**
  * 
- * Delta extractor modifier
+ * Params logaritmic
  * 
  * @author Mindaugas Greibus
  *
  * @since 0.0.1
  * 
- * Created 2009.05.24
+ * Created 2009.06.02
  *
  */
-public class DeltaExtractor extends AbstractExtractor {
+public class LogExtractor extends AbstractExtractor {
 	Logger log = Logger.getLogger(getClass());
 	
 
 	private IExtractor extractor;
-	
-	private Float previous;
-	private Float previousDelta;
 
 	
 	
-	public DeltaExtractor() {
-		getParam().setClassName(DeltaExtractor.class.getSimpleName());
+	public LogExtractor() {
+		getParam().setClassName(LogExtractor.class.getSimpleName());
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues calculatedValues = new FrameValues();
 		FrameValues fv = getExtractor().calculateWindow(window);
-		
-		if(fv.size()==1){
-			Float val = fv.get(0);
-			previous = previous==null?val:previous;
-			Float delta = val-previous;
-			previousDelta = previousDelta==null?delta:previousDelta;
-//			Float deltaDelta = delta - previousDelta;
-			previous = val;
-			previousDelta=delta;
-			calculatedValues.add(delta);
-//			calculatedValues.add(deltaDelta);
-
+		for (Float float1 : fv) {
+			calculatedValues.add((float)Math.log(float1));
 		}
-
 		return calculatedValues;
 	}	
 	
+	
+	
+	
 	public String getName() {
-		return ExtractorModifiersEnum.delta.name()+"_"+ getExtractor().getName();
+		return ExtractorModifiersEnum.mean.name()+"_" + getExtractor().getName();
 	}
 	
 	@Override

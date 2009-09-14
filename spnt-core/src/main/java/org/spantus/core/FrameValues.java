@@ -54,6 +54,9 @@ public class FrameValues extends LinkedList<Float>{
 	@SuppressWarnings("unchecked")
 	public FrameValues(Collection collection){
 		addAll(collection);
+		if(collection instanceof FrameValues){
+			setSampleRate(((FrameValues)collection).getSampleRate());
+		}
 	}
 	public FrameValues(Float[] floats) {
 		addAll(Arrays.asList(floats));
@@ -74,7 +77,9 @@ public class FrameValues extends LinkedList<Float>{
 	
 	public FrameValues subList(int fromIndex, int toIndex) {
 		List<Float> lst = super.subList(fromIndex, toIndex);
-		return new FrameValues(lst);
+		FrameValues fv = new FrameValues(lst); 
+		fv.setSampleRate(this.getSampleRate());
+		return fv;
 	}
 	
 	

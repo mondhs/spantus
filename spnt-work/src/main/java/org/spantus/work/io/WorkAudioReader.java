@@ -30,7 +30,7 @@ public class WorkAudioReader extends AbstractAudioReader{
 	
 	public WorkAudioReader(WorkReadersEnum readerType) {
 		switch (readerType) {
-		case simple:
+		case simple: 
 			workReader = AudioFactory.createAudioReader();
 			break;
 		case multiFeature:

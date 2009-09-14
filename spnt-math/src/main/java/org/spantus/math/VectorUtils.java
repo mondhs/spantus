@@ -20,6 +20,7 @@
  */
 package org.spantus.math;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,5 +55,7 @@ public class VectorUtils {
 	public static Float avg(List<Float> vector){
 		return sum(vector)/vector.size();
 	}
-
+	public static Float min(List<Float> vector){
+		return Collections.min(vector);
+	}
 }

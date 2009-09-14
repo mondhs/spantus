@@ -32,6 +32,7 @@ import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.DeltaThreshold;
 import org.spantus.core.threshold.DynamicThreshold;
 import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.MaximumThreshold;
 import org.spantus.core.threshold.OfflineThreshold;
 import org.spantus.core.threshold.StaticThreshold;
 import org.spantus.core.threshold.ThresholdEnum;
@@ -142,6 +143,12 @@ public abstract class ExtractorUtils {
 					smooted.setExtractor(extractorInstance);
 					extractorInstance = smooted;
 				}
+				if(ExtractorParamUtils.getBoolean(param, 
+						ExtractorModifiersEnum.log.name(), false)){
+					LogExtractor logExtactor = new LogExtractor();
+					logExtactor.setExtractor(extractorInstance);
+					extractorInstance = logExtactor;
+				}
 				return extractorInstance;
 			} else if (extractor3DMap.get(extractor) != null) {
 				return extractor3DMap.get(extractor).newInstance();
@@ -205,6 +212,8 @@ public abstract class ExtractorUtils {
 		case delta:
 			threshold = new DeltaThreshold();
 			break;
+		case maximum:
+			threshold = new MaximumThreshold();
 		default:
 			break;
 		}

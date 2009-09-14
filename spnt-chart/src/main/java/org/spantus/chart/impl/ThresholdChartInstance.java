@@ -29,6 +29,7 @@ import java.math.BigDecimal;
 import java.text.Format;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import net.quies.math.plot.CoordinateBoundary;
 import net.quies.math.plot.GraphDomain;
@@ -76,9 +77,9 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 			BigDecimal[] yCoordinate, BigDecimal xScalar, BigDecimal yScalar) {
 //
 		if(polylinesX.size() > 0) return;
-		LinkedList<Float> list = null;
+		FrameValues list = null;
 		synchronized (getCtx().getValues()) {
-			list = new LinkedList<Float>(getCtx().getValues());
+			list = new FrameValues(getCtx().getValues());
 		}
 		Float _min = Float.MAX_VALUE;
 		Float _max = Float.MIN_VALUE;
@@ -90,10 +91,22 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 		this.min = _min;
 		this.max = _max;
 		
-		polylinesX.add(toCoordinatesTime(getCtx().getValues(), xScalar.floatValue()));
-		polylinesYt.add(toCoordinatesValues(getCtx().getThreshold(), yScalar.floatValue()));
-		polylinesYstate.add(toCoordinatesSates(getCtx().getState(), yScalar.floatValue()));
-		polylinesY.add(toCoordinatesValues(getCtx().getValues(), yScalar.floatValue()));
+
+		FrameValues threshold = getCtx().getThreshold();
+		FrameValues states = getCtx().getState();
+		if(domain.getFrom() != null){
+			int fromIndex = getCtx().getValues().toIndex(domain.getFrom().floatValue());
+			int toIndex = getCtx().getValues().toIndex(domain.getUntil().floatValue());
+			list=(FrameValues)list.subList(fromIndex, toIndex);
+			threshold = (FrameValues)threshold.subList(fromIndex, toIndex);
+			states = (FrameValues)states.subList(fromIndex, toIndex);
+		}
+		
+		
+		polylinesX.add(toCoordinatesTime(list, xScalar.floatValue()));
+		polylinesYt.add(toCoordinatesValues(threshold, yScalar.floatValue()));
+		polylinesYstate.add(toCoordinatesSates(states, yScalar.floatValue()));
+		polylinesY.add(toCoordinatesValues(list, yScalar.floatValue()));
 
 	}
 
@@ -101,7 +114,10 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 //		log.severe("paint: " + description);
 //		int i = polylinesX.size();
 //		while (--i >= 0) {
+		
 		for (int i = 0; i < polylinesY.size(); i++) {
+			
+			
 			int[] x = polylinesX.get(i);
 			int[] y = polylinesY.get(i);
 			int[] yt = polylinesYt.get(i);
@@ -125,10 +141,11 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 			xMax = domain.getUntil().floatValue();
 			xMin = domain.getFrom().floatValue();
 		}
-
-		return new CoordinateBoundary(new BigDecimal(xMin),
+		coordinateBoundary = new CoordinateBoundary(new BigDecimal(xMin),
 				new BigDecimal(xMax), new BigDecimal(yMin),
 				new BigDecimal(yMax));
+
+		return coordinateBoundary;
 
 	}
 
@@ -207,7 +224,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 		int i=0; 
 		float delta =  max-min;
 		for (Float floatValue : valsClone) {
-			floatValue=floatValue == 1?max:min;
+			floatValue=max*floatValue; //floatValue == 1?max:min;
 			if(i+1 == valsClone.size() || i == 0){
 				floatValue = min;
 			}

@@ -57,7 +57,8 @@ public class DeltaThreshold extends StaticThreshold {
 		meanExtractor = new MeanExtractor();
 		meanExtractor.setOrder(50);
 	}
-
+	
+	@Override
 	protected void processDiscriminator(Long sample, Float value) {
 		Float prevState = 0F;
 		Integer countChanges = 0;

@@ -19,11 +19,11 @@
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-core</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+		</dependency> 
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-extract</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1-SNAPSHOT</version> 
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>

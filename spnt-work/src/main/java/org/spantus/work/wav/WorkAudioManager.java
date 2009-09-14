@@ -166,9 +166,9 @@ public class WorkAudioManager implements AudioManager {
 			this.length = length;
 		}
 
-		public AudioInputStream getStream() {
-			return stream;
-		}
+//		public AudioInputStream getStream() {
+//			return stream;
+//		}
 
 		/*
 		 * (non-Javadoc)

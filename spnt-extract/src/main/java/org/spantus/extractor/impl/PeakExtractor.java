@@ -62,7 +62,7 @@ public class PeakExtractor extends AbstractExtractor {
 		FrameValues calculatedValues = new FrameValues();
 		int order = extrValues.get(0).size();
 		LinkedList<Float> bufferValues = getBuffer(order);
-		LinkedList<Float> predictedValues = new FrameValues();
+//		LinkedList<Float> predictedValues = new FrameValues();
 		for (Float value : window) {
 			bufferValues.poll();
 			bufferValues.add(value);
