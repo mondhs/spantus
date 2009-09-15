@@ -1,5 +1,6 @@
 package org.spantus.core.threshold;
 
+
 /**
  * 
  * @author Mindaugas Greibus
@@ -14,6 +15,8 @@ public class ExtreamEntry {
 	private Integer index;
 	private Float value;
 	private SignalStates signalStates;
+	private ExtreamEntry next;
+	private ExtreamEntry previous;
 	
 	public ExtreamEntry(Integer index, Float value,
 			SignalStates signalStates) {
@@ -41,6 +44,25 @@ public class ExtreamEntry {
 	public void setSignalStates(SignalStates signalStates) {
 		this.signalStates = signalStates;
 	}
+	
+	public void link(ExtreamEntry previous, ExtreamEntry next){
+		this.next = next;
+		this.previous = previous;
+	}
+	
+	public ExtreamEntry getNext() {
+		return next;
+	}
+	public void setNext(ExtreamEntry next) {
+		this.next = next;
+	}
+	public ExtreamEntry getPrevious() {
+		return previous;
+	}
+	public void setPrevious(ExtreamEntry previous) {
+		this.previous = previous;
+	}
+	
 	@Override
 	public String toString() {
 		return getIndex() +"=>["+getValue() + "; " + getSignalStates() + "]";

@@ -136,6 +136,10 @@ public class WavDropTargetListener implements DropTargetListener {
 					.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 				List<File> files = (List<File>) transferable
 				.getTransferData(DataFlavor.javaFileListFlavor);
+				if(files == null){
+					log.error("dragged files list are empty");
+					return urls;
+				}
 				for (File file : files) {
 					urls.add(file.toURI().toURL());
 				}

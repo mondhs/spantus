@@ -16,12 +16,11 @@ public class ExtreamsListIterator implements ListIterator<ExtreamEntry> {
 
 	Logger log = Logger.getLogger(ExtreamsListIterator.class);
 	
-	private transient IteratationEntry header = new IteratationEntry(null,
-			null, null);
 
-	private IteratationEntry lastReturned = null;
-	private IteratationEntry first = null;
-	private IteratationEntry last = null;
+	private ExtreamEntry lastReturned = null;
+	private ExtreamEntry first = null;
+	@SuppressWarnings("unused")
+	private ExtreamEntry last = null;
 	
 	private int nextIndex;
 	FrameValues allValues;
@@ -31,53 +30,49 @@ public class ExtreamsListIterator implements ListIterator<ExtreamEntry> {
 		this.list = list;
 		this.allValues = allValues;
 		nextIndex = 0;
-		IteratationEntry previous = null;
-		IteratationEntry entry = null;
+		ExtreamEntry previous = null;
 		for (ExtreamEntry element : list) {
-			entry = new IteratationEntry(element, null, previous);
+			element.link(previous, null);
 			if(first == null){
-				first = entry;
+				first = element;
 			}
 			if(previous != null){
-				previous.next = entry;
-				entry.previous = previous;
+				previous.setNext(element);
+				element.setPrevious(previous);
 			}
-			previous = entry;
+			previous = element;
 		}
-		last = entry;
+		last = previous.getNext();
 	}
 
 
 	// custom impl
 	public boolean isPreviousMinExtream(){
-		if(lastReturned.previous == null){
+		if(lastReturned.getPrevious() == null){
 			return true;
 		}
-		return SignalStates.minExtream.equals(lastReturned.previous.element.getSignalStates());
+		return SignalStates.minExtream.equals(lastReturned.getPrevious().getSignalStates());
 	}
 	public boolean isCurrentMaxExtream(){
-		if(lastReturned.previous == null){
-			return true;
-		}
-		return SignalStates.minExtream.equals(lastReturned.previous.element.getSignalStates());
+		return SignalStates.maxExtream.equals(lastReturned.getSignalStates());
 	}
 	public boolean isNextMinExtream(){
-		if(lastReturned.next == null){
+		if(lastReturned.getNext() == null){
 			return true;
 		}
-		return SignalStates.minExtream.equals(lastReturned.next.element.getSignalStates());
+		return SignalStates.minExtream.equals(lastReturned.getNext().getSignalStates());
 	}
 	public ExtreamEntry getNextEntry(){
-		if(lastReturned.next == null){
-			return new ExtreamEntry(list.size(), lastReturned.element.getValue(),SignalStates.minExtream);
+		if(lastReturned.getNext() == null){
+			return new ExtreamEntry(list.size(), lastReturned.getValue(),SignalStates.minExtream);
 		}
-		return lastReturned.next.element;
+		return lastReturned.getNext();
 	}
 	public ExtreamEntry getPreviousEntry(){
-		if(lastReturned.previous == null){
-			return new ExtreamEntry(0, lastReturned.element.getValue(),SignalStates.minExtream);
+		if(lastReturned.getPrevious() == null){
+			return new ExtreamEntry(0, lastReturned.getValue(),SignalStates.minExtream);
 		}
-		return lastReturned.previous.element;
+		return lastReturned.getPrevious();
 	}
 	public Integer getPeakLength(){
 		int length = getNextEntry().getIndex() - getPreviousEntry().getIndex(); 
@@ -99,13 +94,16 @@ public class ExtreamsListIterator implements ListIterator<ExtreamEntry> {
 	public void logCurrent(){
 //		if(log.isDebugMode()){
 			int length = getPeakLength(); 
-			String out = MessageFormat.format("{0,number,#.###}/{1,number,#.###}\\{2,number,#.###};\t area: {3,number,#};\t\t length: {4}", 
+			String out = MessageFormat.format("{0,number,#.###};{1,number,#.###};{2,number,#.###};\t area: {3,number,#};\t\t length: {4}", 
 					allValues.toTime(getPreviousEntry().getIndex()), 
-					allValues.toTime(lastReturned.element.getIndex()), 
+					allValues.toTime(lastReturned.getIndex()), 
 					allValues.toTime(getNextEntry().getIndex()),
 //					getPreviousEntry().getIndex(), 
-//					lastReturned.element.getIndex(), 
+//					lastReturned.getIndex(), 
 //					getNextEntry().getIndex(),
+//					getPreviousEntry().getValue(), 
+//					lastReturned.getValue(), 
+//					getNextEntry().getValue(),
 					getArea(), allValues.toTime(length));
 			log.info(out);
 			
@@ -115,7 +113,10 @@ public class ExtreamsListIterator implements ListIterator<ExtreamEntry> {
 	//interface impl
 
 	public boolean hasNext() {
-		return nextIndex != list.size();
+		if(lastReturned == null){
+			return first.getNext() != null;
+		}
+		return  lastReturned.getNext() != null; 
 	}
 
 	public ExtreamEntry next() {
@@ -125,24 +126,45 @@ public class ExtreamsListIterator implements ListIterator<ExtreamEntry> {
 		if(lastReturned == null){
 			lastReturned = first;
 		}else{
-			lastReturned = lastReturned.next;
+			lastReturned = lastReturned.getNext();
 		}
 		nextIndex++;
-		return lastReturned.element;
+		return lastReturned;
+	}
+	public ExtreamEntry getNext(SignalStates signalState) {
+		ExtreamEntry current = lastReturned;
+		while(current.getNext()!=null){
+			current = current.getNext();
+			if(signalState.equals(current.getSignalStates())){
+				return current;
+			}
+		}
+		return null;
+	}
+	public ExtreamEntry getPrevious(SignalStates signalState) {
+		ExtreamEntry current = lastReturned;
+		while(current.getPrevious()!=null){
+			current = current.getPrevious();
+			if(signalState.equals(current.getSignalStates())){
+				return current;
+			}
+		}
+		return null;
+		
 	}
 
 	public boolean hasPrevious() {
-		return nextIndex != 0;
+		return lastReturned.getPrevious() != null;
 	}
 
 	public ExtreamEntry previous() {
 		if (nextIndex == 0)
 			throw new NoSuchElementException();
 
-		lastReturned = lastReturned.previous;
+		lastReturned = lastReturned.getPrevious();
 		nextIndex--;
 		checkForComodification();
-		return lastReturned.element;
+		return lastReturned;
 	}
 
 	public int nextIndex() {
@@ -154,9 +176,59 @@ public class ExtreamsListIterator implements ListIterator<ExtreamEntry> {
 	}
 
 	public void remove() {
+		log.info("remove current");
+		remove(lastReturned);
+		ExtreamEntry previous = lastReturned.getPrevious();
+		if(previous != null){
+			lastReturned = previous;
+			nextIndex--;
+		}else {
+			lastReturned = lastReturned.getNext();
+		}
 		
 	}
+	public void removeNext() {
+		ExtreamEntry next = lastReturned.getNext();
+		if(next != null){
+			ExtreamEntry nextNext = lastReturned.getNext().getNext();
+			if(nextNext != null){
+				lastReturned.setNext(nextNext);
+				nextNext.setPrevious(lastReturned);
+			}else{
+				lastReturned.setNext(null);
+			}
+			list.remove(next);
+		}
+	}
 
+	public void removePrevious() {
+		ExtreamEntry previous = lastReturned.getPrevious();
+		if(previous != null){
+			ExtreamEntry previousPrevious = lastReturned.getPrevious().getPrevious();
+			if(previousPrevious != null){
+				lastReturned.setPrevious(previousPrevious);
+				previousPrevious.setNext(lastReturned);
+			}else{
+				lastReturned.setNext(null);
+			}
+			list.remove(previous);
+		}
+	}
+	public void remove(ExtreamEntry extreamEntry) {
+		log.info("remove: " + extreamEntry);
+
+		ExtreamEntry next = extreamEntry.getNext();
+		ExtreamEntry previous = extreamEntry.getPrevious();
+		if(next != null){
+			next.setPrevious(previous);
+		}
+		if(previous!=null){
+			previous.setNext(next);
+		}
+		list.remove(extreamEntry);
+	}
+
+	
 	public void set(ExtreamEntry o) {
 	}
 
@@ -167,18 +239,5 @@ public class ExtreamsListIterator implements ListIterator<ExtreamEntry> {
 		// if (modCount != expectedModCount)
 		// throw new ConcurrentModificationException();
 		// }
-	}
-
-	class IteratationEntry {
-		ExtreamEntry element;
-		IteratationEntry next;
-		IteratationEntry previous;
-
-		public IteratationEntry(ExtreamEntry element, IteratationEntry next,
-				IteratationEntry previous) {
-			this.element = element;
-			this.next = next;
-			this.previous = previous;
-		}
 	}
 }

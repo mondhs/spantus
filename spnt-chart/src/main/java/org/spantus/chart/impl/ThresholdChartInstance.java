@@ -114,8 +114,8 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 //		log.severe("paint: " + description);
 //		int i = polylinesX.size();
 //		while (--i >= 0) {
-		
-		for (int i = 0; i < polylinesY.size(); i++) {
+		int size = Math.min(polylinesY.size(), polylinesX.size());
+		for (int i = 0; i < size; i++) {
 			
 			
 			int[] x = polylinesX.get(i);
