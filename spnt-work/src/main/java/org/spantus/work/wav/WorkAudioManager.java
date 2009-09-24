@@ -66,10 +66,13 @@ public class WorkAudioManager implements AudioManager {
 		log.debug("[save] from:{0}; lenght:{1}; pathToSave:{2}", startsObj,
 				lengthObj, pathToSave);
 		AudioInputStream stream = createInput(fileURL);
-		float starts = startsObj == null?0:startsObj.floatValue();
-		float length = lengthObj == null?getTotalTime(stream):lengthObj.floatValue();
 		
-		double totalTime = getTotalTime(stream);
+		Float totalTime = getTotalTime(stream);
+		
+		Float starts = startsObj == null?0:startsObj.floatValue();
+		Float length = lengthObj == null?totalTime:lengthObj.floatValue();
+		
+		
 		double ends = starts + length;
 		double adaptedLength = ends > totalTime ? totalTime - starts : length;
 		if (starts > totalTime) {
@@ -104,8 +107,8 @@ public class WorkAudioManager implements AudioManager {
 	 * 
 	 * @return
 	 */
-	protected float getTotalTime(AudioInputStream stream) {
-		float totalTime = (stream.getFrameLength() / stream.getFormat()
+	protected Float getTotalTime(AudioInputStream stream) {
+		Float totalTime = (stream.getFrameLength() / stream.getFormat()
 				.getFrameRate());
 		return totalTime;
 	}
