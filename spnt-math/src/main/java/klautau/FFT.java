@@ -201,8 +201,8 @@ void  rsifft(Float x[])
    if (logm > 1) { 
 	  BR_permute(x, logm); 
    } 
-   x[0] *= 0.5; 
-   if (logm > 0) x[1] *= 0.5; 
+   x[0] *= 0.5F; 
+   if (logm > 0) x[1] *= 0.5F; 
  /*creat table*/ 
 	//if(logm>=4) creattab(logm); 
    /*  Call  recursive  routine */ 

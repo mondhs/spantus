@@ -29,7 +29,6 @@ import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractThreshold;
-import org.spantus.core.threshold.DeltaThreshold;
 import org.spantus.core.threshold.DynamicThreshold;
 import org.spantus.core.threshold.IThreshold;
 import org.spantus.core.threshold.MaximumThreshold;
@@ -208,9 +207,6 @@ public abstract class ExtractorUtils {
 			break;
 		case offline:
 			threshold = new OfflineThreshold();
-			break;
-		case delta:
-			threshold = new DeltaThreshold();
 			break;
 		case maximum:
 			threshold = new MaximumThreshold();

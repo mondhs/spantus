@@ -69,15 +69,15 @@ public class MFCC {
 	 */ 
 	private final double m_dlogFilterOutputFloor = 0.0; 
 	private int[][] m_nboundariesDFTBins; 
-	private double[][] m_dweights; 
+	private Double[][] m_dweights; 
 	private FFT m_fft; 
-	private double[][] m_ddCTMatrix; 
+	private Double[][] m_ddCTMatrix; 
  
-	private double[] m_dfilterOutput; 
-	private final double[] m_nlifteringMultiplicationFactor; 
+	private Double[] m_dfilterOutput; 
+	private final Double[] m_nlifteringMultiplicationFactor; 
  
 	//things to be calculated just once: 
-	private final double m_dscalingFactor; 
+	private final Double m_dscalingFactor; 
  
 	/**The 0-th coefficient is included in nnumberOfParameters. 
 	 * So, if one wants 12 MFCC's and additionally the 0-th 
@@ -120,9 +120,9 @@ public class MFCC {
  
 		//avoid allocating RAM space repeatedly, m_dfilterOutput is 
 		//going to be used in method getParameters() 
-		m_dfilterOutput = new double[m_nnumberOfFilters]; 
+		m_dfilterOutput = new Double[m_nnumberOfFilters]; 
 		for (int i = 0; i < m_dfilterOutput.length; i++) {
-			m_dfilterOutput[i]=0F;
+			m_dfilterOutput[i]=0.0;
 			
 		}
  
@@ -139,7 +139,7 @@ public class MFCC {
 			//even when m_oisZeroThCepstralCoefficientCalculated is true 
 			//because if 0-th cepstral coefficient is included, 
 			//it is not liftered 
-			m_nlifteringMultiplicationFactor = new double[m_nlifteringCoefficient]; 
+			m_nlifteringMultiplicationFactor = new Double[m_nlifteringCoefficient]; 
 			double dfactor = m_nlifteringCoefficient / 2.0; 
 			double dfactor2 = Math.PI / m_nlifteringCoefficient; 
 			for (int i=0; i<m_nlifteringCoefficient; i++) { 
@@ -162,7 +162,7 @@ public class MFCC {
  
 	/**Initializes the DCT matrix.*/ 
 	private void initializeDCTMatrix() { 
-		m_ddCTMatrix = new double[m_nnumberOfParameters][m_nnumberOfFilters]; 
+		m_ddCTMatrix = new Double[m_nnumberOfParameters][m_nnumberOfFilters]; 
 		for(int i=0;i<m_nnumberOfParameters;i++) { 
 			for(int j=0;j<m_nnumberOfFilters;j++) { 
 				m_ddCTMatrix[i][j] = Math.cos((i+1.0)*(j+1.0-0.5)*(Math.PI/m_nnumberOfFilters)); 
@@ -212,7 +212,7 @@ public class MFCC {
  
 		//initialize member variables 
 		m_nboundariesDFTBins= new int[m_nnumberOfFilters][2]; 
-		m_dweights = new double[m_nnumberOfFilters][]; 
+		m_dweights = new Double[m_nnumberOfFilters][]; 
  
 		//notice the loop starts from the filter i=1 because i=0 is the one centered at DC 
 		for (int i=1; i<= nnumberofFilters; i++) { 
@@ -246,7 +246,7 @@ public class MFCC {
  
 		//allocate space 
 		for(int i=0;i<nnumberofFilters;i++) { 
-			m_dweights[i] = new double[m_nboundariesDFTBins[i][1]-m_nboundariesDFTBins[i][0]+1]; 
+			m_dweights[i] = new Double[m_nboundariesDFTBins[i][1]-m_nboundariesDFTBins[i][0]+1]; 
 		} 
  
 		//calculate the weights 
@@ -310,9 +310,9 @@ public class MFCC {
 			//of compatibility with HTK 
 			Float dzeroThCepstralCoefficient = 0.0F; 
 			for(int j=0;j<m_nnumberOfFilters;j++) { 
-				dzeroThCepstralCoefficient += m_dfilterOutput[j]; 
+				dzeroThCepstralCoefficient += m_dfilterOutput[j].floatValue(); 
 			} 
-			dzeroThCepstralCoefficient *= m_dscalingFactor; 
+			dzeroThCepstralCoefficient *= m_dscalingFactor.floatValue(); 
 			dMFCCParameters[dMFCCParameters.length-1] = dzeroThCepstralCoefficient; 
 		} else { 
 			//allocate space 
@@ -325,13 +325,13 @@ public class MFCC {
 		//cosine transform 
 		for(int i=0;i<m_nnumberOfParameters;i++) { 
 			for(int j=0;j<m_nnumberOfFilters;j++) {
-				dMFCCParameters[i] += m_dfilterOutput[j]*m_ddCTMatrix[i][j]; 
+				dMFCCParameters[i] += ((Double)(m_dfilterOutput[j]*m_ddCTMatrix[i][j])).floatValue(); 
 				//the original equations have the first index as 1 
 			} 
 			//could potentially incorporate liftering factor and 
 			//factor below to save multiplications, but will not 
 			//do it for the sake of clarity 
-			dMFCCParameters[i] *= m_dscalingFactor; 
+			dMFCCParameters[i] *= m_dscalingFactor.floatValue(); 
 		} 
  
 		//debugging purposes 
@@ -353,7 +353,7 @@ public class MFCC {
 			// [3] ISIP package - Mississipi Univ. Picone's group. 
 			//if 0-th coefficient is included, it is not liftered 
 			for (int i=0; i<m_nnumberOfParameters; i++) { 
-				dMFCCParameters[i] *= m_nlifteringMultiplicationFactor[i]; 
+				dMFCCParameters[i] *= m_nlifteringMultiplicationFactor[i].floatValue(); 
 			} 
 		} 
  
@@ -401,12 +401,12 @@ public class MFCC {
 			if (m_ousePowerInsteadOfMagnitude) { 
 				Float[] fpowerSpectrum = m_fft.calculateFFTPower(fspeechFrame); 
 				for(int j=m_nboundariesDFTBins[i][0], k=0;j<=m_nboundariesDFTBins[i][1];j++,k++) { 
-					dfilterOutput[i] += fpowerSpectrum[j] * m_dweights[i][k]; 
+					dfilterOutput[i] += fpowerSpectrum[j] * m_dweights[i][k].floatValue(); 
 				} 
 			} else { 
 				Float[] fmagnitudeSpectrum = m_fft.calculateFFTMagnitude(fspeechFrame); 
 				for(int j=m_nboundariesDFTBins[i][0], k=0;j<=m_nboundariesDFTBins[i][1];j++,k++) { 
-					dfilterOutput[i] += fmagnitudeSpectrum[j] * m_dweights[i][k]; 
+					dfilterOutput[i] += fmagnitudeSpectrum[j] * m_dweights[i][k].floatValue(); 
 				} 
 			} 
  

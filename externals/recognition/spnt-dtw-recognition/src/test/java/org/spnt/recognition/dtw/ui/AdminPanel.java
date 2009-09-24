@@ -92,7 +92,7 @@ public class AdminPanel extends JPanel {
 			CorpusFileEntry entry = corpusFileEntries.get(getTable().getSelectedRow());
 			if(entry.getWavFile().exists()){
 				try {
-					AudioManagerFactory.createAudioManager().play(entry.getWavFile().toURI().toURL(),null,null);
+					AudioManagerFactory.createAudioManager().play(entry.getWavFile().toURI().toURL(), null, null);
 				} catch (MalformedURLException e) {
 					log.error(e);
 				}
