@@ -17,6 +17,7 @@ public class MarkerProxyDao implements MarkerDao {
 		markerDaoRegister = new HashMap<String, MarkerDao>();
 		markerDaoRegister.put("spnt.xml", new MarkerXmlDaoImpl());
 		markerDaoRegister.put("txt", new MarkerAudacityDao());
+		markerDaoRegister.put("laba", new MarkerLabaDao());
 	}
 
 	public MarkerSetHolder read(File file) {
