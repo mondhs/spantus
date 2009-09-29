@@ -5,13 +5,13 @@
       <MarkerSet>
         <markers class="linked-list">
           <Marker>
-            <start>993.3</start>
-            <length>920.2</length>
+            <start>993</start>
+            <length>920</length>
             <label>vienas</label>
           </Marker>
           <Marker>
-            <start>2051.1</start>
-            <length>872.9</length>
+            <start>2051</start>
+            <length>872</length>
             <label>du</label>
           </Marker>
         </markers>

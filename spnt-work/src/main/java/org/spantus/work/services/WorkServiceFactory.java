@@ -12,7 +12,7 @@ public abstract class WorkServiceFactory {
 	
 	public static MarkerDao createMarkerDao(){
 		if(markerDao == null){
-			markerDao = new MarkerXmlDaoImpl();
+			markerDao = new MarkerProxyDao();
 		}
 		return markerDao; 
 	}

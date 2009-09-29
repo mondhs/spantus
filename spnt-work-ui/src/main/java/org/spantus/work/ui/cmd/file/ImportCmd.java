@@ -25,8 +25,10 @@ public class ImportCmd extends AbsrtactCmd {
 	
 	private Logger log = Logger.getLogger(getClass());
 	
+	private JFileChooser fileChooser;
 	private Component parent;
-	SampleChart chart;
+	private SampleChart chart;
+	private File defaulDir;
 	
 	
 	public ImportCmd(Component parent, SampleChart chart) {
@@ -37,19 +39,12 @@ public class ImportCmd extends AbsrtactCmd {
 	
 	
 	public String execute(SpantusWorkInfo ctx) {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.addChoosableFileFilter(new UIFileFilter(ExportCmd.MARKER_FILES, ExportCmd.ExportType.markers.name()));
-		fileChooser.addChoosableFileFilter(new UIFileFilter(ExportCmd.SAMPLE_FILES, ExportType.sample.name()));
-		fileChooser.addChoosableFileFilter(new UIFileFilter(ExportCmd.MPEG7_FILES, ExportType.mpeg7.name()));
-		fileChooser.addChoosableFileFilter(new UIFileFilter(ExportCmd.BUNDLE_FILES, ExportType.bundle.name()));
-
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		fileChooser.setCurrentDirectory(ctx.getProject().getWorkingDir());
+		defaulDir = ctx.getProject().getWorkingDir();
 		
-		int returnValue = fileChooser.showOpenDialog(parent);
+		int returnValue = getFileChooser().showOpenDialog(parent);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = fileChooser.getSelectedFile();
-			ExportCmd.ExportType type = ExportCmd.ExportType.valueOf(((UIFileFilter)fileChooser.getFileFilter()).getType());
+			File selectedFile = getFileChooser().getSelectedFile();
+			ExportCmd.ExportType type = ExportCmd.ExportType.valueOf(((UIFileFilter)getFileChooser().getFileFilter()).getType());
 			switch (type) {
 			case markers:
 				ctx.getProject().getCurrentSample().setMarkerSetHolder(readMarker(selectedFile));
@@ -72,6 +67,22 @@ public class ImportCmd extends AbsrtactCmd {
 			}
 		}
 		return null;
+	}
+	
+	protected JFileChooser getFileChooser(){
+		if(fileChooser == null){
+			fileChooser = new JFileChooser();
+			fileChooser.addChoosableFileFilter(new UIFileFilter(ExportCmd.MARKER_FILES, ExportCmd.ExportType.markers.name()));
+			fileChooser.addChoosableFileFilter(new UIFileFilter(ExportCmd.SAMPLE_FILES, ExportType.sample.name()));
+			fileChooser.addChoosableFileFilter(new UIFileFilter(ExportCmd.MPEG7_FILES, ExportType.mpeg7.name()));
+			fileChooser.addChoosableFileFilter(new UIFileFilter(ExportCmd.BUNDLE_FILES, ExportType.bundle.name()));
+
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			if(defaulDir != null){
+				fileChooser.setCurrentDirectory(defaulDir);
+			}
+		}
+		return fileChooser;
 	}
 
 	protected MarkerSetHolder readMarker(File file){
