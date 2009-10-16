@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
  */
 public class SkypeMonitor implements Runnable {
 
-    private SkypeClient skypeClient;
+    private SkypeClientImpl skypeClient;
     Logger log = Logger.getLogger(SkypeMonitor.class);
 
     public void run() {
@@ -21,7 +21,7 @@ public class SkypeMonitor implements Runnable {
         init();
 
         while (isSkypeAvaible()) {
-            skypeClient.writeMessage("mondhs","test");
+//            skypeClient.writeMessage("mondhs","test");
             try {
                 Thread.sleep(4000);
             } catch (InterruptedException e) {
@@ -46,9 +46,9 @@ public class SkypeMonitor implements Runnable {
         return skypeClient != null;
     }
 
-    public SkypeClient getSkypeClient() {
+    public SkypeClientImpl getSkypeClient() {
         if (skypeClient == null) {
-            skypeClient = new SkypeClient();
+            skypeClient = new SkypeClientImpl();
         }
         return skypeClient;
     }

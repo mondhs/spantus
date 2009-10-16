@@ -8,6 +8,11 @@ public class SkypeInfo {
 
     public static final String MSG_CHAT_CREATE = "CHAT CREATE {0}";
     public static final String MSG_CHATMESSAGE = "CHATMESSAGE {0} {1}";
+    public static final String MSG_GET_CHATMESSAGES = "GET CHAT {0} CHATMESSAGES";
+    public static final String MSG_GET_CHATMESSAGE = "GET CHATMESSAGE {0} BODY";
+    public static final String MSG_GET_CHATID = "GET CHATMESSAGE {0} CHATNAME";
+
+
     public static final String MSG_NAME = "NAME {0}";
     public static final String MSG_PROTOCOL ="PROTOCOL {0}";
 

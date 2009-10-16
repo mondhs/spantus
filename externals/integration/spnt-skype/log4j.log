@@ -1,0 +1,363 @@
+[2009-10-16 18:00:20,490]DEBUG     0[Thread-0] - org.spantus.integration.skype.SkypeClient.connect(SkypeClient.java:46) - Connected
+[2009-10-16 18:00:20,496]DEBUG     6[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >NAME java
+[2009-10-16 18:00:20,511]DEBUG    21[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <OK
+[2009-10-16 18:00:20,512]DEBUG    22[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >PROTOCOL 8
+[2009-10-16 18:00:20,515]DEBUG    25[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <PROTOCOL 8
+[2009-10-16 18:00:20,522]DEBUG    32[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:00:20,526]DEBUG    36[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:00:20,527]DEBUG    37[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:00:20,550]DEBUG    60[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 107 STATUS SENDING
+[2009-10-16 18:00:20,561]DEBUG    71[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CONNSTATUS ONLINE
+[2009-10-16 18:00:20,563]DEBUG    73[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CURRENTUSERHANDLE spantus_info
+[2009-10-16 18:00:20,563]DEBUG    73[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <USERSTATUS ONLINE
+[2009-10-16 18:00:20,566]DEBUG    76[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705220
+[2009-10-16 18:00:20,566]DEBUG    76[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 107 STATUS SENDING
+[2009-10-16 18:00:20,956]DEBUG   466[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 107 STATUS SENT
+[2009-10-16 18:00:24,551]DEBUG  4061[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:00:24,553]DEBUG  4063[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:00:24,553]DEBUG  4063[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:00:24,560]DEBUG  4070[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 108 STATUS SENDING
+[2009-10-16 18:00:24,562]DEBUG  4072[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 108 STATUS SENDING
+[2009-10-16 18:00:24,656]DEBUG  4166[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705224
+[2009-10-16 18:00:25,457]DEBUG  4967[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 108 STATUS SENT
+[2009-10-16 18:00:28,562]DEBUG  8072[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:00:28,564]DEBUG  8074[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:00:28,565]DEBUG  8075[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:00:28,577]DEBUG  8087[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 109 STATUS SENDING
+[2009-10-16 18:00:28,659]DEBUG  8169[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705228
+[2009-10-16 18:00:28,659]DEBUG  8169[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 109 STATUS SENDING
+[2009-10-16 18:00:28,956]DEBUG  8466[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 109 STATUS SENT
+[2009-10-16 18:00:32,578]DEBUG 12088[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:00:32,581]DEBUG 12091[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:00:32,581]DEBUG 12091[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:00:32,595]DEBUG 12105[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 110 STATUS SENDING
+[2009-10-16 18:00:32,659]DEBUG 12169[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705232
+[2009-10-16 18:00:32,660]DEBUG 12170[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 110 STATUS SENDING
+[2009-10-16 18:00:32,956]DEBUG 12466[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 110 STATUS SENT
+[2009-10-16 18:00:36,596]DEBUG 16106[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:00:36,600]DEBUG 16110[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:00:36,601]DEBUG 16111[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:00:36,613]DEBUG 16123[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 111 STATUS SENDING
+[2009-10-16 18:00:36,658]DEBUG 16168[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705236
+[2009-10-16 18:00:36,659]DEBUG 16169[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 111 STATUS SENDING
+[2009-10-16 18:00:36,856]DEBUG 16366[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 111 STATUS SENT
+[2009-10-16 18:00:40,613]DEBUG 20123[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:00:40,615]DEBUG 20125[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:00:40,616]DEBUG 20126[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:00:40,627]DEBUG 20137[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 112 STATUS SENDING
+[2009-10-16 18:00:40,657]DEBUG 20167[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705240
+[2009-10-16 18:00:40,657]DEBUG 20167[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 112 STATUS SENDING
+[2009-10-16 18:00:41,056]DEBUG 20566[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 112 STATUS SENT
+[2009-10-16 18:00:44,628]DEBUG 24138[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:00:44,630]DEBUG 24140[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:00:44,630]DEBUG 24140[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:00:44,645]DEBUG 24155[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 113 STATUS SENDING
+[2009-10-16 18:00:44,656]DEBUG 24166[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705244
+[2009-10-16 18:00:44,657]DEBUG 24167[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 113 STATUS SENDING
+[2009-10-16 18:00:45,057]DEBUG 24567[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 113 STATUS SENT
+[2009-10-16 18:00:48,646]DEBUG 28156[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:00:48,649]DEBUG 28159[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:00:48,649]DEBUG 28159[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:00:48,660]DEBUG 28170[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 114 STATUS SENDING
+[2009-10-16 18:00:48,663]DEBUG 28173[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705248
+[2009-10-16 18:00:48,663]DEBUG 28173[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 114 STATUS SENDING
+[2009-10-16 18:00:49,056]DEBUG 28566[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 114 STATUS SENT
+[2009-10-16 18:00:52,663]DEBUG 32173[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:00:52,666]DEBUG 32176[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:00:52,667]DEBUG 32177[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:00:52,682]DEBUG 32192[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 115 STATUS SENDING
+[2009-10-16 18:00:52,756]DEBUG 32266[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705252
+[2009-10-16 18:00:52,757]DEBUG 32267[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 115 STATUS SENDING
+[2009-10-16 18:00:52,956]DEBUG 32466[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 115 STATUS SENT
+[2009-10-16 18:00:56,684]DEBUG 36194[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:00:56,685]DEBUG 36195[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:00:56,686]DEBUG 36196[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:00:56,704]DEBUG 36214[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 116 STATUS SENDING
+[2009-10-16 18:00:56,756]DEBUG 36266[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705256
+[2009-10-16 18:00:56,757]DEBUG 36267[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 116 STATUS SENDING
+[2009-10-16 18:00:57,056]DEBUG 36566[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 116 STATUS SENT
+[2009-10-16 18:01:00,705]DEBUG 40215[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:00,709]DEBUG 40219[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:00,710]DEBUG 40220[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:00,723]DEBUG 40233[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 117 STATUS SENDING
+[2009-10-16 18:01:00,757]DEBUG 40267[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705260
+[2009-10-16 18:01:00,757]DEBUG 40267[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 117 STATUS SENDING
+[2009-10-16 18:01:01,056]DEBUG 40566[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 117 STATUS SENT
+[2009-10-16 18:01:04,724]DEBUG 44234[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:04,727]DEBUG 44237[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:04,727]DEBUG 44237[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:04,739]DEBUG 44249[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 118 STATUS SENDING
+[2009-10-16 18:01:04,758]DEBUG 44268[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705264
+[2009-10-16 18:01:04,758]DEBUG 44268[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 118 STATUS SENDING
+[2009-10-16 18:01:05,056]DEBUG 44566[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 118 STATUS SENT
+[2009-10-16 18:01:08,740]DEBUG 48250[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:08,742]DEBUG 48252[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:08,742]DEBUG 48252[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:08,752]DEBUG 48262[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 119 STATUS SENDING
+[2009-10-16 18:01:08,758]DEBUG 48268[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705268
+[2009-10-16 18:01:08,759]DEBUG 48269[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 119 STATUS SENDING
+[2009-10-16 18:01:09,056]DEBUG 48566[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 119 STATUS SENT
+[2009-10-16 18:01:12,753]DEBUG 52263[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:12,756]DEBUG 52266[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:12,757]DEBUG 52267[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:12,771]DEBUG 52281[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 120 STATUS SENDING
+[2009-10-16 18:01:12,857]DEBUG 52367[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705272
+[2009-10-16 18:01:12,857]DEBUG 52367[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 120 STATUS SENDING
+[2009-10-16 18:01:13,156]DEBUG 52666[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 120 STATUS SENT
+[2009-10-16 18:01:16,772]DEBUG 56282[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:16,775]DEBUG 56285[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:16,776]DEBUG 56286[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:16,787]DEBUG 56297[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 121 STATUS SENDING
+[2009-10-16 18:01:16,856]DEBUG 56366[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705276
+[2009-10-16 18:01:16,857]DEBUG 56367[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 121 STATUS SENDING
+[2009-10-16 18:01:17,056]DEBUG 56566[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 121 STATUS SENT
+[2009-10-16 18:01:20,788]DEBUG 60298[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:20,791]DEBUG 60301[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:20,791]DEBUG 60301[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:20,803]DEBUG 60313[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 122 STATUS SENDING
+[2009-10-16 18:01:20,856]DEBUG 60366[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705280
+[2009-10-16 18:01:20,856]DEBUG 60366[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 122 STATUS SENDING
+[2009-10-16 18:01:21,057]DEBUG 60567[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 122 STATUS SENT
+[2009-10-16 18:01:24,804]DEBUG 64314[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:24,806]DEBUG 64316[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:24,807]DEBUG 64317[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:24,820]DEBUG 64330[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 123 STATUS SENDING
+[2009-10-16 18:01:24,858]DEBUG 64368[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705284
+[2009-10-16 18:01:24,858]DEBUG 64368[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 123 STATUS SENDING
+[2009-10-16 18:01:25,056]DEBUG 64566[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 123 STATUS SENT
+[2009-10-16 18:01:28,821]DEBUG 68331[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:28,822]DEBUG 68332[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:28,823]DEBUG 68333[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:28,836]DEBUG 68346[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 124 STATUS SENDING
+[2009-10-16 18:01:28,856]DEBUG 68366[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705288
+[2009-10-16 18:01:28,857]DEBUG 68367[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 124 STATUS SENDING
+[2009-10-16 18:01:29,256]DEBUG 68766[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 124 STATUS SENT
+[2009-10-16 18:01:32,838]DEBUG 72348[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:32,840]DEBUG 72350[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:32,841]DEBUG 72351[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:32,862]DEBUG 72372[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 125 STATUS SENDING
+[2009-10-16 18:01:32,864]DEBUG 72374[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705292
+[2009-10-16 18:01:32,864]DEBUG 72374[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 125 STATUS SENDING
+[2009-10-16 18:01:33,256]DEBUG 72766[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 125 STATUS SENT
+[2009-10-16 18:01:36,863]DEBUG 76373[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:36,865]DEBUG 76375[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:36,866]DEBUG 76376[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:36,871]DEBUG 76381[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 126 STATUS SENDING
+[2009-10-16 18:01:36,957]DEBUG 76467[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705296
+[2009-10-16 18:01:36,957]DEBUG 76467[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 126 STATUS SENDING
+[2009-10-16 18:01:37,156]DEBUG 76666[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 126 STATUS SENT
+[2009-10-16 18:01:40,872]DEBUG 80382[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:40,873]DEBUG 80383[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:40,873]DEBUG 80383[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:40,889]DEBUG 80399[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 127 STATUS SENDING
+[2009-10-16 18:01:40,956]DEBUG 80466[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705300
+[2009-10-16 18:01:40,956]DEBUG 80466[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 127 STATUS SENDING
+[2009-10-16 18:01:41,256]DEBUG 80766[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 127 STATUS SENT
+[2009-10-16 18:01:44,889]DEBUG 84399[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:44,894]DEBUG 84404[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:44,894]DEBUG 84404[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:44,901]DEBUG 84411[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 128 STATUS SENDING
+[2009-10-16 18:01:44,957]DEBUG 84467[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705304
+[2009-10-16 18:01:44,957]DEBUG 84467[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 128 STATUS SENDING
+[2009-10-16 18:01:45,256]DEBUG 84766[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 128 STATUS SENT
+[2009-10-16 18:01:48,902]DEBUG 88412[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:01:48,904]DEBUG 88414[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 STATUS DIALOG
+[2009-10-16 18:01:48,904]DEBUG 88414[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHATMESSAGE #spantus_info/$mondhs;b6f1dc4890e14233 test
+[2009-10-16 18:01:48,911]DEBUG 88421[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <CHATMESSAGE 129 STATUS SENDING
+[2009-10-16 18:01:48,957]DEBUG 88467[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705308
+[2009-10-16 18:01:48,957]DEBUG 88467[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 129 STATUS SENDING
+[2009-10-16 18:01:49,156]DEBUG 88666[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 129 STATUS SENT
+[2009-10-16 18:01:52,912]DEBUG 92422[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >CHAT CREATE mondhs
+[2009-10-16 18:03:12,126]DEBUG     0[Thread-0] - org.spantus.integration.skype.SkypeClient.connect(SkypeClient.java:46) - Connected
+[2009-10-16 18:03:12,144]DEBUG    18[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >NAME java
+[2009-10-16 18:03:12,148]DEBUG    22[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <OK
+[2009-10-16 18:03:12,148]DEBUG    22[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:83) - >PROTOCOL 8
+[2009-10-16 18:03:12,157]DEBUG    31[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:85) - <PROTOCOL 8
+[2009-10-16 18:03:12,206]DEBUG    80[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CONNSTATUS ONLINE
+[2009-10-16 18:03:12,206]DEBUG    80[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CURRENTUSERHANDLE spantus_info
+[2009-10-16 18:03:12,207]DEBUG    81[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <USERSTATUS ONLINE
+[2009-10-16 18:03:27,414]DEBUG 15288[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705403
+[2009-10-16 18:03:27,414]DEBUG 15288[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 124 STATUS RECEIVED
+[2009-10-16 18:03:28,807]DEBUG 16681[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255705407
+[2009-10-16 18:03:28,808]DEBUG 16682[Thread-1] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 125 STATUS RECEIVED
+[2009-10-16 18:04:15,998]DEBUG 63872[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 95 STATUS READ
+[2009-10-16 18:04:16,001]DEBUG 63875[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 124 STATUS READ
+[2009-10-16 18:04:16,002]DEBUG 63876[Thread-4] - org.spantus.integration.skype.SkypeClient.notify(SkypeClient.java:75) - <CHATMESSAGE 125 STATUS READ
+[2009-10-16 18:28:26,096]DEBUG     0[Thread-0] - org.spantus.integration.skype.SkypeClient.connect(SkypeClient.java:46) - Connected
+[2009-10-16 18:28:26,112]DEBUG    16[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:90) - >NAME java
+[2009-10-16 18:28:26,120]DEBUG    24[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:92) - <OK
+[2009-10-16 18:28:26,120]DEBUG    24[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:90) - >PROTOCOL 8
+[2009-10-16 18:28:26,124]DEBUG    28[Thread-0] - org.spantus.integration.skype.SkypeClient.invoke(SkypeClient.java:92) - <PROTOCOL 8
+[2009-10-16 18:28:26,197]DEBUG   101[Thread-1] - org.spantus.integration.skype.processor.IncomeSkypeMessageLogProcessor.notify(IncomeSkypeMessageLogProcessor.java:14) - <CONNSTATUS ONLINE
+[2009-10-16 18:28:26,198]DEBUG   102[Thread-1] - org.spantus.integration.skype.processor.IncomeSkypeMessageLogProcessor.notify(IncomeSkypeMessageLogProcessor.java:14) - <CURRENTUSERHANDLE spantus_info
+[2009-10-16 18:28:26,198]DEBUG   102[Thread-1] - org.spantus.integration.skype.processor.IncomeSkypeMessageLogProcessor.notify(IncomeSkypeMessageLogProcessor.java:14) - <USERSTATUS ONLINE
+[2009-10-16 18:29:01,428]DEBUG 35332[Thread-4] - org.spantus.integration.skype.processor.IncomeSkypeMessageLogProcessor.notify(IncomeSkypeMessageLogProcessor.java:14) - <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255706938
+[2009-10-16 18:29:01,433]DEBUG 35337[Thread-1] - org.spantus.integration.skype.processor.IncomeSkypeMessageLogProcessor.notify(IncomeSkypeMessageLogProcessor.java:14) - <CHATMESSAGE 94 STATUS RECEIVED
+[2009-10-16 18:30:01,461]DEBUG 95365[Thread-4] - org.spantus.integration.skype.processor.IncomeSkypeMessageLogProcessor.notify(IncomeSkypeMessageLogProcessor.java:14) - <CONTACTS FOCUSED vaitke
+[2009-10-16 18:30:01,690]DEBUG 95594[Thread-1] - org.spantus.integration.skype.processor.IncomeSkypeMessageLogProcessor.notify(IncomeSkypeMessageLogProcessor.java:14) - <CHATMESSAGE 94 STATUS READ
+18:31:22,483 DEBUG [Thread-0] [skype.SkypeClient]: Connected
+18:31:22,484 DEBUG [Thread-0] [skype.SkypeClient]: >NAME java
+18:31:22,486 DEBUG [Thread-0] [skype.SkypeClient]: <OK
+18:31:22,486 DEBUG [Thread-0] [skype.SkypeClient]: >PROTOCOL 8
+18:31:22,488 DEBUG [Thread-0] [skype.SkypeClient]: <PROTOCOL 8
+18:31:22,559 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CONNSTATUS ONLINE
+18:31:22,560 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CURRENTUSERHANDLE spantus_info
+18:31:22,560 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <USERSTATUS ONLINE
+18:31:24,257 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <USER vaitke PHONE_MOBILE +37061048355
+18:31:24,504 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <USER vaitke ONLINESTATUS ONLINE
+18:31:24,511 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <GROUP 12 NROFUSERS 2
+18:32:19,965 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CONTACTS FOCUSED mondhs
+18:32:32,183 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255707125
+18:32:32,184 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+18:32:32,192 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 128 STATUS RECEIVED
+18:32:34,893 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255707152
+18:32:34,894 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+18:32:34,894 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 129 STATUS RECEIVED
+18:33:09,176 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255707189
+18:33:09,177 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+18:33:09,185 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 130 STATUS RECEIVED
+18:46:13,153 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CONTACTS FOCUSED vaitke
+18:46:13,411 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 128 STATUS READ
+18:46:13,413 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 129 STATUS READ
+18:46:13,413 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 130 STATUS READ
+18:46:34,699 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255707990
+18:46:34,699 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+18:46:34,719 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255707992
+18:46:34,719 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+18:46:34,731 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 131 STATUS RECEIVED
+18:46:34,740 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 132 STATUS RECEIVED
+18:46:35,377 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255707994
+18:46:35,378 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+18:46:35,388 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 133 STATUS RECEIVED
+18:46:36,503 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255707995
+18:46:36,504 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+18:46:36,504 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 134 STATUS RECEIVED
+18:48:19,591 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255708099
+18:48:19,592 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+18:48:19,639 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 135 STATUS RECEIVED
+18:56:10,717 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255708568
+18:56:10,718 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+18:56:10,759 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 136 STATUS RECEIVED
+18:56:19,938 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CONTACTS FOCUSED vaitke
+18:56:20,267 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 131 STATUS READ
+18:56:20,267 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 132 STATUS READ
+18:56:20,267 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 133 STATUS READ
+18:56:20,267 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 134 STATUS READ
+18:56:20,267 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 135 STATUS READ
+18:56:20,267 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 136 STATUS READ
+18:56:31,446 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255708591
+18:56:31,447 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+18:56:31,494 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 137 STATUS READ
+19:01:08,383 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255708868
+19:01:08,384 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:01:08,447 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 138 STATUS RECEIVED
+19:01:59,469 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255708919
+19:01:59,469 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:01:59,472 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 140 STATUS RECEIVED
+19:03:34,270 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255709014
+19:03:34,271 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:03:34,347 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 141 STATUS RECEIVED
+19:08:28,595 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 138 STATUS READ
+19:08:28,649 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 140 STATUS READ
+19:08:28,687 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 141 STATUS READ
+19:17:03,689 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255709819
+19:17:03,690 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:17:03,690 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 143 STATUS RECEIVED
+19:19:38,076 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255709977
+19:19:38,076 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:19:38,140 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 144 STATUS RECEIVED
+19:22:15,378 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255710135
+19:22:15,378 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:22:15,447 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 145 STATUS RECEIVED
+19:27:09,165 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 143 STATUS READ
+19:27:09,165 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 144 STATUS READ
+19:27:09,166 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 145 STATUS READ
+19:27:29,369 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255710445
+19:27:29,370 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:27:29,370 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 146 STATUS READ
+19:27:29,447 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 146 STATUS READ
+19:27:36,149 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255710455
+19:27:36,149 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:27:36,216 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 147 STATUS RECEIVED
+19:29:16,831 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255710556
+19:29:16,831 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:29:16,939 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 148 STATUS RECEIVED
+19:31:50,296 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 147 STATUS READ
+19:31:50,296 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 148 STATUS READ
+19:35:10,385 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255710910
+19:35:10,386 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:35:10,518 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 150 STATUS RECEIVED
+19:37:28,410 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 150 STATUS READ
+19:37:40,433 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255711057
+19:37:40,434 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:37:40,538 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 151 STATUS RECEIVED
+19:37:40,836 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 152 STATUS SENDING
+19:37:41,116 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255711060
+19:37:41,116 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:37:43,216 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 152 STATUS SENT
+19:38:35,225 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255711115
+19:38:35,226 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:38:35,361 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 153 STATUS RECEIVED
+19:38:35,666 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 154 STATUS SENDING
+19:38:36,260 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 154 STATUS SENT
+19:38:38,986 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255711118
+19:38:38,986 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:38:38,986 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 155 STATUS RECEIVED
+19:38:39,287 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 156 STATUS SENDING
+19:38:39,912 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 156 STATUS SENT
+19:38:41,580 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255711121
+19:38:41,581 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:38:41,664 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 157 STATUS RECEIVED
+19:38:41,966 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 158 STATUS SENDING
+19:38:42,462 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 158 STATUS SENT
+19:43:34,663 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <USER spantus_info ONLINESTATUS AWAY
+19:43:34,663 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <USERSTATUS AWAY
+19:47:22,154 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <USER spantus_info ONLINESTATUS ONLINE
+19:47:22,154 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <USERSTATUS ONLINE
+19:47:39,020 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 151 STATUS READ
+19:47:39,020 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 153 STATUS READ
+19:47:39,020 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 155 STATUS READ
+19:47:39,020 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 157 STATUS READ
+19:49:04,718 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CONTACTS FOCUSED vaitke
+19:49:04,718 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CONTACTS FOCUSED vaitke
+19:49:04,718 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <USER mondhs ONLINESTATUS ONLINE
+19:50:40,535 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <USER vaitke PHONE_MOBILE +37061048355
+19:56:55,715 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255712212
+19:56:55,715 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:56:55,807 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 160 STATUS RECEIVED
+19:56:56,139 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 161 STATUS SENDING
+19:56:56,139 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 162 STATUS SENDING
+19:56:56,435 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255712215
+19:56:56,435 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:56:57,336 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 161 STATUS SENT
+19:56:57,336 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 162 STATUS SENT
+19:57:01,466 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255712220
+19:57:01,467 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:57:01,605 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 163 STATUS RECEIVED
+19:57:01,878 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 164 STATUS SENDING
+19:57:01,964 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 165 STATUS SENDING
+19:57:02,263 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255712221
+19:57:02,264 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+19:57:02,605 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 164 STATUS SENT
+19:57:02,605 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 165 STATUS SENT
+19:59:04,286 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CONTACTS FOCUSED vaitke
+19:59:04,286 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CONTACTS FOCUSED vaitke
+19:59:04,286 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <USER mondhs ONLINESTATUS AWAY
+20:00:13,384 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255712413
+20:00:13,384 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+20:00:13,475 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 166 STATUS RECEIVED
+20:00:13,976 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 167 STATUS SENDING
+20:00:14,137 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 168 STATUS SENDING
+20:00:14,275 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 169 STATUS SENDING
+20:00:15,405 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 167 STATUS SENT
+20:00:15,406 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 168 STATUS SENT
+20:00:15,406 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 169 STATUS SENT
+20:00:17,764 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHAT #spantus_info/$mondhs;b6f1dc4890e14233 ACTIVITY_TIMESTAMP 1255712417
+20:00:17,765 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: 1:#spantus_info/$mondhs;b6f1dc4890e14233
+20:00:17,849 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 170 STATUS RECEIVED
+20:00:18,149 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 171 STATUS SENDING
+20:00:18,256 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 172 STATUS SENDING
+20:00:18,345 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 173 STATUS SENDING
+20:00:19,111 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 171 STATUS SENT
+20:00:19,111 DEBUG [Thread-1] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 172 STATUS SENT
+20:00:19,272 DEBUG [Thread-4] [processor.IncomeSkypeMessageEchoProcessor]: <CHATMESSAGE 173 STATUS SENT

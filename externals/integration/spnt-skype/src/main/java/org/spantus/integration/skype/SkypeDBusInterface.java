@@ -1,6 +1,8 @@
 package org.spantus.integration.skype;
 
 import org.freedesktop.dbus.DBusInterface;
+import org.spantus.integration.skype.processor.IncomeSkypeMessageProcessor;
+import org.spantus.integration.skype.processor.ProcessorFactory;
 
 /**
  *
@@ -8,14 +10,16 @@ import org.freedesktop.dbus.DBusInterface;
  */
 public class SkypeDBusInterface implements DBusInterface {
 
-    SkypeClient skypeClient = null;
+    private SkypeClientImpl skypeClient = null;
+    private IncomeSkypeMessageProcessor messageProcessor = null;
 
-    public SkypeDBusInterface(SkypeClient skypeClient) {
+    public SkypeDBusInterface(SkypeClientImpl skypeClient) {
         this.skypeClient = skypeClient;
+        messageProcessor = ProcessorFactory.createProcessor(skypeClient);
     }
 
     public int Notify(String s1) {
-        skypeClient.notify(s1);
+        messageProcessor.notify(s1);
         return 0;
     }
 

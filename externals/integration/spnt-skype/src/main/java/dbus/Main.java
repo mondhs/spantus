@@ -6,7 +6,7 @@
 package dbus;
 
 import java.util.Calendar;
-import org.spantus.integration.skype.SkypeClient;
+import org.spantus.integration.skype.SkypeClientImpl;
 import org.spantus.integration.skype.SkypeMonitor;
 
 
