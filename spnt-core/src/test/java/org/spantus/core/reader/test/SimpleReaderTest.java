@@ -26,7 +26,7 @@ public class SimpleReaderTest extends TestCase {
 		SignalFormat signalFormat =  signalReader.getFormat(inputFile);
 		assertNotNull(signalFormat);
 		assertEquals(1.3F, signalFormat.getSampleRate());
-		assertEquals(414, signalFormat.getLength());
+		assertEquals(414F, signalFormat.getLength());
 	}
 	public void testIsSuported(){
 		assertTrue(signalReader.isFormatSupported(inputFile));
@@ -37,6 +37,6 @@ public class SimpleReaderTest extends TestCase {
 		SignalFormat signalFormat =  signalReader.getFormat(inputFile);
 		DumyExtractorInputReader reader = new DumyExtractorInputReader();
 		signalReader.readSignal(inputFile, reader);
-		assertEquals(signalFormat.getLength(), reader.getWindow().size());
+		assertTrue(signalFormat.getLength()== reader.getWindow().size());
 	}
 }

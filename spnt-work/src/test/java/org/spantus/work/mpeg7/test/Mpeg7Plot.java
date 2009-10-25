@@ -93,7 +93,7 @@ public class Mpeg7Plot extends JFrame {
 		reader.setConfig(mp7conf);
 
 //		reader.setConfig(Mpeg7ConfigUtil.createConfig(Mpeg7ExtractorEnum.values()));
-		Mpeg7Factory.createAudioReader().readAudio(mp7File.toURI().toURL(), reader);
+		Mpeg7Factory.createAudioReader().readSignal(mp7File.toURI().toURL(), reader);
 		return reader;
 	}
 

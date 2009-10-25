@@ -55,7 +55,7 @@ public class SinglePlotWav extends JFrame {
 		ExtractorUtils.register(bufferedReader, new ExtractorEnum[] {
 				ExtractorEnum.ENERGY_EXTRACTOR,
 		}, null);
-		reader.readAudio(urlFile, bufferedReader);
+		reader.readSignal(urlFile, bufferedReader);
 		return bufferedReader;
 	}
 

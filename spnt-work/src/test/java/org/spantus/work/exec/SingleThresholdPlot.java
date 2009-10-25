@@ -63,7 +63,7 @@ public class SingleThresholdPlot extends JFrame {
 				ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR
 				
 				}, null);
-		reader.readAudio(urlFile, bufferedReader);
+		reader.readSignal(urlFile, bufferedReader);
 		return bufferedReader;
 	}
 

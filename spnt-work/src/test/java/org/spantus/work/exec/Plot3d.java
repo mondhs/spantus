@@ -159,7 +159,7 @@ public class Plot3d extends JFrame {
 		// bufferedReader.registerExtractor(new ExtractorResultBuffer3D(
 		// new FFTExtractor()));
 
-		reader.readAudio(urlFile, bufferedReader);
+		reader.readSignal(urlFile, bufferedReader);
 		
 		return bufferedReader;
 	}

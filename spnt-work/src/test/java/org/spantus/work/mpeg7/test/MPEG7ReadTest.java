@@ -35,14 +35,14 @@ public class MPEG7ReadTest extends TestCase {
 	public void testReadEncode() throws MalformedURLException{
 		AudioReader mpeg7 = Mpeg7Factory.createAudioReader();
 		IExtractorInputReader reader = new Mpeg7ExtractorInputReader();
-		mpeg7.readAudio((new File("../data/text1.encode.xml")).toURI().toURL(), reader);
+		mpeg7.readSignal((new File("../data/text1.encode.xml")).toURI().toURL(), reader);
 		assertEquals(3, reader.getExtractorRegister().size());
 		assertEquals(3, reader.getExtractorRegister3D().size());
 	}
 	public void testReadService() throws MalformedURLException{
 		AudioReader mpeg7 = Mpeg7Factory.createAudioReader();
 		IExtractorInputReader reader = new Mpeg7ExtractorInputReader();
-		mpeg7.readAudio((new File("../data/text1.service.xml")).toURI().toURL(), reader);
+		mpeg7.readSignal((new File("../data/text1.service.xml")).toURI().toURL(), reader);
 		assertEquals(13, reader.getExtractorRegister().size());
 		assertEquals(5, reader.getExtractorRegister3D().size());
 	}
@@ -55,7 +55,7 @@ public class MPEG7ReadTest extends TestCase {
 		extractors.add(Mpeg7ExtractorEnum.AudioWaveform);
 		config.setExtractors(extractors);
 		reader.setConfig(config);
-		mpeg7.readAudio((new File("../data/text1.wav")).toURI().toURL(), reader);
+		mpeg7.readSignal((new File("../data/text1.wav")).toURI().toURL(), reader);
 		assertEquals(1, reader.getExtractorRegister().size());
 		assertEquals(1, reader.getExtractorRegister3D().size());
 	}
@@ -70,7 +70,7 @@ public class MPEG7ReadTest extends TestCase {
 			reader.setConfig(config);
 			reader.getExtractorRegister().clear();
 			reader.getExtractorRegister3D().clear();
-			mpeg7.readAudio((new File("../data/text1.wav")).toURI().toURL(), reader);
+			mpeg7.readSignal((new File("../data/text1.wav")).toURI().toURL(), reader);
 			if(reader.getExtractorRegister().size()+reader.getExtractorRegister3D().size() == 2){
 				log.debug("extr: " + extr);
 			}
