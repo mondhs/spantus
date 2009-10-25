@@ -68,14 +68,14 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 	
 	public void pushValues(Long sample) {
 		getDefaultReader().pushValues(sample);
-		getMpeg7Reader().pushValues(sample);
+//		getMpeg7Reader().pushValues(sample);
 
 	}
 
 	
 	public void put(Long sample, float value) {
 		getDefaultReader().put(sample, value);
-		getMpeg7Reader().put(sample, value);
+//		getMpeg7Reader().put(sample, value);
 	}
 
 	

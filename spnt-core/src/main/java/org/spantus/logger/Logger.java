@@ -20,135 +20,108 @@
  */
 package org.spantus.logger;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.text.MessageFormat;
-import java.util.Date;
-import java.util.HashMap;
-
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * 
  * @author Mindaugas Greibus
- *
+ * 
  * @since 0.0.1
  * 
- * Created 2008.02.29
- *
+ *        Created 2008.02.29
+ * 
  */
-public class Logger {
-    
-    public static final int DEBUG = 1;
-    public static final int INFO = 2;
-    public static final int ERROR = 3;
-    public static final int FATAL = 4;
-    public static final HashMap<Integer, String> labels = new HashMap<Integer, String>();
-    private static PrintStream out =  System.out;
-    private static PrintStream err =  System.err;
-    
+public class Logger implements ILogger {
+	ILogger logger;
 
-    private static int logMode = DEBUG;
-    private Class<?> logClass = null;
-    
-    static{
-        labels.put(DEBUG,"DEBUG");
-        labels.put(INFO,"INFO");
-        labels.put(ERROR,"ERROR");
-        labels.put(FATAL,"FATAL");
-    }
-    
-    void log(int level, String message){
-        if(level >= logMode){
-            String levelStr = labels.get(level);
-            String classNameStr = getSimpleName(logClass);
-            
-            String result = MessageFormat.format("{0,time,kk:mm:ss.SSS} {1} [{2}] {3}",
-            		 new Date(),
-                     levelStr,
-                     classNameStr,
-                     message);
-            
-            if(level == ERROR || level == FATAL){
-                err.println(result);
-            }else{
-                out.println(result);    
-            }
-            
+	public Logger(ILogger logger) {
+		this.logger = logger;
+	}
 
-        }
-    }
+	public static Logger getLogger(Class<?> logClass) {
+		ILogger logger1 = null;
+		try {
+			Class<?> loggingClass = Class.forName("org.spantus.work.ui.logger.LoggerLog4j");
+			Constructor<?> loggerConstructor = loggingClass.getConstructor(Class.class);
+			logger1 = (ILogger)loggerConstructor.newInstance(logClass);
+		} catch (ClassNotFoundException e) {
+		} catch (SecurityException e) {
+		} catch (NoSuchMethodException e) {
+		} catch (IllegalArgumentException e) {
+		} catch (InstantiationException e) {
+		} catch (IllegalAccessException e) {
+		} catch (InvocationTargetException e) {
+		}finally{
+			logger1 = logger1 ==null?new SimpleLogger(logClass):logger1;
+		}
+		
+		Logger thisLogger = new Logger(logger1);
+		return thisLogger;
 
-    public void debug(String pattern, Object... arguments ){
-    	if(isDebugMode()){
-    		log(DEBUG,MessageFormat.format(pattern, arguments));
-    	}
-    }
-    
-    public void debug(String str){
-    	if(isDebugMode()){
-    		log(DEBUG,str);
-    	}
-    }
-    
-    
-    public void info(String pattern, Object... arguments ){
-    	if(INFO >= logMode){
-    		log(INFO,MessageFormat.format(pattern, arguments));
-    	}
-    }
+	}
 
-    public void info(String str){
-    	if(INFO >= logMode){
-    		log(INFO,str);
-    	}
-    }
-    
-    public void error(String str){
-        log(ERROR,str);
-    }
-    public void error(Exception e){
-    	StringWriter sw = new StringWriter();
-    	PrintWriter pw = new PrintWriter(sw);
-    	e.printStackTrace(pw);
-        log(ERROR,sw.toString());
-    }
-    public void fatal(String str){
-        log(FATAL,str);
-    }
-    
- 
-    
-    public static String getSimpleName(Class<?> argClass){
-        String rtn = "";
-        rtn = argClass.getName();
-        rtn = rtn.substring(rtn.lastIndexOf(".")+1);
-        return rtn;
-        
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.spantus.logger.ILogger#debug(java.lang.String, java.lang.Object)
+	 */
+	public void debug(String pattern, Object... arguments) {
+		logger.debug(pattern, arguments);
+	}
 
-    
-    public static Logger getLogger(Class<?> logClass){
-        Logger logger = new Logger();
-        logger.logClass = logClass;
-        return logger;
-        
-    }
-  
-    /**
-     * @return Returns the logMode.
-     */
-    public int getLogMode() {
-        return logMode;
-    }
-    public boolean isDebugMode() {
-        return DEBUG >= getLogMode();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.spantus.logger.ILogger#debug(java.lang.String)
+	 */
+	public void debug(String str) {
+		logger.debug(str);
+	}
 
-	@SuppressWarnings("static-access")
-	public void setLogMode(int logMode) {
-		this.logMode = logMode;
-//		debug("Log mode set to:" + logMode);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.spantus.logger.ILogger#info(java.lang.String, java.lang.Object)
+	 */
+	public void info(String pattern, Object... arguments) {
+		logger.info(pattern, arguments);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.spantus.logger.ILogger#info(java.lang.String)
+	 */
+	public void info(String str) {
+		logger.info(str);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.spantus.logger.ILogger#error(java.lang.String)
+	 */
+	public void error(String str) {
+		logger.error(str);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.spantus.logger.ILogger#error(java.lang.Exception)
+	 */
+	public void error(Exception e) {
+		logger.error(e);
+	}
+
+	public void fatal(String str) {
+		logger.fatal(str);
+
+	}
+
+	public boolean isDebugMode() {
+		return logger.isDebugMode();
 	}
 
 }

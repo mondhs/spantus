@@ -120,7 +120,7 @@ public class DrawSignalMpeg7 extends JFrame {
 		IExtractorConfig config = Mpeg7ConfigUtil.createConfig(Mpeg7ExtractorEnum.values());
 		Mpeg7ExtractorInputReader reader = new Mpeg7ExtractorInputReader();
 		reader.setConfig(config);
-		Mpeg7Factory.createAudioReader().readAudio(audioFile.toURI().toURL(),
+		Mpeg7Factory.createAudioReader().readSignal(audioFile.toURI().toURL(),
 				reader);
 		if (reader == null) {
 			throw new RuntimeException();

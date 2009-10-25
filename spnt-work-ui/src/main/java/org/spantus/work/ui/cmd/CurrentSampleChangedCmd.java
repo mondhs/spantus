@@ -22,11 +22,15 @@ package org.spantus.work.ui.cmd;
 
 import java.awt.Toolkit;
 
+import javax.swing.JOptionPane;
+
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
+import org.spantus.exception.ProcessingException;
+import org.spantus.logger.Logger;
 import org.spantus.work.ui.container.SampleChangeListener;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.services.WorkInfoManager;
@@ -34,10 +38,11 @@ import org.spantus.work.ui.services.WorkUIServiceFactory;
 
 public class CurrentSampleChangedCmd extends AbsrtactCmd {
 
-	SampleChangeListener lisetener;
-	ProcessedFrameLinstener processedFrameLinstener;
-	SpantusWorkCommand handler;
-	WorkInfoManager workInfoManager;
+	protected Logger log = Logger.getLogger(getClass());
+	private SampleChangeListener lisetener;
+	private ProcessedFrameLinstener processedFrameLinstener;
+	private SpantusWorkCommand handler;
+	private WorkInfoManager workInfoManager;
 	
 	public CurrentSampleChangedCmd(SampleChangeListener lisetener, ProcessedFrameLinstener processedFrameLinstener, SpantusWorkCommand handler) {
 		this.lisetener = lisetener;
@@ -57,7 +62,7 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 //			ReadingThread thread = new ReadingThread(ctx);
 //			thread.execute();
 
-			Thread thread = new Thread(new ReadingThread(ctx));
+			Thread thread = new ReadingThread(ctx);
 			thread.start();
 		}
 		return null;
@@ -67,10 +72,17 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 		
 		public ReadingThread(SpantusWorkInfo ctx) {
 			this.ctx = ctx;
+			setName("Signal Readning Thread");
 		}
 		public void run() {
-			IExtractorInputReader reader = WorkUIServiceFactory.constructReader(ctx, 
-					processedFrameLinstener);
+			IExtractorInputReader reader;
+			try{
+				//read changed sample
+				reader = WorkUIServiceFactory.read(ctx, processedFrameLinstener);
+			}catch (ProcessingException e) {
+				error(e.getLocalizedMessage(), ctx);
+				return;
+			}
 			if(reader.getExtractorRegister().size() == 0 && 
 					reader.getExtractorRegister3D().size() == 0){
 				handler.execute(GlobalCommands.tool.reloadResources.name(), ctx);
@@ -87,6 +99,17 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 		}
 	}
 
+	protected void error(String message, SpantusWorkInfo ctx){
+		String messageBody = getMessage(message);
+		log.error(messageBody);
+		
+//		if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
+			JOptionPane.showMessageDialog(null,messageBody,
+					getMessage("Error"),
+					JOptionPane.ERROR_MESSAGE);	
+//		}		
+	}
+	
 	public WorkInfoManager getWorkInfoManager() {
 		if(workInfoManager == null){
 			workInfoManager = WorkUIServiceFactory.createInfoManager();

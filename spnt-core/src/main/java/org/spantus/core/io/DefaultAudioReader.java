@@ -30,6 +30,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.SignalFormat;
 import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
 
@@ -48,7 +49,7 @@ public class DefaultAudioReader extends AbstractAudioReader {
 
 	WraperExtractorReader wraperExtractorReader;
 	
-	public void readAudio(URL url, IExtractorInputReader bufferedReader) {
+	public void readSignal(URL url, IExtractorInputReader bufferedReader) {
 		wraperExtractorReader = createWraperExtractorReader(bufferedReader);
 		wraperExtractorReader.setFormat(getAudioFormat(url).getFormat());
 		readAudio(url, wraperExtractorReader);
@@ -92,13 +93,41 @@ public class DefaultAudioReader extends AbstractAudioReader {
 		try {
 			return AudioSystem.getAudioFileFormat(url);
 		} catch (UnsupportedAudioFileException e) {
-			throw new ProcessingException(e);
+//			log.debug("Unsupported Audio File Exception " + url.getFile());
+			return null;
 		} catch (IOException e) {
-			throw new ProcessingException(e);
+			log.debug("[getAudioFormat]IO exception Exception " + url.getFile());
+			return null;
 		}
 	}
 
+	public Float getSampleRate(URL url) {
+		try {
+			return AudioSystem.getAudioFileFormat(url).getFormat().getSampleRate();
+		} catch (UnsupportedAudioFileException e) {
+			return 1F;
+		} catch (IOException e) {
+			return 1F;
+		}
+		
+	}
+	
 	public WraperExtractorReader getWraperExtractorReader() {
 		return wraperExtractorReader;
 	}
+
+	public SignalFormat getFormat(URL url) {
+		SignalFormat signalFormat = new SignalFormat();
+		AudioFileFormat audioFileFormat = getAudioFormat(url);
+		signalFormat.setLength(audioFileFormat.getFrameLength());
+		signalFormat.setSampleRate(audioFileFormat.getFormat().getSampleRate());
+		return signalFormat;
+	}
+
+	public boolean isFormatSupported(URL url) {
+		AudioFileFormat audioFileFormat = getAudioFormat(url);
+		return audioFileFormat != null;
+	}
+
+	
 }

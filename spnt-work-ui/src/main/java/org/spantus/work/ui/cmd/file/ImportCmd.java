@@ -97,7 +97,7 @@ public class ImportCmd extends AbsrtactCmd {
 	protected IExtractorInputReader readMpeg7(File file){
 		Mpeg7ExtractorInputReader reader = new Mpeg7ExtractorInputReader();
 		try {
-			Mpeg7Factory.createAudioReader().readAudio(file.toURI().toURL(), reader);
+			Mpeg7Factory.createAudioReader().readSignal(file.toURI().toURL(), reader);
 		} catch (ProcessingException e) {
 			throw e;
 		} catch (MalformedURLException e) {

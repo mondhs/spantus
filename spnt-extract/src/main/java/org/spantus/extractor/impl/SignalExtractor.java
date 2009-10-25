@@ -47,7 +47,7 @@ public class SignalExtractor extends AbstractExtractor {
 	public String getName() {
 		return ExtractorEnum.SIGNAL_EXTRACTOR.name();
 	}
-	private Integer downScale = 10;
+	private Integer downScale = 1;
 	
 	@Override
 	public FrameValues calculate(Long sampleNum, FrameValues values) {

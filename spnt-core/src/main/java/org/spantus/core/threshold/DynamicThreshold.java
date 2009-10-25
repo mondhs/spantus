@@ -74,7 +74,7 @@ public class DynamicThreshold extends StaticThreshold {
 		
 		if(bufferedSampleSize == null){
 			bufferedSampleSize = getExtractorSampleRate()*.3f;
-			numberOfBins = log2(bufferedSampleSize.intValue())+10;
+			numberOfBins = log2(bufferedSampleSize.intValue()+1)+10;
 
 		}
 		

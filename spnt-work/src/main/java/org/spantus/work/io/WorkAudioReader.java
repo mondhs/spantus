@@ -15,6 +15,7 @@ import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
+import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.io.AbstractAudioReader;
 import org.spantus.core.io.AudioFactory;
 import org.spantus.core.io.AudioReader;
@@ -48,17 +49,16 @@ public class WorkAudioReader extends AbstractAudioReader{
 	public AudioFileFormat getAudioFormat(URL url) {
 		return workReader.getAudioFormat(url);
 	}
-
 	
-	public void readAudio(URL url, IExtractorInputReader extractor)
-			throws ProcessingException {
+	public void readSignal(URL url, IExtractorInputReader extractor)
+	throws ProcessingException {
 		if(extractor instanceof MultiFeatureExtractorInputReader){
 			MultiFeatureExtractorInputReader mf = (MultiFeatureExtractorInputReader)extractor;
-			mf.getMpeg7Reader().getConfig().setSampleRate(getAudioFormat(url).getFormat().getSampleRate());
-			mpeg7Reader.readAudio(url, mf.getMpeg7Reader());
-			workReader.readAudio(url, mf.getDefaultReader());
+			mf.getMpeg7Reader().getConfig().setSampleRate(getFormat(url).getSampleRate());
+			mpeg7Reader.readSignal(url, mf.getMpeg7Reader());
+			workReader.readSignal(url, mf.getDefaultReader());
 		}else{
-			workReader.readAudio(url, extractor);	
+			workReader.readSignal(url, extractor);	
 		}
 		postProcess(extractor);
 	}
@@ -127,4 +127,13 @@ public class WorkAudioReader extends AbstractAudioReader{
 		return invertedExtractors.contains(extractor.getName());
 		
 	}
+
+	public SignalFormat getFormat(URL url) {
+		return workReader.getFormat(url);
+	}
+
+	public boolean isFormatSupported(URL url) {
+		return workReader.isFormatSupported(url);
+	}
+
 }

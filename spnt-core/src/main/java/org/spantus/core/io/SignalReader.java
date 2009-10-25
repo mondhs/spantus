@@ -23,6 +23,11 @@ package org.spantus.core.io;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
+
+import org.spantus.core.extractor.IExtractorConfig;
+import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.SignalFormat;
+import org.spantus.exception.ProcessingException;
 /**
  * 
  * 
@@ -33,6 +38,10 @@ import javax.sound.sampled.AudioFileFormat;
  * Created 2008.04.11
  *
  */
-public interface AudioReader extends SignalReader {
-	public AudioFileFormat getAudioFormat(URL url);
+public interface SignalReader {
+	public void readSignal(URL url, IExtractorInputReader reader) throws ProcessingException;
+	public boolean isFormatSupported(URL url);
+	public SignalFormat getFormat(URL url);
+	
+
 }

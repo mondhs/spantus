@@ -42,7 +42,9 @@ public class ExtreamsListIterator implements ListIterator<ExtreamEntry> {
 			}
 			previous = element;
 		}
-		last = previous.getNext();
+		if(previous != null){
+			last = previous.getNext();
+		}
 	}
 
 

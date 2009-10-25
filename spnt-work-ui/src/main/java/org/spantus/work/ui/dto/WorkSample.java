@@ -4,14 +4,16 @@ import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
 
+import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.marker.MarkerSetHolder;
 
 public class WorkSample {
-	URL currentFile;
+	private URL currentFile;
 	
-	String title;
-
-	AudioFileFormat format;
+	private String title;
+	
+	private SignalFormat signalFormat;
+	
 	
 	final MarkerSetHolder markerSetHolder = new MarkerSetHolder();
 	
@@ -34,12 +36,21 @@ public class WorkSample {
 		return !getCurrentFile().getFile().endsWith("xml");
 	}
 
-	public AudioFileFormat getFormat() {
-		return format;
+	public SignalFormat getSignalFormat() {
+		if(signalFormat == null){
+			signalFormat = new SignalFormat();
+		}
+		return signalFormat;
 	}
 
+	public void setSignalFormat(SignalFormat signalFormat) {
+		this.signalFormat = signalFormat;
+	}
+	
+
 	public void setFormat(AudioFileFormat format) {
-		this.format = format;
+//		this.format = format;
+		getSignalFormat().setLength(format.getFrameLength()/format.getFormat().getFrameRate());
 	}
 
 	public MarkerSetHolder getMarkerSetHolder() {
@@ -50,4 +61,6 @@ public class WorkSample {
 		this.markerSetHolder.getMarkerSets().clear();
 		this.markerSetHolder.getMarkerSets().putAll(markerSetHolder.getMarkerSets());
 	}
+
+	
 }

@@ -25,11 +25,14 @@ public abstract class WorkUIServiceFactory {
 	public static ReaderService createReaderService(){
 		return new DefaultReaderService();
 	}
-	public static IExtractorInputReader constructReader(SpantusWorkInfo ctx, ProcessedFrameLinstener processedFrameLinstener){
+	public static IExtractorInputReader read(SpantusWorkInfo ctx, ProcessedFrameLinstener processedFrameLinstener){
 		setThreshold(ctx.getProject(), ctx.getProject().getFeatureReader().getWorkConfig());
 		WorkSample workSample = ctx.getProject().getCurrentSample();
-		workSample.setFormat(createReaderService().getFormat(workSample.getCurrentFile()));
-		return createReaderService().getReader(
+//		workSample.setLength(createReaderService().getFormat(workSample.getCurrentFile()));
+//		workSample.setFormat(createReaderService().getFormat(workSample.getCurrentFile()));
+		ReaderService readerService = createReaderService();
+		workSample.setSignalFormat(readerService.getSignalFormat(workSample.getCurrentFile()));
+		return readerService.read(
 				workSample.getCurrentFile(), 
 				ctx.getProject().getFeatureReader(),
 				processedFrameLinstener);

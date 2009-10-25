@@ -22,9 +22,8 @@ package org.spantus.work.ui.services;
 
 import java.net.URL;
 
-import javax.sound.sampled.AudioFileFormat;
-
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.work.ui.dto.FeatureReader;
 
@@ -40,8 +39,8 @@ import org.spantus.work.ui.dto.FeatureReader;
  * 
  */
 public interface ReaderService {
-	public IExtractorInputReader getReader(URL url, FeatureReader reader,
+	public IExtractorInputReader read(URL url, FeatureReader reader,
 			ProcessedFrameLinstener processedFrameLinstener);
-
-	public AudioFileFormat getFormat(URL url);
+	public SignalFormat getSignalFormat(URL url);
+	
 }

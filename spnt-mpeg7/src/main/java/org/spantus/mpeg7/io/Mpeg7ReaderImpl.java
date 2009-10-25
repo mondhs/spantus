@@ -16,6 +16,7 @@ import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
+import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.io.AudioReader;
 import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
@@ -46,7 +47,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	}
 
 	
-	public void readAudio(URL url, IExtractorInputReader reader)
+	public void readSignal(URL url, IExtractorInputReader reader)
 			throws ProcessingException {
 		try {
 			readInternal(url, reader);
@@ -80,7 +81,13 @@ public class Mpeg7ReaderImpl implements AudioReader {
 		} catch (UnsupportedAudioFileException e) {
 			log.debug("Reading as audio file failed. It will try to read as xml");
 			// maybe it is xml file
-			transform(reader, Mpeg7Utils.readDocument(url.toURI()));
+			try{
+				transform(reader, Mpeg7Utils.readDocument(url.toURI()));
+			}catch (ProcessingException pe) {
+				log.error("It is not possible read file as xml");
+				log.error(pe);
+				//it is not possible read as xml file
+			}
 		}
 	}
 	/**
@@ -319,6 +326,17 @@ public class Mpeg7ReaderImpl implements AudioReader {
 			vals.add(Float.valueOf(strs[i]));
 		}
 		return vals;
+	}
+
+
+
+	public SignalFormat getFormat(URL url) {
+		return null;
+	}
+
+
+	public boolean isFormatSupported(URL url) {
+		return false;
 	}
 
 }

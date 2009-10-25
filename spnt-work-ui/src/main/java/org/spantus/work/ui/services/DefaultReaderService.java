@@ -22,12 +22,12 @@ package org.spantus.work.ui.services;
 
 import java.net.URL;
 
-import javax.sound.sampled.AudioFileFormat;
-
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.AudioReader;
+import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.io.ProcessedFrameLinstener;
+import org.spantus.core.io.SignalReader;
+import org.spantus.logger.Logger;
 import org.spantus.work.WorkReadersEnum;
 import org.spantus.work.io.WorkAudioFactory;
 import org.spantus.work.reader.MultiFeatureExtractorInputReader;
@@ -46,40 +46,49 @@ import org.spantus.work.ui.util.WorkUIExtractorConfigUtil;
  * 
  */
 public class DefaultReaderService implements ReaderService {
-
+	Logger log = Logger.getLogger(DefaultReaderService.class);
 	
-	public IExtractorInputReader getReader(URL url, FeatureReader readerDto, 
+	public IExtractorInputReader read(URL url, FeatureReader readerDto, 
 			ProcessedFrameLinstener processedFrameLinstener) {
+		log.debug("[read]reading:" + url);
 		IExtractorInputReader extractor = null;
+		SignalReader signalReader = createSignalReader(url, readerDto.getReaderPerspective());
+		
 		switch (readerDto.getReaderPerspective()) {
-//		case simple:
-//			extractor = new SimpleExtractorInputReader();
-//			setConfig(url, extractor, readerDto);
-//			break;
 		case multiFeature:
 			extractor = new MultiFeatureExtractorInputReader();
 			setConfig(url, extractor, readerDto);
 			break;
 		default:
-			throw new RuntimeException("Not implemented:"
+			throw new RuntimeException("[read] Not implemented:"
 					+ readerDto.getReaderPerspective());
 		}
 		
-		AudioReader audioReader = WorkAudioFactory.createAudioReader(readerDto.getReaderPerspective());
-		if(processedFrameLinstener != null && audioReader instanceof ProcessedFrameLinstener){
-			((ProcessedFrameLinstener)audioReader).registerProcessedFrameLinstener(processedFrameLinstener);
+		if(processedFrameLinstener != null && signalReader instanceof ProcessedFrameLinstener){
+			((ProcessedFrameLinstener)signalReader).registerProcessedFrameLinstener(processedFrameLinstener);
 		}
-		audioReader.readAudio(url, extractor);
+		log.debug("[getReader] working with extractor: " + extractor);
+		signalReader.readSignal(url, extractor);
 		return extractor;
 	}
-	public AudioFileFormat getFormat(URL url){
-		return WorkAudioFactory.createAudioReader(WorkReadersEnum.multiFeature).getAudioFormat(url);
+	
+	protected SignalReader createSignalReader(URL url, WorkReadersEnum readerType){
+		SignalReader signalReader = WorkAudioFactory.createAudioReader(url, readerType);
+		return signalReader;
 	}
 	
+	public SignalFormat getSignalFormat(URL url) {
+		SignalFormat signalFormat = WorkAudioFactory.createAudioReader(url, WorkReadersEnum.multiFeature)
+		.getFormat(url);
+		return signalFormat;
+	}
+
+	
 	protected void setConfig(URL url, IExtractorInputReader extractor,FeatureReader readerDto){
-		AudioFileFormat format = WorkAudioFactory.createAudioReader(readerDto.getReaderPerspective())
-		.getAudioFormat(url);
-		IExtractorConfig config = WorkUIExtractorConfigUtil.convert(readerDto.getWorkConfig(), format.getFormat().getSampleRate());
+		SignalFormat signalFormat = WorkAudioFactory.createAudioReader(url, readerDto.getReaderPerspective())
+		.getFormat(url);
+//		sampleRate = sampleRate == null?1:sampleRate;
+		IExtractorConfig config = WorkUIExtractorConfigUtil.convert(readerDto.getWorkConfig(), signalFormat.getSampleRate());
 		config.getExtractors().addAll(readerDto.getExtractors());
 		config.getParameters().putAll(readerDto.getParameters());
 		extractor.setConfig(config);

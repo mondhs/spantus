@@ -21,8 +21,6 @@
  */
 package org.spantus.work.ui.cmd;
 
-import javax.sound.sampled.AudioFileFormat;
-
 import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
@@ -44,8 +42,7 @@ public class ZoomOutCmd extends AbsrtactCmd {
 	}
 	
 	public String execute(SpantusWorkInfo ctx) {
-		AudioFileFormat format = ctx.getProject().getCurrentSample().getFormat();
-		float length = format.getFrameLength()/format.getFormat().getFrameRate();
+		float length = ctx.getProject().getCurrentSample().getSignalFormat().getLength();
 		sampleChart.getChart().changedZoom(0f, length);
 		return null;
 	}

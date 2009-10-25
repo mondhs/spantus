@@ -90,7 +90,7 @@ public class SpantusUIServiceImpl {
 		int i = 0;
 		for (SpntLogginLevel lvl : SpntLogginLevel.values()) {
 			if(lvl.equals(logginLevel)){
-				log.setLogMode(i+1);
+//				log.setLogMode(i+1);
 				break;
 			}
 			i++;

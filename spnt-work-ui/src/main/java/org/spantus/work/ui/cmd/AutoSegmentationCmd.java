@@ -101,6 +101,12 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 				.getMarkerSets().put(MarkerSetHolderEnum.word.name(), value);
 		putLabels(ctx);
 		
+		inform(value, ctx);
+		
+		return GlobalCommands.sample.reloadSampleChart.name();
+	}
+
+	protected void inform(MarkerSet value, SpantusWorkInfo ctx){
 		String messageFormat = getMessage(segmentAutoPanelMessageBody);
 		String messageBody = MessageFormat.format(messageFormat, 
 				value.getMarkers().size()
@@ -112,11 +118,9 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 			JOptionPane.showMessageDialog(null,messageBody,
 					getMessage(segmentAutoPanelMessageHeader),
 					JOptionPane.INFORMATION_MESSAGE);	
-		}
-		
-		
-		return GlobalCommands.sample.reloadSampleChart.name();
+		}		
 	}
+
 	
 	protected String getDescriptionFileName(String wavFile){
 		String txtFile = wavFile;

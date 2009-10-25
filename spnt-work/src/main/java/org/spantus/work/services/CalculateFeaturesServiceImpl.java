@@ -11,9 +11,9 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioFactory;
-import org.spantus.core.io.AudioReader;
 import org.spantus.core.io.MergeMultipleAudioReader;
 import org.spantus.core.io.MergedWraperExtractorReader;
+import org.spantus.core.io.SignalReader;
 import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.extractor.ExtractorInputReader;
@@ -39,12 +39,12 @@ public class CalculateFeaturesServiceImpl{
 	public IExtractorInputReader calculateFeatures(URL wavFile){
 		return calculateFeatures(wavFile, setupReaderByFile(wavFile));
 	}
-	public IExtractorInputReader calculateFeatures(URL wavFile, IExtractorConfig config){
-		AudioReader workAudioReader = 
-			WorkAudioFactory.createAudioReader(WorkReadersEnum.multiFeature);
+	public IExtractorInputReader calculateFeatures(URL signalFile, IExtractorConfig config){
+		SignalReader workAudioReader = 
+			WorkAudioFactory.createAudioReader(signalFile, WorkReadersEnum.multiFeature);
 		IExtractorInputReader extractor = new MultiFeatureExtractorInputReader();
 		extractor.setConfig(config);
-		workAudioReader.readAudio(wavFile, extractor);
+		workAudioReader.readSignal(signalFile, extractor);
 		return extractor;
 	}
 	
@@ -66,8 +66,7 @@ public class CalculateFeaturesServiceImpl{
 		}, null);
 		
 		bufferedReader.setConfig(setupReaderByFile(mainSignal));
-		merger.readAudio(mainSignal, bufferedReader);
-		
+		merger.readSignal(mainSignal, bufferedReader);
 		return merger;
 	}
 	

@@ -133,7 +133,7 @@ public class DrawSignalCommon extends JFrame {
 		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader
 				.getAudioFormat(audioFile.toURI().toURL()).getFormat());
 		ExtractorUtils.register(bufferedReader, ExtractorEnum.values(), null);
-		reader.readAudio(audioFile.toURI().toURL(), bufferedReader);
+		reader.readSignal(audioFile.toURI().toURL(), bufferedReader);
 		if (reader == null) {
 			throw new RuntimeException();
 		}

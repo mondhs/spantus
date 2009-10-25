@@ -34,11 +34,14 @@ import org.spantus.work.ui.services.WorkUIServiceFactory;
 import de.crysandt.util.FileFilterExtension;
 
 public class OpenCmd extends AbsrtactCmd {
-	public static final String[] FILES = {"wav"};
+	public static final String[] FILES = {"wav", "txt"};
 	
 	public static final String OPEN_DIALOG_TITLE ="spantus.work.ui.sample.open-dialog-title";
 	
 	private WorkInfoManager workInfoManager;
+	private JFileChooser fileChooser;
+	private File defaulDir;
+	
 	
 	public String execute(SpantusWorkInfo ctx) {
 		if(importSample(ctx)){
@@ -50,17 +53,13 @@ public class OpenCmd extends AbsrtactCmd {
 	}
 
 	public boolean importSample(SpantusWorkInfo ctx) {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle(getMessage(OPEN_DIALOG_TITLE));
-		fileChooser.setFileFilter(new FileFilterExtension(FILES));
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		fileChooser.setCurrentDirectory(ctx.getProject().getWorkingDir());
+		defaulDir = ctx.getProject().getWorkingDir();
 		
 		
 		
-		int returnValue = fileChooser.showOpenDialog(null);
+		int returnValue = getFileChooser().showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = fileChooser.getSelectedFile();
+			File selectedFile = getFileChooser().getSelectedFile();
 			try {
 				ctx.getProject().getCurrentSample().setCurrentFile(
 						selectedFile.toURI().toURL());
@@ -71,6 +70,22 @@ public class OpenCmd extends AbsrtactCmd {
 			return true;
 		}
 		return false;
+	}
+	
+	protected JFileChooser getFileChooser(){
+		if(fileChooser == null){
+			fileChooser = new JFileChooser();
+			fileChooser.setDialogTitle(getMessage(OPEN_DIALOG_TITLE));
+			fileChooser.setFileFilter(new FileFilterExtension(FILES));
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			fileChooser.setCurrentDirectory(defaulDir);
+
+			fileChooser.setAcceptAllFileFilterUsed(false);
+			if(defaulDir != null){
+				fileChooser.setCurrentDirectory(defaulDir);
+			}
+		}
+		return fileChooser;
 	}
 	
 	public String getMessage(String key){
