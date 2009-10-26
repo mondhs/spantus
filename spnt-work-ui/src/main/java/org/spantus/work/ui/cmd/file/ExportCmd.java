@@ -25,7 +25,7 @@ public class ExportCmd extends AbsrtactCmd {
 	private Logger log = Logger.getLogger(getClass());
 	
 	public static final String[] IMAGE_FILES = {"png"};
-	public static final String[] MARKER_FILES = {"mspnt.xml", "txt", "laba"};
+	public static final String[] MARKER_FILES = {"mspnt.xml", "txt", "laba", "TextGrid"};
 	public static final String[] SAMPLE_FILES = {"sspnt.xml"};
 	public static final String[] MPEG7_FILES = {"mpeg7.xml"};
 	public static final String[] BUNDLE_FILES = {"spnt.zip"};

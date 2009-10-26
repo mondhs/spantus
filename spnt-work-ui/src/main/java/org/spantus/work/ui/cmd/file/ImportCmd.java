@@ -44,7 +44,8 @@ public class ImportCmd extends AbsrtactCmd {
 		int returnValue = getFileChooser().showOpenDialog(parent);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = getFileChooser().getSelectedFile();
-			ExportCmd.ExportType type = ExportCmd.ExportType.valueOf(((UIFileFilter)getFileChooser().getFileFilter()).getType());
+			UIFileFilter fileFilter = (UIFileFilter)getFileChooser().getFileFilter();
+			ExportCmd.ExportType type = ExportCmd.ExportType.valueOf(fileFilter.getType());
 			switch (type) {
 			case markers:
 				ctx.getProject().getCurrentSample().setMarkerSetHolder(readMarker(selectedFile));
