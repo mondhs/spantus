@@ -8,6 +8,7 @@ import java.text.MessageFormat;
 import org.apache.log4j.Logger;
 import org.freedesktop.dbus.DBusConnection;
 import org.freedesktop.dbus.exceptions.DBusException;
+import org.freedesktop.dbus.exceptions.DBusExecutionException;
 
 /**
  *
@@ -44,6 +45,10 @@ public class SkypeClientImpl implements SkypeClient {
             skypeAPI = conn.getPeerRemoteObject("com.Skype.API", "/com/Skype", SkypeAPI.class);
             conn.exportObject("/com/Skype/Client", dbussInterface);
             log.debug("Connected");
+        } catch (DBusExecutionException dbee){
+             log.error("error connecting", dbee);
+            throw new IllegalArgumentException("error connecting", dbee);
+
         } catch (DBusException e) {
             log.error("error connecting", e);
             throw new IllegalArgumentException("error connecting", e);
@@ -62,9 +67,8 @@ public class SkypeClientImpl implements SkypeClient {
         String[] chatparams = chat.split(" ");
         String chatId = chatparams[1];
         invoke(SkypeInfo.MSG_CHATMESSAGE, chatId, message);
-
-
     }
+    
     public void test(){
          String pong = invoke("PING");
          if(!"PONG".equals(pong)){

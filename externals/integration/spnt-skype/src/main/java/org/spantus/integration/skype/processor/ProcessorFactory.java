@@ -8,9 +8,11 @@ import org.spantus.integration.skype.SkypeClient;
  */
 public abstract class ProcessorFactory {
     public static IncomeSkypeMessageProcessor createProcessor(SkypeClient skypeClient){
-//        return new IncomeSkypeMessageLogProcessor();
-        IncomeSkypeMessageEchoProcessor processor = new IncomeSkypeMessageEchoProcessor();
+
+        IncomeSkypeMessageHandleProcessor processor =
+                  new IncomeSkypeMessageHandleProcessor();
         processor.setSkypeClient(skypeClient);
+//        IncomeSkypeMessageLogProcessor processor = new IncomeSkypeMessageLogProcessor();
         return processor;
     }
 }
