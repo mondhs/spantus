@@ -155,6 +155,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		}
 		return function.getCharType();
 	}
+	
 	private TimeSeriesFunctionInstance addFunction(Graph graphChart, IThreshold extr,
 			int order) {
 		ChartStyle style1 = createChartStyle();
@@ -328,12 +329,13 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 	}
 
 	@Override
-	public void changedZoom(float from, float length) {
-		if(from ==0 && length == 0){
-			log.debug("Nothing to zoom");
-			return;
+	public void changedZoom(Float from, Float length) {
+		GraphDomain domain = null;
+		if(from == null || length ==null || from ==0 && length == 0){
+			domain=new GraphDomain();
+		}else {
+			domain = new GraphDomain(from, from+length);
 		}
-		GraphDomain domain = new GraphDomain(from, from+length);
 		graph.setDomain(domain);
 		graph.setZoomSelection(null);
 		graph.render();

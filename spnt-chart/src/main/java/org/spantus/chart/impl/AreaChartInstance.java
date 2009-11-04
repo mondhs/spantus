@@ -52,7 +52,7 @@ import org.spantus.core.FrameVectorValues;
 public class AreaChartInstance extends TimeSeriesFunctionInstance {
 
 	FrameVectorValues values;
-	CoordinateBoundary coordinateBoundary;
+//	CoordinateBoundary coordinateBoundary;
 	GraphDomain domain;
 
 	float order;
@@ -189,16 +189,17 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 		this.domain = domain;
 	}
 
-//	private int[] toCoordinatesTime(int size, float scalar) {
-//		int[] temp = new int[size];
-//		for (int j = 0; j < size; j++) {
-//			temp[j] = (int) (j / (scalar * values.getSampleRate()));
-//		}
-//		return temp;
-//	}
-	
 	private int toCoordinateTime(int j, float scalar) {
 		int x = (int) (j / (scalar * values.getSampleRate()));
+		return x;
+	}
+
+	private int toCoordinateValues(Float floatValue, float scalar) {
+		int x = 0;
+		float delta = (max - min);
+		floatValue = (floatValue - min) / delta;
+		floatValue += getOrder();
+		x = (int) (floatValue / scalar);
 		return x;
 	}
 
@@ -212,26 +213,6 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 		max = Math.max(max, f1);
 	}
 
-//	private int[] toCoordinatesValues(FrameValues vals, float scalar) {
-//		int[] temp = new int[vals.size()];
-//		int i = 0;
-//		for (Float floatValue : vals) {
-//			float delta = (max - min);
-//			floatValue = (floatValue - min) / delta;
-//			floatValue += getOrder();
-//			temp[i] = (int) (floatValue / scalar);
-//			i++;
-//		}
-//		return temp;
-//	}
-	private int toCoordinateValues(Float floatValue, float scalar) {
-		int x = 0;
-		float delta = (max - min);
-		floatValue = (floatValue - min) / delta;
-		floatValue += getOrder();
-		x = (int) (floatValue / scalar);
-		return x;
-	}
 
 	public float getOrder() {
 		return order;
@@ -249,7 +230,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 			max(frameValues.get(1));
 		}
 
-		coordinateBoundary = getCoordinateBoundary(values);
+//		coordinateBoundary = getCoordinateBoundary(values);
 	}
 	
 	public String getValueOn(BigDecimal x) {

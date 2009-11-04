@@ -93,6 +93,7 @@ public class SampleChart extends JPanel {
 			chart.setPreferredSize(getSize());
 			chart.addSignalSelectionListener(getSelectionListener());
 			add(chart, BorderLayout.CENTER);
+			chart.initialize();
 			repaint();
 		}
 	}

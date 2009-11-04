@@ -85,7 +85,7 @@ public class DefaultReaderService implements ReaderService {
 			extrEnum.add(Mpeg7ExtractorEnum.valueOf(extr));
 		}
 		reader.setConfig(Mpeg7ConfigUtil.createConfig(extrEnum));
-		Mpeg7Factory.createAudioReader().readAudio(url, reader);
+		Mpeg7Factory.createAudioReader().readSignal(url, reader);
 		return reader;
 	}
 	/**
@@ -106,7 +106,7 @@ public class DefaultReaderService implements ReaderService {
 			ExtractorUtils.register(reader, ExtractorEnum.valueOf(demoExtractorEnum), 
 			null);
 		}
-		audioReader.readAudio(url, reader);
+		audioReader.readSignal(url, reader);
 		return reader;
 	}
 	public IExtractorConfig getConfig(){

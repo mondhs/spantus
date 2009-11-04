@@ -7,7 +7,16 @@
 	<packaging>pom</packaging>
 	<name>Spantus - Package</name>
 	<version>0.0.1-SNAPSHOT</version>
-	<url>http://mondhs.homeip.net</url>
+	<url>http://spantus.sourceforge.net/</url>
+	<licenses>
+    		<license>
+      			<name>GNU General Public License, version 3</name>
+      			<url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+      			<comments>Read the COPYING file</comments>
+      			<distribution>repo</distribution>
+    		</license>
+  	</licenses>
+
 	<properties>
 		<org.springframework.spring.version>2.5.2</org.springframework.spring.version>
 	</properties>

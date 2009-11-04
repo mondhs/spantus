@@ -58,6 +58,6 @@ public abstract class AbstractSwingChart extends JPanel implements Chart {
 		this.info = info;
 	}
 
-	public abstract void changedZoom(float from, float length);
+	public abstract void changedZoom(Float from, Float length);
 	public abstract void initialize();
 }

@@ -193,6 +193,9 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 	
 	public String getValueOn(BigDecimal x) {
 		int index = values.toIndex(x.floatValue());
+		if(index>=values.size()){
+			return "";
+		}
 		Float value = values.get(index);
 		return value.toString();
 	}

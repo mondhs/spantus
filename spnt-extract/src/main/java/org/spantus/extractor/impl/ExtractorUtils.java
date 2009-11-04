@@ -31,7 +31,7 @@ import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.DynamicThreshold;
 import org.spantus.core.threshold.IThreshold;
-import org.spantus.core.threshold.MaximumThreshold;
+import org.spantus.core.threshold.ExtremeThreshold;
 import org.spantus.core.threshold.OfflineThreshold;
 import org.spantus.core.threshold.StaticThreshold;
 import org.spantus.core.threshold.ThresholdEnum;
@@ -209,7 +209,7 @@ public abstract class ExtractorUtils {
 			threshold = new OfflineThreshold();
 			break;
 		case maximum:
-			threshold = new MaximumThreshold();
+			threshold = new ExtremeThreshold();
 		default:
 			break;
 		}

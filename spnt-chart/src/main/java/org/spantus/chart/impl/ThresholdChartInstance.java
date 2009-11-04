@@ -28,8 +28,6 @@ import java.awt.Graphics2D;
 import java.math.BigDecimal;
 import java.text.Format;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import net.quies.math.plot.CoordinateBoundary;
 import net.quies.math.plot.GraphDomain;
@@ -49,7 +47,7 @@ import org.spantus.logger.Logger;
  */
 public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 
-	CoordinateBoundary coordinateBoundary;
+//	CoordinateBoundary coordinateBoundary;
 	
 	GraphDomain domain;
 
@@ -77,14 +75,14 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 			BigDecimal[] yCoordinate, BigDecimal xScalar, BigDecimal yScalar) {
 //
 		if(polylinesX.size() > 0) return;
-		FrameValues list = null;
+		FrameValues clonedValues = null;
 		synchronized (getCtx().getValues()) {
-			list = new FrameValues(getCtx().getValues());
+			clonedValues = new FrameValues(getCtx().getValues());
 		}
 		Float _min = Float.MAX_VALUE;
 		Float _max = Float.MIN_VALUE;
 
-		for (Float float1 : list) {
+		for (Float float1 : clonedValues) {
 			_min = Math.min(_min, float1);
 			_max = Math.max(_max, float1);
 		}
@@ -94,19 +92,19 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 
 		FrameValues threshold = getCtx().getThreshold();
 		FrameValues states = getCtx().getState();
-		if(domain.getFrom() != null){
-			int fromIndex = getCtx().getValues().toIndex(domain.getFrom().floatValue());
-			int toIndex = getCtx().getValues().toIndex(domain.getUntil().floatValue());
-			list=(FrameValues)list.subList(fromIndex, toIndex);
-			threshold = (FrameValues)threshold.subList(fromIndex, toIndex);
-			states = (FrameValues)states.subList(fromIndex, toIndex);
-		}
+//		if(domain.getFrom() != null){
+//			int fromIndex = getCtx().getValues().toIndex(domain.getFrom().floatValue());
+//			int toIndex = getCtx().getValues().toIndex(domain.getUntil().floatValue());
+//			clonedValues=(FrameValues)clonedValues.subList(fromIndex, toIndex);
+//			threshold = (FrameValues)threshold.subList(fromIndex, toIndex);
+//			states = (FrameValues)states.subList(fromIndex, toIndex);
+//		}
 		
 		
-		polylinesX.add(toCoordinatesTime(list, xScalar.floatValue()));
+		polylinesX.add(toCoordinatesTime(clonedValues, xScalar.floatValue()));
 		polylinesYt.add(toCoordinatesValues(threshold, yScalar.floatValue()));
 		polylinesYstate.add(toCoordinatesSates(states, yScalar.floatValue()));
-		polylinesY.add(toCoordinatesValues(list, yScalar.floatValue()));
+		polylinesY.add(toCoordinatesValues(clonedValues, yScalar.floatValue()));
 
 	}
 
@@ -135,17 +133,18 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 	}
 
 	private CoordinateBoundary getCoordinateBoundary(FrameValues values) {
-
-		Float xMin = 0f, xMax = new Float(values.toTime(values.size())), yMin = 0f+getOrder(), yMax = 1f+getOrder();
+		Float xMin = 0f;
+		Float xMax = Float.valueOf(values.toTime(values.size()));
+		Float yMin = getOrder();
+		Float yMax = getOrder() + 1;
+		
 		if (domain != null && domain.getUntil() != null) {
 			xMax = domain.getUntil().floatValue();
 			xMin = domain.getFrom().floatValue();
 		}
-		coordinateBoundary = new CoordinateBoundary(new BigDecimal(xMin),
+		return new CoordinateBoundary(new BigDecimal(xMin),
 				new BigDecimal(xMax), new BigDecimal(yMin),
 				new BigDecimal(yMax));
-
-		return coordinateBoundary;
 
 	}
 
@@ -268,7 +267,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 		for (Float f1 : getCtx().getValues()) {
 			minmax(f1);
 		}
-		coordinateBoundary = getCoordinateBoundary(getCtx().getValues());
+//		coordinateBoundary = getCoordinateBoundary(getCtx().getValues());
 	}
 	protected ThresholdChartContext getCtx() {
 		return ctx;

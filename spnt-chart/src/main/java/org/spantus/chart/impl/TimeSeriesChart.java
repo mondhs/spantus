@@ -32,6 +32,7 @@ import org.spantus.chart.InteractiveChart;
 import org.spantus.chart.SignalSelectionListener;
 import org.spantus.chart.functions.FrameValueFuncton;
 import org.spantus.core.FrameValues;
+import org.spantus.logger.Logger;
 /**
  * 
  * 
@@ -53,6 +54,8 @@ public class TimeSeriesChart extends AbstractSwingChart{
 	
 	private FrameValueFuncton function = null;
 
+	private Logger log = Logger.getLogger(TimeSeriesChart.class);
+	
 	public TimeSeriesChart() {
 		graph = new InteractiveChart();
 		graph.getXAxis().setZigZaginess(BigDecimal.valueOf(7L, 1));
@@ -93,8 +96,8 @@ public class TimeSeriesChart extends AbstractSwingChart{
 	}
 
 	@Override
-	public void changedZoom(float from, float length) {
-		
+	public void changedZoom(Float from, Float length) {
+		log.debug("zoomout from{0} length{1}",from, length);
 	}
 	
 }

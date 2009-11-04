@@ -42,8 +42,7 @@ public class ZoomOutCmd extends AbsrtactCmd {
 	}
 	
 	public String execute(SpantusWorkInfo ctx) {
-		float length = ctx.getProject().getCurrentSample().getSignalFormat().getLength();
-		sampleChart.getChart().changedZoom(0f, length);
+		sampleChart.getChart().changedZoom(null, null);
 		return null;
 	}
 

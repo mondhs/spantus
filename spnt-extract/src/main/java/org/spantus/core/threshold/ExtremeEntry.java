@@ -7,23 +7,23 @@ package org.spantus.core.threshold;
  * 
  *
  */
-public class ExtreamEntry {
+public class ExtremeEntry {
 	
 	public enum SignalStates{stable, maxExtream, increasing, minExtream, decreasing} 
 
 	
 	private Integer index;
 	private Float value;
-	private SignalStates signalStates;
-	private ExtreamEntry next;
-	private ExtreamEntry previous;
+	private SignalStates signalState;
+	private ExtremeEntry next;
+	private ExtremeEntry previous;
 	
-	public ExtreamEntry(Integer index, Float value,
-			SignalStates signalStates) {
+	public ExtremeEntry(Integer index, Float value,
+			SignalStates signalState) {
 		super();
 		this.index = index;
 		this.value = value;
-		this.signalStates = signalStates;
+		this.signalState = signalState;
 	}
 	public Integer getIndex() {
 		return index;
@@ -38,33 +38,33 @@ public class ExtreamEntry {
 	public void setValue(Float value) {
 		this.value = value;
 	}
-	public SignalStates getSignalStates() {
-		return signalStates;
+	public SignalStates getSignalState() {
+		return signalState;
 	}
-	public void setSignalStates(SignalStates signalStates) {
-		this.signalStates = signalStates;
+	public void setSignalState(SignalStates signalStates) {
+		this.signalState = signalStates;
 	}
 	
-	public void link(ExtreamEntry previous, ExtreamEntry next){
+	public void link(ExtremeEntry previous, ExtremeEntry next){
 		this.next = next;
 		this.previous = previous;
 	}
 	
-	public ExtreamEntry getNext() {
+	public ExtremeEntry getNext() {
 		return next;
 	}
-	public void setNext(ExtreamEntry next) {
+	public void setNext(ExtremeEntry next) {
 		this.next = next;
 	}
-	public ExtreamEntry getPrevious() {
+	public ExtremeEntry getPrevious() {
 		return previous;
 	}
-	public void setPrevious(ExtreamEntry previous) {
+	public void setPrevious(ExtremeEntry previous) {
 		this.previous = previous;
 	}
 	
 	@Override
 	public String toString() {
-		return getIndex() +"=>["+getValue() + "; " + getSignalStates() + "]";
+		return getIndex() +"=>["+getValue() + "; " + getSignalState() + "]";
 	}
 }

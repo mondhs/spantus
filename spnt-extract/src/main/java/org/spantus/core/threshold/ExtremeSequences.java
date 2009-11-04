@@ -6,7 +6,7 @@ import java.util.ListIterator;
 
 import org.spantus.core.FrameValues;
 
-public class ExtreamSequences extends LinkedList<ExtreamEntry> {
+public class ExtremeSequences extends LinkedList<ExtremeEntry> {
 
 	/**
 	 * 
@@ -15,18 +15,18 @@ public class ExtreamSequences extends LinkedList<ExtreamEntry> {
 
 	FrameValues allValues;
 	
-	public ExtreamSequences(Collection<ExtreamEntry> c, FrameValues allValues) {
+	public ExtremeSequences(Collection<ExtremeEntry> c, FrameValues allValues) {
 		super(c);
 		this.allValues = allValues;
 	}
 	
 	@Override
-	public ListIterator<ExtreamEntry> listIterator() {
+	public ListIterator<ExtremeEntry> listIterator() {
 		return super.listIterator();
 	}
 
-	public ExtreamsListIterator extreamsListIterator() {
-		return new ExtreamsListIterator(this, allValues);
+	public ExtremeListIterator extreamsListIterator() {
+		return new ExtremeListIterator(this, allValues);
 	}
 	
 }
