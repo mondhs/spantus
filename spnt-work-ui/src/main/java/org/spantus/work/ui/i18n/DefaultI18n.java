@@ -63,7 +63,7 @@ public class DefaultI18n implements I18n {
 	 */
 	public ResourceBundle getBundle() {
 		if (bundle == null) {
-			log.debug("Creating new bundle on locale: " + getLocale());
+//			log.debug("Creating new bundle on locale: " + getLocale());
 			bundle = ResourceBundle
 					.getBundle(PROPERTIES_FILE_NAME, getLocale());
 		}
@@ -93,6 +93,7 @@ public class DefaultI18n implements I18n {
 			log.debug("Resource not fount: " + key);
 //			log.error(e);
 		}
+//		log.debug("{0}->{1}", key, rtnStr);
 		return rtnStr;
 	}
 	/**
@@ -141,7 +142,9 @@ public class DefaultI18n implements I18n {
 	}
 
 	protected void setLocale(Locale locale) {
+			log.debug("Locale set: {0}", locale.toString());
 		this.locale = locale;
+		setBundle(null);
 	}
 
 	protected void setBundle(ResourceBundle bundle) {

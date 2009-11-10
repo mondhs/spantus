@@ -78,6 +78,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		getJJMenuBar().reload();
 		getToolBar().reload();
 		contructTitle();
+		log.info("reload");
 		this.setTitle(contructTitle());
 	}
 	

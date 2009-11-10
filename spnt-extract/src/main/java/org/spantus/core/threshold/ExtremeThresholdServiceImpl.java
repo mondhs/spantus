@@ -16,6 +16,18 @@ public class ExtremeThresholdServiceImpl {
 	
 	Logger log = Logger.getLogger(ExtremeThresholdServiceImpl.class);
 	/**
+	 * 
+	 * @param values
+	 * @return
+	 */
+	public Map<Integer, ExtremeEntry> calculateExtremes(FrameValues values) {
+		Map<Integer, ExtremeEntry> extremes = null;
+		extremes = extractExtremes(values);
+		extremes = processExtremes(extremes, values);
+		return extremes;
+
+	}
+	/**
 	 * extract min/max from signal
 	 * 
 	 * @param values
@@ -23,6 +35,11 @@ public class ExtremeThresholdServiceImpl {
 	 */
 	public Map<Integer, ExtremeEntry> extractExtremes(List<Float> values) {
 		Map<Integer, ExtremeEntry> extremes = new TreeMap<Integer, ExtremeEntry>();
+		
+		if(values.size() == 0){
+			return extremes;
+		}
+
 		int index = 0;
 		Float previous = null;
 		SignalStates maxState = SignalStates.stable;
@@ -44,14 +61,15 @@ public class ExtremeThresholdServiceImpl {
 			index++;
 			
 		}
-		if(previous!=null){
-			listIter.previous();
-			index--;
-			ExtremeEntry firstMinExtreamEntry = new ExtremeEntry(
+
+		//found min. revert 
+		listIter.previous();
+		index--;
+		ExtremeEntry firstMinExtreamEntry = new ExtremeEntry(
 				index, previous, SignalStates.minExtream);
-			extremes.put(index, firstMinExtreamEntry);
-			log.debug("adding 1st min  {0} ", firstMinExtreamEntry.toString());
-		}
+		extremes.put(index, firstMinExtreamEntry);
+		log.debug("adding 1st min  {0} ", firstMinExtreamEntry.toString());
+
 		//process all the signal for min/max extremes
 		while (listIter.hasNext()) {
 			Float value = (Float) listIter.next();
@@ -97,6 +115,9 @@ public class ExtremeThresholdServiceImpl {
 	 */
 	public Map<Integer, ExtremeEntry> processExtremes(
 			Map<Integer, ExtremeEntry> originalExtremes, FrameValues values) {
+		if(originalExtremes.size() == 0){
+			return originalExtremes;
+		}
 		Map<Integer, ExtremeEntry> extremes = new TreeMap<Integer, ExtremeEntry>(
 				originalExtremes);
 		ExtremeSequences allExtriemesSequence = new ExtremeSequences(extremes
@@ -173,7 +194,12 @@ public class ExtremeThresholdServiceImpl {
 				maxArea));
 
 	}
-
+	/**
+	 * 
+	 * @param extremes
+	 * @param values
+	 * @return
+	 */
 	public FrameValues calculateExtremesStates(
 			Map<Integer, ExtremeEntry> extremes, FrameValues values) {
 		ExtremeSequences allExtriemesSequence = new ExtremeSequences(extremes
@@ -211,8 +237,8 @@ public class ExtremeThresholdServiceImpl {
 			}
 		}
 
-		int index = 0;
-		for (Float value : values) {
+
+		for (int index = 0; index < values.size(); index++) {
 			if (maximas.contains(index)) {
 				extremesStates.add(1F);
 				// getThresholdValues().add(value);
@@ -223,7 +249,6 @@ public class ExtremeThresholdServiceImpl {
 				extremesStates.add(0F);
 				// getThresholdValues().add(min);
 			}
-			index++;
 		}
 		return extremesStates;
 	}

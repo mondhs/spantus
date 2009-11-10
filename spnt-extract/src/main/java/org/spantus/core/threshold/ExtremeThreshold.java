@@ -13,7 +13,6 @@ public class ExtremeThreshold extends DynamicThreshold {
 	Vector<Float> lastMaxs;
 
 	ExtremeThresholdServiceImpl extremeThresholdService = new ExtremeThresholdServiceImpl();
-	
 
 	@Override
 	public void flush() {
@@ -21,12 +20,9 @@ public class ExtremeThreshold extends DynamicThreshold {
 		getThresholdValues().clear();
 		getState().clear();
 		Map<Integer, ExtremeEntry> extremes = null;
-
-
-		extremes = extremeThresholdService.extractExtremes(getOutputValues());
-		extremes = extremeThresholdService.processExtremes(extremes, getOutputValues());
-		FrameValues stateValues = extremeThresholdService.calculateExtremesStates(extremes,
-				getOutputValues());
+		extremes = extremeThresholdService.calculateExtremes(getOutputValues());
+		FrameValues stateValues = extremeThresholdService
+				.calculateExtremesStates(extremes, getOutputValues());
 		getState().addAll(stateValues);
 	}
 

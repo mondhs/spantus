@@ -12,6 +12,7 @@ import org.spantus.core.threshold.ExtremeEntry.SignalStates;
 public class ExtremeThresholdTest extends TestCase {
 	ExtremeThresholdServiceImpl extremeThresholdService;
 	
+	public static final Float[] empty = new Float[]{};
 	public static final Float[] singleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F}; 
 	public static final Float[] doubleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F}; 
 
@@ -23,7 +24,12 @@ public class ExtremeThresholdTest extends TestCase {
 	}
 	
 	public void testExtractExtremes() throws Exception {
-		Map<Integer, ExtremeEntry> extemes = extremeThresholdService.extractExtremes(createValues(singleMax));
+		Map<Integer, ExtremeEntry> extemes = null;
+		
+		extemes = extremeThresholdService.extractExtremes(createValues(empty));
+		assertEquals(0, extemes.size());
+		
+		extemes = extremeThresholdService.extractExtremes(createValues(singleMax));
 		assertEquals(3, extemes.size());
 		assertMinState(1, extemes);
 		assertMaxState(4, extemes);
@@ -36,14 +42,18 @@ public class ExtremeThresholdTest extends TestCase {
 		assertMaxState(11, extemes);
 		assertMinState(14, extemes);
 	}
+	
 	public void testProcessExtremes() throws Exception { 
-		FrameValues singleMaxFv = createValues(singleMax);
-		Map<Integer, ExtremeEntry> extemes = extremeThresholdService.extractExtremes(singleMaxFv);
-		extemes = extremeThresholdService.processExtremes(extemes, singleMaxFv);
-		assertEquals(3, extemes.size());
-		assertMinState(1, extemes);
-		assertMaxState(4, extemes);
-		assertMinState(7, extemes);
+		Map<Integer, ExtremeEntry> extemes  = null;
+		FrameValues values = createValues(empty);
+		extemes = extremeThresholdService.extractExtremes(values);
+		extemes = extremeThresholdService.processExtremes(extemes, values);
+		assertEquals(0, extemes.size());
+		
+		values = createValues(doubleMax);
+		extemes = extremeThresholdService.extractExtremes(values);
+		extemes = extremeThresholdService.processExtremes(extemes, values);
+		assertEquals(5, extemes.size());
 	}
 
 	

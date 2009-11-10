@@ -415,7 +415,11 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				break;
 			case thresholdType:
 				ThresholdEnum thresholdType = (ThresholdEnum)getThresholdModel().getSelectedObject();
-				getInfo().getProject().setThresholdType(thresholdType.name());
+				if(thresholdType!=null){
+					getInfo().getProject().setThresholdType(thresholdType.name());
+				}else{
+					getInfo().getProject().setThresholdType(ThresholdEnum.offline.name());
+				}
 				break;
 			case automatedSegmentaionParameters:
 			case automatedThresholdParameters:

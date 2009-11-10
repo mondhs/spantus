@@ -98,7 +98,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	
 	public void logCurrent(){
 //		if(log.isDebugMode()){
-			int length = getPeakLength(); 
+//			int length = getPeakLength(); 
 //			String out = MessageFormat.format("{0,number,#.###};{1,number,#.###};{2,number,#.###};\t area: {3,number,#};\t\t length: {4}", 
 //					allValues.toTime(getPreviousEntry().getIndex()), 
 //					allValues.toTime(lastReturned.getIndex()), 

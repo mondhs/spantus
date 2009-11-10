@@ -208,7 +208,7 @@ public abstract class ExtractorUtils {
 		case offline:
 			threshold = new OfflineThreshold();
 			break;
-		case maximum:
+		case rules:
 			threshold = new ExtremeThreshold();
 		default:
 			break;

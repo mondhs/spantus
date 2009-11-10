@@ -75,12 +75,15 @@ public class SpantusWorkInfo implements Serializable{
 	public Locale getLocale() {
 		if (locale == null) {
 			locale = I18n.LOCALES[1];
+//			Locale.Default(locale);
 		}
 		return locale;
 	}
 
 	public void setLocale(Locale currentLocale) {
 		this.locale = currentLocale;
+//		Locale.setDefault(currentLocale);
+
 	}
 
 }

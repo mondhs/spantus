@@ -3,6 +3,7 @@ package org.spantus.work.ui.services;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
+import java.util.Locale;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -84,6 +85,8 @@ public class SpantusUIServiceImpl {
 		if (info.getEnv().getSpantusVersion() == null) {
 			info.getEnv().setSpantusVersion("0.0.1");
 		}
+
+		Locale.setDefault(info.getLocale());
 
 		
 		SpntLogginLevel logginLevel = SpntLogginLevel.valueOf(info.getEnv().getLoggingLevel());

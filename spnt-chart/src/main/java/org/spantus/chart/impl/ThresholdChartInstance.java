@@ -27,6 +27,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.math.BigDecimal;
 import java.text.Format;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import net.quies.math.plot.CoordinateBoundary;
@@ -112,6 +113,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 //		log.severe("paint: " + description);
 //		int i = polylinesX.size();
 //		while (--i >= 0) {
+		Graphics2D g2 = (Graphics2D)g;
 		int size = Math.min(polylinesY.size(), polylinesX.size());
 		for (int i = 0; i < size; i++) {
 			
@@ -122,12 +124,16 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 			int[] yState = polylinesYstate.get(i);
 			
 			g.drawPolyline(x, y, x.length);
+
 			Color currentColor = ((Color)getCtx().getStyle().getPaint());
-			((Graphics2D)g).setPaint(currentColor.darker().darker());
-			g.drawPolyline(x, yt, x.length);
+			if(yt != null && yt.length > 0){
+				g2.setPaint(currentColor.darker().darker());
+				g2.drawPolyline(x, yt, x.length);
+			}
+			
 			Color currentColorTransparent = new Color(currentColor.getRGB() & 0x00FFFFFF | 0x33000000, true);
-			((Graphics2D)g).setPaint(currentColorTransparent);
-			g.fillPolygon(x, yState, x.length);
+			g2.setPaint(currentColorTransparent);
+			g2.fillPolygon(x, yState, x.length);
 
 		}
 	}
@@ -275,14 +281,19 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 	
 	public String getValueOn(BigDecimal x) {
 		int index = getCtx().getValues().toIndex(x.floatValue());
-		if(index > getCtx().getValues().size()-1){
-			return "";
+		Float value = null;
+		if(index < getCtx().getValues().size()){
+			value = getCtx().getValues().get(index);
 		}
-		Float value = getCtx().getValues().get(index);
-		Float thresholdValue = getCtx().getThreshold().get(index);
-		
-		return  value.toString() + "\n Threshold:" + thresholdValue;
+		Float thresholdValue = null;
+		if(index <getCtx().getThreshold().size()){
+			thresholdValue = getCtx().getThreshold().get(index);
+		}
+		String valueStr = MessageFormat.format("{0,number} \n Threshold: {1,number}", value, thresholdValue);
+
+		return  valueStr;
 	}
+	
 
 
 }
