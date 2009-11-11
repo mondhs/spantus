@@ -20,12 +20,16 @@
  */
 package org.spantus.chart;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.UIManager;
 
 import net.quies.math.plot.AxisInstance;
 import net.quies.math.plot.CoordinateBoundary;
@@ -49,7 +53,11 @@ import org.spantus.utils.Assert;
 public class InteractiveChart extends InteractiveGraph {
 	private SpantusChartToolbar spntToolbar;
 	private List<ChartDescriptionResolver> resolvers;
+	private final Color SELECTION_COLOR = UIManager.getColor("textHighlight");
 
+
+	private Point currentMousePoint;
+	
 	/**
 	 * 
 	 */
@@ -66,6 +74,27 @@ public class InteractiveChart extends InteractiveGraph {
 		}
 		return spntToolbar;
 	}
+	/**
+	 * 
+	 */
+	@Override
+	public void paintChildren(Graphics g) {
+		super.paintChildren(g);
+		if(currentMousePoint!=null){
+			g.setColor(SELECTION_COLOR.darker().darker());
+			g.drawLine(currentMousePoint.x, getGraphTop(), currentMousePoint.x, getGraphHeight());
+//			g.fillOval(currentMousePoint.x-2, currentMousePoint.y-2, 4, 4);
+		}
+	}
+	
+	
+	@Override
+	public void mouseMoved(MouseEvent event) {
+		super.mouseMoved(event);
+		currentMousePoint = event.getPoint();
+		repaint(30L);
+	}
+	
 	/**
 	 * calculate Tooltip text
 	 */
@@ -198,6 +227,21 @@ public class InteractiveChart extends InteractiveGraph {
 		int left = border.left + padding.left;
 		int width = getWidth() - left - right;
 		return width;
+	}
+	protected int getGraphTop(){
+		Insets border = getInsets();
+		Insets padding = getPadding();	// thread-safe
+		int top = border.top + padding.top;
+		return top;
+	}
+	
+	protected int getGraphHeight(){
+		Insets border = getInsets();
+		Insets padding = getPadding();	// thread-safe
+		int top = border.top + padding.top;
+		int bottom = (border.bottom + padding.bottom)/3;
+		int heigth = getHeight() - top -bottom;
+		return heigth;
 	}
 
 	

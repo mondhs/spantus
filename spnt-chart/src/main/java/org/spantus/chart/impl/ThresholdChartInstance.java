@@ -25,6 +25,7 @@ import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.math.BigDecimal;
 import java.text.Format;
 import java.text.MessageFormat;
@@ -133,9 +134,29 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 			
 			Color currentColorTransparent = new Color(currentColor.getRGB() & 0x00FFFFFF | 0x33000000, true);
 			g2.setPaint(currentColorTransparent);
-			g2.fillPolygon(x, yState, x.length);
+			Polygon polygon = constructStatePolygon(x, yState);
+			g2.fillPolygon(polygon);
 
 		}
+	}
+	
+	protected Polygon constructStatePolygon(int[] x, int[] yState){
+		Polygon polygon = new Polygon();//x, yState, x.length);
+		Integer prevState = null;
+		Integer prevX = null;
+		for (int j = 0; j < yState.length; j++) {
+			int currX = x[j];
+			int currState =  yState[j];
+			prevState = prevState == null?currState:prevState;
+			prevX = prevX == null?currX:prevX;
+			if(currState != prevState){
+				polygon.addPoint(prevX, currState);
+			}
+			polygon.addPoint(currX, currState);
+			prevState = currState;
+			prevX = currX;
+		}	
+		return polygon;
 	}
 
 	private CoordinateBoundary getCoordinateBoundary(FrameValues values) {
@@ -230,6 +251,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 		float delta =  max-min;
 		for (Float floatValue : valsClone) {
 			floatValue=max*floatValue; //floatValue == 1?max:min;
+			//fix that polygone come to singnal y point
 			if(i+1 == valsClone.size() || i == 0){
 				floatValue = min;
 			}
@@ -289,7 +311,8 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 		if(index <getCtx().getThreshold().size()){
 			thresholdValue = getCtx().getThreshold().get(index);
 		}
-		String valueStr = MessageFormat.format("{0,number} \n Threshold: {1,number}", value, thresholdValue);
+		String thresholdValueStr = thresholdValue==null?"-":thresholdValue.toString();
+		String valueStr = MessageFormat.format("{0,number} \n Threshold: {1}", value, thresholdValueStr);
 
 		return  valueStr;
 	}

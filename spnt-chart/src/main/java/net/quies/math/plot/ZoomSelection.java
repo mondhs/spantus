@@ -188,11 +188,11 @@ public void setOrigin(Point origin) {
 }
 
 
-private static final Cursor DRAG_EAST_CURSOR = new Cursor(Cursor.E_RESIZE_CURSOR);
-private static final Cursor DRAG_WEST_CURSOR = new Cursor(Cursor.W_RESIZE_CURSOR);
+public static final Cursor DRAG_EAST_CURSOR = new Cursor(Cursor.E_RESIZE_CURSOR);
+public static final Cursor DRAG_WEST_CURSOR = new Cursor(Cursor.W_RESIZE_CURSOR);
 
-private final Color SELECTION_COLOR = UIManager.getColor("textHighlight");
-private final Color SELECTION_TRANSPARENT = new Color(SELECTION_COLOR.getRGB() & 0x00FFFFFF | 0x77000000, true);
+public final Color SELECTION_COLOR = UIManager.getColor("textHighlight");
+public final Color SELECTION_TRANSPARENT = new Color(SELECTION_COLOR.getRGB() & 0x00FFFFFF | 0x77000000, true);
 
 private final InteractiveGraph graph;
 private final int graphHeight;
