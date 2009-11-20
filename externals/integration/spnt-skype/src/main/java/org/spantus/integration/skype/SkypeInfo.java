@@ -15,8 +15,11 @@ public class SkypeInfo {
     public static final String MSG_CALL_ANSWER = "ALTER CALL {0} ANSWER";
     public static final String MSG_CALL_HANGUP = "ALTER CALL {0} HANGUP";
     
-    public static final String MSG_CALL_SETOUTPUT_FILE = "ALTER CALL {0} SET_OUTPUT file=\"{1}.wav\" SOUNDCARD=\"default\"";
+    //public static final String MSG_CALL_SETOUTPUT_FILE = "ALTER CALL {0} SET_OUTPUT file=\"{1}.wav\" SOUNDCARD=\"default\"";
     public static final String MSG_CALL_SETINPUT_FILE = "ALTER CALL {0} SET_INPUT file=\"{1}.wav\" SOUNDCARD=\"default\"";
+//    public static final String MSG_CALL_SETOUTPUT_FILE = "ALTER CALL {0} SET_OUTPUT file=\"{1}.wav\",port=\"801235\" SOUNDCARD=\"default\"";
+     public static final String MSG_CALL_SETOUTPUT ="ALTER CALL {0} SET_OUTPUT PORT=\"{1}\" SOUNDCARD=\"default\"";
+    //public static final String MSG_CALL_SETINPUT_FILE = "ALTER CALL {0} SET_INPUT file=\"{1}.wav\",port=\"801234\" SOUNDCARD=\"default\"";
 
     public static final String MSG_NAME = "NAME {0}";
     public static final String MSG_PROTOCOL ="PROTOCOL {0}";

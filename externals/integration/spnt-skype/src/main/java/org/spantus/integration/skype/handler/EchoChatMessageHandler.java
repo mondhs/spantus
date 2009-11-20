@@ -2,7 +2,11 @@ package org.spantus.integration.skype.handler;
 
 import java.util.List;
 import org.spantus.integration.skype.SkypeInfo;
-
+/**
+ * 
+ *
+ * @author mondhs
+ */
 public class EchoChatMessageHandler extends AbstractMessageHandler {
 
     public static final String GET_CHAT_MESSAGE_RECIEVED = "CHATMESSAGE (\\d+) STATUS RECEIVED";

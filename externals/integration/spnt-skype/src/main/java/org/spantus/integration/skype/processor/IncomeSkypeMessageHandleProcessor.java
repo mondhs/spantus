@@ -30,7 +30,7 @@ public class IncomeSkypeMessageHandleProcessor implements IncomeSkypeMessageProc
         for (AbstractMessageHandler handler : handlers) {
             handler.setSkypeClient(getSkypeClient());
             if(handler.handle(msg)){
-                log.debug("handled by" +handler.getClass().getSimpleName() + ": " + msg);
+                log.debug("handled by " +handler.getClass().getSimpleName() + ": " + msg);
             }
         }
     }
