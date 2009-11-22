@@ -18,70 +18,56 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.extractor.impl;
+package org.spantus.extractor.modifiers;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.extractor.AbstractExtractor;
+import org.spantus.extractor.impl.EnergyExtractor;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
+import org.spantus.math.VectorUtils;
 /**
  * 
- * Delta extractor modifier
+ * Params logaritmic
  * 
  * @author Mindaugas Greibus
  *
  * @since 0.0.1
  * 
- * Created 2009.05.24
+ * Created 2008.08.13
  *
  */
-public class DeltaExtractor extends AbstractExtractor {
+public class SmoothedExtractor extends AbstractExtractor {
 	Logger log = Logger.getLogger(getClass());
 	
 
 	private IExtractor extractor;
 	
-	private Float previous;
-	private Float previousDelta;
+	private FrameValues smooth = new FrameValues();
 
+	private int smothingSize = 20;
 	
 	
-	public DeltaExtractor() {
-		getParam().setClassName(DeltaExtractor.class.getSimpleName());
+	public SmoothedExtractor() {
+		getParam().setClassName(SmoothedExtractor.class.getSimpleName());
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues calculatedValues = new FrameValues();
-		FrameValues fv = getExtractor().calculateWindow(window);
 		
-		if(fv.size()==1){
-			Float val = fv.get(0);
-			previous = previous==null?val:previous;
-			Float delta = val-previous;
-			previousDelta = previousDelta==null?delta:previousDelta;
-//			Float deltaDelta = delta - previousDelta;
-			previous = val;
-			previousDelta=delta;
-			calculatedValues.add(delta);
-//			calculatedValues.add(deltaDelta);
-
+		smooth.add(VectorUtils.avg(getExtractor().calculateWindow(window)));
+		if(smooth.size()>smothingSize){
+			smooth.removeFirst();
 		}
+		calculatedValues.add(VectorUtils.avg(smooth));
 
 		return calculatedValues;
 	}	
 	
 	public String getName() {
-		return ExtractorModifiersEnum.delta.name()+"_"+ getExtractor().getName();
-	}
-	
-	@Override
-	public void setConfig(IExtractorConfig conf) {
-		extractor.setConfig(conf);
-	}
-	@Override
-	public IExtractorConfig getConfig() {
-		return extractor.getConfig();
+		return ExtractorModifiersEnum.smooth.name()+"_" + getExtractor().getName();
 	}
 	
 	public IExtractor getExtractor() {
@@ -89,6 +75,14 @@ public class DeltaExtractor extends AbstractExtractor {
 			extractor = new EnergyExtractor();
 		}
 		return extractor;
+	}
+	@Override
+	public void setConfig(IExtractorConfig config) {
+		extractor.setConfig(config);
+	}
+	@Override
+	public IExtractorConfig getConfig() {
+		return extractor.getConfig();
 	}
 
 	public void setExtractor(IExtractor extractor) {

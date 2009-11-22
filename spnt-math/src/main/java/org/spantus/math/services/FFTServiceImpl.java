@@ -50,6 +50,6 @@ public class FFTServiceImpl implements FFTService{
 		FFT m_fft = new FFT(n);
 		
 		Float[] fftOutput = m_fft.calculateFFTPower(fftArr);
-		return Arrays.asList(fftOutput).subList(1, fftOutput.length);
+		return Arrays.asList(fftOutput);
 	}
 }

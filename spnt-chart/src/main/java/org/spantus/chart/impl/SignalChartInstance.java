@@ -86,7 +86,7 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 //		log.debug("paint: " + description);
 //		int i = polylinesX.size();
 //		while (--i >= 0) {
-		for (int i = 0; i < polylinesY.size(); i++) {
+		for (int i = 0; i < polylinesX.size(); i++) {
 			int[] x = polylinesX.get(i);
 			int[] y = polylinesY.get(i);
 			g.drawPolyline(x, y, x.length);

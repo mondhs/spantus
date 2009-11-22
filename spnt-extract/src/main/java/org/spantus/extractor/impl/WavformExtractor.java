@@ -35,11 +35,18 @@ import org.spantus.logger.Logger;
  *
  */
 public class WavformExtractor extends AbstractExtractor3D {
-	Logger log = Logger.getLogger(getClass());
+	private Logger log = Logger.getLogger(getClass());
+	private Float previousMin = null;
+	private Float previousMax = null;
+	private int devideInto = 3;
 
-	public WavformExtractor() {}
+	public WavformExtractor() {
+//		devideInto = 5;
+	}	
+
 	
 	public WavformExtractor(ExtractorParam param) {
+		this();
 		setParam(param);
 	}
 	
@@ -47,22 +54,66 @@ public class WavformExtractor extends AbstractExtractor3D {
 		return 2;
 	}
 	
+	private FrameValues push(Float float1, Context ctx){
+		FrameValues fv = null;
+		ctx.max = Math.max(ctx.max, float1);
+		ctx.min = Math.min(ctx.min, float1);
+		if(ctx.index == ctx.chunkSize){
+			fv = new FrameValues();
+			previousMin = previousMin == null?ctx.min:previousMin;
+			previousMax = previousMax == null?ctx.max:previousMax;
+			fv.add((ctx.min+previousMin)*.5F);
+			fv.add((ctx.max+previousMax)*.5F);
+			log.debug("min:{0}; ;max:{1}, index:{2}", ctx.min , ctx.max, ctx.index);
+			previousMin = ctx.min;
+			previousMax = ctx.max;
+			ctx.max = -Float.MAX_VALUE;
+			ctx.min = Float.MAX_VALUE;
+
+		}
+		ctx.index++;
+		return fv;
+	}
+	
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameVectorValues calculatedValues = new FrameVectorValues();
-		FrameValues fv = new FrameValues();
-		Float max = Float.MIN_VALUE, min = Float.MAX_VALUE;
+		
+		Context ctx = new Context();
+		
+		int chunkSize  = (window.size()/devideInto)+1;
+		ctx.chunkSize = chunkSize;
+		
 		for (Float float1 : window) {
-			max = Math.max(max, float1);
-			min = Math.min(min, float1);
+			FrameValues fv = push(float1, ctx);
+			if(fv!=null){
+				calculatedValues.add(fv);	
+				ctx.chunkSize = ctx.index + chunkSize;
+				ctx.chunkSize = Math.min(ctx.chunkSize, window.size()-1);
+			}
 		}
-		fv.add(min);
-		fv.add(max);
-//		log.debug("min:" + min +";max:" + max);
-		calculatedValues.add(fv);
+		
+
+//		fv.add(min);
+//		fv.add(max);
+
+		
+
 		return calculatedValues;
 	}	
 	public String getName() {
 		return ExtractorEnum.WAVFORM_EXTRACTOR.toString();
 	}
+	
+	@Override
+	public float getExtractorSampleRate() {
+		return super.getExtractorSampleRate()*devideInto;
+	}
 
+	public class Context{
+		 int index = 0;
+		 int chunkSize = 0;
+		 Float max = -Float.MAX_VALUE;
+		 Float min = Float.MAX_VALUE;
+	}
+	
 }

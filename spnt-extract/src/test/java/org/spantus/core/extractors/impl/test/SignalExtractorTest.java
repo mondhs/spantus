@@ -24,8 +24,8 @@ import junit.framework.TestCase;
 
 import org.spantus.core.FrameValues;
 import org.spantus.extractor.ExtractorConfig;
-import org.spantus.extractor.impl.MeanExtractor;
 import org.spantus.extractor.impl.SignalExtractor;
+import org.spantus.extractor.modifiers.MeanExtractor;
 import org.spantus.logger.Logger;
 
 public class SignalExtractorTest extends TestCase{

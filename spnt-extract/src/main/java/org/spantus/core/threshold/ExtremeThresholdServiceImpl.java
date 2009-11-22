@@ -23,7 +23,8 @@ public class ExtremeThresholdServiceImpl {
 	public Map<Integer, ExtremeEntry> calculateExtremes(FrameValues values) {
 		Map<Integer, ExtremeEntry> extremes = null;
 		extremes = extractExtremes(values);
-		extremes = processExtremes(extremes, values);
+//		extremes = processExtremes(extremes, values);
+		extremes = filtterExremeOffline(extremes, values);
 		return extremes;
 
 	}
@@ -54,7 +55,7 @@ public class ExtremeThresholdServiceImpl {
 				continue;
 			}
 			if(value>previous){
-				log.debug("found 1st min on {0} value {1}", index-1, previous);
+				log.debug("[extractExtremes]found 1st min on {0} value {1}", index-1, previous);
 				break;
 			}
 			previous = value;
@@ -66,35 +67,36 @@ public class ExtremeThresholdServiceImpl {
 		listIter.previous();
 		index--;
 		ExtremeEntry firstMinExtreamEntry = new ExtremeEntry(
-				index, previous, SignalStates.minExtream);
+				index, previous, SignalStates.min);
 		extremes.put(index, firstMinExtreamEntry);
-		log.debug("adding 1st min  {0} ", firstMinExtreamEntry.toString());
+		log.debug("[extractExtremes]adding 1st min  {0} ", firstMinExtreamEntry.toString());
 
 		//process all the signal for min/max extremes
 		while (listIter.hasNext()) {
 			Float value = (Float) listIter.next();
 			int entryIndex = index;
-
+			//track if values is increasing
 			if (value > previous) {
-				maxState = SignalStates.maxExtream;
+				maxState = SignalStates.max;
 			} else {
-				if (SignalStates.maxExtream.equals(maxState)) {
+				//Changed point if values are equals or decreasing.
+				if (SignalStates.max.equals(maxState)) {
 					ExtremeEntry currentExtreamEntry = new ExtremeEntry(
 							entryIndex, previous, maxState);
 					extremes.put(entryIndex, currentExtreamEntry);
-					log.debug("adding max  {0} ", currentExtreamEntry);
+					log.debug("[extractExtremes]adding max  {0} ", currentExtreamEntry);
 				}
 				maxState = SignalStates.decreasing;
 			}
 
 			if (value < previous) {
-				minState = SignalStates.minExtream;
+				minState = SignalStates.min;
 			} else {
-				if (SignalStates.minExtream.equals(minState)) {
+				if (SignalStates.min.equals(minState)) {
 					ExtremeEntry currentExtreamEntry = new ExtremeEntry(
 							entryIndex, previous, minState);
 					extremes.put(entryIndex, currentExtreamEntry);
-					log.debug("adding min  {0} ", currentExtreamEntry);
+					log.debug("[extractExtremes]adding min  {0} ", currentExtreamEntry);
 				}
 				minState = SignalStates.increasing;
 			}
@@ -108,40 +110,102 @@ public class ExtremeThresholdServiceImpl {
 		return extremes;
 	}
 	/**
+	 * filter extremes
+	 * 
+	 * @param extremes
+	 * @param values
+	 * @return
+	 */
+	public Map<Integer, ExtremeEntry> filtterExremeOffline(
+			Map<Integer, ExtremeEntry> extremes, FrameValues values) {
+		if(extremes.size() == 0){
+			return extremes;
+		}
+		
+		ExtremeSequences allExtriemesSequence = new ExtremeSequences(extremes
+				.values(), values);
+		
+		for (ExtremeListIterator iter = allExtriemesSequence
+				.extreamsListIterator(); iter.hasNext();) {
+			ExtremeEntry entry = iter.next();
+			if (iter.isCurrentMaxExtream()) {
+				//filter max
+				ExtremeEntry nextMax = iter.getNext(SignalStates.max);
+				if (nextMax != null){
+//						&& nextMax.getIndex() - entry.getIndex() < minDistance) {
+					if (entry.getValue() <= nextMax.getValue()) {
+						iter.remove();
+						ExtremeEntry nextMin = iter.getNext(SignalStates.min);
+						iter.remove(nextMin);
+						log.debug("[filtterExremeOffline]removed current");
+					} else {
+//						iter.remove(nextMax);
+//						log.debug("removed next");
+					}
+//					if (iter.hasPrevious()) {
+//						iter.previous();
+//					}
+					continue;
+				}
+			}
+			//filter min
+//			if(iter.isCurrentMinExtream() && iter.isNextMinExtream()){
+//				ExtremeEntry nextMin = iter.getNext(SignalStates.min);
+//				if(nextMin == null) continue;
+//				if(entry.getValue()>nextMin.getValue()){
+////					iter.remove();
+//					log.debug("[filtterExremeOffline]removed current");
+//				}else{
+////					iter.remove(nextMin);
+//					log.debug("[filtterExremeOffline]removed next");
+//				}
+////				if (iter.hasPrevious()) {
+////					iter.previous();
+////				}
+//				continue;
+//			}
+			
+			
+		}
+		Map<Integer, ExtremeEntry> rtnExtremes = allExtriemesSequence.toMap();
+		log.debug("[filtterExremeOffline]extremes  {0} ", extremes);
+		log.debug("[filtterExremeOffline]rtnExtremes  {0} ", rtnExtremes);
+		
+		return rtnExtremes;
+	}
+	/**
 	 * 
 	 * @param originalExtremes
 	 * @param values
 	 * @return
 	 */
 	public Map<Integer, ExtremeEntry> processExtremes(
-			Map<Integer, ExtremeEntry> originalExtremes, FrameValues values) {
-		if(originalExtremes.size() == 0){
-			return originalExtremes;
+			Map<Integer, ExtremeEntry> extremes, FrameValues values) {
+		if(extremes.size() == 0){
+			return extremes;
 		}
-		Map<Integer, ExtremeEntry> extremes = new TreeMap<Integer, ExtremeEntry>(
-				originalExtremes);
 		ExtremeSequences allExtriemesSequence = new ExtremeSequences(extremes
 				.values(), values);
-		int minDistance = values.toIndex(.15f);
-		log.info("minDistance: " + minDistance);
+//		int minDistance = values.toIndex(.15f);
+//		log.info("minDistance: " + minDistance);
 
 		for (ExtremeListIterator iter = allExtriemesSequence
 				.extreamsListIterator(); iter.hasNext();) {
-			ExtremeEntry entry = iter.next();
+//			ExtremeEntry entry = iter.next();
 			if (iter.isCurrentMaxExtream()) {
-				ExtremeEntry nextMax = iter.getNext(SignalStates.maxExtream);
-				if (nextMax != null
-						&& nextMax.getIndex() - entry.getIndex() < minDistance) {
-					if (entry.getValue() <= nextMax.getValue()) {
-						iter.remove();
-					} else {
-						iter.remove(nextMax);
-					}
-					if (iter.hasPrevious()) {
-						iter.previous();
-					}
-					continue;
-				}
+				ExtremeEntry nextMax = iter.getNext(SignalStates.max);
+//				if (nextMax != null
+//						&& nextMax.getIndex() - entry.getIndex() < minDistance) {
+//					if (entry.getValue() <= nextMax.getValue()) {
+//						iter.remove();
+//					} else {
+//						iter.remove(nextMax);
+//					}
+//					if (iter.hasPrevious()) {
+//						iter.previous();
+//					}
+//					continue;
+//				}
 			}
 		}
 		for (ExtremeListIterator iter = allExtriemesSequence
@@ -161,7 +225,7 @@ public class ExtremeThresholdServiceImpl {
 				continue;
 			}
 			if (iter.isCurrentMaxExtream() && !iter.isNextMinExtream()) {
-				log.info("both max" + entry.getIndex() + "; "
+				log.info("[processExtremes]both max" + entry.getIndex() + "; "
 						+ iter.getNextEntry().getIndex());
 			}
 		}
@@ -190,7 +254,7 @@ public class ExtremeThresholdServiceImpl {
 			}
 		}
 		log.info(MessageFormat.format(
-				"Area statistic: min:{0}; avg:{1}; max:{2}", minArea, avgArea,
+				"[logExtremes]Area statistic: min:{0}; avg:{1}; max:{2}", minArea, avgArea,
 				maxArea));
 
 	}
@@ -204,15 +268,17 @@ public class ExtremeThresholdServiceImpl {
 			Map<Integer, ExtremeEntry> extremes, FrameValues values) {
 		ExtremeSequences allExtriemesSequence = new ExtremeSequences(extremes
 				.values(), values);
-		// avgArea *=.5;
+//		 avgArea *=.5;
 		//
 		// log.info("using area for discrimination: " + avgArea );
 
 		Set<Integer> maximas = new HashSet<Integer>();
 		Set<Integer> minimas = new HashSet<Integer>();
 
-		Double avgArea = 0D;
+		Double avgArea = 80D;//22000000D;
 		FrameValues extremesStates = new FrameValues();
+		
+		int length = 0;
 
 		for (ExtremeListIterator iter = allExtriemesSequence
 				.extreamsListIterator(); iter.hasNext();) {
@@ -221,19 +287,20 @@ public class ExtremeThresholdServiceImpl {
 			if (iter.isPreviousMinExtream() && iter.isCurrentMaxExtream()
 					&& iter.isNextMinExtream()) {
 				// maximas.add(entry.getIndex());
-				if (iter.getArea() > avgArea) {
+				if (iter.getArea() > avgArea && iter.getPeakLength()>length) {
 					// maximas.add(entry.getIndex());
 					// minimas.add(iterator.getPreviousEntry().getIndex());
 					// minimas.add(iterator.getNextEntry().getIndex());
-					for (int i = iter.getPreviousEntry().getIndex() + 1; i < iter
-							.getNextEntry().getIndex() - 1; i++) {
+					log.debug("[calculateExtremesStates]area {0}", iter.getArea());
+					for (int i = iter.getPreviousEntry().getIndex(); i < iter
+							.getNextEntry().getIndex() ; i++) {
 						maximas.add(i);
 					}
 
 					iter.logCurrent();
 				}
 
-			} else if (entry.getSignalState().equals(SignalStates.minExtream)) {
+			} else if (entry.getSignalState().equals(SignalStates.min)) {
 			}
 		}
 

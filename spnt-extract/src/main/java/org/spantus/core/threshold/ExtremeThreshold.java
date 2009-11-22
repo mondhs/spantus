@@ -6,7 +6,7 @@ import java.util.Vector;
 import org.spantus.core.FrameValues;
 import org.spantus.logger.Logger;
 
-public class ExtremeThreshold extends DynamicThreshold {
+public class ExtremeThreshold extends AbstractThreshold {
 
 	Logger log = Logger.getLogger(ExtremeThreshold.class);
 
@@ -25,10 +25,11 @@ public class ExtremeThreshold extends DynamicThreshold {
 				.calculateExtremesStates(extremes, getOutputValues());
 		getState().addAll(stateValues);
 	}
+	
 
 	@Override
-	protected boolean isTrained() {
-		return true;
+	public Float calculateThreshold(Float windowValue) {
+		return null;
 	}
 
 }

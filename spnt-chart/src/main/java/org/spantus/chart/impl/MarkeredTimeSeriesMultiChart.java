@@ -77,7 +77,7 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 			AxisInstance axisX = getGraph().getXAxisInstance();
 			BigDecimal zigZagLength = BigDecimal.ZERO;
 			if(axisX.getMin().compareTo(BigDecimal.ZERO)>0){
-				zigZagLength = axisX.getMin().subtract(axisX.getMax()).movePointLeft(1);
+				zigZagLength = axisX.getMax().subtract(axisX.getMin()).movePointLeft(1);
 			}
 			getMarkerGraph().getCtx().setXOffset(axisX.getMin().add(zigZagLength));
 			getMarkerGraph().getCtx().setXScalar(axisX.getGraphichsScalar().setScale(4, RoundingMode.HALF_UP));

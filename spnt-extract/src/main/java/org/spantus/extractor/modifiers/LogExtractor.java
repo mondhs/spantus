@@ -18,14 +18,15 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.extractor.impl;
+package org.spantus.extractor.modifiers;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.extractor.AbstractExtractor;
+import org.spantus.extractor.impl.EnergyExtractor;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
-import org.spantus.math.VectorUtils;
 /**
  * 
  * Params logaritmic
@@ -34,38 +35,44 @@ import org.spantus.math.VectorUtils;
  *
  * @since 0.0.1
  * 
- * Created 2008.08.13
+ * Created 2009.06.02
  *
  */
-public class SmoothedExtractor extends AbstractExtractor {
+public class LogExtractor extends AbstractExtractor {
 	Logger log = Logger.getLogger(getClass());
 	
 
 	private IExtractor extractor;
-	
-	private FrameValues smooth = new FrameValues();
 
-	private int smothingSize = 20;
 	
 	
-	public SmoothedExtractor() {
-		getParam().setClassName(SmoothedExtractor.class.getSimpleName());
+	public LogExtractor() {
+		getParam().setClassName(LogExtractor.class.getSimpleName());
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues calculatedValues = new FrameValues();
-		
-		smooth.add(VectorUtils.avg(getExtractor().calculateWindow(window)));
-		if(smooth.size()>smothingSize){
-			smooth.removeFirst();
+		FrameValues fv = getExtractor().calculateWindow(window);
+		for (Float float1 : fv) {
+			calculatedValues.add((float)Math.log(float1));
 		}
-		calculatedValues.add(VectorUtils.avg(smooth));
-
 		return calculatedValues;
 	}	
 	
+	
+	
+	
 	public String getName() {
-		return ExtractorModifiersEnum.smooth.name()+"_" + getExtractor().getName();
+		return ExtractorModifiersEnum.mean.name()+"_" + getExtractor().getName();
+	}
+	
+	@Override
+	public void setConfig(IExtractorConfig conf) {
+		extractor.setConfig(conf);
+	}
+	@Override
+	public IExtractorConfig getConfig() {
+		return extractor.getConfig();
 	}
 	
 	public IExtractor getExtractor() {
@@ -73,14 +80,6 @@ public class SmoothedExtractor extends AbstractExtractor {
 			extractor = new EnergyExtractor();
 		}
 		return extractor;
-	}
-	@Override
-	public void setConfig(IExtractorConfig config) {
-		extractor.setConfig(config);
-	}
-	@Override
-	public IExtractorConfig getConfig() {
-		return extractor.getConfig();
 	}
 
 	public void setExtractor(IExtractor extractor) {

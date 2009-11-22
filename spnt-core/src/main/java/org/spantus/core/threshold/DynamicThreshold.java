@@ -36,11 +36,11 @@ import org.spantus.core.threshold.Histogram.histogramEnum;
  */
 public class DynamicThreshold extends StaticThreshold {
 	
-	Float bufferedSampleSize;
-	Integer numberOfBins;
-	LinkedList<Float> firstBin = null;
-	Map<histogramEnum, Float> map = null;
-	Float prev = null;
+	private Float bufferedSampleSize;
+	private Integer numberOfBins;
+	private LinkedList<Float> firstBin = null;
+	private Map<histogramEnum, Float> map = null;
+	private Float prev = null;
 	
 	
 	public DynamicThreshold() {

@@ -49,40 +49,74 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 
 
 	// custom impl
+	/**
+	 * 
+	 */
 	public boolean isPreviousMinExtream(){
 		if(getLastReturned() == null || getLastReturned().getPrevious() == null){
 			return true;
 		}
-		return SignalStates.minExtream.equals(getLastReturned().getPrevious().getSignalState());
+		return SignalStates.min.equals(getLastReturned().getPrevious().getSignalState());
 	}
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isCurrentMaxExtream(){
 		if(lastReturned == null){
 			return true;
 		}
-		return SignalStates.maxExtream.equals(getLastReturned().getSignalState());
+		return SignalStates.max.equals(getLastReturned().getSignalState());
 	}
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isCurrentMinExtream(){
+		return !isCurrentMaxExtream();
+	}
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isNextMinExtream(){
 		if(getLastReturned() == null || getLastReturned().getNext() == null){
 			return true;
 		}
-		return SignalStates.minExtream.equals(getLastReturned().getNext().getSignalState());
+		return SignalStates.min.equals(getLastReturned().getNext().getSignalState());
 	}
+	/**
+	 * 
+	 * @return
+	 */
 	public ExtremeEntry getNextEntry(){
 		if(getLastReturned() == null || getLastReturned().getNext() == null){
-			return new ExtremeEntry(list.size(), getLastReturned().getValue(),SignalStates.minExtream);
+			return new ExtremeEntry(list.size(), getLastReturned().getValue(),SignalStates.min);
 		}
 		return getLastReturned().getNext();
 	}
+	/**
+	 * 
+	 * @return
+	 */
 	public ExtremeEntry getPreviousEntry(){
 		if(getLastReturned().getPrevious() == null){
-			return new ExtremeEntry(0, getLastReturned().getValue(),SignalStates.minExtream);
+			return new ExtremeEntry(0, getLastReturned().getValue(),SignalStates.min);
 		}
 		return getLastReturned().getPrevious();
 	}
+	/**
+	 * 
+	 * @return
+	 */
 	public Integer getPeakLength(){
 		int length = getNextEntry().getIndex() - getPreviousEntry().getIndex(); 
 		return length;
 	}
+	/**
+	 * 
+	 * @return
+	 */
 	public Double getArea(){
 		Double area = 0D;
 		int index = 0;

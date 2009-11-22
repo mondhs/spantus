@@ -4,7 +4,7 @@ import org.spantus.core.extractor.IExtractor;
 
 public class StaticThreshold extends AbstractThreshold {
 
-	private int windowsLeaned;
+	private int windowsLearned;
 	private Long learningPeriod;
 	private Float currentThresholdValue = Float.MIN_VALUE;
 
@@ -31,7 +31,7 @@ public class StaticThreshold extends AbstractThreshold {
 	@Override
 	public void setExtractor(IExtractor extractor) {
 		super.setExtractor(extractor);
-		windowsLeaned = 0;
+		windowsLearned = 0;
 	}
 
 	/**
@@ -48,11 +48,11 @@ public class StaticThreshold extends AbstractThreshold {
 	}
 	
 	protected boolean isTrained(){
-		return windowsLeaned > ( getExtractor().getExtractorSampleRate()*getLearningPeriod()/1000);
+		return windowsLearned > ( getExtractor().getExtractorSampleRate()*getLearningPeriod()/1000);
 	}
 	
 	protected Float train(Float windowValue, Float thresholdValue){
-		windowsLeaned++;
+		windowsLearned++;
 		if(Float.MIN_VALUE == thresholdValue){
 			thresholdValue = windowValue;
 			return thresholdValue;

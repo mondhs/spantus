@@ -18,50 +18,63 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.extractor.impl;
+package org.spantus.extractor.modifiers;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.extractor.AbstractExtractor;
+import org.spantus.extractor.impl.EnergyExtractor;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
 /**
  * 
- * Params logaritmic
+ * Delta extractor modifier
  * 
  * @author Mindaugas Greibus
  *
  * @since 0.0.1
  * 
- * Created 2009.06.02
+ * Created 2009.05.24
  *
  */
-public class LogExtractor extends AbstractExtractor {
+public class DeltaExtractor extends AbstractExtractor {
 	Logger log = Logger.getLogger(getClass());
 	
 
 	private IExtractor extractor;
+	
+	private Float previous;
+	private Float previousDelta;
 
 	
 	
-	public LogExtractor() {
-		getParam().setClassName(LogExtractor.class.getSimpleName());
+	public DeltaExtractor() {
+		getParam().setClassName(DeltaExtractor.class.getSimpleName());
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues calculatedValues = new FrameValues();
 		FrameValues fv = getExtractor().calculateWindow(window);
-		for (Float float1 : fv) {
-			calculatedValues.add((float)Math.log(float1));
+		
+		if(fv.size()==1){
+			Float val = fv.get(0);
+			previous = previous==null?val:previous;
+			Float delta = val-previous;
+			previousDelta = previousDelta==null?delta:previousDelta;
+//			Float deltaDelta = delta - previousDelta;
+			previous = val;
+			previousDelta=delta;
+			calculatedValues.add(delta);
+//			calculatedValues.add(deltaDelta);
+
 		}
+
 		return calculatedValues;
 	}	
 	
-	
-	
-	
 	public String getName() {
-		return ExtractorModifiersEnum.mean.name()+"_" + getExtractor().getName();
+		return ExtractorModifiersEnum.delta.name()+"_"+ getExtractor().getName();
 	}
 	
 	@Override

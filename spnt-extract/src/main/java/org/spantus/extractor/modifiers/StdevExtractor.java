@@ -18,12 +18,14 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.extractor.impl;
+package org.spantus.extractor.modifiers;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.extractor.AbstractExtractor;
+import org.spantus.extractor.impl.EnergyExtractor;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
 /**
  * 

@@ -63,8 +63,8 @@ public class SignalExtractor extends AbstractExtractor {
 		for (Float float1 : values) {
 			i++;
 			fWork += float1;
-			if(i == downScale){
-				calculatedValues.add(fWork/downScale);
+			if(i == getDownScale()){
+				calculatedValues.add(fWork/getDownScale());
 				fWork = 0; i = 0;
 			}
 		}
@@ -81,7 +81,7 @@ public class SignalExtractor extends AbstractExtractor {
 	
 	public float getExtractorSampleRate() {
 //		float overlap = ((float)getConfig().getWindowSize()-getConfig().getWindowOverlap())/getConfig().getWindowSize();
-		return (getConfig().getSampleRate())/((downScale));
+		return (getConfig().getSampleRate())/((getDownScale()));
 	}
 
 	public Integer getDownScale() {

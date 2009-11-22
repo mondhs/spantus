@@ -90,8 +90,10 @@ public abstract class AbstractThreshold implements IThreshold, IExtractorListene
 	 */
 	protected void processDiscriminator(Long sample, Float float1){
 		Float threshold = calculateThreshold(float1);
-		getThresholdValues().add(threshold);
-		getState().add(calculateState(sample, float1, threshold));
+		if(threshold != null){
+			getThresholdValues().add(threshold);
+			getState().add(calculateState(sample, float1, threshold));
+		}
 	}
 	
 	/**
@@ -114,6 +116,7 @@ public abstract class AbstractThreshold implements IThreshold, IExtractorListene
 	 * @return
 	 */
 	protected Float calculateState(Long sample, Float windowValue, Float threshold){
+		if(threshold == null) return null;
 		return (windowValue>threshold)?Float.valueOf(1f):Float.valueOf(0f); 
 	}
 	

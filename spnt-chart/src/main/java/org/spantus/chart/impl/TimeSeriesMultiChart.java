@@ -22,6 +22,7 @@ package org.spantus.chart.impl;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -103,8 +104,8 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		interactiveChart.setSize(getSize());
 		interactiveChart.addZoomListeners(new WrapedZoomlistener());
 		interactiveChart.setBackground(Color.WHITE);
-		// graph.getXAxis().setZigZaginess(BigDecimal.valueOf(7L, 1));
-		// graph.getYAxis().setZigZaginess(BigDecimal.valueOf(7L, 1));
+		 graph.getXAxis().setZigZaginess(BigDecimal.valueOf(51L, 2));
+		 graph.getYAxis().setZigZaginess(BigDecimal.valueOf(51L, 2));
 		int i = 0;
 		for (IExtractor buff : reader.getExtractorRegister()) {
 			ChartDescriptionResolver resolver = null;

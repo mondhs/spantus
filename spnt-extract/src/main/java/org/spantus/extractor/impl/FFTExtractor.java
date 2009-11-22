@@ -21,6 +21,7 @@
 package org.spantus.extractor.impl;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
@@ -68,23 +69,14 @@ public class FFTExtractor extends AbstractExtractor3D {
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameValues calculatedTempValues = window;
 		FrameVectorValues calculatedValues = new FrameVectorValues();
-//		FrameVectorValues extrValues = calculateExtr3D(window);
-//		calculatedTempValues = new FrameValues();
-//		int order = extrValues.get(0).size();
-//		LinkedList<Float> bufferValues = getBuffer(order);
-//		for (Float value : window) {
-//			bufferValues.poll();
-//			bufferValues.add(value);
-//			Float predicted = 0F;
-//			Iterator<Float> coefIter = extrValues.get(0).iterator();
-//			for (Float bufferedVal : getBuffer(order)) {
-//				predicted += bufferedVal * coefIter.next();
-//			}
-//			calculatedTempValues.add(predicted);
-//		}
 		
+		int upperLimit = (int)(getConfig().getSampleRate()/1000);
+		
+		List<Float> fftOutput = MathServicesFactory.createFFTService().calculateFFTMagnitude(calculatedTempValues);
+		upperLimit = Math.min(upperLimit, fftOutput.size());
+		fftOutput = fftOutput.subList(1, upperLimit);
 		calculatedValues.add(
-				MathServicesFactory.createFFTService().calculateFFTMagnitude(calculatedTempValues)
+				fftOutput
 		);
 		
 		return  calculatedValues;

@@ -14,7 +14,11 @@ public class ExtremeThresholdTest extends TestCase {
 	
 	public static final Float[] empty = new Float[]{};
 	public static final Float[] singleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F}; 
-	public static final Float[] doubleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F}; 
+	public static final Float[] doubleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F};
+	public static final Float[] sinlgleLocalMinMax = new Float[]{
+		0F, 0F, 1F, 4F, 2F, 4F, 5F,
+		6F,
+		5F, 4F, 2F, 4F, 1F, 0F, 0F};
 
 	
 	@Override
@@ -45,14 +49,21 @@ public class ExtremeThresholdTest extends TestCase {
 	
 	public void testProcessExtremes() throws Exception { 
 		Map<Integer, ExtremeEntry> extemes  = null;
-		FrameValues values = createValues(empty);
-		extemes = extremeThresholdService.extractExtremes(values);
-		extemes = extremeThresholdService.processExtremes(extemes, values);
-		assertEquals(0, extemes.size());
+		FrameValues values = null;
 		
-		values = createValues(doubleMax);
+//		values = createValues(empty);
+//		extemes = extremeThresholdService.extractExtremes(values);
+//		extemes = extremeThresholdService.processExtremes(extemes, values);
+//		assertEquals(0, extemes.size());
+//		
+//		values = createValues(doubleMax);
+//		extemes = extremeThresholdService.extractExtremes(values);
+//		extemes = extremeThresholdService.processExtremes(extemes, values);
+//		assertEquals(5, extemes.size());
+		
+		values = createValues(sinlgleLocalMinMax);
 		extemes = extremeThresholdService.extractExtremes(values);
-		extemes = extremeThresholdService.processExtremes(extemes, values);
+		extemes = extremeThresholdService.filtterExremeOffline(extemes, values);
 		assertEquals(5, extemes.size());
 	}
 
@@ -67,9 +78,9 @@ public class ExtremeThresholdTest extends TestCase {
 	}
 	
 	public void assertMinState(int index, Map<Integer, ExtremeEntry> extemes){
-		assertEquals(SignalStates.minExtream, extemes.get(index).getSignalState());
+		assertEquals(SignalStates.min, extemes.get(index).getSignalState());
 	}
 	public void assertMaxState(int index, Map<Integer, ExtremeEntry> extemes){
-		assertEquals(SignalStates.maxExtream, extemes.get(index).getSignalState());
+		assertEquals(SignalStates.max, extemes.get(index).getSignalState());
 	}
 }

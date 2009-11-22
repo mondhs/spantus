@@ -39,6 +39,11 @@ import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.AbstractExtractor3D;
 import org.spantus.extractor.ExtractorResultBuffer;
 import org.spantus.extractor.ExtractorResultBufferFactory;
+import org.spantus.extractor.modifiers.DeltaExtractor;
+import org.spantus.extractor.modifiers.LogExtractor;
+import org.spantus.extractor.modifiers.MeanExtractor;
+import org.spantus.extractor.modifiers.SmoothedExtractor;
+import org.spantus.extractor.modifiers.StdevExtractor;
 import org.spantus.utils.ExtractorParamUtils;
 
 /**

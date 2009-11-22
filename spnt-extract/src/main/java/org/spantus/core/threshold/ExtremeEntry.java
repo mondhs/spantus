@@ -9,7 +9,7 @@ package org.spantus.core.threshold;
  */
 public class ExtremeEntry {
 	
-	public enum SignalStates{stable, maxExtream, increasing, minExtream, decreasing} 
+	public enum SignalStates{stable, max, increasing, min, decreasing} 
 
 	
 	private Integer index;
