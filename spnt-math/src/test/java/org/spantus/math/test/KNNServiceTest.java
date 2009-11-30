@@ -5,13 +5,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.spantus.math.knn.KNNService;
 import org.spantus.math.knn.KNNServiceImpl;
 
 import junit.framework.TestCase;
 
 public class KNNServiceTest extends TestCase {
 
-	KNNServiceImpl knnService;
+	KNNService knnService;
 	
 	@Override
 	protected void setUp() throws Exception {

@@ -22,6 +22,8 @@ package org.spantus.math.services;
 
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.dtw.DtwServiceStansalvadorImpl;
+import org.spantus.math.knn.KNNService;
+import org.spantus.math.knn.KNNServiceImpl;
 
 /**
  * 
@@ -37,6 +39,7 @@ public abstract class MathServicesFactory {
 	static MFCCService mfccService;
 	static LPCService lpcService;
 	static DtwService dtwService;
+	static KNNService knnService;
 	
 	public static FFTService createFFTService(){
 		if(fftService == null){
@@ -67,4 +70,10 @@ public abstract class MathServicesFactory {
 		return lpcService;
 	}
 	
+	public static KNNService createKnnService() {
+		if(knnService == null){
+			knnService = new KNNServiceImpl();
+		}
+		return knnService;
+	}
 }

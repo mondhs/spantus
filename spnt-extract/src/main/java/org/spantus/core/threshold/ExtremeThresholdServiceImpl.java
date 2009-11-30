@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -17,6 +17,7 @@ import java.util.TreeMap;
 import org.spantus.core.FrameValues;
 import org.spantus.core.threshold.ExtremeEntry.SignalStates;
 import org.spantus.logger.Logger;
+import org.spantus.math.services.MathServicesFactory;
 
 public class ExtremeThresholdServiceImpl {
 	
@@ -38,19 +39,31 @@ public class ExtremeThresholdServiceImpl {
 		try {
 			FileOutputStream fos = new FileOutputStream(new File("./target/result.csv"));
 			DataOutputStream oos = new DataOutputStream(fos);
+			List<List<Float>> vectors = new ArrayList<List<Float>>();
 			for (ExtremeListIterator iter = allExtriemesSequence
 					.extreamsListIterator(); iter.hasNext();) {
 //				ExtremeEntry entry = 
 					iter.next();
+				
 				if (iter.isCurrentMaxExtream()) {
+					List<Float> vector = new ArrayList<Float>();
+					vector.add(iter.getPeakLength().floatValue());
+					vector.add(iter.getArea().floatValue());
 					Long length = iter.getPeakLength();
-					String aorea = ""+iter.getArea();
+					String area = ""+iter.getArea();
 					//bug
 					if(length>0){
-						oos.writeBytes(MessageFormat.format("{0};{1}\n",""+length, aorea));
+						oos.writeBytes(MessageFormat.format("{0};{1}\n",""+length, area));
 					}
+					vectors.add(vector);
 				}
+				
 			}	
+			List<List<Float>> center = MathServicesFactory.createKnnService().cluster(vectors, 3);
+			for (List<Float> list : center) {
+				oos.writeBytes(MessageFormat.format("{0};{1}\n",""+list.get(0), ""+list.get(1)));
+				log.debug("{0};{1}\n",""+list.get(0), ""+list.get(1));
+			}
 			oos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

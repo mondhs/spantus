@@ -10,8 +10,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-public class KNNServiceImpl {
+public class KNNServiceImpl implements KNNService {
 
+	/* (non-Javadoc)
+	 * @see org.spantus.math.knn.KNNService#cluster(java.util.List, int)
+	 */
 	public List<List<Float>> cluster(List<List<Float>> vectors, int clusterSize) {
 		if(vectors.size()<= clusterSize){
 			throw new IllegalArgumentException("not enough data");
@@ -22,10 +25,10 @@ public class KNNServiceImpl {
 		for (int i = 0; i < clusterSize; i++) {
 			clusters.put(i, new ArrayList<List<Float>>());
 		}
-		
+		int vectorsSize = vectors.size();
 		
 		debug("centers {0}; ", vectors);
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < vectorsSize; i++) {
 			debug("centers {0}; ", centers);
 
 			// 
@@ -53,7 +56,7 @@ public class KNNServiceImpl {
 	 * @param args
 	 */
 	public void debug(String pattern, Object... args) {
-		System.out.println(MessageFormat.format(pattern, args));
+//		System.out.println(MessageFormat.format(pattern, args));
 	}
 	/**
 	 * 
