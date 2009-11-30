@@ -1,5 +1,11 @@
 package org.spantus.core.threshold;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +30,35 @@ public class ExtremeThresholdServiceImpl {
 		Map<Integer, ExtremeEntry> extremes = null;
 		extremes = extractExtremes(values);
 //		extremes = processExtremes(extremes, values);
-		extremes = filtterExremeOffline(extremes, values);
+//		extremes = filtterExremeOffline(extremes, values);
+
+		ExtremeSequences allExtriemesSequence = new ExtremeSequences(extremes
+				.values(), values);
+//		Double area = null;
+		try {
+			FileOutputStream fos = new FileOutputStream(new File("./target/result.csv"));
+			DataOutputStream oos = new DataOutputStream(fos);
+			for (ExtremeListIterator iter = allExtriemesSequence
+					.extreamsListIterator(); iter.hasNext();) {
+//				ExtremeEntry entry = 
+					iter.next();
+				if (iter.isCurrentMaxExtream()) {
+					Long length = iter.getPeakLength();
+					String aorea = ""+iter.getArea();
+					//bug
+					if(length>0){
+						oos.writeBytes(MessageFormat.format("{0};{1}\n",""+length, aorea));
+					}
+				}
+			}	
+			oos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return extremes;
 
 	}
@@ -34,11 +68,14 @@ public class ExtremeThresholdServiceImpl {
 	 * @param values
 	 * @return
 	 */
-	public Map<Integer, ExtremeEntry> extractExtremes(List<Float> values) {
-		Map<Integer, ExtremeEntry> extremes = new TreeMap<Integer, ExtremeEntry>();
+	public Map<Integer, ExtremeEntry> extractExtremes(FrameValues values) {
+		Map<Integer, ExtremeEntry> extremes1 = new TreeMap<Integer, ExtremeEntry>();
+		ExtremeSequences sequence = new ExtremeSequences(extremes1
+				.values(), values);
+		ExtremeListIterator iterator = sequence.extreamsListIterator();
 		
 		if(values.size() == 0){
-			return extremes;
+			return sequence.toMap();
 		}
 
 		int index = 0;
@@ -68,7 +105,7 @@ public class ExtremeThresholdServiceImpl {
 		index--;
 		ExtremeEntry firstMinExtreamEntry = new ExtremeEntry(
 				index, previous, SignalStates.min);
-		extremes.put(index, firstMinExtreamEntry);
+		iterator.add(firstMinExtreamEntry);
 		log.debug("[extractExtremes]adding 1st min  {0} ", firstMinExtreamEntry.toString());
 
 		//process all the signal for min/max extremes
@@ -83,7 +120,28 @@ public class ExtremeThresholdServiceImpl {
 				if (SignalStates.max.equals(maxState)) {
 					ExtremeEntry currentExtreamEntry = new ExtremeEntry(
 							entryIndex, previous, maxState);
-					extremes.put(entryIndex, currentExtreamEntry);
+					
+//					ExtremeEntry prevMaxEntry = iterator.getPrevious(SignalStates.max);
+//					//filtering
+//					if(prevMaxEntry == null){
+//						iterator.add(currentExtreamEntry);
+//					}else {
+//						log.debug("[extractExtremes]cmp: {0} ; {1}", prevMaxEntry, currentExtreamEntry);
+//						if(prevMaxEntry.lt(currentExtreamEntry)){
+//							log.debug("[extractExtremes]removing previous triangle: {0} ; {1}", prevMaxEntry, currentExtreamEntry);
+//							iterator.remove(prevMaxEntry);
+////							iterator.remove(iterator.getPrevious(SignalStates.min));
+//							log.debug("[extractExtremes]adding max  {0} ", currentExtreamEntry);
+//							iterator.add(currentExtreamEntry);
+//							
+//						}else {
+//							log.debug("[extractExtremes]not adding max: {0} ; {1}", prevMaxEntry, currentExtreamEntry);
+////							ExtremeEntry prevMinEntry = iterator.getPrevious(SignalStates.min);
+////							iterator.remove(prevMinEntry);	
+//						}
+//						
+//					}
+					iterator.add(currentExtreamEntry);
 					log.debug("[extractExtremes]adding max  {0} ", currentExtreamEntry);
 				}
 				maxState = SignalStates.decreasing;
@@ -95,8 +153,16 @@ public class ExtremeThresholdServiceImpl {
 				if (SignalStates.min.equals(minState)) {
 					ExtremeEntry currentExtreamEntry = new ExtremeEntry(
 							entryIndex, previous, minState);
-					extremes.put(entryIndex, currentExtreamEntry);
-					log.debug("[extractExtremes]adding min  {0} ", currentExtreamEntry);
+//					if(!iterator.isPreviousMinExtream()){
+//						iterator.add(currentExtreamEntry);
+//						log.debug("[extractExtremes]adding min  {0} ", currentExtreamEntry);
+//					}else{
+//						log.debug("[extractExtremes]NOT adding min  {0} ", currentExtreamEntry);
+//					}
+					
+					log.debug("[extractExtremes]adding max  {0} ", currentExtreamEntry);
+					iterator.add(currentExtreamEntry);	
+
 				}
 				minState = SignalStates.increasing;
 			}
@@ -106,8 +172,10 @@ public class ExtremeThresholdServiceImpl {
 		}
 		
 		
+			
+		
 
-		return extremes;
+		return sequence.toMap();
 	}
 	/**
 	 * filter extremes
@@ -124,6 +192,27 @@ public class ExtremeThresholdServiceImpl {
 		
 		ExtremeSequences allExtriemesSequence = new ExtremeSequences(extremes
 				.values(), values);
+		Double area = null;
+		for (ExtremeListIterator iter = allExtriemesSequence
+				.extreamsListIterator(); iter.hasNext();) {
+			ExtremeEntry entry = iter.next();
+			if (iter.isCurrentMaxExtream()) {
+				Double _area = iter.getArea();
+				area = area == null?_area:area;
+				area = (area+_area)/2;
+			}
+		}
+		area = area * 1.2;
+		
+		for (ExtremeListIterator iter = allExtriemesSequence
+				.extreamsListIterator(); iter.hasNext();) {
+			ExtremeEntry entry = iter.next();
+			if (iter.isCurrentMaxExtream()) {
+				if(iter.getArea()<area){
+					iter.remove();
+				}
+			}
+		}
 		
 		for (ExtremeListIterator iter = allExtriemesSequence
 				.extreamsListIterator(); iter.hasNext();) {
@@ -275,11 +364,14 @@ public class ExtremeThresholdServiceImpl {
 		Set<Integer> maximas = new HashSet<Integer>();
 		Set<Integer> minimas = new HashSet<Integer>();
 
-		Double avgArea = 80D;//22000000D;
+		Double avgArea = 4000D;
+//		Double avgArea = 0D;
 		FrameValues extremesStates = new FrameValues();
 		
-		int length = 0;
+//		int length = 0;
+		int length = 5;
 
+		
 		for (ExtremeListIterator iter = allExtriemesSequence
 				.extreamsListIterator(); iter.hasNext();) {
 			ExtremeEntry entry = iter.next();
@@ -291,7 +383,7 @@ public class ExtremeThresholdServiceImpl {
 					// maximas.add(entry.getIndex());
 					// minimas.add(iterator.getPreviousEntry().getIndex());
 					// minimas.add(iterator.getNextEntry().getIndex());
-					log.debug("[calculateExtremesStates]area {0}", iter.getArea());
+//					log.debug("[calculateExtremesStates]area {0}", iter.getArea());
 					for (int i = iter.getPreviousEntry().getIndex(); i < iter
 							.getNextEntry().getIndex() ; i++) {
 						maximas.add(i);

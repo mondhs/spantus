@@ -63,6 +63,13 @@ public class ExtremeEntry {
 		this.previous = previous;
 	}
 	
+	public boolean gt(ExtremeEntry entry){
+		return this.getValue()>entry.getValue();
+	}
+	public boolean lt(ExtremeEntry entry){
+		return this.getValue()<entry.getValue();
+	}
+	
 	@Override
 	public String toString() {
 		return getIndex() +"=>["+getValue() + "; " + getSignalState() + "]";

@@ -109,8 +109,8 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	 * 
 	 * @return
 	 */
-	public Integer getPeakLength(){
-		int length = getNextEntry().getIndex() - getPreviousEntry().getIndex(); 
+	public Long getPeakLength(){
+		long length = getNextEntry().getIndex() - getPreviousEntry().getIndex(); 
 		return length;
 	}
 	/**
@@ -120,7 +120,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	public Double getArea(){
 		Double area = 0D;
 		int index = 0;
-		int length = getPeakLength(); 
+		long length = getPeakLength(); 
 		for (Iterator<Float> iterator = allValues.listIterator(getPreviousEntry().getIndex()); iterator.hasNext();) {
 			area += iterator.next();
 			if(index++>length){
@@ -153,7 +153,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 
 	public boolean hasNext() {
 		if(getLastReturned() == null){
-			return first.getNext() != null;
+			return first!=null && first.getNext() != null;
 		}
 		return  getLastReturned().getNext() != null; 
 	}
@@ -170,6 +170,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 		nextIndex++;
 		return getLastReturned();
 	}
+	
 	public ExtremeEntry getNext(SignalStates signalState) {
 		ExtremeEntry current = getLastReturned();
 		while(current.getNext()!=null){
@@ -271,7 +272,25 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	public void set(ExtremeEntry o) {
 	}
 
-	public void add(ExtremeEntry o) {
+	public void add(ExtremeEntry element) {
+		if(first == null){
+			first = element;
+		}
+		ExtremeEntry current = getLastReturned();
+		if(current!=null){
+			ExtremeEntry origPrev = current;
+			ExtremeEntry origNext = current.getNext();
+			if(origPrev != null){
+				element.setPrevious(origPrev);
+				origPrev.setNext(element);
+			}
+			if(origNext != null){
+				element.setNext(origNext);
+				origNext.setPrevious(element);
+			}
+		}
+		setLastReturned(element);
+		list.add(element);
 	}
 
 	final void checkForComodification() {
