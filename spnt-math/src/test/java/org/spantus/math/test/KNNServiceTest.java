@@ -2,6 +2,7 @@ package org.spantus.math.test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.spantus.math.knn.KNNServiceImpl;
@@ -19,22 +20,62 @@ public class KNNServiceTest extends TestCase {
 	}
 	
 	public void testClusterisation() throws Exception {
-		List<List<Float>> vectors = new ArrayList<List<Float>>();
-		vectors.addAll(createVectorList(10));//5
-		vectors.addAll(createVectorList(100));//50
+		List<List<Float>> vectors = createVectorList();
+//		new ArrayList<List<Float>>();
+//		vectors.addAll(createVectorList(5, 5));//5
+//		vectors.addAll(createVectorList(5, 20 ));//50
 		Collections.shuffle(vectors);
 		List<List<Float>> clusterCenters = knnService.cluster(vectors, 2);
+		Collections.sort(clusterCenters,new ListComparator()); 
 		assertEquals(2, clusterCenters.size());
+		assertAproxEquals(5.0, clusterCenters.get(0).get(0), 5.0);
+		assertAproxEquals(150.0, clusterCenters.get(1).get(0), 70.0);
+		
 	}
 
-	public List<List<Float>> createVectorList(int centerValue) {
+	public List<List<Float>> createVectorList(int mean, int shift) {
 		List<List<Float>> vectors = new ArrayList<List<Float>>();
 		for (int j = 0; j < 5; j++) {
+			List<Float> vector = new ArrayList<Float>();
 			for (int i = 0; i < 2; i++) {
-				List<Float> vector = new ArrayList<Float>();
-				vector.add((float) Math.random() * centerValue);
+				vector.add( ((float) Math.random() * mean*2) + shift);
 			}
+			vectors.add(vector);
 		}
 		return vectors;
+	}
+	public List<List<Float>> createVectorList() {
+		List<List<Float>> vectors = new ArrayList<List<Float>>();
+		vectors.add(createVector(5, 5));
+		vectors.add(createVector(5.1, 5));
+		vectors.add(createVector(5, 5.1));
+		vectors.add(createVector(4.9, 5));
+		vectors.add(createVector(5, 4.9));
+		vectors.add(createVector(151, 150));
+		vectors.add(createVector(150, 151));
+		vectors.add(createVector(150, 150));
+		vectors.add(createVector(149, 150));
+		vectors.add(createVector(150, 149));
+		return vectors;
+	}
+	public List<Float> createVector(Number... numbers) {
+		List<Float> floats = new ArrayList<Float>();
+		for (Number number : numbers) {
+			floats.add(number.floatValue());
+		}
+		return floats;
+	}
+	
+	public void assertAproxEquals(Double  expected, Float actual, Double precission){
+		Double delta = Math.abs(expected-actual);
+		assertTrue(delta<precission);
+	}
+	
+	public class ListComparator implements Comparator<List<Float>>{
+
+		public int compare(List<Float> center, List<Float> point) {
+			return center.get(0).compareTo(point.get(0));
+		}
+		
 	}
 }
