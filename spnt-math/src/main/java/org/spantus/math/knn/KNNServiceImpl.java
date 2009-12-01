@@ -1,7 +1,8 @@
 package org.spantus.math.knn;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,6 +22,7 @@ public class KNNServiceImpl implements KNNService {
 		}
 		Map<Integer, List<List<Float>>> clusters = new HashMap<Integer, List<List<Float>>>();
 		List<List<Float>> centers = calculateCenter(vectors, clusterSize);
+		
 		
 		for (int i = 0; i < clusterSize; i++) {
 			clusters.put(i, new ArrayList<List<Float>>());
@@ -48,6 +50,7 @@ public class KNNServiceImpl implements KNNService {
 			}
 
 		}
+		Collections.sort(centers,new ListComparator());
 		return centers;
 	}
 	/**
@@ -148,5 +151,17 @@ public class KNNServiceImpl implements KNNService {
 			avg.set(i, avg.get(i) / size);
 		}
 		return avg;
+	}
+	/**
+	 * 
+	 * @author Mindaugas Greibus
+	 *
+	 */
+	public class ListComparator implements Comparator<List<Float>>{
+
+		public int compare(List<Float> center, List<Float> point) {
+			return center.get(0).compareTo(point.get(0));
+		}
+		
 	}
 }

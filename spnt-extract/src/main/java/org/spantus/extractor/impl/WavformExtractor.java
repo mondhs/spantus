@@ -64,7 +64,7 @@ public class WavformExtractor extends AbstractExtractor3D {
 			previousMax = previousMax == null?ctx.max:previousMax;
 			fv.add((ctx.min+previousMin)*.5F);
 			fv.add((ctx.max+previousMax)*.5F);
-			log.debug("min:{0}; ;max:{1}, index:{2}", ctx.min , ctx.max, ctx.index);
+//			log.debug("min:{0}; ;max:{1}, index:{2}", ctx.min , ctx.max, ctx.index);
 			previousMin = ctx.min;
 			previousMax = ctx.max;
 			ctx.max = -Float.MAX_VALUE;

@@ -1,14 +1,14 @@
 package org.spantus.math.test;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 import org.spantus.math.knn.KNNService;
 import org.spantus.math.knn.KNNServiceImpl;
-
-import junit.framework.TestCase;
 
 public class KNNServiceTest extends TestCase {
 
@@ -27,7 +27,6 @@ public class KNNServiceTest extends TestCase {
 //		vectors.addAll(createVectorList(5, 20 ));//50
 		Collections.shuffle(vectors);
 		List<List<Float>> clusterCenters = knnService.cluster(vectors, 2);
-		Collections.sort(clusterCenters,new ListComparator()); 
 		assertEquals(2, clusterCenters.size());
 		assertAproxEquals(5.0, clusterCenters.get(0).get(0), 5.0);
 		assertAproxEquals(150.0, clusterCenters.get(1).get(0), 70.0);
@@ -69,14 +68,7 @@ public class KNNServiceTest extends TestCase {
 	
 	public void assertAproxEquals(Double  expected, Float actual, Double precission){
 		Double delta = Math.abs(expected-actual);
-		assertTrue(delta<precission);
+		assertTrue(MessageFormat.format("expected {0} with precission {1}, but got {2}", expected, precission, actual), delta<precission);
 	}
 	
-	public class ListComparator implements Comparator<List<Float>>{
-
-		public int compare(List<Float> center, List<Float> point) {
-			return center.get(0).compareTo(point.get(0));
-		}
-		
-	}
 }

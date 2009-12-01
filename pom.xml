@@ -29,6 +29,21 @@
     <module>spnt-main</module>
     
   </modules>
+<pluginRepositories>
+        <pluginRepository>
+            <id>twdata-m2-repository</id>
+            <name>twdata.org Maven 2 Repository</name>
+            <url>http://twdata-m2-repository.googlecode.com/svn/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
+<build>
+<plugins>
+<plugin>
+     <groupId>org.twdata.maven</groupId>
+     <artifactId>maven-cli-plugin</artifactId>
+  </plugin>
+</plugins>
+</build>
 
 </project>

@@ -31,46 +31,12 @@ public class ExtremeThresholdServiceImpl {
 		Map<Integer, ExtremeEntry> extremes = null;
 		extremes = extractExtremes(values);
 //		extremes = processExtremes(extremes, values);
-//		extremes = filtterExremeOffline(extremes, values);
+		extremes = filtterExremeOffline(extremes, values);
 
-		ExtremeSequences allExtriemesSequence = new ExtremeSequences(extremes
-				.values(), values);
+//		ExtremeSequences allExtriemesSequence = new ExtremeSequences(extremes
+//				.values(), values);
 //		Double area = null;
-		try {
-			FileOutputStream fos = new FileOutputStream(new File("./target/result.csv"));
-			DataOutputStream oos = new DataOutputStream(fos);
-			List<List<Float>> vectors = new ArrayList<List<Float>>();
-			for (ExtremeListIterator iter = allExtriemesSequence
-					.extreamsListIterator(); iter.hasNext();) {
-//				ExtremeEntry entry = 
-					iter.next();
-				
-				if (iter.isCurrentMaxExtream()) {
-					List<Float> vector = new ArrayList<Float>();
-					vector.add(iter.getPeakLength().floatValue());
-					vector.add(iter.getArea().floatValue());
-					Long length = iter.getPeakLength();
-					String area = ""+iter.getArea();
-					//bug
-					if(length>0){
-						oos.writeBytes(MessageFormat.format("{0};{1}\n",""+length, area));
-					}
-					vectors.add(vector);
-				}
-				
-			}	
-			List<List<Float>> center = MathServicesFactory.createKnnService().cluster(vectors, 3);
-			for (List<Float> list : center) {
-				oos.writeBytes(MessageFormat.format("{0};{1}\n",""+list.get(0), ""+list.get(1)));
-				log.debug("{0};{1}\n",""+list.get(0), ""+list.get(1));
-			}
-			oos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 		return extremes;
 
@@ -119,7 +85,7 @@ public class ExtremeThresholdServiceImpl {
 		ExtremeEntry firstMinExtreamEntry = new ExtremeEntry(
 				index, previous, SignalStates.min);
 		iterator.add(firstMinExtreamEntry);
-		log.debug("[extractExtremes]adding 1st min  {0} ", firstMinExtreamEntry.toString());
+		log.debug("[extractExtremes]adding min  {0} ", firstMinExtreamEntry.toString());
 
 		//process all the signal for min/max extremes
 		while (listIter.hasNext()) {
@@ -173,9 +139,8 @@ public class ExtremeThresholdServiceImpl {
 //						log.debug("[extractExtremes]NOT adding min  {0} ", currentExtreamEntry);
 //					}
 					
-					log.debug("[extractExtremes]adding max  {0} ", currentExtreamEntry);
+					log.debug("[extractExtremes]adding min  {0} ", currentExtreamEntry);
 					iterator.add(currentExtreamEntry);	
-
 				}
 				minState = SignalStates.increasing;
 			}
@@ -183,8 +148,13 @@ public class ExtremeThresholdServiceImpl {
 			previous = value;
 			index++;
 		}
-		
-		
+		if(iterator.isCurrentMaxExtream()){
+			index--;
+			ExtremeEntry lastMinExtreamEntry = new ExtremeEntry(
+				index, previous, SignalStates.min);
+			iterator.add(lastMinExtreamEntry);
+			log.debug("[extractExtremes]adding min  {0} ", firstMinExtreamEntry.toString());
+		}
 			
 		
 
@@ -205,68 +175,54 @@ public class ExtremeThresholdServiceImpl {
 		
 		ExtremeSequences allExtriemesSequence = new ExtremeSequences(extremes
 				.values(), values);
-		Double area = null;
-		for (ExtremeListIterator iter = allExtriemesSequence
-				.extreamsListIterator(); iter.hasNext();) {
-			ExtremeEntry entry = iter.next();
-			if (iter.isCurrentMaxExtream()) {
-				Double _area = iter.getArea();
-				area = area == null?_area:area;
-				area = (area+_area)/2;
-			}
-		}
-		area = area * 1.2;
 		
-		for (ExtremeListIterator iter = allExtriemesSequence
-				.extreamsListIterator(); iter.hasNext();) {
-			ExtremeEntry entry = iter.next();
-			if (iter.isCurrentMaxExtream()) {
-				if(iter.getArea()<area){
-					iter.remove();
-				}
-			}
-		}
 		
+		List<List<Float>> vectors = new ArrayList<List<Float>>();
 		for (ExtremeListIterator iter = allExtriemesSequence
 				.extreamsListIterator(); iter.hasNext();) {
-			ExtremeEntry entry = iter.next();
-			if (iter.isCurrentMaxExtream()) {
-				//filter max
-				ExtremeEntry nextMax = iter.getNext(SignalStates.max);
-				if (nextMax != null){
-//						&& nextMax.getIndex() - entry.getIndex() < minDistance) {
-					if (entry.getValue() <= nextMax.getValue()) {
-						iter.remove();
-						ExtremeEntry nextMin = iter.getNext(SignalStates.min);
-						iter.remove(nextMin);
-						log.debug("[filtterExremeOffline]removed current");
-					} else {
-//						iter.remove(nextMax);
-//						log.debug("removed next");
-					}
-//					if (iter.hasPrevious()) {
-//						iter.previous();
-//					}
-					continue;
-				}
-			}
-			//filter min
-//			if(iter.isCurrentMinExtream() && iter.isNextMinExtream()){
-//				ExtremeEntry nextMin = iter.getNext(SignalStates.min);
-//				if(nextMin == null) continue;
-//				if(entry.getValue()>nextMin.getValue()){
-////					iter.remove();
-//					log.debug("[filtterExremeOffline]removed current");
-//				}else{
-////					iter.remove(nextMin);
-//					log.debug("[filtterExremeOffline]removed next");
-//				}
-////				if (iter.hasPrevious()) {
-////					iter.previous();
-////				}
-//				continue;
-//			}
+				iter.next();
 			
+			if (iter.isCurrentMaxExtream()) {
+				List<Float> vector = new ArrayList<Float>();
+				vector.add(iter.getArea().floatValue());
+				vector.add(iter.getPeakLength().floatValue());
+				vectors.add(vector);
+			}
+		}	
+		List<List<Float>> center= MathServicesFactory.createKnnService().cluster(vectors, 2);		
+
+		try {
+			FileOutputStream fos = new FileOutputStream(new File("./target/result.csv"));
+			DataOutputStream oos = new DataOutputStream(fos);
+			for (List<Float> list : center) {
+				oos.writeBytes(MessageFormat.format("{0};{1}\n",""+list.get(1), ""+list.get(0)));
+				log.debug("centers: lenght:{0}; area:{1}",""+list.get(1), ""+list.get(0));
+			}
+			for (List<Float> list : vectors) {
+				oos.writeBytes(MessageFormat.format("{0};{1}\n",""+list.get(1), ""+list.get(0)));
+			}
+			oos.close();
+		} catch (FileNotFoundException e) {
+			log.error(e);
+		} catch (IOException e) {
+			log.error(e);
+		}
+		Float minArea = center.get(0).get(0);
+		int minLength = center.get(0).get(1).intValue();
+		
+		
+		for (ExtremeListIterator iter = allExtriemesSequence
+				.extreamsListIterator(); iter.hasNext();) {
+			ExtremeEntry entry = iter.next();
+			if (iter.isCurrentMaxExtream()) {
+				ExtremeEntry prevEntry = iter.getPrevious(SignalStates.min); 
+				if ( iter.getArea()>minArea) {
+					log.debug("iter area: {0}; min area {1}", iter.getArea(), minArea);
+					iter.remove(entry);
+					iter.remove(prevEntry);
+				}
+			}
+
 			
 		}
 		Map<Integer, ExtremeEntry> rtnExtremes = allExtriemesSequence.toMap();

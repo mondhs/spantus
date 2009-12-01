@@ -21,7 +21,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	@SuppressWarnings("unused")
 	private ExtremeEntry last = null;
 	
-	private int nextIndex;
+//	private int nextIndex;
 	FrameValues allValues;
 
 	
@@ -29,7 +29,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 			) {
 		this.list = list;
 		this.allValues = allValues;
-		nextIndex = 0;
+//		nextIndex = 0;
 		ExtremeEntry previous = null;
 		for (ExtremeEntry element : list) {
 			element.link(previous, null);
@@ -111,6 +111,10 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	 */
 	public Long getPeakLength(){
 		long length = getNextEntry().getIndex() - getPreviousEntry().getIndex(); 
+		if(length < 0){
+			log.debug("next entry index: {0}; previous {1}", getNextEntry().getIndex(), getPreviousEntry().getIndex());
+			throw new IllegalArgumentException("length is negative");
+		}
 		return length;
 	}
 	/**
@@ -160,14 +164,14 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 
 	public ExtremeEntry next() {
 		checkForComodification();
-		if (nextIndex == list.size())
-			throw new NoSuchElementException();
+//		if (nextIndex == list.size())
+//			throw new NoSuchElementException();
 		if(getLastReturned() == null){
 			setLastReturned(first);
 		}else{
 			setLastReturned(getLastReturned().getNext());
 		}
-		nextIndex++;
+//		nextIndex++;
 		return getLastReturned();
 	}
 	
@@ -198,21 +202,21 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	}
 
 	public ExtremeEntry previous() {
-		if (nextIndex == 0)
-			throw new NoSuchElementException();
+//		if (nextIndex == 0)
+//			throw new NoSuchElementException();
 
 		setLastReturned(getLastReturned().getPrevious());
-		nextIndex--;
+//		nextIndex--;
 		checkForComodification();
 		return getLastReturned();
 	}
 
 	public int nextIndex() {
-		return nextIndex;
+		return 0;
 	}
 
 	public int previousIndex() {
-		return nextIndex - 1;
+		return 0;
 	}
 
 	public void remove() {
@@ -221,7 +225,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 		ExtremeEntry previous = lastReturned.getPrevious();
 		if(previous != null){
 			lastReturned = previous;
-			nextIndex--;
+//			nextIndex--;
 		}else {
 			lastReturned = lastReturned.getNext();
 		}
