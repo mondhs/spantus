@@ -1,6 +1,7 @@
 package org.spantus.work.ui.container.option;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
@@ -60,7 +62,13 @@ public class PropertiesTable extends JTable {
 	
 	@Override
 	public TableCellRenderer getCellRenderer(int row, int column) {
-		if(column == 1){
+		if(column == 0){
+			//align right names
+			DefaultTableCellRenderer renderer = (DefaultTableCellRenderer)super.getCellRenderer(row, column);
+			renderer.setHorizontalAlignment(JLabel.RIGHT);
+			return renderer;
+			
+		}else if(column == 1){
 			return new PropertyTableCellRenderer();
 		}
 		return super.getCellRenderer(row, column);
@@ -90,6 +98,11 @@ public class PropertiesTable extends JTable {
 				Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
 			if(value instanceof String){
+				JLabel label = new JLabel((String)value);
+				Font f = label.getFont();
+				// bold
+				label.setFont(f.deriveFont(f.getStyle() ^ Font.BOLD));
+				return label;
 			}else if(value instanceof Boolean){
 				String name = ((PropertyTableModel)getModel()).getPropertyRowName(row);
 				JCheckBox check = (JCheckBox)editors.get(name).getComponent();

@@ -24,6 +24,7 @@ import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.rule.DecisionCtx;
 import org.spantus.segment.online.rule.RuleBaseEnum;
+import org.spantus.segment.online.rule.RuleBaseService;
 import org.spantus.segment.online.rule.RuleServiceFactory;
 
 /**
@@ -41,7 +42,11 @@ public class DecisionSegmentatorOnline extends MultipleSegmentatorOnline {
 
 	
 	private DecisionCtx decisionContext;
+	private RuleBaseService ruleBaseService;
 	
+	public DecisionSegmentatorOnline() {
+		ruleBaseService = RuleServiceFactory.createRuleBaseService();
+	}
 	
 	private Logger log = Logger.getLogger(DecisionSegmentatorOnline.class);
 	
@@ -53,8 +58,9 @@ public class DecisionSegmentatorOnline extends MultipleSegmentatorOnline {
 		ctx.setSample(sample);
 		ctx.setState(getVoteForState(time, extractor, val));
 		if(ctx.getState() == null) return;
-//		RuleBaseEnum.state prevState = ctx.getSegmentState();
-		RuleBaseEnum.action action = RuleServiceFactory.createRuleBaseService().testOnRuleBase(ctx);
+
+		RuleBaseEnum.action action = ruleBaseService.testOnRuleBase(ctx);
+		
 		switch (action) {
 		case processNoise:
 			onProcessNoise(ctx,time,sample);

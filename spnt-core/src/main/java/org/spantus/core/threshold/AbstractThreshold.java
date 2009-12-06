@@ -4,6 +4,7 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorListener;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.utils.Assert;
 
 public abstract class AbstractThreshold implements IThreshold, IExtractorListener {
@@ -22,6 +23,10 @@ public abstract class AbstractThreshold implements IThreshold, IExtractorListene
 	
 	public IExtractor getExtractor() {
 		return extractor;
+	}
+	
+	public MarkerSet getMarkerSet() {
+		return null;
 	}
 
 	public void setExtractor(IExtractor extractor) {

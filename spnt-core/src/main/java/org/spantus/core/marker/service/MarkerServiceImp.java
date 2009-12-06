@@ -1,5 +1,8 @@
 package org.spantus.core.marker.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 
@@ -20,8 +23,12 @@ public class MarkerServiceImp implements IMarkerService {
 
 	public boolean validate(MarkerSet markerSet, Marker marker,
 			Long newStart, Long newLength) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
+	}
+	
+	public Long getTime(int sampleNum, Float sampleRate) {
+		return BigDecimal.valueOf((sampleNum * 1000) / sampleRate).setScale(0,
+				RoundingMode.HALF_UP).longValue();
 	}
 
 }

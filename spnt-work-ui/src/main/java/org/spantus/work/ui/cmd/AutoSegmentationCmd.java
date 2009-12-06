@@ -39,10 +39,12 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
+import org.spantus.core.threshold.ExtremeThreshold;
 import org.spantus.core.threshold.IThreshold;
 import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
+import org.spantus.segment.SegmentatorParam;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -62,107 +64,152 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 
 	public static final String segmentAutoPanelMessageHeader = "segmentAutoPanelMessageHeader";
 	public static final String segmentAutoPanelMessageBody = "segmentAutoPanelMessageBody";
-	
+
 	private ISegmentatorService segmentator;
 	private SampleChart sampleChart;
 
 	protected Logger log = Logger.getLogger(getClass());
-	
+
+	/**
+	 * 
+	 * @param sampleChart
+	 */
 	public AutoSegmentationCmd(SampleChart sampleChart) {
 		segmentator = SegmentFactory.createSegmentator();
 		this.sampleChart = sampleChart;
 
 	}
 
+	/**
+	 * 
+	 */
 	public String execute(SpantusWorkInfo ctx) {
-		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader().getWorkConfig();
+		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader()
+				.getWorkConfig();
 		IExtractorInputReader reader = sampleChart.getReader();
-		if(reader == null){
+		if (reader == null) {
 			log.info("Nothing to segment");
 		}
 		reader.getExtractorRegister();
+		MarkerSet markerSet = null;
 		Set<IThreshold> threasholds = new HashSet<IThreshold>();
 		for (IExtractor extractor : reader.getExtractorRegister()) {
-			if (extractor instanceof IThreshold) {
+			if (extractor instanceof ExtremeThreshold) {
+				markerSet = ((ExtremeThreshold) extractor).getMarkerSet();
+				ctx.getProject().getCurrentSample().getMarkerSetHolder()
+						.getMarkerSets().put(markerSet.getMarkerSetType(),
+								markerSet);
+			} else if (extractor instanceof IThreshold) {
 				threasholds.add((IThreshold) extractor);
 			}
 		}
+
+		if (threasholds != null && threasholds.size() > 0) {
+			SegmentatorParam param = createSegmentatorParam(config);
+			markerSet = segmentator.extractSegments(threasholds, param);
+			ctx.getProject().getCurrentSample().getMarkerSetHolder()
+					.getMarkerSets().put(MarkerSetHolderEnum.word.name(),
+							markerSet);
+			putLabels(ctx);
+
+		}
+		if (markerSet == null) {
+			log
+					.debug("Auto segmentaiton was not processed as there is no data.");
+			return null;
+		}
+
+		inform(markerSet, ctx);
+
+		return GlobalCommands.sample.reloadSampleChart.name();
+	}
+
+	/**
+	 * 
+	 * @param value
+	 * @param ctx
+	 */
+	protected void inform(MarkerSet value, SpantusWorkInfo ctx) {
+		String messageFormat = getMessage(segmentAutoPanelMessageBody);
+		String messageBody = MessageFormat.format(messageFormat, value
+				.getMarkers().size());
+
+		log.info(messageBody);
+
+		if (Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())) {
+			JOptionPane.showMessageDialog(null, messageBody,
+					getMessage(segmentAutoPanelMessageHeader),
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+
+	/**
+	 * 
+	 * @param config
+	 * @return
+	 */
+	protected SegmentatorParam createSegmentatorParam(
+			WorkUIExtractorConfig config) {
 		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
 		param.setMinLength(config.getSegmentationMinLength().longValue());
 		param.setMinSpace(config.getSegmentationMinSpace().longValue());
 		param.setExpandEnd(config.getSegmentationExpandEnd().longValue());
 		param.setExpandStart(config.getSegmentationExpandStart().longValue());
-		if(threasholds == null || threasholds.size() == 0){
-			log.debug("Auto segmentaiton was not processed as there is no data.");
-			return null;
-		}
-		MarkerSet value = segmentator.extractSegments(threasholds, param);
-		ctx.getProject().getCurrentSample().getMarkerSetHolder()
-				.getMarkerSets().put(MarkerSetHolderEnum.word.name(), value);
-		putLabels(ctx);
-		
-		inform(value, ctx);
-		
-		return GlobalCommands.sample.reloadSampleChart.name();
+		return param;
 	}
 
-	protected void inform(MarkerSet value, SpantusWorkInfo ctx){
-		String messageFormat = getMessage(segmentAutoPanelMessageBody);
-		String messageBody = MessageFormat.format(messageFormat, 
-				value.getMarkers().size()
-				);
-		
-		log.info(messageBody);
-		
-		if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
-			JOptionPane.showMessageDialog(null,messageBody,
-					getMessage(segmentAutoPanelMessageHeader),
-					JOptionPane.INFORMATION_MESSAGE);	
-		}		
-	}
-
-	
-	protected String getDescriptionFileName(String wavFile){
+	/**
+	 * 
+	 * @param wavFile
+	 * @return
+	 */
+	protected String getDescriptionFileName(String wavFile) {
 		String txtFile = wavFile;
-		if(new File(txtFile + ".txt").isFile()){
+		if (new File(txtFile + ".txt").isFile()) {
 			return txtFile + ".txt";
 		}
 		Pattern pattern = Pattern.compile("(.*)(\\.)(.*)");
 		Matcher matcher = pattern.matcher(txtFile);
-		if(matcher.matches()){
-			txtFile = matcher.replaceAll("$1"+".txt");
-			if(new File(txtFile).isFile()){
+		if (matcher.matches()) {
+			txtFile = matcher.replaceAll("$1" + ".txt");
+			if (new File(txtFile).isFile()) {
 				return txtFile;
 			}
 		}
 		return null;
-		
+
 	}
-	
-	public void putLabels(SpantusWorkInfo ctx){
-		String filePath = getDescriptionFileName(
-				ctx.getProject().getCurrentSample().getCurrentFile().getFile()
-				);
+
+	/**
+	 * 
+	 * @param ctx
+	 */
+	public void putLabels(SpantusWorkInfo ctx) {
+		String filePath = getDescriptionFileName(ctx.getProject()
+				.getCurrentSample().getCurrentFile().getFile());
 		List<String> words = null;
-		if(filePath == null){
-			log.debug("marker description file not found for " 
-					+ ctx.getProject().getCurrentSample().getCurrentFile().getFile());
+		if (filePath == null) {
+			log.debug("marker description file not found for "
+					+ ctx.getProject().getCurrentSample().getCurrentFile()
+							.getFile());
 			return;
 		}
 
-		List<Marker> markers = ctx.getProject().getCurrentSample().getMarkerSetHolder().getMarkerSets().get(
-				MarkerSetHolderEnum.word.name()).getMarkers();
+		List<Marker> markers = ctx.getProject().getCurrentSample()
+				.getMarkerSetHolder().getMarkerSets().get(
+						MarkerSetHolderEnum.word.name()).getMarkers();
 
-		try{
+		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filePath));
 			String str = null;
 			words = new ArrayList<String>();
-			//Assume it is multi line format
-			while((str = reader.readLine()) != null){
+			// Assume it is multi line format
+			while ((str = reader.readLine()) != null) {
 				words.add(str);
 			}
-			//if only single one line is selected, assume it is single line format
-			if(words.size() == 1 && markers.size()>1){
+			// if only single one line is selected, assume it is single line
+			// format
+			if (words.size() == 1 && markers.size() > 1) {
 				String wordsString = words.get(0);
 				String[] strs = wordsString.split("\\s");
 				words.clear();
@@ -174,15 +221,16 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 			log.error(e);
 		}
 		int i = 0;
-		
-		if(words == null){
+
+		if (words == null) {
 			for (Marker marker : markers) {
-				marker.setLabel(Integer.valueOf(i+1).toString());
+				marker.setLabel(Integer.valueOf(i + 1).toString());
 				i++;
 			}
-		}else{
+		} else {
 			for (Marker marker : markers) {
-				if(i>=words.size()) break;
+				if (i >= words.size())
+					break;
 				marker.setLabel(words.get(i));
 				i++;
 			}

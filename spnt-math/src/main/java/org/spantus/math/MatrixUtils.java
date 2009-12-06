@@ -44,10 +44,18 @@ public class MatrixUtils {
 	public static List<Float> zeros(int order){
 		List<Float> zeros = new ArrayList<Float>();
 		for (int i = 0; i < order; i++) {
-			zeros.add(new Float(0));
+			zeros.add(0F);
 		}
 		return zeros;
 	}
+	public static List<Float> generareVector(Float value, int order){
+		List<Float> zeros = new ArrayList<Float>();
+		for (int i = 0; i < order; i++) {
+			zeros.add(value);
+		}
+		return zeros;
+	}
+	
 	public static List<Float> reverseVector(List<Float> vector){
 		Collections.reverse(vector);
 		return vector;

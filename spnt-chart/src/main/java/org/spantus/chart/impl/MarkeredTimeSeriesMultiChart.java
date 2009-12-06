@@ -30,6 +30,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import net.quies.math.plot.AxisInstance;
+import net.quies.math.plot.CoordinateBoundary;
 
 import org.spantus.chart.WrappedChartDescriptionResolver;
 import org.spantus.chart.marker.MarkerGraph;
@@ -59,10 +60,21 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 		getMarkerGraph().addMouseListener(mouseListener);
 		getMarkerGraph().addMouseMotionListener(mouseMotionListener);
 		getMarkerGraph().addKeyListener(keyListener);
-		getMarkerGraph().setPreferredSize(new Dimension(300, 40));
+		
+		getMarkerGraph().setPreferredSize(new Dimension(300, getHeaderHeight()));
 		getMarkerGraph().initialize();
 	}
-
+	/**
+	 * Header height 
+	 */
+	public int getHeaderHeight(){
+		MarkerSetHolder holder = getMarkerGraph().getMarkerSetHolder();
+		int prefredHeigth = 5;
+		if(holder.getMarkerSets() != null && holder.getMarkerSets().size()>0){
+			prefredHeigth += 30 * holder.getMarkerSets().size();
+		}
+		return prefredHeigth;
+	}
 	
 	public MarkerGraph getMarkerGraph() {
 		if (markerGraph == null) {
@@ -77,10 +89,14 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 			AxisInstance axisX = getGraph().getXAxisInstance();
 			BigDecimal zigZagLength = BigDecimal.ZERO;
 			if(axisX.getMin().compareTo(BigDecimal.ZERO)>0){
+				CoordinateBoundary cb = getGraph().getCoordinateBoundary();
 				zigZagLength = axisX.getMax().subtract(axisX.getMin()).movePointLeft(1);
+				BigDecimal zigZagLength1 = cb.getXMax().subtract(cb.getXMin()).movePointLeft(1);
+//				zigZagLength = BigDecimal.valueOf(.11);
+				zigZagLength = zigZagLength1.negate();
 			}
 			getMarkerGraph().getCtx().setXOffset(axisX.getMin().add(zigZagLength));
-			getMarkerGraph().getCtx().setXScalar(axisX.getGraphichsScalar().setScale(4, RoundingMode.HALF_UP));
+			getMarkerGraph().getCtx().setXScalar(axisX.getGraphichsScalar());
 			getMarkerGraph().resetScreenCoord();
 		}
 		
@@ -97,10 +113,4 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 	public void changeSelection(int start, int length){
 		getGraph().changeSelection(start, length);
 	}
-//	 public void addMouseListener(MouseListener l) {
-//		 getMarkerGraph().addMouseListener(l);
-//	 }
-//	 public void addKeyListener(KeyListener l) {
-//		 getMarkerGraph().addKeyListener(l);
-//	 }
 }

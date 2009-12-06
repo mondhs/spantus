@@ -34,7 +34,7 @@ public class ExtremeThresholdTest extends TestCase {
 		extremeThresholdService = new ExtremeThresholdServiceImpl();
 	}
 	
-	public void _testExtractExtremes() throws Exception {
+	public void testExtractExtremes() throws Exception {
 		Map<Integer, ExtremeEntry> extemes = null;
 		
 		extemes = extremeThresholdService.extractExtremes(createValues(empty));
@@ -58,20 +58,10 @@ public class ExtremeThresholdTest extends TestCase {
 		Map<Integer, ExtremeEntry> extemes  = null;
 		FrameValues values = null;
 		
-//		values = createValues(empty);
-//		extemes = extremeThresholdService.extractExtremes(values);
-//		extemes = extremeThresholdService.processExtremes(extemes, values);
-//		assertEquals(0, extemes.size());
-//		
-//		values = createValues(doubleMax);
-//		extemes = extremeThresholdService.extractExtremes(values);
-//		extemes = extremeThresholdService.processExtremes(extemes, values);
-//		assertEquals(5, extemes.size());
-		
 		values = createValues(complexMinMax);
 		extemes = extremeThresholdService.extractExtremes(values);
 		extemes = extremeThresholdService.filtterExremeOffline(extemes, values);
-		assertEquals(3, extemes.size());
+		assertEquals(7, extemes.size());
 	}
 
 	
@@ -81,6 +71,7 @@ public class ExtremeThresholdTest extends TestCase {
 		for (Float float1 : fvArr) {
 			fv.add(float1);
 		}
+		fv.setSampleRate(1000);
 		return fv;
 	}
 	

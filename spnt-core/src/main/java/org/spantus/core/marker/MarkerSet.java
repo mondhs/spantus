@@ -5,6 +5,7 @@ import java.util.List;
 
 public class MarkerSet {
 	
+	String markerSetType;
 	List<Marker> markers;
 
 	public List<Marker> getMarkers() {
@@ -12,5 +13,13 @@ public class MarkerSet {
 			markers = new LinkedList<Marker>();
 		}
 		return markers;
+	}
+
+	public String getMarkerSetType() {
+		return markerSetType;
+	}
+
+	public void setMarkerSetType(String markerSetType) {
+		this.markerSetType = markerSetType;
 	}
 }

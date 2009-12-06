@@ -22,6 +22,7 @@ package org.spantus.segment.test;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractorConfig;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.threshold.IThreshold;
 
 public class MockThreshold implements IThreshold {
@@ -83,6 +84,10 @@ public class MockThreshold implements IThreshold {
 	public void flush() {
 		// TODO Auto-generated method stub
 		
+	}
+	public MarkerSet getMarkerSet() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

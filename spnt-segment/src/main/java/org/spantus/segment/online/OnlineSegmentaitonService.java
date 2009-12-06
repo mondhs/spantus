@@ -19,25 +19,20 @@ public class OnlineSegmentaitonService implements ISegmentatorService {
 
 	public MarkerSet extractSegments(Set<IThreshold> thresholds,
 			SegmentatorParam param) {
+
 		DecisionSegmentatorOnline multipleSegmentator = new DecisionSegmentatorOnline();
 		if(param != null){
 			multipleSegmentator.setParam((OnlineDecisionSegmentatorParam)param);
 		}
 		Map<IThreshold, Iterator<Float>> thresholdMap = new HashMap<IThreshold, Iterator<Float>>();
 		Integer delta = null;
-//		Float extractorSampleRate = null;
 		
 		for (IThreshold threshold : thresholds) {
 			thresholdMap.put(threshold, threshold.getState().iterator());
 			if(delta == null){
 				delta = threshold.getConfig().getWindowOverlap();
-//				extractorSampleRate = threshold.getState().getSampleRate();
 			}else{
 				Assert.isTrue(delta==threshold.getConfig().getWindowOverlap());
-//				Assert.isTrue(extractorSampleRate == threshold.getState().getSampleRate(),
-//						"Extraction sample rate not the same " + extractorSampleRate 
-//						+ " != " + threshold.getState().getSampleRate()
-//						);
 			}
 		}
 		

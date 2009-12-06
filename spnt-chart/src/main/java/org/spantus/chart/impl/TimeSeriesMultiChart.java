@@ -22,6 +22,7 @@ package org.spantus.chart.impl;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,8 +48,8 @@ import org.spantus.chart.functions.FrameValueThearsholdFuncton;
 import org.spantus.chart.service.ColorResolver;
 import org.spantus.chart.service.IColorResolver;
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.threshold.IThreshold;
 import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
@@ -237,11 +238,16 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		return VectorSeriesColorEnum.valueOf(getCharInfo().getColorSchema());
 	}
 
+	public int getHeaderHeight(){
+		return 0;
+	}
 	
 	public void repaint() {
 		super.repaint();
 		if (graph != null) {
-			graph.setSize(getSize());
+			Dimension d = getSize();
+			d.height -= getHeaderHeight();
+			graph.setSize(d);
 			graph.render();
 			graph.repaint();
 		}

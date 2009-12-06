@@ -106,27 +106,30 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 	public synchronized void paintFunction(Graphics g) {
 		Graphics2D g2 = (Graphics2D)g;
 		int size = Math.min(polylinesY.size(), polylinesX.size());
+		Color currentColor = ((Color)getCtx().getStyle().getPaint());
+		Color currentColorTransparent = new Color(currentColor.getRGB() & 0x00FFFFFF | 0x33000000, true);
 		for (int i = 0; i < size; i++) {
 			
 			
 			int[] x = polylinesX.get(i);
 			int[] y = polylinesY.get(i);
-			int[] yt = polylinesYt.get(i);
-			int[] yState = polylinesYstate.get(i);
-			
+
 			g.drawPolyline(x, y, x.length);
 
-			Color currentColor = ((Color)getCtx().getStyle().getPaint());
-			if(yt != null && yt.length > 0){
-				g2.setPaint(currentColor.darker().darker());
-				g2.drawPolyline(x, yt, x.length);
-			}
 			
-			Color currentColorTransparent = new Color(currentColor.getRGB() & 0x00FFFFFF | 0x33000000, true);
-			g2.setPaint(currentColorTransparent);
-			Polygon polygon = constructStatePolygon(x, yState);
-			g2.fillPolygon(polygon);
-
+			if(polylinesYt.size()>i){
+				int[] yt = polylinesYt.get(i);
+				if(yt != null && yt.length > 0){
+					g2.setPaint(currentColor.darker().darker());
+					g2.drawPolyline(x, yt, x.length);
+				}
+			}
+			if(polylinesYstate.size()>i){
+				int[] yState = polylinesYstate.get(i);
+				g2.setPaint(currentColorTransparent);
+				Polygon polygon = constructStatePolygon(x, yState);
+				g2.fillPolygon(polygon);
+			}
 		}
 	}
 	
