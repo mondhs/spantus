@@ -7,6 +7,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.spantus.math.cluster.ClusterCollection;
 import org.spantus.math.knn.KNNService;
 import org.spantus.math.knn.KNNServiceImpl;
 
@@ -26,7 +27,7 @@ public class KNNServiceTest extends TestCase {
 //		vectors.addAll(createVectorList(5, 5));//5
 //		vectors.addAll(createVectorList(5, 20 ));//50
 		Collections.shuffle(vectors);
-		List<List<Float>> clusterCenters = knnService.cluster(vectors, 2);
+		ClusterCollection clusterCenters = knnService.cluster(vectors, 2);
 		assertEquals(2, clusterCenters.size());
 		assertAproxEquals(5.0, clusterCenters.get(0).get(0), 5.0);
 		assertAproxEquals(150.0, clusterCenters.get(1).get(0), 70.0);

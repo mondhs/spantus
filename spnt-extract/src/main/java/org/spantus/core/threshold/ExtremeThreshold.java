@@ -1,7 +1,6 @@
 package org.spantus.core.threshold;
 
 import java.util.Map;
-import java.util.Vector;
 
 import org.spantus.core.FrameValues;
 import org.spantus.logger.Logger;
@@ -10,7 +9,7 @@ public class ExtremeThreshold extends AbstractThreshold {
 
 	Logger log = Logger.getLogger(ExtremeThreshold.class);
 
-	Vector<Float> lastMaxs;
+//	Vector<Float> lastMaxs;
 
 	ExtremeThresholdServiceImpl extremeThresholdService = new ExtremeThresholdServiceImpl();
 

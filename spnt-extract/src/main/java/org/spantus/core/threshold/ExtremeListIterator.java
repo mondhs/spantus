@@ -3,7 +3,6 @@ package org.spantus.core.threshold;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.NoSuchElementException;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.threshold.ExtremeEntry.SignalStates;
@@ -110,9 +109,10 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	 * @return
 	 */
 	public Long getPeakLength(){
-		long length = getNextEntry().getIndex() - getPreviousEntry().getIndex(); 
+		long length = getNextEntry().getIndex() - getPreviousEntry().getIndex() +1; 
 		if(length < 0){
 			log.debug("next entry index: {0}; previous {1}", getNextEntry().getIndex(), getPreviousEntry().getIndex());
+//			return 0L;
 			throw new IllegalArgumentException("length is negative");
 		}
 		return length;
@@ -126,10 +126,10 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 		int index = 0;
 		long length = getPeakLength(); 
 		for (Iterator<Float> iterator = allValues.listIterator(getPreviousEntry().getIndex()); iterator.hasNext();) {
-			area += iterator.next();
-			if(index++>length){
+			if(index++>=length){
 				break;
 			}
+			area += iterator.next();
 		}
 		return area;
 	}
