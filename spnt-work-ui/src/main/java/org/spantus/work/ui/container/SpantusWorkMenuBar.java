@@ -1,6 +1,7 @@
 package org.spantus.work.ui.container;
 
 import java.awt.Event;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -108,26 +109,26 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			JMenuItem m = createMenuItem(
 					GlobalCommands.file.open,
 					GlobalCommands.file.open.name(),
-					KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK)); 
+					KeyStroke.getKeyStroke(KeyEvent.VK_O, getCtrlMask())); 
 			menu.add(m);
 			menu.addSeparator();
 			menu.add(createMenuItem(GlobalCommands.file.newProject,
-					KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK|Event.SHIFT_MASK)
+					KeyStroke.getKeyStroke(KeyEvent.VK_N, getCtrlMask()|Event.SHIFT_MASK)
 					));
 			menu.add(createMenuItem(GlobalCommands.file.openProject,
-					KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK|Event.SHIFT_MASK)));
+					KeyStroke.getKeyStroke(KeyEvent.VK_O, getCtrlMask()|Event.SHIFT_MASK)));
 			menu.add(createMenuItem(GlobalCommands.file.saveProject,
-					KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK|Event.SHIFT_MASK)));
+					KeyStroke.getKeyStroke(KeyEvent.VK_S, getCtrlMask()|Event.SHIFT_MASK)));
 			menu.addSeparator();
 			menu.add(createMenuItem(GlobalCommands.file.exportFile,
-					KeyStroke.getKeyStroke(KeyEvent.VK_E, Event.CTRL_MASK|Event.SHIFT_MASK)));
+					KeyStroke.getKeyStroke(KeyEvent.VK_E, getCtrlMask()|Event.SHIFT_MASK)));
 			menu.add(createMenuItem(GlobalCommands.file.importFile,
-					KeyStroke.getKeyStroke(KeyEvent.VK_I, Event.CTRL_MASK|Event.SHIFT_MASK)));
+					KeyStroke.getKeyStroke(KeyEvent.VK_I, getCtrlMask()|Event.SHIFT_MASK)));
 			
 			menu.addSeparator();
 			
 			menu.add(createMenuItem(GlobalCommands.file.exit,
-					KeyStroke.getKeyStroke(KeyEvent.VK_Q, Event.CTRL_MASK)));
+					KeyStroke.getKeyStroke(KeyEvent.VK_Q, getCtrlMask())));
 			fileMenu = menu;
 			this.add(fileMenu);
 		}
@@ -140,19 +141,19 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			menu.add(createMenuItem(
 					GlobalCommands.file.currentSampleChanged,
 					SpantusWorkToolbar.RELOAD,
-					KeyStroke.getKeyStroke(KeyEvent.VK_R, Event.CTRL_MASK)));
+					KeyStroke.getKeyStroke(KeyEvent.VK_R, getCtrlMask())));
 			menu.add(createMenuItem(
 					GlobalCommands.tool.autoSegmentation,
-					KeyStroke.getKeyStroke(KeyEvent.VK_U, Event.CTRL_MASK)));
+					KeyStroke.getKeyStroke(KeyEvent.VK_U, getCtrlMask())));
 			menu.setText(getResource(menuLabels.tool.name()));
 			menuItems.put(menuLabels.tool.name(), menu);
 			menu.add(createMenuItem(GlobalCommands.tool.saveSegments,
-					KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK)));
+					KeyStroke.getKeyStroke(KeyEvent.VK_S, getCtrlMask())));
 			
 			menu.addSeparator();
 			
 			menu.add(createMenuItem(GlobalCommands.tool.option,
-					KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK)));
+					KeyStroke.getKeyStroke(KeyEvent.VK_P, getCtrlMask())));
 			
 			toolMenu = menu;
 			this.add(toolMenu);
@@ -230,5 +231,20 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 	}
 
 
+	Integer ctrlMask;
+	
+	public int getCtrlMask(){
+		if(ctrlMask == null){
+//			String vers = System.getProperty("os.name").toLowerCase();
+
+//			if (vers.indexOf("mac") != -1) {
+//				ctrlMask =  Event.META_MASK;
+//			}else {
+//				ctrlMask = Event.CTRL_MASK;
+//			}
+			ctrlMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+		}
+		return ctrlMask;
+	}
 
 }

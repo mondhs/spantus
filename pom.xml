@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  
+
   <groupId>org.spantus</groupId>
   <artifactId>spnt-svn-pom</artifactId>
   <packaging>pom</packaging>
@@ -27,23 +27,53 @@
 
   <modules>
     <module>spnt-main</module>
-    
   </modules>
-<pluginRepositories>
-        <pluginRepository>
-            <id>twdata-m2-repository</id>
-            <name>twdata.org Maven 2 Repository</name>
-            <url>http://twdata-m2-repository.googlecode.com/svn/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
-<build>
-<plugins>
-<plugin>
-     <groupId>org.twdata.maven</groupId>
-     <artifactId>maven-cli-plugin</artifactId>
-  </plugin>
-</plugins>
-</build>
+  <distributionManagement>
+    <repository>
+      <id>sf.net</id>
+      <name>Sourceforge Repository</name>
+      <url>sftp://frs.sourceforge.net/home/groups/s/sp/spantus/htdocs/maven/release</url>
+    </repository>
+    <snapshotRepository>
+      <id>sf.net</id>
+      <name>Sourceforge Repository</name>
+      <url>sftp://frs.sourceforge.net/home/groups/s/sp/spantus/htdocs/maven/snapshot</url>
+    </snapshotRepository> 
+  </distributionManagement>
+
+
+  	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Maven Repository Switchboard</name>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>spnt-snapshot</id>
+                        <name>Spantus snapshot</name>
+                        <url>http://spantus.sourceforge.net/maven/snapshot/</url>
+                        <snapshots>
+                                <enabled>true</enabled>
+			        <updatePolicy>daily</updatePolicy>
+                        </snapshots>
+                        <releases>
+                                <enabled>false</enabled>
+                        </releases>
+                </repository>
+                <repository>
+                        <id>spnt-global</id>
+                        <name>Spantus global</name>
+                        <url>http://spantus.sourceforge.net/maven/global/</url>
+			<snapshots>
+                                <enabled>false</enabled>
+     			</snapshots>
+			<releases>
+                                <enabled>false</enabled>
+			        <updatePolicy>daily</updatePolicy>
+                        </releases>
+                </repository>
+
+	</repositories>
 
 </project>

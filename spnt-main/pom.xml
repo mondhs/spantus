@@ -2,6 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.spantus</groupId>
+        <artifactId>spnt-svn-pom</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 	<groupId>org.spantus</groupId>
 	<artifactId>spnt-main</artifactId>
 	<packaging>pom</packaging>
@@ -16,6 +21,7 @@
       			<distribution>repo</distribution>
     		</license>
   	</licenses>
+
 
 	<properties>
 		<org.springframework.spring.version>2.5.2</org.springframework.spring.version>
@@ -58,21 +64,7 @@
 		<module>../spnt-work</module>
 		<module>../spnt-work-ui</module>
 	</modules>
-	<repositories>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>central</id>
-			<name>Maven Repository Switchboard</name>
-			<url>http://repo1.maven.org/maven2</url>
-		</repository>
-		<repository>
-			<id>java.net</id>
-			<url>				https://maven-repository.dev.java.net/nonav/repository</url>
-			<layout>legacy</layout>
-		</repository>
-	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

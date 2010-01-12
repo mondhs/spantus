@@ -61,7 +61,7 @@ public class ExtremeThresholdTest extends TestCase {
 		values = createValues(complexMinMax);
 		extemes = extremeThresholdService.extractExtremes(values);
 		extemes = extremeThresholdService.filtterExremeOffline(extemes, values);
-		assertEquals(7, extemes.size());
+		assertEquals(3, extemes.size());
 	}
 
 	

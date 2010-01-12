@@ -32,7 +32,14 @@ public class SpantusWorkMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		SpantusWorkMain main = new SpantusWorkMain();
+		
+		 String os = System.getProperty("os.name").toLowerCase();
+		 if (os.indexOf("mac") != -1) {
+				System.setProperty("apple.laf.useScreenMenuBar", "true");
+				System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Spantus");
+
+		 }
+		
 		SpantusWorkFrame spwork = new SpantusWorkFrame();
 		spwork.initialize();
 		spwork.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

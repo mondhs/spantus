@@ -159,10 +159,11 @@ public class ExtremeThresholdServiceImpl {
 				ExtremeEntry prevMax = iter.getPrevious(SignalStates.max);
 				Long length = iter.getPeakLength();
 				Float lengthTime = sequence.allValues.toTime(length.intValue());
-				Double area = iter.getArea();
+//				Double area = iter.getArea();
 
-				// join inc part
+				// join increased and decreasing parts
 				if (prevMax != null) {
+					//increasing
 					boolean prevChunkIncrease = prevMax.getPrevious()
 							.getValue() < prevMax.getNext().getValue();
 					boolean currentChunkIncrease = entry.getPrevious()
@@ -178,6 +179,7 @@ public class ExtremeThresholdServiceImpl {
 							.getNext().getValue();
 					boolean currentChunkDec = entry.getPrevious().getValue() > entry
 							.getNext().getValue();
+					//decreasing
 					if (prevChunkDec && currentChunkDec) {
 						if (lengthTime + prevLengthTime < getMaxLength()) {
 							log.debug("prev join as decrease for {0}", entry);
@@ -206,19 +208,25 @@ public class ExtremeThresholdServiceImpl {
 					"./target/result.csv"));
 			DataOutputStream oos = new DataOutputStream(fos);
 			for (List<Float> list : vectors) {
-				oos.writeBytes(MessageFormat.format("{0};{1}\n", ""
-						+ list.get(0), "" + list.get(1)));
+				String seperator = "";
+				StringBuilder sb = new StringBuilder();
+				for (Float float1 : list) {
+					sb.append(float1).append(seperator);
+					seperator = ";";
+				}
+				oos.writeBytes(sb.toString());
 			}
 			for (Entry<Integer, List<Float>> entry : centers.entrySet()) {
 				List<Float> list = entry.getValue();
-				if (list.size() == 0)
-					continue;
-				oos.writeBytes(MessageFormat.format("{0};{1}\n", ""
-						+ list.get(0), "" + list.get(1)));
-				log.debug("cluster {2} center: area:{0},  lenght:{1};", ""
-						+ list.get(0), "" + list.get(1), entry.getKey());
+				String seperator = "";
+				StringBuilder sb = new StringBuilder();
+				for (Float float1 : list) {
+					sb.append(float1).append(seperator);
+					seperator = ";";
+				}
+				oos.writeBytes(sb.toString());
+				log.debug("cluster {0} center: area, length:{1}", entry.getKey(), sb.toString());
 			}
-
 			oos.close();
 		} catch (FileNotFoundException e) {
 			log.error(e);
@@ -266,7 +274,7 @@ public class ExtremeThresholdServiceImpl {
 	}
 
 	protected List<Float> createMatchVector(Long length, Double area) {
-		return createVector((length * 8) / 10, area);
+		return createVector(length, area);
 	}
 
 	/**
@@ -278,7 +286,7 @@ public class ExtremeThresholdServiceImpl {
 	protected List<Float> createVector(Long length, Double area) {
 		List<Float> vector = new ArrayList<Float>();
 		vector.add(area.floatValue());
-		vector.add(length.floatValue());
+//		vector.add(length.floatValue());
 		return vector;
 	}
 
@@ -301,6 +309,8 @@ public class ExtremeThresholdServiceImpl {
 
 		initialCleanup(extriemesSequence);
 
+		
+		//log debug data
 		if (log.isDebugMode()) {
 			log.debug("data before filterring");
 
@@ -321,7 +331,9 @@ public class ExtremeThresholdServiceImpl {
 				}
 			}
 		}
-
+//		if(true){
+//			return extriemesSequence.toMap();
+//		}
 		Integer prevClusterId = 0;
 		Float prevLengthTime = 0F;
 		log.debug("start clean up");
@@ -342,15 +354,16 @@ public class ExtremeThresholdServiceImpl {
 				if (prevMax == null) {
 					continue;
 				}
-				if (clusterID >= 1 && prevClusterId == 0) {
-					if ((lengthTime + prevLengthTime) < getMaxLength()) {
-						log.debug("join smaler chunk {0} to bigger one {1}",
-								prevMax, entry);
-						iter.remove(prevMax);
-						iter.remove(prevMax.getNext());
-					}
-				}
-				if (clusterID == 0 && prevClusterId == 0) {
+//				if (clusterID >= 1 && prevClusterId == 0) {
+//					if ((lengthTime + prevLengthTime) < getMaxLength()) {
+//						log.debug("join smaler chunk {0} to bigger one {1}",
+//								prevMax, entry);
+//						iter.remove(prevMax);
+//						iter.remove(prevMax.getNext());
+//					}
+//				}
+				//clusterID == 0 && prevClusterId == 0
+				if (true) {
 					if ((lengthTime + prevLengthTime) < getMaxLength()) {
 						log.debug("iter area: {0}; length: {1}; prev {2}",
 								area, length, prevClusterId);
