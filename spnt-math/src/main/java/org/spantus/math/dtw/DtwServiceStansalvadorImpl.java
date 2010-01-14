@@ -26,7 +26,6 @@ public class DtwServiceStansalvadorImpl implements DtwService {
 	}
 
 	public Float calculateDistance(DtwInfo info) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

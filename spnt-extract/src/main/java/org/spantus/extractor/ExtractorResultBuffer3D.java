@@ -67,12 +67,10 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 	}
 
 	public ExtractorParam getParam() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void setParam(ExtractorParam param) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -111,7 +109,6 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 
 	
 	public FrameVectorValues calculateWindow(FrameValues window) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -16,7 +16,6 @@ public class MFCCTest extends TestCase{
 	};
 	
 	protected void setUp() throws Exception {
-		// TODO Auto-generated method stub
 		super.setUp();
 		x = MatrixUtils.zeros(256);
         x.set(2, 10f); x.set(4, 14f);

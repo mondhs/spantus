@@ -1,3 +1,3 @@
 cd spnt-work-ui
-mvn exec:java -Dexec.mainClass="org.spantus.work.ui.SpantusWorkMain"
+mvn exec:java -Dexec.mainClass="org.spantus.work.ui.SpantusWorkMain" -o
 

@@ -65,7 +65,7 @@ import org.spantus.utils.Assert;
  * 
  */
 public class TimeSeriesMultiChart extends AbstractSwingChart {
-	Logger log = Logger.getLogger(getClass());
+	Logger log = Logger.getLogger(TimeSeriesMultiChart.class);
 	/**
 	 * 
 	 */
@@ -248,6 +248,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 			Dimension d = getSize();
 			d.height -= getHeaderHeight();
 			graph.setSize(d);
+			log.debug("repaint");
 			graph.render();
 			graph.repaint();
 		}

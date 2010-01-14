@@ -20,18 +20,19 @@
  */
 package org.spantus.segment;
 
-import org.spantus.segment.online.OnlineSegmentaitonService;
+import org.spantus.segment.offline.SimpleDecisionSegmentatorServiceImpl;
+import org.spantus.segment.offline.SimpleSegmentatorServiceImpl;
 
 public abstract class SegmentFactory {
 	public static ISegmentatorService defaultSegmentator;
 	
 	public static ISegmentatorService createSegmentator(){
-		if(defaultSegmentator == null){
-//			SimpleDecisionSegmentatorServiceImpl segmentator = new SimpleDecisionSegmentatorServiceImpl();
-//			segmentator.setSegmentator(new SimpleSegmentatorServiceImpl());
-			defaultSegmentator = new OnlineSegmentaitonService();
+//		if(defaultSegmentator == null){
+			SimpleDecisionSegmentatorServiceImpl defaultSegmentator = new SimpleDecisionSegmentatorServiceImpl();
+			defaultSegmentator.setSegmentator(new SimpleSegmentatorServiceImpl());
+//			defaultSegmentator = new OnlineSegmentaitonService();
 			//segmentator;
-		}
+//		}
 		return defaultSegmentator;
 	}
 }

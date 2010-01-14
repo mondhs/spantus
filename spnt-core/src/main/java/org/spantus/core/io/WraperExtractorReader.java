@@ -7,6 +7,7 @@ import javax.sound.sampled.AudioFormat;
 
 import org.spantus.core.extractor.FullPreemphasis;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.MiddlePreemphasis;
 import org.spantus.core.extractor.Preemphasis;
 
 public class WraperExtractorReader {
@@ -54,8 +55,8 @@ public class WraperExtractorReader {
 	protected Float preemphasis(Float currentValue){
 		if(preemphasisFilter == null){
 //			preemphasisFilter = new HighPreemphasis();
-//			preemphasisFilter = new MiddlePreemphasis();
-			preemphasisFilter = new FullPreemphasis();
+			preemphasisFilter = new MiddlePreemphasis();
+//			preemphasisFilter = new FullPreemphasis();
 		}
 		return preemphasisFilter.process(currentValue);
 		

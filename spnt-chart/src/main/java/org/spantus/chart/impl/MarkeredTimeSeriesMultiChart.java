@@ -70,7 +70,7 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 	public int getHeaderHeight(){
 		MarkerSetHolder holder = getMarkerGraph().getMarkerSetHolder();
 		int prefredHeigth = 5;
-		if(holder.getMarkerSets() != null && holder.getMarkerSets().size()>0){
+		if(holder != null && holder.getMarkerSets() != null && holder.getMarkerSets().size()>0){
 			prefredHeigth += 30 * holder.getMarkerSets().size();
 		}
 		return prefredHeigth;
@@ -86,6 +86,9 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 	public void repaint() {
 		super.repaint();
 		if(getGraph() != null && getMarkerGraph() != null){
+			if(getGraph().getCoordinateBoundary() == null){
+				return;
+			}
 			AxisInstance axisX = getGraph().getXAxisInstance();
 			BigDecimal zigZagLength = BigDecimal.ZERO;
 			if(axisX.getMin().compareTo(BigDecimal.ZERO)>0){

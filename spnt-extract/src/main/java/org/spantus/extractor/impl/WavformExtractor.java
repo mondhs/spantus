@@ -95,9 +95,7 @@ public class WavformExtractor extends AbstractExtractor3D {
 
 //		fv.add(min);
 //		fv.add(max);
-
-		
-
+		log.debug("min:{0}; max:{1};", ctx.min, ctx.max);
 		return calculatedValues;
 	}	
 	public String getName() {

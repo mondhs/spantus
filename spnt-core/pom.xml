@@ -5,9 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.spantus</groupId>
-		<artifactId>spnt-main</artifactId>
+		<artifactId>spnt-root-pom</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-        	<relativePath>../spnt-main</relativePath>
 	</parent>
 
 	<artifactId>spnt-core</artifactId>
@@ -15,10 +14,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
+		
 	</dependencies>
+	
 </project>

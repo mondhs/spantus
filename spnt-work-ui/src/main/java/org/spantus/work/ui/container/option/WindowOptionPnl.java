@@ -31,8 +31,8 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		
 		recordSampleRate, audioPathOutput,  
 		
-		thresholdLearningPeriod, thresholdCoef, thresholdType,
 		automatedThresholdParameters,
+		thresholdLearningPeriod, thresholdCoef, thresholdType,
 		
 		segmentationMinLength, segmentationMinSpace,
 		segmentationExpandStart, segmentationExpandEnd, 
@@ -418,7 +418,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				if(thresholdType!=null){
 					getInfo().getProject().setThresholdType(thresholdType.name());
 				}else{
-					getInfo().getProject().setThresholdType(ThresholdEnum.offline.name());
+					getInfo().getProject().setThresholdType(null);
 				}
 				break;
 			case automatedSegmentaionParameters:

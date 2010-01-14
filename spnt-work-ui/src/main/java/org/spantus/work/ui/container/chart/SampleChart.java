@@ -57,7 +57,7 @@ import org.spantus.work.ui.i18n.I18nFactory;
  */
 public class SampleChart extends JPanel {
 
-	Logger log = Logger.getLogger(getClass());
+	Logger log = Logger.getLogger(SampleChart.class);
 
 	public static final String CHOOSE_SAMPLE = "clickToChooseSample";
 	private static final long serialVersionUID = 1L;
@@ -167,8 +167,9 @@ public class SampleChart extends JPanel {
 
 	public void repaint() {
 		if (getChart() != null) {
+			log.debug("repaint");
 			getChart().setSize(getSize());
-			getChart().repaint();
+//			getChart().repaint();
 		}
 		super.repaint();
 	}

@@ -44,6 +44,7 @@ import org.spantus.extractor.modifiers.LogExtractor;
 import org.spantus.extractor.modifiers.MeanExtractor;
 import org.spantus.extractor.modifiers.SmoothedExtractor;
 import org.spantus.extractor.modifiers.StdevExtractor;
+import org.spantus.logger.Logger;
 import org.spantus.utils.ExtractorParamUtils;
 
 /**
@@ -58,6 +59,7 @@ import org.spantus.utils.ExtractorParamUtils;
  */
 public abstract class ExtractorUtils {
 
+        private static Logger log = Logger.getLogger(ExtractorUtils.class);
 	static Map<ExtractorEnum, Class<? extends AbstractExtractor>> extractorMap = new HashMap<ExtractorEnum, Class<? extends AbstractExtractor>>();
 	static Map<ExtractorEnum, Class<? extends AbstractExtractor3D>> extractor3DMap = new HashMap<ExtractorEnum, Class<? extends AbstractExtractor3D>>();
 
@@ -160,11 +162,9 @@ public abstract class ExtractorUtils {
 				throw new RuntimeException("Not impl");
 			}
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+                        log.error(e);
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
 		return null;
 

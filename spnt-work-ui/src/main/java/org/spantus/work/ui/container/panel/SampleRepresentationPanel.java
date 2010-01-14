@@ -106,7 +106,7 @@ public class SampleRepresentationPanel extends JPanel implements SampleChangeLis
 	
 	public void processed(Long current, Long total){
 		if(total != null){
-			Float percentL = (current.floatValue()/total)*100;
+			Float percentL = ((current.floatValue()+1)/total)*100;
 			Short percent = Short.valueOf(percentL.shortValue());
 			if(percent.shortValue() != processedPercent){
 				progress.setValue(percent);
