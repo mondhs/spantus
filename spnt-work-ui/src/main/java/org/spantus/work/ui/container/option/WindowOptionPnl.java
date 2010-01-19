@@ -12,8 +12,10 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.spantus.core.extractor.preemphasis.Preemphasis.PreemphasisEnum;
 import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.logger.Logger;
+import org.spantus.math.windowing.WindowingEnum;
 import org.spantus.ui.MapComboBoxModel;
 import org.spantus.ui.ModelEntry;
 import org.spantus.work.ui.container.ReloadableComponent;
@@ -24,6 +26,12 @@ import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableComponent{
+	
+	enum WindowOptionSeparators {signal, record, segmentation, threshold};
+	
+	public static final String PREFIX_windowing = "windowingType_";
+	public static final String PREFIX_preemphasis = "preemphasis_";
+
 	
 	enum optionsLabels{
 		bufferSize, frameSize, windowSize, windowOverlap, 
@@ -38,7 +46,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		segmentationExpandStart, segmentationExpandEnd, 
 		autoSegmentation,
 		automatedSegmentaionParameters,
-		
+		windowingType, preemphasis
 		} 
 
 	
@@ -60,11 +68,11 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 	 * @return void
 	 */
 	public void initialize() {
-		this.setSize(300, 200);
+//		this.setSize(300, 200);
 		optionsLabels[] signalProcessingLabels = new optionsLabels[]{
 				optionsLabels.automatedSignalParameters,
 				optionsLabels.bufferSize, optionsLabels.frameSize, 
-				optionsLabels.windowSize, optionsLabels.windowOverlap,	
+				optionsLabels.windowSize, optionsLabels.windowOverlap, optionsLabels.windowingType, optionsLabels.preemphasis
 		};
 		optionsLabels[] recordLabels = new optionsLabels[]{
 				optionsLabels.recordSampleRate, optionsLabels.audioPathOutput, 
@@ -96,27 +104,28 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		if(log.isDebugMode()){
 			panelContainer = new FormDebugPanel();
 		}
+		
 		DefaultFormBuilder builder = new DefaultFormBuilder(layout, panelContainer);
 		builder.setDefaultDialogBorder();
-		builder.appendSeparator(getMessage("Signal"));
+		builder.appendSeparator(getMessage(WindowOptionSeparators.signal));
 		for (optionsLabels fieldEntryLabel : signalProcessingLabels) {
 			LabelControlEntry fieldEntry = getOptionComponents().get(fieldEntryLabel);
 			builder.append(fieldEntry.getLabel(), fieldEntry.getControl());
 		}
 		builder.nextLine();
-		builder.appendSeparator(getMessage("Record"));
+		builder.appendSeparator(getMessage(WindowOptionSeparators.record));
 		for (optionsLabels fieldEntryLabel : recordLabels) {
 			LabelControlEntry fieldEntry = getOptionComponents().get(fieldEntryLabel);
 			builder.append(fieldEntry.getLabel(), fieldEntry.getControl());
 		}
 		builder.nextLine();
-		builder.appendSeparator(getMessage("Segmentation"));
+		builder.appendSeparator(getMessage(WindowOptionSeparators.segmentation));
 		for (optionsLabels fieldEntryLabel : segmentLabels) {
 			LabelControlEntry fieldEntry = getOptionComponents().get(fieldEntryLabel);
 			builder.append(fieldEntry.getLabel(), fieldEntry.getControl());
 		}
 		builder.nextLine();
-		builder.appendSeparator(getMessage("Threshold"));
+		builder.appendSeparator(getMessage(WindowOptionSeparators.threshold));
 		for (optionsLabels fieldEntryLabel : thresholdLabels) {
 			LabelControlEntry fieldEntry = getOptionComponents().get(fieldEntryLabel);
 			builder.append(fieldEntry.getLabel(), fieldEntry.getControl());
@@ -192,6 +201,18 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				break;
 			case windowOverlap:
 				textField.setValue(Double.valueOf(((double)workConfig.getWindowOverlap()/100)));
+				fieldEntry.getValue().setVisible(isAdvanced());
+				break;
+			case windowingType:
+				((JComboBox)fieldEntry.getValue().getControl()).setSelectedItem(
+						getMessage(PREFIX_windowing
+						+getInfo().getProject().getFeatureReader().getWorkConfig().getWindowingType()));
+				fieldEntry.getValue().setVisible(isAdvanced());
+				break;
+			case preemphasis:
+				((JComboBox)fieldEntry.getValue().getControl()).setSelectedItem(
+						getMessage(PREFIX_preemphasis
+						+getInfo().getProject().getFeatureReader().getWorkConfig().getPreemphasis()));
 				fieldEntry.getValue().setVisible(isAdvanced());
 				break;
 			case recordSampleRate:
@@ -282,6 +303,14 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			textField = new JFormattedTextField(getI18n().getPercentFormat());
 			addFieldList(textField, optionsLabels.windowOverlap.name() );
 			
+			JComboBox windowingInput = new JComboBox();
+			windowingInput.setModel(getWindowingModel());
+			addFieldList(windowingInput, optionsLabels.windowingType.name() );
+			
+			JComboBox preemphasisInput = new JComboBox();
+			preemphasisInput.setModel(getPreemphasisModel());
+			addFieldList(preemphasisInput, optionsLabels.preemphasis.name() );
+			
 			textField = new JFormattedTextField(getI18n().getDecimalFormat());
 			addFieldList(textField, optionsLabels.recordSampleRate.name() );
 			
@@ -358,6 +387,22 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			case windowOverlap:
 				Double overlap = (((Number)field.getValue()).doubleValue())*100;
 				workConfig.setWindowOverlap(overlap.intValue());
+				break;
+			case windowingType:
+				WindowingEnum windowingEnum = (WindowingEnum)getWindowingModel().getSelectedObject();
+				if(windowingEnum!=null){
+					getInfo().getProject().getFeatureReader().getWorkConfig().setWindowingType(windowingEnum.name());
+				}else{
+					getInfo().getProject().getFeatureReader().getWorkConfig().setWindowingType(null);
+				}
+				break;
+			case preemphasis:
+				PreemphasisEnum preemphasisEnum = (PreemphasisEnum)getPreemphasisModel().getSelectedObject();
+				if(preemphasisEnum!=null){
+					getInfo().getProject().getFeatureReader().getWorkConfig().setPreemphasis(preemphasisEnum.name());
+				}else{
+					getInfo().getProject().getFeatureReader().getWorkConfig().setPreemphasis(null);
+				}
 				break;
 			case recordSampleRate:
 				Number recordSampleRate = (Number)(field.getValue());
@@ -444,7 +489,29 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		}
 		return treasholdType;
 	}
-
+	
+	MapComboBoxModel windowingType;
+	protected MapComboBoxModel getWindowingModel() {
+		if (windowingType == null) {
+			windowingType = new MapComboBoxModel();
+			for (WindowingEnum windowingTypeEnum : WindowingEnum.values()) {
+				String label = getMessage(PREFIX_windowing + windowingTypeEnum.name());
+				windowingType.addElement(new ModelEntry(label, windowingTypeEnum));
+			}
+		}
+		return windowingType;
+	}
+	MapComboBoxModel preemphasisModel;
+	protected MapComboBoxModel getPreemphasisModel() {
+		if (preemphasisModel == null) {
+			preemphasisModel = new MapComboBoxModel();
+			for (PreemphasisEnum preemphasisEnum : PreemphasisEnum.values()) {
+				String label = getMessage(PREFIX_preemphasis + preemphasisEnum.name());
+				preemphasisModel.addElement(new ModelEntry(label, preemphasisEnum));
+			}
+		}
+		return preemphasisModel;
+	}
 	
 
 }

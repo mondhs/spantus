@@ -51,6 +51,8 @@ public abstract class WorkUIExtractorConfigUtil {
 		config.setFrameSize((config.getWindowSize() * workConfig.getFrameSize())+config.getWindowOverlap());
 		float bufferSize = (sampleRate * workConfig.getBufferSize())/windowSize;
 		config.setBufferSize((int)bufferSize);
+		config.setWindowing(workConfig.getWindowingType());
+		config.setPreemphasis(workConfig.getPreemphasis());
 		return config;
 	}
 	

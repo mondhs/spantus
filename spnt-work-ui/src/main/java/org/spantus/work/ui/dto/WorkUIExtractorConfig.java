@@ -21,6 +21,9 @@
  */
 package org.spantus.work.ui.dto;
 
+import org.spantus.core.extractor.preemphasis.Preemphasis.PreemphasisEnum;
+import org.spantus.math.windowing.WindowingEnum;
+
 /**
  * 
  * 
@@ -40,7 +43,7 @@ public class WorkUIExtractorConfig{
 	private Integer windowSize = 30 ; //30ms
 	private Integer frameSize = 10 ; //10 windows
 	private Integer windowOverlap = 66; //66%
-	private Integer bufferSize = 800; //5s	
+	private Integer bufferSize = 8000; //5s	
 	
 	private Float recordSampleRate=11025F;
 	private String audioPathOutput="./";
@@ -50,6 +53,9 @@ public class WorkUIExtractorConfig{
 	private Integer segmentationMinSpace=61;
 	private Integer segmentationExpandStart=60;
 	private Integer segmentationExpandEnd=60;
+	
+	private String windowingType;
+	private String preemphasis;
 	 
 	public Integer getBufferSize() {
 		return bufferSize;
@@ -169,5 +175,23 @@ public class WorkUIExtractorConfig{
 	public void setSegmentationExpandEnd(Integer segmentationExpandEnd) {
 		this.segmentationExpandEnd = segmentationExpandEnd;
 	}
+	public String getWindowingType() {
+		if(windowingType == null){
+			windowingType = WindowingEnum.Hamming.name();
+		}
+		return windowingType;
+	}
 
+	public void setWindowingType(String windowingType) {
+		this.windowingType = windowingType;
+	}
+	public String getPreemphasis(){
+		if(preemphasis == null){
+			preemphasis = PreemphasisEnum.full.name();
+		}
+		return preemphasis;
+	}
+	public void setPreemphasis(String preemphasis){
+		this.preemphasis = preemphasis;
+	}
 }

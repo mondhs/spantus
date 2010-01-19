@@ -38,7 +38,7 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 	}
 	
 	enum generalLabels {
-		advancedMode, locale, lookAndFeel, chartGrid, vectorChartColorType, popupNotification, 
+		advancedMode, locale, lookAndFeel, chartGrid, vectorChartColorType, popupNotification,
 		
 	}
 
@@ -222,7 +222,7 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 		}
 		return laf;
 	}
-	MapComboBoxModel chartColorTypes;
+	private MapComboBoxModel chartColorTypes;
 
 	protected MapComboBoxModel getChartColorTypeModel() {
 		if(chartColorTypes == null){

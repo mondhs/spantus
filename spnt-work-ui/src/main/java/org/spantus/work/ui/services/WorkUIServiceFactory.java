@@ -51,7 +51,6 @@ public abstract class WorkUIServiceFactory {
 				ExtractorParamUtils.<Float>setValue(param,
 						ExtractorParamUtils.commonParam.threasholdCoef.name(),
 						Float.valueOf(config.getThresholdCoef()));
-
 			}
 			break;
 

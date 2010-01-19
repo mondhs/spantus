@@ -16,7 +16,6 @@ import org.spantus.logger.Logger;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.dto.EnviromentRepresentation;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
-import org.spantus.work.ui.dto.EnviromentRepresentation.SpntLogginLevel;
 
 public class SpantusUIServiceImpl {
 	Logger log = Logger.getLogger(SpantusUIServiceImpl.class);
@@ -73,9 +72,6 @@ public class SpantusUIServiceImpl {
 		if (info.getEnv().getAutoSegmentation() == null) {
 			info.getEnv().setAutoSegmentation(Boolean.TRUE);
 		}
-		if (info.getEnv().getLoggingLevel() == null) {
-			info.getEnv().setLoggingLevel(SpntLogginLevel.info.name());
-		}
 		if (info.getEnv().getVectorChartColorTypes() == null) {
 			info.getEnv().setVectorChartColorTypes(VectorSeriesColorEnum.blackWhite.name());
 		}
@@ -88,18 +84,6 @@ public class SpantusUIServiceImpl {
 
 		Locale.setDefault(info.getLocale());
 
-		
-		SpntLogginLevel logginLevel = SpntLogginLevel.valueOf(info.getEnv().getLoggingLevel());
-		int i = 0;
-		for (SpntLogginLevel lvl : SpntLogginLevel.values()) {
-			if(lvl.equals(logginLevel)){
-//				log.setLogMode(i+1);
-				break;
-			}
-			i++;
-		}
-		
-		
 	}
 
 	protected boolean isEmpty(Dimension d) {

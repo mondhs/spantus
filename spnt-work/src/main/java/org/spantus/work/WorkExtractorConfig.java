@@ -13,7 +13,8 @@ public class WorkExtractorConfig implements IExtractorConfig {
 	int windowOverlapPercent = 10;
 	private String windowing;
 	
-	ExtractorConfig config = new ExtractorConfig();
+	private ExtractorConfig config = new ExtractorConfig();
+	private String preemphasis;
 	/**
 	 * 
 	 */
@@ -106,6 +107,14 @@ public class WorkExtractorConfig implements IExtractorConfig {
 	
 	public void setWindowing(String windowing) {
 		this.windowing = windowing;
+	}
+
+	public String getPreemphasis() {
+		return preemphasis;
+	}
+
+	public void setPreemphasis(String preemphasis) {
+		this.preemphasis = preemphasis;
 	}
 
 }

@@ -107,4 +107,16 @@ public class Mpeg7ExtractorConfig implements IExtractorConfig {
 	public void setWindowing(String windowing) {
 	}
 
+
+	public String getPreemphasis() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public void setPreemphasis(String preemphasis) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

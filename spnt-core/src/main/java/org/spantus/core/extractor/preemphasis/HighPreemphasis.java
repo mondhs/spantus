@@ -1,4 +1,4 @@
-package org.spantus.core.extractor;
+package org.spantus.core.extractor.preemphasis;
 
 public class HighPreemphasis implements Preemphasis {
 

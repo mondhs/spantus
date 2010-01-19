@@ -20,6 +20,11 @@ public abstract class AbstractOptionPanel extends JPanel implements
 	protected String getMessage(String key){
 		return getI18n().getMessage(key);
 	}
+	protected String getMessage(Enum<?> key){
+		if(key == null) return null;
+		return getI18n().getMessage(key.name());
+	}
+
 	protected I18n getI18n(){
 		return I18nFactory.createI18n();
 	}

@@ -29,10 +29,12 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 	
 	private String windowing;
 	
-	Set<String> extractors;
+	private Set<String> extractors;
 	
-	Map<String, ExtractorParam> parameters;
+	private Map<String, ExtractorParam> parameters;
 
+	private String preemphasis;
+	
 	public DefaultExtractorConfig() {
 		sampleRate = 44000;
 		windowSize = 512;
@@ -123,5 +125,11 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 
 	public void setWindowing(String windowing) {
 		this.windowing = windowing;
+	}
+	public String getPreemphasis() {
+		return preemphasis;
+	}
+	public void setPreemphasis(String preemphasis) {
+		this.preemphasis = preemphasis;
 	}
 }

@@ -169,7 +169,14 @@ public abstract class ExtractorUtils {
 		return null;
 
 	}
-
+	/**
+	 * 
+	 * @param bufferedReader
+	 * @param extractorType
+	 * @param param
+	 * @param threshold
+	 * @return
+	 */
 	public static IThreshold registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
 			ExtractorParam param,
@@ -192,11 +199,24 @@ public abstract class ExtractorUtils {
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType, ExtractorParam param) {
 		return registerThreshold(bufferedReader, extractorType, param, ThresholdEnum.online);
 	}
-
+	/**
+	 * 
+	 * @param bufferedReader
+	 * @param extractors
+	 * @param params
+	 */
 	public static void registerThreshold(IExtractorInputReader bufferedReader,
 			ExtractorEnum[] extractors,Map<String, ExtractorParam> params) {
 		registerThreshold(bufferedReader, extractors, params, ThresholdEnum.online);
 	}
+	/**
+	 * 
+	 * @param bufferedReader
+	 * @param extractorType
+	 * @param param
+	 * @param thresholdType
+	 * @return
+	 */
 	public static IThreshold registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
 			ExtractorParam param,
@@ -221,7 +241,13 @@ public abstract class ExtractorUtils {
 		return registerThreshold(bufferedReader, extractorType, param,
 				threshold);
 	}
-
+	/**
+	 * 
+	 * @param bufferedReader
+	 * @param extractors
+	 * @param params
+	 * @param thresholdType
+	 */
 	public static void registerThreshold(IExtractorInputReader bufferedReader,
 			ExtractorEnum[] extractors,
 			Map<String, ExtractorParam> params,
@@ -231,7 +257,12 @@ public abstract class ExtractorUtils {
 					params.get(extractor.name()), thresholdType);
 		}
 	}
-
+	/**
+	 * 
+	 * @param bufferedReader
+	 * @param extractors
+	 * @param params
+	 */
 	public static void register(IExtractorInputReader bufferedReader,
 			ExtractorEnum[] extractors,Map<String, ExtractorParam> params) {
 		for (ExtractorEnum extractor : extractors) {

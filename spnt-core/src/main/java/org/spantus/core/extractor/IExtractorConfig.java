@@ -20,5 +20,7 @@ public interface IExtractorConfig extends Cloneable, Serializable {
 	public Map<String,ExtractorParam> getParameters();
 	public String getWindowing();
 	public void setWindowing(String windowing);
+	public String getPreemphasis();
+	public void setPreemphasis(String preemphasis);
 	
 }

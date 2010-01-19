@@ -115,6 +115,15 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 		defaultReader.setConfig(spntConfig);
 	}
 	
+	protected ThresholdEnum getThresholdEnum(String tresholdType){
+		if(!StringUtils.hasText(tresholdType)) return null;
+		try{
+			return ThresholdEnum.valueOf(tresholdType);
+		}catch (IllegalArgumentException e) {
+			return null;
+		}
+		
+	}
 
 	/**
 	 * 
@@ -138,8 +147,8 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 			String tresholdType = ExtractorParamUtils.getString(param, 
 					ExtractorParamUtils.commonParam.thresholdType.name(), 
 					"");
-			if(StringUtils.hasText(tresholdType)){
-				ThresholdEnum thresholdEnum = ThresholdEnum.valueOf(tresholdType);
+			ThresholdEnum thresholdEnum = getThresholdEnum(tresholdType);
+			if(thresholdEnum != null){
 				//construct extractor with threshold
 				IThreshold threshold = ExtractorUtils.registerThreshold(getDefaultReader(),
 						extractorType,

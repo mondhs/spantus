@@ -77,7 +77,9 @@ public abstract class ExtractorConfigUtil {
 		cloned.setBufferSize(config.getBufferSize());
 		cloned.setWindowSize(config.getWindowSize());
 		cloned.setWindowOverlap(config.getWindowOverlap());
+		cloned.setWindowing(config.getWindowing());
 		cloned.setSampleRate(config.getSampleRate());
+		cloned.setPreemphasis(config.getPreemphasis());
 		return cloned;
 	}
 }

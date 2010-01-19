@@ -27,7 +27,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.utils.StringUtils;
@@ -122,9 +121,9 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 	 */
 	protected void updateOnLoad(SpantusWorkInfo info){
 		initializeExperimentId(info.getProject());
-		if(!StringUtils.hasText(info.getProject().getThresholdType())){
-			info.getProject().setThresholdType(ThresholdEnum.online.name());
-		}
+//		if(!StringUtils.hasText(info.getProject().getThresholdType())){
+//			info.getProject().setThresholdType(ThresholdEnum.online.name());
+//		}
 
 	}
 	

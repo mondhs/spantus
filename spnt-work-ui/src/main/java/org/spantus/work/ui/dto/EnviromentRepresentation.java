@@ -34,8 +34,6 @@ import java.awt.Point;
  */
 public class EnviromentRepresentation {
 	
-	public enum SpntLogginLevel{debug, info, error, fatal}
-	
 	private Dimension mainWindowDimension;
 	private Point location;
 	private int mainWindowState;//maximized or normal
@@ -43,7 +41,6 @@ public class EnviromentRepresentation {
 	private String vectorChartColorTypes;//chart vector colors
 	private Boolean popupNotifications;
 	private Boolean autoSegmentation;
-	private String loggingLevel;
 	private Boolean advancedMode;
 	private String spantusVersion;
 	
@@ -105,14 +102,6 @@ public class EnviromentRepresentation {
 
 	public void setAutoSegmentation(Boolean autoSegmentation) {
 		this.autoSegmentation = autoSegmentation;
-	}
-
-	public String getLoggingLevel() {
-		return loggingLevel;
-	}
-
-	public void setLoggingLevel(String loggingLevel) {
-		this.loggingLevel = loggingLevel;
 	}
 
 	public String getVectorChartColorTypes() {
