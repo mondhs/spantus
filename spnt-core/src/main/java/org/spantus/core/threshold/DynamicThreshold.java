@@ -40,6 +40,7 @@ public class DynamicThreshold extends StaticThreshold {
 	private Integer numberOfBins;
 	private LinkedList<Float> firstBin = null;
 	private Map<histogramEnum, Float> map = null;
+	
 	private Float prev = null;
 	
 	
@@ -99,7 +100,8 @@ public class DynamicThreshold extends StaticThreshold {
 		
 		if(f != null){
 			prev = getCurrentThresholdValue();
-			setCurrentThresholdValue(f);	
+			setCurrentThresholdValue(f);
+			prev.isInfinite();
 		}
 		
 	}

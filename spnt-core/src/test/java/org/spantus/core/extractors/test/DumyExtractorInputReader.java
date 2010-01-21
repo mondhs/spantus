@@ -14,10 +14,10 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
 	
 	private Logger log = Logger.getLogger(getClass());
 	private LinkedList<Float> window = new LinkedList<Float>();
-	private Float lastMin=Float.MAX_VALUE, lastMax=Float.MIN_VALUE;
-	private int same = 0;
-	private Long sample = 0L;
-	private Integer configedWindowSize =10;
+//	private Float lastMin=Float.MAX_VALUE, lastMax=Float.MIN_VALUE;
+//	private int same = 0;
+//	private Long sample = 0L;
+//	private Integer configedWindowSize =10;
 	
 	
 	public Set<IExtractor> getExtractorRegister() {

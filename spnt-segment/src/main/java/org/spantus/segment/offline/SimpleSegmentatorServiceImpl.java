@@ -30,7 +30,7 @@ import java.util.Map.Entry;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentatorParam;
@@ -39,11 +39,11 @@ import org.spantus.utils.Assert;
 public class SimpleSegmentatorServiceImpl implements ISegmentatorService {
 	
 	Logger log = Logger.getLogger(getClass());
-	public MarkerSet extractSegments(Set<IThreshold> thresholds) {
+	public MarkerSet extractSegments(Set<IClassifier> thresholds) {
 		return extractSegments(thresholds, null);
 	}
 
-	protected Float getWeight(SegmentatorParam param, IThreshold threshold){
+	protected Float getWeight(SegmentatorParam param, IClassifier threshold){
 		if(param == null || param.getJoinWeights() == null
 				|| !param.getJoinWeights().containsKey(threshold) ){
 			return 1f;
@@ -52,27 +52,27 @@ public class SimpleSegmentatorServiceImpl implements ISegmentatorService {
 		return param.getJoinWeights().get(threshold);
 	}
 	
-	public MarkerSet extractSegments(Set<IThreshold> thresholds, SegmentatorParam param ) {
-		log.debug("[extractSegments] thresholds.size:" + thresholds.size());
+	public MarkerSet extractSegments(Set<IClassifier> classifiers, SegmentatorParam param ) {
+		log.debug("[extractSegments] thresholds.size:" + classifiers.size());
 		MarkerSet markerSet = new MarkerSet();
 		Float sampleRate = null;
 		
 		LinkedHashMap<Integer, Float> statesSums = new LinkedHashMap<Integer, Float>();
 		
-		for (IThreshold threshold : thresholds){
+		for (IClassifier classifier : classifiers){
 			int i = 0;
 			if(sampleRate == null){
-				sampleRate = threshold.getState().getSampleRate();
+				sampleRate = classifier.getState().getSampleRate();
 			}else{
 				//should be same for all threshold states
-				Assert.isTrue(sampleRate.equals(threshold.getState().getSampleRate()),
-						threshold.getName()+
+				Assert.isTrue(sampleRate.equals(classifier.getState().getSampleRate()),
+						classifier.getName()+
 						" should be same for all threshold states" + 
-						sampleRate + " == " + threshold.getState().getSampleRate());
+						sampleRate + " == " + classifier.getState().getSampleRate());
 			}
 			
-			for (Float float1 : threshold.getState()) {
-				safeSum(statesSums, i++, float1,  getWeight(param, threshold));
+			for (Float float1 : classifier.getState()) {
+				safeSum(statesSums, i++, float1,  getWeight(param, classifier));
 			}
 		}
 		
@@ -81,7 +81,7 @@ public class SimpleSegmentatorServiceImpl implements ISegmentatorService {
 		ctx.setMarkerSet(markerSet);
 		ctx.setSampleRate(sampleRate);
 
-		int count = thresholds.size();
+		int count = classifiers.size();
 		int index = 0;
 		for (Entry<Integer, Float> stateSum : statesSums.entrySet()) {
 			ctx.setCurrentState(stateSum.getValue()/count > .5?1f:0f);

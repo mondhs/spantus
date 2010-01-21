@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.spantus.core.marker.MarkerSet;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.offline.SimpleSegmentatorServiceImpl;
 
@@ -32,7 +32,7 @@ public class SimpleSegmentatorTest extends SegmentatorTest {
 	
 	public void testSingleSegmentator(){
 		ISegmentatorService segmentator = new SimpleSegmentatorServiceImpl();
-		Set<IThreshold> thresholds = new HashSet<IThreshold>();
+		Set<IClassifier> thresholds = new HashSet<IClassifier>();
 		Float[] statesF = new Float[]{0f, 0f, 1f, 1f, 0f, 0f, 1f, 1f,};
 		thresholds.add(contsructThreshold(statesF));
 		MarkerSet markerSet = segmentator.extractSegments(thresholds);
@@ -41,7 +41,7 @@ public class SimpleSegmentatorTest extends SegmentatorTest {
 
 	public void testDoubleSegmentator(){
 		ISegmentatorService segmentator = new SimpleSegmentatorServiceImpl();
-		Set<IThreshold> thresholds = new HashSet<IThreshold>();
+		Set<IClassifier> thresholds = new HashSet<IClassifier>();
 		
 		Float[] statesF1 = new Float[]{0f, 0f, 1f, 1f, 0f, 0f, 0f, 0f};
 		Float[] statesF2 = new Float[]{0f, 0f, 0f, 0f, 0f, 0f, 1f, 1f};
@@ -55,7 +55,7 @@ public class SimpleSegmentatorTest extends SegmentatorTest {
 
 	public void testTripleSegmentator(){
 		ISegmentatorService segmentator = new SimpleSegmentatorServiceImpl();
-		Set<IThreshold> thresholds = new HashSet<IThreshold>();
+		Set<IClassifier> thresholds = new HashSet<IClassifier>();
 		
 		Float[] statesF1 = new Float[]{0f, 0f, 1f, 1f, 0f, 0f, 0f, 0f};
 		Float[] statesF2 = new Float[]{0f, 0f, 1f, 0f, 0f, 0f, 1f, 1f};

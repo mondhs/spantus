@@ -28,10 +28,10 @@ import org.spantus.core.extractor.ExtractorWrapper;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
-import org.spantus.core.threshold.AbstractThreshold;
+import org.spantus.core.threshold.AbstractClassifier;
 import org.spantus.core.threshold.DynamicThreshold;
-import org.spantus.core.threshold.IThreshold;
-import org.spantus.core.threshold.ExtremeThreshold;
+import org.spantus.core.threshold.IClassifier;
+import org.spantus.core.threshold.ExtremeClassifier;
 import org.spantus.core.threshold.OfflineThreshold;
 import org.spantus.core.threshold.StaticThreshold;
 import org.spantus.core.threshold.ThresholdEnum;
@@ -177,10 +177,10 @@ public abstract class ExtractorUtils {
 	 * @param threshold
 	 * @return
 	 */
-	public static IThreshold registerThreshold(
+	public static IClassifier registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
 			ExtractorParam param,
-			AbstractThreshold threshold) {
+			AbstractClassifier threshold) {
 		IGeneralExtractor generalExtr = createInstance(extractorType, param);
 		if (generalExtr instanceof IExtractor) {
 			ExtractorWrapper wraper = new ExtractorWrapper(
@@ -195,7 +195,7 @@ public abstract class ExtractorUtils {
 
 	}
 
-	public static IThreshold registerThreshold(
+	public static IClassifier registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType, ExtractorParam param) {
 		return registerThreshold(bufferedReader, extractorType, param, ThresholdEnum.online);
 	}
@@ -217,11 +217,11 @@ public abstract class ExtractorUtils {
 	 * @param thresholdType
 	 * @return
 	 */
-	public static IThreshold registerThreshold(
+	public static IClassifier registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
 			ExtractorParam param,
 			ThresholdEnum thresholdType) {
-		AbstractThreshold threshold = null;
+		AbstractClassifier threshold = null;
 		
 		switch (thresholdType) {
 		case online:
@@ -234,7 +234,7 @@ public abstract class ExtractorUtils {
 			threshold = new OfflineThreshold();
 			break;
 		case rules:
-			threshold = new ExtremeThreshold();
+			threshold = new ExtremeClassifier();
 		default:
 			break;
 		}

@@ -2,7 +2,7 @@ package org.spantus.core.threshold;
 
 import org.spantus.core.extractor.IExtractor;
 
-public class StaticThreshold extends AbstractThreshold {
+public class StaticThreshold extends AbstractClassifier {
 
 	private int windowsLearned;
 	private Long learningPeriod;

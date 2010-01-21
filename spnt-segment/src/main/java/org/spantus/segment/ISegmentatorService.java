@@ -23,9 +23,9 @@ package org.spantus.segment;
 import java.util.Set;
 
 import org.spantus.core.marker.MarkerSet;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 
 public interface ISegmentatorService {
-	public MarkerSet extractSegments(Set<IThreshold> thresholds, SegmentatorParam param);
-	public MarkerSet extractSegments(Set<IThreshold> thresholds);
+	public MarkerSet extractSegments(Set<IClassifier> thresholds, SegmentatorParam param);
+	public MarkerSet extractSegments(Set<IClassifier> thresholds);
 }

@@ -50,7 +50,7 @@ import org.spantus.chart.service.IColorResolver;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
 
@@ -110,8 +110,8 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		int i = 0;
 		for (IExtractor buff : reader.getExtractorRegister()) {
 			ChartDescriptionResolver resolver = null;
-			if(buff instanceof IThreshold){
-				resolver = addFunction(interactiveChart, (IThreshold)buff, i++);
+			if(buff instanceof IClassifier){
+				resolver = addFunction(interactiveChart, (IClassifier)buff, i++);
 			}else{
 				resolver = addFunction(interactiveChart, buff, i++);
 			}
@@ -158,7 +158,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		return function.getCharType();
 	}
 	
-	private TimeSeriesFunctionInstance addFunction(Graph graphChart, IThreshold extr,
+	private TimeSeriesFunctionInstance addFunction(Graph graphChart, IClassifier extr,
 			int order) {
 		ChartStyle style1 = createChartStyle();
 		style1.setPaint(getColorResolver().resolveColor(extr));

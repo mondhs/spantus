@@ -5,17 +5,17 @@ import java.util.Set;
 
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 
 public class SampleInfo {
 	
 	IExtractorInputReader reader;
 	
-	Set<IThreshold> thresholds;
+	Set<IClassifier> thresholds;
 	
-	public Set<IThreshold> getThresholds() {
+	public Set<IClassifier> getThresholds() {
 		if(thresholds == null){
-			thresholds = new LinkedHashSet<IThreshold>();
+			thresholds = new LinkedHashSet<IClassifier>();
 		}
 		return thresholds;
 	}

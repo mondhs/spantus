@@ -39,8 +39,8 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
-import org.spantus.core.threshold.ExtremeThreshold;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.ExtremeClassifier;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
@@ -92,15 +92,15 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		}
 		reader.getExtractorRegister();
 		MarkerSet markerSet = null;
-		Set<IThreshold> threasholds = new HashSet<IThreshold>();
+		Set<IClassifier> threasholds = new HashSet<IClassifier>();
 		for (IExtractor extractor : reader.getExtractorRegister()) {
-			if (extractor instanceof ExtremeThreshold) {
-				markerSet = ((ExtremeThreshold) extractor).getMarkerSet();
+			if (extractor instanceof ExtremeClassifier) {
+				markerSet = ((ExtremeClassifier) extractor).getMarkerSet();
 				ctx.getProject().getCurrentSample().getMarkerSetHolder()
 						.getMarkerSets().put(markerSet.getMarkerSetType(),
 								markerSet);
-			} else if (extractor instanceof IThreshold) {
-				threasholds.add((IThreshold) extractor);
+			} else if (extractor instanceof IClassifier) {
+				threasholds.add((IClassifier) extractor);
 			}
 		}
 

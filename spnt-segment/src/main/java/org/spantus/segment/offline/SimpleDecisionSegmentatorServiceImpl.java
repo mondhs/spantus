@@ -29,7 +29,7 @@ import java.util.Set;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentatorParam;
@@ -42,11 +42,11 @@ public class SimpleDecisionSegmentatorServiceImpl implements
 
 	private ISegmentatorService segmentator;
 
-	public MarkerSet extractSegments(Set<IThreshold> thresholds) {
+	public MarkerSet extractSegments(Set<IClassifier> thresholds) {
 		return extractSegments(thresholds, null);
 	}
 
-	public MarkerSet extractSegments(Set<IThreshold> thresholds,
+	public MarkerSet extractSegments(Set<IClassifier> thresholds,
 			SegmentatorParam param) {
 		MarkerSet markerSet = getSegmentator().extractSegments(thresholds,
 				param);
@@ -202,9 +202,9 @@ public class SimpleDecisionSegmentatorServiceImpl implements
 		}
 	}
 
-	protected float getSampleRate(Set<IThreshold> thresholds) {
+	protected float getSampleRate(Set<IClassifier> thresholds) {
 		Float sampleRate = null;
-		for (IThreshold threshold : thresholds) {
+		for (IClassifier threshold : thresholds) {
 			Assert.isTrue(threshold.getState().getSampleRate() > 0);
 			if (sampleRate == null) {
 				sampleRate = threshold.getState().getSampleRate();

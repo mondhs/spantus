@@ -10,11 +10,11 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 
-public class ExtremeThreshold extends AbstractThreshold {
+public class ExtremeClassifier extends AbstractClassifier {
 
 	// private Logger log = Logger.getLogger(ExtremeThreshold.class);
 
-	private ExtremeThresholdServiceImpl extremeThresholdService = new ExtremeThresholdServiceImpl();
+	private ExtremeClassifierServiceImpl extremeThresholdService = new ExtremeClassifierServiceImpl();
 	private MarkerSet markerSet = null;
 
 	@Override
@@ -22,12 +22,8 @@ public class ExtremeThreshold extends AbstractThreshold {
 		super.flush();
 		getThresholdValues().clear();
 		getState().clear();
-		Map<Integer, ExtremeEntry> extremes = null;
-		extremes = extremeThresholdService.calculateExtremes(getOutputValues());
-		ExtremeSequences extriemesSequence = new ExtremeSequences(extremes
-				.values(), getOutputValues());
-		markerSet = extremeThresholdService
-				.calculateExtremesSegments(extriemesSequence);
+		ExtremeCtx extremeCtx = extremeThresholdService.calculateSegments(getOutputValues());
+		markerSet = extremeCtx.getMarkerSet();
 		refreshThreasholdInfo(markerSet);
 
 	}

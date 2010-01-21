@@ -10,8 +10,8 @@ import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
-import org.spantus.core.threshold.AbstractThreshold;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.AbstractClassifier;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.extractor.ExtractorInputReader;
@@ -150,15 +150,15 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 			ThresholdEnum thresholdEnum = getThresholdEnum(tresholdType);
 			if(thresholdEnum != null){
 				//construct extractor with threshold
-				IThreshold threshold = ExtractorUtils.registerThreshold(getDefaultReader(),
+				IClassifier threshold = ExtractorUtils.registerThreshold(getDefaultReader(),
 						extractorType,
 						params.get(key),
 						thresholdEnum);
 				param = ExtractorParamUtils.getSafeParam(params, key);
 				Float threasholdCoef = ExtractorParamUtils.<Float>getValue(param, 
 						ExtractorParamUtils.commonParam.threasholdCoef.name(), Float.valueOf(1.1f));
-				if(threshold instanceof AbstractThreshold){
-					((AbstractThreshold)threshold).setCoef(threasholdCoef);	
+				if(threshold instanceof AbstractClassifier){
+					((AbstractClassifier)threshold).setCoef(threasholdCoef);	
 				}
 				return;
 			}

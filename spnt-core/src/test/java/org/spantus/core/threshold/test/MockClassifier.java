@@ -4,7 +4,7 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 
-public class MockExtractor implements IExtractor {
+public class MockClassifier implements IExtractor {
 
 	IExtractorConfig config;
 	

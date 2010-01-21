@@ -23,9 +23,9 @@ package org.spantus.segment.test;
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.marker.MarkerSet;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 
-public class MockThreshold implements IThreshold {
+public class MockClassifier implements IClassifier {
 
 	FrameValues states;
 	

@@ -23,12 +23,12 @@ package org.spantus.segment.test;
 import junit.framework.TestCase;
 
 import org.spantus.core.FrameValues;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 
 public abstract class SegmentatorTest extends TestCase {
 	
-	public IThreshold contsructThreshold(Float[] statesF ){
-		MockThreshold threshold = new MockThreshold();
+	public IClassifier contsructThreshold(Float[] statesF ){
+		MockClassifier threshold = new MockClassifier();
 		FrameValues states = new FrameValues(statesF);
 		states.setSampleRate(100f);
 		threshold.setState(states);

@@ -220,7 +220,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	}
 
 	public void remove() {
-		log.info("remove current");
+		log.debug("remove current");
 		remove(getLastReturned());
 		ExtremeEntry previous = lastReturned.getPrevious();
 		if(previous != null){
@@ -259,7 +259,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 		}
 	}
 	public void remove(ExtremeEntry extreamEntry) {
-		log.info("remove: " + extreamEntry);
+		log.debug("remove: " + extreamEntry);
 
 		ExtremeEntry next = extreamEntry.getNext();
 		ExtremeEntry previous = extreamEntry.getPrevious();

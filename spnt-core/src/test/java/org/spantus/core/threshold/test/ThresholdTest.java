@@ -47,7 +47,7 @@ public class ThresholdTest extends TestCase {
 		
 		StaticThreshold threshold = new StaticThreshold();
 		threshold.setCoef(1f);
-		MockExtractor mockExtractor= new MockExtractor();
+		MockClassifier mockExtractor= new MockClassifier();
 		mockExtractor.setExtractorSampleRate(1);
 		threshold.setLearningPeriod(1000L);
 		ExtractorWrapper wraper = new ExtractorWrapper(mockExtractor);

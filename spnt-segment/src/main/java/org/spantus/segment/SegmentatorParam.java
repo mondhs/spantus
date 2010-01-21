@@ -42,17 +42,17 @@ package org.spantus.segment;
 
 import java.util.Map;
 
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 
 public class SegmentatorParam {
 	
-	Map<IThreshold, Float> joinWeights;
+	Map<IClassifier, Float> joinWeights;
 
-	public Map<IThreshold, Float> getJoinWeights() {
+	public Map<IClassifier, Float> getJoinWeights() {
 		return joinWeights;
 	}
 
-	public void setJoinWeights(Map<IThreshold, Float> joinWeights) {
+	public void setJoinWeights(Map<IClassifier, Float> joinWeights) {
 		this.joinWeights = joinWeights;
 	}
 	

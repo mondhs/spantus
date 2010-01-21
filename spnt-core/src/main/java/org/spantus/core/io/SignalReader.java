@@ -22,9 +22,6 @@ package org.spantus.core.io;
 
 import java.net.URL;
 
-import javax.sound.sampled.AudioFileFormat;
-
-import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.SignalFormat;
 import org.spantus.exception.ProcessingException;
