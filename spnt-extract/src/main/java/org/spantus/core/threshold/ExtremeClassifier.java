@@ -21,7 +21,6 @@ public class ExtremeClassifier extends AbstractClassifier {
 	public void flush() {
 		super.flush();
 		getThresholdValues().clear();
-		getState().clear();
 		ExtremeCtx extremeCtx = extremeThresholdService.calculateSegments(getOutputValues());
 		markerSet = extremeCtx.getMarkerSet();
 		refreshThreasholdInfo(markerSet);
@@ -36,7 +35,6 @@ public class ExtremeClassifier extends AbstractClassifier {
 		Set<Integer> maximas = new HashSet<Integer>();
 		Map<Integer,Float> changePoints = new HashMap<Integer,Float>();
 		
-		FrameValues extremesStates = getState();
 		FrameValues threashoValues = getThresholdValues();
 
 		// int entryIndex = 0;
@@ -60,11 +58,11 @@ public class ExtremeClassifier extends AbstractClassifier {
 		Iterator<Float> valIter = getOutputValues().iterator();
 		for (int index = 0; index < getOutputValues().size(); index++) {
 			Float val = valIter.next();
-			if (maximas.contains(index)) {
-				extremesStates.add(1F);
-			} else {
-				extremesStates.add(0F);
-			}
+//			if (maximas.contains(index)) {
+//				extremesStates.add(1F);
+//			} else {
+//				extremesStates.add(0F);
+//			}
 			if (changePoints.containsKey(index)) {
 				threashoValues.add(val);
 			} else {

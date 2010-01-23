@@ -6,7 +6,7 @@ import org.spantus.core.marker.MarkerSet;
 
 public interface IClassifier extends IExtractor{
 	public FrameValues getThresholdValues();
-	public FrameValues getState();
+//	public FrameValues getState();
 	public MarkerSet getMarkerSet();
 
 }

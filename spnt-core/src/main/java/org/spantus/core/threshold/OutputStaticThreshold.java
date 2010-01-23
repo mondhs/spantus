@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 
+import org.spantus.core.marker.Marker;
 import org.spantus.logger.Logger;
 /**
  * 
@@ -42,22 +43,19 @@ public class OutputStaticThreshold extends StaticThreshold {
 	Logger log = Logger.getLogger(getClass());
 	
 	Float lastVal = Float.valueOf(0f);
-	int samples = 0;
+	
 	
 	@Override
-	protected Float calculateState(Long sample, Float windowValue, Float threshold) {
-		Float val = super.calculateState(sample, windowValue, threshold);
-		if(lastVal.compareTo(val)!=0){
-			if(val == 0){
-				fireSilence(samples/getExtractorSampleRate());
-			}else{
-				fireSignal(samples/getExtractorSampleRate());
-			}
-			samples = 0;
+	protected void calculateState(Long sample, Float windowValue, Float threshold) {
+		Marker lastMarker = getMarker();
+		super.calculateState(sample, windowValue, threshold);
+		
+		if(getMarker() != null && getMarker().getExtractionData().getStartSampleNum() == sample){
+				fireSilence(getMarker().getStart());
+		//for end use lastMarker as current marker is reseted
+		}else if(lastMarker !=null &&  lastMarker.getExtractionData().getLengthSampleNum() != null){
+				fireSignal(lastMarker.getStart()+lastMarker.getLength());
 		}
-		lastVal = val;
-		samples++;
-		return val;
 	}
 	@Override
 	public Float getCoef() {
@@ -78,7 +76,7 @@ public class OutputStaticThreshold extends StaticThreshold {
 		}
 	}
 	protected void fireSignal(float time){
-		log.error("signal: " + samples/getExtractorSampleRate());
+		log.debug("signal: " + time);
 		try {
 			getWriter().write("H");
 			getWriter().flush();
@@ -94,4 +92,5 @@ public class OutputStaticThreshold extends StaticThreshold {
 		}
 		return out;
 	}
+	
 }

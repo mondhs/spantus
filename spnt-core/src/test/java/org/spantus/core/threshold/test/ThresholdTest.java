@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.ExtractorWrapper;
+import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.StaticThreshold;
 
 /**
@@ -67,7 +68,7 @@ public class ThresholdTest extends TestCase {
 			avg += fv1;
 		}
 		j=0;
-		for (Float fv1 : threshold.getState()) {
+		for (Marker fv1 : threshold.getMarkerSet().getMarkers()) {
 			assertEquals(fv1,expectedState[j++]);
 		}
 	}

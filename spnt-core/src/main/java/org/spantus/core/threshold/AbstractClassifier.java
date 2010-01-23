@@ -4,6 +4,7 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorListener;
+import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.utils.Assert;
 
@@ -12,8 +13,9 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	private IExtractor extractor;
 	private FrameValues thereshold;
 	private Float coef =null;
-	private FrameValues state;
-	
+//	private FrameValues state;
+	MarkerSet markerSet;
+	Marker marker;
 	/**
 	 * 
 	 * @param windowValue
@@ -25,10 +27,6 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		return extractor;
 	}
 	
-	public MarkerSet getMarkerSet() {
-		return null;
-	}
-
 	public void setExtractor(IExtractor extractor) {
 		this.extractor = extractor;
 	}
@@ -81,12 +79,12 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		cleanup();
 	}
 	protected void cleanup(){
-		getState().setSampleRate(getExtractorSampleRate());
+//		getState().setSampleRate(getExtractorSampleRate());
 		Assert.isTrue(getConfig() != null, "cofiguration not set");
 		int i = getThresholdValues().size() - getConfig().getBufferSize();
 		while( i > 0 ){
 			getThresholdValues().poll();
-			getState().poll();
+//			getState().poll();
 			i--;
 		}
 	}
@@ -97,7 +95,7 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		Float threshold = calculateThreshold(float1);
 		if(threshold != null){
 			getThresholdValues().add(threshold);
-			getState().add(calculateState(sample, float1, threshold));
+			calculateState(sample, float1, threshold);
 		}
 	}
 	
@@ -120,17 +118,33 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	 * @param threshold
 	 * @return
 	 */
-	protected Float calculateState(Long sample, Float windowValue, Float threshold){
-		if(threshold == null) return null;
-		return (windowValue>threshold)?Float.valueOf(1f):Float.valueOf(0f); 
+	protected void calculateState(Long sample, Float windowValue, Float threshold){
+		if(windowValue>threshold){
+			//segment
+			if(getMarker()==null){
+				setMarker(new Marker());
+				Float time = getOutputValues().toTime(sample.intValue())*1000;
+				getMarker().setStart(time.longValue());
+				getMarker().getExtractionData().setStartSampleNum(sample);
+			}
+		}else {
+			//silent
+			if(getMarker()!=null){
+				Float time = getOutputValues().toTime(sample.intValue())*1000;
+				getMarker().setEnd(time.longValue());
+				getMarkerSet().getMarkers().add(getMarker());
+				getMarker().getExtractionData().setEndSampleNum(sample);
+				setMarker(null);
+			}
+		}
 	}
 	
-	public FrameValues getState() {
-		if(state == null){
-			state = new FrameValues();
-		}
-		return state;
-	}
+//	public FrameValues getState() {
+//		if(state == null){
+//			state = new FrameValues();
+//		}
+//		return state;
+//	}
 
 
 	public Float getCoef() {
@@ -149,6 +163,25 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + ":" + getName();
+	}
+
+	public Marker getMarker() {
+		return marker;
+	}
+
+	public void setMarker(Marker marker) {
+		this.marker = marker;
+	}
+	
+	public MarkerSet getMarkerSet() {
+		if(markerSet == null){
+			markerSet = new MarkerSet();
+		}
+		return markerSet;
+	}
+
+	public void setMarkerSet(MarkerSet markerSet) {
+		this.markerSet = markerSet;
 	}
 
 	

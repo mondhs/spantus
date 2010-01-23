@@ -27,7 +27,7 @@ public class ThresholdSegmentatorOnline extends StaticThreshold {
 	private OnlineSegmentator onlineSegmentator;
 	
 	@Override
-	protected Float calculateState(Long sampleNum, Float windowValue, Float threshold) {
+	protected void calculateState(Long sampleNum, Float windowValue, Float threshold) {
 		Float f = super.calculateState(sampleNum, windowValue, threshold);
 		onlineSegmentator.processState(sampleNum, getExtractor(), f);
 		return f;
