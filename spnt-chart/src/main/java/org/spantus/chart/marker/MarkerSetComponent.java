@@ -101,7 +101,9 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 			MarkerComponent component = new MarkerComponent();
 			component.setCtx(getCtx());
 			component.setMarker(marker);
-			component.addKeyListener(getKeyListeners()[0]);
+			if(getKeyListeners().length>0){
+				component.addKeyListener(getKeyListeners()[0]);
+			}
 			add(component);
 		}
 	}

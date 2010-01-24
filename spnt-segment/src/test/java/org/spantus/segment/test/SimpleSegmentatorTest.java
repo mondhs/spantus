@@ -23,50 +23,62 @@ package org.spantus.segment.test;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.offline.SimpleSegmentatorServiceImpl;
 
 public class SimpleSegmentatorTest extends SegmentatorTest {
-	
+	/**
+	 * 
+	 */
 	public void testSingleSegmentator(){
 		ISegmentatorService segmentator = new SimpleSegmentatorServiceImpl();
-		Set<IClassifier> thresholds = new HashSet<IClassifier>();
-		Float[] statesF = new Float[]{0f, 0f, 1f, 1f, 0f, 0f, 1f, 1f,};
-		thresholds.add(contsructThreshold(statesF));
-		MarkerSet markerSet = segmentator.extractSegments(thresholds);
-		assertEquals(2, markerSet.getMarkers().size());
+		Set<IClassifier> classifiers = new HashSet<IClassifier>();
+		Integer[][] markersData = new Integer[][]{{100, 200}, {300, 400}, {500, 600}};
+		classifiers.add(contsructClassifier(markersData));
+		MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers);
+		assertEqualsMarkers("3 datasets", markersData, markerSetHolder);
 	}
-
+	/**
+	 * 
+	 */
 	public void testDoubleSegmentator(){
 		ISegmentatorService segmentator = new SimpleSegmentatorServiceImpl();
-		Set<IClassifier> thresholds = new HashSet<IClassifier>();
+		Set<IClassifier> classifiers = new HashSet<IClassifier>();
 		
-		Float[] statesF1 = new Float[]{0f, 0f, 1f, 1f, 0f, 0f, 0f, 0f};
-		Float[] statesF2 = new Float[]{0f, 0f, 0f, 0f, 0f, 0f, 1f, 1f};
+		Integer[][] markersData1 = new Integer[][]{{100, 205}, {300, 400}, {495, 600}};
+		Integer[][] markersData2 = new Integer[][]{{100, 200}, {295, 405}, {500, 605}};
+		Integer[][] markersDataExpexted = new Integer[][]{{100, 200}, {300, 400}, {500, 600}};
 
-		thresholds.add(contsructThreshold(statesF1));
-		thresholds.add(contsructThreshold(statesF2));
+		
+		classifiers.add(contsructClassifier(markersData1));
+		classifiers.add(contsructClassifier(markersData2));
 
-		MarkerSet markerSet = segmentator.extractSegments(thresholds);
-		assertEquals(0, markerSet.getMarkers().size());
+		MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers);
+		assertEqualsMarkers("3 datasets", markersDataExpexted, markerSetHolder);
 	}
-
+	/**
+	 * 
+	 */
 	public void testTripleSegmentator(){
 		ISegmentatorService segmentator = new SimpleSegmentatorServiceImpl();
-		Set<IClassifier> thresholds = new HashSet<IClassifier>();
+		Set<IClassifier> classifiers = new HashSet<IClassifier>();
 		
-		Float[] statesF1 = new Float[]{0f, 0f, 1f, 1f, 0f, 0f, 0f, 0f};
-		Float[] statesF2 = new Float[]{0f, 0f, 1f, 0f, 0f, 0f, 1f, 1f};
-		Float[] statesF3 = new Float[]{0f, 0f, 1f, 1f, 0f, 0f, 1f, 0f};
+//		Float[] statesF1 = new Float[]{0f, 0f, 1f, 1f, 0f, 0f, 0f, 0f};
+//		Float[] statesF2 = new Float[]{0f, 0f, 1f, 0f, 0f, 0f, 1f, 1f};
+//		Float[] statesF3 = new Float[]{0f, 0f, 1f, 1f, 0f, 0f, 1f, 0f};
+		Integer[][] markers1 = new Integer[][]{{100, 205}, {300, 400}, {495, 600}};
+		Integer[][] markers2 = new Integer[][]{{100, 200}, {295, 405}, {500, 605}};
+		Integer[][] markersDataExpexted = new Integer[][]{{100, 200}, {300, 400}, {500, 600}};
 
-		thresholds.add(contsructThreshold(statesF1));
-		thresholds.add(contsructThreshold(statesF2));
-		thresholds.add(contsructThreshold(statesF3));
+
+		classifiers.add(contsructClassifier(markers1));
+		classifiers.add(contsructClassifier(markers2));
+		classifiers.add(contsructClassifier(markers1));
 		
-		MarkerSet markerSet = segmentator.extractSegments(thresholds);
-		assertEquals(2, markerSet.getMarkers().size());
+		MarkerSetHolder markerSet = segmentator.extractSegments(classifiers);
+		assertEqualsMarkers("3 datasets", markersDataExpexted, markerSet);
 	}
 
 }

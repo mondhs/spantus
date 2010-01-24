@@ -43,7 +43,6 @@ public class MockSegmentatorExtractorConfig extends MockExtractorConfig {
 
 
 	public int getFrameSize() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

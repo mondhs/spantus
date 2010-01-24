@@ -16,21 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-package org.spantus.core.marker;
+package org.spantus.segment;
 
-import java.util.Comparator;
+import java.util.Set;
 
-public class MarkerTimeComparator implements Comparator<Marker>{
+import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.threshold.IClassifier;
+/**
+ * Abstract class for segmentation services
+ * 
+ * @author Mindaugas Greibus
+ *
+ */
+public abstract class AbstractSegmentatorService implements ISegmentatorService {
 
-	public int compare(Marker o1, Marker o2) {
-		if(o1 == null){
-			return -1;
-		}
-		if(o2 == null){
-			return 1;
-		}
-		return o1.getStart()-o2.getStart()>0?1:-1;
+	public MarkerSetHolder extractSegments(Set<IClassifier> thresholds) {
+		return extractSegments(thresholds, null);
 	}
-	
 
 }

@@ -1,23 +1,21 @@
-/**
- * Part of program for analyze speech signal 
- * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://code.google.com/p/spantus/
- * 
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 675 Mass Ave, Cambridge, MA 02139, USA.
- * 
- */
+/*
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal 
+ 	http://spantus.sourceforge.net
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 package org.spantus.chart.impl;
 
 import java.awt.BorderLayout;
@@ -39,7 +37,7 @@ import org.spantus.chart.SignalSelectionListener;
 import org.spantus.chart.SpantusChartToolbar;
 import org.spantus.chart.WrappedChartDescriptionResolver;
 import org.spantus.chart.bean.ChartInfo;
-import org.spantus.chart.bean.ThresholdChartContext;
+import org.spantus.chart.bean.ClassifierChartContext;
 import org.spantus.chart.bean.VectorSeriesColorEnum;
 import org.spantus.chart.functions.FrameValueAreaFunction;
 import org.spantus.chart.functions.FrameValueFuncton;
@@ -163,12 +161,12 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		ChartStyle style1 = createChartStyle();
 		style1.setPaint(getColorResolver().resolveColor(extr));
 		
-		ThresholdChartContext ctx = new ThresholdChartContext();
+		ClassifierChartContext ctx = new ClassifierChartContext();
 		ctx.setDescription(extr.getName() + THRESHOLD_PREFIX );
 		ctx.setValues(extr.getOutputValues());
 		ctx.setThreshold(extr.getThresholdValues());
 		ctx.setStyle(style1);
-		ctx.setState(extr.getState());
+		ctx.setMarkSet(extr.getMarkSet());
 		
 		FrameValueThearsholdFuncton function = new FrameValueThearsholdFuncton(ctx);
 		function.setOrder(order);

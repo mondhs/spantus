@@ -1,23 +1,21 @@
 /*
- * Part of program for analyze speech signal 
- * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://spantus.sourceforge.net
- * 
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 675 Mass Ave, Cambridge, MA 02139, USA.
- * 
- */
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal 
+ 	http://spantus.sourceforge.net
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 package org.spantus.work.ui.cmd;
 
 import java.io.BufferedReader;
@@ -38,8 +36,8 @@ import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
-import org.spantus.core.threshold.ExtremeClassifier;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
@@ -92,30 +90,27 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		}
 		reader.getExtractorRegister();
 		MarkerSet markerSet = null;
-		Set<IClassifier> threasholds = new HashSet<IClassifier>();
+		Set<IClassifier> classifiers = new HashSet<IClassifier>();
 		for (IExtractor extractor : reader.getExtractorRegister()) {
-			if (extractor instanceof ExtremeClassifier) {
-				markerSet = ((ExtremeClassifier) extractor).getMarkerSet();
-				ctx.getProject().getCurrentSample().getMarkerSetHolder()
-						.getMarkerSets().put(markerSet.getMarkerSetType(),
-								markerSet);
-			} else if (extractor instanceof IClassifier) {
-				threasholds.add((IClassifier) extractor);
+			if (extractor instanceof IClassifier) {
+//				markerSet = ((IClassifier) extractor).getMarkSet();
+//				ctx.getProject().getCurrentSample().getMarkerSetHolder()
+//						.getMarkerSets().put(markerSet.getMarkerSetType(),
+//								markerSet);
+				classifiers.add((IClassifier)extractor);
 			}
 		}
 
-		if (threasholds != null && threasholds.size() > 0) {
+		if (classifiers != null && classifiers.size() > 0) {
 			SegmentatorParam param = createSegmentatorParam(config);
-			markerSet = segmentator.extractSegments(threasholds, param);
-			ctx.getProject().getCurrentSample().getMarkerSetHolder()
-					.getMarkerSets().put(MarkerSetHolderEnum.word.name(),
-							markerSet);
+			MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers, param);
+			ctx.getProject().getCurrentSample().setMarkerSetHolder(markerSetHolder);
+			markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
 			putLabels(ctx);
 
 		}
 		if (markerSet == null) {
-			log
-					.debug("Auto segmentaiton was not processed as there is no data.");
+			log.debug("Auto segmentaiton was not processed as there is no data.");
 			return null;
 		}
 

@@ -23,8 +23,7 @@ package org.spantus.segment.test;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.spantus.core.FrameValues;
-import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.segment.offline.SimpleDecisionSegmentatorParam;
 import org.spantus.segment.offline.SimpleDecisionSegmentatorServiceImpl;
@@ -44,28 +43,21 @@ public class SimpleDecisionSegmentatorTest extends SegmentatorTest {
 		param.setMinSpace(20L);
 		param.setMinLength(40L);
 		segmentator.setSegmentator(new SimpleSegmentatorServiceImpl());
-		Set<IClassifier> thresholds = new HashSet<IClassifier>();
-		
-		FrameValues fv = new FrameValues();
-		fv.addAll(new FrameValues(silence));
-		fv.addAll(new FrameValues(signal));
-		fv.addAll(new FrameValues(silence));
-		fv.addAll(new FrameValues(noise));
-		fv.addAll(new FrameValues(silence));
-		fv.addAll(new FrameValues(errorShortSignal));
-		fv.addAll(new FrameValues(signal));
-		fv.addAll(new FrameValues(silence));
-		fv.addAll(new FrameValues(silence));
-		fv.addAll(new FrameValues(signal));
-		fv.addAll(new FrameValues(errorShortSignal));
-		fv.addAll(new FrameValues(silence));
-		thresholds.add(contsructThreshold(fv.toArray()));
-		
-		MarkerSet markerSet = segmentator.extractSegments(thresholds, param);
-		assertEquals(3, markerSet.getMarkers().size());
-		assertEquals(50,markerSet.getMarkers().get(0).getLength().intValue());
-		assertEquals(70,markerSet.getMarkers().get(1).getLength().intValue());
-		assertEquals(70,markerSet.getMarkers().get(2).getLength().intValue());
+
+		Integer[][] markersData1 = new Integer[][]{
+				{100, 200}, //signal
+				{300, 320}, //noise
+				{400,420},{440,540},//noise in the segment front
+				{700,800},{820,840},//noise in the segment end
+				{940, 1040}, //signal
+				};
+		Integer[][] markersDataExpexted = new Integer[][]{{100, 200}, {400, 540}, {700, 840}, {940, 1040}};
+
+		Set<IClassifier> classifiers = new HashSet<IClassifier>();
+		classifiers.add(contsructClassifier(markersData1));
+
+		MarkerSetHolder markerSet = segmentator.extractSegments(classifiers, param);
+		assertEqualsMarkers("decision", markersDataExpexted, markerSet);
 	}
 	
 }

@@ -1,24 +1,21 @@
-/**
- * Part of program for analyze speech signal 
- * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://code.google.com/p/spantus/
- * 
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 675 Mass Ave, Cambridge, MA 02139, USA.
- * 
- */
+/*
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal 
+ 	http://spantus.sourceforge.net
 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 package org.spantus.chart.impl;
 
 import java.awt.Color;
@@ -29,54 +26,61 @@ import java.awt.Polygon;
 import java.math.BigDecimal;
 import java.text.Format;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 
 import net.quies.math.plot.CoordinateBoundary;
 import net.quies.math.plot.GraphDomain;
 
-import org.spantus.chart.bean.ThresholdChartContext;
+import org.spantus.chart.bean.ClassifierChartContext;
+import org.spantus.chart.functions.FrameValueThearsholdFuncton;
 import org.spantus.core.FrameValues;
+import org.spantus.core.marker.Marker;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.logger.Logger;
+
 /**
  * 
+ * class is created by {@link FrameValueThearsholdFuncton}
  * 
  * @author Mindaugas Greibus
- *
+ * 
  * @since 0.0.1
  * 
- * Created 2008.08.02
- *
+ *        Created 2008.08.02
+ * 
  */
-public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
+public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 
-//	CoordinateBoundary coordinateBoundary;
-	
+	// CoordinateBoundary coordinateBoundary;
+
 	GraphDomain domain;
 
-	ThresholdChartContext ctx;
-	
-	private final ArrayList<int[]> polylinesX = new ArrayList<int[]>();
-	private final ArrayList<int[]> polylinesYt = new ArrayList<int[]>();
-	private final ArrayList<int[]> polylinesYstate = new ArrayList<int[]>();
-	private final ArrayList<int[]> polylinesY = new ArrayList<int[]>();
+	ClassifierChartContext ctx;
+
+	private int[] polylinesX = null;
+	private int[] polylinesYt = null;
+	private Polygon statePoligon = null;
+	private int[] polylinesY = null;
 
 	Logger log = Logger.getLogger(this.getClass());
 
-	public ThresholdChartInstance(ThresholdChartContext ctx) {
+	public ThresholdChartInstance(ClassifierChartContext ctx) {
 		this.ctx = ctx;
 		this.description = ctx.getDescription();
 		for (Float float1 : ctx.getValues()) {
 			minmax(float1);
 		}
 		setOrder(0);
-		log.debug("name: " + description + "; order: " + getOrder() + "; min=" +min + "; max: " + max +
-				"; sampleRate:" + ctx.getValues().getSampleRate() + "; length: " + ctx.getValues().size());
+		log.debug("name: " + description + "; order: " + getOrder() + "; min="
+				+ min + "; max: " + max + "; sampleRate:"
+				+ ctx.getValues().getSampleRate() + "; length: "
+				+ ctx.getValues().size());
 	}
 
 	public void renderFunction(BigDecimal[] xCoordinate,
 			BigDecimal[] yCoordinate, BigDecimal xScalar, BigDecimal yScalar) {
-//
-		if(polylinesX.size() > 0) return;
+		//
+//		if (polylinesX == null)
+//			return;
 		FrameValues clonedValues = null;
 		synchronized (getCtx().getValues()) {
 			clonedValues = new FrameValues(getCtx().getValues());
@@ -90,74 +94,46 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 		}
 		this.min = _min;
 		this.max = _max;
-		
-		
 
 		FrameValues threshold = getCtx().getThreshold();
-		FrameValues states = getCtx().getState();
-		
-		polylinesX.add(toCoordinatesTime(clonedValues, xScalar.floatValue()));
-		polylinesY.add(toCoordinatesValues(clonedValues, yScalar.floatValue()));
-		polylinesYt.add(toCoordinatesValues(threshold, yScalar.floatValue()));
-		polylinesYstate.add(toCoordinatesSates(states, yScalar.floatValue()));
+
+		polylinesX = toCoordinatesTime(clonedValues, xScalar.floatValue());
+		polylinesY = toCoordinatesValues(clonedValues, yScalar.floatValue());
+		polylinesYt = toCoordinatesValues(threshold, yScalar.floatValue());
+//		statePoligon =  constructStatePolygon(polylinesX, ctx.getMarkSet());
+//		polylinesYstate = toCoordinatesSates(getCtx().getMarkSet(), yScalar
+//				.floatValue());
 
 	}
-
+	/**
+	 * 
+	 */
 	public synchronized void paintFunction(Graphics g) {
-		Graphics2D g2 = (Graphics2D)g;
-		int size = Math.min(polylinesY.size(), polylinesX.size());
-		Color currentColor = ((Color)getCtx().getStyle().getPaint());
-		Color currentColorTransparent = new Color(currentColor.getRGB() & 0x00FFFFFF | 0x33000000, true);
-		for (int i = 0; i < size; i++) {
-			
-			
-			int[] x = polylinesX.get(i);
-			int[] y = polylinesY.get(i);
-
-			g.drawPolyline(x, y, x.length);
-
-			
-			if(polylinesYt.size()>i){
-				int[] yt = polylinesYt.get(i);
-				if(yt != null && yt.length > 0){
-					g2.setPaint(currentColor.darker().darker());
-					g2.drawPolyline(x, yt, x.length);
-				}
-			}
-			if(polylinesYstate.size()>i){
-				int[] yState = polylinesYstate.get(i);
-				g2.setPaint(currentColorTransparent);
-				Polygon polygon = constructStatePolygon(x, yState);
-				g2.fillPolygon(polygon);
-			}
+		Graphics2D g2 = (Graphics2D) g;
+		Color currentColor = ((Color) getCtx().getStyle().getPaint());
+		Color currentColorTransparent = new Color(
+				currentColor.getRGB() & 0x00FFFFFF | 0x33000000, true);
+		if(polylinesY!=null){
+			g.drawPolyline(polylinesX, polylinesY, polylinesX.length);
 		}
+		if (polylinesYt != null && polylinesYt.length > 0) {
+			g2.setPaint(currentColor.darker().darker());
+			g2.drawPolyline(polylinesX, polylinesYt, polylinesX.length);
+		}
+		if(statePoligon != null){
+			g2.setPaint(currentColorTransparent);
+			g2.fillPolygon(statePoligon);
+		}
+
 	}
 	
-	protected Polygon constructStatePolygon(int[] x, int[] yState){
-		Polygon polygon = new Polygon();//x, yState, x.length);
-		Integer prevState = null;
-		Integer prevX = null;
-		for (int j = 0; j < yState.length; j++) {
-			int currX = x[j];
-			int currState =  yState[j];
-			prevState = prevState == null?currState:prevState;
-			prevX = prevX == null?currX:prevX;
-			if(currState != prevState){
-				polygon.addPoint(prevX, currState);
-			}
-			polygon.addPoint(currX, currState);
-			prevState = currState;
-			prevX = currX;
-		}	
-		return polygon;
-	}
 
 	private CoordinateBoundary getCoordinateBoundary(FrameValues values) {
 		Float xMin = 0f;
 		Float xMax = Float.valueOf(values.toTime(values.size()));
 		Float yMin = getOrder();
 		Float yMax = getOrder() + 1;
-		
+
 		if (domain != null && domain.getUntil() != null) {
 			xMax = domain.getUntil().floatValue();
 			xMin = domain.getFrom().floatValue();
@@ -168,22 +144,18 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 
 	}
 
-	
 	public CoordinateBoundary getCoordinateBoundary() {
 		return getCoordinateBoundary(getCtx().getValues());
 	}
 
-	
 	public BigDecimal[] getXCoordinates() {
 		return null;
 	}
 
-	
 	public BigDecimal[] getYCoordinates() {
 		return null;
 	}
 
-	
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g.create();
 		g2.setPaint(getCtx().getStyle().getPaint());
@@ -193,13 +165,12 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 
 	}
 
-	
 	public void render(BigDecimal xScalar, BigDecimal yScalar, Format yFormat,
 			FontMetrics fontMetrics) {
-		polylinesX.clear();
-		polylinesYt.clear();
-		polylinesYstate.clear();
-		polylinesY.clear();
+		polylinesX = null;
+		polylinesYt = null;
+		statePoligon = null;
+		polylinesY = null;
 		renderFunction(null, null, xScalar, yScalar);
 	}
 
@@ -211,115 +182,137 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 		this.domain = domain;
 	}
 
-	private int[] toCoordinatesTime(FrameValues vals,
-			float scalar) {
-		
+	private int[] toCoordinatesTime(FrameValues vals, float scalar) {
+
 		int start = 0;
 		int end = vals.size();
-		if(domain != null && domain.getFrom()!=null){
+		if (domain != null && domain.getFrom() != null) {
 			start = vals.toIndex(domain.getFrom().floatValue());
 			end = vals.toIndex(domain.getUntil().floatValue());
 			end = Math.min(end, vals.size());
 		}
-		int length = end-start;
+		int length = end - start;
 		int[] temp = new int[length];
 
 		for (int j = 0; j < temp.length; j++) {
-			temp[j] = (int)((j+start) / (scalar*vals.getSampleRate())) ;			
+			temp[j] = (int) ((j + start) / (scalar * vals.getSampleRate()));
 		}
 		return temp;
 	}
-	
+
 	Float min = Float.MAX_VALUE;
 	Float max = -Float.MAX_VALUE;
-	private void minmax(Float f1){
+
+	private void minmax(Float f1) {
 		min = Math.min(min, f1);
 		max = Math.max(max, f1);
 	}
 
-	private int[] toCoordinatesValues(FrameValues vals,
-			float scalar) {
+	private int[] toCoordinatesValues(FrameValues vals, float scalar) {
 		return toCoordinatesValues(vals, scalar, 1f);
 	}
 	
-	private int[] toCoordinatesSates(FrameValues vals,
-			float scalar) {
-		FrameValues valsClone = vals;
-//		synchronized (vals) {
-//			valsClone = new FrameValues(vals);
+	/**
+	 * 
+	 * @param x
+	 * @param markerSet
+	 * @return
+	 */
+	protected Polygon constructStatePolygon(int[] x, MarkerSet markerSet) {
+		Polygon polygon = new Polygon();// x, yState, x.length);
+//		Integer prevState = null;
+//		Integer prevX = null;
+		for (Marker marker : markerSet.getMarkers()) {
+			polygon.addPoint(marker.getStart().intValue(), 0);
+			polygon.addPoint(marker.getStart().intValue(), 1000);
+			polygon.addPoint(marker.getEnd().intValue(), 1000);
+			polygon.addPoint(marker.getEnd().intValue(), 0);
+		}
+//		for (int j = 0; j < yState.length; j++) {
+//			int currX = x[j];
+//			int currState = yState[j];
+//			prevState = prevState == null ? currState : prevState;
+//			prevX = prevX == null ? currX : prevX;
+//			if (currState != prevState) {
+//				polygon.addPoint(prevX, currState);
+//			}
+//			polygon.addPoint(currX, currState);
+//			prevState = currState;
+//			prevX = currX;
 //		}
-		
-
-		int start = 0;
-		int end = vals.size();
-		if(domain != null && domain.getFrom()!=null){
-			start = vals.toIndex(domain.getFrom().floatValue());
-			end = vals.toIndex(domain.getUntil().floatValue());
-			end = Math.min(end, vals.size());
-		}
-		int length = end-start;
-		int[] temp = new int[length];
-
-
-		int i=0,skip=0; 
-		float delta =  max-min;
-		for (Float floatValue : valsClone) {
-			if(skip<start){
-				skip++;
-				continue;
-			}
-			floatValue=(delta*floatValue)+min; //floatValue == 1?max:min;
-			//fix that polygone come to singnal y point
-			if(i+1 == valsClone.size() || i == 0 || i+1>=length){
-				floatValue = min;
-			}
-			floatValue = (floatValue-min)/delta;
-			floatValue += getOrder();
-			temp[i] = (int)(floatValue/scalar);
-			i++;
-			if(i>=length){
-				break;
-			}
-		}
-		return temp;
+		return polygon;
 	}
 
-	
-	private int[] toCoordinatesValues(FrameValues vals,
-			float scalar, float coef) {
+//	private int[] toCoordinatesSates(MarkerSet markerSet, float scalar) {
+
+		// int start = 0;
+		// int end = vals.size();
+		// if(domain != null && domain.getFrom()!=null){
+		// start = vals.toIndex(domain.getFrom().floatValue());
+		// end = vals.toIndex(domain.getUntil().floatValue());
+		// end = Math.min(end, vals.size());
+		// }
+		// int length = end-start;
+		// int[] temp = new int[length];
+		//
+		//
+		// int i=0,skip=0;
+		// float delta = max-min;
+		// for (Float floatValue : valsClone) {
+		// if(skip<start){
+		// skip++;
+		// continue;
+		// }
+		// floatValue=(delta*floatValue)+min; //floatValue == 1?max:min;
+		// //fix that polygone come to singnal y point
+		// if(i+1 == valsClone.size() || i == 0 || i+1>=length){
+		// floatValue = min;
+		// }
+		// floatValue = (floatValue-min)/delta;
+		// floatValue += getOrder();
+		// temp[i] = (int)(floatValue/scalar);
+		// i++;
+		// if(i>=length){
+		// break;
+		// }
+		// }
+//		return temp;
+//	}
+
+	private int[] toCoordinatesValues(FrameValues vals, float scalar, float coef) {
 		FrameValues valsClone = vals;
-		if(vals == null || vals.size()==0){
+		if (vals == null || vals.size() == 0) {
 			return null;
 		}
-//		synchronized (vals) {
-//			valsClone = new FrameValues(vals);
-//		}
+		// synchronized (vals) {
+		// valsClone = new FrameValues(vals);
+		// }
 		int start = 0;
 		int end = vals.size();
-		if(domain != null && domain.getFrom()!=null){
+		if (domain != null && domain.getFrom() != null) {
 			start = vals.toIndex(domain.getFrom().floatValue());
 			end = vals.toIndex(domain.getUntil().floatValue());
 			end = Math.min(end, vals.size());
 		}
-		int length = end-start;
+		int length = end - start;
 		int[] temp = new int[length];
 
-		int i=0,skip=0; 
-		float delta =  max-min;
+		int i = 0, skip = 0;
+		float delta = max - min;
 		for (Float floatValue : valsClone) {
-			if(skip<start){
+			if (skip < start) {
 				skip++;
 				continue;
 			}
-			floatValue*=coef;
-			if(i+1 == valsClone.size() || i == 0 || i>=length){
+			floatValue *= coef;
+			if (i + 1 == valsClone.size() || i == 0 || i >= length) {
 				floatValue = min;
 			}
-			floatValue = (floatValue-min)/delta;
+			floatValue = (floatValue - min) / delta;
 			floatValue += getOrder();
-			temp[i] = (int)(floatValue/scalar);
+			temp[i] = (int) (floatValue / scalar);
 			i++;
-			if(i>=length){
+			if (i >= length) {
 				break;
 			}
 		}
@@ -335,28 +328,30 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance{
 		for (Float f1 : getCtx().getValues()) {
 			minmax(f1);
 		}
-//		coordinateBoundary = getCoordinateBoundary(getCtx().getValues());
+		// coordinateBoundary = getCoordinateBoundary(getCtx().getValues());
 	}
-	protected ThresholdChartContext getCtx() {
+
+	protected ClassifierChartContext getCtx() {
 		return ctx;
 	}
-	
+
 	public String getValueOn(BigDecimal x) {
 		int index = getCtx().getValues().toIndex(x.floatValue());
 		Float value = null;
-		if(index < getCtx().getValues().size()){
+		if (index < getCtx().getValues().size()) {
 			value = getCtx().getValues().get(index);
 		}
 		Float thresholdValue = null;
-		if(index <getCtx().getThreshold().size()){
+		if (index < getCtx().getThreshold().size()) {
 			thresholdValue = getCtx().getThreshold().get(index);
 		}
-		String thresholdValueStr = thresholdValue==null?"-":thresholdValue.toString();
-		String valueStr = MessageFormat.format("{0,number} \n Threshold: {1} \n index: {2}", value, thresholdValueStr, index);
+		String thresholdValueStr = thresholdValue == null ? "-"
+				: thresholdValue.toString();
+		String valueStr = MessageFormat.format(
+				"{0,number} \n Threshold: {1} \n index: {2}", value,
+				thresholdValueStr, index);
 
-		return  valueStr;
+		return valueStr;
 	}
-	
-
 
 }

@@ -56,7 +56,6 @@ public class MockSegmentatorExtractor implements IExtractor {
 	}
 
 	public FrameValues getOutputValues() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -65,7 +64,6 @@ public class MockSegmentatorExtractor implements IExtractor {
 	}
 
 	public int getDimension() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	float extractorSampleRate;
@@ -86,7 +84,6 @@ public class MockSegmentatorExtractor implements IExtractor {
 	}
 
 	public void putValues(Long sample, FrameValues values) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -100,8 +97,6 @@ public class MockSegmentatorExtractor implements IExtractor {
 	}
 
 	public void flush() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	

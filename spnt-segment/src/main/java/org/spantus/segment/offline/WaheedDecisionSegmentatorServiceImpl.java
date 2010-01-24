@@ -1,23 +1,21 @@
-/**
- * Part of program for analyze speech signal 
- * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://code.google.com/p/spantus/
- * 
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 675 Mass Ave, Cambridge, MA 02139, USA.
- * 
- */
+/*
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal 
+ 	http://spantus.sourceforge.net
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 package org.spantus.segment.offline;
 
 import java.util.Iterator;
@@ -29,8 +27,11 @@ import java.util.Set;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.logger.Logger;
+import org.spantus.segment.AbstractSegmentatorService;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentatorParam;
 import org.spantus.utils.Assert;
@@ -43,25 +44,22 @@ import org.spantus.utils.Assert;
  * Created 2008.11.29
  *
  */
-public class WaheedDecisionSegmentatorServiceImpl implements ISegmentatorService {
+public class WaheedDecisionSegmentatorServiceImpl extends AbstractSegmentatorService {
 
 	protected Logger log = Logger.getLogger(getClass());
 	
 	private ISegmentatorService segmentator;
-	
-	
-	public MarkerSet extractSegments(Set<IClassifier> thresholds) {
-		return extractSegments(thresholds, null);
-	}
-
-	
-	public MarkerSet extractSegments(Set<IClassifier> thresholds, SegmentatorParam param) {
-		MarkerSet markerSet = getSegmentator().extractSegments(thresholds, param);
+	/**
+	 * 
+	 */
+	public MarkerSetHolder extractSegments(Set<IClassifier> thresholds, SegmentatorParam param) {
+		MarkerSetHolder markerSetHolder = getSegmentator().extractSegments(thresholds, param);
+		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name()); 
 		SimpleDecisionSegmentatorParam _param = createParam(param);
 		
 		Iterator<Marker> markerIterator = markerSet.getMarkers().iterator();
 		if(!markerIterator.hasNext()){
-			return markerSet;
+			return markerSetHolder;
 		}
 		Map<Marker, MarkerDto> markerDtos = createDto(markerSet.getMarkers());
 		process(markerDtos, _param);
@@ -74,7 +72,7 @@ public class WaheedDecisionSegmentatorServiceImpl implements ISegmentatorService
 			markerSet.getMarkers().add(currentDto.getMarker());
 		}
 		log.debug("extractSegments: " + markerSet.getMarkers());
-		return markerSet;
+		return markerSetHolder;
 	}
 	
 	SimpleDecisionSegmentatorParam createParam(SegmentatorParam param){
@@ -179,15 +177,15 @@ public class WaheedDecisionSegmentatorServiceImpl implements ISegmentatorService
 		}
 	}
 	
-	protected float getSampleRate(Set<IClassifier> thresholds) {
+	protected float getSampleRate(Set<IClassifier> classifiers) {
 		Float sampleRate = null;
-		for (IClassifier threshold : thresholds) {
-			Assert.isTrue(threshold.getState().getSampleRate() > 0);
+		for (IClassifier classifier : classifiers) {
+			Assert.isTrue(classifier.getThresholdValues().getSampleRate() > 0);
 			if (sampleRate == null) {
-				sampleRate = threshold.getState().getSampleRate();
+				sampleRate = classifier.getThresholdValues().getSampleRate();
 			} else {
 				// should be same for all threshold states
-				Assert.isTrue(sampleRate.equals(threshold.getState()
+				Assert.isTrue(sampleRate.equals(classifier.getThresholdValues()
 						.getSampleRate()));
 			}
 		}

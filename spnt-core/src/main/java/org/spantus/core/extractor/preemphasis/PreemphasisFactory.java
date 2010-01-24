@@ -5,7 +5,10 @@ import org.spantus.core.extractor.preemphasis.Preemphasis.PreemphasisEnum;
 
 public abstract class PreemphasisFactory {
 	public static Preemphasis createPreemphasis(String preemphasisCode){
-		PreemphasisEnum preemphasisEnum = PreemphasisEnum.valueOf(preemphasisCode); 
+		PreemphasisEnum preemphasisEnum = null;
+                try{
+                    preemphasisEnum = PreemphasisEnum.valueOf(preemphasisCode);
+                }catch(Exception e){}
 		if(preemphasisCode == null){
 			return new FullPreemphasis();			
 		}

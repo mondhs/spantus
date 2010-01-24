@@ -18,7 +18,7 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.segment;
+package org.spantus.core.segment;
 
 import org.spantus.core.marker.MarkerSet;
 

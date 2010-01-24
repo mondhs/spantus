@@ -27,67 +27,66 @@ import org.spantus.core.threshold.IClassifier;
 
 public class MockClassifier implements IClassifier {
 
-	FrameValues states;
-	
-	public FrameValues getState() {
-		return states;
-	}
-	public void setState(FrameValues  states) {
-		this.states = states;
-	}
+//	FrameValues states;
+//	
+//	public FrameValues getState() {
+//		return states;
+//	}
+//	public void setState(FrameValues  states) {
+//		this.states = states;
+//	}
 
+	MarkerSet markSet;
+	
+	Float extractorSampleRate;
 	
 	public FrameValues getThresholdValues() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public FrameValues calculate(Long sample, FrameValues values) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public FrameValues getOutputValues() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public IExtractorConfig getConfig() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public float getExtractorSampleRate() {
-		// TODO Auto-generated method stub
-		return 0;
+		return extractorSampleRate;
+	}
+
+	public void setExtractorSampleRate(Float extractorSampleRate) {
+		this.extractorSampleRate = extractorSampleRate;
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void putValues(Long sample, FrameValues values) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void setConfig(IExtractorConfig config) {
-		// TODO Auto-generated method stub
 
 	}
 	public void flush() {
-		// TODO Auto-generated method stub
 		
 	}
-	public MarkerSet getMarkerSet() {
-		// TODO Auto-generated method stub
-		return null;
+	public MarkerSet getMarkSet() {
+		return markSet;
 	}
+	public void setMarkSet(MarkerSet markerSet) {
+		this.markSet = markerSet;
+	}
+
 
 }

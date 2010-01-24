@@ -15,17 +15,22 @@ public class ExtremeClassifier extends AbstractClassifier {
 	// private Logger log = Logger.getLogger(ExtremeThreshold.class);
 
 	private ExtremeClassifierServiceImpl extremeThresholdService = new ExtremeClassifierServiceImpl();
-	private MarkerSet markerSet = null;
 
 	@Override
 	public void flush() {
 		super.flush();
 		getThresholdValues().clear();
 		ExtremeCtx extremeCtx = extremeThresholdService.calculateSegments(getOutputValues());
-		markerSet = extremeCtx.getMarkerSet();
-		refreshThreasholdInfo(markerSet);
+		setMarkSet(extremeCtx.getMarkerSet());
+		refreshThreasholdInfo(getMarkSet());
 
 	}
+	
+	@Override
+	public boolean isSignalState(Float value) {
+		return false;
+	}
+
 	/**
 	 * 
 	 * @param markerSet
@@ -74,10 +79,6 @@ public class ExtremeClassifier extends AbstractClassifier {
 	@Override
 	public Float calculateThreshold(Float windowValue) {
 		return null;
-	}
-
-	public MarkerSet getMarkerSet() {
-		return markerSet;
 	}
 
 }

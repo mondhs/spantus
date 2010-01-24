@@ -104,8 +104,12 @@ public class MarkerGraph extends JComponent {
 	public MarkerSetComponent createMarkerSetComponent(MarkerSet markerSet) {
 		MarkerSetComponent component = new MarkerSetComponent();
 		component.addMouseListener(getMouseListeners()[0]);
-		component.addMouseMotionListener(getMouseMotionListeners()[0]);
-		component.addKeyListener(getKeyListeners()[0]);
+		if(getMouseMotionListeners().length>0){
+			component.addMouseMotionListener(getMouseMotionListeners()[0]);
+		}
+		if(getKeyListeners().length>0){
+			component.addKeyListener(getKeyListeners()[0]);
+		}
 		component.setMarkerSet(markerSet);
 		component.setCtx(getCtx());
 		component.initialize();
@@ -193,12 +197,10 @@ public class MarkerGraph extends JComponent {
 	}
 
 	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

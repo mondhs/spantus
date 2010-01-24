@@ -24,7 +24,6 @@ public class MockClassifier implements IExtractor {
 	}
 
 	public FrameValues getOutputValues() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -33,7 +32,6 @@ public class MockClassifier implements IExtractor {
 	}
 
 	public int getDimension() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	float extractorSampleRate;
@@ -47,13 +45,10 @@ public class MockClassifier implements IExtractor {
 	}
 
 	public String getName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void putValues(Long sample, FrameValues values) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void setConfig(IExtractorConfig config) {
@@ -61,8 +56,6 @@ public class MockClassifier implements IExtractor {
 	}
 
 	public void flush() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

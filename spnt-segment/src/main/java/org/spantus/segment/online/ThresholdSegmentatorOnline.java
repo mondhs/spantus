@@ -20,17 +20,30 @@
  */
 package org.spantus.segment.online;
 
+import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.StaticThreshold;
 
 public class ThresholdSegmentatorOnline extends StaticThreshold {
 
 	private OnlineSegmentator onlineSegmentator;
+	private Float state = 0F;
 	
 	@Override
-	protected void calculateState(Long sampleNum, Float windowValue, Float threshold) {
-		Float f = super.calculateState(sampleNum, windowValue, threshold);
-		onlineSegmentator.processState(sampleNum, getExtractor(), f);
-		return f;
+	protected void calculateState(Long sampleNum, Float windowValue) {
+		super.calculateState(sampleNum, windowValue);
+		onlineSegmentator.processState(sampleNum, getExtractor(), state);
+	}
+	@Override
+	protected void onSegmentedStarted(Marker marker) {
+		// TODO Auto-generated method stub
+		super.onSegmentedStarted(marker);
+		state = 1F;
+	}
+	
+	@Override
+	protected void onSegmentedEnded(Marker marker) {
+		super.onSegmentedEnded(marker);
+		state = 0F;
 	}
 	
 	@Override

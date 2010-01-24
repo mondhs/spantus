@@ -25,11 +25,13 @@ import net.quies.math.plot.Function;
 import net.quies.math.plot.FunctionInstance;
 import net.quies.math.plot.GraphDomain;
 
-import org.spantus.chart.bean.ThresholdChartContext;
+import org.spantus.chart.bean.ClassifierChartContext;
 import org.spantus.chart.impl.ThresholdChartInstance;
+import org.spantus.chart.impl.TimeSeriesMultiChart;
 import org.spantus.core.FrameValues;
 /**
  * 
+ * class is created by {@link TimeSeriesMultiChart}
  * 
  * @author Mindaugas Greibus
  *
@@ -40,7 +42,7 @@ import org.spantus.core.FrameValues;
  */
 public class FrameValueThearsholdFuncton extends Function {
 
-	private ThresholdChartContext ctx;
+	private ClassifierChartContext ctx;
 	ThresholdChartInstance charType ;
 
 	/**
@@ -48,7 +50,7 @@ public class FrameValueThearsholdFuncton extends Function {
 	 */
 	private static final long serialVersionUID = -4310600874173414841L;
 
-	public FrameValueThearsholdFuncton(ThresholdChartContext ctx) {
+	public FrameValueThearsholdFuncton(ClassifierChartContext ctx) {
 		super(ctx.getDescription());
 		charType = new ThresholdChartInstance(ctx);
 		this.ctx = ctx;

@@ -50,7 +50,7 @@ import org.spantus.work.ui.i18n.I18nFactory;
  */
 public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 	public static final String EXPERIMENT = "Experiment";
-	private Logger log = Logger.getLogger(this.getClass());
+	private Logger log = Logger.getLogger(AbstractWorkInfoManager.class);
 	
 	
 	public SpantusWorkInfo openWorkInfo() {

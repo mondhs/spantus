@@ -22,16 +22,73 @@ package org.spantus.segment.test;
 
 import junit.framework.TestCase;
 
-import org.spantus.core.FrameValues;
+import org.spantus.core.marker.Marker;
+import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
 
 public abstract class SegmentatorTest extends TestCase {
-	
-	public IClassifier contsructThreshold(Float[] statesF ){
-		MockClassifier threshold = new MockClassifier();
-		FrameValues states = new FrameValues(statesF);
-		states.setSampleRate(100f);
-		threshold.setState(states);
-		return threshold;
+	/**
+	 * 
+	 * @param markers
+	 * @return
+	 */
+	public IClassifier contsructClassifier(Integer[][] markers){
+		MockClassifier classifier = new MockClassifier();
+//		FrameValues states = new FrameValues(statesF);
+//		states.setSampleRate(100f);
+		classifier.setExtractorSampleRate(20f);
+		classifier.setMarkSet(createMarkerSet(markers));
+		return classifier;
 	}
+	/**
+	 * 
+	 * @param markers
+	 * @return
+	 */
+	public MarkerSet createMarkerSet(Integer[][] markers){
+		MarkerSet markerSet = new MarkerSet();
+		for (Integer[] markerIntegers : markers) {
+			Marker marker = createMarker(
+						markerIntegers[0],
+						markerIntegers[1]);
+			markerSet.getMarkers().add(marker);
+		}
+		return markerSet;
+	}
+	/**
+	 * 
+	 * @param message
+	 * @param n1
+	 * @param n2
+	 */
+	protected void assertEqualsLong(String message, Number n1, Number n2){
+		assertEquals(message,n1.longValue(), n2.longValue());
+	}
+	
+	protected void assertEqualsMarkers(String message, Integer[][] expexted, MarkerSetHolder result){
+		MarkerSet markerSet = result.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+		assertEquals(expexted.length, markerSet.getMarkers().size());
+		int i=0;
+		for (Integer[] integers : expexted) {
+			assertEqualsLong((i+1) + " marker start", integers[0], markerSet.getMarkers().get(i).getStart());
+			assertEqualsLong((i+1) + " marker end", integers[1], markerSet.getMarkers().get(i).getEnd());
+			i++;
+		}
+	}
+	
+	/**
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	protected Marker createMarker(Integer start, Integer end){
+		Marker marker = new Marker();
+		marker.setStart(start.longValue());
+		marker.setEnd(end.longValue());
+		return marker;
+	}
+
 }

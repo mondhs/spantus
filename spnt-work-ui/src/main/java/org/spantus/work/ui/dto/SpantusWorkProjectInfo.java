@@ -102,7 +102,7 @@ public class SpantusWorkProjectInfo {
 
 	public String getCurrentType() {
 		if(currentType == null){
-			currentType = ProjectTypeEnum.feature.name();
+			currentType = ProjectTypeEnum.segmenation.name();
 		}
 		return currentType;
 	}
