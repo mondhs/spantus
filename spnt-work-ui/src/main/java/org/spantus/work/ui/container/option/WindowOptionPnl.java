@@ -1,5 +1,25 @@
+/*
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal 
+ 	http://spantus.sourceforge.net
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 package org.spantus.work.ui.container.option;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -16,6 +36,7 @@ import org.spantus.core.extractor.preemphasis.Preemphasis.PreemphasisEnum;
 import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.logger.Logger;
 import org.spantus.math.windowing.WindowingEnum;
+import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
 import org.spantus.ui.MapComboBoxModel;
 import org.spantus.ui.ModelEntry;
 import org.spantus.work.ui.container.ReloadableComponent;
@@ -24,10 +45,20 @@ import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.FormLayout;
-
+/**
+ * Window(Feature) Option Panel
+ * 
+ * @author Mindaugas Greibus
+ * 
+ * @since 0.0.1
+ * Created Jan 25, 2010
+ *
+ */
 public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableComponent{
 	
 	enum WindowOptionSeparators {signal, record, segmentation, threshold};
+	public static final String PREFIX_threshold = "threshold_";
+	public static final String PREFIX_segmentation = "segmentation_";
 	
 	public static final String PREFIX_windowing = "windowingType_";
 	public static final String PREFIX_preemphasis = "preemphasis_";
@@ -42,6 +73,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		automatedThresholdParameters,
 		thresholdLearningPeriod, thresholdCoef, thresholdType,
 		
+		segmentationServiceType,
 		segmentationMinLength, segmentationMinSpace,
 		segmentationExpandStart, segmentationExpandEnd, 
 		autoSegmentation,
@@ -55,6 +87,11 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 	private static final long serialVersionUID = 1L;
 	private Map<optionsLabels, LabelControlEntry> jTextFields = null;
 
+	private MapComboBoxModel preemphasisModel;
+	private MapComboBoxModel treasholdType;
+	private MapComboBoxModel windowingType;
+	private MapComboBoxModel segmentationServiceType;
+	
 	/**
 	 * This is the default constructor
 	 */
@@ -80,15 +117,16 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		optionsLabels[] segmentLabels = new optionsLabels[]{
 				optionsLabels.automatedSegmentaionParameters,
 				optionsLabels.autoSegmentation,
+				optionsLabels.segmentationServiceType,
 				optionsLabels.segmentationMinLength, optionsLabels.segmentationMinSpace, 
 				optionsLabels.segmentationExpandStart, optionsLabels.segmentationExpandEnd, 
 
 		};
 		
 		optionsLabels[] thresholdLabels = new optionsLabels[]{
+				optionsLabels.thresholdType,
 				optionsLabels.automatedThresholdParameters,
 				optionsLabels.thresholdLearningPeriod, optionsLabels.thresholdCoef, 
-				optionsLabels.thresholdType,
 				optionsLabels.automatedThresholdParameters,
 
 		};
@@ -230,6 +268,16 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				textField.setValue(workConfig.getThresholdCoef());
 				fieldEntry.getValue().setVisible(isAdvanced());
 				break;
+			case segmentationServiceType:
+				((JComboBox)fieldEntry.getValue().getControl()).setSelectedItem(
+						getMessage(PREFIX_segmentation
+						+workConfig.getSegmentationServiceType()));
+				setLabelControlVisible(optionsLabels.segmentationMinLength,workConfig.getSegmentationServiceType());
+				setLabelControlVisible(optionsLabels.segmentationMinSpace, workConfig.getSegmentationServiceType());
+				setLabelControlVisible(optionsLabels.segmentationExpandStart, workConfig.getSegmentationServiceType());
+				setLabelControlVisible(optionsLabels.segmentationExpandEnd, workConfig.getSegmentationServiceType());
+				fieldEntry.getValue().setVisible(isAdvanced());
+				break;
 			case segmentationMinLength:
 				textField.setValue(Integer.valueOf(workConfig.getSegmentationMinLength()));
 				fieldEntry.getValue().setVisible(isAdvanced());
@@ -249,12 +297,16 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			case autoSegmentation:
 				((JCheckBox)cmp).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getAutoSegmentation()));
 				fieldEntry.getValue().setVisible(isAdvanced());
+				Boolean isAutoSegmentValue = Boolean.TRUE.equals(getInfo().getEnv().getAutoSegmentation()); 
+				setLabelControlVisible(optionsLabels.segmentationServiceType, isAutoSegmentValue.toString());
 				break;
 			case thresholdType:
 				((JComboBox)fieldEntry.getValue().getControl()).setSelectedItem(
-						getMessage("threshold_"
+						getMessage(PREFIX_threshold
 						+getInfo().getProject().getThresholdType()));
 				fieldEntry.getValue().setVisible(isAdvanced());
+				setLabelControlVisible(optionsLabels.thresholdLearningPeriod, getInfo().getProject().getThresholdType());
+				setLabelControlVisible(optionsLabels.thresholdCoef, getInfo().getProject().getThresholdType());
 				break;
 			case automatedSegmentaionParameters:
 			case automatedThresholdParameters:
@@ -317,11 +369,23 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			textField = new JFormattedTextField();
 			addFieldList(textField, optionsLabels.audioPathOutput.name() );
 			
-			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
-			addFieldList(textField, optionsLabels.thresholdLearningPeriod.name() );
 
-			textField = new JFormattedTextField(getI18n().getDecimalFormat());
-			addFieldList(textField, optionsLabels.thresholdCoef.name() );
+			JComboBox segmentationServiceTypeInput = new JComboBox();
+			segmentationServiceTypeInput.setModel(getSegmentationServiceTypeModel());
+			addFieldList(segmentationServiceTypeInput, optionsLabels.segmentationServiceType.name() );
+			segmentationServiceTypeInput.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent evt) {
+					Object item = evt.getItem(); 
+					if (evt.getStateChange() == ItemEvent.SELECTED) { 
+						SegmentatorServiceEnum segmentatorServiceEnum = (SegmentatorServiceEnum)getSegmentationServiceTypeModel().get(item.toString());
+						// Item was just selected 
+						setLabelControlVisible(optionsLabels.segmentationMinLength, segmentatorServiceEnum.name());
+						setLabelControlVisible(optionsLabels.segmentationMinSpace, segmentatorServiceEnum.name());
+						setLabelControlVisible(optionsLabels.segmentationExpandStart, segmentatorServiceEnum.name());
+						setLabelControlVisible(optionsLabels.segmentationExpandEnd, segmentatorServiceEnum.name());
+					}
+				}
+			});
 			
 			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
 			addFieldList(textField, optionsLabels.segmentationMinLength.name() );
@@ -336,12 +400,38 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			addFieldList(textField, optionsLabels.segmentationExpandEnd.name() );
 			
 			JComboBox thresholdInput = new JComboBox();
+			thresholdInput.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent evt) {
+					Object item = evt.getItem(); 
+					if (evt.getStateChange() == ItemEvent.SELECTED) { 
+						// Item was just selected 
+						ThresholdEnum thresholdEnum = (ThresholdEnum)getThresholdModel().get(item.toString());
+						setLabelControlVisible(optionsLabels.thresholdLearningPeriod, thresholdEnum.name());
+						setLabelControlVisible(optionsLabels.thresholdCoef, thresholdEnum.name());
+					}
+				}
+			});
 			thresholdInput.setModel(getThresholdModel());
 			addFieldList(thresholdInput, optionsLabels.thresholdType.name() );
+			
+			textField = new JFormattedTextField(getI18n().getMillisecondFormat());
+			addFieldList(textField, optionsLabels.thresholdLearningPeriod.name() );
+
+			textField = new JFormattedTextField(getI18n().getDecimalFormat());
+			addFieldList(textField, optionsLabels.thresholdCoef.name() );
 			
 			JCheckBox autoSegmentationChb = new JCheckBox();
 			autoSegmentationChb.setSelected(Boolean.TRUE
 					.equals(getInfo().getEnv().getAutoSegmentation()));
+			autoSegmentationChb.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent evt) {
+					if (evt.getStateChange() == ItemEvent.SELECTED) { 
+						setLabelControlVisible(optionsLabels.segmentationServiceType, Boolean.TRUE.toString());
+					}else if (evt.getStateChange() == ItemEvent.DESELECTED) { 
+						setLabelControlVisible(optionsLabels.segmentationServiceType, Boolean.FALSE.toString());
+					}
+				}
+			});
 			addFieldList(autoSegmentationChb, optionsLabels.autoSegmentation.name());
 			
 			JCheckBox auto = new JCheckBox("",true);
@@ -438,6 +528,10 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				Number thresholdCoef = (Number)(field.getValue());
 				workConfig.setThresholdCoef(thresholdCoef.floatValue());
 				break;
+			case segmentationServiceType:
+				SegmentatorServiceEnum segmentatorServiceEnum = (SegmentatorServiceEnum)getSegmentationServiceTypeModel().getSelectedObject();
+				workConfig.setSegmentationServiceType(segmentatorServiceEnum.name());
+				break;
 			case segmentationMinLength:
 				Number segmentationMinLength = (Number)(field.getValue());
 				workConfig.setSegmentationMinLength(segmentationMinLength.intValue());
@@ -476,21 +570,54 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			}
 		}
 	}
-	
-	MapComboBoxModel treasholdType;
+	/**
+	 * dynamic show/hide for controls 
+	 * @param optionsLabel
+	 * @param value
+	 * @return
+	 */
+	protected boolean setLabelControlVisible(optionsLabels optionsLabel, String value){
+		LabelControlEntry labelControlEntry = jTextFields.get(optionsLabel);
+		switch (optionsLabel) {
+		case thresholdLearningPeriod:
+			labelControlEntry.setVisible(ThresholdEnum.online.name().equals(value));
+			break;
+		case thresholdCoef:
+			labelControlEntry.setVisible(!ThresholdEnum.rules.name().equals(value));
+			break;
+		case segmentationMinSpace:
+			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
+			break;
+		case segmentationMinLength:
+			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
+			break;
+		case segmentationExpandStart:
+			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
+			break;
+		case segmentationExpandEnd:
+			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
+			break;
+		case segmentationServiceType:
+			labelControlEntry.setVisible(Boolean.valueOf(value));
+			break;
+
+		default:
+			break;
+		}
+		return true;
+	}
 	
 	protected MapComboBoxModel getThresholdModel() {
 		if (treasholdType == null) {
 			treasholdType = new MapComboBoxModel();
 			for (ThresholdEnum thresholdTypeEnum : ThresholdEnum.values()) {
-				String label = getMessage("threshold_" + thresholdTypeEnum.name());
+				String label = getMessage(PREFIX_threshold + thresholdTypeEnum.name());
 				treasholdType.addElement(new ModelEntry(label, thresholdTypeEnum));
 			}
 		}
 		return treasholdType;
 	}
 	
-	MapComboBoxModel windowingType;
 	protected MapComboBoxModel getWindowingModel() {
 		if (windowingType == null) {
 			windowingType = new MapComboBoxModel();
@@ -501,7 +628,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		}
 		return windowingType;
 	}
-	MapComboBoxModel preemphasisModel;
+	
 	protected MapComboBoxModel getPreemphasisModel() {
 		if (preemphasisModel == null) {
 			preemphasisModel = new MapComboBoxModel();
@@ -513,5 +640,15 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		return preemphasisModel;
 	}
 	
+	protected MapComboBoxModel getSegmentationServiceTypeModel(){
+		if (segmentationServiceType == null) {
+			segmentationServiceType = new MapComboBoxModel();
+			for (SegmentatorServiceEnum segmentatorServiceEnum : SegmentatorServiceEnum.values()) {
+				String label = getMessage(PREFIX_segmentation + segmentatorServiceEnum.name());
+				segmentationServiceType.addElement(new ModelEntry(label, segmentatorServiceEnum));
+			}
+		}
+		return segmentationServiceType;
+	}
 
 }

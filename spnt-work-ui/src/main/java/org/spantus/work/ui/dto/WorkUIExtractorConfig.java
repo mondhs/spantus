@@ -23,6 +23,7 @@ package org.spantus.work.ui.dto;
 
 import org.spantus.core.extractor.preemphasis.Preemphasis.PreemphasisEnum;
 import org.spantus.math.windowing.WindowingEnum;
+import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
 
 /**
  * 
@@ -56,6 +57,7 @@ public class WorkUIExtractorConfig{
 	
 	private String windowingType;
 	private String preemphasis;
+	private String segmentationServiceType;
 	 
 	public Integer getBufferSize() {
 		return bufferSize;
@@ -193,5 +195,18 @@ public class WorkUIExtractorConfig{
 	}
 	public void setPreemphasis(String preemphasis){
 		this.preemphasis = preemphasis;
+	}
+
+
+	public String getSegmentationServiceType() {
+		if(segmentationServiceType == null){
+			segmentationServiceType = SegmentatorServiceEnum.offline.name();
+		}
+		return segmentationServiceType;
+	}
+
+
+	public void setSegmentationServiceType(String segmentationServiceType) {
+		this.segmentationServiceType = segmentationServiceType;
 	}
 }

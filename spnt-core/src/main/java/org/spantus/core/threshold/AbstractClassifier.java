@@ -25,10 +25,12 @@ import org.spantus.core.extractor.IExtractorListener;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
+import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
 
 public abstract class AbstractClassifier implements IClassifier, IExtractorListener {
 	
+	private Logger log = Logger.getLogger(AbstractClassifier.class); 
 	private IExtractor extractor;
 	private FrameValues thereshold;
 	private Float coef =null;
@@ -114,7 +116,7 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		getExtractor().flush();
 	}
 	
-	private Long prevSample;
+//	private Long prevSample;
 	
 	/**
 	 * 
@@ -144,7 +146,7 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 				setMarker(null);
 			}
 		}
-		prevSample = sample;
+//		prevSample = sample;
 	}
 	/**
 	 * custom logic on segment found event
@@ -152,14 +154,14 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	 * @param marker
 	 */
 	protected void onSegmentedStarted(Marker marker){
-		
+		log.debug("[onSegmentedStarted]",marker);
 	}
 	/**
 	 * custom logic on segment found event
 	 * @param marker
 	 */
 	protected void onSegmentedEnded(Marker marker){
-		
+		log.debug("[onSegmentedEnded]",marker);
 	}
 
 	
