@@ -586,19 +586,28 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			labelControlEntry.setVisible(!ThresholdEnum.rules.name().equals(value));
 			break;
 		case segmentationMinSpace:
-			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
+			boolean isAuto = getInfo().getEnv().getAutoSegmentation();
+			labelControlEntry.setVisible(!isAuto && !SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationMinLength:
-			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
+			isAuto = getInfo().getEnv().getAutoSegmentation();
+			labelControlEntry.setVisible(!isAuto && !SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationExpandStart:
-			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
+			isAuto = getInfo().getEnv().getAutoSegmentation();
+			labelControlEntry.setVisible(!isAuto && !SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationExpandEnd:
-			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
+			isAuto = getInfo().getEnv().getAutoSegmentation();
+			labelControlEntry.setVisible(!isAuto && !SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationServiceType:
-			labelControlEntry.setVisible(Boolean.valueOf(value));
+			boolean val = Boolean.valueOf(value);
+			labelControlEntry.setVisible(val);
+			jTextFields.get(optionsLabels.segmentationMinSpace).setVisible(val);
+			jTextFields.get(optionsLabels.segmentationMinLength).setVisible(val);
+			jTextFields.get(optionsLabels.segmentationExpandStart).setVisible(val);
+			jTextFields.get(optionsLabels.segmentationExpandEnd).setVisible(val);
 			break;
 
 		default:
