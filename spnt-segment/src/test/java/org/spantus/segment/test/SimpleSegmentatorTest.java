@@ -70,7 +70,7 @@ public class SimpleSegmentatorTest extends SegmentatorTest {
 //		Float[] statesF3 = new Float[]{0f, 0f, 1f, 1f, 0f, 0f, 1f, 0f};
 		Integer[][] markers1 = new Integer[][]{{100, 205}, {300, 400}, {495, 600}};
 		Integer[][] markers2 = new Integer[][]{{100, 200}, {295, 405}, {500, 605}};
-		Integer[][] markersDataExpexted = new Integer[][]{{100, 200}, {300, 400}, {500, 600}};
+		Integer[][] markersDataExpexted = new Integer[][]{{100, 205}, {300, 400}, {495, 600}};
 
 
 		classifiers.add(contsructClassifier(markers1));

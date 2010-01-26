@@ -63,7 +63,6 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	public static final String segmentAutoPanelMessageHeader = "segmentAutoPanelMessageHeader";
 	public static final String segmentAutoPanelMessageBody = "segmentAutoPanelMessageBody";
 
-	private ISegmentatorService segmentator;
 	private SampleChart sampleChart;
 
 	protected Logger log = Logger.getLogger(getClass());
@@ -73,7 +72,6 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	 * @param sampleChart
 	 */
 	public AutoSegmentationCmd(SampleChart sampleChart) {
-		segmentator = SegmentFactory.createSegmentator();
 		this.sampleChart = sampleChart;
 
 	}
@@ -94,7 +92,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		for (IExtractor extractor : reader.getExtractorRegister()) {
 			if (extractor instanceof IClassifier) {
 //				markerSet = ((IClassifier) extractor).getMarkSet();
-//				ctx.getProject().getCurrentSample().getMarkerSetHolder()
+//				ctx.getProject().getCurrentSample().getMarkerSetHolder()	
 //						.getMarkerSets().put(markerSet.getMarkerSetType(),
 //								markerSet);
 				classifiers.add((IClassifier)extractor);
@@ -103,6 +101,9 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 
 		if (classifiers != null && classifiers.size() > 0) {
 			SegmentatorParam param = createSegmentatorParam(config);
+			//create special segmentator
+			ISegmentatorService segmentator = SegmentFactory.createSegmentator(
+					ctx.getProject().getFeatureReader().getWorkConfig().getSegmentationServiceType());
 			MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers, param);
 			ctx.getProject().getCurrentSample().setMarkerSetHolder(markerSetHolder);
 			markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());

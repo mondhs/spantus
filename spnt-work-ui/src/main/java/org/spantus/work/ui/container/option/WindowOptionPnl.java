@@ -586,28 +586,24 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			labelControlEntry.setVisible(!ThresholdEnum.rules.name().equals(value));
 			break;
 		case segmentationMinSpace:
-			boolean isAuto = getInfo().getEnv().getAutoSegmentation();
-			labelControlEntry.setVisible(!isAuto && !SegmentatorServiceEnum.basic.name().equals(value));
+			boolean isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
+			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationMinLength:
-			isAuto = getInfo().getEnv().getAutoSegmentation();
-			labelControlEntry.setVisible(!isAuto && !SegmentatorServiceEnum.basic.name().equals(value));
+			isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
+			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationExpandStart:
-			isAuto = getInfo().getEnv().getAutoSegmentation();
-			labelControlEntry.setVisible(!isAuto && !SegmentatorServiceEnum.basic.name().equals(value));
+			isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
+			labelControlEntry.setVisible( !SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationExpandEnd:
-			isAuto = getInfo().getEnv().getAutoSegmentation();
-			labelControlEntry.setVisible(!isAuto && !SegmentatorServiceEnum.basic.name().equals(value));
+			isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
+			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationServiceType:
 			boolean val = Boolean.valueOf(value);
 			labelControlEntry.setVisible(val);
-			jTextFields.get(optionsLabels.segmentationMinSpace).setVisible(val);
-			jTextFields.get(optionsLabels.segmentationMinLength).setVisible(val);
-			jTextFields.get(optionsLabels.segmentationExpandStart).setVisible(val);
-			jTextFields.get(optionsLabels.segmentationExpandEnd).setVisible(val);
 			break;
 
 		default:

@@ -54,7 +54,7 @@ public abstract class SegmentFactory {
 		SegmentatorServiceEnum segmentatorServiceEnum = SegmentatorServiceEnum.valueOf(segmentatorService);
 		switch (segmentatorServiceEnum) {
 		case basic:
-			segmentator = new SimpleDecisionSegmentatorServiceImpl();
+			segmentator = new SimpleSegmentatorServiceImpl();
 			break;
 		case online:
 			segmentator = new OnlineSegmentaitonService();

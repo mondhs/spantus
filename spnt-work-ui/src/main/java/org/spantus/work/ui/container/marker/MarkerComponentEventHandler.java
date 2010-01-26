@@ -75,7 +75,7 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
 		}
 	}
 	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
+		// do nothing
 		
 	}
 	  
@@ -114,12 +114,11 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
 	 * 
 	 */
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+            //do nothing
 	}
 	//Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+            //do nothing
 		
 	}
 	//Override

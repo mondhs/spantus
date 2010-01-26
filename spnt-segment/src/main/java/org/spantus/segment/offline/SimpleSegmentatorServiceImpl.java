@@ -51,7 +51,7 @@ public class SimpleSegmentatorServiceImpl extends AbstractSegmentatorService {
 		log.debug("[extractSegments] thresholds.size:" + classifiers.size());
 		MarkerSet markerSet = new MarkerSet();
 		LinkedHashMap<Long, Float> statesSums = caclculateStatesSums(classifiers, param);
-		
+		MarkerSet ms = classifiers.iterator().next().getMarkSet();
 			// int i = 0;
 			// if(sampleRate == null){
 			// sampleRate = classifier.getExtractorSampleRate();
@@ -100,7 +100,7 @@ public class SimpleSegmentatorServiceImpl extends AbstractSegmentatorService {
 		LinkedHashMap<Long, Float> statesSums = new LinkedHashMap<Long, Float>();
 
 		for (IClassifier classifier : classifiers) {
-			float resolution = classifier.getExtractorSampleRate();
+			float resolution = 1;//classifier.getExtractorSampleRate();
 			// last sample rate will be used as main
 			MarkerSet classifierlMarkerSet = classifier.getMarkSet();
 			if (classifierlMarkerSet == null) {
@@ -114,6 +114,7 @@ public class SimpleSegmentatorServiceImpl extends AbstractSegmentatorService {
 				for (; index <= marker.getEnd(); index += resolution) {
 					safeSum(statesSums, index, 1F, getWeight(param, classifier));
 				}
+				log.debug("marker:{0}; stateSum{1}",marker,statesSums);
 			}
 		}
 		return statesSums;

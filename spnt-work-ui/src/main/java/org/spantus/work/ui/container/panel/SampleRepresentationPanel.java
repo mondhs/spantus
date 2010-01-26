@@ -39,7 +39,7 @@ public class SampleRepresentationPanel extends JPanel implements SampleChangeLis
 		add(getStatusBar(), BorderLayout.SOUTH);
 	}
 	public void reload() {
-		// TODO Auto-generated method stub
+		// do nothing
 	}
 
 
