@@ -36,6 +36,7 @@ public class OfflineThreshold extends DynamicThreshold {
 		Float f = Histogram.calculateAvgForFirstBin(Histogram.calculateHistogram(getOutputValues()));
 		setCurrentThresholdValue(f);
 		getThresholdValues().clear();
+		setClassifierSampleNum(0);
 		afterCalculated(0L, getOutputValues());
 		
 	}

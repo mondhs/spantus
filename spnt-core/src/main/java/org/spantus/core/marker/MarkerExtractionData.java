@@ -18,11 +18,20 @@
 */
 package org.spantus.core.marker;
 
-public class MarkerExtractionData {
+import java.io.Serializable;
+/**
+ * Additional Marker information for online segmentation and recognition
+ * 
+ * @author mondhs
+ *
+ */
+public class MarkerExtractionData implements Serializable, Cloneable{
 	
-	Long startSampleNum;
+	private static final long serialVersionUID = 1L;
+
+	private Long startSampleNum;
 	
-	Long lengthSampleNum;
+	private Long lengthSampleNum;
 	
 	public Long getStartSampleNum() {
 		return startSampleNum;

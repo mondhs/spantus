@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.ExtractorWrapper;
 import org.spantus.core.marker.Marker;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.threshold.StaticThreshold;
 
 /**
@@ -73,6 +74,26 @@ public class ThresholdTest extends TestCase {
 		assertEquals("length 2 segment", 2000L, marker.getLength().longValue());
 
 	}
+	/**
+	 * @throws CloneNotSupportedException 
+	 * 
+	 */
+	public void testClone(){
+		Marker m = new Marker();
+		m.setStart(1L);
+		m.setLength(11L);
+		m.setLabel("111");
+		Marker clone = (Marker)m.clone();
+		assertEquals(m.getStart(), clone.getStart());
+		
+		MarkerSet ms = new MarkerSet();
+		ms.getMarkers().add(m);
+		ms.getMarkers().add(clone);
+		MarkerSet msClone = ms.clone();
+		assertEquals(ms.getMarkers().size(), msClone.getMarkers().size());
+		
+	}
+	
 	public Float[] getWindow(StaticThreshold threshold, float windowIndex){
 		return new Float[]{windowIndex, windowIndex};
 	}

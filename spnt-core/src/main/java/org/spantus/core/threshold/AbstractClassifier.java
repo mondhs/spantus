@@ -39,6 +39,20 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	Marker marker;
 	private long classifierSampleNum =0l;
 	/**
+	 * @param classifierSampleNum the classifierSampleNum to set
+	 */
+	public void setClassifierSampleNum(long classifierSampleNum) {
+		this.classifierSampleNum = classifierSampleNum;
+	}
+
+	/**
+	 * @return the classifierSampleNum
+	 */
+	public long getClassifierSampleNum() {
+		return classifierSampleNum;
+	}
+
+	/**
 	 * 
 	 * @param windowValue
 	 * @return
@@ -98,9 +112,9 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		Float threshold = calculateThreshold(float1);
 		if(threshold != null){
 			getThresholdValues().add(threshold);
-			calculateState(classifierSampleNum, float1);
+			calculateState(getClassifierSampleNum(), float1);
 		}
-		classifierSampleNum++;
+		setClassifierSampleNum(getClassifierSampleNum() + 1);
 	}
 	
 	/**
@@ -154,14 +168,14 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	 * @param marker
 	 */
 	protected void onSegmentedStarted(Marker marker){
-		log.debug("[onSegmentedStarted]",marker);
+		log.debug("[onSegmentedStarted]{0}",marker);
 	}
 	/**
 	 * custom logic on segment found event
 	 * @param marker
 	 */
 	protected void onSegmentedEnded(Marker marker){
-		log.debug("[onSegmentedEnded]",marker);
+		log.debug("[onSegmentedEnded]{0}",marker);
 	}
 
 	

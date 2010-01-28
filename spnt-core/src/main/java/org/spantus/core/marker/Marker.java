@@ -18,6 +18,8 @@
 */
 package org.spantus.core.marker;
 
+import java.io.Serializable;
+
 import org.spantus.utils.Assert;
 /**
  * Marker represent segment information in segmentation process
@@ -25,13 +27,17 @@ import org.spantus.utils.Assert;
  * @author Mindaugas Greibus
  *
  */
-public class Marker {
+public class Marker implements Serializable, Cloneable{
 
-	Long start;
-	Long length;
+	private static final long serialVersionUID = 1L;
 
-	String label;
-	MarkerExtractionData extractionData;
+	private Long start;
+	
+	private Long length;
+
+	private String label;
+	
+	private MarkerExtractionData extractionData;
 
 	public Long getStart() {
 		return start;
@@ -82,6 +88,14 @@ public class Marker {
 		return val;
 	}
 
+	public Marker clone(){
+		try {
+			return (Marker)super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+	
 	public MarkerExtractionData getExtractionData() {
 		if(extractionData == null){
 			extractionData = new MarkerExtractionData();
@@ -92,7 +106,5 @@ public class Marker {
 	public void setExtractionData(MarkerExtractionData extractionData) {
 		this.extractionData = extractionData;
 	}
-
-	
 	
 }

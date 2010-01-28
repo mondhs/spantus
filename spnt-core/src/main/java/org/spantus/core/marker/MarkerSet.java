@@ -18,6 +18,7 @@
 */
 package org.spantus.core.marker;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,10 +32,13 @@ import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
  * @author mondhs
  *
  */
-public class MarkerSet {
+public class MarkerSet implements Serializable,Cloneable {
 	
-	String markerSetType;
-	List<Marker> markers;
+	private static final long serialVersionUID = 1L;
+
+	private String markerSetType;
+	
+	private List<Marker> markers;
 	/**
 	 * Marker collection
 	 * @return
@@ -45,6 +49,10 @@ public class MarkerSet {
 		}
 		return markers;
 	}
+	public void setMarkerSetType(String markerSetType) {
+		this.markerSetType = markerSetType;
+	}
+
 	/** 
 	 * 
 	 * @see MarkerSetHolderEnum
@@ -55,7 +63,16 @@ public class MarkerSet {
 		return markerSetType;
 	}
 
-	public void setMarkerSetType(String markerSetType) {
-		this.markerSetType = markerSetType;
+	public void setMarkers(List<Marker> markers) {
+		this.markers = markers;
 	}
+
+	public MarkerSet clone(){
+		try {
+			return (MarkerSet)super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+
 }
