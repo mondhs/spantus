@@ -49,6 +49,7 @@ public abstract class SegmentatorTest extends TestCase {
 	 */
 	public MarkerSet createMarkerSet(Integer[][] markers){
 		MarkerSet markerSet = new MarkerSet();
+		markerSet.setMarkerSetType(MarkerSetHolderEnum.phone.name());
 		for (Integer[] markerIntegers : markers) {
 			Marker marker = createMarker(
 						markerIntegers[0],

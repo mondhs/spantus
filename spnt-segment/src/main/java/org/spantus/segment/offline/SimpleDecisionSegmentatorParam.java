@@ -20,6 +20,8 @@
  */
 package org.spantus.segment.offline;
 
+import java.text.MessageFormat;
+
 import org.spantus.segment.SegmentatorParam;
 
 /**
@@ -71,6 +73,11 @@ public class SimpleDecisionSegmentatorParam extends SegmentatorParam {
 	 */
 	public void setMinSpace(Long minSpace) {
 		this.minSpace = minSpace;
+	}
+
+	@Override
+	public String toString() {
+		return MessageFormat.format("{0}[minLength: {1}; minSpace: {2}]", SimpleDecisionSegmentatorParam.class.getSimpleName(),getMinLength(),getMinSpace());
 	}
 
 }

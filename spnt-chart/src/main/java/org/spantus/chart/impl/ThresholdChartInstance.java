@@ -100,7 +100,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		polylinesX = toCoordinatesTime(clonedValues, xScalar.floatValue());
 		polylinesY = toCoordinatesValues(clonedValues, yScalar.floatValue());
 		polylinesYt = toCoordinatesValues(threshold, yScalar.floatValue());
-//		statePoligon =  constructStatePolygon(polylinesX, ctx.getMarkSet());
+		statePoligon =  constructStatePolygon(polylinesX, ctx.getMarkSet(), yScalar.floatValue());
 //		polylinesYstate = toCoordinatesSates(getCtx().getMarkSet(), yScalar
 //				.floatValue());
 
@@ -218,14 +218,15 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 	 * @param markerSet
 	 * @return
 	 */
-	protected Polygon constructStatePolygon(int[] x, MarkerSet markerSet) {
+	protected Polygon constructStatePolygon(int[] x, MarkerSet markerSet, float scalar) {
 		Polygon polygon = new Polygon();// x, yState, x.length);
 //		Integer prevState = null;
 //		Integer prevX = null;
+		Float delta = max - min;
 		for (Marker marker : markerSet.getMarkers()) {
 			polygon.addPoint(marker.getStart().intValue(), 0);
-			polygon.addPoint(marker.getStart().intValue(), 1000);
-			polygon.addPoint(marker.getEnd().intValue(), 1000);
+			polygon.addPoint(marker.getStart().intValue(), (int)(max/scalar));
+			polygon.addPoint(marker.getEnd().intValue(), (int)(max/scalar));
 			polygon.addPoint(marker.getEnd().intValue(), 0);
 		}
 //		for (int j = 0; j < yState.length; j++) {

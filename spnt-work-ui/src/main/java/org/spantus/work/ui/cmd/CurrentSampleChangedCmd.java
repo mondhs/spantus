@@ -72,7 +72,7 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 		
 		public ReadingThread(SpantusWorkInfo ctx) {
 			this.ctx = ctx;
-			setName("Signal Readning Thread");
+			setName("Signal Readning");
 		}
 		public void run() {
 			IExtractorInputReader reader;

@@ -18,7 +18,6 @@
 */
 package org.spantus.segment.offline;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -42,23 +41,27 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 
 	private ISegmentatorService segmentator;
 	/**
-	 * 
+	 * process with some decision logic segments that are extracted by {@link #getSegmentator()}
 	 */
 	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers,
 			SegmentatorParam param) {
+		//merge segments with segmentator
 		MarkerSetHolder markerSetHolder = getSegmentator().extractSegments(classifiers,
 				param);
+		//init parameters
 		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
-		SimpleDecisionSegmentatorParam _param = createParam(param);
-
-		Iterator<Marker> markerIterator = markerSet.getMarkers().iterator();
-		if (!markerIterator.hasNext()) {
+		SimpleDecisionSegmentatorParam safe_param = createParam(param);
+		//if there is no segments just return empty segmentaion results
+		if (markerSet.getMarkers().size()==0) {
 			return markerSetHolder;
 		}
+		//create working collection
 		Map<Marker, MarkerDto> markerDtos = createDto(markerSet.getMarkers());
-		process(markerDtos, _param);
-		MarkerDto firstMarkerDto = markerDtos.values().iterator().next();
+		//process the working collection with harcoded rules
+		process(markerDtos, safe_param);
+		//extract data from working collection
 		markerSet.getMarkers().clear();
+		MarkerDto firstMarkerDto = markerDtos.values().iterator().next();
 		MarkerDto currentDto = firstMarkerDto;
 		markerSet.getMarkers().add(currentDto.getMarker());
 		while (currentDto.getNext() != null) {
@@ -76,33 +79,42 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		return new SimpleDecisionSegmentatorParam();
 
 	}
-
+	/**
+	 * process working collection, with simple logic. actions remove
+	 * 
+	 * @param markerDtos
+	 * @param param
+	 */
 	protected void process(Map<Marker, MarkerDto> markerDtos,
 			SimpleDecisionSegmentatorParam param) {
 		Set<Marker> removed = new LinkedHashSet<Marker>();
+		log.debug("[process] with parameters {0}", param);
+		//search for removal. 
 		for (MarkerDto markerDto : markerDtos.values()) {
 			if (isForRemove(markerDto.getMarker(), markerDto
 					.getDistanceToPrevious(), markerDto.getDistanceToNext(),
 					param)) {
-				log.debug("marking for delete: " + markerDto);
+				log.debug("[process] marking for delete: " + markerDto);
 
 				markerDto.getPrevious().setNext(markerDto.getNext());
 				markerDto.getNext().setPrevious(markerDto.getPrevious());
 				removed.add(markerDto.getMarker());
 			}
 		}
+		//remove marked for deletion
 		for (Marker marker : removed) {
 			markerDtos.remove(marker);
 		}
 		// log.debug("Remove noises: " + removed);
 		removed.clear();
-
+		//join action
 		for (MarkerDto markerDto : markerDtos.values()) {
+			log.debug("[process] minLength: {0}; distances [{1};{2}]",markerDto.getMarker().getLength(), markerDto.getDistanceToPrevious(), markerDto.getDistanceToNext());
 			if (param.getMinLength()>markerDto.getMarker().getLength()) {
 				if (markerDto.getDistanceToNext().intValue() > 0
 						&& param.getMinSpace()>
 								markerDto.getDistanceToNext()) {
-					log.debug("joint " + markerDto + "to next: "
+					log.debug("[process] joint " + markerDto + "to next: "
 							+ markerDto.getNext());
 					Marker current = markerDto.getMarker();
 					Marker next = markerDto.getNext().getMarker();
@@ -119,7 +131,7 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 				} else if (markerDto.getDistanceToPrevious() > 0
 						&& param.getMinSpace()>
 								markerDto.getDistanceToPrevious()) {
-					log.debug("joint " + markerDto + "to previous: "
+					log.debug("[process] joint " + markerDto + "to previous: "
 							+ markerDto.getPrevious());
 					Marker current = markerDto.getMarker();
 					Marker previous = markerDto.getPrevious().getMarker();
@@ -139,14 +151,14 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		for (Marker marker : removed) {
 			markerDtos.remove(marker);
 		}
-		log.debug("Remove joined: " + removed);
+		log.debug("[process] Remove joined: " + removed);
 		removed.clear();
 
 		for (MarkerDto markerDto : markerDtos.values()) {
 			if (markerDto.getDistanceToNext().intValue() > 0
 					&& param.getMinSpace()>
 							markerDto.getDistanceToNext()) {
-				log.debug("joint " + markerDto + "to next: "
+				log.debug("[process] joint " + markerDto + "to next: "
 						+ markerDto.getNext());
 				Marker current = markerDto.getMarker();
 				Marker next = markerDto.getNext().getMarker();
@@ -165,11 +177,16 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		for (Marker marker : removed) {
 			markerDtos.remove(marker);
 		}
-		log.debug("Remove joined: " + removed);
+		log.debug("[process] Remove joined: " + removed);
 		removed.clear();
 
 	}
-
+	/**
+	 * create dto {@link MarkerDto} for every marker
+	 * 
+	 * @param markers
+	 * @return return the map with 
+	 */
 	public Map<Marker, MarkerDto> createDto(List<Marker> markers) {
 		Map<Marker, MarkerDto> markerDto = new LinkedHashMap<Marker, MarkerDto>();
 		MarkerDto previous = null;
@@ -185,7 +202,14 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		}
 		return markerDto;
 	}
-
+	/**
+	 * is this segment possible to remove
+	 * @param current
+	 * @param distanceToPrevious
+	 * @param distanceToNext
+	 * @param param
+	 * @return
+	 */
 	protected boolean isForRemove(Marker current,
 			Long distanceToPrevious, Long distanceToNext,
 			SimpleDecisionSegmentatorParam param) {
@@ -194,13 +218,21 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 				&& distanceToPrevious>param
 						.getMinSpace();
 	}
-
+	/**
+	 * 
+	 * @param markerSet
+	 * @param removed
+	 */
 	protected void remove(MarkerSet markerSet, Set<Marker> removed) {
 		for (Marker marker : removed) {
 			markerSet.getMarkers().remove(marker);
 		}
 	}
-
+	/**
+	 * 
+	 * @param thresholds
+	 * @return
+	 */
 	protected float getSampleRate(Set<IClassifier> thresholds) {
 		Float sampleRate = null;
 		for (IClassifier threshold : thresholds) {

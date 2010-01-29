@@ -91,11 +91,14 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		Set<IClassifier> classifiers = new HashSet<IClassifier>();
 		for (IExtractor extractor : reader.getExtractorRegister()) {
 			if (extractor instanceof IClassifier) {
-//				markerSet = ((IClassifier) extractor).getMarkSet();
-//				ctx.getProject().getCurrentSample().getMarkerSetHolder()	
-//						.getMarkerSets().put(markerSet.getMarkerSetType(),
-//								markerSet);
+				markerSet = ((IClassifier) extractor).getMarkSet();
+				ctx.getProject().getCurrentSample().getMarkerSetHolder()	
+						.getMarkerSets().put(markerSet.getMarkerSetType(),
+								markerSet);
 				classifiers.add((IClassifier)extractor);
+//				markerSet = ((IClassifier)extractor).getMarkSet();
+//				markerSet.setMarkerSetType(MarkerSetHolderEnum.word.name());
+//				ctx.getProject().getCurrentSample().getMarkerSetHolder().getMarkerSets().put(markerSet.getMarkerSetType(), markerSet);
 			}
 		}
 

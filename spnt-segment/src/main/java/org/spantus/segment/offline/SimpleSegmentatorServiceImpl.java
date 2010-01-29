@@ -84,8 +84,9 @@ public class SimpleSegmentatorServiceImpl extends AbstractSegmentatorService {
 				+ markerSet.getMarkers().size());
 
 		MarkerSetHolder holder = new MarkerSetHolder();
-		holder.getMarkerSets().put(MarkerSetHolderEnum.word.name(), ctx.getMarkerSet());
-		holder.getMarkerSets().put(MarkerSetHolderEnum.phone.name(), ms);
+		ctx.getMarkerSet().setMarkerSetType(MarkerSetHolderEnum.word.name());
+		holder.getMarkerSets().put(ctx.getMarkerSet().getMarkerSetType(), ctx.getMarkerSet());//word
+		holder.getMarkerSets().put(ms.getMarkerSetType(), ms);//phone
 		
 		return holder;
 	}

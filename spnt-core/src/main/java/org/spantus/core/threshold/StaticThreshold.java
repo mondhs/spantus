@@ -25,6 +25,7 @@ public class StaticThreshold extends AbstractClassifier {
 	private int windowsLearned;
 	private Long learningPeriod;
 	private Float currentThresholdValue = Float.MIN_VALUE;
+	private Float baseThresholdValue = Float.MIN_VALUE;
 
 	public Float getCurrentThresholdValue() {
 		return currentThresholdValue;
@@ -59,16 +60,19 @@ public class StaticThreshold extends AbstractClassifier {
 	 */
 	public Float calculateThreshold(Float value){
 		if (!isTrained()) {
-			currentThresholdValue = train(value, currentThresholdValue);
+			baseThresholdValue = train(value, baseThresholdValue);
 		}
 		//with negative values this should work too
-		Float rtnThreshold = currentThresholdValue + (Math.abs(currentThresholdValue* getCoef()));
-		if(!isTrained() && currentThresholdValue>value){
+		Float rtnThreshold = baseThresholdValue + (Math.abs(baseThresholdValue* getCoef()));
+		if(!isTrained() && rtnThreshold<value){
 			currentThresholdValue = value;
 			rtnThreshold = value;
 		}
+		currentThresholdValue = rtnThreshold;
 		return rtnThreshold;
 	}
+	
+	
 	
 	@Override
 	public boolean isSignalState(Float value) {

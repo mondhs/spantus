@@ -53,8 +53,8 @@
       <plugins>
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
-            <artifactId>native2ascii-maven-plugin
-            </artifactId>
+            <artifactId>native2ascii-maven-plugin</artifactId>
+            <version>1.0-alpha-1</version>
             <executions>
                <execution>
                   <goals>
@@ -80,7 +80,7 @@
                   </manifest>
                   <manifestEntries>
                      <mode>development</mode>
-                     <url>${pom.url}</url>
+                     <url>${project.url}</url>
                      <!--
                         <SplashScreen-Image>org/spantus/work/ui/img/logo.gif</SplashScreen-Image>
                      -->

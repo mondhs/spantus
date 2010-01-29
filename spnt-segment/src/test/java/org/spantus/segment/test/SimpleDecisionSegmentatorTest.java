@@ -47,8 +47,8 @@ public class SimpleDecisionSegmentatorTest extends SegmentatorTest {
 		Integer[][] markersData1 = new Integer[][]{
 				{100, 200}, //signal
 				{300, 320}, //noise
-				{400,420},{440,540},//noise in the segment front
-				{700,800},{820,840},//noise in the segment end
+				{400,425},{440,540},//noise in the segment front
+				{700,800},{815,840},//noise in the segment end
 				{940, 1040}, //signal
 				};
 		Integer[][] markersDataExpexted = new Integer[][]{{100, 200}, {400, 540}, {700, 840}, {940, 1040}};
