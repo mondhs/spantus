@@ -1,22 +1,20 @@
 /*
- * Part of program for analyze speech signal 
- * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://spantus.sourceforge.net
- * 
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 675 Mass Ave, Cambridge, MA 02139, USA.
- * 
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal 
+ 	http://spantus.sourceforge.net
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 package org.spantus.work.services;
 
@@ -35,11 +33,35 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.logger.Logger;
+
 /**
- * TextGrid format support
+ * support for TextGrid of praat
  * 
- *
- *	<br>format:<br>
+ * 
+ * <br>
+ * format:<br>
+ * File type = "ooTextFile"<br>
+ * Object class = "TextGrid"<br>
+ * <br>
+ * xmin = 0<br>
+ * xmax = 3.7828344671201814<br>
+ * tiers? &lt;exists&gt;<br>
+ * size = 2<br>
+ * item []:<br>
+ * item [1]:<br>
+ * class = "IntervalTier"<br>
+ * name = "Level 1"<br>
+ * xmin = 0<br>
+ * xmax = 3.7828344671201814<br>
+ * intervals: size = 10<br>
+ * intervals [1]:<br>
+ * xmin = 0<br>
+ * xmax = 0.9219844950605262<br>
+ * text = ""<br>
+ * intervals [2]:<br>
+ * xmin = 0.9219844950605262<br>
+ * xmax = 1.1692887650859252<br>
+ * text = "v"<br>
  * 
  * @author Mindaugas Greibus
  * @since 0.0.1
@@ -47,13 +69,13 @@ import org.spantus.logger.Logger;
 public class MarkerTextGridDao implements MarkerDao {
 
 	Logger log = Logger.getLogger(MarkerTextGridDao.class);
-	
+
 	public static final String patternItem = "\\s+item \\[(\\d+)\\]:";
 	public static final String patternIntervals = "\\s+intervals \\[(\\d+)\\]:";
 	public static final String patternXmin = "\\s+xmin = (.+)";
 	public static final String patternXmax = "\\s+xmax = (.+)";
 	public static final String patternText = "\\s+text = (.*)";
-		
+
 	/**
 	 * 
 	 */
@@ -69,16 +91,16 @@ public class MarkerTextGridDao implements MarkerDao {
 			String strLine;
 			// Read File Line By Line
 			while ((strLine = br.readLine()) != null) {
-//				log.debug("read "+ strLine);
-				if(strLine.matches(patternItem)){
+				// log.debug("read "+ strLine);
+				if (strLine.matches(patternItem)) {
 					readListener.readItem(strLine);
-				}else if(strLine.matches(patternIntervals)){
+				} else if (strLine.matches(patternIntervals)) {
 					readListener.readIneterval(strLine);
-				}else if(strLine.matches(patternXmin)){
+				} else if (strLine.matches(patternXmin)) {
 					readListener.readXmin(strLine);
-				}else if(strLine.matches(patternXmax)){
+				} else if (strLine.matches(patternXmax)) {
 					readListener.readXmax(strLine);
-				}else if(strLine.matches(patternText)){
+				} else if (strLine.matches(patternText)) {
 					readListener.readText(strLine);
 				}
 			}
@@ -88,9 +110,9 @@ public class MarkerTextGridDao implements MarkerDao {
 			log.error(e);
 		}
 		return readListener.getMarkerSetHolder();
-		
+
 	}
-	
+
 	public MarkerSetHolder read(InputStream inputStream) {
 		// TODO Auto-generated method stub
 		return null;
@@ -105,79 +127,91 @@ public class MarkerTextGridDao implements MarkerDao {
 		// TODO Auto-generated method stub
 
 	}
-	
-	public class ReadListener{
+
+	public class ReadListener {
 		MarkerSetHolder markerSetHolder = new MarkerSetHolder();
 		MarkerSet markerSet;
 		Marker marker;
-		
-		public void readItem(String index){
+
+		public void readItem(String index) {
 			markerSet = new MarkerSet();
 			String str = regexp(patternItem, index);
-			if("1".equals(str)){
-				markerSet =  new MarkerSet();
-				markerSetHolder.getMarkerSets().put(MarkerSetHolderEnum.phone.name(), markerSet);
+			if ("1".equals(str)) {
+				markerSet = new MarkerSet();
+				markerSetHolder.getMarkerSets().put(
+						MarkerSetHolderEnum.phone.name(), markerSet);
 				marker = null;
-			}else if("2".equals(str)){
-				markerSet =  new MarkerSet();
-				markerSetHolder.getMarkerSets().put(MarkerSetHolderEnum.word.name(), markerSet);
+			} else if ("2".equals(str)) {
+				markerSet = new MarkerSet();
+				markerSetHolder.getMarkerSets().put(
+						MarkerSetHolderEnum.word.name(), markerSet);
 				marker = null;
 			}
 
-			log.debug("[markerset]"+ markerSetHolder);
-			
+			log.debug("[markerset]" + markerSetHolder);
+
 		}
-		public void readIneterval(String index){
+
+		public void readIneterval(String index) {
 			String str = regexp(patternIntervals, index);
 			marker = new Marker();
 			markerSet.getMarkers().add(marker);
 			marker.setLabel(str);
-			log.debug("[marker]"+markerSet);
-			
+			log.debug("[marker]" + markerSet);
+
 		}
-		public void readXmin(String time){
+
+		public void readXmin(String time) {
 			String str = regexp(patternXmin, time);
-			Float start = Float.valueOf(str)*1000;
-			if(marker != null){
+			Float start = Float.valueOf(str) * 1000;
+			if (marker != null) {
 				marker.setStart(start.longValue());
 			}
-			log.debug("[marker start]"+marker);
+			log.debug("[marker start]" + marker);
 		}
-		public void readXmax(String time){
+
+		public void readXmax(String time) {
 			String str = regexp(patternXmax, time);
-			Float end = Float.valueOf(str)*1000;
-			if(marker != null){
+			Float end = Float.valueOf(str) * 1000;
+			if (marker != null) {
 				marker.setEnd(end.longValue());
 			}
-			log.debug("[marker end]"+marker);
-			
+			log.debug("[marker end]" + marker);
+
 		}
-		public void readText(String text){
+
+		public void readText(String text) {
 			String str = regexp(patternText, text);
 			str = str.replace("\"", "");
-			if(marker != null){
-				if("".equals(str.trim())){
+			if (marker != null) {
+				if ("".equals(str.trim())) {
 					markerSet.getMarkers().remove(marker);
 				}
 				marker.setLabel(str);
 			}
-			log.debug("[marker text]"+marker);
+			log.debug("[marker text]" + marker);
 		}
+
 		public MarkerSetHolder getMarkerSetHolder() {
 			return markerSetHolder;
 		}
+
 		public void setMarkerSetHolder(MarkerSetHolder markerSetHolder) {
 			this.markerSetHolder = markerSetHolder;
 		}
+
 		public MarkerSet getMarkerSet() {
 			return markerSet;
 		}
+
 		public void setMarkerSet(MarkerSet markerSet) {
 			this.markerSet = markerSet;
 		}
+
 		public Marker getMarker() {
 			return marker;
 		}
+
 		public void setMarker(Marker marker) {
 			this.marker = marker;
 		}
@@ -185,12 +219,12 @@ public class MarkerTextGridDao implements MarkerDao {
 	}
 
 	public String regexp(String pattern, String msg) {
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(msg);
-        if (!m.find() || m.groupCount() != 1) {
-            return null;
-        }
-        return m.group(1);
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(msg);
+		if (!m.find() || m.groupCount() != 1) {
+			return null;
+		}
+		return m.group(1);
 
-    }
+	}
 }

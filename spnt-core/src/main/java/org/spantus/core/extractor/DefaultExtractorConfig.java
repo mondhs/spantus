@@ -41,8 +41,8 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 		windowOverlap = windowSize - (windowSize / 10); 
 		frameSize = (windowSize * 10)+windowOverlap;
 		bufferSize = 850;
-		
 	}
+	
 	public DefaultExtractorConfig(IExtractorConfig cloning) {
 		this.sampleRate = cloning.getSampleRate();
 		this.windowSize = cloning.getWindowSize();

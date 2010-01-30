@@ -38,9 +38,11 @@ import org.spantus.logger.Logger;
  */
 public class OutputStaticThreshold extends StaticThreshold {
 
-	Logger log = Logger.getLogger(getClass());
+	private Logger log = Logger.getLogger(getClass());
 
-	Float lastVal = Float.valueOf(0f);
+//	private Float lastVal = Float.valueOf(0f);
+	private BufferedWriter out = null;
+
 
 	/**
 	 * custom logic on segment found event
@@ -49,7 +51,14 @@ public class OutputStaticThreshold extends StaticThreshold {
 	 */
 	@Override
 	protected void onSegmentedStarted(Marker marker) {
-		fireSignal(marker.getStart() + marker.getLength());
+		super.onSegmentedStarted(marker);
+		try {
+			getWriter().write("H");
+			getWriter().flush();
+		} catch (IOException e) {
+			log.error(e);
+		}
+
 	}
 
 	/**
@@ -59,43 +68,19 @@ public class OutputStaticThreshold extends StaticThreshold {
 	 */
 	@Override
 	protected void onSegmentedEnded(Marker marker) {
-		fireSilence(marker.getStart());
-
-	}
-
-	@Override
-	public Float getCoef() {
-		if (super.getCoef() == null) {
-			setCoef(1.3f);// *30%
-		}
-		return super.getCoef();
-	}
-
-	protected void fireSilence(float time) {
-		log.error("silence: " + time);
+		super.onSegmentedStarted(marker);
 		try {
 			getWriter().write("L");
 			getWriter().flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error(e);
 		}
+
+
 	}
 
-	protected void fireSignal(float time) {
-		log.debug("signal: " + time);
-		try {
-			getWriter().write("H");
-			getWriter().flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
-	BufferedWriter out = null;
-
-	public Writer getWriter() throws IOException {
+	protected Writer getWriter() throws IOException {
 		if (out == null) {
 			out = new BufferedWriter(new PrintWriter(System.out));
 		}

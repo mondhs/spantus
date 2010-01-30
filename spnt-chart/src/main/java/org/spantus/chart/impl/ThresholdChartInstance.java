@@ -122,7 +122,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		}
 		if(statePoligon != null){
 			g2.setPaint(currentColorTransparent);
-			g2.fillPolygon(statePoligon);
+//			g2.fillPolygon(statePoligon);
 		}
 
 	}

@@ -196,9 +196,6 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 
 	public void setCoef(Float coef) {
 		this.coef = coef;
-		if(this.coef>=1){
-			this.coef = this.coef -1F;
-		}
 	}
 	@Override
 	public String toString() {

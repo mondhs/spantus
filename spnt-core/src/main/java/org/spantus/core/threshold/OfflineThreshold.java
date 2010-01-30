@@ -42,8 +42,9 @@ public class OfflineThreshold extends DynamicThreshold {
 	}
 	
 	@Override
-	protected void recacluclateCurrentThreashold(FrameValues result){
+	protected Float recacluclateCurrentThreashold(FrameValues result){
 		//do nothing
+		return null;
 	}
 
 }

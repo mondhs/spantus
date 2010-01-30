@@ -25,7 +25,7 @@ public class StaticThreshold extends AbstractClassifier {
 	private int windowsLearned;
 	private Long learningPeriod;
 	private Float currentThresholdValue = Float.MIN_VALUE;
-	private Float baseThresholdValue = Float.MIN_VALUE;
+	private Float baseThresholdValue = null;
 
 	public Float getCurrentThresholdValue() {
 		return currentThresholdValue;
@@ -54,16 +54,25 @@ public class StaticThreshold extends AbstractClassifier {
 	}
 
 	/**
+	 * currentThresholdValue attribute should be set after calculation 
 	 * 
 	 * @param windowValue
-	 * @return
+	 * @return calculate threshold value
 	 */
 	public Float calculateThreshold(Float value){
 		if (!isTrained()) {
 			baseThresholdValue = train(value, baseThresholdValue);
 		}
+		if(baseThresholdValue == null){
+			baseThresholdValue = value;
+		}
+		Float rtnThreshold = null;
+//		if(getCoef()>1){
+			rtnThreshold =baseThresholdValue + Math.abs(baseThresholdValue* getCoef());
+//		}else{
+//			rtnThreshold = baseThresholdValue* getCoef();
+//		}
 		//with negative values this should work too
-		Float rtnThreshold = baseThresholdValue + (Math.abs(baseThresholdValue* getCoef()));
 		if(!isTrained() && rtnThreshold<value){
 			currentThresholdValue = value;
 			rtnThreshold = value;
@@ -86,7 +95,7 @@ public class StaticThreshold extends AbstractClassifier {
 	
 	protected Float train(Float windowValue, Float thresholdValue){
 		windowsLearned++;
-		if(Float.MIN_VALUE == thresholdValue){
+		if(thresholdValue == null){
 			thresholdValue = windowValue;
 			return thresholdValue;
 		}

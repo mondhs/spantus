@@ -18,6 +18,7 @@
 */
 package org.spantus.core.threshold;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import java.util.Map;
 import org.spantus.core.FrameValues;
 import org.spantus.core.threshold.Histogram.histogramEnum;
 /**
+ * {@link StaticThreshold}
  * 
  * @author Mindaugas Greibus
  * 
@@ -38,57 +40,57 @@ public class DynamicThreshold extends StaticThreshold {
 	private Integer numberOfBins;
 	private LinkedList<Float> firstBin = null;
 	private Map<histogramEnum, Float> map = null;
+//	private Float prev = null;
+	private Float frameThreshold;
 	
-	private Float prev = null;
-	
-	
-	public DynamicThreshold() {
-	}
-	
+	/**
+	 * recalculate threshold for each frame
+	 */
 	@Override
 	public void afterCalculated(Long sample, FrameValues result) {
-		recacluclateCurrentThreashold(result);
+		frameThreshold = recacluclateCurrentThreashold(result);
 		super.afterCalculated(sample, result);
-
+	}
+	
+	/**
+	 * return the value of current frame threshold. also it should set currentThresholdValue property.
+	 * {@link StaticThreshold#calculateThreshold(Float)}
+	 * 
+	 */
+	@Override
+	public Float calculateThreshold(Float value) {
+		setCurrentThresholdValue(frameThreshold);
+		return frameThreshold;
+	}
+	/**
+	 * Not use training functionality.
+	 */
+	@Override
+	protected boolean isTrained(){
+		return true;
 	}
 
-//	@Override
-//	protected Float calculateState(Long sample, Float windowValue,
-//			Float threshold) {
-//		Float calcThreshold = (prev-getCurrentThresholdValue());
-//		calcThreshold = calcThreshold.isInfinite()?0F:calcThreshold;
-//		return Math.abs(calcThreshold)>7000?1F:0F;//super.calculateState(sample, windowValue, threshold);
-//	}
 	
-//	@Override
-//	public Float calculateThreshold(Float windowValue) {
-//		Float threshold = (prev-getCurrentThresholdValue());
-//		threshold = threshold.isInfinite()?0F:threshold;
-//		return Math.abs(threshold);
-//		//super.calculateThreshold(windowValue);
-//	}
-	
-	
-	protected void recacluclateCurrentThreashold(FrameValues result){
+	protected Float recacluclateCurrentThreashold(FrameValues frameValues){
 		
 		if(bufferedSampleSize == null){
 			bufferedSampleSize = getExtractorSampleRate()*.3f;
 			numberOfBins = log2(bufferedSampleSize.intValue()+1)+10;
 
 		}
-		
-//		firstBin.addAll(result);
-		
+		//calculate min max for frame values
 		if(map == null){
-			map = Histogram.getMinAndMax(result);
+			map = Histogram.getMinAndMax(frameValues);
 		}else{
-			map = Histogram.getMinAndMax(result,map);
+			map = Histogram.getMinAndMax(frameValues,map);
 		}
-		List<List<Float>> histogram = Histogram.calculateHistogram(result,map,numberOfBins);
+		//calculate histogram of all frame values
+		List<List<Float>> histogram = Histogram.calculateHistogram(frameValues,map,numberOfBins);
 		
-		getFirstBin().addAll(histogram.get(0));
-		
-		Float f = Histogram.calculateAvg(getFirstBin());
+		//extract first not empty bin
+		getFirstBin().addAll(findFirstBin(histogram));
+		//calculate averages
+		Float rtnThreshold = Histogram.calculateAvg(getFirstBin());
 
 		int i = getFirstBin().size()-bufferedSampleSize.intValue();
 		while( i > 0 ){
@@ -96,19 +98,28 @@ public class DynamicThreshold extends StaticThreshold {
 			i--;
 		}
 		
-		if(f != null){
-			prev = getCurrentThresholdValue();
-			setCurrentThresholdValue(f);
-			prev.isInfinite();
-		}
+//		if(getCoef()>1){
+			rtnThreshold +=Math.abs(rtnThreshold* (getCoef()));
+//		}else{
+//			rtnThreshold *= getCoef();
+//		}
+		return rtnThreshold;
 		
 	}
-
-	
-	@Override
-	protected boolean isTrained(){
-		return true;
+	/**
+	 * fint first not empty bin
+	 * @param histogram
+	 * @return
+	 */
+	protected List<Float> findFirstBin(List<List<Float>> histogram){
+		for (List<Float> list : histogram) {
+			if(list.size()>0){
+				return list;
+			}
+		}
+		return Collections.emptyList();
 	}
+	
 	/**
 	 * 
 	 * @param d
@@ -124,6 +135,33 @@ public class DynamicThreshold extends StaticThreshold {
 			firstBin = new LinkedList<Float>();
 		}
 		return firstBin;
+	}
+	public Float getFrameThreshold() {
+		return frameThreshold;
+	}
+
+	public void setFrameThreshold(Float frameThreshold) {
+		this.frameThreshold = frameThreshold;
+	}
+
+	public Integer getNumberOfBins() {
+		return numberOfBins;
+	}
+
+	public void setNumberOfBins(Integer numberOfBins) {
+		this.numberOfBins = numberOfBins;
+	}
+
+	public Map<histogramEnum, Float> getMap() {
+		return map;
+	}
+
+	public void setMap(Map<histogramEnum, Float> map) {
+		this.map = map;
+	}
+
+	public void setFirstBin(LinkedList<Float> firstBin) {
+		this.firstBin = firstBin;
 	}
 
 }
