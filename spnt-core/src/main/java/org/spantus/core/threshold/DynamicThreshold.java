@@ -97,12 +97,8 @@ public class DynamicThreshold extends StaticThreshold {
 			getFirstBin().poll();
 			i--;
 		}
-		
-//		if(getCoef()>1){
-			rtnThreshold +=Math.abs(rtnThreshold* (getCoef()));
-//		}else{
-//			rtnThreshold *= getCoef();
-//		}
+		//apply coef
+		rtnThreshold = applyCoef(rtnThreshold);
 		return rtnThreshold;
 		
 	}

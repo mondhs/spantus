@@ -19,9 +19,11 @@
 package org.spantus.core.threshold;
 
 import org.spantus.core.extractor.IExtractor;
+import org.spantus.logger.Logger;
 
 public class StaticThreshold extends AbstractClassifier {
 
+	private Logger log = Logger.getLogger(StaticThreshold.class);
 	private int windowsLearned;
 	private Long learningPeriod;
 	private Float currentThresholdValue = Float.MIN_VALUE;
@@ -66,13 +68,7 @@ public class StaticThreshold extends AbstractClassifier {
 		if(baseThresholdValue == null){
 			baseThresholdValue = value;
 		}
-		Float rtnThreshold = null;
-//		if(getCoef()>1){
-			rtnThreshold =baseThresholdValue + Math.abs(baseThresholdValue* getCoef());
-//		}else{
-//			rtnThreshold = baseThresholdValue* getCoef();
-//		}
-		//with negative values this should work too
+		Float rtnThreshold = applyCoef(baseThresholdValue);
 		if(!isTrained() && rtnThreshold<value){
 			currentThresholdValue = value;
 			rtnThreshold = value;
@@ -96,6 +92,7 @@ public class StaticThreshold extends AbstractClassifier {
 	protected Float train(Float windowValue, Float thresholdValue){
 		windowsLearned++;
 		if(thresholdValue == null){
+			log.debug("[train]thresholdValue is null for {0}", windowValue);
 			thresholdValue = windowValue;
 			return thresholdValue;
 		}

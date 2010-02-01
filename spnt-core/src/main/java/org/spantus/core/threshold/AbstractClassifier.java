@@ -79,6 +79,15 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		FrameValues fv = getExtractor().calculateWindow(window);
 		return fv;
 	}
+	/**
+	 * Apply coef for given value
+	 * @param value
+	 * @return
+	 */
+	public Float applyCoef(Float value){
+		return 	value + Math.abs(value* getCoef());
+
+	}
 
 	public void putValues(Long sample, FrameValues values) {
 		getExtractor().putValues(sample, values);
