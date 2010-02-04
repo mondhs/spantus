@@ -68,6 +68,48 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 		m = multipeListener.getMarkSet().getMarkers().get(1);
 		assertEquals(9000, m.getStart().intValue());
 		assertEquals(3000, m.getLength().intValue());
+		
+		for (int i = 0; i < SEGMENT1_VALS.length; i++) {
+			float f2 = SEGMENT2_VALS[i];
+			float f3 = SEGMENT3_VALS[i];
+			Long l = Long.valueOf(i);
+			segmentator2.calculate(l, getWindow(f2));
+			segmentator3.calculate(l, getWindow(f3));
+		}
+	}
+	/**
+	 * 
+	 */
+	public void testOnline2Segements(){
+		MultipleSegmentatorListenerOnline multipeListener = new MultipleSegmentatorListenerOnline();
+		
+		IClassifier segmentator2 = getSegmentator("extractor2", multipeListener);
+		IClassifier segmentator3 = getSegmentator("extractor3", multipeListener);
+		
+		for (int i = 0; i < SEGMENT1_VALS.length; i++) {
+			float f2 = SEGMENT2_VALS[i];
+			float f3 = SEGMENT3_VALS[i];
+			Long l = Long.valueOf(i);
+			segmentator2.calculate(l, getWindow(f2));
+			segmentator3.calculate(l, getWindow(f3));
+		}
+		assertNotNull(multipeListener.getMarkSet());
+		log.debug("Markers: " + multipeListener.getMarkSet().getMarkers());
+		assertEquals(2, multipeListener.getMarkSet().getMarkers().size());
+		Marker m = multipeListener.getMarkSet().getMarkers().get(0);
+		assertEquals(4000, m.getStart().intValue());
+		assertEquals(2000, m.getLength().intValue());
+		m = multipeListener.getMarkSet().getMarkers().get(1);
+		assertEquals(10000, m.getStart().intValue());
+		assertEquals(2000, m.getLength().intValue());
+		
+		for (int i = 0; i < SEGMENT1_VALS.length; i++) {
+			float f2 = SEGMENT2_VALS[i];
+			float f3 = SEGMENT3_VALS[i];
+			Long l = Long.valueOf(i);
+			segmentator2.calculate(l, getWindow(f2));
+			segmentator3.calculate(l, getWindow(f3));
+		}
 	}
 	/**
 	 * 
