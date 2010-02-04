@@ -16,16 +16,16 @@ import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.core.io.WraperExtractorReader;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
-import org.spantus.segment.online.ThresholdSegmentatorOnline;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.reader.SupportableReaderEnum;
-import org.spantus.work.segment.OnlineSegmentationUtils;
 import org.spantus.work.ui.container.SampleChangeListener;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
@@ -97,7 +97,7 @@ public class RecordCmd extends AbsrtactCmd {
 
 		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader()
 				.getWorkConfig();
-		ThresholdSegmentatorOnline segmentator = null;
+		IClassifier segmentator = null;
 		
 		if (ProjectTypeEnum.recordSegmentation.name().equals(ctx.getProject()
 				.getCurrentType())) {
@@ -110,12 +110,12 @@ public class RecordCmd extends AbsrtactCmd {
 				case spantus:
 					ExtractorEnum extractorType = ExtractorEnum
 							.valueOf(extractor[1]);
-					segmentator = OnlineSegmentationUtils.register(wrapReader
+					segmentator = ExtractorUtils.registerThreshold(wrapReader
 							.getReader(), extractorType);
-					segmentator.setOnlineSegmentator(recordSegmentator);
-					segmentator.setCoef(config.getThresholdCoef());
-					segmentator.setLearningPeriod(config
-							.getThresholdLeaningPeriod().longValue());
+					segmentator.addClassificationListener(recordSegmentator);
+//					segmentator.setCoef(config.getThresholdCoef());
+//					segmentator.setLearningPeriod(config
+//							.getThresholdLeaningPeriod().longValue());
 					break;
 				case mpeg7:
 					break;
@@ -125,12 +125,12 @@ public class RecordCmd extends AbsrtactCmd {
 			}
 		} else {
 			ExtractorEnum extractorType = ExtractorEnum.WAVFORM_EXTRACTOR;
-			segmentator = OnlineSegmentationUtils.register(wrapReader
+			segmentator = ExtractorUtils.registerThreshold(wrapReader
 					.getReader(), extractorType);
-			segmentator.setOnlineSegmentator(recordSegmentator);
-			segmentator.setCoef(config.getThresholdCoef());
-			segmentator.setLearningPeriod(config.getThresholdLeaningPeriod()
-					.longValue());
+			segmentator.addClassificationListener(recordSegmentator);
+//			segmentator.setCoef(config.getThresholdCoef());
+//			segmentator.setLearningPeriod(config.getThresholdLeaningPeriod()
+//					.longValue());
 
 		}
 	}

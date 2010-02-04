@@ -225,8 +225,8 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		Float delta = max - min;
 		for (Marker marker : markerSet.getMarkers()) {
 			polygon.addPoint(marker.getStart().intValue(), 0);
-			polygon.addPoint(marker.getStart().intValue(), (int)(max/scalar));
-			polygon.addPoint(marker.getEnd().intValue(), (int)(max/scalar));
+			polygon.addPoint(marker.getStart().intValue(), (int)(delta/scalar));
+			polygon.addPoint(marker.getEnd().intValue(), (int)(delta/scalar));
 			polygon.addPoint(marker.getEnd().intValue(), 0);
 		}
 //		for (int j = 0; j < yState.length; j++) {

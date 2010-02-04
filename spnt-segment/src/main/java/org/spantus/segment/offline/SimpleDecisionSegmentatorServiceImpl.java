@@ -34,7 +34,19 @@ import org.spantus.segment.AbstractSegmentatorService;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentatorParam;
 import org.spantus.utils.Assert;
-
+/**
+ * Simple rules for extraction more stables segmentation result.
+ * Class applies rules on segmentation results from {@link #getSegmentator()}
+ * 
+ * 
+ * @author Mindaugas Greibus
+ * 
+ * @since 0.0.1
+ * Created Feb 1, 2010
+ * 
+ * @see MergeSegmentatorServiceImpl
+ *
+ */
 public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorService {
 
 	protected Logger log = Logger.getLogger(getClass());
@@ -50,15 +62,17 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 				param);
 		//init parameters
 		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
-		SimpleDecisionSegmentatorParam safe_param = createParam(param);
+		BaseDecisionSegmentatorParam safe_param = createSafeParam(param);
 		//if there is no segments just return empty segmentaion results
 		if (markerSet.getMarkers().size()==0) {
 			return markerSetHolder;
 		}
 		//create working collection
 		Map<Marker, MarkerDto> markerDtos = createDto(markerSet.getMarkers());
-		//process the working collection with harcoded rules
+		
+		//process the working collection with hard-coded rules
 		process(markerDtos, safe_param);
+		
 		//extract data from working collection
 		markerSet.getMarkers().clear();
 		MarkerDto firstMarkerDto = markerDtos.values().iterator().next();
@@ -71,14 +85,7 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		log.debug("extractSegments: " + markerSet.getMarkers());
 		return markerSetHolder;
 	}
-
-	SimpleDecisionSegmentatorParam createParam(SegmentatorParam param) {
-		if (param != null && param instanceof SimpleDecisionSegmentatorParam) {
-			return (SimpleDecisionSegmentatorParam) param;
-		}
-		return new SimpleDecisionSegmentatorParam();
-
-	}
+	
 	/**
 	 * process working collection, with simple logic. actions remove
 	 * 
@@ -86,7 +93,7 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 	 * @param param
 	 */
 	protected void process(Map<Marker, MarkerDto> markerDtos,
-			SimpleDecisionSegmentatorParam param) {
+			BaseDecisionSegmentatorParam param) {
 		Set<Marker> removed = new LinkedHashSet<Marker>();
 		log.debug("[process] with parameters {0}", param);
 		//search for removal. 
@@ -212,7 +219,7 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 	 */
 	protected boolean isForRemove(Marker current,
 			Long distanceToPrevious, Long distanceToNext,
-			SimpleDecisionSegmentatorParam param) {
+			BaseDecisionSegmentatorParam param) {
 		return current.getLength()<param.getMinLength()
 				&& distanceToNext>param.getMinSpace()
 				&& distanceToPrevious>param
@@ -246,7 +253,10 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		}
 		return sampleRate;
 	}
-
+	/**
+	 * Some segmentation service to do the general extraction logic. {@link MergeSegmentatorServiceImpl}
+	 * @return
+	 */
 	public ISegmentatorService getSegmentator() {
 		return segmentator;
 	}

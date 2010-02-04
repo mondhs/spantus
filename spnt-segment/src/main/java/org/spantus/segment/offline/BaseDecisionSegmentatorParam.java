@@ -31,7 +31,7 @@ import org.spantus.segment.SegmentatorParam;
  * @since 0.0.1
  * 
  */
-public class SimpleDecisionSegmentatorParam extends SegmentatorParam {
+public class BaseDecisionSegmentatorParam extends SegmentatorParam {
 	/**
 	 * Minimum length in milliseconds, when segment can be accepted as valid.
 	 */
@@ -77,7 +77,7 @@ public class SimpleDecisionSegmentatorParam extends SegmentatorParam {
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0}[minLength: {1}; minSpace: {2}]", SimpleDecisionSegmentatorParam.class.getSimpleName(),getMinLength(),getMinSpace());
+		return MessageFormat.format("{0}[minLength: {1}; minSpace: {2}]", BaseDecisionSegmentatorParam.class.getSimpleName(),getMinLength(),getMinSpace());
 	}
 
 }

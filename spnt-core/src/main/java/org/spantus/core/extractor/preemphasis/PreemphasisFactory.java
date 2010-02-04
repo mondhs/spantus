@@ -1,10 +1,14 @@
 package org.spantus.core.extractor.preemphasis;
 
 import org.spantus.core.extractor.preemphasis.Preemphasis.PreemphasisEnum;
+import org.spantus.utils.StringUtils;
 
 
 public abstract class PreemphasisFactory {
 	public static Preemphasis createPreemphasis(String preemphasisCode){
+		if(!StringUtils.hasText(preemphasisCode)){
+			preemphasisCode = PreemphasisEnum.full.name();
+		}
 		PreemphasisEnum preemphasisEnum = null;
                 try{
                     preemphasisEnum = PreemphasisEnum.valueOf(preemphasisCode);

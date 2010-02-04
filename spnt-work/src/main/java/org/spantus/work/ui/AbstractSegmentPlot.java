@@ -14,7 +14,7 @@ import org.spantus.core.io.WraperExtractorReader;
 import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
-import org.spantus.segment.online.MultipleSegmentatorOnline;
+import org.spantus.segment.online.MultipleSegmentatorListenerOnline;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 
 public abstract class AbstractSegmentPlot extends JPanel {
@@ -42,7 +42,7 @@ public abstract class AbstractSegmentPlot extends JPanel {
 		return wraperExtractorReader;
 	}
 
-	protected MultipleSegmentatorOnline createSegmentatorRecordable(){
+	protected MultipleSegmentatorListenerOnline createSegmentatorRecordable(){
 		RecordSegmentatorOnline multipleSegmentator = new RecordSegmentatorOnline();
 		multipleSegmentator.setParam(createParam());
 		multipleSegmentator.setReader((RecordWraperExtractorReader)getWraperExtractorReader());

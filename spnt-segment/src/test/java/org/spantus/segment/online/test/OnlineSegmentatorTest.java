@@ -20,9 +20,9 @@ package org.spantus.segment.online.test;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.logger.Logger;
-import org.spantus.segment.online.MultipleSegmentatorOnline;
-import org.spantus.segment.online.ThresholdSegmentatorOnline;
+import org.spantus.segment.online.MultipleSegmentatorListenerOnline;
 /**
  * 
  * 
@@ -40,14 +40,15 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 	public static float[] SEGMENT1_VALS = new float[]{.5f, 0f, 0f, 1f, 1f, 0f, 0f, 0f, 0f, 1f, 1f, 1f, 0f};
 	public static float[] SEGMENT2_VALS = new float[]{.5f, 0f, 0f, 0f, 1f, 1f, 0f, 0f, 0f, 1f, 1f, 1f, 0f};
 	public static float[] SEGMENT3_VALS = new float[]{.5f, 0f, 1f, 0f, 1f, 1f, 0f, 0f, 0f, 0f, 1f, 1f, 0f};
-	
-
+	/**
+	 * 
+	 */
 	public void testOnline(){
-		MultipleSegmentatorOnline multipe = new MultipleSegmentatorOnline();
+		MultipleSegmentatorListenerOnline multipeListener = new MultipleSegmentatorListenerOnline();
 		
-		ThresholdSegmentatorOnline segmentator1 = getSegmentator("extractor1", multipe);
-		ThresholdSegmentatorOnline segmentator2 = getSegmentator("extractor2", multipe);
-		ThresholdSegmentatorOnline segmentator3 = getSegmentator("extractor3", multipe);
+		IClassifier segmentator1 = getSegmentator("extractor1", multipeListener);
+		IClassifier segmentator2 = getSegmentator("extractor2", multipeListener);
+		IClassifier segmentator3 = getSegmentator("extractor3", multipeListener);
 		
 		for (int i = 0; i < SEGMENT1_VALS.length; i++) {
 			float f1 = SEGMENT1_VALS[i];
@@ -58,20 +59,24 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 			segmentator2.calculate(l, getWindow(f2));
 			segmentator3.calculate(l, getWindow(f3));
 		}
-		log.debug("Markers: " + multipe.getMarkSet().getMarkers());
-		assertEquals(2, multipe.getMarkSet().getMarkers().size());
-		Marker m = multipe.getMarkSet().getMarkers().get(0);
+		assertNotNull(multipeListener.getMarkSet());
+		log.debug("Markers: " + multipeListener.getMarkSet().getMarkers());
+		assertEquals(2, multipeListener.getMarkSet().getMarkers().size());
+		Marker m = multipeListener.getMarkSet().getMarkers().get(0);
 		assertEquals(4000, m.getStart().intValue());
 		assertEquals(2000, m.getLength().intValue());
-		m = multipe.getMarkSet().getMarkers().get(1);
+		m = multipeListener.getMarkSet().getMarkers().get(1);
 		assertEquals(9000, m.getStart().intValue());
 		assertEquals(3000, m.getLength().intValue());
 	}
-
+	/**
+	 * 
+	 */
 	public void testOnlineRuleSimple(){
 		MarkerSet markSet = 
 			segmentRuleBase(
 				new Float[]{.5f, 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f});
+		assertNotNull(markSet);
 		
 		log.debug("Markers: " + markSet.getMarkers());
 		assertEquals(2, markSet.getMarkers().size());
@@ -87,7 +92,7 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 		MarkerSet markSet = 
 			segmentRuleBase(
 				new Float[]{.5f, 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 0f, 1f, 0f, 0f, 1f, 0f});
-		
+		assertNotNull(markSet);
 		log.debug("Markers: " + markSet.getMarkers());
 		assertEquals(1, markSet.getMarkers().size());
 		Marker m = markSet.getMarkers().get(0);
@@ -99,7 +104,7 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 		MarkerSet markSet = 
 			segmentRuleBase(
 					new Float[]{.5f, 0f, 0f, 1f, 0f, 1f, 1f, 0f, 1f, 0f, 0f });
-		
+		assertNotNull(markSet);
 		log.debug("Markers: " + markSet.getMarkers());
 		assertEquals(1, markSet.getMarkers().size());
 		Marker m = markSet.getMarkers().get(0);

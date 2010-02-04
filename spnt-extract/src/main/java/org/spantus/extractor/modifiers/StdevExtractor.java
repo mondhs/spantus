@@ -23,13 +23,12 @@ package org.spantus.extractor.modifiers;
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
-import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.impl.EnergyExtractor;
 import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
 /**
  * 
- * Params logaritmic
+ * Standard deviation
  * 
  * @author Mindaugas Greibus
  *
@@ -38,7 +37,7 @@ import org.spantus.logger.Logger;
  * Created 2009.06.02
  *
  */
-public class StdevExtractor extends AbstractExtractor {
+public class StdevExtractor extends AbstractExtractorModifier {
 	Logger log = Logger.getLogger(getClass());
 	
 

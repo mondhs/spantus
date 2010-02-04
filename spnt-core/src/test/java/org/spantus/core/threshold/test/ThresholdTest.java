@@ -45,7 +45,7 @@ public class ThresholdTest extends TestCase {
 	public void testThreshold(){
 		StaticThreshold threshold = new StaticThreshold();
 		threshold.setCoef(0f);
-		MockClassifier mockExtractor= new MockClassifier();
+		MockExtractor mockExtractor= new MockExtractor();
 		mockExtractor.setExtractorSampleRate(1);
 		threshold.setLearningPeriod(1000L);
 		ExtractorWrapper wraper = new ExtractorWrapper(mockExtractor);
@@ -90,6 +90,8 @@ public class ThresholdTest extends TestCase {
 		ms.getMarkers().add(clone);
 		MarkerSet msClone = ms.clone();
 		assertEquals(ms.getMarkers().size(), msClone.getMarkers().size());
+		msClone.getMarkers().clear();
+		assertTrue("sizes should be not impacted", ms.getMarkers().size()!= 0);
 		
 	}
 	

@@ -11,13 +11,13 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioFactory;
 import org.spantus.core.io.DefaultAudioReader;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
-import org.spantus.segment.online.ThresholdSegmentatorOnline;
 import org.spantus.utils.Assert;
-import org.spantus.work.segment.OnlineSegmentationUtils;
 
 public class SegmentPlot extends AbstractSegmentPlot {
 
@@ -75,17 +75,17 @@ public class SegmentPlot extends AbstractSegmentPlot {
 			createSegmentatorDefault();
 		
 		
-		ThresholdSegmentatorOnline segmentator = null;
-		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR);
-		segmentator.setOnlineSegmentator(multipleSegmentator);
-		segmentator.setCoef(2f);
+		IClassifier segmentator = null;
+		segmentator =ExtractorUtils.registerThreshold(getReader(), ExtractorEnum.ENERGY_EXTRACTOR); 
+		segmentator.addClassificationListener(multipleSegmentator);
+//		segmentator.setCoef(2f);
 		
-		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.WAVFORM_EXTRACTOR);
-		segmentator.setOnlineSegmentator(multipleSegmentator);
+		segmentator = ExtractorUtils.registerThreshold(getReader(), ExtractorEnum.WAVFORM_EXTRACTOR);
+//		segmentator.addClassificationListener(multipleSegmentator);
 
-		segmentator = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR);
-		segmentator.setOnlineSegmentator(multipleSegmentator);
-		segmentator.setCoef(2f);
+		segmentator = ExtractorUtils.registerThreshold(getReader(), ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR);
+		segmentator.addClassificationListener(multipleSegmentator);
+//		segmentator.setCoef(2f);
 		
 //		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.LPC_EXTRACTOR);
 //		segmentator.setMultipleSegmentator(multipleSegmentator);

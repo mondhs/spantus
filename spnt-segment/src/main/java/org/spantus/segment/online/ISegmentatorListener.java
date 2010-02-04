@@ -18,11 +18,16 @@
 */
 package org.spantus.segment.online;
 
-import org.spantus.core.extractor.IGeneralExtractor;
-import org.spantus.core.segment.ISegmentator;
-
-public interface OnlineSegmentator extends ISegmentator{
-	public void processState(Long sampleNum, IGeneralExtractor extractor,
-			Float val);
+import org.spantus.core.threshold.IClassificationListener;
+/**
+ * 
+ * @author Mindaugas Greibus
+ * 
+ * @since 0.0.1
+ * Created Feb 1, 2010
+ *
+ */
+public interface ISegmentatorListener extends IClassificationListener{
+	
 
 }

@@ -194,9 +194,13 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 			return;
 		}
 
-		List<Marker> markers = ctx.getProject().getCurrentSample()
-				.getMarkerSetHolder().getMarkerSets().get(
-						MarkerSetHolderEnum.word.name()).getMarkers();
+		MarkerSet markerSet = ctx.getProject().getCurrentSample()
+		.getMarkerSetHolder().getMarkerSets().get(
+				MarkerSetHolderEnum.word.name());
+		if(markerSet == null){
+			return;
+		}
+		List<Marker> markers = markerSet.getMarkers();
 
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filePath));

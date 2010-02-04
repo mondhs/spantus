@@ -18,58 +18,83 @@
 */
 package org.spantus.segment.online;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.spantus.core.marker.Marker;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
+import org.spantus.core.threshold.AbstractClassifier;
 import org.spantus.core.threshold.IClassifier;
+import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
-import org.spantus.segment.AbstractSegmentatorService;
 import org.spantus.segment.SegmentatorParam;
+import org.spantus.segment.offline.MergeSegmentatorServiceImpl;
 /**
  * Online segmentation algorithm
  * 
  * @author Mindaugas Greibus
  *
  */
-public class OnlineSegmentaitonService extends AbstractSegmentatorService {
+public class OnlineSegmentaitonService extends MergeSegmentatorServiceImpl {
 	private Logger log = Logger.getLogger(getClass());
+	private DecisionSegmentatorOnline multipleSegmentator;
+	
+	public OnlineSegmentaitonService() {
+		multipleSegmentator = new DecisionSegmentatorOnline();
+	}
 	
 	/**
 	 * 
 	 */
-	public MarkerSetHolder extractSegments(Set<IClassifier> thresholds,
+	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers,
 			SegmentatorParam param) {
 
 		DecisionSegmentatorOnline multipleSegmentator = new DecisionSegmentatorOnline();
 		if(param != null){
 			multipleSegmentator.setParam((OnlineDecisionSegmentatorParam)param);
 		}
-//		Map<IClassifier, Iterator<Float>> thresholdMap = new HashMap<IClassifier, Iterator<Float>>();
-//		Integer delta = null;
+		MarkerSetHolder mergedHolder = super.extractSegments(classifiers, param);
+		MarkerSet words = mergedHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
 		
-//		for (IClassifier threshold : thresholds) {
-//			thresholdMap.put(threshold, threshold.getState().iterator());
-//			if(delta == null){
-//				delta = threshold.getConfig().getWindowOverlap();
-//			}else{
-//				Assert.isTrue(delta==threshold.getConfig().getWindowOverlap());
-//			}
-//		}
 		
-//		Long i = delta.longValue();
-//		boolean hasMore = true;
-//		while(hasMore){
-//			hasMore = false;
-//			for (Entry<IClassifier, Iterator<Float>> thresholdEntry : thresholdMap.entrySet()) {
-//				if(thresholdEntry.getValue().hasNext()){
-//					multipleSegmentator.processState(i, thresholdEntry.getKey(), thresholdEntry.getValue().next());
-//					hasMore = true;
-//				}
-//					
-//			}
-//			i+=delta;			
-//		}
+		long index = 0;
+		int resolution = 1;
+		String id= "1";
+		for (Marker marker : words.getMarkers()) {
+			for (; index < marker.getStart(); index += resolution) {
+				SegmentEvent event = new SegmentEvent(); 
+				event.setId(id);
+				event.setSample(index);
+				event.setTime(index);
+				multipleSegmentator.noiseDetected(event);
+			}
+			for (; index <= marker.getEnd(); index += resolution) {
+				SegmentEvent event = new SegmentEvent();
+				event.setId(id);
+				event.setSample(index);
+				event.setTime(index);
+				multipleSegmentator.segmentDetected(event);
+			}
+//			log.debug("marker:{0}; stateSum{1}",marker,statesSums);
+		}
+		for (int i = 0; i <= multipleSegmentator.getParam().getMinSpace(); i++) {
+			index++;
+			SegmentEvent event = new SegmentEvent();
+			event.setId(id);
+			event.setSample(index);
+			event.setTime(index);
+			multipleSegmentator.noiseDetected(event);
+		}
+		
+		
+		
+		
+		
+		
 		int num = 1;
 		for (Marker marker : multipleSegmentator.getMarkSet().getMarkers()) {
 			marker.setLabel("" +(num++));
@@ -78,9 +103,17 @@ public class OnlineSegmentaitonService extends AbstractSegmentatorService {
 		
 		log.debug("[extractSegments] {0}", multipleSegmentator.getMarkSet().getMarkers());
 		
-		MarkerSetHolder holder = new MarkerSetHolder();
-		holder.getMarkerSets().put(multipleSegmentator.getMarkSet().getMarkerSetType(), multipleSegmentator.getMarkSet());
+//		MarkerSetHolder holder = new MarkerSetHolder();
+		mergedHolder.getMarkerSets().put(multipleSegmentator.getMarkSet().getMarkerSetType(), multipleSegmentator.getMarkSet());
 		
-		return holder;
+		return mergedHolder;
 	}
+
+//	@Override
+//	protected void safeSum(Map<Long, Float> statesSums, Long time, Float value,
+//			SegmentatorParam param, IClassifier classifier) {
+//		super.safeSum(statesSums, time, value, param, classifier);
+////		multipleSegmentator.processState(time, ((AbstractClassifier)classifier).getExtractor(), value);
+//	}
+
 }

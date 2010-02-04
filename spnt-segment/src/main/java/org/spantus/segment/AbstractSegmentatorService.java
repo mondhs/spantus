@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.threshold.IClassifier;
+import org.spantus.segment.offline.BaseDecisionSegmentatorParam;
 /**
  * Abstract class for segmentation services
  * 
@@ -29,9 +30,23 @@ import org.spantus.core.threshold.IClassifier;
  *
  */
 public abstract class AbstractSegmentatorService implements ISegmentatorService {
-
-	public MarkerSetHolder extractSegments(Set<IClassifier> thresholds) {
-		return extractSegments(thresholds, null);
+	/*
+	 * (non-Javadoc)
+	 * @see org.spantus.segment.ISegmentatorService#extractSegments(java.util.Set)
+	 */
+	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers) {
+		return extractSegments(classifiers, null);
 	}
-
+	/**
+	 * safe parame creation. if null create new, else return the same
+	 * @param param
+	 * @return
+	 */
+	protected BaseDecisionSegmentatorParam createSafeParam(SegmentatorParam param){
+		if(param != null && param instanceof BaseDecisionSegmentatorParam){
+			return (BaseDecisionSegmentatorParam)param; 
+		}
+		return new BaseDecisionSegmentatorParam();
+		
+	}
 }

@@ -55,14 +55,14 @@ public class WaheedDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 	public MarkerSetHolder extractSegments(Set<IClassifier> thresholds, SegmentatorParam param) {
 		MarkerSetHolder markerSetHolder = getSegmentator().extractSegments(thresholds, param);
 		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name()); 
-		SimpleDecisionSegmentatorParam _param = createParam(param);
+		BaseDecisionSegmentatorParam safeParam = createSafeParam(param);
 		
 		Iterator<Marker> markerIterator = markerSet.getMarkers().iterator();
 		if(!markerIterator.hasNext()){
 			return markerSetHolder;
 		}
 		Map<Marker, MarkerDto> markerDtos = createDto(markerSet.getMarkers());
-		process(markerDtos, _param);
+		process(markerDtos, safeParam);
 		MarkerDto firstMarkerDto = markerDtos.values().iterator().next();
 		markerSet.getMarkers().clear();
 		MarkerDto currentDto = firstMarkerDto; 
@@ -75,15 +75,8 @@ public class WaheedDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		return markerSetHolder;
 	}
 	
-	SimpleDecisionSegmentatorParam createParam(SegmentatorParam param){
-		if(param != null && param instanceof SimpleDecisionSegmentatorParam){
-			return (SimpleDecisionSegmentatorParam)param; 
-		}
-		return new SimpleDecisionSegmentatorParam();
-		
-	}
 	
-	protected void process(Map<Marker, MarkerDto> markerDtos, SimpleDecisionSegmentatorParam param){
+	protected void process(Map<Marker, MarkerDto> markerDtos, BaseDecisionSegmentatorParam param){
 		Set<Marker> removed = new LinkedHashSet<Marker>();
 		for (MarkerDto markerDto : markerDtos.values()) {
 			if(isForRemove(markerDto.getMarker(), markerDto.getDistanceToPrevious(), 
@@ -165,7 +158,7 @@ public class WaheedDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 	protected boolean isForRemove(Marker current, 
 			Long distanceToPrevious, 
 			Long distanceToNext,
-			SimpleDecisionSegmentatorParam param){
+			BaseDecisionSegmentatorParam param){
 		return current.getLength().compareTo(param.getMinLength()) < 0
 		&& distanceToNext.compareTo(param.getMinSpace())>0
 		&& distanceToPrevious.compareTo(param.getMinSpace())>0;

@@ -3,6 +3,7 @@ package org.spantus.segment.online.rule;
 import java.text.MessageFormat;
 
 import org.spantus.core.marker.Marker;
+import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 
 public class DecisionCtx {

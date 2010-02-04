@@ -69,7 +69,12 @@ public class MarkerSet implements Serializable,Cloneable {
 
 	public MarkerSet clone(){
 		try {
-			return (MarkerSet)super.clone();
+			MarkerSet msCloned =  (MarkerSet)super.clone();
+			msCloned.setMarkers(new LinkedList<Marker>());
+			for (Marker marker : this.getMarkers()) {
+				msCloned.getMarkers().add(marker.clone());
+			}
+			return msCloned;
 		} catch (CloneNotSupportedException e) {
 			throw new IllegalArgumentException(e);
 		}

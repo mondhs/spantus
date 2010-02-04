@@ -16,26 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-package org.spantus.core.threshold;
+package org.spantus.extractor.modifiers;
 
-
+import org.spantus.extractor.AbstractExtractor;
 /**
- * on segmentation event write to some stream 
- * 
+ * Modifier abstract class. Modifier transforms extractor data.
  * @author Mindaugas Greibus
  * 
- * @since 0.0.1
- * 
- *        Created 2008.11.27
- * 
+ * Created Feb 4, 2010
+ *
  */
-public class OutputStaticThreshold extends StaticThreshold {
-
-	public OutputStaticThreshold() {
-		addClassificationListener(new OutputWriterClassificationListener());
-	}
-
-
+public abstract class AbstractExtractorModifier extends AbstractExtractor {
 	
-
 }

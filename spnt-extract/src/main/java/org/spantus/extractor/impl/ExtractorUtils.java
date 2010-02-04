@@ -110,12 +110,12 @@ public abstract class ExtractorUtils {
 	/**
 	 * 
 	 * @param bufferedReader
-	 * @param extractor
+	 * @param extractorType
 	 */
 	public static void register(IExtractorInputReader bufferedReader,
-			ExtractorEnum extractor, ExtractorParam param) {
+			ExtractorEnum extractorType, ExtractorParam param) {
 		bufferedReader.registerExtractor(ExtractorResultBufferFactory
-				.create(createInstance(extractor, param)));
+				.create(createInstance(extractorType, param)));
 	}
 
 	public static IGeneralExtractor createInstance(ExtractorEnum extractor, ExtractorParam param) {
@@ -192,10 +192,31 @@ public abstract class ExtractorUtils {
 		return threshold;
 
 	}
-
+	/**
+	 * 
+	 * @param bufferedReader
+	 * @param extractorType
+	 * @param param
+	 * @return
+	 */
 	public static IClassifier registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType, ExtractorParam param) {
 		return registerThreshold(bufferedReader, extractorType, param, ThresholdEnum.online);
+	}
+	/**
+	 * 
+	 * @param bufferedReader
+	 * @param extractorType
+	 * @return
+	 */
+	public static IClassifier registerThreshold(
+			IExtractorInputReader bufferedReader, ExtractorEnum extractorType) {
+		if(extractor3DMap.get(extractorType)!=null){
+			register(bufferedReader, extractorType, null);
+			return null;
+		}else{
+			return registerThreshold(bufferedReader, extractorType, null, ThresholdEnum.offline);
+		}
 	}
 	/**
 	 * 
@@ -251,8 +272,13 @@ public abstract class ExtractorUtils {
 			Map<String, ExtractorParam> params,
 			ThresholdEnum thresholdType) {
 		for (ExtractorEnum extractor : extractors) {
+			ExtractorParam extractorParam = null;
+			if(params!=null){
+				extractorParam = params.get(extractor.name());
+			}
 			ExtractorUtils.registerThreshold(bufferedReader, extractor, 
-					params.get(extractor.name()), thresholdType);
+					extractorParam
+					, thresholdType);
 		}
 	}
 	/**

@@ -34,12 +34,13 @@ import org.spantus.segment.AbstractSegmentatorService;
 import org.spantus.segment.SegmentatorParam;
 
 /**
- * Simple implementation of segmentation off-line algorithm
+ * Simple implementation of segmentation off-line algorithm. 
+ * it merges few classifiers result. 
  * 
  * @author mondhs
  * 
  */
-public class SimpleSegmentatorServiceImpl extends AbstractSegmentatorService {
+public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 
 	Logger log = Logger.getLogger(getClass());
 
@@ -51,32 +52,18 @@ public class SimpleSegmentatorServiceImpl extends AbstractSegmentatorService {
 		log.debug("[extractSegments] thresholds.size:" + classifiers.size());
 		MarkerSet markerSet = new MarkerSet();
 		LinkedHashMap<Long, Float> statesSums = caclculateStatesSums(classifiers, param);
-		MarkerSet ms = classifiers.iterator().next().getMarkSet().clone();
-			// int i = 0;
-			// if(sampleRate == null){
-			// sampleRate = classifier.getExtractorSampleRate();
-			// }else{
-			// //should be same for all threshold states
-			// Assert.isTrue(sampleRate.equals(classifier.getExtractorSampleRate()),
-			// classifier.getName()+
-			// " should be same for all threshold states" +
-			// sampleRate + " == " + classifier.getExtractorSampleRate());
-			// }
-			// for (Float state : classifier.getState()) {
-			// safeSum(statesSums, i++, state, getWeight(param, classifier));
-			// }
 
 		SegmentationCtx ctx = new SegmentationCtx();
 		ctx.setMarkerSet(markerSet);
 //		ctx.setSampleRate(sampleRate);
 
 		int count = classifiers.size();
-		int index = 0;
+//		int index = 0;
 		for (Entry<Long, Float> stateSum : statesSums.entrySet()) {
 			ctx.setCurrentState(stateSum.getValue() / count > .5 ? 1f : 0f);
 			ctx.setCurrentMoment(stateSum.getKey());
 			processState(ctx);
-			index++;
+//			index++;
 		}
 		ctx.setCurrentState(0f);
 		processState(ctx);
@@ -84,9 +71,14 @@ public class SimpleSegmentatorServiceImpl extends AbstractSegmentatorService {
 				+ markerSet.getMarkers().size());
 
 		MarkerSetHolder holder = new MarkerSetHolder();
-		ctx.getMarkerSet().setMarkerSetType(MarkerSetHolderEnum.word.name());
-		holder.getMarkerSets().put(ctx.getMarkerSet().getMarkerSetType(), ctx.getMarkerSet());//word
-		holder.getMarkerSets().put(ms.getMarkerSetType(), ms);//phone
+		MarkerSet phones = ctx.getMarkerSet();
+		MarkerSet words = ctx.getMarkerSet().clone();
+		phones.setMarkerSetType(MarkerSetHolderEnum.phone.name());
+		words.setMarkerSetType(MarkerSetHolderEnum.word.name());
+		holder.getMarkerSets().put(words.getMarkerSetType(), words);//word
+		holder.getMarkerSets().put(phones.getMarkerSetType(), phones);//phone
+		
+		
 		
 		return holder;
 	}
@@ -110,12 +102,12 @@ public class SimpleSegmentatorServiceImpl extends AbstractSegmentatorService {
 			long index = 0;
 			for (Marker marker : classifierlMarkerSet.getMarkers()) {
 				for (; index < marker.getStart(); index += resolution) {
-					safeSum(statesSums, index, 0F, getWeight(param, classifier));
+					safeSum(statesSums, index, 0F, param, classifier);
 				}
 				for (; index <= marker.getEnd(); index += resolution) {
-					safeSum(statesSums, index, 1F, getWeight(param, classifier));
+					safeSum(statesSums, index, 1F, param, classifier);
 				}
-				log.debug("marker:{0}; stateSum{1}",marker,statesSums);
+//				log.debug("marker:{0}; stateSum{1}",marker,statesSums);
 			}
 		}
 		return statesSums;
@@ -143,7 +135,8 @@ public class SimpleSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 * @param value
 	 */
 	protected void safeSum(Map<Long, Float> statesSums, Long time, Float value,
-			Float weight) {
+			SegmentatorParam param, IClassifier classifier) {
+		Float weight =  getWeight(param, classifier);
 		Float existValue = statesSums.get(time);
 		if (existValue == null) {
 			existValue = 0F;

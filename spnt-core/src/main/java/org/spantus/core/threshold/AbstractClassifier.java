@@ -18,6 +18,9 @@
 */
 package org.spantus.core.threshold;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
@@ -34,9 +37,9 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	private IExtractor extractor;
 	private FrameValues thereshold;
 	private Float coef =null;
-//	private FrameValues state;
-	MarkerSet markSet;
-	Marker marker;
+	private MarkerSet markSet;
+	private Marker marker;
+	private Set<IClassificationListener> classificationListeners;
 	private long classifierSampleNum =0l;
 	/**
 	 * @param classifierSampleNum the classifierSampleNum to set
@@ -60,7 +63,27 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	public abstract Float calculateThreshold(Float windowValue);
 	
 	public abstract boolean isSignalState(Float windowValue);
-
+	/*
+	 * (non-Javadoc)
+	 * @see org.spantus.core.threshold.IClassifier#addClassificationListener(org.spantus.core.threshold.IClassificationListener)
+	 */
+	public boolean addClassificationListener(
+			IClassificationListener classificationListener) {
+		log.debug("[addClassificationListener]registering {0}",classificationListener);
+		boolean result = getClassificationListeners().add(classificationListener);
+		if(result){
+			classificationListener.registered(getName());
+		}
+		return result;
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see org.spantus.core.threshold.IClassifier#removeClassificationListener(org.spantus.core.threshold.IClassificationListener)
+	 */
+	public boolean removeClassificationListener(
+			IClassificationListener classificationListener) {
+		return getClassificationListeners().remove(classificationListener);
+	}
 	
 	public IExtractor getExtractor() {
 		return extractor;
@@ -142,58 +165,47 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 //	private Long prevSample;
 	
 	/**
+	 * calculate State at the sample moment with given value
 	 * 
 	 * @param windowValue
 	 * @param threshold
 	 * @return
 	 */
 	protected void calculateState(Long sample, Float windowValue){
+		Float timeFloat = getThresholdValues().toTime(sample.intValue())*1000;
+		Long time = timeFloat.longValue();
 		if(isSignalState(windowValue)){
 			//segment
 			if(getMarker()==null){
 				setMarker(new Marker());
-				Float time = getThresholdValues().toTime(sample.intValue())*1000;
-				getMarker().setStart(time.longValue());
+				getMarker().setStart(time);
 				getMarker().setLabel(sample.toString());
 //				getMarker().getExtractionData().setStartSampleNum(sample);
-				onSegmentedStarted(getMarker());
+				for (IClassificationListener listener : getClassificationListeners()) {
+					listener.onSegmentedStarted(
+							new SegmentEvent(getName(),time,getMarker(),sample));
+				}
 			}
 		}else {
 			//silent
 			if(getMarker()!=null){
-				Float time = getThresholdValues().toTime(sample.intValue())*1000;
-				getMarker().setEnd(time.longValue());
+				getMarker().setEnd(time);
 				getMarkSet().getMarkers().add(getMarker());
 //				getMarker().getExtractionData().setEndSampleNum(sample);
-				onSegmentedEnded(getMarker());
+				for (IClassificationListener listener : getClassificationListeners()) {
+					listener.onSegmentedEnded(
+							new SegmentEvent(getName(),time,getMarker(),sample));
+				}
 				setMarker(null);
 			}
 		}
-//		prevSample = sample;
-	}
-	/**
-	 * custom logic on segment found event
-	 * 
-	 * @param marker
-	 */
-	protected void onSegmentedStarted(Marker marker){
-		log.debug("[onSegmentedStarted]{0}",marker);
-	}
-	/**
-	 * custom logic on segment found event
-	 * @param marker
-	 */
-	protected void onSegmentedEnded(Marker marker){
-		log.debug("[onSegmentedEnded]{0}",marker);
+		//notify that segment processed
+		for (IClassificationListener listener : getClassificationListeners()) {
+			listener.onSegmentedProcessed(
+					new SegmentEvent(getName(),time,getMarker(),sample));
+		}
 	}
 
-	
-//	public FrameValues getState() {
-//		if(state == null){
-//			state = new FrameValues();
-//		}
-//		return state;
-//	}
 
 
 	public Float getCoef() {
@@ -251,6 +263,18 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 
 	public String getName() {
 		return getExtractor().getName();
+	}
+
+	public Set<IClassificationListener> getClassificationListeners() {
+		if (classificationListeners == null) {
+			classificationListeners =new HashSet<IClassificationListener>();
+		}
+		return classificationListeners;
+	}
+
+	public void setClassificationListeners(
+			Set<IClassificationListener> classificationListeners) {
+		this.classificationListeners = classificationListeners;
 	}
 	
 }

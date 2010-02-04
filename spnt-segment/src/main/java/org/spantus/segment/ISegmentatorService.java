@@ -21,9 +21,31 @@ package org.spantus.segment;
 import java.util.Set;
 
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
-
+/**
+ * Segmentation service for extracting/consolidating segment information from multiple classifiers
+ *  
+ * @author Mindaugas Greibus
+ * 
+ * @since 0.0.1
+ * Created Feb 1, 2010
+ *
+ */
 public interface ISegmentatorService {
+	/**
+	 * Segmentation with parameters. {@link #extractSegments(Set)} 
+	 * @param classifiers
+	 * @param param
+	 * @return
+	 */
 	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers, SegmentatorParam param);
+	/**
+	 * extract segments information using default parameters. It should extract information from 
+	 * classifiers {@link MarkerSetHolder#getMarkerSets()} should return at least {@link MarkerSetHolderEnum#word} level information. 
+	 * in some case it can return other level info too.
+	 * @param classifiers
+	 * @return
+	 */
 	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers);
 }

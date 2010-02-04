@@ -1,5 +1,5 @@
 /*
- 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Copyright (c) 2009, 2010 Mindaugas Greibus (spantus@gmail.com)
  	Part of program for analyze speech signal 
  	http://spantus.sourceforge.net
 
@@ -18,24 +18,34 @@
 */
 package org.spantus.core.threshold;
 
-
 /**
- * on segmentation event write to some stream 
+ * Classification Listener
  * 
  * @author Mindaugas Greibus
  * 
- * @since 0.0.1
- * 
- *        Created 2008.11.27
- * 
+ * Created Feb 3, 2010
+ *
  */
-public class OutputStaticThreshold extends StaticThreshold {
-
-	public OutputStaticThreshold() {
-		addClassificationListener(new OutputWriterClassificationListener());
-	}
-
-
-	
-
+public interface IClassificationListener {
+	/**
+	 * 
+	 * @param event
+	 */
+	public void onSegmentedStarted(SegmentEvent event);
+	/**
+	 * 
+	 * @param event
+	 */
+	public void onSegmentedEnded(SegmentEvent event);
+	/**
+	 * 
+	 * @param event
+	 */
+	public void onSegmentedProcessed(SegmentEvent event);
+	/**
+	 * Notify listener that it was registered
+	 * 
+	 * @param id
+	 */
+	public void registered(String id);
 }

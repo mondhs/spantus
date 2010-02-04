@@ -28,7 +28,7 @@ import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
 
-public abstract class SegmentatorTest extends TestCase {
+public abstract class AbstractSegmentatorTest extends TestCase {
 	/**
 	 * 
 	 * @param markers
@@ -68,8 +68,9 @@ public abstract class SegmentatorTest extends TestCase {
 		assertEquals(message,n1.longValue(), n2.longValue());
 	}
 	
-	protected void assertEqualsMarkers(String message, Integer[][] expexted, MarkerSetHolder result){
-		MarkerSet markerSet = result.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+	protected void assertEqualsMarkers(String message, Integer[][] expexted, MarkerSetHolder markerSetHolder){
+		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+		assertNotNull("No word level anotation", markerSet);
 		assertEquals(expexted.length, markerSet.getMarkers().size());
 		int i=0;
 		for (Integer[] integers : expexted) {

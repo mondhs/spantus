@@ -23,6 +23,7 @@ package org.spantus.segment.test;
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.threshold.IClassificationListener;
 import org.spantus.core.threshold.IClassifier;
 
 public class MockClassifier implements IClassifier {
@@ -86,6 +87,18 @@ public class MockClassifier implements IClassifier {
 	}
 	public void setMarkSet(MarkerSet markerSet) {
 		this.markSet = markerSet;
+	}
+
+	public boolean addClassificationListener(
+			IClassificationListener classificationListener) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean removeClassificationListener(
+			IClassificationListener classificationListener) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 

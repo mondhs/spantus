@@ -34,6 +34,7 @@ import javax.sound.sampled.AudioSystem;
 import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
 
@@ -122,20 +123,18 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 	}
 	
 	@Override
-	protected Marker createSegment(Long sample,
-			Long time) {
-		Marker marker = super.createSegment(sample, time);
-		marker.getExtractionData().setStartSampleNum(sample);
+	protected Marker createSegment(SegmentEvent event) {
+		Marker marker = super.createSegment(event);
+		marker.getExtractionData().setStartSampleNum(event.getSample());
 		return marker;
 	}
 	
 	@Override
-	protected Marker finazlizeSegment(Marker marker, Long sample, 
-			Long time) {
-		Marker rtnMarker = super.finazlizeSegment(marker, sample, time);
+	protected Marker finazlizeSegment(Marker marker, SegmentEvent event) {
+		Marker rtnMarker = super.finazlizeSegment(marker, event);
 		if (rtnMarker == null)
 			return rtnMarker;
-		rtnMarker.getExtractionData().setEndSampleNum(sample);
+		rtnMarker.getExtractionData().setEndSampleNum(event.getSample());
 		return marker;
 	}
 	

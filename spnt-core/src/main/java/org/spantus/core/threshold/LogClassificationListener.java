@@ -18,24 +18,38 @@
 */
 package org.spantus.core.threshold;
 
-
+import org.spantus.logger.Logger;
 /**
- * on segmentation event write to some stream 
+ * Logger listener
  * 
  * @author Mindaugas Greibus
- * 
- * @since 0.0.1
- * 
- *        Created 2008.11.27
- * 
+ *
  */
-public class OutputStaticThreshold extends StaticThreshold {
-
-	public OutputStaticThreshold() {
-		addClassificationListener(new OutputWriterClassificationListener());
+public class LogClassificationListener implements IClassificationListener {
+	Logger log = Logger.getLogger(LogClassificationListener.class);
+	/**
+	 * 
+	 */
+	public void onSegmentedStarted(SegmentEvent event) {
+		log.debug("[onSegmentedStarted]{0}: {1}", event.getId(), event.getMarker());
 	}
-
-
-	
+	/**
+	 * 
+	 */
+	public void onSegmentedEnded(SegmentEvent event) {
+		log.debug("[onSegmentedEnded]{0}: {1}",event.getId(), event.getMarker());
+	}
+	/**
+	 * 
+	 */
+	public void onSegmentedProcessed(SegmentEvent event) {
+		log.debug("[onSegmentedProcessed]{0}: {1}", event.getId(), event.getMarker());
+	}
+	/**
+	 * 
+	 */
+	public void registered(String id) {
+		// do nothing
+	}
 
 }

@@ -21,8 +21,23 @@ package org.spantus.core.threshold;
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.segment.ISegmentator;
-
+/**
+ * Classification interface
+ * @author mondhs
+ *
+ */
 public interface IClassifier extends IExtractor,ISegmentator{
 	public FrameValues getThresholdValues();
-//	public FrameValues getState();
+	/**
+	 * Add listener
+	 * @param classificationListener
+	 * @return
+	 */
+	public boolean addClassificationListener(IClassificationListener classificationListener);
+	/**
+	 * remove listener
+	 * @param classificationListener
+	 * @return
+	 */
+	public boolean removeClassificationListener(IClassificationListener classificationListener);
 }

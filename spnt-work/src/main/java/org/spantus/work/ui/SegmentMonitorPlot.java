@@ -8,21 +8,18 @@ import javax.sound.sampled.AudioFormat;
 
 import org.spantus.core.extractor.DefaultExtractorConfig;
 import org.spantus.core.extractor.ExtractorParam;
-import org.spantus.core.extractor.ExtractorWrapper;
-import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.io.AudioCapture;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorModifiersEnum;
+import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
-import org.spantus.segment.online.MultipleSegmentatorOnline;
+import org.spantus.segment.online.ISegmentatorListener;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
-import org.spantus.segment.online.OnlineSegmentator;
-import org.spantus.segment.online.ThresholdSegmentatorOnline;
 import org.spantus.utils.ExtractorParamUtils;
-import org.spantus.work.segment.OnlineSegmentationUtils;
 import org.spantus.work.services.ConfigDao;
 import org.spantus.work.services.ConfigPropertiesDao;
 
@@ -95,12 +92,12 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		}, 1000L, 1000L);
 	}
 	
-	public void registerExtractors(ExtractorParam param, OnlineSegmentator multipleSegmentator){
-		ThresholdSegmentatorOnline segmentator = null;
-		Float threshold_coef = ExtractorParamUtils.<Float>getValue(param,
-				ConfigPropertiesDao.key_threshold_coef);
-		Long threshold_leaningPeriod = ExtractorParamUtils.<Long>getValue(param,
-				ConfigPropertiesDao.key_threshold_leaningPeriod);
+	public void registerExtractors(ExtractorParam param, ISegmentatorListener multipleSegmentator){
+		IClassifier segmentator = null;
+//		Float threshold_coef = ExtractorParamUtils.<Float>getValue(param,
+//				ConfigPropertiesDao.key_threshold_coef);
+//		Long threshold_leaningPeriod = ExtractorParamUtils.<Long>getValue(param,
+//				ConfigPropertiesDao.key_threshold_leaningPeriod);
 
 		
 //		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.ENERGY_EXTRACTOR);
@@ -112,10 +109,12 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		ExtractorParamUtils.setBoolean(paramEnergy, 
 				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
 
-		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy);
-		segmentator.setOnlineSegmentator(multipleSegmentator);
-		segmentator.setCoef(threshold_coef);
-		segmentator.setLearningPeriod(threshold_leaningPeriod);
+//		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy);
+		segmentator =ExtractorUtils.registerThreshold(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy); 
+
+		segmentator.addClassificationListener(multipleSegmentator);
+//		segmentator.setCoef(threshold_coef);
+//		segmentator.setLearningPeriod(threshold_leaningPeriod);
 
 		
 
@@ -130,7 +129,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 
 //		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.WAVFORM_EXTRACTOR);
 //		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.LPC_EXTRACTOR);
-		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.MFCC_EXTRACTOR);
+		segmentator  = ExtractorUtils.registerThreshold(getReader(), ExtractorEnum.MFCC_EXTRACTOR);
 
 	}
 	
@@ -148,15 +147,6 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		return getFormat(8000);
 	}
 	
-	public ThresholdSegmentatorOnline getSegmentator(IExtractor extractor, MultipleSegmentatorOnline multipe){
-		ThresholdSegmentatorOnline segmentator = new ThresholdSegmentatorOnline();
-		ExtractorWrapper wraper = new ExtractorWrapper(extractor);
-		segmentator.setExtractor(wraper);
-		wraper.getListeners().add(segmentator);
-		segmentator.setOnlineSegmentator(multipe);
-		return segmentator;
-		
-	}
 	
 	protected DecisionSegmentatorOnline createSegmentatorRecordable(ExtractorParam param){
 		String path = ExtractorParamUtils.<String>getValue(param,

@@ -18,7 +18,7 @@
 */
 package org.spantus.segment.online;
 
-import org.spantus.core.extractor.IGeneralExtractor;
+import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.rule.DecisionCtx;
 import org.spantus.segment.online.rule.RuleBaseEnum;
@@ -36,50 +36,71 @@ import org.spantus.segment.online.rule.RuleServiceFactory;
  * 
  */
 
-public class DecisionSegmentatorOnline extends MultipleSegmentatorOnline {
+public class DecisionSegmentatorOnline extends MultipleSegmentatorListenerOnline {
 
 	
 	private DecisionCtx decisionContext;
 	private RuleBaseService ruleBaseService;
 	
 	
-	private Logger log = Logger.getLogger(DecisionSegmentatorOnline.class);
 	
+	private Logger log = Logger.getLogger(DecisionSegmentatorOnline.class);
+	/*
+	 * (non-Javadoc)
+	 * @see org.spantus.segment.online.MultipleSegmentatorListenerOnline#segmentDetected(org.spantus.core.threshold.SegmentEvent)
+	 */
 	@Override
-	public void processState(Long sample, IGeneralExtractor extractor, Float val) {
-		Long time = calculateTime(extractor, sample);
+	protected void segmentDetected(SegmentEvent event){
+		getDecisionContext().setState(true);
+		processState(event);
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see org.spantus.segment.online.MultipleSegmentatorListenerOnline#noiseDetected(org.spantus.core.threshold.SegmentEvent)
+	 */
+	@Override
+	protected void noiseDetected(SegmentEvent event){
+		getDecisionContext().setState(false);
+		processState(event);
+	}
+	
+	
+	public void processState(SegmentEvent event){//Long time, IGeneralExtractor extractor, Float val) {
+//		DecisionSegmentatorOnlinebug("[onSegmentedProcessed] {0}", event);
+		Long time = event.getTime();//calculateTime(extractor, sample);
+		Long sample = event.getSample();
 		DecisionCtx ctx = getDecisionContext();
 		ctx.setTime(time);
 		ctx.setSample(sample);
-		ctx.setState(getVoteForState(time, extractor, val));
+//		ctx.setState(state);//getVoteForState(time, extractor, val));
 		if(ctx.getState() == null) return;
 
 		RuleBaseEnum.action action = getRuleBaseService().testOnRuleBase(ctx);
 		
 		switch (action) {
 		case processNoise:
-			onProcessNoise(ctx,time,sample);
+			onProcessNoise(ctx, event);
 			break;
 		case startSegmentFound:
-			onStartSegmentFound(ctx,time,sample);
+			onStartSegmentFound(ctx, event);
 			break;
 		case startSegmentApproved:
-			onStartSegmentApproved(ctx, time, sample);
+			onStartSegmentApproved(ctx, event);
 			break;
 		case processSegment:
-			onProcessSegment(ctx, time, sample);
+			onProcessSegment(ctx, event);
 			break;
 		case endSegmentFound:
-			onEndSegmentFound(ctx, time, sample);
+			onEndSegmentFound(ctx, event);
 			break;
 		case endSegmentApproved:
-			onEndSegmentApproved(ctx, time, sample);
+			onEndSegmentApproved(ctx, event);
 			break;
 		case joinToSegment:
-			onJoinToSegment(ctx, time, sample);
+			onJoinToSegment(ctx, event);
 			break;
 		case deleteSegment:
-			onDeleteSegment(ctx, time, sample);
+			onDeleteSegment(ctx, event);
 			break;
 		default:
 			throw new RuntimeException("Not implemented");
@@ -89,34 +110,34 @@ public class DecisionSegmentatorOnline extends MultipleSegmentatorOnline {
 
 	}
 	
-	public void onProcessNoise(DecisionCtx ctx, Long time, Long sample){}
+	public void onProcessNoise(DecisionCtx ctx, SegmentEvent event){}
 	
-	public void onStartSegmentFound(DecisionCtx ctx, Long time, Long sample){
-		ctx.setMarker(createSegment(sample, time));
-		finazlizeSegment(ctx.getMarker(), sample, time);
+	public void onStartSegmentFound(DecisionCtx ctx, SegmentEvent event){
+		ctx.setMarker(createSegment(event));
+		finazlizeSegment(ctx.getMarker(), event);
 		ctx.setSegmentState(RuleBaseEnum.state.start);
 		debugAction("onStartSegmentFound", ctx);
 	}
 	
-	public void onStartSegmentApproved(DecisionCtx ctx, Long time, Long sample){
+	public void onStartSegmentApproved(DecisionCtx ctx, SegmentEvent event){
 		super.onStartSegment(ctx.getMarker());
-		finazlizeSegment(ctx.getMarker(), sample, time);
+		finazlizeSegment(ctx.getMarker(), event);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
 		debugAction("onStartSegmentApproved", ctx);
 	}
 	
-	public void onProcessSegment(DecisionCtx ctx, Long time, Long sample){
-		finazlizeSegment(ctx.getMarker(), sample, time);
+	public void onProcessSegment(DecisionCtx ctx, SegmentEvent event){
+		finazlizeSegment(ctx.getMarker(), event);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
 		debugAction("onProcessSegment" , ctx);
 	}
 	
-	public void onEndSegmentFound(DecisionCtx ctx, Long time, Long sample){
-		finazlizeSegment(ctx.getMarker(), sample, time);
+	public void onEndSegmentFound(DecisionCtx ctx, SegmentEvent event){
+		finazlizeSegment(ctx.getMarker(), event);
 		ctx.setSegmentState(RuleBaseEnum.state.end);
 		debugAction("onEndSegmentFound", ctx);
 	}
-	public void onEndSegmentApproved(DecisionCtx ctx, Long time, Long sample){
+	public void onEndSegmentApproved(DecisionCtx ctx, SegmentEvent event){
 		Long expandedStart =ctx.getMarker().getStart()-getParam().getExpandStart();
 		Long expandedLength = ctx.getMarker().getLength()+getParam().getExpandEnd();
 		ctx.getMarker().setStart(expandedStart);
@@ -127,12 +148,12 @@ public class DecisionSegmentatorOnline extends MultipleSegmentatorOnline {
 		ctx.setSegmentState(null);
 	}
 	
-	public void onJoinToSegment(DecisionCtx ctx, Long time, Long sample){
-		finazlizeSegment(ctx.getMarker(), sample, time);
+	public void onJoinToSegment(DecisionCtx ctx, SegmentEvent event){
+		finazlizeSegment(ctx.getMarker(), event);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
 		debugAction("onJoinToSegment", ctx);
 	}
-	public void onDeleteSegment(DecisionCtx ctx, Long time, Long sample){
+	public void onDeleteSegment(DecisionCtx ctx, SegmentEvent event){
 		if(ctx.getMarker() != null)debugAction("onDeleteSegment", ctx);
 		setCurrentMarker(null);
 		ctx.setMarker(null);
