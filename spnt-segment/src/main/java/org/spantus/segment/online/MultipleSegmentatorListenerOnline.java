@@ -64,7 +64,9 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 //		log.debug("[onSegmentedStarted] {0}", event);
 
 	}
-
+	/**
+	 * 
+	 */
 	public void onSegmentedProcessed(SegmentEvent event) {
 //		log.debug("[onSegmentedProcessed] {0}", event);
 		SegmentEvent multievent = event.clone();
@@ -98,6 +100,13 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 					multievent.setMarker(getCurrentMarker());
 				}
 				segmentDetected(multievent);
+			}else if (singnalCount == classifiersThreshold && singnalCount==noiseCount ) {
+				if(getCurrentMarker() != null){
+					getCurrentMarker().setEnd(time);
+					multievent.setMarker(getCurrentMarker());
+					setCurrentMarker(null);
+				}
+				noiseDetected(multievent);
 			}else {
 				throw new IllegalArgumentException("Not impl");
 //				multievent.setMarker(getCurrentMarker());

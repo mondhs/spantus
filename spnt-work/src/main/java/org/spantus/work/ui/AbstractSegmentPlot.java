@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
+import org.spantus.chart.bean.ChartInfo;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.core.io.WraperExtractorReader;
@@ -65,7 +66,13 @@ public abstract class AbstractSegmentPlot extends JPanel {
 	
 	protected void initGraph(IExtractorInputReader reader) {
 		chart = ChartFactory.createChart(reader);
+		ChartInfo chartInfo = new ChartInfo();
+		chartInfo.setGrid(Boolean.TRUE);
+		chartInfo.setSelfZoomable(false);
+//		chartInfo.setColorSchema(getInfo().getEnv().getVectorChartColorTypes());
+		chart.setCharInfo(chartInfo);
 		this.add(chart,BorderLayout.CENTER);
+		chart.initialize();
 	}
 	
 	public abstract AudioFormat getFormat();
@@ -94,7 +101,8 @@ public abstract class AbstractSegmentPlot extends JPanel {
 	public void repaint() {
 		if (getChart() != null) {
 			try{
-				getChart().repaint();
+//				getChart().repaint();
+				getChart().setSize(getSize());
 			}catch(Exception e){
 				log.error(e);
 			}

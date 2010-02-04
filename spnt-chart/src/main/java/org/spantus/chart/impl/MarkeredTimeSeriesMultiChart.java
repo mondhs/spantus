@@ -85,6 +85,7 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 		super.repaint();
 		if(getGraph() != null && getMarkerGraph() != null){
 			if(getGraph().getCoordinateBoundary() == null){
+				log.error("no coordinate boundary is set");
 				return;
 			}
 			AxisInstance axisX = getGraph().getXAxisInstance();
