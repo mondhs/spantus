@@ -66,7 +66,6 @@ import de.crysandt.audio.mpeg7audio.msgs.MsgSpectralCentroid;
 import de.crysandt.audio.mpeg7audio.msgs.MsgTemporalCentroid;
 import de.crysandt.hmm.GaussianDistribution;
 import de.crysandt.xml.Namespace;
-@SuppressWarnings("unchecked")
 public class MP7DocumentBuilder
 	implements MsgListener
 {
@@ -91,28 +90,28 @@ public class MP7DocumentBuilder
 */		
 	}
 
-	private final TreeMap schema_location = new TreeMap();
+	private final TreeMap<String, String> schema_location = new TreeMap<String, String>();
    // private boolean checked=false;
 	private int duration = 0;
 
 	// start with ArrayList (optimal for add()); sort messages later
-	private List listAP   = new ArrayList();
-	private List listASBP = new ArrayList();
-	private List listASC  = new ArrayList();
-	private List listASD  = new ArrayList();
-	private List listASE  = new ArrayList();
-	private List listASF  = new ArrayList();
-	private List listASS  = new ArrayList();
-	private List listAW   = new ArrayList();
-	private List listAH   = new ArrayList();
-	private List listAFF  = new ArrayList();
-	private List listDC   = new ArrayList();// DigitalClip
-	private List listDZ   = new ArrayList();// DigitalZero
-	private List listSH   = new ArrayList();// SampleHold
-	private List listCK   = new ArrayList();// Click
-	private List listBNL  = new ArrayList();// BackgroundNoiseLevel
-	private List listDCO  = new ArrayList();// DcOffset
-	private List listBW   = new ArrayList();// BandWidth
+	private List<Msg> listAP   = new ArrayList<Msg>();
+	private List<Msg> listASBP = new ArrayList<Msg>();
+	private List<Msg> listASC  = new ArrayList<Msg>();
+	private List<Msg> listASD  = new ArrayList<Msg>();
+	private List<Msg> listASE  = new ArrayList<Msg>();
+	private List<Msg> listASF  = new ArrayList<Msg>();
+	private List<Msg> listASS  = new ArrayList<Msg>();
+	private List<Msg> listAW   = new ArrayList<Msg>();
+	private List<Msg> listAH   = new ArrayList<Msg>();
+	private List<Msg> listAFF  = new ArrayList<Msg>();
+	private List<Msg> listDC   = new ArrayList<Msg>();// DigitalClip
+	private List<Msg> listDZ   = new ArrayList<Msg>();// DigitalZero
+	private List<Msg> listSH   = new ArrayList<Msg>();// SampleHold
+	private List<Msg> listCK   = new ArrayList<Msg>();// Click
+	private List<Msg> listBNL  = new ArrayList<Msg>();// BackgroundNoiseLevel
+	private List<Msg> listDCO  = new ArrayList<Msg>();// DcOffset
+	private List<Msg> listBW   = new ArrayList<Msg>();// BandWidth
 
 	private MsgHarmonicSpectralCentroid  msgHSC = null; // HarmonicSpectralCentroid
 	private MsgHarmonicSpectralDeviation msgHSD = null; // HarmonicSpectralDeviation
@@ -123,9 +122,9 @@ public class MP7DocumentBuilder
 	private MsgSpectralCentroid msgSC  = null; // SpectralCentroid
 	private MsgTemporalCentroid msgTC  = null; // TemporalCentroid
 
-	private List listAS   = new ArrayList();
-	private List listSI   = new ArrayList();
-	private List listBPM  = new ArrayList();
+	private List<Msg> listAS   = new ArrayList<Msg>();
+	private List<Msg> listSI   = new ArrayList<Msg>();
+	private List<Msg> listBPM  = new ArrayList<Msg>();
 
 	private MsgSoundModel msg_sound_model = null;
 	
@@ -219,7 +218,7 @@ public class MP7DocumentBuilder
 		
 		if (!schema_location.isEmpty()) {
 			StringBuffer buffer = new StringBuffer();
-			for (Iterator i = schema_location.keySet().iterator(); i.hasNext(); ) {
+			for (Iterator<String> i = schema_location.keySet().iterator(); i.hasNext(); ) {
 				Object key = i.next();
 				Object value = schema_location.get(key);
 				buffer.append(key.toString()).append(SPACE);
@@ -350,7 +349,7 @@ public class MP7DocumentBuilder
 	       StringBuffer buffer_bnl = new StringBuffer();
 	       DecimalFormat df = new DecimalFormat("0.####");
 	       
-		   for (Iterator i = listBNL.iterator(); i.hasNext(); ){
+		   for (Iterator<Msg> i = listBNL.iterator(); i.hasNext(); ){
 			   msg = (MsgBackgroundNoiseLevel) i.next();
 			   numberch.append(msg.channel);
 			   if(msg.bnl==100) buffer_bnl.append("-Infinity");
@@ -374,7 +373,7 @@ public class MP7DocumentBuilder
 	       StringBuffer numberch = new StringBuffer();
 	       StringBuffer buffer_dco = new StringBuffer();
 	       DecimalFormat df = new DecimalFormat("0.####");
-		   for (Iterator i = listDCO.iterator(); i.hasNext(); ){
+		   for (Iterator<Msg> i = listDCO.iterator(); i.hasNext(); ){
 			   msg = (MsgDcOffset) i.next();
 			   numberch.append(msg.channel);
 			   buffer_dco.append(df.format(msg.dco));
@@ -397,7 +396,7 @@ public class MP7DocumentBuilder
 	       StringBuffer numberch = new StringBuffer();
 	       StringBuffer buffer_bw = new StringBuffer();
 	       DecimalFormat df = new DecimalFormat("0.####");
-		   for (Iterator i = listBW.iterator(); i.hasNext(); ){
+		   for (Iterator<Msg> i = listBW.iterator(); i.hasNext(); ){
 			   msg = (MsgBandWidth) i.next();
 			   numberch.append(msg.channel);
 			   buffer_bw.append(df.format(msg.bw));
@@ -421,7 +420,7 @@ public class MP7DocumentBuilder
                //Click
 			   if(!listCK.isEmpty()){
 			       Collections.sort(listCK);
-			       Iterator i=listCK.iterator();
+			       Iterator<Msg> i=listCK.iterator();
 			       
 			       while(i.hasNext()){
 			           MsgClick msg = (MsgClick) i.next();
@@ -492,7 +491,7 @@ public class MP7DocumentBuilder
 			   //DigitalClip
 			   if(!listDC.isEmpty()){
 			       Collections.sort(listDC);
-			       Iterator i=listDC.iterator();
+			       Iterator<Msg> i=listDC.iterator();
 			       
 			       while(i.hasNext()){
 			           MsgDigitalClip msg = (MsgDigitalClip) i.next();
@@ -569,7 +568,7 @@ public class MP7DocumentBuilder
                //DigitalZero
 			   if(!listDZ.isEmpty()){
 			       Collections.sort(listDZ);
-			       Iterator i=listDZ.iterator();
+			       Iterator<Msg> i=listDZ.iterator();
 			       
 			       while(i.hasNext()){
 			           MsgDigitalZero msg = (MsgDigitalZero) i.next();
@@ -646,7 +645,7 @@ public class MP7DocumentBuilder
 			   //SampleHold
 			   if(!listSH.isEmpty()){
 			       Collections.sort(listSH);
-			       Iterator i=listSH.iterator();
+			       Iterator<Msg> i=listSH.iterator();
 			       
 			       while(i.hasNext()){
 			           MsgSampleHold msg = (MsgSampleHold) i.next();
@@ -749,7 +748,7 @@ public class MP7DocumentBuilder
 		
 		StringBuffer buffer_aff = new StringBuffer();
 		
-		for (Iterator i = listAFF.iterator(); i.hasNext(); ){
+		for (Iterator<Msg> i = listAFF.iterator(); i.hasNext(); ){
 			msg = (MsgAudioFundamentalFrequency) i.next();			
 			buffer_aff.append(msg.fundfreq).append(SPACE);
 		}
@@ -790,7 +789,7 @@ public class MP7DocumentBuilder
 
 		StringBuffer buffer_hr = new StringBuffer();
 		StringBuffer buffer_ul = new StringBuffer();
-		for (Iterator i = listAH.iterator(); i.hasNext(); ){
+		for (Iterator<Msg> i = listAH.iterator(); i.hasNext(); ){
 			msg = (MsgAudioHarmonicity) i.next();
 			
 			buffer_hr.append(msg.harmonicratio).append(SPACE);
@@ -825,7 +824,7 @@ public class MP7DocumentBuilder
 		audio_descriptor.appendChild(sos);
 		
 		StringBuffer buffer = new StringBuffer();
-		for (Iterator i = listAP.iterator(); i.hasNext(); ) {
+		for (Iterator<Msg> i = listAP.iterator(); i.hasNext(); ) {
 			buffer.append(format(((MsgAudioPower) i.next()).power));
 			buffer.append(SPACE);
 		}
@@ -899,7 +898,7 @@ public class MP7DocumentBuilder
 				append(new StringBuffer(), projection).toString()));
 		
 		if (listASBP.size()>1) {
-			Iterator i = listASBP.iterator();
+			Iterator<Msg> i = listASBP.iterator();
 			i.next(); 		// drop first msg (fields already added)
 			
 			while (i.hasNext()){
@@ -938,7 +937,7 @@ public class MP7DocumentBuilder
 		sos.appendChild(raw);
 		
 		StringBuffer buffer = new StringBuffer();
-		for (Iterator i = listASC.iterator(); i.hasNext(); ) {
+		for (Iterator<Msg> i = listASC.iterator(); i.hasNext(); ) {
 			buffer.append("" +
 					format(((MsgAudioSpectrumCentroid) i.next()).centroid));
 			buffer.append(SPACE);
@@ -966,7 +965,7 @@ public class MP7DocumentBuilder
 		sos.appendChild(raw);
 		
 		StringBuffer buffer = new StringBuffer();
-		for (Iterator i = listASS.iterator(); i.hasNext(); ) {
+		for (Iterator<Msg> i = listASS.iterator(); i.hasNext(); ) {
 			buffer.append("" +
 					format(((MsgAudioSpectrumSpread) i.next()).spread));
 			buffer.append(SPACE);
@@ -1012,7 +1011,7 @@ public class MP7DocumentBuilder
 		sov.appendChild(raw);
 		
 		StringBuffer buffer = new StringBuffer();
-		for (Iterator i = listASD.iterator(); i.hasNext(); ) {
+		for (Iterator<Msg> i = listASD.iterator(); i.hasNext(); ) {
 			float[] distribution = ((MsgAudioSpectrumDistribution) i.next()).getDistribution();
 			
 			assert distribution.length == cols;
@@ -1077,7 +1076,7 @@ public class MP7DocumentBuilder
 		sov.appendChild(raw);
 		
 		StringBuffer buffer = new StringBuffer();
-		for (Iterator i = listASE.iterator(); i.hasNext(); ) {
+		for (Iterator<Msg> i = listASE.iterator(); i.hasNext(); ) {
 			float[] envelope = ((MsgAudioSpectrumEnvelope) i.next()).getEnvelope();
 			assert envelope.length == cols;
 			for (int c = 0; c < cols; ++c) {
@@ -1117,7 +1116,7 @@ public class MP7DocumentBuilder
 		sov.appendChild(raw);
 		
 		StringBuffer buffer = new StringBuffer();
-		for (Iterator i = listASF.iterator(); i.hasNext(); ) {
+		for (Iterator<Msg> i = listASF.iterator(); i.hasNext(); ) {
 			float[] flatness = ((MsgAudioSpectrumFlatness) i.next()).
 			getFlatness();
 			assert flatness.length == cols;
@@ -1150,7 +1149,7 @@ public class MP7DocumentBuilder
 		
 		StringBuffer buffer_min = new StringBuffer();
 		StringBuffer buffer_max = new StringBuffer();
-		for (Iterator i = listAW.iterator(); i.hasNext(); ) {
+		for (Iterator<Msg> i = listAW.iterator(); i.hasNext(); ) {
 			msg = (MsgAudioWaveform) i.next();
 			
 			buffer_min.append(format(msg.min));
@@ -1258,7 +1257,7 @@ public class MP7DocumentBuilder
 		StringBuffer buffer_mean = new StringBuffer();
 		StringBuffer buffer_var  = new StringBuffer();
 		
-		for (Iterator i=listAS.iterator(); i.hasNext(); ) {
+		for (Iterator<Msg> i=listAS.iterator(); i.hasNext(); ) {
 			msg = (MsgAudioSignature) i.next();
 			float[] m = msg.getFlatnessMean();
 			float[] v = msg.getFlatnessVariance();

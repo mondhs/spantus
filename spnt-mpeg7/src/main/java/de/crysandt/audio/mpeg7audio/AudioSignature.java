@@ -14,7 +14,6 @@ import de.crysandt.math.Function;
 /**
  * @author <a href="mailto:crysandt@ient.rwth-aachen.de">Holger Crysandt</a>
  */
-@SuppressWarnings("unchecked")
 class AudioSignature
     extends MsgSpeaker
     implements MsgListener
@@ -26,7 +25,7 @@ class AudioSignature
   private final static float LO_EDGE = 250.0f;
   private final static float HI_EDGE = 4000.0f;
 
-  private LinkedList msglist =  new LinkedList();
+  private LinkedList<MsgAudioSpectrumFlatness> msglist =  new LinkedList<MsgAudioSpectrumFlatness>();
 
   public AudioSignature( int decimation ) {
     this.DECIMATION = decimation;
@@ -57,7 +56,7 @@ class AudioSignature
       float[][] flatness = new float[DECIMATION][length];
       
       int index = 0;
-      for (Iterator i = msglist.iterator(); i.hasNext(); ++index) {
+      for (Iterator<MsgAudioSpectrumFlatness> i = msglist.iterator(); i.hasNext(); ++index) {
         System.arraycopy(
         		((MsgAudioSpectrumFlatness)i.next()).getFlatness(), dim250, 
 				flatness[index], 0, 

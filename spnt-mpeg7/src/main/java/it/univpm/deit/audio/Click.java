@@ -14,7 +14,7 @@ import java.util.*;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings(value={"unchecked","rawtypes"})
 public class Click
 	extends MsgSpeaker                
 	implements MsgListener

@@ -75,6 +75,7 @@ public class MultiPlotWav extends JFrame {
 		}
 		chart = ChartFactory.createChart(reader);
 		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
+		chart.initialize();
 		getContentPane().add(chart);
 
 	}

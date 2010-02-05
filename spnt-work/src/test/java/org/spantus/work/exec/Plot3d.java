@@ -142,7 +142,7 @@ public class Plot3d extends JFrame {
 	 */
 	public static IExtractorInputReader readSignal() throws MalformedURLException
 			 {
-		File wavFile = new File("./target/test-classes/t_1_2.wav");
+		File wavFile = new File("../data/t_1_2.wav");
 		URL urlFile = wavFile.toURI().toURL();
 		AudioReader reader = AudioFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader

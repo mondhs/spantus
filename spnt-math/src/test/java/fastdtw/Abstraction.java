@@ -53,11 +53,10 @@ public class Abstraction
 
 
    // Expand the small warp path ot the resolution fo tohe original time series for tsI and tsJ.
-   @SuppressWarnings("unchecked")
 private static WarpPath expandPath(WarpPath path, PAA tsI, PAA tsJ)
    {
-      final ArrayList iPoints = new ArrayList();
-      final ArrayList jPoints = new ArrayList();
+      final ArrayList<Integer> iPoints = new ArrayList<Integer>();
+      final ArrayList<Integer> jPoints = new ArrayList<Integer>();
 
       iPoints.add(new Integer(0));
       jPoints.add(new Integer(0));

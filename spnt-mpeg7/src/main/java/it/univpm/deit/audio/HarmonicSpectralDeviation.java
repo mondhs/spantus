@@ -13,7 +13,6 @@ import de.crysandt.math.Function;
 /**
  * @author <a href="mailto:micky78@email.it">Michele Bartolucci</a>
  */
-@SuppressWarnings("unchecked")
 public class HarmonicSpectralDeviation 
 	extends MsgSpeaker 
 	implements MsgListener
@@ -38,7 +37,7 @@ public class HarmonicSpectralDeviation
 		float num = 0.0f;
 		float[] pd1, pd2, pd3;
 		
-		ArrayList peaks = mhp.getPeaks();
+		ArrayList<?> peaks = mhp.getPeaks();
 		int size = mhp.getHarmonicPeaksSize();
 		float spectrumEnvelope[] = new float[size];
 		

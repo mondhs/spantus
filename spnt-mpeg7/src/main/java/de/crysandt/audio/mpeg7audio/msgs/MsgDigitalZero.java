@@ -13,15 +13,14 @@ import it.univpm.deit.audio.DigitalZero;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-@SuppressWarnings("unchecked")
 public class MsgDigitalZero
        extends Msg{
     
-    public ArrayList zeros;
+    public ArrayList<?> zeros;
     public int channel;
     public final float SAMPLE_RATE;
  
-    public MsgDigitalZero(int time,int duration,ArrayList zeros,int channel,float SAMPLE_RATE){
+    public MsgDigitalZero(int time,int duration,ArrayList<?> zeros,int channel,float SAMPLE_RATE){
         
         super(time ,duration);
         this.zeros=zeros;

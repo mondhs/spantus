@@ -18,7 +18,6 @@
 */
 package org.spantus.core;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 /**
@@ -47,8 +46,7 @@ public class FrameVectorValues extends LinkedList<List<Float>>{
 		setFrameBufferSize(DEFAULT_FRAME_BUFFER_SIZE);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public FrameVectorValues(Collection collection){
+	public FrameVectorValues(List<List<Float>> collection){
 		addAll(collection);
 	}
 
@@ -111,7 +109,7 @@ public class FrameVectorValues extends LinkedList<List<Float>>{
 	
 	
 	public FrameVectorValues subList(int fromIndex, int toIndex) {
-		List<?> lst = super.subList(fromIndex, toIndex);
+		List<List<Float>> lst = super.subList(fromIndex, toIndex);
 		return new FrameVectorValues(lst);
 	}
 

@@ -48,8 +48,7 @@ public class FrameValues extends LinkedList<Float>{
 //		setFrameBufferSize(DEFAULT_FRAME_BUFFER_SIZE);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public FrameValues(Collection collection){
+	public FrameValues(Collection<Float> collection){
 		addAll(collection);
 		if(collection instanceof FrameValues){
 			setSampleRate(((FrameValues)collection).getSampleRate());

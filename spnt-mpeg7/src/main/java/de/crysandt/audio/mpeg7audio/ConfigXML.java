@@ -21,7 +21,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.crysandt.util.Debug;
 import de.crysandt.xml.Namespace;
-@SuppressWarnings("unchecked")
 public class ConfigXML {
 //	private static String MP7AE = "http://mpeg7audioenc.sf.net/mpeg7audioenc.xsd"; 
 	
@@ -113,9 +112,9 @@ public class ConfigXML {
 
 		Config config_default = new ConfigDefault();
 
-		SortedSet keys = new TreeSet(config_default.config.keySet());
+		SortedSet<?> keys = new TreeSet<Object>(config_default.config.keySet());
 		
-		for (Iterator i=keys.iterator(); i.hasNext(); ) {
+		for (Iterator<?> i=keys.iterator(); i.hasNext(); ) {
 			String key = i.next().toString();
 			if (key.endsWith("_enable")) {
 				String module = key.substring(0, key.indexOf("_enable"));
@@ -125,7 +124,7 @@ public class ConfigXML {
 					child.setAttributeNS(Namespace.MPEG7AE, "mp7ae:enable", Boolean.TRUE.toString());
 					root.appendChild(child);
 					
-					for (Iterator j=keys.iterator(); j.hasNext(); ) {
+					for (Iterator<?> j=keys.iterator(); j.hasNext(); ) {
 						String module_name = j.next().toString();
 						if (module_name.startsWith(module)) {
 							String name = module_name.substring(

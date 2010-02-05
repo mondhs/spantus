@@ -7,7 +7,7 @@ package fastdtw.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-@SuppressWarnings("unchecked")
+@SuppressWarnings(value={"unchecked","rawtypes"})
 public class Arrays
 {
 
@@ -24,12 +24,14 @@ public class Arrays
         return primArr;
     }
 
-    public static int[] toIntArray(Collection c)
+    
+	public static int[] toIntArray(Collection c)
     {
         return toPrimitiveArray((Integer[])c.toArray(new Integer[0]));
     }
 
     
+	
 	public static Collection toCollection(boolean arr[])
     {
         ArrayList collection = new ArrayList(arr.length);

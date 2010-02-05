@@ -6,21 +6,21 @@
 package it.univpm.deit.audio;
 
 import de.crysandt.audio.mpeg7audio.msgs.*;
+
 import java.util.*;
 
 /**
  * @author Guido Raparo
  */
-@SuppressWarnings("unchecked")
 public class SampleHold
 	extends MsgSpeaker
 	implements MsgListener
 {        
      private static final int LENGTH_FRAME=30;//ms    
      private final float SAMPLE_RATE;
-     private LinkedList msglist=new LinkedList();
+     private LinkedList<MsgResizer> msglist=new LinkedList<MsgResizer>();
      private int channel=1;
-     private ArrayList s_holds =new ArrayList();
+     private ArrayList<Sh> s_holds =new ArrayList<Sh>();
      private int position =0;
      private int shposition=1;
      private int length_remember=1;
@@ -59,7 +59,7 @@ public class SampleHold
             
             //calcola lunghezza del segnale
      	    int length = 0;
-     		Iterator iter = msglist.iterator();
+     		Iterator<MsgResizer> iter = msglist.iterator();
      		while( iter.hasNext() )
      			length += ((MsgResizer)(iter.next())).getSignalLength();
      			

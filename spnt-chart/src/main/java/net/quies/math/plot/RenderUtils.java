@@ -134,7 +134,7 @@ throws IOException {
 	if (graph == null || target == null)
 		throw new IllegalArgumentException();
 	try {
-		Class domClass = Class.forName("org.apache.batik.dom.GenericDOMImplementation");
+		Class<?> domClass = Class.forName("org.apache.batik.dom.GenericDOMImplementation");
 
 		Method buildDOM = domClass.getDeclaredMethod("getDOMImplementation");
 		Object dom = buildDOM.invoke(null);
@@ -142,7 +142,7 @@ throws IOException {
 		Method buildDocument = domClass.getDeclaredMethod("createDocument", String.class, String.class, DocumentType.class);
 		Object document = buildDocument.invoke(dom, "http://www.w3.org/2000/svg", "svg", null);
 
-		Class svgClass = Class.forName("org.apache.batik.svggen.SVGGraphics2D");
+		Class<Graphics> svgClass = (Class<Graphics>)Class.forName("org.apache.batik.svggen.SVGGraphics2D");
 		Constructor<Graphics> svgConstructor = svgClass.getDeclaredConstructor(Document.class);
 		Graphics svg = svgConstructor.newInstance(document);
 
@@ -194,7 +194,7 @@ throws IOException {
 	Axis yAxis = graph.getYAxis();
 
 	try {
-		Class csvClass = Class.forName("net.quies.tech.csv.CSVWriter");
+		Class<Writer> csvClass = (Class<Writer>)Class.forName("net.quies.tech.csv.CSVWriter");
 		Constructor<Writer> csvConstructor = csvClass.getDeclaredConstructor(Writer.class);
 		Writer csv = csvConstructor.newInstance(target);
 

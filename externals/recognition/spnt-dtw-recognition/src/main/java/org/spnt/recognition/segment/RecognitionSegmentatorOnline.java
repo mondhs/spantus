@@ -10,6 +10,7 @@ import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.work.services.FeatureExtractor;
 import org.spantus.work.services.FeatureExtractorImpl;
 import org.spnt.recognition.bean.FeatureData;
+import org.spnt.recognition.bean.RecognitionResult;
 import org.spnt.recognition.services.CorpusService;
 import org.spnt.recognition.services.CorpusServiceBaseImpl;
 
@@ -47,6 +48,11 @@ public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 			if(getLearnMode()){
 				getCorpusService().learn(marker.getLabel(),featureData);
 			}else{
+				RecognitionResult result = getCorpusService().match(featureData);
+				if(result == null){
+					log.error("Does not matched");
+					continue;
+				}
 				marker.setLabel(getCorpusService().match(featureData).getInfo().getName());
 			}
 		}

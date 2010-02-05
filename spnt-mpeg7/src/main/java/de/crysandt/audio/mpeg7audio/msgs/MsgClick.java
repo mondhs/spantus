@@ -15,16 +15,15 @@ import de.crysandt.audio.mpeg7audio.msgs.Msg;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-@SuppressWarnings("unchecked")
 public class MsgClick
 extends Msg{
 
 
-public LinkedList clicks;
+public LinkedList<?> clicks;
    public int channel;
    public final float SAMPLE_RATE;
 
-    public MsgClick(int time,int duration,LinkedList clicks,int channel,float SAMPLE_RATE) {
+    public MsgClick(int time,int duration,LinkedList<?> clicks,int channel,float SAMPLE_RATE) {
  
                  super(time ,duration);
                  this.clicks=clicks;

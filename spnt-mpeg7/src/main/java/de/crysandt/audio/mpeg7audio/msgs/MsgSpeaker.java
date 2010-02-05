@@ -10,11 +10,10 @@ import java.util.*;
 /**
  * @author <a href="mailto:crysandt@ient.rwth-aachen.de">Holger Crysandt</a>
  */
-@SuppressWarnings("unchecked")
 public class MsgSpeaker
     implements Flushable
 {
-  private Set listeners = Collections.synchronizedSet(new HashSet());
+  private Set<MsgListener> listeners = Collections.synchronizedSet(new HashSet<MsgListener>());
 
   /**
    * Adds a MsgListener to the MsgSpeaker
@@ -45,7 +44,7 @@ public class MsgSpeaker
    * calls flush method of all listener which are Flushable.
    */
   public void flush() {
-    for (Iterator i=listeners.iterator(); i.hasNext();) {
+    for (Iterator<MsgListener> i=listeners.iterator(); i.hasNext();) {
       try {
         ((Flushable) i.next()).flush();
       } catch (ClassCastException e) {
@@ -62,7 +61,7 @@ public class MsgSpeaker
    */
   protected void send(Msg msg) {
     if ((msg != null) && (!listeners.isEmpty())) {
-      for (Iterator i = listeners.iterator(); i.hasNext(); )
+      for (Iterator<MsgListener> i = listeners.iterator(); i.hasNext(); )
         ((MsgListener) i.next()).receivedMsg(msg);
     }
   }

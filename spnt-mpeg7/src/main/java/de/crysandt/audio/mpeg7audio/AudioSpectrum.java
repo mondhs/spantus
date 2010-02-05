@@ -17,7 +17,6 @@ import it.univpm.deit.FFT2N;
 /**
  * @author <a href="mailto:crysandt@ient.rwth-aachen.de">Holger Crysandt</a>
  */
-@SuppressWarnings("unchecked")
 class AudioSpectrum
 	extends MsgSpeaker
 	implements MsgListener
@@ -26,9 +25,9 @@ class AudioSpectrum
 	
 	private final float samplerate;
 	
-	private LinkedList msglist = new LinkedList();
-	private Map        hamming = new TreeMap();
-	private Map        fft2n   = new TreeMap();
+	private LinkedList<MsgResizer> msglist = new LinkedList<MsgResizer>();
+	private Map<Integer, float[]>        hamming = new TreeMap<Integer, float[]>();
+	private Map<Integer, FFT2N>        fft2n   = new TreeMap<Integer, FFT2N>();
 	
 	public AudioSpectrum( float samplerate ) {
 		super( );
@@ -75,7 +74,7 @@ class AudioSpectrum
 			
 			// calculate length of signal
 			int length = 0;
-			Iterator i = msglist.iterator();
+			Iterator<MsgResizer> i = msglist.iterator();
 			while( i.hasNext() )
 				length += ((MsgResizer)(i.next())).getSignalLength();
 			

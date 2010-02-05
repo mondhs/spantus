@@ -25,6 +25,7 @@ import javax.sound.sampled.AudioFormat;
 
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.utils.Assert;
 /**
  * 
  * @author Mindaugas Greibus
@@ -46,6 +47,7 @@ public abstract class ExtractorsFactory {
 	}
 	
 	public static IExtractorInputReader createReader(AudioFileFormat format){
+		Assert.isTrue(format!=null,"audio file format cannot be null");
 		return createReader(format.getFormat());
 	}
 	public static IExtractorInputReader createNormalizedReader(){

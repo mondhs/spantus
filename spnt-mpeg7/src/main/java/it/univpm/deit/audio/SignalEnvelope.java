@@ -13,15 +13,14 @@ import de.crysandt.math.Function;
 /**
  * @author <a href="mailto:micky78@email.it">Michele Bartolucci</a>
  */
-@SuppressWarnings("unchecked")
 public class SignalEnvelope 
 	extends MsgSpeaker 
 	implements MsgListener
 {	
 	private static final int LENGTH_FRAME = 30; /* ms */
 	
-	private ArrayList signalEnv = new ArrayList();
-	private LinkedList msglist = new LinkedList();
+	private ArrayList<Float> signalEnv = new ArrayList<Float>();
+	private LinkedList<MsgResizer> msglist = new LinkedList<MsgResizer>();
 	private int position = 0;
 	private int windowlength, windowslide;
 	
@@ -53,7 +52,7 @@ public class SignalEnvelope
 			
 			// calculate length of signal
 			int length = 0;
-			Iterator i = msglist.iterator();
+			Iterator<MsgResizer> i = msglist.iterator();
 			while( i.hasNext() )
 				length += ((MsgResizer)(i.next())).getSignalLength();
 			

@@ -12,14 +12,13 @@ import java.util.*;
 /**
  * @author <a href="mailto:micky78@email.it">Michele Bartolucci</a>
  */
-@SuppressWarnings("unchecked")
 public class HarmonicPeaks 
 	extends MsgSpeaker
 	implements MsgListener
 {
 
 	private float nonHarmonicity, thresold;
-	private ArrayList peaks =new ArrayList();
+	private ArrayList<float[]> peaks =new ArrayList<float[]>();
 	private float[] signalSpectrum;
 	private int spectrumLength;
 	private float dF;
@@ -65,8 +64,8 @@ public class HarmonicPeaks
 			
 			
 			
-			ArrayList a = new ArrayList(); 
-			ArrayList b = new ArrayList();
+			ArrayList<Integer> a = new ArrayList<Integer>(); 
+			ArrayList<Integer> b = new ArrayList<Integer>();
 			
 			// a and b delimit the range of the single peak "area"
 			

@@ -11,7 +11,7 @@ import de.crysandt.audio.mpeg7audio.msgs.*;
 /**
  * @author Francesco Saletti
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings(value={"unchecked","rawtypes"})
 public class AudioTempoType
   extends MsgSpeaker
   implements MsgListener

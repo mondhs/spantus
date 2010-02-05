@@ -12,7 +12,6 @@ import de.crysandt.audio.mpeg7audio.msgs.*;
 /**
  * @author <a href="mailto:micky78@email.it">Michele Bartolucci</a>
  */
-@SuppressWarnings("unchecked")
 public class TemporalCentroid 	extends MsgSpeaker
 implements MsgListener
 {
@@ -35,7 +34,7 @@ implements MsgListener
 	public void receivedMsg( MsgSignalEnvelope m ){
 		
 		float temporalCentroid = 0;
-		ArrayList signalEnv = m.signalEnv;
+		ArrayList<?> signalEnv = m.signalEnv;
 		
 		for( int i = 1; i < signalEnv.size(); i++)
 		{

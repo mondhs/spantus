@@ -18,16 +18,12 @@
 */
 package org.spantus.segment.online;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
-import org.spantus.core.threshold.AbstractClassifier;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
@@ -41,10 +37,8 @@ import org.spantus.segment.offline.MergeSegmentatorServiceImpl;
  */
 public class OnlineSegmentaitonService extends MergeSegmentatorServiceImpl {
 	private Logger log = Logger.getLogger(getClass());
-	private DecisionSegmentatorOnline multipleSegmentator;
 	
 	public OnlineSegmentaitonService() {
-		multipleSegmentator = new DecisionSegmentatorOnline();
 	}
 	
 	/**

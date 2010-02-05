@@ -13,7 +13,6 @@ import de.crysandt.math.Function;
 /**
  * @author <a href="mailto:micky78@email.it">Michele Bartolucci</a>
  */
-@SuppressWarnings("unchecked")
 public class HarmonicSpectralVariation 	
 	extends MsgSpeaker
 	implements MsgListener
@@ -22,7 +21,7 @@ public class HarmonicSpectralVariation
 	private float num_hsv = 0.0f;
 	private float hsv = 0.0f;
 	private int nb_frames = 0;
-	private ArrayList msgs = new ArrayList();
+	private ArrayList<ArrayList<?>> msgs = new ArrayList<ArrayList<?>>();
 	
 	public void receivedMsg( Msg msg ) {
 		if (msg instanceof MsgHarmonicPeaks){
@@ -41,8 +40,8 @@ public class HarmonicSpectralVariation
 		if( msgs.size() == 2)
 		{		
 			
-			ArrayList peaks1 = (ArrayList)msgs.get(0);
-			ArrayList peaks2 = (ArrayList)msgs.get(1);
+			ArrayList<?> peaks1 = (ArrayList<?>)msgs.get(0);
+			ArrayList<?> peaks2 = (ArrayList<?>)msgs.get(1);
 			
 			int size;
 			

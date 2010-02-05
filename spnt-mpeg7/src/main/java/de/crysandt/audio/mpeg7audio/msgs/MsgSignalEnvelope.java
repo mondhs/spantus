@@ -10,14 +10,13 @@ import java.util.*;
 /**
  * @author <a href="mailto:micky78@email.it">Michele Bartolucci</a>
  */
-@SuppressWarnings("unchecked")
 public class MsgSignalEnvelope 
 extends Msg
 {
-	public ArrayList signalEnv = new ArrayList();
+	public ArrayList<?> signalEnv = new ArrayList<Object>();
 	public int slide; 
 	
-	public MsgSignalEnvelope(int time, int duration, ArrayList signalEnv, int slide){
+	public MsgSignalEnvelope(int time, int duration, ArrayList<?> signalEnv, int slide){
 		super(time, duration);
 		this.signalEnv = signalEnv;
 		this.slide = slide;

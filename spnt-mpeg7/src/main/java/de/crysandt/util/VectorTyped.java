@@ -10,22 +10,21 @@ import java.util.*;
 /**
  * @author Michael.Lambertz@rwth-aachen.de
  */
-@SuppressWarnings("unchecked")
 public class VectorTyped
 {
 
-ArrayList	vector;
-Class		type;
+ArrayList<Object>	vector;
+Class<?>		type;
 
-public VectorTyped( Class type )
+public VectorTyped( Class<?> type )
 {
 	this.type = type;
-	vector = new ArrayList( );
+	vector = new ArrayList<Object>( );
 }
 
 private boolean check( Object obj )
 {
-Class		obj_class;
+Class<?>		obj_class;
 
 	obj_class = obj.getClass();
 	while ((obj_class != null) && (!obj_class.equals(type)))

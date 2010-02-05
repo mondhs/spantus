@@ -14,15 +14,15 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioFactory;
 import org.spantus.core.io.DefaultAudioReader;
 import org.spantus.core.io.WraperExtractorReader;
+import org.spantus.core.threshold.AbstractClassifier;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorModifiersEnum;
+import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
-import org.spantus.segment.online.ThresholdSegmentatorOnline;
 import org.spantus.utils.ExtractorParamUtils;
-import org.spantus.work.segment.OnlineSegmentationUtils;
 import org.spnt.recognition.segment.RecognitionSegmentatorOnline;
 
 public class RecognitionPlot extends JFrame {
@@ -53,6 +53,7 @@ public class RecognitionPlot extends JFrame {
 			throw new RuntimeException();
 		}
 		chart = ChartFactory.createChart(reader);
+		chart.initialize();
 //		chart.addSignalSelectionListener(new TestSignalSelectionListener());
 		getContentPane().add(chart);
 
@@ -60,9 +61,9 @@ public class RecognitionPlot extends JFrame {
 
 	public IExtractorInputReader readSignal()
 			throws UnsupportedAudioFileException, IOException {
-//		File wavFile = new File("../data/t_1_2.wav");
+		File wavFile = new File("../../../data/t_1_2.wav");
 //		File wavFile = new File("../data/test/1_2_l.wav");
-		File wavFile = new File("/home/mindas/src/spnt-code/spnt-work-ui/ijunk_ishjunk/ijunk_isjunk.wav");
+//		File wavFile = new File("/home/mindas/src/spnt-code/spnt-work-ui/ijunk_ishjunk/ijunk_isjunk.wav");
 		
 		URL urlFile = wavFile.toURI().toURL();
 		DefaultAudioReader audioReader = (DefaultAudioReader)AudioFactory.createAudioReader();
@@ -76,20 +77,18 @@ public class RecognitionPlot extends JFrame {
 		RecognitionSegmentatorOnline multipleSegmentator = new RecognitionSegmentatorOnline(bufferedReader);
 		multipleSegmentator.setParam(createParam());
 		
-		ThresholdSegmentatorOnline segmentator = null;
+		AbstractClassifier segmentator = null;
 		ExtractorParam param = new ExtractorParam();
 		ExtractorParamUtils.setBoolean(param, 
 				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
-		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.ENERGY_EXTRACTOR, param);
-		segmentator.setOnlineSegmentator(multipleSegmentator);
+		segmentator = (AbstractClassifier)ExtractorUtils.registerThreshold(bufferedReader, ExtractorEnum.ENERGY_EXTRACTOR, param);
+		segmentator.addClassificationListener(multipleSegmentator);
 		segmentator.setCoef(4f);
 		
 //		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.WAVFORM_EXTRACTOR);
 //		segmentator.setOnlineSegmentator(multipleSegmentator);
 
-		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.LPC_EXTRACTOR);
-		segmentator.setOnlineSegmentator(multipleSegmentator);
-		segmentator.setCoef(2f);
+		ExtractorUtils.register(bufferedReader, ExtractorEnum.LPC_EXTRACTOR, null);
 		
 //		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.LPC_EXTRACTOR);
 //		segmentator.setMultipleSegmentator(multipleSegmentator);

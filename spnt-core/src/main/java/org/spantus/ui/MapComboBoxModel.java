@@ -19,7 +19,7 @@ public class MapComboBoxModel extends DefaultComboBoxModel {
 
 	@SuppressWarnings("unchecked")
 	public void addElement(Object obj) {
-		if(obj instanceof Entry){
+		if(obj instanceof Entry<?,?>){
 			Entry<String, Object> entry = (Entry<String,Object>)obj;
 			getObjectMap().put(entry.getKey(), entry.getValue());
 		}else{

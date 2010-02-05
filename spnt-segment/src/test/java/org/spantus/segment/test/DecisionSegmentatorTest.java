@@ -103,7 +103,7 @@ public class DecisionSegmentatorTest extends AbstractSegmentatorTest {
 		MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers, param);
 		assertEqualsMarkers("decision", markersDataExpexted, markerSetHolder);
 		MarkerSet phones = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
-//		assertEquals(7, phones.getMarkers().size());
+		assertEquals(7, phones.getMarkers().size());
 	}
 	
 }

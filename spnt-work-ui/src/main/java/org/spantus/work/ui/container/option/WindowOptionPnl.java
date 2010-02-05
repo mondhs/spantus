@@ -586,19 +586,19 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			labelControlEntry.setVisible(!ThresholdEnum.rules.name().equals(value));
 			break;
 		case segmentationMinSpace:
-			boolean isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
+//			boolean isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
 			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationMinLength:
-			isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
+//			isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
 			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationExpandStart:
-			isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
+//			isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
 			labelControlEntry.setVisible( !SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationExpandEnd:
-			isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
+//			isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
 			labelControlEntry.setVisible(!SegmentatorServiceEnum.basic.name().equals(value));
 			break;
 		case segmentationServiceType:

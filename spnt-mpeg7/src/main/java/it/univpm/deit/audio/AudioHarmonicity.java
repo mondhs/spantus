@@ -19,7 +19,7 @@ import java.util.*;
  *
  * @author Francesco Saletti
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings(value={"unchecked","rawtypes"})
 public class AudioHarmonicity
     extends MsgSpeaker
     implements MsgListener

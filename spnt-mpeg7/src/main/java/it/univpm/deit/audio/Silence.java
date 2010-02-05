@@ -13,7 +13,6 @@ import de.crysandt.audio.mpeg7audio.msgs.*;
 /**
  * @author Giuliano Marozzi
  */
-@SuppressWarnings("unchecked")
 public class Silence
     extends MsgSpeaker
     implements MsgListener
@@ -25,7 +24,7 @@ public class Silence
   private boolean first = false;
   private boolean start_sil = false;
   private boolean end_sil = false;
-  private LinkedList msglist = new LinkedList();
+  private LinkedList<MsgResizer> msglist = new LinkedList<MsgResizer>();
   private int min_dur = 0;
   private float[] buffer = {0, 0, 0};
   private float tot_conf = 0.0f;

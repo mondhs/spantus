@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * @author Guido Raparo
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings(value={"unchecked","rawtypes"})
 public class DigitalZero
         extends MsgSpeaker
 		implements MsgListener{

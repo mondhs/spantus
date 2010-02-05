@@ -11,20 +11,19 @@ import java.util.*;
 /**
  * @author <a href="mailto:crysandt@ient.rwth-aachen.de">Holger Crysandt</a>
  */
-@SuppressWarnings("unchecked")
 public class Config
 	implements Cloneable
 {
-	protected Map config = new HashMap();
+	protected Map<Object, Object> config = new HashMap<Object, Object>();
 	
 	public Object clone()
 		throws CloneNotSupportedException
 	{
 		Config cloned = (Config) super.clone();
 		
-		cloned.config = new HashMap();
+		cloned.config = new HashMap<Object, Object>();
 		
-		for (Iterator i = config.keySet().iterator(); i.hasNext(); ) {
+		for (Iterator<Object> i = config.keySet().iterator(); i.hasNext(); ) {
 			Object key = i.next();
 			cloned.config.put(key, config.get(key));
 		}
@@ -91,20 +90,20 @@ public class Config
 	 */
 	
 	public void enableAll(boolean enable) {
-		Set keys = new TreeSet();
-		for (Iterator i=config.keySet().iterator(); i.hasNext(); ){
+		Set<String> keys = new TreeSet<String>();
+		for (Iterator<Object> i=config.keySet().iterator(); i.hasNext(); ){
 			String key = i.next().toString();
 			if (key.endsWith("enable"))
 				keys.add(key);
 		}
 		
-		for (Iterator i=keys.iterator(); i.hasNext(); )
+		for (Iterator<String> i=keys.iterator(); i.hasNext(); )
 			config.put(i.next(), "" + enable);
 	}
 	
 	public String toString() {
 		StringBuffer s = new StringBuffer();
-		for (Iterator i = new TreeSet(config.keySet()).iterator(); i.hasNext(); ) {
+		for (Iterator<Object> i = new TreeSet<Object>(config.keySet()).iterator(); i.hasNext(); ) {
 			Object key = (String) i.next();
 			s.append(key + ": " + config.get(key) + "\n");
 		}

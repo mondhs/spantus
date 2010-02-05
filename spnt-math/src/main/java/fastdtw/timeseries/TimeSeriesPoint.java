@@ -22,7 +22,7 @@ public class TimeSeriesPoint {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public TimeSeriesPoint(Collection values) {
 		measurements = new double[values.size()];
 		hashCode = 0;

@@ -13,7 +13,6 @@ import de.crysandt.audio.mpeg7audio.msgs.*;
 /**
  * @author <a href="mailto:micky78@email.it">Michele Bartolucci</a>
  */
-@SuppressWarnings("unchecked")
 public class HarmonicSpectralCentroidSpread 	
 	extends MsgSpeaker
 	implements MsgListener
@@ -44,8 +43,8 @@ public class HarmonicSpectralCentroidSpread
 		float num_ihsc = 0.0f, den_ihsc = 0.0f;
 		float num_ihss = 0.0f, den_ihss = 0.0f;
 		
-		ArrayList peaks = mhp.getPeaks();		
-		Iterator iterator = peaks.iterator();
+		ArrayList<?> peaks = mhp.getPeaks();		
+		Iterator<?> iterator = peaks.iterator();
 		
 		while( iterator.hasNext() ) {
 			float[] pd = (float[])iterator.next();

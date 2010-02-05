@@ -140,13 +140,11 @@ public class ShuttleSelectionPanel extends JPanel {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public Iterator sourceIterator() {
+	public Iterator<?> sourceIterator() {
 		return sourceListModel.iterator();
 	}
 
-	@SuppressWarnings("unchecked")
-	public Iterator destinationIterator() {
+	public Iterator<?> destinationIterator() {
 		return destListModel.iterator();
 	}
 

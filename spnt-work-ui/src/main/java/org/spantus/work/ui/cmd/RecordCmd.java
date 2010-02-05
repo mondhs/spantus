@@ -95,8 +95,8 @@ public class RecordCmd extends AbsrtactCmd {
 	protected void createExtractorForProject(WraperExtractorReader wrapReader,
 			RecordSegmentatorOnline recordSegmentator) {
 
-		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader()
-				.getWorkConfig();
+//		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader()
+//				.getWorkConfig();
 		IClassifier segmentator = null;
 		
 		if (ProjectTypeEnum.recordSegmentation.name().equals(ctx.getProject()

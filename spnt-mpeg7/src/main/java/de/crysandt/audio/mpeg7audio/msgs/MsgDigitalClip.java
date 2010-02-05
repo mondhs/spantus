@@ -12,15 +12,14 @@ import it.univpm.deit.audio.DigitalClip;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-@SuppressWarnings("unchecked")
 public class MsgDigitalClip
        extends Msg{
     
-    public ArrayList clips;
+    public ArrayList<?> clips;
     public int channel;
     public final float SAMPLE_RATE;
 
-    public MsgDigitalClip(int time,int duration,ArrayList clips,int channel,float SAMPLE_RATE){
+    public MsgDigitalClip(int time,int duration,ArrayList<?> clips,int channel,float SAMPLE_RATE){
         
         super(time ,duration);
         this.clips=clips;

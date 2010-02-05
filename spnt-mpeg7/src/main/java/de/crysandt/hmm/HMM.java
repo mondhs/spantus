@@ -21,7 +21,6 @@ import de.crysandt.util.Debug;
  *
  * @version 1.0
  */
-@SuppressWarnings("unchecked")
 public class HMM
 {
 	/** set initial values of state #n to realative time spent in this state */
@@ -82,13 +81,13 @@ public class HMM
 	static GaussianDistribution[] initGaussianDist(
 			int SIZE,
 			int N, 
-			Collection sequences) 
+			Collection<float[][]> sequences) 
 	{
 		double[] mean = new double[SIZE];
 		double[] var = new double[SIZE];
 
-		SortedSet vectors = new TreeSet(new SortByColumn(0));
-		for (Iterator i = sequences.iterator(); i.hasNext(); ) {
+		SortedSet<float[]> vectors = new TreeSet<float[]>(new SortByColumn(0));
+		for (Iterator<float[][]> i = sequences.iterator(); i.hasNext(); ) {
 			float[][] sequence = (float[][]) i.next();
 			for (int n = 0, n_max = sequence.length; n < n_max; ++n) {
 				assert sequence[n].length == SIZE;
@@ -96,7 +95,7 @@ public class HMM
 			}
 		}
 
-		for (Iterator i = vectors.iterator(); i.hasNext(); ) {
+		for (Iterator<float[]> i = vectors.iterator(); i.hasNext(); ) {
 			float[] vector = (float[]) i.next();
 
 			for (int c = 0; c < SIZE; ++c) {
@@ -118,14 +117,14 @@ public class HMM
 
 				// resort "vectors" if necessary
 		if (index > 0) {
-			SortedSet vectors_new = new TreeSet(new SortByColumn(index));
+			SortedSet<float[]> vectors_new = new TreeSet<float[]>(new SortByColumn(index));
 			vectors_new.addAll(vectors);
 			vectors = vectors_new;
 		}
 
 		GaussianDistribution[] dist = new GaussianDistribution[N];
 		final int GAP = (vectors.size() - 1) / (N + 1) - 1;
-		Iterator i = vectors.iterator();
+		Iterator<float[]> i = vectors.iterator();
 		for (int n = 0; n < N; ++n) {
 			// fast forward (#GAP steps)
 			for (int k = 0; (k < GAP) && i.hasNext(); ++k)
@@ -174,7 +173,7 @@ public class HMM
 			float[][] sequence,
 			int init_type)
 	{
-		Collection list = new ArrayList(1);
+		Collection<float[][]> list = new ArrayList<float[][]>(1);
 		list.add(sequence);
 		return createModel(N, size, list, init_type);
 	}
@@ -201,7 +200,7 @@ public class HMM
 	public static HMM createModel(
 			int N,
 			int size,
-			Collection sequences,
+			Collection<float[][]> sequences,
 			int init_type)
 	{
 		HMM hmm = new HMM(N, size);
@@ -332,9 +331,9 @@ public class HMM
 		return null;
 	}
 */
-	private double getLogProbBestPath(Collection sequences) {
+	private double getLogProbBestPath(Collection<float[][]> sequences) {
 		double sum_log_prob = 0.0;
-		for (Iterator i = sequences.iterator(); i.hasNext(); )
+		for (Iterator<float[][]> i = sequences.iterator(); i.hasNext(); )
 			sum_log_prob += getLogProbBestPath((float[][]) i.next());
 		return sum_log_prob;
 	}
@@ -354,7 +353,7 @@ public class HMM
 	 *
 	 * @return Returns optimized hidden markov model
 	 */
-	public HMM optimizeModel(Collection sequences, int init_type) {
+	public HMM optimizeModel(Collection<float[][]> sequences, int init_type) {
 		// gamma[e][t][i]
 		double[][][] gamma = new double[sequences.size()][][];
 
@@ -362,7 +361,7 @@ public class HMM
 		final double[][][][] xi = new double[sequences.size()][][][];
 
 		{ // calculate gamma and xi
-			Iterator iter = sequences.iterator();
+			Iterator<float[][]> iter = sequences.iterator();
 
 			for (int e = 0; iter.hasNext(); ++e) {
 				final float[][] sequence = (float[][]) iter.next();
@@ -565,14 +564,14 @@ public class HMM
 		   GaussianDistribution[] dist,
 		   double[][][] gamma,
 		   double[] sum_sum_gamma_et, 
-		   Collection sequences)
+		   Collection<float[][]> sequences)
 	{
 		GaussianDistribution[] dist_new = new GaussianDistribution[N];
 		
 		for (int i = 0; i < N; ++i) {
 			double sum_sum_gamma_eti = sum_sum_gamma_et[i];
 			double[] mean_new_sum = new double[SIZE];
-			Iterator iter = sequences.iterator();
+			Iterator<float[][]> iter = sequences.iterator();
 
 			for (int e = 0; e < sequences.size(); ++e) {
 				float[][] sequence = (float[][]) iter.next();
