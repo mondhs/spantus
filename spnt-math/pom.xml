@@ -4,12 +4,12 @@
 	<parent>
 		<artifactId>spnt-root-pom</artifactId>
 		<groupId>org.spantus</groupId>
-		<version>0.1</version>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>spnt-math</artifactId>
 	<name>Spantus - Common Math Module</name>
-	<version>0.1</version>
+	<version>0.2-SNAPSHOT</version>
 
 	
 </project>

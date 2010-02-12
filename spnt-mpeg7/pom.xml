@@ -4,23 +4,23 @@
 	<parent>
 		<artifactId>spnt-root-pom</artifactId>
 		<groupId>org.spantus</groupId>
-		<version>0.1</version>
+		<version>0.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>spnt-mpeg7</artifactId>
 	<name>Spantus - MPEG7 support</name>
-	<version>0.1</version>
+	<version>0.2-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-math</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-core</artifactId>
-			<version>0.1</version>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

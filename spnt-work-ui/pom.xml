@@ -4,19 +4,19 @@
    <parent>
       <artifactId>spnt-root-pom</artifactId>
       <groupId>org.spantus</groupId>
-      <version>0.1</version>
+      <version>0.2-SNAPSHOT</version>
    </parent>
 
    <groupId>org.spantus</groupId>
    <artifactId>spnt-work-ui</artifactId>
    <name>Spantus - Work UI module</name>
-   <version>0.1</version>
+   <version>0.2-SNAPSHOT</version>
 
    <dependencies>
       <dependency>
          <groupId>org.spantus</groupId>
          <artifactId>spnt-work</artifactId>
-         <version>0.1</version>
+         <version>0.2-SNAPSHOT</version>
       </dependency>
       <dependency>
          <groupId>com.jgoodies</groupId>
