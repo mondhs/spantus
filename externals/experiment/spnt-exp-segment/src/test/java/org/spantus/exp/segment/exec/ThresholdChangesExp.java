@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.spantus.core.beans.SampleInfo;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.beans.ProcessReaderInfo;
@@ -22,7 +21,7 @@ public class ThresholdChangesExp extends AbstractGraphGenerator {
 	public List<ComparisionResult> compare() {
 		List<ComparisionResult> results = new ArrayList<ComparisionResult>();
 		MarkerSetHolder expert = getExpertMarkerSet();
-		MarkerSet experMS = getWordMarkerSet(expert);
+//		MarkerSet experMS = getWordMarkerSet(expert);
 		IExtractorInputReader reader = getTestReader();
 
 		ProcessReaderInfo processReaderInfo = new ProcessReaderInfo();
@@ -36,9 +35,9 @@ public class ThresholdChangesExp extends AbstractGraphGenerator {
 			SampleInfo info = getProcessReader().processReader(reader,
 					processReaderInfo);
 			
-			MarkerSet testMS = getSegmentator().extractSegments(info.getThresholds());
+			MarkerSetHolder testMS = getSegmentator().extractSegments(info.getThresholds());
 			
-			ComparisionResult result = getMakerComparison().compare(experMS,
+			ComparisionResult result = getMakerComparison().compare(expert,
 					testMS);
 //			result.setTest(test)
 			result.setName(name);

@@ -12,7 +12,8 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.beans.SampleInfo;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.marker.MarkerSet;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.beans.ProcessReaderInfo;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -75,8 +76,8 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 					processReaderInfo);
 			processReaderInfo.setThresholdCoef(thresholdVal);
 
-			Set<IThreshold> set = new HashSet<IThreshold>(info.getThresholds());
-			for (IThreshold threshold : set) {
+			Set<IClassifier> set = new HashSet<IClassifier>(info.getThresholds());
+			for (IClassifier threshold : set) {
 
 				if (threshold.getName().contains("MFCC")
 						|| threshold.getName().contains("FFT")
@@ -101,9 +102,9 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 					onlineParam.setMinSpace(segmentsSpace);
 					onlineParam.setMinLength(segmentsSpace);
 
-					MarkerSet simpleMS = getSimpleSegmentator()
+					MarkerSetHolder simpleMS = getSimpleSegmentator()
 					 .extractSegments(info.getThresholds());
-					MarkerSet onlineMS = getOnlineSegmentator()
+					MarkerSetHolder onlineMS = getOnlineSegmentator()
 							.extractSegments(info.getThresholds(), onlineParam);
 					
 					ComparisionResult result = getMakerComparison().compare(

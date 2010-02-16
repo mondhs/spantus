@@ -5,16 +5,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.spantus.core.beans.SampleInfo;
-import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.beans.ProcessReaderInfo;
 import org.spantus.exp.segment.draw.AbstractGraphGenerator;
 import org.spantus.exp.segment.services.ProcessReader;
 import org.spantus.exp.segment.services.impl.ProcessReaderImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.segment.offline.SimpleDecisionSegmentatorParam;
+import org.spantus.segment.offline.BaseDecisionSegmentatorParam;
 
 public class SegmentatorExp extends AbstractGraphGenerator {
 
@@ -26,18 +25,18 @@ public class SegmentatorExp extends AbstractGraphGenerator {
 	public List<ComparisionResult> compare() {
 		List<ComparisionResult> results = new ArrayList<ComparisionResult>();
 		MarkerSetHolder expert = getExpertMarkerSet();
-		MarkerSet experMS = getWordMarkerSet(expert);
+		MarkerSetHolder experMSH = expert;
 
 		ProcessReaderInfo pri = new ProcessReaderInfo();
 		pri.setThresholdCoef(1.2 );
 		SampleInfo info = getProcessReader().processReader(getTestReader(), pri);
-		Set<IThreshold> set = info.getThresholds();
+		Set<IClassifier> set = info.getThresholds();
 		info.getThresholds().retainAll(getProcessReader().getFilterThresholdByName(
 				set, 
 				ExtractorEnum.ENERGY_EXTRACTOR.name())
 				);
 
-		SimpleDecisionSegmentatorParam param = new SimpleDecisionSegmentatorParam();
+		BaseDecisionSegmentatorParam param = new BaseDecisionSegmentatorParam();
 		
 		for (int i = 7; i < 17; i++) {
 			param.setMinLength(i*10L);
@@ -46,9 +45,9 @@ public class SegmentatorExp extends AbstractGraphGenerator {
 					+ param.getMinLength() + "_" 
 					+ param.getMinSpace();
 				param.setMinSpace(j*10L);
-				MarkerSet testMS = getSegmentator().extractSegments(info.getThresholds(), param);
+				MarkerSetHolder testMS = getSegmentator().extractSegments(info.getThresholds(), param);
 				log.debug("Will be processed: " + name);
-				ComparisionResult result = getMakerComparison().compare(experMS,
+				ComparisionResult result = getMakerComparison().compare(experMSH,
 						testMS);
 				result.setName(name);
 				results.add(result);

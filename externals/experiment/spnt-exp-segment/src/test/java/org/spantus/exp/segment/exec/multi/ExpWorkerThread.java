@@ -27,7 +27,7 @@ public class ExpWorkerThread extends Thread {
 			MultiFeatureSelectionExp exp = new MultiFeatureSelectionExp();
 			exp.setExpertMarksPath(monitor.constructExpertMarksPath(resourceName));
 			exp.setTestPath(monitor.constructTestPath(resourceName));
-			exp.setExpertMS(exp.getWordMarkerSet(exp.getExpertMarkerSet()));
+//			exp.setExpertMS(exp.getWordMarkerSet(exp.getExpertMarkerSet()));
 			SampleInfo sampleInfo = exp.getProcessReader().processReader(
 					exp.getTestReader(),monitor.createProcessReaderInfo(resourceName));
 			

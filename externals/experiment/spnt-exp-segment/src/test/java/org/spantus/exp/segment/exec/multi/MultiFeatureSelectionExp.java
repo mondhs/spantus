@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.spantus.core.beans.SampleInfo;
-import org.spantus.core.marker.MarkerSet;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.beans.ProcessReaderInfo;
 import org.spantus.exp.segment.draw.AbstractGraphGenerator;
@@ -31,7 +31,7 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 	
 	private SampleInfo info;
 	
-	MarkerSet expertMS;
+//	MarkerSetHolder expertMS;
 	
 	protected String getGeneratePath() {
 		return super.getGeneratePath() + "multifeatures/";
@@ -60,11 +60,10 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 		MultiFeatureSelectionExp exp = new MultiFeatureSelectionExp();
 		exp.setExpertMarksPath(expertMarksPath);
 		exp.setTestPath(testPath);
-		MarkerSet expertMS = exp.getWordMarkerSet(exp.getExpertMarkerSet());
 		SampleInfo info = exp.getProcessReader().processReader(
 				exp.getTestReader(),
 				new ProcessReaderInfo(thresholdCoef));
-		exp.setExpertMS(expertMS);
+//		exp.setExpertMS(exp.getExpertMarkerSet());
 		exp.setInfo(info);
 		Iterable<Set<String>> compbinations = 
 			exp.getProcessReader().generateAllCompbinations(info.getThresholds(), combinationDepth);
@@ -81,12 +80,12 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 	public List<ComparisionResult> compare() {
 		long processed = 0l;
 		for (Set<String> setCombination : this.getCompbinations()) {
-			Set<IThreshold> threshods = getProcessReader().
+			Set<IClassifier> threshods = getProcessReader().
 				getThresholdSet(getInfo().getThresholds(), setCombination);
 			
 			compare(join(setCombination),
 				threshods,
-				expertMS, 
+				getExpertMarkerSet(), 
 				getOnlineParam());
 			processed++;
 		}
@@ -100,10 +99,10 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 	 * @param experMS
 	 * @param param
 	 */
-	public void compare(String featureNames, Set<IThreshold> thresholds,
-			MarkerSet experMS, SegmentatorParam param) {
+	public void compare(String featureNames, Set<IClassifier> thresholds,
+			MarkerSetHolder experMS, SegmentatorParam param) {
 
-		MarkerSet testMS = getSegmentator().extractSegments(thresholds, param);
+		MarkerSetHolder testMS = getSegmentator().extractSegments(thresholds, param);
 		ComparisionResult result = getMakerComparison()
 				.compare(experMS, testMS);
 		result.setName(featureNames);
@@ -166,14 +165,14 @@ public class MultiFeatureSelectionExp extends AbstractGraphGenerator {
 	}
 
 
-	public MarkerSet getExpertMS() {
-		return expertMS;
-	}
-
-
-	public void setExpertMS(MarkerSet experMS) {
-		this.expertMS = experMS;
-	}
+//	public MarkerSetHolder getExpertMS() {
+//		return expertMS;
+//	}
+//
+//
+//	public void setExpertMS(MarkerSetHolder experMS) {
+//		this.expertMS = experMS;
+//	}
 	
 	public void setOnlineParam(OnlineDecisionSegmentatorParam onlineParam) {
 		this.onlineParam = onlineParam;

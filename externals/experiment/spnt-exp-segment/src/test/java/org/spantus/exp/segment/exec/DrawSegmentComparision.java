@@ -42,10 +42,8 @@ import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioFactory;
 import org.spantus.core.io.AudioReader;
-import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.services.ExpServiceFactory;
@@ -119,7 +117,7 @@ public class DrawSegmentComparision extends ApplicationFrame {
 			ExtractorUtils.registerThreshold(bufferedReader, new ExtractorEnum[] {
 					ExtractorEnum.ENERGY_EXTRACTOR,
 			}, null, ThresholdEnum.offline);
-			reader.readAudio(urlFile, bufferedReader);
+			reader.readSignal(urlFile, bufferedReader);
 			return bufferedReader;
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -143,15 +141,14 @@ public class DrawSegmentComparision extends ApplicationFrame {
     private XYSeries[] createSeries() {
 
         IExtractorInputReader reader = readSignal();
-		Set<IThreshold> thresholds = new HashSet<IThreshold>();
+		Set<IClassifier> thresholds = new HashSet<IClassifier>();
 		for (IExtractor extractor : reader.getExtractorRegister()) {
-			if(extractor instanceof IThreshold)
-				thresholds.add((IThreshold)extractor);
+			if(extractor instanceof IClassifier)
+				thresholds.add((IClassifier)extractor);
 		}
-		MarkerSet testMarkerSet = SegmentFactory.createSegmentator().extractSegments(thresholds);
+		MarkerSetHolder testMarkerSet = SegmentFactory.createSegmentator().extractSegments(thresholds);
 		MarkerSetHolder holder = WorkServiceFactory.createMarkerDao().read(new File("./target/test-classes/t_1_2.mrk.xml"));
-		MarkerSet originalMarkerSet = holder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
-		ComparisionResult result = ExpServiceFactory.createMakerComparison().compare(originalMarkerSet, testMarkerSet);
+		ComparisionResult result = ExpServiceFactory.createMakerComparison().compare(holder, testMarkerSet);
     	
         final XYSeries[] series = new XYSeries[]{
         		new XYSeries("Segmentation Result"),

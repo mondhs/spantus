@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.spantus.core.beans.SampleInfo;
-import org.spantus.core.marker.MarkerSet;
-import org.spantus.core.threshold.IThreshold;
+import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.beans.ProcessReaderInfo;
 import org.spantus.exp.segment.draw.AbstractGraphGenerator;
@@ -23,25 +23,25 @@ public class FeatureSelectionExp extends AbstractGraphGenerator {
 	public List<ComparisionResult> compare() {
 		List<ComparisionResult> results = new ArrayList<ComparisionResult>();
 
-		MarkerSet experMS = getWordMarkerSet(getExpertMarkerSet());
+		MarkerSetHolder experMSH = getExpertMarkerSet();
 		Double thresholdCoef = 1.6;
 		ProcessReaderInfo processReaderInfo = new ProcessReaderInfo();
 		processReaderInfo.setThresholdCoef(thresholdCoef);
 		SampleInfo info = getProcessReader().processReader(getTestReader(), processReaderInfo);
 
-		Set<IThreshold> thresholds = new LinkedHashSet<IThreshold>();
+		Set<IClassifier> thresholds = new LinkedHashSet<IClassifier>();
 
 		OnlineDecisionSegmentatorParam param =
 //			new OnlineDecisionSegmentatorParam();
 			createDefaultOnlineParam();
 
-		for (IThreshold threshold : info.getThresholds()) {
+		for (IClassifier threshold : info.getThresholds()) {
 			thresholds.clear();
 			thresholds.add(threshold);
 			log.debug("start processing:" + thresholds);
-			MarkerSet testMS = getSegmentator().extractSegments(thresholds, param);
+			MarkerSetHolder testMS = getSegmentator().extractSegments(thresholds, param);
 			ComparisionResult result = getMakerComparison().compare(
-					experMS, testMS);
+					experMSH, testMS);
 			result.setThreshold(threshold);
 			result.setName(getProcessReader().getName(threshold));
 			results.add(result);

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?><project>
   <parent>
-    <artifactId>spnt-main</artifactId>
+    <artifactId>spnt-root-pom</artifactId>
     <groupId>org.spantus</groupId>
-    <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../../spnt-main</relativePath>
+    <version>0.2-SNAPSHOT</version>
+    <relativePath>../../..</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>spnt-exp-segment</artifactId>
   <name>Spantus - External - Segmentation experiment</name>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>org.spantus</groupId>
       <artifactId>spnt-work</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>xstream</groupId>

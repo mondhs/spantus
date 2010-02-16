@@ -1,23 +1,21 @@
 /*
- * Part of program for analyze speech signal 
- * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://spantus.sourceforge.net
- * 
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 675 Mass Ave, Cambridge, MA 02139, USA.
- * 
- */
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal 
+ 	http://spantus.sourceforge.net
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 package org.spantus.exp.segment.services.impl;
 
 import java.util.HashMap;
@@ -27,6 +25,8 @@ import java.util.Map;
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.beans.ComparisionResult.paramEnum;
 import org.spantus.exp.segment.services.MakerComparison;
@@ -46,7 +46,7 @@ public class MakerComparisonImpl implements MakerComparison{
 	
 	public static final Long STEP_IN_MILS = 10L; 
 	
-	public ComparisionResult compare(MarkerSet original,MarkerSet test){
+	public ComparisionResult compare(MarkerSetHolder original,MarkerSetHolder test){
 		ComparisionResult result = new ComparisionResult();
 		result.setOriginal(createSequence(original)); 
 		result.setTest(createSequence(test));
@@ -56,7 +56,11 @@ public class MakerComparisonImpl implements MakerComparison{
 		return result;
 	}
 	
-	protected Map<String, Long> analyze(MarkerSet markerSet){
+	protected Map<String, Long> analyze(MarkerSetHolder markerSetHolder){
+		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+		if(markerSet == null){
+			markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
+		}
 		Map<String, Long> map = new HashMap<String, Long>();
 		Long minLength = null;
 		Long maxLength = null;
@@ -98,7 +102,24 @@ public class MakerComparisonImpl implements MakerComparison{
 		
 		return map;
 	}
+	/**
+	 * 
+	 * @param markerSetHolder
+	 * @return
+	 */
+	protected FrameValues createSequence(MarkerSetHolder markerSetHolder){
+		MarkerSet ms = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+		if(ms == null){
+			ms = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
+		}
+		return createSequence(ms, 1);
+	}
 	
+	/**
+	 * 
+	 * @param markerSet1
+	 * @return
+	 */
 	protected FrameValues createSequence(MarkerSet markerSet1){
 		return createSequence(markerSet1, 1);
 	}
