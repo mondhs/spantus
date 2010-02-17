@@ -72,10 +72,10 @@ public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 
 		MarkerSetHolder holder = new MarkerSetHolder();
 		MarkerSet phones = ctx.getMarkerSet();
-		MarkerSet words = ctx.getMarkerSet().clone();
+//		MarkerSet words = ctx.getMarkerSet().clone();
 		phones.setMarkerSetType(MarkerSetHolderEnum.phone.name());
-		words.setMarkerSetType(MarkerSetHolderEnum.word.name());
-		holder.getMarkerSets().put(words.getMarkerSetType(), words);//word
+//		words.setMarkerSetType(MarkerSetHolderEnum.word.name());
+//		holder.getMarkerSets().put(words.getMarkerSetType(), words);//word
 		holder.getMarkerSets().put(phones.getMarkerSetType(), phones);//phone
 		
 		

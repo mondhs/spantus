@@ -18,7 +18,7 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.exp.segment.draw;
+package org.spantus.exp.segment.exec;
 
 import java.awt.GridLayout;
 import java.util.LinkedHashMap;
@@ -34,7 +34,7 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.exp.segment.beans.ComparisionResult;
-import org.spantus.exp.segment.exec.DecisionSegmentationExp;
+import org.spantus.exp.segment.draw.AbstractGraphGenerator;
 import org.spantus.logger.Logger;
 
 /**

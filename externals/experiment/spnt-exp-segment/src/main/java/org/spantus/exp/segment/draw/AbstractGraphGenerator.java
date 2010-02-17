@@ -108,7 +108,7 @@ public abstract class AbstractGraphGenerator {
 	 * @param expertMarksPath
 	 * @param testPath
 	 */
-	protected void process(String expertMarksPath, String testPath) {
+	public void process(String expertMarksPath, String testPath) {
 		setExpertMarksPath(expertMarksPath);
 		setTestPath(testPath);
 		List<ComparisionResult> results = compare();

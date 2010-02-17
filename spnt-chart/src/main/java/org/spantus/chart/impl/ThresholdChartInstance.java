@@ -81,10 +81,10 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		//
 //		if (polylinesX == null)
 //			return;
-		FrameValues clonedValues = null;
-		synchronized (getCtx().getValues()) {
-			clonedValues = new FrameValues(getCtx().getValues());
-		}
+		FrameValues clonedValues = getCtx().getValues();
+//		synchronized (getCtx().getValues()) {
+//			clonedValues = new FrameValues(getCtx().getValues());
+//		}
 		Float _min = Float.MAX_VALUE;
 		Float _max = -Float.MAX_VALUE;
 
@@ -100,7 +100,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		polylinesX = toCoordinatesTime(clonedValues, xScalar.floatValue());
 		polylinesY = toCoordinatesValues(clonedValues, yScalar.floatValue());
 		polylinesYt = toCoordinatesValues(threshold, yScalar.floatValue());
-		statePoligon =  constructStatePolygon(polylinesX, ctx.getMarkSet(), yScalar.floatValue());
+		statePoligon =  constructStatePolygon(polylinesX, ctx.getMarkSet(), xScalar.floatValue(), yScalar.floatValue());
 //		polylinesYstate = toCoordinatesSates(getCtx().getMarkSet(), yScalar
 //				.floatValue());
 
@@ -122,7 +122,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		}
 		if(statePoligon != null){
 			g2.setPaint(currentColorTransparent);
-//			g2.fillPolygon(statePoligon);
+			g2.fillPolygon(statePoligon);
 		}
 
 	}
@@ -193,9 +193,10 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		}
 		int length = end - start;
 		int[] temp = new int[length];
-
+		Float sampledScalar =  scalar * vals.getSampleRate();
+		
 		for (int j = 0; j < temp.length; j++) {
-			temp[j] = (int) ((j + start) / (scalar * vals.getSampleRate()));
+			temp[j] = (int) ((j + start) / (sampledScalar));
 		}
 		return temp;
 	}
@@ -218,16 +219,26 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 	 * @param markerSet
 	 * @return
 	 */
-	protected Polygon constructStatePolygon(int[] x, MarkerSet markerSet, float scalar) {
+	protected Polygon constructStatePolygon(int[] x, MarkerSet markerSet, float xScalar, float yScalar) {
 		Polygon polygon = new Polygon();// x, yState, x.length);
 //		Integer prevState = null;
-//		Integer prevX = null;
-		Float delta = max - min;
+//		Integer prevX = null; 
+//		Float delta = max - min; 
+		Float maxvalueF = (1+getOrder())/yScalar;
+		int maxvalue = maxvalueF.intValue(); 
+		Float minvalueF = (getOrder())/yScalar;
+		int minvalue = minvalueF.intValue();
+		Float sampledXScalar = xScalar * getCtx().getValues().getSampleRate();
+		polygon.addPoint(0, minvalue);
 		for (Marker marker : markerSet.getMarkers()) {
-			polygon.addPoint(marker.getStart().intValue(), 0);
-			polygon.addPoint(marker.getStart().intValue(), (int)(delta/scalar));
-			polygon.addPoint(marker.getEnd().intValue(), (int)(delta/scalar));
-			polygon.addPoint(marker.getEnd().intValue(), 0);
+			int startIndex = getCtx().getValues().toIndex(marker.getStart()/1000f);
+			int endIndex = getCtx().getValues().toIndex(marker.getEnd()/1000f);
+			Float start = startIndex/sampledXScalar;
+			Float end = endIndex/sampledXScalar;
+			polygon.addPoint(start.intValue(), minvalue);
+			polygon.addPoint(start.intValue(), maxvalue);
+			polygon.addPoint(end.intValue(), maxvalue);
+			polygon.addPoint(end.intValue(), minvalue);
 		}
 //		for (int j = 0; j < yState.length; j++) {
 //			int currX = x[j];
