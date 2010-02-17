@@ -4,7 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.dnd.DropTarget;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -34,6 +39,8 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	
 	private SpantusUIServiceImpl spantusUIService;
 	private WorkInfoManager workInfoManager;
+	private String version = null;
+
 	
 	/**
 	 * This is the default constructor
@@ -83,7 +90,8 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	}
 	
 	protected String contructTitle(){
-		String version = getMessage("spantus.work.ui.version");
+		String version = getVersion();
+		
 		String projectType = getMessage("spantus.work.ui.project.type." + getInfo().getProject().getCurrentType());
 		String fileName = "";
 		if(getInfo().getProject().getCurrentSample().getCurrentFile() != null){
@@ -94,6 +102,42 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 				projectType,
 				fileName);
 		return title;
+	}
+	
+	protected String getVersion(){
+		if(version == null){
+			log.error("version not set. trying read from eclipse");
+			try {
+				Properties prop = new Properties();
+				InputStream is = new FileInputStream(new File("./target/maven-archiver/pom.properties"));
+				prop.load(is);
+				version = prop.getProperty("version");
+			} catch (IOException e) {
+				log.debug("version for eclipse not found",e);
+			}catch (NullPointerException e) {
+				log.debug("version for eclipse not found",e);
+			}
+			if(version == null){
+				log.error("version not set. trying read from jar");
+				try {
+					Properties prop = new Properties();
+					InputStream is = this.getClass().getClassLoader().getResourceAsStream("META-INF/maven/org.spantus/spnt-work-ui/pom.properties");
+					prop.load(is);
+					version = prop.getProperty("version");
+				} catch (IOException e) {
+					log.debug("version for jad not found",e);
+				}catch (NullPointerException e) {
+					log.debug("version for jar not found",e);
+				}
+
+			}
+			if(version == null){
+				log.error("version not set. trying read from properties");
+				version = getMessage("spantus.work.ui.version");
+			}
+
+		}
+		return version;
 	}
 	
 	/**

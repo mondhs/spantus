@@ -112,7 +112,11 @@ public class RecordCmd extends AbsrtactCmd {
 							.valueOf(extractor[1]);
 					segmentator = ExtractorUtils.registerThreshold(wrapReader
 							.getReader(), extractorType);
-					segmentator.addClassificationListener(recordSegmentator);
+					if(segmentator != null){
+						segmentator.addClassificationListener(recordSegmentator);
+					}else {
+						log.debug("segmentator for {0} not constructed", extractorType);
+					}
 //					segmentator.setCoef(config.getThresholdCoef());
 //					segmentator.setLearningPeriod(config
 //							.getThresholdLeaningPeriod().longValue());
@@ -127,14 +131,10 @@ public class RecordCmd extends AbsrtactCmd {
 			ExtractorEnum extractorType = ExtractorEnum.WAVFORM_EXTRACTOR;
 			segmentator = ExtractorUtils.registerThreshold(wrapReader
 					.getReader(), extractorType);
-			segmentator.addClassificationListener(recordSegmentator);
-//			segmentator.setCoef(config.getThresholdCoef());
-//			segmentator.setLearningPeriod(config.getThresholdLeaningPeriod()
-//					.longValue());
+//			segmentator.addClassificationListener(recordSegmentator);
 
 		}
 	}
-
 
 	
 	public class UpdateCapture extends TimerTask {
@@ -225,17 +225,26 @@ public class RecordCmd extends AbsrtactCmd {
 							JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
-	
-	public AudioFormat getFormat(WorkUIExtractorConfig config) {
+	/**
+	 * Construct record audio format
+	 * @param config
+	 * @return
+	 */
+	protected AudioFormat getFormat(WorkUIExtractorConfig config) {
 		Float sampleRate = config.getRecordSampleRate();
 		int sampleSizeInBits = 16;
 		int channels = 1;
 		boolean signed = true;
 		boolean bigEndian = true;
-		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed,
+		AudioFormat af = new AudioFormat(sampleRate, sampleSizeInBits, channels, signed,
 				bigEndian);
+		return af;
 	}
-	
+	/**
+	 * Create reader depends on content
+	 * @param workConfig
+	 * @return
+	 */
 	protected WraperExtractorReader createReader(WorkUIExtractorConfig workConfig){
 		AudioFormat format = getFormat(workConfig);
 		IExtractorInputReader reader = ExtractorsFactory.createReader(format);

@@ -49,6 +49,9 @@ public class WorkSample {
 	
 
 	public void setFormat(AudioFileFormat format) {
+		if(format == null){
+			return;
+		}
 //		this.format = format;
 		getSignalFormat().setLength(format.getFrameLength()/format.getFormat().getFrameRate());
 	}
