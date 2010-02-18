@@ -20,7 +20,11 @@
  */
 package org.spantus.math.windowing;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -33,17 +37,54 @@ import java.util.List;
  */
 public class HammingWindowing extends Windowing {
 
+	Map<Integer, List<Float>> cache;
 	
 	public void apply(List<Float> values) {
-		int nSamples = values.size();
-		int i, j;
-		for (j = 0-nSamples/2 ; j < nSamples/2; j++)
-		{
-			i = j+nSamples/2;
-			values.set(i, values.get(i)
-					* (0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / nSamples)));
-		}		
-
+//		int nSamples = values.size();
+		List<Float> result = new ArrayList<Float>();
+		Iterator<Float> windowIterator = getFromCache(values.size()).iterator();
+		Iterator<Float> valuesIterator = values.iterator();
+		while (valuesIterator.hasNext()) {
+			Float val = valuesIterator.next();
+			Float win = windowIterator.next();
+			result.add(val*win);
+		}
+		values.clear();
+		values.addAll(result);
 	}
-
+	/**
+	 * 
+	 * @param size
+	 * @return
+	 */
+	protected List<Float> getFromCache(int size){
+		if(cache == null){
+			cache = new HashMap<Integer, List<Float>>();
+		}
+		if(cache.get(size)==null){
+			cache.put(size, calculate(size));	
+		}
+		return cache.get(size);
+	}
+	/**
+	 * 
+	 * @param size
+	 * @return
+	 */
+	public List<Float> calculate(int size){
+		int nSamples = size;			
+		int j;
+		List<Float> result = new ArrayList<Float>();
+		for (j = 0-nSamples/2 ; j < nSamples/2; j++){
+				float d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / nSamples));
+				result.add(d);
+//			}	
+		}
+		if(size>result.size()){
+			float d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / nSamples));
+			result.add(d);
+		}
+		return result;
+	}
+	
 }

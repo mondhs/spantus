@@ -110,6 +110,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 			MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers, param);
 			ctx.getProject().getCurrentSample().setMarkerSetHolder(markerSetHolder);
 			markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+			//if word level does not exist, check for phone level
 			if(markerSet == null){
 				markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
 			}

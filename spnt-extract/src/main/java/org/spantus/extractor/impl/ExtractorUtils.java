@@ -157,7 +157,7 @@ public abstract class ExtractorUtils {
 			} else if (extractor3DMap.get(extractor) != null) {
 				return extractor3DMap.get(extractor).newInstance();
 			} else {
-				throw new RuntimeException("Not impl");
+				throw new RuntimeException("Not impl: " + extractor);
 			}
 		} catch (InstantiationException e) {
                         log.error(e);

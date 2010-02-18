@@ -50,32 +50,35 @@ public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers,
 			SegmentatorParam param) {
 		log.debug("[extractSegments] thresholds.size:" + classifiers.size());
+		MarkerSetHolder holder = new MarkerSetHolder();
+		//if classifiers only one nothing to merge
+		if(classifiers.size() == 1){
+			IClassifier classfier = classifiers.iterator().next();
+			MarkerSet phones = classfier.getMarkSet();
+			holder.getMarkerSets().put(phones.getMarkerSetType(), phones);//phone
+			return holder;
+			
+		}
+			
 		MarkerSet markerSet = new MarkerSet();
 		LinkedHashMap<Long, Float> statesSums = caclculateStatesSums(classifiers, param);
 
 		SegmentationCtx ctx = new SegmentationCtx();
 		ctx.setMarkerSet(markerSet);
-//		ctx.setSampleRate(sampleRate);
 
 		int count = classifiers.size();
-//		int index = 0;
 		for (Entry<Long, Float> stateSum : statesSums.entrySet()) {
 			ctx.setCurrentState(stateSum.getValue() / count > .5 ? 1f : 0f);
 			ctx.setCurrentMoment(stateSum.getKey());
 			processState(ctx);
-//			index++;
 		}
 		ctx.setCurrentState(0f);
 		processState(ctx);
 		log.debug("[extractSegments] found segments:"
 				+ markerSet.getMarkers().size());
 
-		MarkerSetHolder holder = new MarkerSetHolder();
 		MarkerSet phones = ctx.getMarkerSet();
-//		MarkerSet words = ctx.getMarkerSet().clone();
 		phones.setMarkerSetType(MarkerSetHolderEnum.phone.name());
-//		words.setMarkerSetType(MarkerSetHolderEnum.word.name());
-//		holder.getMarkerSets().put(words.getMarkerSetType(), words);//word
 		holder.getMarkerSets().put(phones.getMarkerSetType(), phones);//phone
 		
 		

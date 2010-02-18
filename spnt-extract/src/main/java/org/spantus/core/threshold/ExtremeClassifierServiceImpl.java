@@ -94,7 +94,7 @@ public class ExtremeClassifierServiceImpl {
 		}
 		extremeCtx.setSegments(segments);
 		if(log.isDebugMode()){
-			log.debug("[extractSements]segments: {0}", segments);
+			log.debug("[extractSements]{1} segments: {0}", segments, segments.size());
 		}
 		return segments;
 	}
@@ -229,21 +229,21 @@ public class ExtremeClassifierServiceImpl {
 					log.debug("[initialCleanup]remove:{0}; exists: {1} ",  previous, segments.size());
 					ExtremeSegment eliminated = segments.removeLast();
 					ExtremeSegment joined = join(eliminated, entry);
-					log.debug("[initialCleanup]inc:true; inc:true ");
+					log.debug("[initialCleanup] /// inc:true; inc:true ");
 					segments.add(joined);
-					log.debug("[initialCleanup]joined:{0}; exists: {1} ",  joined, segments.size());
+					log.debug("[initialCleanup]joined:{0}; size: {1} ",  joined, segments.size());
 				}else if(entry.isDecrease() && previous.isDecrease()){
-					log.debug("[initialCleanup]remove:{0}; exists: {1} ",  previous, segments.size());
+					log.debug("[initialCleanup]remove:{0}; size: {1} ",  previous, segments.size());
 					ExtremeSegment eliminated = segments.removeLast();
 					ExtremeSegment joined = join(eliminated, entry);
-					log.debug("[initialCleanup]dec:true; dec:true ");
+					log.debug("[initialCleanup] \\\\\\ dec:true; dec:true ");
 					segments.add(joined);
-					log.debug("[initialCleanup]joined:{0}; exists: {1} ",  joined, segments.size());
+					log.debug("[initialCleanup]joined:{0}; size: {1} ",  joined, segments.size());
 				}else {
 					segments.add(entry);
-					log.debug("[initialCleanup]reusing:{0}; exists: {1} ",  entry, segments.size());
+					log.debug("[initialCleanup]reusing:{0}; size: {1} ",  entry, segments.size());
 				}
-				log.debug("[initialCleanup]exists {0} ", segments);				
+				log.debug("[initialCleanup]size {0} ", segments);				
 //
 //				// join increased and decreasing parts
 //				if (prevMax != null) {
@@ -412,7 +412,7 @@ public class ExtremeClassifierServiceImpl {
 	protected List<Float> createVector(Long length, Double area) {
 		List<Float> vector = new ArrayList<Float>();
 		vector.add(area.floatValue());
-		// vector.add(length.floatValue());
+		vector.add(length.floatValue());
 		return vector;
 	}
 
