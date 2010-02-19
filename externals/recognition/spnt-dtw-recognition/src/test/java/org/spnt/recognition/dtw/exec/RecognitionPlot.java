@@ -15,6 +15,7 @@ import org.spantus.core.io.AudioFactory;
 import org.spantus.core.io.DefaultAudioReader;
 import org.spantus.core.io.WraperExtractorReader;
 import org.spantus.core.threshold.AbstractClassifier;
+import org.spantus.externals.recognition.segment.RecognitionSegmentatorOnline;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -23,7 +24,6 @@ import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.utils.ExtractorParamUtils;
-import org.spnt.recognition.segment.RecognitionSegmentatorOnline;
 
 public class RecognitionPlot extends JFrame {
 

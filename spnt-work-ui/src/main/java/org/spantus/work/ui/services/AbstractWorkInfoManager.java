@@ -84,7 +84,8 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		SpantusWorkProjectInfo project = createProject();
 		project.setWorkingDir(oldProject.getWorkingDir());
 		project.setExperimentId(oldProject.getExperimentId());
-		project.setCurrentType(type);
+		project.setType(type);
+		project.setSample(oldProject.getSample());
 		project.setThresholdType(oldProject.getThresholdType());
 		switch (ProjectTypeEnum.valueOf(type)) {
 		case feature:
@@ -101,8 +102,10 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 					SupportableReaderEnum.spantus.name() + ":" + 
 					ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name());
 			break;
-		default:
+		case recognition:
 			break;
+		default:
+			throw new IllegalArgumentException("Not impl:" + type);
 		}
 		return project;
 	}

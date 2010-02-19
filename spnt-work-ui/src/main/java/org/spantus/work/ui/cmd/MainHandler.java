@@ -4,7 +4,6 @@ import java.awt.Frame;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.file.CurrentProjectChangedCmd;
 import org.spantus.work.ui.cmd.file.ExportCmd;
@@ -12,10 +11,7 @@ import org.spantus.work.ui.cmd.file.ImportCmd;
 import org.spantus.work.ui.cmd.file.NewProjectCmd;
 import org.spantus.work.ui.cmd.file.OpenProjectCmd;
 import org.spantus.work.ui.cmd.file.SaveProjectCmd;
-import org.spantus.work.ui.container.ReloadableComponent;
-import org.spantus.work.ui.container.SampleChangeListener;
 import org.spantus.work.ui.container.SpantusWorkFrame;
-import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class MainHandler implements SpantusWorkCommand {
@@ -27,13 +23,10 @@ public class MainHandler implements SpantusWorkCommand {
 	public void initialize(SpantusWorkFrame frame) {
 		this.getCmds().put(GlobalCommands.file.exit.name(),
 				new ExitCmd(frame));
-		createSampleCmd(this, frame.getSampleRepresentationPanel()
-				.getSampleChart(), frame.getSampleRepresentationPanel());
-		createFileCmd(this, frame, frame, frame.getSampleRepresentationPanel()
-				.getSampleChart());
-		createMiscCmd(this, frame, frame.getSampleRepresentationPanel(),
-				frame.getSampleRepresentationPanel(), frame, frame.getSampleRepresentationPanel()
-				.getSampleChart());
+		CommandExecutionFacade executionFacade = new CommandExecutionFacade(frame);
+		createSampleCmd(this,  executionFacade );
+		createFileCmd(this, frame, executionFacade );
+		createMiscCmd(this, frame, executionFacade);
 	}
 
 	public Map<String, SpantusWorkCommand> getCmds() {
@@ -59,22 +52,21 @@ public class MainHandler implements SpantusWorkCommand {
 		return execute(enumCmdName.name(), info);
 	}
 
-	private void createSampleCmd(MainHandler handler, SampleChart sampleChart,
-			SampleChangeListener lisetener) {
+	private void createSampleCmd(MainHandler handler, CommandExecutionFacade executionFacade) {
 
 		handler.getCmds().put(GlobalCommands.sample.record.name(),
-				new RecordCmd(lisetener, handler));
+				new RecordCmd(executionFacade, handler));
 		handler.getCmds().put(GlobalCommands.sample.play.name(), new PlayCmd());
 
 		handler.getCmds().put(GlobalCommands.sample.stop.name(), new StopCmd());
 
 		handler.getCmds().put(GlobalCommands.sample.zoomin.name(),
-				new ZoomInCmd(sampleChart));
+				new ZoomInCmd(executionFacade));
 		handler.getCmds().put(GlobalCommands.sample.zoomout.name(),
-				new ZoomOutCmd(sampleChart));
+				new ZoomOutCmd(executionFacade));
 
 		handler.getCmds().put(GlobalCommands.sample.reloadSampleChart.name(),
-				new ReloadSampleChartCmd(sampleChart));
+				new ReloadSampleChartCmd(executionFacade));
 
 	}
 	/**
@@ -84,8 +76,7 @@ public class MainHandler implements SpantusWorkCommand {
 	 * @param reloadableComponent
 	 * @param sampleChart
 	 */
-	private void createFileCmd(MainHandler handler, Frame frame,
-			ReloadableComponent reloadableComponent, SampleChart sampleChart) {
+	private void createFileCmd(MainHandler handler, Frame frame, CommandExecutionFacade executionFacade) {
 		
 		handler.getCmds().put(GlobalCommands.file.open.name(), new OpenCmd());
 		handler.getCmds().put(GlobalCommands.file.newProject.name(),
@@ -96,11 +87,11 @@ public class MainHandler implements SpantusWorkCommand {
 				new SaveProjectCmd(frame));
 
 		handler.getCmds().put(GlobalCommands.file.currentProjectChanged.name(),
-				new CurrentProjectChangedCmd(reloadableComponent));
+				new CurrentProjectChangedCmd(frame));
 		handler.getCmds().put(GlobalCommands.file.exportFile.name(),
-				new ExportCmd(frame, sampleChart));
+				new ExportCmd(frame, executionFacade));
 		handler.getCmds().put(GlobalCommands.file.importFile.name(),
-				new ImportCmd(frame, sampleChart));
+				new ImportCmd(frame, executionFacade));
 	}
 	/**
 	 * 
@@ -111,10 +102,8 @@ public class MainHandler implements SpantusWorkCommand {
 	 * @param reloadableComponent
 	 */
 	private void createMiscCmd(MainHandler handler, Frame frame,
-			SampleChangeListener lisetener,
-			ProcessedFrameLinstener processedFrameLinstener,
-			ReloadableComponent reloadableComponent,
-			SampleChart sampleChart) {
+			CommandExecutionFacade executionFacade) {
+		
 		handler.getCmds().put(GlobalCommands.help.about.name(),
 				new AboutCmd(frame));
 
@@ -122,7 +111,7 @@ public class MainHandler implements SpantusWorkCommand {
 				new ShowDocumentationCmd(frame));
 
 		CurrentSampleChangedCmd currentSampleChanged = new CurrentSampleChangedCmd(
-				lisetener, processedFrameLinstener, handler);
+				executionFacade, handler);
 		handler.getCmds().put(GlobalCommands.file.currentSampleChanged.name(),
 				currentSampleChanged);
 
@@ -130,14 +119,14 @@ public class MainHandler implements SpantusWorkCommand {
 				new OptionCmd(frame));
 
 		handler.getCmds().put(GlobalCommands.tool.reloadResources.name(),
-				new ReloadResourcesCmd(reloadableComponent));
+				new ReloadResourcesCmd(executionFacade));
 
 		handler.getCmds().put(GlobalCommands.tool.saveSegments.name(),
 				new SaveSegmentCmd());
 
 		handler.getCmds().put(
 				GlobalCommands.tool.autoSegmentation.name(),
-				new AutoSegmentationCmd(sampleChart));
+				new AutoSegmentationCmd(executionFacade));
 
 	}
 

@@ -1,4 +1,4 @@
-package org.spnt.recognition.corpus;
+package org.spantus.externals.recognition.corpus;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.spantus.exception.ProcessingException;
+import org.spantus.externals.recognition.bean.CorpusEntry;
+import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.utils.FileUtils;
 import org.spantus.work.services.converter.FrameValues3DConverter;
 import org.spantus.work.services.converter.FrameValuesConverter;
-import org.spnt.recognition.bean.CorpusEntry;
-import org.spnt.recognition.bean.CorpusFileEntry;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;

@@ -1,8 +1,8 @@
-package org.spnt.recognition.corpus;
+package org.spantus.externals.recognition.corpus;
 
 import java.util.List;
 
-import org.spnt.recognition.bean.CorpusEntry;
+import org.spantus.externals.recognition.bean.CorpusEntry;
 
 public interface CorpusRepository {
 	public List<CorpusEntry> findAllEntries();

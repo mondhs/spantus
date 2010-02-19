@@ -21,7 +21,6 @@
  */
 package org.spantus.work.ui.cmd;
 
-import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
  * 
@@ -35,14 +34,14 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
  */
 public class ZoomOutCmd extends AbsrtactCmd {
 
-	SampleChart sampleChart;
+	CommandExecutionFacade executionFacade;
 
-	public ZoomOutCmd(SampleChart sampleChart) {
-		this.sampleChart = sampleChart;
+	public ZoomOutCmd(CommandExecutionFacade executionFacade) {
+		this.executionFacade = executionFacade;
 	}
 	
 	public String execute(SpantusWorkInfo ctx) {
-		sampleChart.getChart().changedZoom(null, null);
+		executionFacade.changedZoom(null, null);
 		return null;
 	}
 

@@ -1,4 +1,4 @@
-package org.spnt.recognition.dtw.ui;
+package org.spantus.externals.recognition.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -14,10 +14,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 
+import org.spantus.externals.recognition.bean.CorpusFileEntry;
+import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
 import org.spantus.work.wav.AudioManagerFactory;
-import org.spnt.recognition.bean.CorpusFileEntry;
-import org.spnt.recognition.corpus.CorpusRepositoryFileImpl;
 
 public class AdminPanel extends JPanel {
 	/**

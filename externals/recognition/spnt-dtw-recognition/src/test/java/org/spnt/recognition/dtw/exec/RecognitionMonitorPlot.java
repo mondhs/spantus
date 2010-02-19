@@ -1,14 +1,14 @@
 package org.spnt.recognition.dtw.exec;
 
 import org.spantus.core.io.RecordWraperExtractorReader;
+import org.spantus.externals.recognition.segment.RecordRecognitionSegmentatorOnline;
 import org.spantus.segment.online.MultipleSegmentatorListenerOnline;
 import org.spantus.work.ui.AbstractSegmentPlot;
 import org.spantus.work.ui.SegmentMonitorPlot;
-import org.spnt.recognition.segment.RecordRecognitionSegmentatorOnline;
 
 public class RecognitionMonitorPlot extends SegmentMonitorPlot {
 	
-	/**
+	/** 
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;

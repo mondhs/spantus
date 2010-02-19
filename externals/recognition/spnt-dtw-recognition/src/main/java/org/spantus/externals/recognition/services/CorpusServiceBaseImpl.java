@@ -1,17 +1,17 @@
-package org.spnt.recognition.services;
+package org.spantus.externals.recognition.services;
 
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.spantus.externals.recognition.bean.CorpusEntry;
+import org.spantus.externals.recognition.bean.FeatureData;
+import org.spantus.externals.recognition.bean.RecognitionResult;
+import org.spantus.externals.recognition.corpus.CorpusRepository;
+import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.services.MathServicesFactory;
-import org.spnt.recognition.bean.CorpusEntry;
-import org.spnt.recognition.bean.FeatureData;
-import org.spnt.recognition.bean.RecognitionResult;
-import org.spnt.recognition.corpus.CorpusRepository;
-import org.spnt.recognition.corpus.CorpusRepositoryFileImpl;
 /**
  * 
  * @author Mindaugas Greibus

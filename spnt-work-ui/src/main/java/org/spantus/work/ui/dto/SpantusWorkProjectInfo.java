@@ -34,16 +34,16 @@ import java.io.File;
  */
 public class SpantusWorkProjectInfo {
 
-	public enum ProjectTypeEnum{feature, segmenation, recordSegmentation};
+	public enum ProjectTypeEnum{feature, segmenation, recordSegmentation, recognition};
 	
 	
 	private float from;
 
 	private float length;
 	
-	private String currentType;
+	private String type;
 
-	private WorkSample currentSample;
+	private WorkSample sample;
 	
 	private FeatureReader featureReader;
 	
@@ -70,15 +70,15 @@ public class SpantusWorkProjectInfo {
 	}
 
 	
-	public WorkSample getCurrentSample() {
-		if(currentSample == null){
-			this.currentSample = new WorkSample();
+	public WorkSample getSample() {
+		if(sample == null){
+			this.sample = new WorkSample();
 		}
-		return currentSample;
+		return sample;
 	}
 
-	public void setCurrentSample(WorkSample sample) {
-		this.currentSample = sample;
+	public void setSample(WorkSample sample) {
+		this.sample = sample;
 	}
 
 	public FeatureReader getFeatureReader() {
@@ -100,15 +100,15 @@ public class SpantusWorkProjectInfo {
 		this.workingDir = workingDir;
 	}
 
-	public String getCurrentType() {
-		if(currentType == null){
-			currentType = ProjectTypeEnum.segmenation.name();
+	public String getType() {
+		if(type == null){
+			type = ProjectTypeEnum.segmenation.name();
 		}
-		return currentType;
+		return type;
 	}
 
-	public void setCurrentType(String currentType) {
-		this.currentType = currentType;
+	public void setType(String currentType) {
+		this.type = currentType;
 	}
 
 	public String getExperimentId() {

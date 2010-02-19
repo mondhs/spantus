@@ -48,13 +48,13 @@ public class SaveSegmentCmd extends AbsrtactCmd{
 		String pathToSaveFormat = ctx.getProject().getFeatureReader().getWorkConfig().getAudioPathOutput()+
 		"/{0}_{1}.wav";
 		MarkerSet words = 
-		ctx.getProject().getCurrentSample().getMarkerSetHolder().getMarkerSets().get(
+		ctx.getProject().getSample().getMarkerSetHolder().getMarkerSets().get(
 				MarkerSetHolderEnum.word.name());
 //		StringBuilder sb = new StringBuilder();
 		for (Marker marker : words.getMarkers()) {
 			String path = MessageFormat.format(pathToSaveFormat,ctx.getProject().getExperimentId(), marker.getLabel());
 			AudioManagerFactory.createAudioManager().save(
-					ctx.getProject().getCurrentSample().getCurrentFile(), 
+					ctx.getProject().getSample().getCurrentFile(), 
 					marker.getStart()/1000f,
 					marker.getLength()/1000f,
 					path

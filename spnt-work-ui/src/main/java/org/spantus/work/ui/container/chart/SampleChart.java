@@ -109,13 +109,13 @@ public class SampleChart extends JPanel {
 			chart.setCharInfo(createChartInfo());
 			chart.setPreferredSize(getSize());
 			add(chart, BorderLayout.CENTER);
-			if(!ProjectTypeEnum.feature.name().equals(getInfo().getProject().getCurrentType())
+			if(!ProjectTypeEnum.feature.name().equals(getInfo().getProject().getType())
 					&&
-					getInfo().getProject().getCurrentSample().getMarkerSetHolder() != null){
+					getInfo().getProject().getSample().getMarkerSetHolder() != null){
 				if( chart instanceof MarkeredTimeSeriesMultiChart ){
 					MarkeredTimeSeriesMultiChart _chart = ((MarkeredTimeSeriesMultiChart)chart);
 					getMarkerComponentEventHandler().setChart(_chart);
-					_chart.initialize(getInfo().getProject().getCurrentSample().getMarkerSetHolder()
+					_chart.initialize(getInfo().getProject().getSample().getMarkerSetHolder()
 							,getMarkerComponentEventHandler()
 							,getMarkerComponentEventHandler()
 							,getMarkerComponentEventHandler());

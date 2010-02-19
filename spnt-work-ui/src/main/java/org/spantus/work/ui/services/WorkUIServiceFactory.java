@@ -27,7 +27,7 @@ public abstract class WorkUIServiceFactory {
 	}
 	public static IExtractorInputReader read(SpantusWorkInfo ctx, ProcessedFrameLinstener processedFrameLinstener){
 		setThreshold(ctx.getProject(), ctx.getProject().getFeatureReader().getWorkConfig());
-		WorkSample workSample = ctx.getProject().getCurrentSample();
+		WorkSample workSample = ctx.getProject().getSample();
 //		workSample.setLength(createReaderService().getFormat(workSample.getCurrentFile()));
 //		workSample.setFormat(createReaderService().getFormat(workSample.getCurrentFile()));
 		ReaderService readerService = createReaderService();
@@ -38,7 +38,7 @@ public abstract class WorkUIServiceFactory {
 				processedFrameLinstener);
 	}
 	protected static void setThreshold(SpantusWorkProjectInfo project, WorkUIExtractorConfig config){
-		ProjectTypeEnum projectType = ProjectTypeEnum.valueOf(project.getCurrentType());
+		ProjectTypeEnum projectType = ProjectTypeEnum.valueOf(project.getType());
 		switch (projectType) {
 		case segmenation:
 			for (String extractorKey : project.getFeatureReader().getExtractors()) {

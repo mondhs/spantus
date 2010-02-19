@@ -6,18 +6,19 @@
 	<parent>
       <artifactId>spnt-root-pom</artifactId>
       <groupId>org.spantus</groupId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.2-SNAPSHOT</version>
    	</parent>
 
+	<groupId>org.spantus.externals.recognition</groupId>
 	<artifactId>spnt-dtw-recognition</artifactId>
 	<name>Spantus - External - DTW recognition</name>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.2-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-work</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>xstream</groupId>

@@ -1,23 +1,22 @@
 package org.spantus.work.ui.cmd;
 
-import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class ReloadSampleChartCmd extends AbsrtactCmd {
 	
 	
-	private SampleChart chart;
+	private CommandExecutionFacade executionFacade;
 	
-	public ReloadSampleChartCmd(SampleChart chart) {
-		this.chart = chart;
+	public ReloadSampleChartCmd(CommandExecutionFacade executionFacade) {
+		this.executionFacade = executionFacade;
 	}
 
 	
 	public String execute(SpantusWorkInfo ctx) {
-		if(ctx.getProject().getCurrentSample().getCurrentFile()==null){
-			chart.setReader(null);
+		if(ctx.getProject().getSample().getCurrentFile()==null){
+			executionFacade.setReader(null);
 		}
-		chart.updateContent();
+		executionFacade.updateContent();
 		
 		return null;
 	}

@@ -4,9 +4,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.spantus.externals.recognition.bean.RecognitionResult;
+import org.spantus.externals.recognition.corpus.CorpusMatchListener;
 import org.spantus.logger.Logger;
-import org.spnt.recognition.bean.RecognitionResult;
-import org.spnt.recognition.corpus.CorpusMatchListener;
 
 public class WritableCorpusMatchListener implements CorpusMatchListener {
 

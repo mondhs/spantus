@@ -71,9 +71,9 @@ public class RecordCmd extends AbsrtactCmd {
 		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader().getWorkConfig();
 		
 		
-		ctx.getProject().getCurrentSample().setCurrentFile(null);
-		ctx.getProject().getCurrentSample().setFormat(null);
-		ctx.getProject().getCurrentSample().setMarkerSetHolder(new MarkerSetHolder());
+		ctx.getProject().getSample().setCurrentFile(null);
+		ctx.getProject().getSample().setFormat(null);
+		ctx.getProject().getSample().setMarkerSetHolder(new MarkerSetHolder());
 		setCapture(null);
 		
 		WraperExtractorReader wrapReader = createReader(config);
@@ -100,7 +100,7 @@ public class RecordCmd extends AbsrtactCmd {
 		IClassifier segmentator = null;
 		
 		if (ProjectTypeEnum.recordSegmentation.name().equals(ctx.getProject()
-				.getCurrentType())) {
+				.getType())) {
 			for (String extr : ctx.getProject().getFeatureReader()
 					.getExtractors()) {
 				String[] extractor = extr.split(":");
@@ -188,7 +188,7 @@ public class RecordCmd extends AbsrtactCmd {
 			showMessage(recordSegmentator.getMarkSet(), fullSingalFullPath);
 			this.cancel();
 			if(wavFile != null){
-				ctx.getProject().getCurrentSample().setCurrentFile(wavFile);
+				ctx.getProject().getSample().setCurrentFile(wavFile);
 				handler.execute(GlobalCommands.file.currentSampleChanged.name(), ctx);
 			}
 			
@@ -208,7 +208,7 @@ public class RecordCmd extends AbsrtactCmd {
 	}
 	protected void showMessage(MarkerSet words, String path){
 		String messageFormat = getMessage(recordFinishedMessageBody);
-		if(ProjectTypeEnum.segmenation.name().equals(ctx.getProject().getCurrentType())){
+		if(ProjectTypeEnum.segmenation.name().equals(ctx.getProject().getType())){
 			messageFormat = getMessage(recordedSoundSavedMessageBody);
 		}
 		

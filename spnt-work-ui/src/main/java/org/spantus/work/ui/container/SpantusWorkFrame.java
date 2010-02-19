@@ -15,11 +15,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.spantus.externals.recognition.ui.AdminPanel;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.MainHandler;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.container.panel.SampleRepresentationPanel;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
 import org.spantus.work.ui.i18n.ImageResourcesEnum;
 import org.spantus.work.ui.services.SpantusUIServiceImpl;
@@ -31,7 +33,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
 	private SpantusWorkMenuBar jJMenuBar = null;
-	private SpantusWorkToolbar jJToolBarBar = null;
+	private SpantusWorkToolbar spantusToolBar = null;
 	private SpantusWorkInfo info = null;
 	private MainHandler handler = null;
 	private SampleRepresentationPanel sampleRepresentationPanel;
@@ -67,12 +69,12 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	 */
 	public void initialize() {
 		getSpantusUIService().setupEnv(getInfo(),this);
+//		this.setContentPane(getJContentPane());
 		getJJMenuBar().initialize();
-		getToolBar().initialize();
-		getSampleRepresentationPanel().initialize();
+//		getToolBar().initialize();
+//		getSampleRepresentationPanel().initialize();
 		this.setJMenuBar(getJJMenuBar());
-		this.setContentPane(getJContentPane());
-		contructTitle();
+		newProject();
 		log.info("Application started");
 	}
 	
@@ -81,9 +83,39 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		getWorkInfoManager().saveWorkInfo(getInfo());
 		log.info("Application stoped");
 	}
+	/**
+	 * 
+	 */
+	public void newProject() {
+//		setJMenuBar(null);
+		getContentPane().removeAll();
+		if(jContentPane!=null){
+			getJContentPane().removeAll();
+			jContentPane=null;
+		}
+		sampleRepresentationPanel = null;
+		if(ProjectTypeEnum.recognition.name().equals(
+				getInfo().getProject().getType())){
+			setContentPane(getRecognitionContentPane());
+		}else{
+			setContentPane(getJContentPane());
+//			getJJMenuBar().initialize();
+			getToolBar().initialize();
+			getSampleRepresentationPanel().initialize();
+			this.setJMenuBar(getJJMenuBar());
+			this.setContentPane(getJContentPane());
+		}
+		contructTitle();
+		repaint();
+		log.info("New project {0}", getInfo().getProject().getType());
+	}
+	/**
+	 * 
+	 */
 	public void reload() {
 		getJJMenuBar().reload();
 		getToolBar().reload();
+		getSampleRepresentationPanel().reload();
 		contructTitle();
 		log.info("reload");
 		this.setTitle(contructTitle());
@@ -92,10 +124,10 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	protected String contructTitle(){
 		String version = getVersion();
 		
-		String projectType = getMessage("spantus.work.ui.project.type." + getInfo().getProject().getCurrentType());
+		String projectType = getMessage("spantus.work.ui.project.type." + getInfo().getProject().getType());
 		String fileName = "";
-		if(getInfo().getProject().getCurrentSample().getCurrentFile() != null){
-			fileName = getInfo().getProject().getCurrentSample().getCurrentFile().getFile();
+		if(getInfo().getProject().getSample().getCurrentFile() != null){
+			fileName = getInfo().getProject().getSample().getCurrentFile().getFile();
 		}
 		String title = MessageFormat.format(getMessage("spantus.work.ui.title.format"), 
 				version,
@@ -155,6 +187,17 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		}
 		return jContentPane;
 	}
+	private JPanel getRecognitionContentPane() {
+		if (jContentPane == null) {
+			jContentPane = new JPanel();
+			jContentPane.setLayout(new BorderLayout());
+//			jContentPane.add(getToolBar(), BorderLayout.NORTH);
+			AdminPanel adminPanel = new AdminPanel();
+			jContentPane.add(adminPanel,BorderLayout.CENTER);
+//			new DropTarget(jContentPane, new WavDropTargetListener(getHandler(),getInfo()));
+		}
+		return jContentPane;
+	}
 
 	/**
 	 * This method initializes jJMenuBar	
@@ -173,14 +216,12 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	
 	
 	public SpantusWorkToolbar getToolBar() {
-		if (jJToolBarBar == null) {
-			jJToolBarBar = new SpantusWorkToolbar();
-//			demoToolBar.setActionListener(getListener());
-			jJToolBarBar.setInfo(getInfo());
-			jJToolBarBar.setHandler(getHandler());
-			
+		if (spantusToolBar == null) {
+			spantusToolBar = new SpantusWorkToolbar();
+			spantusToolBar.setInfo(getInfo());
+			spantusToolBar.setHandler(getHandler());
 		}
-		return jJToolBarBar;
+		return spantusToolBar;
 	}
 
 	

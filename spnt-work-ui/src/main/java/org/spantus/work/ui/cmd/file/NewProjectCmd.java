@@ -33,7 +33,7 @@ public class NewProjectCmd extends AbsrtactCmd {
 		for (ProjectTypeEnum projectType : ProjectTypeEnum.values()) {
 			selectionMap.put(getMessage(RESOURCE_PREFIX + projectType.name()), projectType);
 		}
-		String current = getMessage(RESOURCE_PREFIX + info.getProject().getCurrentType());
+		String current = getMessage(RESOURCE_PREFIX + info.getProject().getType());
 		
 	    String projectType = (String)JOptionPane.showInputDialog(
 	                        frame,

@@ -1,18 +1,18 @@
-package org.spnt.recognition.segment;
+package org.spantus.externals.recognition.segment;
 
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.marker.Marker;
+import org.spantus.externals.recognition.bean.FeatureData;
+import org.spantus.externals.recognition.bean.RecognitionResult;
+import org.spantus.externals.recognition.services.CorpusService;
+import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.work.services.FeatureExtractor;
 import org.spantus.work.services.FeatureExtractorImpl;
-import org.spnt.recognition.bean.FeatureData;
-import org.spnt.recognition.bean.RecognitionResult;
-import org.spnt.recognition.services.CorpusService;
-import org.spnt.recognition.services.CorpusServiceBaseImpl;
 
 public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 	

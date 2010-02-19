@@ -62,6 +62,13 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 				param);
 		//init parameters
 		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+		//if word level no info but exists phone level, clone phone level
+		if(markerSet == null && markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name())!= null){
+			markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
+			markerSet = markerSet.clone();
+			markerSet.setMarkerSetType(MarkerSetHolderEnum.word.name());
+			markerSetHolder.getMarkerSets().put(markerSet.getMarkerSetType(), markerSet);
+		}
 		BaseDecisionSegmentatorParam safe_param = createSafeParam(param);
 		//if there is no segments just return empty segmentaion results
 		if (markerSet.getMarkers().size()==0) {

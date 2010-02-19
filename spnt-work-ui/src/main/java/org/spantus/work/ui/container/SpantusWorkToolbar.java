@@ -89,7 +89,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 //        this.add(getStopBtn());
 //        this.add(getRecordBtn());
 //        this.add(getMode());
-		initialize(getInfo().getProject().getCurrentType());
+		initialize(getInfo().getProject().getType());
 	}
 	
 	protected void initialize(String projectType) {
@@ -120,7 +120,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 //		removeAll();
 //		initialize(getInfo().getProject().getCurrentType());
 		
-		String projectType = getInfo().getProject().getCurrentType();
+		String projectType = getInfo().getProject().getType();
 		boolean isPlayable = false;
 		ProjectTypeEnum type = ProjectTypeEnum.valueOf(projectType);
 		switch (type) {

@@ -1,4 +1,4 @@
-package org.spnt.recognition.dtw.ui;
+package org.spantus.externals.recognition.ui;
 
 public interface RecognitionUIActionListener {
 	public void start();

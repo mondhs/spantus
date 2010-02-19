@@ -61,7 +61,7 @@ public class OpenCmd extends AbsrtactCmd {
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = getFileChooser().getSelectedFile();
 			try {
-				ctx.getProject().getCurrentSample().setCurrentFile(
+				ctx.getProject().getSample().setCurrentFile(
 						selectedFile.toURI().toURL());
 				ctx.getProject().setWorkingDir(selectedFile.getParentFile());
 			} catch (MalformedURLException e1) {

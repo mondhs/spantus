@@ -1,4 +1,4 @@
-package org.spnt.recognition.dtw.ui;
+package org.spantus.externals.recognition.ui;
 
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -34,7 +34,7 @@ public class RecognitionToolBar extends JToolBar {
 	
 	private boolean learnMode = false;
 	
-	protected void initialize() {
+	public void initialize() {
 		FlowLayout layout = new FlowLayout(FlowLayout.LEFT, 3, 2);
 		this.setLayout(layout);
 		this.add(getRecordBtn());

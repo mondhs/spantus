@@ -80,10 +80,10 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 	}
 
 	public void initialize() {
-		initialize(getInfo().getProject().getCurrentType());
+		initialize(getInfo().getProject().getType());
 	}
 	public void reload() {
-		initialize(getInfo().getProject().getCurrentType());
+		initialize(getInfo().getProject().getType());
 	}
 	protected void initialize(String projectType) {
 		getFileMenu();

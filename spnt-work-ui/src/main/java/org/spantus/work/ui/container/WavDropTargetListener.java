@@ -88,7 +88,7 @@ public class WavDropTargetListener implements DropTargetListener {
 
 		URL file = getFile(event.getTransferable());
 		if (file != null) {
-			this.info.getProject().getCurrentSample().setCurrentFile(file);
+			this.info.getProject().getSample().setCurrentFile(file);
 			this.handler.execute(GlobalCommands.file.currentSampleChanged
 						.name(), this.info);
 		}

@@ -1,4 +1,4 @@
-package org.spnt.recognition.bean;
+package org.spantus.externals.recognition.bean;
 
 import java.util.HashMap;
 import java.util.Map;

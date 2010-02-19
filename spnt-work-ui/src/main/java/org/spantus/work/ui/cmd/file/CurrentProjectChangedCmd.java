@@ -1,22 +1,23 @@
 package org.spantus.work.ui.cmd.file;
 
+import java.awt.Frame;
+
 import org.spantus.work.ui.cmd.AbsrtactCmd;
-import org.spantus.work.ui.cmd.GlobalCommands;
-import org.spantus.work.ui.container.ReloadableComponent;
+import org.spantus.work.ui.container.SpantusWorkFrame;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class CurrentProjectChangedCmd extends AbsrtactCmd {
 	
-	ReloadableComponent component;
+	private SpantusWorkFrame component;
 	
-	public CurrentProjectChangedCmd(ReloadableComponent component) {
-		this.component = component;
+	public CurrentProjectChangedCmd(Frame component) {
+		this.component = (SpantusWorkFrame)component;
 	}
 
 	
 	public String execute(SpantusWorkInfo ctx) {
-		component.reload();
-		return GlobalCommands.sample.reloadSampleChart.name();
+		component.newProject();
+		return null;
 	}
 
 }

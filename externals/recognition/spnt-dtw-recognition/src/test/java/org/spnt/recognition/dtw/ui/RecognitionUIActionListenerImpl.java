@@ -2,6 +2,8 @@ package org.spnt.recognition.dtw.ui;
 
 import java.awt.BorderLayout;
 
+import org.spantus.externals.recognition.ui.RecognitionUIActionListener;
+
 public class RecognitionUIActionListenerImpl implements
 		RecognitionUIActionListener {
 

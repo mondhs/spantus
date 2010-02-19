@@ -1,4 +1,4 @@
-package org.spnt.recognition.bean;
+package org.spantus.externals.recognition.bean;
 
 
 public class RecognitionResult {

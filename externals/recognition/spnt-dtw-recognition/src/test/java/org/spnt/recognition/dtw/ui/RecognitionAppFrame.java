@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.spantus.externals.recognition.ui.RecognitionToolBar;
+import org.spantus.externals.recognition.ui.RecognitionUIActionListener;
 import org.spnt.recognition.dtw.exec.RecognitionMonitorPlot;
 
 public class RecognitionAppFrame extends JFrame {

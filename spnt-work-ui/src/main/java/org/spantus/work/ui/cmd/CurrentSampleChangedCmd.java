@@ -25,13 +25,11 @@ import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
-import org.spantus.work.ui.container.SampleChangeListener;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.services.WorkInfoManager;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
@@ -39,22 +37,22 @@ import org.spantus.work.ui.services.WorkUIServiceFactory;
 public class CurrentSampleChangedCmd extends AbsrtactCmd {
 
 	protected Logger log = Logger.getLogger(getClass());
-	private SampleChangeListener lisetener;
-	private ProcessedFrameLinstener processedFrameLinstener;
+//	private SampleChangeListener lisetener;
+//	private ProcessedFrameLinstener processedFrameLinstener;
+	private CommandExecutionFacade executionFacade;
 	private SpantusWorkCommand handler;
 	private WorkInfoManager workInfoManager;
 	
-	public CurrentSampleChangedCmd(SampleChangeListener lisetener, ProcessedFrameLinstener processedFrameLinstener, SpantusWorkCommand handler) {
-		this.lisetener = lisetener;
-		this.processedFrameLinstener = processedFrameLinstener;
+	public CurrentSampleChangedCmd(CommandExecutionFacade executionFacade, SpantusWorkCommand handler) {
+		this.executionFacade = executionFacade;
 		this.handler = handler;
 	}
 
 	
 	public String execute(SpantusWorkInfo ctx) {
 		
-		if(ctx.getProject().getCurrentSample().getCurrentFile() != null){
-			MarkerSetHolder holder = ctx.getProject().getCurrentSample().getMarkerSetHolder();
+		if(ctx.getProject().getSample().getCurrentFile() != null){
+			MarkerSetHolder holder = ctx.getProject().getSample().getMarkerSetHolder();
 			MarkerSet markerSet = new MarkerSet();
 			holder.getMarkerSets().clear();
 			holder.getMarkerSets().put(MarkerSetHolderEnum.word.name(), markerSet);
@@ -78,7 +76,7 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 			IExtractorInputReader reader;
 			try{
 				//read changed sample
-				reader = WorkUIServiceFactory.read(ctx, processedFrameLinstener);
+				reader = WorkUIServiceFactory.read(ctx, executionFacade);
 			}catch (ProcessingException e) {
 				error(e.getLocalizedMessage(), ctx);
 				return;
@@ -88,7 +86,7 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 				handler.execute(GlobalCommands.tool.reloadResources.name(), ctx);
 				return;
 			}
-			lisetener.changedReader(reader);
+			executionFacade.changedReader(reader);
 			if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
 				Toolkit.getDefaultToolkit().beep();
 			}

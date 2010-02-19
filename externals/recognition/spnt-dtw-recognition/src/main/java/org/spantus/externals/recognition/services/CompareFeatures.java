@@ -1,4 +1,4 @@
-package org.spnt.recognition.services;
+package org.spantus.externals.recognition.services;
 
 import java.io.File;
 

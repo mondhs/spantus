@@ -15,10 +15,10 @@ import org.spantus.mpeg7.io.Mpeg7Factory;
 import org.spantus.work.SpantusBundle;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
+import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.cmd.UIFileFilter;
 import org.spantus.work.ui.cmd.file.ExportCmd.ExportType;
-import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class ImportCmd extends AbsrtactCmd {
@@ -27,13 +27,13 @@ public class ImportCmd extends AbsrtactCmd {
 	
 	private JFileChooser fileChooser;
 	private Component parent;
-	private SampleChart chart;
+//	private SampleChart chart;
 	private File defaulDir;
+	private CommandExecutionFacade executionFacade;
 	
-	
-	public ImportCmd(Component parent, SampleChart chart) {
+	public ImportCmd(Component parent, CommandExecutionFacade executionFacade) {
 		this.parent = parent;
-		this.chart = chart;
+		this.executionFacade = executionFacade;
 	}
 	
 	
@@ -48,15 +48,15 @@ public class ImportCmd extends AbsrtactCmd {
 			ExportCmd.ExportType type = ExportCmd.ExportType.valueOf(fileFilter.getType());
 			switch (type) {
 			case markers:
-				ctx.getProject().getCurrentSample().setMarkerSetHolder(readMarker(selectedFile));
+				ctx.getProject().getSample().setMarkerSetHolder(readMarker(selectedFile));
 				log.debug("Imported markers successfuly:" + selectedFile);
 				return GlobalCommands.sample.reloadSampleChart.name();
 			case sample:
-				chart.setReader(readExtractorReader(selectedFile));
+				executionFacade.setReader(readExtractorReader(selectedFile));
 				log.debug("Imported sample successfuly:" + selectedFile);
 				return GlobalCommands.sample.reloadSampleChart.name();
 			case mpeg7:
-				chart.setReader(readMpeg7(selectedFile));
+				executionFacade.setReader(readMpeg7(selectedFile));
 				log.debug("Imported mpeg7 successfuly:" + selectedFile);
 				return GlobalCommands.sample.reloadSampleChart.name();
 			case bundle:
@@ -110,8 +110,8 @@ public class ImportCmd extends AbsrtactCmd {
 	
 	protected void readBundle(SpantusWorkInfo ctx, File file){
 		SpantusBundle bundle = WorkServiceFactory.createBundleDao().read(file);
-		chart.setReader(bundle.getReader());
-		ctx.getProject().getCurrentSample().setMarkerSetHolder(bundle.getHolder());
+		executionFacade.setReader(bundle.getReader());
+		ctx.getProject().getSample().setMarkerSetHolder(bundle.getHolder());
 	}
 
 	

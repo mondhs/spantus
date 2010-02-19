@@ -1,11 +1,11 @@
-package org.spnt.recognition.dtw.ui;
+package org.spantus.externals.recognition.ui;
 
 import java.util.List;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import org.spnt.recognition.bean.CorpusFileEntry;
+import org.spantus.externals.recognition.bean.CorpusFileEntry;
 
 public class CorpusEntryTableModel implements TableModel {
 	/**

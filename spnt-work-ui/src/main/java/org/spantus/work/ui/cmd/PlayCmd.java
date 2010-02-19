@@ -7,7 +7,7 @@ public class PlayCmd extends AbsrtactCmd {
 	
 	
 	public String execute(SpantusWorkInfo ctx) {
-		AudioManagerFactory.createAudioManager().play(ctx.getProject().getCurrentSample().getCurrentFile(), 
+		AudioManagerFactory.createAudioManager().play(ctx.getProject().getSample().getCurrentFile(), 
 				ctx.getProject().getFrom(),
 				ctx.getProject().getLength()
 				);	

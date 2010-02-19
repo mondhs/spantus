@@ -44,7 +44,6 @@ import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
 import org.spantus.segment.SegmentatorParam;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
-import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 
@@ -63,7 +62,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	public static final String segmentAutoPanelMessageHeader = "segmentAutoPanelMessageHeader";
 	public static final String segmentAutoPanelMessageBody = "segmentAutoPanelMessageBody";
 
-	private SampleChart sampleChart;
+	private CommandExecutionFacade executionFacade;
 
 	protected Logger log = Logger.getLogger(getClass());
 
@@ -71,8 +70,8 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	 * 
 	 * @param sampleChart
 	 */
-	public AutoSegmentationCmd(SampleChart sampleChart) {
-		this.sampleChart = sampleChart;
+	public AutoSegmentationCmd(CommandExecutionFacade executionFacade) {
+		this.executionFacade = executionFacade;
 
 	}
 
@@ -82,7 +81,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	public String execute(SpantusWorkInfo ctx) {
 		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader()
 				.getWorkConfig();
-		IExtractorInputReader reader = sampleChart.getReader();
+		IExtractorInputReader reader = executionFacade.getReader();
 		if (reader == null) {
 			log.info("Nothing to segment");
 		}
@@ -92,7 +91,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		for (IExtractor extractor : reader.getExtractorRegister()) {
 			if (extractor instanceof IClassifier) {
 				markerSet = ((IClassifier) extractor).getMarkSet();
-				ctx.getProject().getCurrentSample().getMarkerSetHolder()	
+				ctx.getProject().getSample().getMarkerSetHolder()	
 						.getMarkerSets().put(markerSet.getMarkerSetType(),
 								markerSet);
 				classifiers.add((IClassifier)extractor);
@@ -108,7 +107,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 			ISegmentatorService segmentator = SegmentFactory.createSegmentator(
 					ctx.getProject().getFeatureReader().getWorkConfig().getSegmentationServiceType());
 			MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers, param);
-			ctx.getProject().getCurrentSample().setMarkerSetHolder(markerSetHolder);
+			ctx.getProject().getSample().setMarkerSetHolder(markerSetHolder);
 			markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
 			//if word level does not exist, check for phone level
 			if(markerSet == null){
@@ -189,16 +188,16 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	 */
 	public void putLabels(SpantusWorkInfo ctx) {
 		String filePath = getDescriptionFileName(ctx.getProject()
-				.getCurrentSample().getCurrentFile().getFile());
+				.getSample().getCurrentFile().getFile());
 		List<String> words = null;
 		if (filePath == null) {
 			log.debug("marker description file not found for "
-					+ ctx.getProject().getCurrentSample().getCurrentFile()
+					+ ctx.getProject().getSample().getCurrentFile()
 							.getFile());
 			return;
 		}
 
-		MarkerSet markerSet = ctx.getProject().getCurrentSample()
+		MarkerSet markerSet = ctx.getProject().getSample()
 		.getMarkerSetHolder().getMarkerSets().get(
 				MarkerSetHolderEnum.word.name());
 		if(markerSet == null){

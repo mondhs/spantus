@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 
 import javax.swing.JFileChooser;
 
-import org.spantus.chart.util.ChartUtils;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.logger.Logger;
@@ -16,8 +15,8 @@ import org.spantus.utils.FileUtils;
 import org.spantus.work.SpantusBundle;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
+import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.cmd.UIFileFilter;
-import org.spantus.work.ui.container.chart.SampleChart;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class ExportCmd extends AbsrtactCmd {
@@ -31,7 +30,7 @@ public class ExportCmd extends AbsrtactCmd {
 	public static final String[] BUNDLE_FILES = {"spnt.zip"};
 	
 	
-	private SampleChart chart;
+	private CommandExecutionFacade execFacade;
 	
 	private Component parent;
 	
@@ -51,8 +50,8 @@ public class ExportCmd extends AbsrtactCmd {
 
 	enum ExportType{image, markers, sample, mpeg7, bundle}; 
 	
-	public ExportCmd(Frame frame, SampleChart chart) {
-		this.chart = chart;
+	public ExportCmd(Frame frame, CommandExecutionFacade execCtx) {
+		this.execFacade = execCtx;
 		this.parent = frame;
 	}
 	
@@ -68,7 +67,7 @@ public class ExportCmd extends AbsrtactCmd {
 		File file = null;
 		//set file name for export file chooser
 		try {
-			file = new File(ctx.getProject().getCurrentSample().getCurrentFile().toURI());
+			file = new File(ctx.getProject().getSample().getCurrentFile().toURI());
 			String fileName = FileUtils.getOnlyFileName(file);
 			File newFile = new File(file.getParent(),fileName);
 			if(file != null){
@@ -92,11 +91,11 @@ public class ExportCmd extends AbsrtactCmd {
 			case image:
 				return writePNG(selectedFile);
 			case markers:
-				return writeMarker(ctx.getProject().getCurrentSample().getMarkerSetHolder(),selectedFile);
+				return writeMarker(ctx.getProject().getSample().getMarkerSetHolder(),selectedFile);
 			case sample:
-				return writeSample(chart.getReader(), selectedFile);
+				return writeSample(execFacade.getReader(), selectedFile);
 			case bundle:
-				return writeBundle(chart.getReader(), ctx.getProject().getCurrentSample().getMarkerSetHolder(), selectedFile);
+				return writeBundle(execFacade.getReader(), ctx.getProject().getSample().getMarkerSetHolder(), selectedFile);
 			default:
 				throw new RuntimeException("not impl: " + type.toString());
 			}
@@ -126,10 +125,10 @@ public class ExportCmd extends AbsrtactCmd {
 	
 	protected boolean writePNG(File file){
 		try {
-			ChartUtils.writeAsPNG(chart.getChart(), file);
+			execFacade.writeChartAsPNG(file);
 			log.debug("exported image successfuly: " + file);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e);
 			return false;
 		}
 		return true;

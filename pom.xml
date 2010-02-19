@@ -25,6 +25,7 @@
 		<module>spnt-extract</module>
 		<module>spnt-mpeg7</module>
 		<module>spnt-work</module>
+		<module>externals/recognition/spnt-dtw-recognition</module>
 		<module>spnt-work-ui</module>
 	</modules>
     
