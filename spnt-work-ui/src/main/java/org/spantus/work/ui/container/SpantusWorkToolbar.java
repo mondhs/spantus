@@ -113,6 +113,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		this.add(new JToolBar.Separator());
 		this.add(getPreferencesBtn());
 		this.add(getRefreshBtn());
+		this.add(new JToolBar.Separator());
 		
 	}	
 	

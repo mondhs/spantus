@@ -24,12 +24,19 @@ public class CommandExecutionFacade implements SampleChangeListener,
 		frame.getSampleRepresentationPanel().changedReader(reader);
 	}
 
-	public void refresh(Float value) {
-		frame.getSampleRepresentationPanel().refresh(value);
-		if(value!=null){
-			frame.getRecordMonitor().setValue(value.intValue());
-		}
+	public void refresh() {
+		frame.getSampleRepresentationPanel().refresh();
 	}
+	public void refreshValue(Float value){
+		if(value!=null){
+                        Double sqr_value = value.doubleValue() * value;
+                        if(sqr_value != 0){
+                            sqr_value = Math.log(sqr_value);
+                        }
+			frame.getRecordMonitor().setValue(sqr_value.intValue());
+		}
+        }
+
 
 	public void started(Long total) {
 		frame.getSampleRepresentationPanel().started(total);

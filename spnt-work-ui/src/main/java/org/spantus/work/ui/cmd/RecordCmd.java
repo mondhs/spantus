@@ -88,6 +88,8 @@ public class RecordCmd extends AbsrtactCmd {
 //		log.error("start capturing");
 		ctx.setPlaying(true);
 		getTimer().schedule(new UpdateCapture(recordSegmentator), 500L, 250L);
+                getTimer().schedule(new UpdateMonitor(recordSegmentator), 0L, 5L);
+
 		getWorkInfoManager().increaseExperimentId(ctx);
 		return null;
 	}
@@ -136,11 +138,47 @@ public class RecordCmd extends AbsrtactCmd {
 		}
 	}
 
+	public class UpdateMonitor extends TimerTask {
+
+            private RecordSegmentatorOnline recordSegmentator;
+
+
+            public UpdateMonitor(RecordSegmentatorOnline recordSegmentator) {
+                    super();
+			this.recordSegmentator = recordSegmentator;
+            }
+
+
+            @Override
+            public void run() {
+
+                if(recordSegmentator.getReader().getAudioBuffer().size()>0){
+                        Double dbl = recordSegmentator.getReader().getLastValue().doubleValue();
+                        Double sqr_value = dbl * dbl;
+                        if(sqr_value != 0){
+                            sqr_value = Math.log(sqr_value);
+                        }
+
+//                    if(recordSegmentator.getReader().getLastValue()!=null){
+//                        log.error("sqr_value: " + sqr_value);
+//                    }
+                    lisetener.refreshValue(recordSegmentator.getReader().getLastValue());
+
+                }
+
+                if (!ctx.getPlaying()) {
+                    this.cancel();
+		}
+
+
+            }
+
+        }
 	
 	public class UpdateCapture extends TimerTask {
 		
-		RecordSegmentatorOnline recordSegmentator;
-		boolean isRecordInitialyzed = false;
+		private RecordSegmentatorOnline recordSegmentator;
+		private boolean isRecordInitialyzed = false;
 		
 		public UpdateCapture(RecordSegmentatorOnline recordSegmentator) {
 			super();
@@ -158,10 +196,7 @@ public class RecordCmd extends AbsrtactCmd {
 				lisetener.changedReader(recordSegmentator.getReader().getReader());
 				isRecordInitialyzed =true;
 			}else{
-//				if(recordSegmentator.getReader().getLastValue()!=null){
-//					log.error("recordSegmentator.getReader().getLastValue(): " + recordSegmentator.getReader().getLastValue()*recordSegmentator.getReader().getLastValue());
-//				}
-				lisetener.refresh(recordSegmentator.getReader().getLastValue());
+				lisetener.refresh();
 			}
 			if (!ctx.getPlaying()) {
 				stop();

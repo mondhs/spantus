@@ -168,4 +168,12 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 	public void setWords(MarkerSet words) {
 		this.words = words;
 	}
+	
+	
+	@Override
+	public String toString() {
+		int wordsSize = 0;
+		wordsSize = words == null || words.getMarkers() == null?0:words.getMarkers().size();
+		return MessageFormat.format("{0}[path:{1}, words: {2}]", getClass().getSimpleName(), path, wordsSize);
+	}
 }

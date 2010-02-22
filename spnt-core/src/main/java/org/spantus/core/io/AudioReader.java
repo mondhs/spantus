@@ -32,5 +32,11 @@ import javax.sound.sampled.AudioFileFormat;
  *
  */
 public interface AudioReader extends SignalReader {
+	/**
+	 * Read audio signal format
+	 * 
+	 * @param url
+	 * @return
+	 */
 	public AudioFileFormat getAudioFormat(URL url);
 }

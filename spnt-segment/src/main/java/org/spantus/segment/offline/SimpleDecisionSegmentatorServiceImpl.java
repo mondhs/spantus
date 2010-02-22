@@ -61,7 +61,10 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		MarkerSetHolder markerSetHolder = getSegmentator().extractSegments(classifiers,
 				param);
 		//init parameters
-		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+		MarkerSet phoneMarkerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
+		MarkerSet markerSet = phoneMarkerSet.clone();
+		markerSet.setMarkerSetType(MarkerSetHolderEnum.word.name());
+
 		//if word level no info but exists phone level, clone phone level
 		if(markerSet == null && markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name())!= null){
 			markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
@@ -90,6 +93,7 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 			markerSet.getMarkers().add(currentDto.getMarker());
 		}
 		log.debug("extractSegments: " + markerSet.getMarkers());
+		markerSetHolder.getMarkerSets().put(markerSet.getMarkerSetType(), markerSet);
 		return markerSetHolder;
 	}
 	

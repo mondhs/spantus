@@ -52,7 +52,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	 */
 	public SpantusWorkFrame() {
 		super();
-		this.setTitle("Spantus");
+		this.setTitle(contructTitle());
 		this.setIconImage(new ImageIcon(
 				this.getClass().getClassLoader().getResource(
 						ImageResourcesEnum.spntIcon.getCode()
@@ -74,7 +74,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		getSpantusUIService().setupEnv(getInfo(),this);
 //		this.setContentPane(getJContentPane());
 		getJJMenuBar().initialize();
-		setRecordMonitor(new JProgressBar(0, 1000));
+		setRecordMonitor(new JProgressBar(0, 16));
 		
 //		getToolBar().initialize();
 //		getSampleRepresentationPanel().initialize();
@@ -106,6 +106,8 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 			setContentPane(getSegmentationContentPane());
 //			getJJMenuBar().initialize();
 			getToolBar().initialize();
+                        getToolBar().add(getRecordMonitor());
+
 			getSampleRepresentationPanel().initialize();
 			this.setJMenuBar(getJJMenuBar());
 			this.setContentPane(getSegmentationContentPane());
@@ -225,7 +227,6 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 			spantusToolBar = new SpantusWorkToolbar();
 			spantusToolBar.setInfo(getInfo());
 			spantusToolBar.setHandler(getHandler());
-			spantusToolBar.add(getRecordMonitor());
 		}
 		return spantusToolBar;
 	}

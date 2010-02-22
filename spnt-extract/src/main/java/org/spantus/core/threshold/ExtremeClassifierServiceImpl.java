@@ -60,7 +60,7 @@ public class ExtremeClassifierServiceImpl {
 		ctx.setValues(values);
 		extractExtremes(ctx);
 		extractSements(ctx);
-		initialCleanup(ctx);
+//		initialCleanup(ctx);
 		extractMarkerSet(ctx);
 		return ctx;
 		

@@ -86,17 +86,19 @@ public class DefaultAudioReader extends AbstractAudioReader {
 		ended();
 
 	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see org.spantus.core.io.AudioReader#getAudioFormat(java.net.URL)
+	 */
 	public AudioFileFormat getAudioFormat(URL url) {
+		AudioFileFormat format = null;
 		try {
-			return AudioSystem.getAudioFileFormat(url);
+			format = AudioSystem.getAudioFileFormat(url);
 		} catch (UnsupportedAudioFileException e) {
-//			log.debug("Unsupported Audio File Exception " + url.getFile());
-			return null;
 		} catch (IOException e) {
 			log.debug("[getAudioFormat]IO exception Exception " + url.getFile());
-			return null;
 		}
+		return format;
 	}
 
 	public Float getSampleRate(URL url) {
