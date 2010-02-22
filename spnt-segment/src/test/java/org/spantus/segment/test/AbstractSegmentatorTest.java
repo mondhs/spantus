@@ -68,9 +68,9 @@ public abstract class AbstractSegmentatorTest extends TestCase {
 		assertEquals(message,n1.longValue(), n2.longValue());
 	}
 	
-	protected void assertEqualsMarkers(String message, Integer[][] expexted, MarkerSetHolder markerSetHolder){
-		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
-		assertNotNull("No word level anotation", markerSet);
+	protected void assertEqualsMarkers(String message, Integer[][] expexted, MarkerSetHolder markerSetHolder, MarkerSetHolderEnum markerSetHolderEnum ){
+		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(markerSetHolderEnum.name());
+		assertNotNull("No anotation found", markerSet);
 		assertEquals(expexted.length, markerSet.getMarkers().size());
 		int i=0;
 		for (Integer[] integers : expexted) {

@@ -14,6 +14,7 @@ import java.util.Properties;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 import org.spantus.externals.recognition.ui.AdminPanel;
 import org.spantus.logger.Logger;
@@ -42,6 +43,8 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	private SpantusUIServiceImpl spantusUIService;
 	private WorkInfoManager workInfoManager;
 	private String version = null;
+	private JProgressBar recordMonitor;
+	
 
 	
 	/**
@@ -71,6 +74,8 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		getSpantusUIService().setupEnv(getInfo(),this);
 //		this.setContentPane(getJContentPane());
 		getJJMenuBar().initialize();
+		setRecordMonitor(new JProgressBar(0, 1000));
+		
 //		getToolBar().initialize();
 //		getSampleRepresentationPanel().initialize();
 		this.setJMenuBar(getJJMenuBar());
@@ -90,7 +95,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 //		setJMenuBar(null);
 		getContentPane().removeAll();
 		if(jContentPane!=null){
-			getJContentPane().removeAll();
+			getSegmentationContentPane().removeAll();
 			jContentPane=null;
 		}
 		sampleRepresentationPanel = null;
@@ -98,12 +103,12 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 				getInfo().getProject().getType())){
 			setContentPane(getRecognitionContentPane());
 		}else{
-			setContentPane(getJContentPane());
+			setContentPane(getSegmentationContentPane());
 //			getJJMenuBar().initialize();
 			getToolBar().initialize();
 			getSampleRepresentationPanel().initialize();
 			this.setJMenuBar(getJJMenuBar());
-			this.setContentPane(getJContentPane());
+			this.setContentPane(getSegmentationContentPane());
 		}
 		contructTitle();
 		repaint();
@@ -173,11 +178,11 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	}
 	
 	/**
-	 * This method initializes jContentPane
+	 * This method initializes jContentPane for segmentation 
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getJContentPane() {
+	private JPanel getSegmentationContentPane() {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
@@ -220,6 +225,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 			spantusToolBar = new SpantusWorkToolbar();
 			spantusToolBar.setInfo(getInfo());
 			spantusToolBar.setHandler(getHandler());
+			spantusToolBar.add(getRecordMonitor());
 		}
 		return spantusToolBar;
 	}
@@ -278,6 +284,14 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 			workInfoManager = WorkUIServiceFactory.createInfoManager();
 		}
 		return workInfoManager;
+	}
+
+	public JProgressBar getRecordMonitor() {
+		return recordMonitor;
+	}
+
+	public void setRecordMonitor(JProgressBar recordMonitor) {
+		this.recordMonitor = recordMonitor;
 	}
 	
 	

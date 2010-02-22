@@ -52,13 +52,21 @@ public class OnlineSegmentaitonService extends MergeSegmentatorServiceImpl {
 			multipleSegmentator.setParam((OnlineDecisionSegmentatorParam)param);
 		}
 		MarkerSetHolder mergedHolder = super.extractSegments(classifiers, param);
-		MarkerSet words = mergedHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+		MarkerSet markerSet = mergedHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
 		
+		//if word level no info but exists phone level, clone phone level
+		if(markerSet == null && mergedHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name())!= null){
+			markerSet = mergedHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
+			markerSet = markerSet.clone();
+			markerSet.setMarkerSetType(MarkerSetHolderEnum.word.name());
+			mergedHolder.getMarkerSets().put(markerSet.getMarkerSetType(), markerSet);
+		}
+
 		
 		long index = 0;
 		int resolution = 1;
 		String id= "1";
-		for (Marker marker : words.getMarkers()) {
+		for (Marker marker : markerSet.getMarkers()) {
 			for (; index < marker.getStart(); index += resolution) {
 				SegmentEvent event = new SegmentEvent(); 
 				event.setId(id);

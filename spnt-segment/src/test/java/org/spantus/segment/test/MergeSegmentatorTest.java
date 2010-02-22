@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.offline.MergeSegmentatorServiceImpl;
@@ -38,7 +39,7 @@ public class MergeSegmentatorTest extends AbstractSegmentatorTest {
 		Integer[][] markersData = new Integer[][]{{100, 200}, {300, 400}, {500, 600}};
 		classifiers.add(contsructClassifier(markersData));
 		MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers);
-		assertEqualsMarkers("3 datasets", markersData, markerSetHolder);
+		assertEqualsMarkers("3 datasets", markersData, markerSetHolder, MarkerSetHolderEnum.phone);
 	}
 	/**
 	 * 
@@ -56,7 +57,7 @@ public class MergeSegmentatorTest extends AbstractSegmentatorTest {
 		classifiers.add(contsructClassifier(markersData2));
 
 		MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers);
-		assertEqualsMarkers("3 datasets", markersDataExpexted, markerSetHolder);
+		assertEqualsMarkers("3 datasets", markersDataExpexted, markerSetHolder, MarkerSetHolderEnum.phone);
 	}
 	/**
 	 * 
@@ -78,7 +79,7 @@ public class MergeSegmentatorTest extends AbstractSegmentatorTest {
 		classifiers.add(contsructClassifier(markers1));
 		
 		MarkerSetHolder markerSet = segmentator.extractSegments(classifiers);
-		assertEqualsMarkers("3 datasets", markersDataExpexted, markerSet);
+		assertEqualsMarkers("3 datasets", markersDataExpexted, markerSet, MarkerSetHolderEnum.phone);
 	}
 
 }

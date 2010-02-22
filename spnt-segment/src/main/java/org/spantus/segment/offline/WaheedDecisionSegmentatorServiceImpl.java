@@ -54,7 +54,17 @@ public class WaheedDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 	 */
 	public MarkerSetHolder extractSegments(Set<IClassifier> thresholds, SegmentatorParam param) {
 		MarkerSetHolder markerSetHolder = getSegmentator().extractSegments(thresholds, param);
-		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name()); 
+		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+		
+		//if word level no info but exists phone level, clone phone level
+		if(markerSet == null && markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name())!= null){
+			markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
+			markerSet = markerSet.clone();
+			markerSet.setMarkerSetType(MarkerSetHolderEnum.word.name());
+			markerSetHolder.getMarkerSets().put(markerSet.getMarkerSetType(), markerSet);
+		}
+
+		
 		BaseDecisionSegmentatorParam safeParam = createSafeParam(param);
 		
 		Iterator<Marker> markerIterator = markerSet.getMarkers().iterator();

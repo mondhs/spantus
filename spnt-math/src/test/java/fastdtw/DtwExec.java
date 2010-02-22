@@ -10,7 +10,7 @@ import fastdtw.dtw.TimeWarpInfo;
 import fastdtw.timeseries.TimeSeries;
 
 
-public class DtwTest
+public class DtwExec
 {
 
    // PUBLIC FUNCTIONS

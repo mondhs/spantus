@@ -60,7 +60,7 @@ public class DecisionSegmentatorTest extends AbstractSegmentatorTest {
 		classifiers.add(contsructClassifier(DATA_markersData1));
 
 		MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers, param);
-		assertEqualsMarkers("decision", markersDataExpexted, markerSetHolder);
+		assertEqualsMarkers("decision", markersDataExpexted, markerSetHolder, MarkerSetHolderEnum.word);
 		MarkerSet phones = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
 		assertEquals(7, phones.getMarkers().size());
 	}
@@ -80,7 +80,7 @@ public class DecisionSegmentatorTest extends AbstractSegmentatorTest {
 		classifiers.add(contsructClassifier(DATA_markersData1));
 
 		MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers, param);
-		assertEqualsMarkers("decision", markersDataExpected, markerSetHolder);
+		assertEqualsMarkers("decision", markersDataExpected, markerSetHolder, MarkerSetHolderEnum.word);
 		MarkerSet phones = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
 		assertEquals(7, phones.getMarkers().size());
 	}
@@ -101,7 +101,7 @@ public class DecisionSegmentatorTest extends AbstractSegmentatorTest {
 		classifiers.add(contsructClassifier(DATA_markersData1));
 
 		MarkerSetHolder markerSetHolder = segmentator.extractSegments(classifiers, param);
-		assertEqualsMarkers("decision", markersDataExpexted, markerSetHolder);
+		assertEqualsMarkers("decision", markersDataExpexted, markerSetHolder, MarkerSetHolderEnum.word);
 		MarkerSet phones = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
 		assertEquals(7, phones.getMarkers().size());
 	}

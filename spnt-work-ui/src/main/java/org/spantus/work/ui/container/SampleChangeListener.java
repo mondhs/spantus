@@ -5,5 +5,5 @@ import org.spantus.core.io.ProcessedFrameLinstener;
 
 public interface SampleChangeListener extends ProcessedFrameLinstener {
 	public void changedReader(IExtractorInputReader reader);
-	public void refresh();
+	public void refresh(Float value);
 }

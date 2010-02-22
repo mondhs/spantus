@@ -122,9 +122,11 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 		Polygon polygon = new Polygon();
 		try{
 		for (Point p : minPoints) {
+			if(p==null)continue;
 			polygon.addPoint(p.x, p.y);
 		}
 		for (Point p : maxPoints) {
+			if(p==null)continue;
 			polygon.addPoint(p.x, p.y);
 		}
 

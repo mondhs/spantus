@@ -92,7 +92,7 @@ public class SampleRepresentationPanel extends JPanel implements SampleChangeLis
 	}
 
 
-	public void refresh() {
+	public void refresh(Float value) {
 		if(getSampleChart() != null && getSampleChart().getChart()!=null){
 			getSampleChart().
 			getChart().

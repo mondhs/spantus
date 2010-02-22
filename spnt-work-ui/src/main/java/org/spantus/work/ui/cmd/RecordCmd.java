@@ -158,7 +158,10 @@ public class RecordCmd extends AbsrtactCmd {
 				lisetener.changedReader(recordSegmentator.getReader().getReader());
 				isRecordInitialyzed =true;
 			}else{
-				lisetener.refresh();
+//				if(recordSegmentator.getReader().getLastValue()!=null){
+//					log.error("recordSegmentator.getReader().getLastValue(): " + recordSegmentator.getReader().getLastValue()*recordSegmentator.getReader().getLastValue());
+//				}
+				lisetener.refresh(recordSegmentator.getReader().getLastValue());
 			}
 			if (!ctx.getPlaying()) {
 				stop();

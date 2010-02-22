@@ -16,7 +16,7 @@ import fastdtw.timeseries.TimeSeries;
  * @since Jul 14, 2004
  */
 
-public class FastDTWTest {
+public class FastDTWExec {
 
 	// PUBLIC FUNCTIONS
 	public static void main(String[] args) {
