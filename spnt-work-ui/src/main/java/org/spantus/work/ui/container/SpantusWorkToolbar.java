@@ -1,3 +1,21 @@
+/*
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal 
+ 	http://spantus.sourceforge.net
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 package org.spantus.work.ui.container;
 
 import java.awt.FlowLayout;
@@ -70,6 +88,8 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 	
 	private JButton refreshBtn = null;
 	
+	private JButton infoBtn = null;
+	
 	private JTextField experimentIdTxt = null;
 	
 	private SpantusWorkCommand handler;
@@ -113,6 +133,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		this.add(new JToolBar.Separator());
 		this.add(getPreferencesBtn());
 		this.add(getRefreshBtn());
+		this.add(getInfoBtn());
 		this.add(new JToolBar.Separator());
 		
 	}	
@@ -230,6 +251,18 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 			getToolBarComponents().put(RELOAD, refreshBtn);
 		}
 		return refreshBtn;
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public JButton getInfoBtn() {
+		if (infoBtn == null) {
+			ImageIcon icon = createIcon(ImageResourcesEnum.info.getCode());
+			infoBtn = createButton(icon, GlobalCommands.help.signalInfo.name(),GlobalCommands.help.signalInfo.name());
+			getToolBarComponents().put(GlobalCommands.help.signalInfo.name(), infoBtn);
+		}
+		return infoBtn;
 	}
 
 	

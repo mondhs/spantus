@@ -18,6 +18,6 @@
 */
 package org.spantus.core.threshold;
 
-public enum ThresholdEnum {
+public enum ClassifierEnum {
 	online, dynamic, offline, rules
 }

@@ -86,7 +86,7 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		project.setExperimentId(oldProject.getExperimentId());
 		project.setType(type);
 		project.setSample(oldProject.getSample());
-		project.setThresholdType(oldProject.getThresholdType());
+		project.setClassifierType(oldProject.getClassifierType());
 		switch (ProjectTypeEnum.valueOf(type)) {
 		case feature:
 		case segmenation:

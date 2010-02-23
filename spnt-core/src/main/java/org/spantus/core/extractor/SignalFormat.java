@@ -17,6 +17,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 package org.spantus.core.extractor;
+
+import java.util.Map;
+
 /**
  * To suport various signal formats(not only audio).
  * @author Mindaugas Greibus
@@ -27,6 +30,8 @@ package org.spantus.core.extractor;
 public class SignalFormat {
 	private float sampleRate;
 	private float length;
+	private Map<String, Object> parameters;
+	
 	public float getSampleRate() {
 		return sampleRate;
 	}
@@ -38,5 +43,11 @@ public class SignalFormat {
 	}
 	public void setLength(float length) {
 		this.length = length;
+	}
+	public Map<String, Object> getParameters() {
+		return parameters;
+	}
+	public void setParameters(Map<String, Object> parameters) {
+		this.parameters = parameters;
 	}
 }

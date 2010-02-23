@@ -1,5 +1,5 @@
 /*
- 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Copyright (c) 2009, 2010 Mindaugas Greibus (spantus@gmail.com)
  	Part of program for analyze speech signal 
  	http://spantus.sourceforge.net
 
@@ -20,38 +20,38 @@ package org.spantus.work.ui.cmd;
 
 import java.awt.Frame;
 
+import org.spantus.work.ui.container.panel.SignalInfoDialog;
 import org.spantus.work.ui.container.panel.SpantusAboutDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
  * 
- * 
  * @author Mindaugas Greibus
- *
- * @since 0.0.1
  * 
- * Created Aug 26, 2008
+ * Created Feb 23, 2010
  *
  */
-public class AboutCmd extends AbsrtactCmd {
+public class SignalInfoCmd extends AbsrtactCmd {
 
-	private SpantusAboutDialog about;
+	private SignalInfoDialog info;
 	private Frame frame;
 	
-	public AboutCmd(Frame frame){
+	public SignalInfoCmd(Frame frame){
 		this.frame = frame;
 	}
 	
 	
 	public String execute(SpantusWorkInfo ctx){
-		getAboutPnl().setVisible(true);
+		getInfoPnl().setCtx(ctx);
+		getInfoPnl().setVisible(true);
 		return null;
 	}
 
-	private SpantusAboutDialog getAboutPnl(){
-		if(about == null){
-			about = new SpantusAboutDialog(frame);
-			about.setModal(true);
+	private SignalInfoDialog getInfoPnl(){
+		if(info == null){
+			info = new SignalInfoDialog(frame);
+			
+			info.setModal(true);
 		}
-		return about;
+		return info;
 	}
 }

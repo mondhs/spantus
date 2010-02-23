@@ -12,7 +12,7 @@ import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractClassifier;
 import org.spantus.core.threshold.IClassifier;
-import org.spantus.core.threshold.ThresholdEnum;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -115,10 +115,10 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 		defaultReader.setConfig(spntConfig);
 	}
 	
-	protected ThresholdEnum getThresholdEnum(String tresholdType){
+	protected ClassifierEnum getThresholdEnum(String tresholdType){
 		if(!StringUtils.hasText(tresholdType)) return null;
 		try{
-			return ThresholdEnum.valueOf(tresholdType);
+			return ClassifierEnum.valueOf(tresholdType);
 		}catch (IllegalArgumentException e) {
 			return null;
 		}
@@ -147,7 +147,7 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 			String tresholdType = ExtractorParamUtils.getString(param, 
 					ExtractorParamUtils.commonParam.thresholdType.name(), 
 					"");
-			ThresholdEnum thresholdEnum = getThresholdEnum(tresholdType);
+			ClassifierEnum thresholdEnum = getThresholdEnum(tresholdType);
 			if(thresholdEnum != null){
 				//construct extractor with threshold
 				IClassifier threshold = ExtractorUtils.registerThreshold(getDefaultReader(),

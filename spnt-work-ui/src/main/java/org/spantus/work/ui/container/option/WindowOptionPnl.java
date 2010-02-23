@@ -33,7 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.spantus.core.extractor.preemphasis.Preemphasis.PreemphasisEnum;
-import org.spantus.core.threshold.ThresholdEnum;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.logger.Logger;
 import org.spantus.math.windowing.WindowingEnum;
 import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
@@ -57,7 +57,7 @@ import com.jgoodies.forms.layout.FormLayout;
 public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableComponent{
 	
 	enum WindowOptionSeparators {signal, record, segmentation, threshold};
-	public static final String PREFIX_threshold = "threshold_";
+	public static final String PREFIX_classifier = "classifier_";
 	public static final String PREFIX_segmentation = "segmentation_";
 	
 	public static final String PREFIX_windowing = "windowingType_";
@@ -302,11 +302,11 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				break;
 			case thresholdType:
 				((JComboBox)fieldEntry.getValue().getControl()).setSelectedItem(
-						getMessage(PREFIX_threshold
-						+getInfo().getProject().getThresholdType()));
+						getMessage(PREFIX_classifier
+						+getInfo().getProject().getClassifierType()));
 				fieldEntry.getValue().setVisible(isAdvanced());
-				setLabelControlVisible(optionsLabels.thresholdLearningPeriod, getInfo().getProject().getThresholdType());
-				setLabelControlVisible(optionsLabels.thresholdCoef, getInfo().getProject().getThresholdType());
+				setLabelControlVisible(optionsLabels.thresholdLearningPeriod, getInfo().getProject().getClassifierType());
+				setLabelControlVisible(optionsLabels.thresholdCoef, getInfo().getProject().getClassifierType());
 				break;
 			case automatedSegmentaionParameters:
 			case automatedThresholdParameters:
@@ -405,7 +405,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 					Object item = evt.getItem(); 
 					if (evt.getStateChange() == ItemEvent.SELECTED) { 
 						// Item was just selected 
-						ThresholdEnum thresholdEnum = (ThresholdEnum)getThresholdModel().get(item.toString());
+						ClassifierEnum thresholdEnum = (ClassifierEnum)getThresholdModel().get(item.toString());
 						setLabelControlVisible(optionsLabels.thresholdLearningPeriod, thresholdEnum.name());
 						setLabelControlVisible(optionsLabels.thresholdCoef, thresholdEnum.name());
 					}
@@ -553,11 +553,11 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				fieldEntry.getValue().setVisible(isAdvanced());
 				break;
 			case thresholdType:
-				ThresholdEnum thresholdType = (ThresholdEnum)getThresholdModel().getSelectedObject();
+				ClassifierEnum thresholdType = (ClassifierEnum)getThresholdModel().getSelectedObject();
 				if(thresholdType!=null){
-					getInfo().getProject().setThresholdType(thresholdType.name());
+					getInfo().getProject().setClassifierType(thresholdType.name());
 				}else{
-					getInfo().getProject().setThresholdType(null);
+					getInfo().getProject().setClassifierType(null);
 				}
 				break;
 			case automatedSegmentaionParameters:
@@ -580,10 +580,10 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		LabelControlEntry labelControlEntry = jTextFields.get(optionsLabel);
 		switch (optionsLabel) {
 		case thresholdLearningPeriod:
-			labelControlEntry.setVisible(ThresholdEnum.online.name().equals(value));
+			labelControlEntry.setVisible(ClassifierEnum.online.name().equals(value));
 			break;
 		case thresholdCoef:
-			labelControlEntry.setVisible(!ThresholdEnum.rules.name().equals(value));
+			labelControlEntry.setVisible(!ClassifierEnum.rules.name().equals(value));
 			break;
 		case segmentationMinSpace:
 //			boolean isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();
@@ -615,9 +615,9 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 	protected MapComboBoxModel getThresholdModel() {
 		if (treasholdType == null) {
 			treasholdType = new MapComboBoxModel();
-			for (ThresholdEnum thresholdTypeEnum : ThresholdEnum.values()) {
-				String label = getMessage(PREFIX_threshold + thresholdTypeEnum.name());
-				treasholdType.addElement(new ModelEntry(label, thresholdTypeEnum));
+			for (ClassifierEnum classifierTypeEnum : ClassifierEnum.values()) {
+				String label = getMessage(PREFIX_classifier + classifierTypeEnum.name());
+				treasholdType.addElement(new ModelEntry(label, classifierTypeEnum));
 			}
 		}
 		return treasholdType;

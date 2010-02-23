@@ -51,7 +51,7 @@ public class SpantusWorkProjectInfo {
 	
 	private String experimentId;
 	
-	private String thresholdType;
+	private String classifierType;
 	
 	public float getFrom() {
 		return from;
@@ -119,15 +119,15 @@ public class SpantusWorkProjectInfo {
 		this.experimentId = experimentId;
 	}
 
-	public String getThresholdType() {
+	public String getClassifierType() {
 //		if(thresholdType == null){
 //			thresholdType = ThresholdEnum.online.name();
 //		}
-		return thresholdType;
+		return classifierType;
 	}
 
-	public void setThresholdType(String thresholdType) {
-		this.thresholdType = thresholdType;
+	public void setClassifierType(String thresholdType) {
+		this.classifierType = thresholdType;
 	}
 
 

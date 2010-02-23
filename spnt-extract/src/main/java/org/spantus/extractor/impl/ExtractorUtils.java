@@ -32,7 +32,7 @@ import org.spantus.core.threshold.IClassifier;
 import org.spantus.core.threshold.ExtremeClassifier;
 import org.spantus.core.threshold.OfflineThreshold;
 import org.spantus.core.threshold.StaticThreshold;
-import org.spantus.core.threshold.ThresholdEnum;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.AbstractExtractor3D;
 import org.spantus.extractor.ExtractorResultBuffer;
@@ -201,7 +201,7 @@ public abstract class ExtractorUtils {
 	 */
 	public static IClassifier registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType, ExtractorParam param) {
-		return registerThreshold(bufferedReader, extractorType, param, ThresholdEnum.online);
+		return registerThreshold(bufferedReader, extractorType, param, ClassifierEnum.online);
 	}
 	/**
 	 * 
@@ -215,7 +215,7 @@ public abstract class ExtractorUtils {
 			register(bufferedReader, extractorType, null);
 			return null;
 		}else{
-			return registerThreshold(bufferedReader, extractorType, null, ThresholdEnum.offline);
+			return registerThreshold(bufferedReader, extractorType, null, ClassifierEnum.offline);
 		}
 	}
 	/**
@@ -226,7 +226,7 @@ public abstract class ExtractorUtils {
 	 */
 	public static void registerThreshold(IExtractorInputReader bufferedReader,
 			ExtractorEnum[] extractors,Map<String, ExtractorParam> params) {
-		registerThreshold(bufferedReader, extractors, params, ThresholdEnum.online);
+		registerThreshold(bufferedReader, extractors, params, ClassifierEnum.online);
 	}
 	/**
 	 * 
@@ -239,7 +239,7 @@ public abstract class ExtractorUtils {
 	public static IClassifier registerThreshold(
 			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
 			ExtractorParam param,
-			ThresholdEnum thresholdType) {
+			ClassifierEnum thresholdType) {
 		AbstractClassifier threshold = null;
 		
 		switch (thresholdType) {
@@ -270,7 +270,7 @@ public abstract class ExtractorUtils {
 	public static void registerThreshold(IExtractorInputReader bufferedReader,
 			ExtractorEnum[] extractors,
 			Map<String, ExtractorParam> params,
-			ThresholdEnum thresholdType) {
+			ClassifierEnum thresholdType) {
 		for (ExtractorEnum extractor : extractors) {
 			ExtractorParam extractorParam = null;
 			if(params!=null){

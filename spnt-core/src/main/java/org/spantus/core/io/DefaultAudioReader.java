@@ -22,6 +22,8 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioSystem;
@@ -116,11 +118,29 @@ public class DefaultAudioReader extends AbstractAudioReader {
 		return wraperExtractorReader;
 	}
 
+	protected Map<String, Object> extractParameters(AudioFileFormat audioFileFormat, URL url){
+		Map<String, Object> parameters = new LinkedHashMap<String, Object>();
+		//ui representaion format
+		parameters.put("file", url);
+		parameters.put("type", audioFileFormat.getType().toString());
+		parameters.put("sampleRateInHz", audioFileFormat.getFormat().getSampleRate());
+		parameters.put("resolutionInBits", audioFileFormat.getFormat().getSampleSizeInBits());
+		parameters.put("encoding", audioFileFormat.getFormat().getEncoding());
+		parameters.put("encoding", audioFileFormat.getFormat().getEncoding());
+		parameters.put("channels", audioFileFormat.getFormat().getChannels());
+		parameters.put("bigEdian", audioFileFormat.getFormat().isBigEndian());
+		parameters.put("bytes", audioFileFormat.getByteLength());
+		
+		
+		return parameters;
+	}
+	
 	public SignalFormat getFormat(URL url) {
 		SignalFormat signalFormat = new SignalFormat();
 		AudioFileFormat audioFileFormat = getAudioFormat(url);
 		signalFormat.setLength(audioFileFormat.getFrameLength());
 		signalFormat.setSampleRate(audioFileFormat.getFormat().getSampleRate());
+		signalFormat.setParameters(extractParameters(audioFileFormat, url));
 		return signalFormat;
 	}
 

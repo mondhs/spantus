@@ -3,7 +3,12 @@ package org.spantus.work.ui.services;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Point;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -78,12 +83,49 @@ public class SpantusUIServiceImpl {
 		if (info.getEnv().getAdvancedMode() == null) {
 			info.getEnv().setAdvancedMode(Boolean.FALSE);
 		}
-		if (info.getEnv().getSpantusVersion() == null) {
-			info.getEnv().setSpantusVersion("0.0.1");
-		}
+//		if (info.getEnv().getSpantusVersion() == null) {
+			info.getEnv().setSpantusVersion(getVersion());
+//		}
 
 		Locale.setDefault(info.getLocale());
 
+	}
+	
+	
+	
+	protected String getVersion(){
+		String version = "N/A"; 	
+		log.error("version not set. trying read from eclipse");
+			try {
+				Properties prop = new Properties();
+				InputStream is = new FileInputStream(new File("./target/maven-archiver/pom.properties"));
+				prop.load(is);
+				version = prop.getProperty("version");
+			} catch (IOException e) {
+				log.debug("version for eclipse not found",e);
+			}catch (NullPointerException e) {
+				log.debug("version for eclipse not found",e);
+			}
+			if(version == null){
+				log.error("version not set. trying read from jar");
+				try {
+					Properties prop = new Properties();
+					InputStream is = this.getClass().getClassLoader().getResourceAsStream("META-INF/maven/org.spantus/spnt-work-ui/pom.properties");
+					prop.load(is);
+					version = prop.getProperty("version");
+				} catch (IOException e) {
+					log.debug("version for jad not found",e);
+				}catch (NullPointerException e) {
+					log.debug("version for jar not found",e);
+				}
+
+			}
+			if(version == null){
+				log.error("version not set. trying read from properties");
+//				version = getMessage("spantus.work.ui.version");
+			}
+
+		return version;
 	}
 
 	protected boolean isEmpty(Dimension d) {

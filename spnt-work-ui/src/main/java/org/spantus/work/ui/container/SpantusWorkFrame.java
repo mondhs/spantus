@@ -1,15 +1,28 @@
+/*
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal 
+ 	http://spantus.sourceforge.net
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 package org.spantus.work.ui.container;
 
 import java.awt.BorderLayout;
 import java.awt.dnd.DropTarget;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -29,6 +42,13 @@ import org.spantus.work.ui.services.SpantusUIServiceImpl;
 import org.spantus.work.ui.services.WorkInfoManager;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
 
+/**
+ * 
+ * @author Mindaugas Greibus
+ * 
+ * Created Feb 23, 2010
+ *
+ */
 public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 
 	private static final long serialVersionUID = 1L;
@@ -42,7 +62,6 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	
 	private SpantusUIServiceImpl spantusUIService;
 	private WorkInfoManager workInfoManager;
-	private String version = null;
 	private JProgressBar recordMonitor;
 	
 
@@ -129,7 +148,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	}
 	
 	protected String contructTitle(){
-		String version = getVersion();
+		String version = getInfo().getEnv().getSpantusVersion();
 		
 		String projectType = getMessage("spantus.work.ui.project.type." + getInfo().getProject().getType());
 		String fileName = "";
@@ -143,41 +162,6 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		return title;
 	}
 	
-	protected String getVersion(){
-		if(version == null){
-			log.error("version not set. trying read from eclipse");
-			try {
-				Properties prop = new Properties();
-				InputStream is = new FileInputStream(new File("./target/maven-archiver/pom.properties"));
-				prop.load(is);
-				version = prop.getProperty("version");
-			} catch (IOException e) {
-				log.debug("version for eclipse not found",e);
-			}catch (NullPointerException e) {
-				log.debug("version for eclipse not found",e);
-			}
-			if(version == null){
-				log.error("version not set. trying read from jar");
-				try {
-					Properties prop = new Properties();
-					InputStream is = this.getClass().getClassLoader().getResourceAsStream("META-INF/maven/org.spantus/spnt-work-ui/pom.properties");
-					prop.load(is);
-					version = prop.getProperty("version");
-				} catch (IOException e) {
-					log.debug("version for jad not found",e);
-				}catch (NullPointerException e) {
-					log.debug("version for jar not found",e);
-				}
-
-			}
-			if(version == null){
-				log.error("version not set. trying read from properties");
-				version = getMessage("spantus.work.ui.version");
-			}
-
-		}
-		return version;
-	}
 	
 	/**
 	 * This method initializes jContentPane for segmentation 
