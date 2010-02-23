@@ -80,10 +80,13 @@ public class SignalInfoDialog extends SpantusAboutDialog{
 	public void setCtx(SpantusWorkInfo ctx) {
 		StringBuilder sb = new StringBuilder();
 		Map<String, Object> info = new LinkedHashMap<String, Object>();
-		if(ctx== null){
+		if(ctx== null || ctx.getProject().getSample() == null
+                        || ctx.getProject().getSample().getSignalFormat() == null
+                        || ctx.getProject().getSample().getSignalFormat().getParameters() == null){
 			return;
 		}
-		SignalFormat signalFormat = ctx.getProject().getSample().getSignalFormat();
+                
+    		SignalFormat signalFormat = ctx.getProject().getSample().getSignalFormat();
 		info.putAll(signalFormat.getParameters());
 		sb.append("<h1>").append(getClassMessage("signalHeader")).append("</h1>");
 		for (Entry<String, Object> infoEntry : info.entrySet()) {
