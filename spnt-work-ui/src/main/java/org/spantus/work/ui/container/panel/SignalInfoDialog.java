@@ -26,7 +26,6 @@ import java.util.Map.Entry;
 import javax.swing.JEditorPane;
 
 import org.spantus.core.extractor.SignalFormat;
-import org.spantus.utils.StringUtils;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.container.option.WindowOptionPnl;
 import org.spantus.work.ui.dto.SpantusWorkInfo;

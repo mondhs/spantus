@@ -1,5 +1,5 @@
 /*
- 	Copyright (c) 2009, 2010 Mindaugas Greibus (spantus@gmail.com)
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
  	Part of program for analyze speech signal 
  	http://spantus.sourceforge.net
 
@@ -16,41 +16,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-package org.spantus.work.ui.cmd;
+package org.spantus.work.ui.container.panel;
 
-import java.awt.Frame;
+import java.awt.BorderLayout;
 
-import org.spantus.work.ui.container.panel.SignalInfoDialog;
-import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.externals.recognition.ui.AdminPanel;
 /**
+ * 
+ * Recognition UI.
  * 
  * @author Mindaugas Greibus
  * 
- * Created Feb 23, 2010
+ * Created Feb 26, 2010
  *
  */
-public class SignalInfoCmd extends AbsrtactCmd {
+public class RecognitionContentPane extends AbstractSpantusContentPane{
 
-	private SignalInfoDialog info;
-	private Frame frame;
-	
-	public SignalInfoCmd(Frame frame){
-		this.frame = frame;
-	}
-	
-	
-	public String execute(SpantusWorkInfo ctx){
-		getInfoPnl().setCtx(ctx);
-		getInfoPnl().setVisible(true);
-		return null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public RecognitionContentPane() {
+		this.setLayout(new BorderLayout());
+		AdminPanel adminPanel = new AdminPanel();
+		this.add(adminPanel,BorderLayout.CENTER);
 	}
 
-	private SignalInfoDialog getInfoPnl(){
-		if(info == null){
-			info = new SignalInfoDialog(frame);
-			
-			info.setModal(true);
-		}
-		return info;
+	public void initialize() {
+		
 	}
+
+	public void reload() {
+		
+	}
+	
 }

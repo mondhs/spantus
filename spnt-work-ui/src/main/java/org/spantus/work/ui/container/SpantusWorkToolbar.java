@@ -109,10 +109,10 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 //        this.add(getStopBtn());
 //        this.add(getRecordBtn());
 //        this.add(getMode());
-		initialize(getInfo().getProject().getType());
-	}
-	
-	protected void initialize(String projectType) {
+//		initialize(getInfo().getProject().getType());
+//	}
+//	
+//	protected void initialize(String projectType) {
 		FlowLayout layout = new FlowLayout(FlowLayout.LEFT, 3, 2);
 		this.setLayout(layout);
 

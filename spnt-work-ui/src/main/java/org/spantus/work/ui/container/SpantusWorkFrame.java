@@ -18,22 +18,21 @@
 */
 package org.spantus.work.ui.container;
 
-import java.awt.BorderLayout;
-import java.awt.dnd.DropTarget;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import org.spantus.externals.recognition.ui.AdminPanel;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.MainHandler;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
+import org.spantus.work.ui.container.panel.AbstractSpantusContentPane;
+import org.spantus.work.ui.container.panel.RecognitionContentPane;
 import org.spantus.work.ui.container.panel.SampleRepresentationPanel;
+import org.spantus.work.ui.container.panel.SegmentationContentPane;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
@@ -52,17 +51,15 @@ import org.spantus.work.ui.services.WorkUIServiceFactory;
 public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 
 	private static final long serialVersionUID = 1L;
-	private JPanel jContentPane = null;
 	private SpantusWorkMenuBar jJMenuBar = null;
-	private SpantusWorkToolbar spantusToolBar = null;
 	private SpantusWorkInfo info = null;
 	private MainHandler handler = null;
-	private SampleRepresentationPanel sampleRepresentationPanel;
 	private Logger log= Logger.getLogger(SpantusWorkFrame.class);
 	
 	private SpantusUIServiceImpl spantusUIService;
 	private WorkInfoManager workInfoManager;
 	private JProgressBar recordMonitor;
+	private AbstractSpantusContentPane spantusContentPane;
 	
 
 	
@@ -109,28 +106,26 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	 * 
 	 */
 	public void newProject() {
-//		setJMenuBar(null);
 		getContentPane().removeAll();
-		if(jContentPane!=null){
-			getSegmentationContentPane().removeAll();
-			jContentPane=null;
-		}
-		sampleRepresentationPanel = null;
+		
 		if(ProjectTypeEnum.recognition.name().equals(
 				getInfo().getProject().getType())){
-			setContentPane(getRecognitionContentPane());
+			spantusContentPane = new RecognitionContentPane(); 
+			setContentPane(spantusContentPane);
 		}else{
-			setContentPane(getSegmentationContentPane());
+			SegmentationContentPane pane = new SegmentationContentPane();
+			spantusContentPane = pane;
+			pane.setInfo(getInfo());
+			pane.setHandler(getHandler());
 //			getJJMenuBar().initialize();
-			getToolBar().initialize();
-                        getToolBar().add(getRecordMonitor());
+//			getToolBar().initialize();
+//                 getToolBar().add(getRecordMonitor());
 
-			getSampleRepresentationPanel().initialize();
-			this.setJMenuBar(getJJMenuBar());
-			this.setContentPane(getSegmentationContentPane());
+			setContentPane(spantusContentPane);
 		}
+		spantusContentPane.initialize();
 		contructTitle();
-		repaint();
+		validate();
 		log.info("New project {0}", getInfo().getProject().getType());
 	}
 	/**
@@ -138,9 +133,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	 */
 	public void reload() {
 		getJJMenuBar().reload();
-		getToolBar().reload();
-		getSampleRepresentationPanel().reload();
-		contructTitle();
+		spantusContentPane.reload();
 		log.info("reload");
 		this.setTitle(contructTitle());
 	}
@@ -166,27 +159,22 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getSegmentationContentPane() {
-		if (jContentPane == null) {
-			jContentPane = new JPanel();
-			jContentPane.setLayout(new BorderLayout());
-			jContentPane.add(getToolBar(), BorderLayout.NORTH);
-			jContentPane.add(getSampleRepresentationPanel(),BorderLayout.CENTER);
-			new DropTarget(jContentPane, new WavDropTargetListener(getHandler(),getInfo()));
-		}
-		return jContentPane;
-	}
-	private JPanel getRecognitionContentPane() {
-		if (jContentPane == null) {
-			jContentPane = new JPanel();
-			jContentPane.setLayout(new BorderLayout());
+//	private JPanel getSegmentationContentPane() {
+//		if (jContentPane == null) {
+//			jContentPane = new JPanel();
+//			jContentPane.setLayout(new BorderLayout());
 //			jContentPane.add(getToolBar(), BorderLayout.NORTH);
-			AdminPanel adminPanel = new AdminPanel();
-			jContentPane.add(adminPanel,BorderLayout.CENTER);
+//			jContentPane.add(getSampleRepresentationPanel(),BorderLayout.CENTER);
 //			new DropTarget(jContentPane, new WavDropTargetListener(getHandler(),getInfo()));
-		}
-		return jContentPane;
-	}
+//		}
+//		return jContentPane;
+//	}
+//	private JPanel getRecognitionContentPane() {
+//		if (jContentPane == null) {
+//			jContentPane = new RecognitionContentPane();
+//		}
+//		return jContentPane;
+//	}
 
 	/**
 	 * This method initializes jJMenuBar	
@@ -204,15 +192,6 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	}
 	
 	
-	public SpantusWorkToolbar getToolBar() {
-		if (spantusToolBar == null) {
-			spantusToolBar = new SpantusWorkToolbar();
-			spantusToolBar.setInfo(getInfo());
-			spantusToolBar.setHandler(getHandler());
-		}
-		return spantusToolBar;
-	}
-
 	
 
 	public SpantusWorkInfo getInfo() {
@@ -237,18 +216,12 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	
 
 	public SampleRepresentationPanel getSampleRepresentationPanel() {
-		if (sampleRepresentationPanel == null) {
-			sampleRepresentationPanel = new SampleRepresentationPanel();
-			sampleRepresentationPanel.setInfo(getInfo());
-			sampleRepresentationPanel.setHandler(getHandler());
+		if (spantusContentPane instanceof SegmentationContentPane) {
+			return ((SegmentationContentPane)spantusContentPane).getSampleRepresentationPanel();
 		}
-		return sampleRepresentationPanel;
+		return null;
 	}
 
-	public void setSampleRepresentationPanel(
-			SampleRepresentationPanel sampleRepresentationPanel) {
-		this.sampleRepresentationPanel = sampleRepresentationPanel;
-	}
 	public String getMessage(String key){
 		return I18nFactory.createI18n().getMessage(key);
 	}

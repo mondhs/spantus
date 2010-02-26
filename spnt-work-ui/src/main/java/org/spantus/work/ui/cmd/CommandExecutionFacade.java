@@ -29,6 +29,8 @@ import org.spantus.work.ui.container.SampleChangeListener;
 import org.spantus.work.ui.container.SpantusWorkFrame;
 /**
  * 
+ * Action invocation facade
+ * 
  * @author Mindaugas Greibus
  * 
  * Created Feb 23, 2010
