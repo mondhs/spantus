@@ -49,8 +49,13 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 			
 			FrameVectorValues values = extractor.getOutputValues();
 			Float fromIndex = (marker.getStart().floatValue()*values.getSampleRate())/1000;
-			Float toIndex = fromIndex+(marker.getLength().floatValue()*values.getSampleRate())/1000;
-			FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
+			Float toIndexF = fromIndex+(marker.getLength().floatValue()*values.getSampleRate())/1000;
+                        Integer toIndex = toIndexF.intValue();
+                        if(toIndex>values.size()){
+                            toIndex = values.size();
+//                            throw new IllegalArgumentException("too big index" + toIndex +";" +values.size());
+                        }
+                        FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
 			
 			FeatureData featureData = new FeatureData();
 			featureData.setName(extractor.getName());
@@ -59,7 +64,12 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 			if(getLearnMode()){
 				getCorpusService().learn(marker.getLabel(),featureData);
 			}else{
-				marker.setLabel(getCorpusService().match(featureData).getInfo().getName());
+                            RecognitionResult result = getCorpusService().match(featureData);
+                            if(result !=null){
+				marker.setLabel(result.getInfo().getName());
+                            }else{
+                                log.info("[findBestMatach] there is no match");
+                            }
 			}
 		}
 		

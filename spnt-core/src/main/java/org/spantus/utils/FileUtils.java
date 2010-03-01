@@ -39,7 +39,11 @@ public abstract class FileUtils {
 		file = file.replaceAll("\\.\\w{2,5}$","");
 		return file;
 	}
-	
+	/**
+         * Check if dir exists. if not create all of them
+         * @param dirName
+         * @return
+         */
 	public static File checkDirs(String dirName){
 		File dir = new File(dirName);
 		if(!dir.exists()){

@@ -37,6 +37,7 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
+import org.spantus.utils.FileUtils;
 
 /**
  * 
@@ -71,19 +72,30 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 	 */
 	public URL processAcceptedSegment(Marker marker){
 		int bytesPerSample = (reader.getFormat().getSampleSizeInBits()>>3);// 16bit==2; 8bit==1
+                Float sampleRate = reader.getFormat().getSampleRate();
 
 		long offset = (-reader.getOffset()); 
-		int fromIndex =(int)(offset + marker.getExtractionData().getStartSampleNum())*bytesPerSample;
-		int toIndex = fromIndex + (marker.getExtractionData().getLengthSampleNum().intValue()*bytesPerSample);
-		
+//		int fromIndex =(int)(offset + marker.getExtractionData().getStartSampleNum())*bytesPerSample;
+//		int toIndex = fromIndex + (marker.getExtractionData().getLengthSampleNum().intValue()*bytesPerSample);
+                Float fromIndex = (marker.getStart().floatValue()*sampleRate)/1000;
+                fromIndex = (fromIndex*bytesPerSample)+offset;
+		Float toIndexF = fromIndex+(marker.getLength().floatValue()*sampleRate)/1000;
+                toIndexF = toIndexF * bytesPerSample;
+                Integer toIndex = toIndexF.intValue();
+//                if(toIndex>values.size()){
+//                    toIndex = values.size();
+//                }
+
+                log.error("[processAcceptedSegment] offset: " + offset + "; size:" + reader.getAudioBuffer().size());
+		log.error("[processAcceptedSegment] FromIndex: " + fromIndex + "; toIndex:" + toIndex);
 		try{
 			getWords().getMarkers().add(marker);
-			List<Byte> data = reader.getAudioBuffer().subList(fromIndex, toIndex);
+			List<Byte> data = reader.getAudioBuffer().subList(fromIndex.intValue(), toIndex.intValue());
 			return saveSegmentAccepted(data, marker.getLabel());
 		}catch (IndexOutOfBoundsException e) {
 			log.error(MessageFormat.format("buffer: {3}.marker: {0}. samples: [{1};{2}]", 
 					marker.toString(),fromIndex, toIndex, reader.getAudioBuffer().size()));
-			e.printStackTrace();
+			log.error(e);
 		}
 		return null;
 	}
@@ -95,16 +107,19 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 	 */
 	public URL saveSegmentAccepted(List<Byte> data, String name){
 		if(path!= null && !"".equals(path)){
-			String path = getPath()+"/"+name+".wav";
-    		File wavFile = new File(path);
-    		return saveSegmentAccepted(data, wavFile);
-		}
+                    String path1 = getPath()+"/"+name+".wav";
+                    FileUtils.checkDirs(getPath());
+                    File wavFile = new File(path1);
+                    return saveSegmentAccepted(data, wavFile);
+                    }
 		return null;
 	}
 	
 	public URL saveSegmentAccepted(List<Byte> data, File file){
 	    InputStream bais = new ByteListInputStream(data);
-	    AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size());
+            FileUtils.checkDirs(file.getParent());
+            log.error(file.getParent());
+            AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size());
 	    try {
 	    	AudioSystem.write(ais, AudioFileFormat.Type.WAVE, file);
 	    	log.debug("[saveSegmentAccepted] saved{0}", path);
