@@ -16,6 +16,7 @@ import org.spantus.work.SpantusBundle;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
 import org.spantus.work.ui.cmd.CommandExecutionFacade;
+import org.spantus.work.ui.cmd.CommandExecutionFacadeImpl;
 import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.cmd.UIFileFilter;
 import org.spantus.work.ui.cmd.file.ExportCmd.ExportType;
@@ -23,19 +24,20 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class ImportCmd extends AbsrtactCmd {
 	
+
+
 	private Logger log = Logger.getLogger(getClass());
 	
 	private JFileChooser fileChooser;
 	private Component parent;
 //	private SampleChart chart;
 	private File defaulDir;
-	private CommandExecutionFacade executionFacade;
+	private CommandExecutionFacadeImpl executionFacade;
 	
-	public ImportCmd(Component parent, CommandExecutionFacade executionFacade) {
-		this.parent = parent;
-		this.executionFacade = executionFacade;
+	
+	public ImportCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
 	}
-	
 	
 	
 	public String execute(SpantusWorkInfo ctx) {

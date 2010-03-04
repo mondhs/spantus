@@ -62,17 +62,11 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	public static final String segmentAutoPanelMessageHeader = "segmentAutoPanelMessageHeader";
 	public static final String segmentAutoPanelMessageBody = "segmentAutoPanelMessageBody";
 
-	private CommandExecutionFacade executionFacade;
 
 	protected Logger log = Logger.getLogger(getClass());
 
-	/**
-	 * 
-	 * @param sampleChart
-	 */
 	public AutoSegmentationCmd(CommandExecutionFacade executionFacade) {
-		this.executionFacade = executionFacade;
-
+		super(executionFacade);
 	}
 
 	/**
@@ -81,7 +75,8 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	public String execute(SpantusWorkInfo ctx) {
 		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader()
 				.getWorkConfig();
-		IExtractorInputReader reader = executionFacade.getReader();
+		//hack
+		IExtractorInputReader reader = ((CommandExecutionFacadeImpl)getExecutionFacade()).getReader();
 		if (reader == null) {
 			log.info("Nothing to segment");
 		}

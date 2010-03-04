@@ -14,9 +14,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
+import org.spantus.event.SpantusEvent;
+import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.GlobalCommands;
-import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
 /**
@@ -40,7 +41,8 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 	 */
 	private static final long serialVersionUID = -262432478200012478L;
 	
-	private SpantusWorkCommand handler;
+//	private SpantusWorkCommand handler;
+	private SpantusEventMulticaster  eventMulticaster;
 	
 	enum menuLabels {
 		file, tool, help
@@ -206,7 +208,8 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		
 		public void actionPerformed(ActionEvent e) {
 			log.debug(("Selected: " + e.getActionCommand()));
-			getHandler().execute(e.getActionCommand(), getInfo());
+			getEventMulticaster().multicastEvent(
+					SpantusEvent.createEvent(this, e.getActionCommand()));
 		}
 
 	}
@@ -222,13 +225,13 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 		this.info = info;
 	}
 
-	public SpantusWorkCommand getHandler() {
-		return handler;
-	}
-
-	public void setHandler(SpantusWorkCommand handler) {
-		this.handler = handler;
-	}
+//	public SpantusWorkCommand getHandler() {
+//		return handler;
+//	}
+//
+//	public void setHandler(SpantusWorkCommand handler) {
+//		this.handler = handler;
+//	}
 
 
 	Integer ctrlMask;
@@ -245,6 +248,14 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			ctrlMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 		}
 		return ctrlMask;
+	}
+
+	public SpantusEventMulticaster getEventMulticaster() {
+		return eventMulticaster;
+	}
+
+	public void setEventMulticaster(SpantusEventMulticaster eventMulticaster) {
+		this.eventMulticaster = eventMulticaster;
 	}
 
 }

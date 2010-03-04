@@ -22,8 +22,9 @@ import org.spantus.chart.marker.MarkerSetComponent;
 import org.spantus.core.marker.Marker;
 import org.spantus.logger.Logger;
 import org.spantus.ui.ModifyObjectPopup;
+import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.cmd.GlobalCommands;
-import org.spantus.work.ui.cmd.SpantusWorkCommand;
+import org.spantus.work.ui.dto.SelectionDto;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
 
@@ -37,10 +38,10 @@ public class MarkerPopupMenu extends JPopupMenu {
 	private Long defaultSegmentLength = 80L;
 	private MarkerComponentServiceImpl markerComponentService;
 
-	Logger log = Logger.getLogger(getClass());
-	ActionListener listener;
-	SpantusWorkCommand handler;
-	SpantusWorkInfo info;
+	private Logger log = Logger.getLogger(getClass());
+	private ActionListener listener;
+	private CommandExecutionFacade executionFacade;
+	private SpantusWorkInfo info;
 
 	Map<menuItemsEnum, JComponent> cmpMap;
 	
@@ -151,9 +152,10 @@ public class MarkerPopupMenu extends JPopupMenu {
 			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
 			MarkerComponentEventHandler ml = getShower(source);
 			Marker _marker = ml.getCurrentMarker().getMarker();
-			getInfo().getProject().setFrom(_marker.getStart().floatValue()/1000);
-			getInfo().getProject().setLength(_marker.getLength().floatValue()/1000);
-			getHandler().execute(GlobalCommands.sample.play.name(), getInfo());
+			SelectionDto selectionDto = new SelectionDto(
+					_marker.getStart().floatValue()/1000,
+					_marker.getLength().floatValue()/1000);
+			getExecutionFacade().fireEvent(GlobalCommands.sample.play, selectionDto);
 			log.debug("palyed: " + _marker);
 			_markerSetComponent.repaint();
 		}
@@ -212,13 +214,6 @@ public class MarkerPopupMenu extends JPopupMenu {
 		return parent.getInvoker();
 	}
 	
-	public SpantusWorkCommand getHandler() {
-		return handler;
-	}
-
-	public void setHandler(SpantusWorkCommand handler) {
-		this.handler = handler;
-	}
 
 	public SpantusWorkInfo getInfo() {
 		return info;
@@ -241,6 +236,14 @@ public class MarkerPopupMenu extends JPopupMenu {
 
 	public void setDefaultSegmentLength(Long defaultSegmentLength) {
 		this.defaultSegmentLength = defaultSegmentLength;
+	}
+
+	public CommandExecutionFacade getExecutionFacade() {
+		return executionFacade;
+	}
+
+	public void setExecutionFacade(CommandExecutionFacade executionFacade) {
+		this.executionFacade = executionFacade;
 	}
 
 }

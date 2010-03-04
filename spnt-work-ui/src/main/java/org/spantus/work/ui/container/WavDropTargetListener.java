@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.spantus.logger.Logger;
+import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.cmd.GlobalCommands;
-import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
  * 
@@ -30,7 +30,7 @@ public class WavDropTargetListener implements DropTargetListener {
 	
 	private Logger log = Logger.getLogger(WavDropTargetListener.class);
 
-	private SpantusWorkCommand handler;
+	private CommandExecutionFacade executionFacade;
 	private SpantusWorkInfo info;
 	
 	/**
@@ -38,9 +38,9 @@ public class WavDropTargetListener implements DropTargetListener {
 	 * @param handler
 	 * @param info
 	 */
-	public WavDropTargetListener(SpantusWorkCommand handler,
+	public WavDropTargetListener(CommandExecutionFacade executionFacade,
 			SpantusWorkInfo info) {
-		this.handler = handler;
+		this.executionFacade = executionFacade;
 		this.info = info;
 	}
 	/**
@@ -89,8 +89,7 @@ public class WavDropTargetListener implements DropTargetListener {
 		URL file = getFile(event.getTransferable());
 		if (file != null) {
 			this.info.getProject().getSample().setCurrentFile(file);
-			this.handler.execute(GlobalCommands.file.currentSampleChanged
-						.name(), this.info);
+			this.getExecutionFacade().fireEvent(GlobalCommands.file.currentSampleChanged);
 		}
 		event.dropComplete(true);
 	}
@@ -176,6 +175,12 @@ public class WavDropTargetListener implements DropTargetListener {
 	 */
 	public boolean isDropAcceptable(DropTargetDropEvent event) {
 		return (event.getDropAction() & DnDConstants.ACTION_COPY_OR_MOVE) != 0;
+	}
+	public CommandExecutionFacade getExecutionFacade() {
+		return executionFacade;
+	}
+	public void setExecutionFacade(CommandExecutionFacade executionFacade) {
+		this.executionFacade = executionFacade;
 	}
 
 }

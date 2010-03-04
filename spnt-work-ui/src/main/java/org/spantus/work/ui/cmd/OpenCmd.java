@@ -34,6 +34,8 @@ import org.spantus.work.ui.services.WorkUIServiceFactory;
 import de.crysandt.util.FileFilterExtension;
 
 public class OpenCmd extends AbsrtactCmd {
+	
+
 	public static final String[] FILES = {"wav", "txt"};
 	
 	public static final String OPEN_DIALOG_TITLE ="spantus.work.ui.sample.open-dialog-title";
@@ -42,6 +44,9 @@ public class OpenCmd extends AbsrtactCmd {
 	private JFileChooser fileChooser;
 	private File defaulDir;
 	
+	public OpenCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
+	}
 	
 	public String execute(SpantusWorkInfo ctx) {
 		if(importSample(ctx)){

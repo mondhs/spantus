@@ -39,9 +39,16 @@ import org.spantus.work.wav.AudioManagerFactory;
  */
 public class SaveSegmentCmd extends AbsrtactCmd{
 	
+	
+
 	public static final String segmentSavedPanelMessageHeader = "segmentSavedPanelMessageHeader";
 	public static final String segmentSavedPanelMessageBody = "segmentSavedPanelMessageBody";
 	protected Logger log = Logger.getLogger(getClass());
+	
+	
+	public SaveSegmentCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
+	}
 	
 	@Override
 	public String execute(SpantusWorkInfo ctx) {

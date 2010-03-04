@@ -21,6 +21,7 @@
  */
 package org.spantus.work.ui.cmd;
 
+import org.spantus.work.ui.dto.SelectionDto;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
  * 
@@ -34,14 +35,17 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
  */
 public class ZoomInCmd extends AbsrtactCmd {
 
-	private CommandExecutionFacade executionFacade;
-
-	public ZoomInCmd(CommandExecutionFacade executionFacade) {
-		this.executionFacade = executionFacade;
-	}
 	
+	public ZoomInCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
+	}
+
 	public String execute(SpantusWorkInfo ctx) {
-		executionFacade.changedZoom(ctx.getProject().getFrom(), ctx.getProject().getLength());
+		SelectionDto selectionDto = (SelectionDto) getCurrentEvent().getValue();
+		//TODO: hack
+//		((CommandExecutionFacadeImpl)getExecutionFacade()).changedZoom(
+//				selectionDto.getFrom(),
+//				selectionDto.getLength());
 		return null;
 	}
 

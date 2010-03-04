@@ -29,10 +29,20 @@ public abstract class AbsrtactCmd implements SpantusWorkCommand {
 	
 	private Logger log = Logger.getLogger(AbsrtactCmd.class);
 	
-	public String execute(String cmdName, SpantusWorkInfo ctx){
-		log.debug("[execute][{0}] cmd:{1};",getClass().getName(),cmdName);
-		return execute(ctx);
+	private CommandExecutionFacade executionFacade;
+	SpantusWorkUIEvent currentEvent;
+	
+	public AbsrtactCmd(CommandExecutionFacade executionFacade) {
+		this.executionFacade = executionFacade;
 	}
+	
+	public void execute(SpantusWorkUIEvent event){
+		log.debug("[execute][{0}] cmd:{1};",getClass().getName(),event.getCmd());
+		this.currentEvent = event;
+		String newCmd = execute(event.getCtx());
+		getExecutionFacade().fireEvent(newCmd);
+	}
+	
 	public abstract String execute(SpantusWorkInfo ctx);
 	
 	protected String getMessage(String key){
@@ -40,5 +50,13 @@ public abstract class AbsrtactCmd implements SpantusWorkCommand {
 	}
 	protected I18n getI18n(){
 		return I18nFactory.createI18n();
+	}
+
+	public CommandExecutionFacade getExecutionFacade() {
+		return executionFacade;
+	}
+
+	public SpantusWorkUIEvent getCurrentEvent() {
+		return currentEvent;
 	}
 }

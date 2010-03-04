@@ -7,6 +7,7 @@ import javax.swing.JFileChooser;
 
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
+import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
 
@@ -14,15 +15,16 @@ import de.crysandt.util.FileFilterExtension;
 
 public class SaveProjectCmd extends AbsrtactCmd {
 	
+	
 	Logger log = Logger.getLogger(getClass());
 	public static final String[] FILES = {"spnt.xml"};
 
+	public SaveProjectCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
+	}
 	
 	private Component parent;
 	
-	public SaveProjectCmd(Component frame){
-		this.parent = frame;
-	}
 	
 	public String execute(SpantusWorkInfo ctx) {
 		JFileChooser fileChooser = new JFileChooser();

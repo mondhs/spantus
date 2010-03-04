@@ -37,9 +37,9 @@ public class SpantusWorkProjectInfo {
 	public enum ProjectTypeEnum{feature, segmenation, recordSegmentation, recognition};
 	
 	
-	private float from;
-
-	private float length;
+//	private float from;
+//
+//	private float length;
 	
 	private String type;
 
@@ -53,21 +53,21 @@ public class SpantusWorkProjectInfo {
 	
 	private String classifierType;
 	
-	public float getFrom() {
-		return from;
-	}
-
-	public void setFrom(float from) {
-		this.from = from;
-	}
-
-	public float getLength() {
-		return length;
-	}
-
-	public void setLength(float length) {
-		this.length = length;
-	}
+//	public float getFrom() {
+//		return from;
+//	}
+//
+//	public void setFrom(float from) {
+//		this.from = from;
+//	}
+//
+//	public float getLength() {
+//		return length;
+//	}
+//
+//	public void setLength(float length) {
+//		this.length = length;
+//	}
 
 	
 	public WorkSample getSample() {

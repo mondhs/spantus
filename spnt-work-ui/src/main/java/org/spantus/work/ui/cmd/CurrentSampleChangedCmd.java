@@ -39,13 +39,10 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 	protected Logger log = Logger.getLogger(getClass());
 //	private SampleChangeListener lisetener;
 //	private ProcessedFrameLinstener processedFrameLinstener;
-	private CommandExecutionFacade executionFacade;
-	private SpantusWorkCommand handler;
 	private WorkInfoManager workInfoManager;
 	
-	public CurrentSampleChangedCmd(CommandExecutionFacade executionFacade, SpantusWorkCommand handler) {
-		this.executionFacade = executionFacade;
-		this.handler = handler;
+	public CurrentSampleChangedCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
 	}
 
 	
@@ -76,24 +73,24 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 			IExtractorInputReader reader;
 			try{
 				//read changed sample
-				reader = WorkUIServiceFactory.read(ctx, executionFacade);
+				reader = WorkUIServiceFactory.read(ctx, getExecutionFacade());
 			}catch (ProcessingException e) {
 				error(e.getLocalizedMessage(), ctx);
 				return;
 			}
 			if(reader.getExtractorRegister().size() == 0 && 
 					reader.getExtractorRegister3D().size() == 0){
-				handler.execute(GlobalCommands.tool.reloadResources.name(), ctx);
+				getExecutionFacade().reload();
 				return;
 			}
-			executionFacade.changedReader(reader);
+			getExecutionFacade().changedReader(reader);
 			if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
 				Toolkit.getDefaultToolkit().beep();
 			}
 			if(Boolean.TRUE.equals(ctx.getEnv().getAutoSegmentation())){
-				handler.execute(GlobalCommands.tool.autoSegmentation.name(), ctx);
+				getExecutionFacade().fireEvent(GlobalCommands.tool.autoSegmentation);
 			}
-			handler.execute(GlobalCommands.tool.reloadResources.name(), ctx);
+			getExecutionFacade().reload();
 		}
 	}
 

@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
+import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
@@ -16,6 +17,7 @@ import org.spantus.work.ui.services.WorkUIServiceFactory;
 
 public class NewProjectCmd extends AbsrtactCmd {
 	
+
 	Logger log = Logger.getLogger(getClass());
 	
 	enum labels{newProjectTitle,newProjectMessage};
@@ -23,10 +25,12 @@ public class NewProjectCmd extends AbsrtactCmd {
 	public static final String RESOURCE_PREFIX  = "spantus.work.ui.project.type.";
 
 	private Frame frame;
-	
-	public NewProjectCmd(Frame frame){
-		this.frame = frame;
+
+	public NewProjectCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
 	}
+
+
 	
 	public boolean newProject(SpantusWorkInfo info) {
 		Map<String,ProjectTypeEnum> selectionMap = new LinkedHashMap<String, ProjectTypeEnum>();

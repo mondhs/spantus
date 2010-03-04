@@ -20,7 +20,10 @@ package org.spantus.work.ui.container.panel;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JToolBar;
+
 import org.spantus.externals.recognition.ui.AdminPanel;
+import org.spantus.externals.recognition.ui.RecognitionToolBar;
 /**
  * 
  * Recognition UI.
@@ -36,6 +39,7 @@ public class RecognitionContentPane extends AbstractSpantusContentPane{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private RecognitionToolBar toolBar;
 
 	public RecognitionContentPane() {
 		this.setLayout(new BorderLayout());
@@ -49,6 +53,13 @@ public class RecognitionContentPane extends AbstractSpantusContentPane{
 
 	public void reload() {
 		
+	}
+	
+	public JToolBar getToolBar() {
+		if (toolBar == null) {
+			toolBar = new RecognitionToolBar();
+		}
+		return toolBar;
 	}
 	
 }

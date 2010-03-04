@@ -36,10 +36,14 @@ import org.spantus.chart.SignalSelectionListener;
 import org.spantus.chart.bean.ChartInfo;
 import org.spantus.chart.impl.MarkeredTimeSeriesMultiChart;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.event.SpantusEvent;
+import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.cmd.SpantusWorkCommand;
+import org.spantus.work.ui.cmd.SpantusWorkUIEvent;
 import org.spantus.work.ui.container.marker.MarkerComponentEventHandler;
+import org.spantus.work.ui.dto.SelectionDto;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
@@ -65,7 +69,7 @@ public class SampleChart extends JPanel {
 	private SignalSelectionListener selectionListener;
 	private SpantusWorkInfo info;
 	private AbstractSwingChart chart;
-	private SpantusWorkCommand handler;
+	private SpantusEventMulticaster eventMulticaster;
 	private MarkerComponentEventHandler markerComponentEventHandler;
 
 	public SpantusWorkInfo getInfo() {
@@ -138,7 +142,10 @@ public class SampleChart extends JPanel {
 			JButton btn = new JButton(I18nFactory.createI18n().getMessage(CHOOSE_SAMPLE));
 			btn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
-					getHandler().execute(GlobalCommands.file.open.name(), getInfo());					
+					SpantusEvent event = SpantusEvent.createEvent(
+							this,
+							GlobalCommands.file.open.name());
+					getEventMulticaster().multicastEvent(event);
 				}
 			});
 			btn.setBorder(BorderFactory.createEmptyBorder());
@@ -185,8 +192,11 @@ public class SampleChart extends JPanel {
 			SignalSelectionListener {
 
 		public void selectionChanged(float from, float length) {
-			getInfo().getProject().setFrom(from);
-			getInfo().getProject().setLength(length);
+			SelectionDto selectionDto = new SelectionDto(from, length);
+			SpantusEvent event = SpantusEvent.createEvent(
+					this,
+					GlobalCommands.sample.zoomChanged.name(), selectionDto );
+			getEventMulticaster().multicastEvent(event);
 		}
 
 		public void play() {
@@ -202,18 +212,18 @@ public class SampleChart extends JPanel {
 
 	protected MarkerComponentEventHandler getMarkerComponentEventHandler() {
 		if(markerComponentEventHandler == null){
-			markerComponentEventHandler = new MarkerComponentEventHandler(getInfo(), getHandler());
+			markerComponentEventHandler = new MarkerComponentEventHandler(getInfo());
 		}
 		return markerComponentEventHandler;
 	}
 	
 
-	public SpantusWorkCommand getHandler() {
-		return handler;
+	public SpantusEventMulticaster getEventMulticaster() {
+		return eventMulticaster;
 	}
 
-	public void setHandler(SpantusWorkCommand handler) {
-		this.handler = handler;
+	public void setEventMulticaster(SpantusEventMulticaster eventMulticaster) {
+		this.eventMulticaster = eventMulticaster;
 	}
 
 }

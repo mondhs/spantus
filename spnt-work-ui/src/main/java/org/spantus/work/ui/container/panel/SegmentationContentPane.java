@@ -19,11 +19,11 @@
 package org.spantus.work.ui.container.panel;
 
 import java.awt.BorderLayout;
-import java.awt.dnd.DropTarget;
 
-import org.spantus.work.ui.cmd.SpantusWorkCommand;
+import javax.swing.JToolBar;
+
+import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.work.ui.container.SpantusWorkToolbar;
-import org.spantus.work.ui.container.WavDropTargetListener;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
  * Pane for segmentation, feture and record projects. has its own toolbar and panel
@@ -41,23 +41,23 @@ public class SegmentationContentPane extends AbstractSpantusContentPane{
 	private static final long serialVersionUID = 1L;
 
 	private SampleRepresentationPanel sampleRepresentationPanel;
-	private SpantusWorkToolbar spantusToolBar = null;
+	private SpantusWorkToolbar toolBar = null;
 	private SpantusWorkInfo info;
-	private SpantusWorkCommand handler;
+	private SpantusEventMulticaster eventMulticaster;
 	
 	public SegmentationContentPane() {
 		setLayout(new BorderLayout());
+		toolBar = new SpantusWorkToolbar();
 		add(getToolBar(), BorderLayout.NORTH);
 		this.add(getSampleRepresentationPanel(),BorderLayout.CENTER);	
 	}
 	
 	public void initialize() {
-		getToolBar().initialize();
+		toolBar.initialize();
 		getSampleRepresentationPanel().initialize();
-		new DropTarget(this, new WavDropTargetListener(getHandler(),getInfo()));
 	}
 	public void reload() {
-		getToolBar().reload();
+		toolBar.reload();
 		getSampleRepresentationPanel().reload();
 	}
 	
@@ -67,11 +67,8 @@ public class SegmentationContentPane extends AbstractSpantusContentPane{
 		}
 		return sampleRepresentationPanel;
 	}
-	public SpantusWorkToolbar getToolBar() {
-		if (spantusToolBar == null) {
-			spantusToolBar = new SpantusWorkToolbar();
-		}
-		return spantusToolBar;
+	public JToolBar getToolBar() {
+		return toolBar;
 	}
 	
 	public SpantusWorkInfo getInfo() {
@@ -80,18 +77,28 @@ public class SegmentationContentPane extends AbstractSpantusContentPane{
 
 	public void setInfo(SpantusWorkInfo info) {
 		getSampleRepresentationPanel().setInfo(info);
-		getToolBar().setInfo(info);
+		this.toolBar.setInfo(info);
 		this.info = info;
 	}
-	public SpantusWorkCommand getHandler() {
-		return handler;
+
+//	public CommandExecutionFacade getExecutionFacade() {
+//		return executionFacade;
+//	}
+//
+//	public void setExecutionFacade(CommandExecutionFacade executionFacade) {
+//		this.executionFacade = executionFacade;
+//	}
+
+	public SpantusEventMulticaster getEventMulticaster() {
+		return eventMulticaster;
 	}
 
-	public void setHandler(SpantusWorkCommand handler) {
-		getSampleRepresentationPanel().setHandler(handler);
-		getToolBar().setHandler(handler);
-		this.handler = handler;
+	public void setEventMulticaster(SpantusEventMulticaster eventMulticaster) {
+		this.eventMulticaster = eventMulticaster;
+		toolBar.setEventMulticaster(eventMulticaster);
 	}
+
+	
 	
 	
 	

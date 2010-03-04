@@ -5,18 +5,18 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 public class ReloadSampleChartCmd extends AbsrtactCmd {
 	
 	
-	private CommandExecutionFacade executionFacade;
 	
 	public ReloadSampleChartCmd(CommandExecutionFacade executionFacade) {
-		this.executionFacade = executionFacade;
+		super(executionFacade);
 	}
-
 	
 	public String execute(SpantusWorkInfo ctx) {
 		if(ctx.getProject().getSample().getCurrentFile()==null){
-			executionFacade.setReader(null);
+			//TODO: hack
+			((CommandExecutionFacadeImpl)getExecutionFacade()).setReader(null);
 		}
-		executionFacade.updateContent();
+		//TODO: hack
+		((CommandExecutionFacadeImpl)getExecutionFacade()).updateContent();
 		
 		return null;
 	}

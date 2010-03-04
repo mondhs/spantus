@@ -26,9 +26,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
+import org.spantus.event.BasicSpantusEventMulticaster;
+import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
-import org.spantus.work.ui.cmd.MainHandler;
-import org.spantus.work.ui.cmd.SpantusWorkCommand;
+import org.spantus.work.ui.cmd.CommandBuilder;
+import org.spantus.work.ui.cmd.CommandExecutionFacade;
+import org.spantus.work.ui.cmd.CommandExecutionFacadeImpl;
 import org.spantus.work.ui.container.panel.AbstractSpantusContentPane;
 import org.spantus.work.ui.container.panel.RecognitionContentPane;
 import org.spantus.work.ui.container.panel.SampleRepresentationPanel;
@@ -53,7 +56,6 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	private static final long serialVersionUID = 1L;
 	private SpantusWorkMenuBar jJMenuBar = null;
 	private SpantusWorkInfo info = null;
-	private MainHandler handler = null;
 	private Logger log= Logger.getLogger(SpantusWorkFrame.class);
 	
 	private SpantusUIServiceImpl spantusUIService;
@@ -61,6 +63,8 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	private JProgressBar recordMonitor;
 	private AbstractSpantusContentPane spantusContentPane;
 	
+	private SpantusEventMulticaster eventMulticaster;
+	private CommandExecutionFacade executionFacade;
 
 	
 	/**
@@ -87,7 +91,15 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	 */
 	public void initialize() {
 		getSpantusUIService().setupEnv(getInfo(),this);
+
+		CommandExecutionFacadeImpl executionFacadeImpl = new CommandExecutionFacadeImpl(this);
+		this.executionFacade = executionFacadeImpl;
+		executionFacadeImpl.setCmds(CommandBuilder.create(executionFacade));
+		eventMulticaster = new BasicSpantusEventMulticaster();
+		eventMulticaster.addListener(this.executionFacade);
+
 		this.setTitle(contructTitle());
+
 
 		getJJMenuBar().initialize();
 		setRecordMonitor(new JProgressBar(0, 16));
@@ -116,7 +128,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 			SegmentationContentPane pane = new SegmentationContentPane();
 			spantusContentPane = pane;
 			pane.setInfo(getInfo());
-			pane.setHandler(getHandler());
+			pane.setEventMulticaster(getEventMulticaster());
 //			getJJMenuBar().initialize();
 //			getToolBar().initialize();
 //                 getToolBar().add(getRecordMonitor());
@@ -185,7 +197,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		if (jJMenuBar == null) {
 			SpantusWorkMenuBar spantusWorkMenuBar = new SpantusWorkMenuBar();
 			spantusWorkMenuBar.setInfo(getInfo());
-			spantusWorkMenuBar.setHandler(getHandler());
+			spantusWorkMenuBar.setEventMulticaster(eventMulticaster);
 			jJMenuBar = spantusWorkMenuBar;
 		}
 		return jJMenuBar;
@@ -205,15 +217,6 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	public void setInfo(SpantusWorkInfo info) {
 		this.info = info;
 	}
-
-	public SpantusWorkCommand getHandler() {
-		if(handler == null){
-			handler = new MainHandler();
-			handler.initialize(this);
-		}
-		return handler;
-	}
-	
 
 	public SampleRepresentationPanel getSampleRepresentationPanel() {
 		if (spantusContentPane instanceof SegmentationContentPane) {
@@ -248,6 +251,18 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 
 	public void setRecordMonitor(JProgressBar recordMonitor) {
 		this.recordMonitor = recordMonitor;
+	}
+
+	public SpantusEventMulticaster getEventMulticaster() {
+		return eventMulticaster;
+	}
+
+	public void setEventMulticaster(SpantusEventMulticaster eventMulticaster) {
+		this.eventMulticaster = eventMulticaster;
+	}
+
+	public CommandExecutionFacade getExecutionFacade() {
+		return executionFacade;
 	}
 	
 	

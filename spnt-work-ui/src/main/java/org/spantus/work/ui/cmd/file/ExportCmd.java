@@ -1,7 +1,6 @@
 package org.spantus.work.ui.cmd.file;
 
 import java.awt.Component;
-import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,11 +15,14 @@ import org.spantus.work.SpantusBundle;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
 import org.spantus.work.ui.cmd.CommandExecutionFacade;
+import org.spantus.work.ui.cmd.CommandExecutionFacadeImpl;
 import org.spantus.work.ui.cmd.UIFileFilter;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class ExportCmd extends AbsrtactCmd {
 	
+	
+
 	private Logger log = Logger.getLogger(getClass());
 	
 	public static final String[] IMAGE_FILES = {"png"};
@@ -30,11 +32,19 @@ public class ExportCmd extends AbsrtactCmd {
 	public static final String[] BUNDLE_FILES = {"spnt.zip"};
 	
 	
-	private CommandExecutionFacade execFacade;
+	private CommandExecutionFacadeImpl execFacade;
 	
-	private Component parent;
+	private Component parent =null;
 	
 	private JFileChooser chooser;
+	
+	
+
+	enum ExportType{image, markers, sample, mpeg7, bundle}; 
+	
+	public ExportCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
+	}
 	
 	public JFileChooser getChooser() {
 		if(chooser == null){
@@ -47,14 +57,6 @@ public class ExportCmd extends AbsrtactCmd {
 		}
 		return chooser;
 	}
-
-	enum ExportType{image, markers, sample, mpeg7, bundle}; 
-	
-	public ExportCmd(Frame frame, CommandExecutionFacade execCtx) {
-		this.execFacade = execCtx;
-		this.parent = frame;
-	}
-	
 	
 	
 	public String execute(SpantusWorkInfo ctx) {

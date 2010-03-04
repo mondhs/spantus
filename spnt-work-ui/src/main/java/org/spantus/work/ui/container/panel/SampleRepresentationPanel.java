@@ -27,7 +27,6 @@ import javax.swing.JProgressBar;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.logger.Logger;
-import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.container.ReloadableComponent;
 import org.spantus.work.ui.container.SampleChangeListener;
 import org.spantus.work.ui.container.chart.SampleChart;
@@ -101,13 +100,6 @@ public class SampleRepresentationPanel extends JPanel implements SampleChangeLis
 		this.info = info;
 	}
 
-	public SpantusWorkCommand getHandler() {
-		return getSampleChart().getHandler();
-	}
-
-	public void setHandler(SpantusWorkCommand handler) {
-		getSampleChart().setHandler(handler);
-	}
 
 	
 	

@@ -5,11 +5,15 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class ReloadResourcesCmd extends AbsrtactCmd {
 	
+	
+
 	private ReloadableComponent component;
 	
-	public ReloadResourcesCmd(ReloadableComponent component) {
-		this.component = component;
+	public ReloadResourcesCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
+		component = executionFacade;
 	}
+
 
 	
 	public String execute(SpantusWorkInfo ctx) {

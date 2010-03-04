@@ -36,12 +36,13 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
  */
 public class ShowDocumentationCmd extends AbsrtactCmd {
 
+
 	private SpantusDocumentationDialog docDialog;
-	private Frame frame;
 	
-	public ShowDocumentationCmd(Frame frame){
-		this.frame = frame;
+	public ShowDocumentationCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
 	}
+
 	
 	
 	public String execute(SpantusWorkInfo ctx){
@@ -51,7 +52,7 @@ public class ShowDocumentationCmd extends AbsrtactCmd {
 
 	private SpantusDocumentationDialog getDocDialog(){
 		if(docDialog == null){
-			docDialog = new SpantusDocumentationDialog(frame);
+			docDialog = new SpantusDocumentationDialog(null);
 			docDialog.setModal(true);
 		}
 		return docDialog;

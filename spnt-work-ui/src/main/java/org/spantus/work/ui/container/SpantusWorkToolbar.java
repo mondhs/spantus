@@ -38,9 +38,10 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
+import org.spantus.event.SpantusEvent;
+import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.GlobalCommands;
-import org.spantus.work.ui.cmd.SpantusWorkCommand;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
@@ -92,7 +93,7 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 	
 	private JTextField experimentIdTxt = null;
 	
-	private SpantusWorkCommand handler;
+	private SpantusEventMulticaster eventMulticaster;
 	
 	private ToolbarListener toolbarActionListener;
 	
@@ -330,13 +331,6 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		btn.addActionListener(getToolbarActionListener());
 		return btn;
 	}
-	public SpantusWorkCommand getHandler() {
-		return handler;
-	}
-
-	public void setHandler(SpantusWorkCommand handler) {
-		this.handler = handler;
-	}
 	
 	public class ToolbarListener extends AbstractAction {
 		/**
@@ -353,7 +347,8 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		
 		public void actionPerformed(ActionEvent e) {
 			log.debug(("Selected: " + e.getActionCommand()));
-			getHandler().execute(e.getActionCommand(), getInfo());
+			getEventMulticaster().multicastEvent(SpantusEvent.createEvent(
+					this, e.getActionCommand()));
 		}
 	}
 
@@ -369,6 +364,15 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 		}
 		return toolBarComponents;
 	}
+
+	public SpantusEventMulticaster getEventMulticaster() {
+		return eventMulticaster;
+	}
+
+	public void setEventMulticaster(SpantusEventMulticaster eventMulticaster) {
+		this.eventMulticaster = eventMulticaster;
+	}
+
 	
 
 }

@@ -34,13 +34,19 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
  */
 public class AboutCmd extends AbsrtactCmd {
 
+
 	private SpantusAboutDialog about;
-	private Frame frame;
+//	private Frame frame;
 	
-	public AboutCmd(Frame frame){
-		this.frame = frame;
+//	public AboutCmd(Frame frame){
+//		this.frame = frame;
+//	}
+	
+
+	public AboutCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
 	}
-	
+
 	
 	public String execute(SpantusWorkInfo ctx){
 		getAboutPnl().setVisible(true);
@@ -49,7 +55,7 @@ public class AboutCmd extends AbsrtactCmd {
 
 	private SpantusAboutDialog getAboutPnl(){
 		if(about == null){
-			about = new SpantusAboutDialog(frame);
+			about = new SpantusAboutDialog(null);
 			about.setModal(true);
 		}
 		return about;

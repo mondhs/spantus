@@ -1,12 +1,12 @@
 package org.spantus.work.ui.cmd.file;
 
-import java.awt.Component;
 import java.io.File;
 
 import javax.swing.JFileChooser;
 
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
+import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
@@ -16,13 +16,14 @@ import de.crysandt.util.FileFilterExtension;
 
 public class OpenProjectCmd extends AbsrtactCmd {
 	
+	
+
 	Logger log = Logger.getLogger(getClass());
 	public static final String[] FILES = {"spnt.xml"};
 	
-	private Component parent;
 	
-	public OpenProjectCmd(Component frame){
-		this.parent = frame;
+	public OpenProjectCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
 	}
 
 	public boolean openProject(SpantusWorkInfo ctx) {
@@ -31,7 +32,7 @@ public class OpenProjectCmd extends AbsrtactCmd {
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.setCurrentDirectory(ctx.getProject().getWorkingDir());
 		
-		int returnValue = fileChooser.showOpenDialog(parent);
+		int returnValue = fileChooser.showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = fileChooser.getSelectedFile();
 				if(!selectedFile.exists()) return false;

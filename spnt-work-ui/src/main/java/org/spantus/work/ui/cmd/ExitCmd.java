@@ -22,8 +22,8 @@
 
 package org.spantus.work.ui.cmd;
 
-import org.spantus.work.ui.container.SpantusWorkFrame;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.services.WorkUIServiceFactory;
 /**
  * 
  * 
@@ -36,15 +36,15 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
  */
 public class ExitCmd extends AbsrtactCmd {
 
-	private SpantusWorkFrame frame;
 	
-	public ExitCmd(SpantusWorkFrame frame){
-		this.frame = frame;
+	
+	public ExitCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
 	}
-	
-	
+
 	public String execute(SpantusWorkInfo ctx){
-		frame.saveEnv();
+//		frame.saveEnv();
+		WorkUIServiceFactory.createInfoManager().saveWorkInfo(getCurrentEvent().getCtx());
 		System.exit(0);
 		return null;
 	}

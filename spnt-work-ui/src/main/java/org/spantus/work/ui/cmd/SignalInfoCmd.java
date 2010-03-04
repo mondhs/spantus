@@ -31,13 +31,13 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
  */
 public class SignalInfoCmd extends AbsrtactCmd {
 
+
 	private SignalInfoDialog info;
 	private Frame frame;
 	
-	public SignalInfoCmd(Frame frame){
-		this.frame = frame;
+	public SignalInfoCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
 	}
-	
 	
 	public String execute(SpantusWorkInfo ctx){
 		getInfoPnl().setCtx(ctx);

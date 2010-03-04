@@ -60,6 +60,7 @@ import org.spantus.work.ui.util.WorkUIExtractorConfigUtil;
  */
 public class RecordCmd extends AbsrtactCmd {
 	
+
 	public static final String recordFinishedMessageHeader = "recordFinishedMessageHeader"; 
 	public static final String recordFinishedMessageBody = "recordFinishedMessageBody";
 	public static final String recordedSoundSavedMessageBody="recordedSoundSavedMessageBody";
@@ -68,7 +69,7 @@ public class RecordCmd extends AbsrtactCmd {
 	protected Logger log = Logger.getLogger(getClass());
 
 	private AudioCapture capture;
-	private SpantusWorkCommand handler;
+//	private SpantusWorkCommand handler;
 	
 
 	private Timer timer;
@@ -80,9 +81,14 @@ public class RecordCmd extends AbsrtactCmd {
 	
 	private SampleChangeListener lisetener;
 
-	public RecordCmd(SampleChangeListener lisetener, SpantusWorkCommand handler) {
-		this.lisetener = lisetener;
-		this.handler = handler;
+//	public RecordCmd(SampleChangeListener lisetener, SpantusWorkCommand handler) {
+//		this.lisetener = lisetener;
+//		this.handler = handler;
+//	}
+	
+	public RecordCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
+		this.lisetener = executionFacade;
 	}
 	
 	public String execute(final SpantusWorkInfo ctx) {
@@ -251,7 +257,7 @@ public class RecordCmd extends AbsrtactCmd {
 			this.cancel();
 			if(wavFile != null){
 				ctx.getProject().getSample().setCurrentFile(wavFile);
-				handler.execute(GlobalCommands.file.currentSampleChanged.name(), ctx);
+				getExecutionFacade().fireEvent(GlobalCommands.file.currentSampleChanged);
 			}
 			
 		}

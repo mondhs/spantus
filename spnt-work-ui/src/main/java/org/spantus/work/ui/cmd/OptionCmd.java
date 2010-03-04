@@ -1,19 +1,17 @@
 package org.spantus.work.ui.cmd;
 
-import java.awt.Frame;
-
 import org.spantus.work.ui.container.panel.OptionDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class OptionCmd extends AbsrtactCmd{
+
 	private OptionDialog optionDialog;
-	private Frame frame;
 	private boolean initialized = false;
 	
-	public OptionCmd(Frame frame){
-		this.frame = frame;
+
+	public OptionCmd(CommandExecutionFacade executionFacade) {
+		super(executionFacade);
 	}
-	
 	
 	public String execute(SpantusWorkInfo ctx){
 		getOptionDialog().setInfo(ctx);
@@ -30,7 +28,7 @@ public class OptionCmd extends AbsrtactCmd{
 
 	private OptionDialog getOptionDialog(){
 		if(optionDialog == null){
-			optionDialog = new OptionDialog( frame);
+			optionDialog = new OptionDialog(null);
 		}
 		return optionDialog;
 	}
