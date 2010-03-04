@@ -78,16 +78,20 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 //		int fromIndex =(int)(offset + marker.getExtractionData().getStartSampleNum())*bytesPerSample;
 //		int toIndex = fromIndex + (marker.getExtractionData().getLengthSampleNum().intValue()*bytesPerSample);
                 Float fromIndex = (marker.getStart().floatValue()*sampleRate)/1000;
-                fromIndex = (fromIndex*bytesPerSample)+offset;
+                fromIndex = (fromIndex/bytesPerSample)+offset;
 		Float toIndexF = fromIndex+(marker.getLength().floatValue()*sampleRate)/1000;
-                toIndexF = toIndexF * bytesPerSample;
+//                toIndexF = toIndexF * bytesPerSample;
                 Integer toIndex = toIndexF.intValue();
 //                if(toIndex>values.size()){
-//                    toIndex = values.size();
+                    toIndex = reader.getAudioBuffer().size();
 //                }
+                    if(fromIndex %2==0){
+                        fromIndex--;
+                    }
 
                 log.error("[processAcceptedSegment] offset: " + offset + "; size:" + reader.getAudioBuffer().size());
-		log.error("[processAcceptedSegment] FromIndex: " + fromIndex + "; toIndex:" + toIndex);
+
+                log.error("[processAcceptedSegment] FromIndex: " + fromIndex + "; toIndex:" + toIndex);
 		try{
 			getWords().getMarkers().add(marker);
 			List<Byte> data = reader.getAudioBuffer().subList(fromIndex.intValue(), toIndex.intValue());
@@ -119,7 +123,7 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 	    InputStream bais = new ByteListInputStream(data);
             FileUtils.checkDirs(file.getParent());
             log.error(file.getParent());
-            AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size());
+            AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size()/reader.getFormat().getFrameSize());
 	    try {
 	    	AudioSystem.write(ais, AudioFileFormat.Type.WAVE, file);
 	    	log.debug("[saveSegmentAccepted] saved{0}", path);

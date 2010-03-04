@@ -27,11 +27,13 @@ import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
 import org.spantus.event.BasicSpantusEventMulticaster;
+import org.spantus.event.SpantusEventListener;
 import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.CommandBuilder;
 import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.cmd.CommandExecutionFacadeImpl;
+import org.spantus.work.ui.cmd.SpantusWorkUIListener;
 import org.spantus.work.ui.container.panel.AbstractSpantusContentPane;
 import org.spantus.work.ui.container.panel.RecognitionContentPane;
 import org.spantus.work.ui.container.panel.SampleRepresentationPanel;
@@ -65,6 +67,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	
 	private SpantusEventMulticaster eventMulticaster;
 	private CommandExecutionFacade executionFacade;
+        private SpantusEventListener eventListener;
 
 	
 	/**
@@ -94,9 +97,13 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 
 		CommandExecutionFacadeImpl executionFacadeImpl = new CommandExecutionFacadeImpl(this);
 		this.executionFacade = executionFacadeImpl;
-		executionFacadeImpl.setCmds(CommandBuilder.create(executionFacade));
-		eventMulticaster = new BasicSpantusEventMulticaster();
-		eventMulticaster.addListener(this.executionFacade);
+
+                SpantusWorkUIListener uiEventListener = new SpantusWorkUIListener();
+                this.eventListener = uiEventListener;
+		uiEventListener.setCmds(CommandBuilder.create(executionFacade));
+		uiEventListener.setInfo(getInfo());
+                eventMulticaster = new BasicSpantusEventMulticaster();
+		eventMulticaster.addListener(uiEventListener);
 
 		this.setTitle(contructTitle());
 

@@ -147,20 +147,5 @@ public class CommandExecutionFacadeImpl implements CommandExecutionFacade {
 		frame.newProject();
 	}
 
-	public void onEvent(SpantusEvent event) {
-		SpantusWorkUIEvent workUIEvent = new SpantusWorkUIEvent(
-				event.getSource(),
-				frame.getInfo(), event.getCmd(),
-				event.getValue());
-		getCmds().get(event.getCmd()).execute(workUIEvent);
-	}
-
-	public Map<String, SpantusWorkCommand> getCmds() {
-		return cmds;
-	}
-
-	public void setCmds(Map<String, SpantusWorkCommand> cmds) {
-		this.cmds = cmds;
-	}
 
 }
