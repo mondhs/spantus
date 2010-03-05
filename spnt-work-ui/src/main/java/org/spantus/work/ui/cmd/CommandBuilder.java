@@ -92,7 +92,6 @@ public class CommandBuilder {
 		safePut(cmds, new StopCmd(executionFacade));
 		safePut(cmds, new ZoomInCmd(executionFacade));
 		safePut(cmds, new ZoomOutCmd(executionFacade));
-		safePut(cmds, new ZoomOutCmd(executionFacade));
 		safePut(cmds, new ReloadSampleChartCmd(executionFacade));
 	}
 	/**
