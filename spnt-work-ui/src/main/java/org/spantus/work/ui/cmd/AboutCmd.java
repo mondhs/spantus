@@ -19,6 +19,7 @@
 package org.spantus.work.ui.cmd;
 
 import java.awt.Frame;
+import java.util.Set;
 
 import org.spantus.work.ui.container.panel.SpantusAboutDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -47,6 +48,9 @@ public class AboutCmd extends AbsrtactCmd {
 		super(executionFacade);
 	}
 
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.help.about);
+	}
 	
 	public String execute(SpantusWorkInfo ctx){
 		getAboutPnl().setVisible(true);

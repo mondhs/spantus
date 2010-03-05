@@ -20,6 +20,9 @@
  */
 package org.spantus.work.ui.cmd;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18n;
@@ -40,10 +43,25 @@ public abstract class AbsrtactCmd implements SpantusWorkCommand {
 		log.debug("[execute][{0}] cmd:{1};",getClass().getName(),event.getCmd());
 		this.currentEvent = event;
 		String newCmd = execute(event.getCtx());
-		getExecutionFacade().fireEvent(newCmd);
+		if(newCmd != null){
+			getExecutionFacade().fireEvent(newCmd);
+		}
 	}
 	
 	public abstract String execute(SpantusWorkInfo ctx);
+	
+	
+	protected Set<String> createExpectedActions(Enum<?> enumVal){
+		return createExpectedActions(enumVal.name());
+	}
+	
+	protected Set<String> createExpectedActions(String... actions){
+		Set<String> actionSet = new HashSet<String>();
+		for (String action : actions) {
+			actionSet.add(action);
+		}
+		return actionSet;
+	}
 	
 	protected String getMessage(String key){
 		return getI18n().getMessage(key);

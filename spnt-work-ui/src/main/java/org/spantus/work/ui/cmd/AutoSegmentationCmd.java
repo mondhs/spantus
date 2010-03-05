@@ -68,7 +68,10 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	public AutoSegmentationCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
 	}
-
+	
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.tool.autoSegmentation);
+	}
 	/**
 	 * 
 	 */

@@ -23,6 +23,7 @@
 package org.spantus.work.ui.cmd;
 
 import java.awt.Frame;
+import java.util.Set;
 
 import org.spantus.work.ui.container.panel.SpantusDocumentationDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -43,7 +44,9 @@ public class ShowDocumentationCmd extends AbsrtactCmd {
 		super(executionFacade);
 	}
 
-	
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.help.userGuide);
+	}
 	
 	public String execute(SpantusWorkInfo ctx){
 		getDocDialog().setVisible(true);

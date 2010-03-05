@@ -1,6 +1,7 @@
 package org.spantus.work.ui.cmd.file;
 
 import java.io.File;
+import java.util.Set;
 
 import javax.swing.JFileChooser;
 
@@ -24,6 +25,10 @@ public class OpenProjectCmd extends AbsrtactCmd {
 	
 	public OpenProjectCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
+	}
+	
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.file.openProject);
 	}
 
 	public boolean openProject(SpantusWorkInfo ctx) {

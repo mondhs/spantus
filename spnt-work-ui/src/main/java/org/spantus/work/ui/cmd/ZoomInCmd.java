@@ -21,6 +21,8 @@
  */
 package org.spantus.work.ui.cmd;
 
+import java.util.Set;
+
 import org.spantus.work.ui.dto.SelectionDto;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
@@ -39,7 +41,10 @@ public class ZoomInCmd extends AbsrtactCmd {
 	public ZoomInCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
 	}
-
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.sample.zoomin);
+	}
+	
 	public String execute(SpantusWorkInfo ctx) {
 		SelectionDto selectionDto = (SelectionDto) getCurrentEvent().getValue();
 		//TODO: hack

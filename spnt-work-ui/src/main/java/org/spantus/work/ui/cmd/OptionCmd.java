@@ -1,5 +1,7 @@
 package org.spantus.work.ui.cmd;
 
+import java.util.Set;
+
 import org.spantus.work.ui.container.panel.OptionDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
@@ -11,6 +13,9 @@ public class OptionCmd extends AbsrtactCmd{
 
 	public OptionCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
+	}
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.file.open);
 	}
 	
 	public String execute(SpantusWorkInfo ctx){

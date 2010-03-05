@@ -19,7 +19,9 @@
 package org.spantus.work.ui.cmd;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.file.CurrentProjectChangedCmd;
@@ -42,16 +44,25 @@ public class CommandBuilder {
 	
 
 	
-	public static Map<String, SpantusWorkCommand> create(CommandExecutionFacade executionFacade) {
-		Map<String, SpantusWorkCommand> cmds =  new HashMap<String, SpantusWorkCommand>();;
+	public static Map<String, Set<SpantusWorkCommand>> create(CommandExecutionFacade executionFacade) {
+		Map<String, Set<SpantusWorkCommand>> cmds =  new HashMap<String, Set<SpantusWorkCommand>>();
 		
-		cmds.put(GlobalCommands.file.exit.name(),
-				new ExitCmd(executionFacade));
+		safePut(cmds, new ExitCmd(executionFacade));
 		
 		createSampleCmd(cmds,  executionFacade );
 		createFileCmd(cmds, executionFacade );
 		createMiscCmd(cmds, executionFacade);
 		return cmds;
+	}
+	
+	public static void safePut(Map<String, Set<SpantusWorkCommand>> cmds, SpantusWorkCommand cmd){
+		for (String key : cmd.getExpectedActions()) {
+			if(cmds.get(key)==null){
+				cmds.put(key, new HashSet<SpantusWorkCommand>());
+			}
+			cmds.get(key).add(cmd);
+		}
+		
 	}
 
 //	public Map<String, SpantusWorkCommand> getCmds() {
@@ -75,22 +86,14 @@ public class CommandBuilder {
 ////		}
 //	}
 
-	private static void createSampleCmd(Map<String, SpantusWorkCommand> cmds, CommandExecutionFacade executionFacade) {
-
-		cmds.put(GlobalCommands.sample.record.name(),
-				new RecordCmd(executionFacade));
-		cmds.put(GlobalCommands.sample.play.name(), new PlayCmd(executionFacade));
-
-		cmds.put(GlobalCommands.sample.stop.name(), new StopCmd(executionFacade));
-
-		cmds.put(GlobalCommands.sample.zoomin.name(),
-				new ZoomInCmd(executionFacade));
-		cmds.put(GlobalCommands.sample.zoomout.name(),
-				new ZoomOutCmd(executionFacade));
-
-		cmds.put(GlobalCommands.sample.reloadSampleChart.name(),
-				new ReloadSampleChartCmd(executionFacade));
-
+	private static void createSampleCmd(Map<String, Set<SpantusWorkCommand>> cmds, CommandExecutionFacade executionFacade) {
+		safePut(cmds, new RecordCmd(executionFacade));
+		safePut(cmds, new PlayCmd(executionFacade));
+		safePut(cmds, new StopCmd(executionFacade));
+		safePut(cmds, new ZoomInCmd(executionFacade));
+		safePut(cmds, new ZoomOutCmd(executionFacade));
+		safePut(cmds, new ZoomOutCmd(executionFacade));
+		safePut(cmds, new ReloadSampleChartCmd(executionFacade));
 	}
 	/**
 	 * 
@@ -99,22 +102,15 @@ public class CommandBuilder {
 	 * @param reloadableComponent
 	 * @param sampleChart
 	 */
-	private static void createFileCmd(Map<String, SpantusWorkCommand> cmds, CommandExecutionFacade executionFacade) {
+	private static void createFileCmd(Map<String, Set<SpantusWorkCommand>> cmds, CommandExecutionFacade executionFacade) {
 		
-		cmds.put(GlobalCommands.file.open.name(), new OpenCmd(executionFacade));
-		cmds.put(GlobalCommands.file.newProject.name(),
-				new NewProjectCmd(executionFacade));
-		cmds.put(GlobalCommands.file.openProject.name(),
-				new OpenProjectCmd(executionFacade));
-		cmds.put(GlobalCommands.file.saveProject.name(),
-				new SaveProjectCmd(executionFacade));
-
-		cmds.put(GlobalCommands.file.currentProjectChanged.name(),
-				new CurrentProjectChangedCmd(executionFacade));
-		cmds.put(GlobalCommands.file.exportFile.name(),
-				new ExportCmd(executionFacade));
-		cmds.put(GlobalCommands.file.importFile.name(),
-				new ImportCmd(executionFacade));
+		safePut(cmds, new OpenCmd(executionFacade));
+		safePut(cmds, new NewProjectCmd(executionFacade));
+		safePut(cmds, new OpenProjectCmd(executionFacade));
+		safePut(cmds, new SaveProjectCmd(executionFacade));
+		safePut(cmds, new CurrentProjectChangedCmd(executionFacade));
+		safePut(cmds, new ExportCmd(executionFacade));
+		safePut(cmds, new ImportCmd(executionFacade));
 	}
 	/**
 	 * 
@@ -124,37 +120,18 @@ public class CommandBuilder {
 	 * @param processedFrameLinstener
 	 * @param reloadableComponent
 	 */
-	private static void createMiscCmd(Map<String, SpantusWorkCommand> cmds,
+	private static void createMiscCmd(Map<String, Set<SpantusWorkCommand>> cmds,
 			CommandExecutionFacade executionFacade) {
 		
-		cmds.put(GlobalCommands.help.about.name(),
-				new AboutCmd(executionFacade));
+		safePut(cmds, new AboutCmd(executionFacade));
+		safePut(cmds, new SignalInfoCmd(executionFacade));
+		safePut(cmds, new ShowDocumentationCmd(executionFacade));
+		safePut(cmds, new CurrentSampleChangedCmd(executionFacade));
+		safePut(cmds, new OptionCmd(executionFacade));
+		safePut(cmds, new ReloadResourcesCmd(executionFacade));
+		safePut(cmds, new SaveSegmentCmd(executionFacade));
+		safePut(cmds, new AutoSegmentationCmd(executionFacade));
 		
-		cmds.put(GlobalCommands.help.signalInfo.name(),
-				new SignalInfoCmd(executionFacade));
-
-		
-		cmds.put(GlobalCommands.help.userGuide.name(),
-				new ShowDocumentationCmd(executionFacade));
-
-		CurrentSampleChangedCmd currentSampleChanged = new CurrentSampleChangedCmd(
-				executionFacade);
-		cmds.put(GlobalCommands.file.currentSampleChanged.name(),
-				currentSampleChanged);
-
-		cmds.put(GlobalCommands.tool.option.name(),
-				new OptionCmd(executionFacade));
-
-		cmds.put(GlobalCommands.tool.reloadResources.name(),
-				new ReloadResourcesCmd(executionFacade));
-
-		cmds.put(GlobalCommands.tool.saveSegments.name(),
-				new SaveSegmentCmd(executionFacade));
-
-		cmds.put(
-				GlobalCommands.tool.autoSegmentation.name(),
-				new AutoSegmentationCmd(executionFacade));
-
 	}
 
 }

@@ -45,11 +45,13 @@ public class SegmentationContentPane extends AbstractSpantusContentPane{
 	private SpantusWorkInfo info;
 	private SpantusEventMulticaster eventMulticaster;
 	
-	public SegmentationContentPane() {
+	public SegmentationContentPane(SpantusEventMulticaster eventMulticaster) {
+		super(eventMulticaster);
 		setLayout(new BorderLayout());
 		toolBar = new SpantusWorkToolbar();
 		add(getToolBar(), BorderLayout.NORTH);
-		this.add(getSampleRepresentationPanel(),BorderLayout.CENTER);	
+		sampleRepresentationPanel = new SampleRepresentationPanel(eventMulticaster);
+		this.add(sampleRepresentationPanel,BorderLayout.CENTER);	
 	}
 	
 	public void initialize() {
@@ -62,9 +64,6 @@ public class SegmentationContentPane extends AbstractSpantusContentPane{
 	}
 	
 	public SampleRepresentationPanel getSampleRepresentationPanel() {
-		if (sampleRepresentationPanel == null) {
-			sampleRepresentationPanel = new SampleRepresentationPanel();
-		}
 		return sampleRepresentationPanel;
 	}
 	public JToolBar getToolBar() {

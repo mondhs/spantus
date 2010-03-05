@@ -21,6 +21,7 @@
 package org.spantus.work.ui.cmd;
 
 import java.awt.Toolkit;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -45,6 +46,9 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 		super(executionFacade);
 	}
 
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.file.currentSampleChanged);
+	}
 	
 	public String execute(SpantusWorkInfo ctx) {
 		

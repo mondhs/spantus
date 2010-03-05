@@ -22,6 +22,7 @@ package org.spantus.work.ui.cmd;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -48,6 +49,10 @@ public class SaveSegmentCmd extends AbsrtactCmd{
 	
 	public SaveSegmentCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
+	}
+	
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.tool.saveSegments);
 	}
 	
 	@Override

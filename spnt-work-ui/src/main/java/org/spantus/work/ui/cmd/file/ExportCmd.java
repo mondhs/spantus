@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Set;
 
 import javax.swing.JFileChooser;
 
@@ -16,6 +17,7 @@ import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
 import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.cmd.CommandExecutionFacadeImpl;
+import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.cmd.UIFileFilter;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
@@ -44,6 +46,9 @@ public class ExportCmd extends AbsrtactCmd {
 	
 	public ExportCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
+	}
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.file.exportFile);
 	}
 	
 	public JFileChooser getChooser() {

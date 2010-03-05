@@ -21,6 +21,7 @@ package org.spantus.work.ui.cmd;
 import java.io.File;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -81,10 +82,9 @@ public class RecordCmd extends AbsrtactCmd {
 	
 	private SampleChangeListener lisetener;
 
-//	public RecordCmd(SampleChangeListener lisetener, SpantusWorkCommand handler) {
-//		this.lisetener = lisetener;
-//		this.handler = handler;
-//	}
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.sample.record);
+	}
 	
 	public RecordCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);

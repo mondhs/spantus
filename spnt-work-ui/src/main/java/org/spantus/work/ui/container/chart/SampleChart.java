@@ -40,8 +40,6 @@ import org.spantus.event.SpantusEvent;
 import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.GlobalCommands;
-import org.spantus.work.ui.cmd.SpantusWorkCommand;
-import org.spantus.work.ui.cmd.SpantusWorkUIEvent;
 import org.spantus.work.ui.container.marker.MarkerComponentEventHandler;
 import org.spantus.work.ui.dto.SelectionDto;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -72,6 +70,16 @@ public class SampleChart extends JPanel {
 	private SpantusEventMulticaster eventMulticaster;
 	private MarkerComponentEventHandler markerComponentEventHandler;
 
+	
+	
+	public SampleChart(SpantusEventMulticaster eventMulticaster) {
+		super(new BorderLayout());
+		this.eventMulticaster = eventMulticaster;
+		setBorder(BorderFactory.createLineBorder(Color.black));
+		this.setSize(300, 200);
+
+	}
+
 	public SpantusWorkInfo getInfo() {
 		if (info == null) {
 			info = new SpantusWorkInfo();
@@ -83,14 +91,6 @@ public class SampleChart extends JPanel {
 		this.info = info;
 	}
 
-	/**
-	 * This is the default constructor
-	 */
-	public SampleChart() {
-		super(new BorderLayout());
-		setBorder(BorderFactory.createLineBorder(Color.black));
-		this.setSize(300, 200);
-	}
 
 	/**
 	 * This method initializes this
@@ -222,8 +222,8 @@ public class SampleChart extends JPanel {
 		return eventMulticaster;
 	}
 
-	public void setEventMulticaster(SpantusEventMulticaster eventMulticaster) {
-		this.eventMulticaster = eventMulticaster;
-	}
+//	public void setEventMulticaster(SpantusEventMulticaster eventMulticaster) {
+//		this.eventMulticaster = eventMulticaster;
+//	}
 
 }

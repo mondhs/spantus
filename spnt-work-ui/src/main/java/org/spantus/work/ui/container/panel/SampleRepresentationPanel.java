@@ -26,6 +26,7 @@ import javax.swing.JProgressBar;
 
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.ProcessedFrameLinstener;
+import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.container.ReloadableComponent;
 import org.spantus.work.ui.container.SampleChangeListener;
@@ -45,16 +46,19 @@ public class SampleRepresentationPanel extends JPanel implements SampleChangeLis
 	 */
 	private static final long serialVersionUID = 5470586542419788864L;
 	
-	Logger log = Logger.getLogger(getClass());
+	private Logger log = Logger.getLogger(getClass());
 	
-	SpantusWorkInfo info;
-	SampleChart sampleChart;
-	JPanel statusBar;
-	JProgressBar progress;
+	private SpantusWorkInfo info;
+	private SampleChart sampleChart;
+	private JPanel statusBar;
+	private JProgressBar progress;
+	private SpantusEventMulticaster eventMulticaster;
 	
-	public SampleRepresentationPanel() {
+	public SampleRepresentationPanel(SpantusEventMulticaster eventMulticaster) {
 		setLayout(new BorderLayout());
+		this.eventMulticaster = eventMulticaster;
 	}
+	
 	
 	public void initialize() {
 		removeAll();
@@ -68,7 +72,7 @@ public class SampleRepresentationPanel extends JPanel implements SampleChangeLis
 
 	public SampleChart getSampleChart() {
 		if(sampleChart == null){
-			sampleChart = new SampleChart();
+			sampleChart = new SampleChart(getEventMulticaster());
 			sampleChart.setInfo(getInfo());
 			sampleChart.initialize();
 		}
@@ -87,9 +91,9 @@ public class SampleRepresentationPanel extends JPanel implements SampleChangeLis
 		return statusBar;
 	}
 	
-	public void setSampleChart(SampleChart sampleChart) {
-		this.sampleChart = sampleChart;
-	}
+//	public void setSampleChart(SampleChart sampleChart) {
+//		this.sampleChart = sampleChart;
+//	}
 	
 	public SpantusWorkInfo getInfo() {
 		return info;
@@ -104,6 +108,7 @@ public class SampleRepresentationPanel extends JPanel implements SampleChangeLis
 	
 	
 	public void changedReader(IExtractorInputReader reader) {
+		log.debug("[changedReader] changing reader" );
 		getSampleChart().setReader(reader);
 	}
 
@@ -154,6 +159,11 @@ public class SampleRepresentationPanel extends JPanel implements SampleChangeLis
 		getStatusBar().setVisible(true);
 		processedPercent = 0;
 		startedTime = System.currentTimeMillis();
+	}
+
+
+	public SpantusEventMulticaster getEventMulticaster() {
+		return eventMulticaster;
 	}
 	
 }

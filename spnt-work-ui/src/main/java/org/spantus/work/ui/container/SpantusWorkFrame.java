@@ -27,7 +27,6 @@ import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
 import org.spantus.event.BasicSpantusEventMulticaster;
-import org.spantus.event.SpantusEventListener;
 import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.CommandBuilder;
@@ -67,7 +66,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	
 	private SpantusEventMulticaster eventMulticaster;
 	private CommandExecutionFacade executionFacade;
-        private SpantusEventListener eventListener;
+//        private SpantusEventListener eventListener;
 
 	
 	/**
@@ -98,8 +97,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		CommandExecutionFacadeImpl executionFacadeImpl = new CommandExecutionFacadeImpl(this);
 		this.executionFacade = executionFacadeImpl;
 
-                SpantusWorkUIListener uiEventListener = new SpantusWorkUIListener();
-                this.eventListener = uiEventListener;
+        SpantusWorkUIListener uiEventListener = new SpantusWorkUIListener();
 		uiEventListener.setCmds(CommandBuilder.create(executionFacade));
 		uiEventListener.setInfo(getInfo());
                 eventMulticaster = new BasicSpantusEventMulticaster();
@@ -129,10 +127,10 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		
 		if(ProjectTypeEnum.recognition.name().equals(
 				getInfo().getProject().getType())){
-			spantusContentPane = new RecognitionContentPane(); 
+			spantusContentPane = new RecognitionContentPane(getEventMulticaster()); 
 			setContentPane(spantusContentPane);
 		}else{
-			SegmentationContentPane pane = new SegmentationContentPane();
+			SegmentationContentPane pane = new SegmentationContentPane(getEventMulticaster());
 			spantusContentPane = pane;
 			pane.setInfo(getInfo());
 			pane.setEventMulticaster(getEventMulticaster());

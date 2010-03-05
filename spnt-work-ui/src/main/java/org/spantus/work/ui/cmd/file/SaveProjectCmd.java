@@ -2,12 +2,14 @@ package org.spantus.work.ui.cmd.file;
 
 import java.awt.Component;
 import java.io.File;
+import java.util.Set;
 
 import javax.swing.JFileChooser;
 
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.cmd.AbsrtactCmd;
 import org.spantus.work.ui.cmd.CommandExecutionFacade;
+import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
 
@@ -25,6 +27,9 @@ public class SaveProjectCmd extends AbsrtactCmd {
 	
 	private Component parent;
 	
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.file.saveProject);
+	}
 	
 	public String execute(SpantusWorkInfo ctx) {
 		JFileChooser fileChooser = new JFileChooser();

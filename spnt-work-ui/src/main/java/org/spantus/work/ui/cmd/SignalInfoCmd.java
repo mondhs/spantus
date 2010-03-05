@@ -19,6 +19,7 @@
 package org.spantus.work.ui.cmd;
 
 import java.awt.Frame;
+import java.util.Set;
 
 import org.spantus.work.ui.container.panel.SignalInfoDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -37,6 +38,10 @@ public class SignalInfoCmd extends AbsrtactCmd {
 	
 	public SignalInfoCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
+	}
+	
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.help.signalInfo);
 	}
 	
 	public String execute(SpantusWorkInfo ctx){

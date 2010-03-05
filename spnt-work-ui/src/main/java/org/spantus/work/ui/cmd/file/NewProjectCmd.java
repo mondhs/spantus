@@ -3,6 +3,7 @@ package org.spantus.work.ui.cmd.file;
 import java.awt.Frame;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -29,7 +30,9 @@ public class NewProjectCmd extends AbsrtactCmd {
 	public NewProjectCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
 	}
-
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.file.newProject);
+	}
 
 	
 	public boolean newProject(SpantusWorkInfo info) {

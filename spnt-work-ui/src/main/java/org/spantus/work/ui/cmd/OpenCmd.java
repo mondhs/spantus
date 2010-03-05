@@ -22,6 +22,7 @@ package org.spantus.work.ui.cmd;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Set;
 
 import javax.swing.JFileChooser;
 
@@ -46,6 +47,10 @@ public class OpenCmd extends AbsrtactCmd {
 	
 	public OpenCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
+	}
+	
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.file.open);
 	}
 	
 	public String execute(SpantusWorkInfo ctx) {

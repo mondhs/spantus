@@ -3,6 +3,7 @@ package org.spantus.work.ui.cmd.file;
 import java.awt.Component;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Set;
 
 import javax.swing.JFileChooser;
 
@@ -39,6 +40,9 @@ public class ImportCmd extends AbsrtactCmd {
 		super(executionFacade);
 	}
 	
+	public Set<String> getExpectedActions() {
+		return createExpectedActions(GlobalCommands.file.importFile);
+	}
 	
 	public String execute(SpantusWorkInfo ctx) {
 		defaulDir = ctx.getProject().getWorkingDir();
