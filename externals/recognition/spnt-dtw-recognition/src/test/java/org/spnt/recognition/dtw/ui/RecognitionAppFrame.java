@@ -9,6 +9,7 @@ import org.spantus.event.BasicSpantusEventMulticaster;
 import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.externals.recognition.ui.RecognitionPanel;
 import org.spantus.externals.recognition.ui.RecognitionToolBar;
+import org.spantus.externals.recognition.ui.RecognitionUIActionListenerImpl;
 
 public class RecognitionAppFrame extends JFrame {
 	/**
@@ -31,8 +32,6 @@ public class RecognitionAppFrame extends JFrame {
 	
 	public void initialize() {
         eventMulticaster = new BasicSpantusEventMulticaster();
-        RecognitionUIActionListenerImpl actionListener = new RecognitionUIActionListenerImpl(this);
-        eventMulticaster.addListener(actionListener);
         
 		this.setContentPane(getMainContentPane());	
 		getToolBar().initialize();

@@ -1,17 +1,15 @@
-package org.spnt.recognition.dtw.ui;
+package org.spantus.externals.recognition.ui;
 
 import org.spantus.event.SpantusEvent;
 import org.spantus.event.SpantusEventListener;
-import org.spantus.externals.recognition.ui.RecognitionCmdEnum;
-import org.spantus.externals.recognition.ui.RecognitionUIActionListener;
 
 public class RecognitionUIActionListenerImpl implements
 		RecognitionUIActionListener, SpantusEventListener {
 
-	RecognitionAppFrame recognitionAppFrame;
+	RecognitionPanel recognitionAppFrame;
 	
 	public RecognitionUIActionListenerImpl(
-			RecognitionAppFrame recognitionAppFrame) {
+			RecognitionPanel recognitionAppFrame) {
 		super();
 		this.recognitionAppFrame = recognitionAppFrame;
 	}
@@ -19,17 +17,17 @@ public class RecognitionUIActionListenerImpl implements
 	public void start() {
 //		recognitionAppFrame.getMainContentPane().add(
 //				recognitionAppFrame.getRecognitionPanel().getRecognitionPlot(),BorderLayout.CENTER);
-		recognitionAppFrame.getRecognitionPanel().getRecognitionPlot().startRecognition();
+		recognitionAppFrame.getRecognitionPlot().startRecognition();
 	}
 
 	public void stop() {
-		recognitionAppFrame.getRecognitionPanel().getRecognitionPlot().stopRecognition();
-		recognitionAppFrame.getRecognitionPanel().remove(recognitionAppFrame.getRecognitionPanel().getRecognitionPlot());
-		recognitionAppFrame.getRecognitionPanel().setRecognitionPlot(null);
+		recognitionAppFrame.getRecognitionPlot().stopRecognition();
+		recognitionAppFrame.remove(recognitionAppFrame.getRecognitionPlot());
+		recognitionAppFrame.setRecognitionPlot(null);
 	}
 
 	public void changeLearningStatus(boolean status) {
-		recognitionAppFrame.getRecognitionPanel().getRecognitionPlot().setLearnMode(status);
+		recognitionAppFrame.getRecognitionPlot().setLearnMode(status);
 	}
 
 	public void onEvent(SpantusEvent event) {

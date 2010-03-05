@@ -51,6 +51,9 @@ public class RecognitionPanel extends JPanel implements SpantusEventListener {
 	public RecognitionPanel(SpantusEventMulticaster eventMulticaster) {
 		setLayout(new BorderLayout());
 		this.eventMulticaster = eventMulticaster;
+        RecognitionUIActionListenerImpl actionListener = new RecognitionUIActionListenerImpl(this);
+        eventMulticaster.addListener(actionListener);
+
 		eventMulticaster.addListener(this);
 	}
 	public void initialize(){
