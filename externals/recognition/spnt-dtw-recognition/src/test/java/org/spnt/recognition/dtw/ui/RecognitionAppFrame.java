@@ -5,9 +5,10 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.spantus.event.BasicSpantusEventMulticaster;
+import org.spantus.event.SpantusEventMulticaster;
+import org.spantus.externals.recognition.ui.RecognitionPanel;
 import org.spantus.externals.recognition.ui.RecognitionToolBar;
-import org.spantus.externals.recognition.ui.RecognitionUIActionListener;
-import org.spnt.recognition.dtw.exec.RecognitionMonitorPlot;
 
 public class RecognitionAppFrame extends JFrame {
 	/**
@@ -17,8 +18,10 @@ public class RecognitionAppFrame extends JFrame {
 	
 	private JPanel jContentPane;
 	private RecognitionToolBar toolBar;
-	private RecognitionMonitorPlot recognitionPlot;
-	private RecognitionUIActionListener actionListener;
+//	private RecognitionMonitorPlot recognitionPlot;
+	private RecognitionPanel recognitionPanel; 
+//	private RecognitionUIActionListener actionListener;
+	private SpantusEventMulticaster eventMulticaster;
 	
 
 	public RecognitionAppFrame() {
@@ -27,8 +30,13 @@ public class RecognitionAppFrame extends JFrame {
 	}
 	
 	public void initialize() {
+        eventMulticaster = new BasicSpantusEventMulticaster();
+        RecognitionUIActionListenerImpl actionListener = new RecognitionUIActionListenerImpl(this);
+        eventMulticaster.addListener(actionListener);
+        
 		this.setContentPane(getMainContentPane());	
 		getToolBar().initialize();
+		getRecognitionPanel().initialize();
 	}
 	
 	public JPanel getMainContentPane() {
@@ -36,26 +44,23 @@ public class RecognitionAppFrame extends JFrame {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
 			jContentPane.add(getToolBar(), BorderLayout.NORTH);
-//			jContentPane.add(getRecognitionPlot(),BorderLayout.CENTER);
+			jContentPane.add(getRecognitionPanel(),BorderLayout.CENTER);
 //			new DropTarget(jContentPane, new WavDropTargetListener(getHandler(),getInfo()));
 		}
 		return jContentPane;
 	}
 	
-	public RecognitionMonitorPlot getRecognitionPlot(){
-		if (recognitionPlot == null) {
-			recognitionPlot = new RecognitionMonitorPlot();
-			recognitionPlot.setLearnMode(getToolBar().isLearnMode());
-		}
-		return recognitionPlot;
-	}
-	public void setRecognitionPlot(RecognitionMonitorPlot recognitionPlot) {
-		this.recognitionPlot = recognitionPlot;
-	}
+//	public RecognitionMonitorPlot getRecognitionPlot(){
+//		if (recognitionPlot == null) {
+//			recognitionPlot = new RecognitionMonitorPlot();
+//			recognitionPlot.setLearnMode(getToolBar().isLearnMode());
+//		}
+//		return recognitionPlot;
+//	}
 	public RecognitionToolBar getToolBar() {
 		if (toolBar == null) {
-			toolBar = new RecognitionToolBar();
-			toolBar.setRecognitionUIActionListener(getRecognitionUIActionListener());
+			toolBar = new RecognitionToolBar(getEventMulticaster());
+//			toolBar.setRecognitionUIActionListener(getRecognitionUIActionListener());
 //			jJToolBarBar.setInfo(getInfo());
 //			jJToolBarBar.setHandler(getHandler());
 			
@@ -63,17 +68,33 @@ public class RecognitionAppFrame extends JFrame {
 		return toolBar;
 	}
 
-	public RecognitionUIActionListener getRecognitionUIActionListener() {
-		if(actionListener == null){
-			actionListener = new RecognitionUIActionListenerImpl(this);
-		}
-		return actionListener;
-	}
+//	public RecognitionUIActionListener getRecognitionUIActionListener() {
+//		if(actionListener == null){
+//		
+//		}
+//		return actionListener;
+//	}
 	
-	public void setLearnMode(Boolean learnMode) {
-		if(recognitionPlot != null){
-			getRecognitionPlot().setLearnMode(learnMode);
+//	public void setLearnMode(Boolean learnMode) {
+//		if(recognitionPlot != null){
+//			getRecognitionPlot().setLearnMode(learnMode);
+//		}
+//	}
+
+	public RecognitionPanel getRecognitionPanel() {
+		if(recognitionPanel == null){
+			recognitionPanel = new RecognitionPanel(getEventMulticaster()); 
 		}
+		return recognitionPanel;
 	}
+
+	public SpantusEventMulticaster getEventMulticaster() {
+		return eventMulticaster;
+	}
+
+	public void setEventMulticaster(SpantusEventMulticaster eventMulticaster) {
+		this.eventMulticaster = eventMulticaster;
+	}
+
 	
 }
