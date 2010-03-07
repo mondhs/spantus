@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
@@ -51,9 +52,11 @@ public class DefaultAudioReader extends AbstractAudioReader {
 	
 	public void readSignal(URL url, IExtractorInputReader bufferedReader) {
 		wraperExtractorReader = createWraperExtractorReader(bufferedReader);
-		wraperExtractorReader.setFormat(getAudioFormat(url).getFormat());
+		wraperExtractorReader.setFormat(getCurrentAudioFormat(url));
 		readAudio(url, wraperExtractorReader);
 	}
+	
+	
 	
 	public WraperExtractorReader createWraperExtractorReader(IExtractorInputReader bufferedReader){
 		return new WraperExtractorReader(bufferedReader);
@@ -87,6 +90,9 @@ public class DefaultAudioReader extends AbstractAudioReader {
 		dis.close();
 		ended();
 
+	}
+	public AudioFormat getCurrentAudioFormat(URL url) {
+		return getAudioFormat(url).getFormat();
 	}
 	/*
 	 * (non-Javadoc)

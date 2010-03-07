@@ -29,7 +29,8 @@ import javax.swing.JProgressBar;
 import org.spantus.event.BasicSpantusEventMulticaster;
 import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
-import org.spantus.work.ui.cmd.CommandBuilder;
+import org.spantus.work.ui.cmd.CommandBuilderService;
+import org.spantus.work.ui.cmd.CommandBuilderServiceImpl;
 import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.cmd.CommandExecutionFacadeImpl;
 import org.spantus.work.ui.cmd.SpantusWorkUIListener;
@@ -98,8 +99,14 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 		this.executionFacade = executionFacadeImpl;
 
         SpantusWorkUIListener uiEventListener = new SpantusWorkUIListener();
-		uiEventListener.setCmds(CommandBuilder.create(executionFacade));
 		uiEventListener.setInfo(getInfo());
+        CommandBuilderService builder = new CommandBuilderServiceImpl();
+        uiEventListener.getCmds().putAll(
+                builder.createSystem(executionFacade)
+        		);
+        uiEventListener.getCmds().putAll(
+                builder.create(executionFacade)
+        		);
                 eventMulticaster = new BasicSpantusEventMulticaster();
 		eventMulticaster.addListener(uiEventListener);
 
@@ -124,6 +131,16 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	 */
 	public void newProject() {
 		getContentPane().removeAll();
+		//update listeners
+		getEventMulticaster().removeAllListeners();
+        SpantusWorkUIListener uiEventListener = new SpantusWorkUIListener();
+		uiEventListener.setInfo(getInfo());
+        CommandBuilderService builder = new CommandBuilderServiceImpl();
+        uiEventListener.getCmds().putAll(
+                builder.createSystem(executionFacade)
+        		);
+		eventMulticaster.addListener(uiEventListener);
+
 		
 		if(ProjectTypeEnum.recognition.name().equals(
 				getInfo().getProject().getType())){
@@ -137,6 +154,10 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 //			getJJMenuBar().initialize();
 //			getToolBar().initialize();
 //                 getToolBar().add(getRecordMonitor());
+
+			uiEventListener.getCmds().putAll(
+	                builder.create(executionFacade)
+	        		);
 
 			setContentPane(spantusContentPane);
 		}

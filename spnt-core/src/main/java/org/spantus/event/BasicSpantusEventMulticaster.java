@@ -12,10 +12,15 @@ public class BasicSpantusEventMulticaster implements SpantusEventMulticaster {
 	}
 
 	public void multicastEvent(SpantusEvent event) {
-		for (SpantusEventListener listener : getListeners()) {
+		Set<SpantusEventListener> listenersTmp = null;
+		synchronized (listeners) {
+			listenersTmp = 
+				new HashSet<SpantusEventListener>(getListeners());
+		}
+		for (SpantusEventListener listener : listenersTmp) {
 			listener.onEvent(event);
 		}
-
+		
 	}
 
 	public void removeAllListeners() {

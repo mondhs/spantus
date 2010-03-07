@@ -31,7 +31,10 @@ public class RecognitionUIActionListenerImpl implements
 	}
 
 	public void onEvent(SpantusEvent event) {
-		
+
+		if(!RecognitionCmdEnum.isCmd(event.getCmd())){
+			return;
+		}
 		RecognitionCmdEnum recCmd = RecognitionCmdEnum.valueOf(event.getCmd());
 		switch (recCmd) {
 		case record:

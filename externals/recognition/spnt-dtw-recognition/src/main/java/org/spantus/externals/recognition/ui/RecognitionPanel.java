@@ -86,6 +86,9 @@ public class RecognitionPanel extends JPanel implements SpantusEventListener {
 	
 	public void onEvent(SpantusEvent event) {
 		String cmd = event.getCmd();
+		if(!RecognitionCmdEnum.isCmd(cmd)){
+			return;
+		}
 		RecognitionCmdEnum recCmd = RecognitionCmdEnum.valueOf(cmd);
 		switch (recCmd) {
 		case learn:

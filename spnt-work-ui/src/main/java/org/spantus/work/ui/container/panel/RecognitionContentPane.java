@@ -23,7 +23,7 @@ import java.awt.BorderLayout;
 import javax.swing.JToolBar;
 
 import org.spantus.event.SpantusEventMulticaster;
-import org.spantus.externals.recognition.ui.AdminPanel;
+import org.spantus.externals.recognition.ui.RecognitionPanel;
 import org.spantus.externals.recognition.ui.RecognitionToolBar;
 /**
  * 
@@ -41,15 +41,20 @@ public class RecognitionContentPane extends AbstractSpantusContentPane{
 	 */
 	private static final long serialVersionUID = 1L;
 	private RecognitionToolBar toolBar;
-
+	private RecognitionPanel recognitionPanel;
+	
 	public RecognitionContentPane(SpantusEventMulticaster eventMulticaster) {
 		super(eventMulticaster);
 		this.setLayout(new BorderLayout());
-		AdminPanel adminPanel = new AdminPanel();
-		this.add(adminPanel,BorderLayout.CENTER);
+		toolBar = new RecognitionToolBar(eventMulticaster);
+		recognitionPanel = new RecognitionPanel(eventMulticaster);
+		this.add(recognitionPanel ,BorderLayout.CENTER);
+		this.add(toolBar,BorderLayout.NORTH);
 	}
 
 	public void initialize() {
+		toolBar.initialize();
+		recognitionPanel.initialize();
 		
 	}
 
@@ -58,9 +63,6 @@ public class RecognitionContentPane extends AbstractSpantusContentPane{
 	}
 	
 	public JToolBar getToolBar() {
-		if (toolBar == null) {
-			toolBar = new RecognitionToolBar();
-		}
 		return toolBar;
 	}
 	

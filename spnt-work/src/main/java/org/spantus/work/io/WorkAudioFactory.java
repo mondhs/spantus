@@ -9,8 +9,11 @@ import org.spantus.work.WorkReadersEnum;
 
 public abstract class WorkAudioFactory {
 	public static SignalReader createAudioReader(URL url, WorkReadersEnum readerType){
-		SignalReader signalReader = new WorkAudioReader(readerType);
-		if(signalReader.isFormatSupported(url)){
+		SignalReader signalReader = null;//new WorkAudioReader();
+
+		if((signalReader = new Mp3SignalReader()).isFormatSupported(url)){
+			return signalReader;
+		}else if((signalReader = new WorkAudioReader(readerType)).isFormatSupported(url)){
 			return signalReader;
 		}else if((signalReader = new SimpleSignalReader()).isFormatSupported(url)){
 			return signalReader;

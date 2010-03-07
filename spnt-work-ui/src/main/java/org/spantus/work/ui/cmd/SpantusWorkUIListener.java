@@ -1,5 +1,6 @@
 package org.spantus.work.ui.cmd;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +27,9 @@ public class SpantusWorkUIListener implements SpantusEventListener {
     }
 
     public Map<String, Set<SpantusWorkCommand>> getCmds() {
+    	if(cmds == null){
+    		cmds = new HashMap<String, Set<SpantusWorkCommand>>();
+    	}
         return cmds;
     }
 

@@ -1,5 +1,7 @@
 package org.spantus.work.ui.dto;
 
+import java.text.MessageFormat;
+
 public class SelectionDto {
 	private Float from;
 
@@ -31,6 +33,11 @@ public class SelectionDto {
 
 	public void setLength(Float length) {
 		this.length = length;
+	}
+	
+	@Override
+	public String toString() {
+		return MessageFormat.format("{0} [from {1};length {2}] ", this.getClass().getSimpleName(), getFrom(), getLength());
 	}
 
 }

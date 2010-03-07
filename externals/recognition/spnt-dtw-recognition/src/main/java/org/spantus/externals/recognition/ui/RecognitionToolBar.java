@@ -1,9 +1,11 @@
 package org.spantus.externals.recognition.ui;
 
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -13,6 +15,7 @@ import javax.swing.JToolBar;
 
 import org.spantus.event.SpantusEvent;
 import org.spantus.event.SpantusEventMulticaster;
+import org.spantus.work.ui.ImageResourcesEnum;
 
 public class RecognitionToolBar extends JToolBar {
 	/**
@@ -52,15 +55,15 @@ public class RecognitionToolBar extends JToolBar {
 	
 	public JButton getRecordBtn() {
 		if (recordBtn == null) {
-//			ImageIcon icon = createIcon(ImageResourcesEnum.record.getCode());
-			recordBtn = createButton(null, RecognitionCmdEnum.record);
+			ImageIcon icon = createIcon(ImageResourcesEnum.record.getCode());
+			recordBtn = createButton(icon, RecognitionCmdEnum.record);
 		}
 		return recordBtn;
 	}
 	public JButton getStopBtn() {
 		if (stopBtn == null) {
-//			ImageIcon icon = createIcon(ImageResourcesEnum.stop.getCode());
-			stopBtn = createButton(null, RecognitionCmdEnum.stop);
+			ImageIcon icon = createIcon(ImageResourcesEnum.stop.getCode());
+			stopBtn = createButton(icon, RecognitionCmdEnum.stop);
 		}
 		return stopBtn;
 	}
@@ -72,6 +75,16 @@ public class RecognitionToolBar extends JToolBar {
 //		}
 //		return adminBtn;
 //	}
+	
+	protected ImageIcon createIcon(String name){
+		URL url = getClass().getClassLoader().getResource(name); 
+		if(url == null){
+			return null;
+		}
+		ImageIcon ii = new ImageIcon(url);
+		return new ImageIcon(ii.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH));
+	}
+
 	
 	public JCheckBox getTrainCheckbox() {
 		if (train == null) {
@@ -100,7 +113,13 @@ public class RecognitionToolBar extends JToolBar {
 	}
 	
 	protected JButton createButton(ImageIcon icon, String cmd, String name){
-		JButton btn = new JButton(getResource(name),icon);
+		JButton btn = null;
+		if(icon== null){
+			btn = new JButton(getResource(name),icon);
+		}else{
+			btn = new JButton(icon);
+			
+		}
 		btn.setActionCommand(cmd);
 		btn.setBorder(BorderFactory.createCompoundBorder()); 
 		btn.setMargin(new Insets(0, 0, 0, 0));

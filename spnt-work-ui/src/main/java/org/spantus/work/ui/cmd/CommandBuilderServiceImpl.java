@@ -37,20 +37,28 @@ import org.spantus.work.ui.cmd.file.SaveProjectCmd;
  * Created Feb 23, 2010
  *
  */
-public class CommandBuilder {
+public class CommandBuilderServiceImpl implements CommandBuilderService {
 
 	Logger log = Logger.getLogger(getClass());
 
 	
+	public Map<String, Set<SpantusWorkCommand>> createSystem(CommandExecutionFacade executionFacade) {
+		Map<String, Set<SpantusWorkCommand>> cmds =  new HashMap<String, Set<SpantusWorkCommand>>();
+		safePut(cmds, new AboutCmd(executionFacade));
+		safePut(cmds, new ShowDocumentationCmd(executionFacade));
+		safePut(cmds, new ExitCmd(executionFacade));
+		createFileCmd(cmds, executionFacade );
+		return cmds;
 
+	}
 	
-	public static Map<String, Set<SpantusWorkCommand>> create(CommandExecutionFacade executionFacade) {
+	/* (non-Javadoc)
+	 * @see org.spantus.work.ui.cmd.CommandBuilderService#create(org.spantus.work.ui.cmd.CommandExecutionFacade)
+	 */
+	public Map<String, Set<SpantusWorkCommand>> create(CommandExecutionFacade executionFacade) {
 		Map<String, Set<SpantusWorkCommand>> cmds =  new HashMap<String, Set<SpantusWorkCommand>>();
 		
-		safePut(cmds, new ExitCmd(executionFacade));
-		
 		createSampleCmd(cmds,  executionFacade );
-		createFileCmd(cmds, executionFacade );
 		createMiscCmd(cmds, executionFacade);
 		return cmds;
 	}
@@ -122,9 +130,7 @@ public class CommandBuilder {
 	private static void createMiscCmd(Map<String, Set<SpantusWorkCommand>> cmds,
 			CommandExecutionFacade executionFacade) {
 		
-		safePut(cmds, new AboutCmd(executionFacade));
 		safePut(cmds, new SignalInfoCmd(executionFacade));
-		safePut(cmds, new ShowDocumentationCmd(executionFacade));
 		safePut(cmds, new CurrentSampleChangedCmd(executionFacade));
 		safePut(cmds, new OptionCmd(executionFacade));
 		safePut(cmds, new ReloadResourcesCmd(executionFacade));

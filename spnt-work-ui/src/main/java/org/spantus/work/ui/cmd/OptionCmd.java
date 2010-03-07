@@ -15,7 +15,7 @@ public class OptionCmd extends AbsrtactCmd{
 		super(executionFacade);
 	}
 	public Set<String> getExpectedActions() {
-		return createExpectedActions(GlobalCommands.file.open);
+		return createExpectedActions(GlobalCommands.tool.option);
 	}
 	
 	public String execute(SpantusWorkInfo ctx){

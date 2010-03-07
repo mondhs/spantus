@@ -4,7 +4,11 @@ public enum RecognitionCmdEnum {
 	learn, stopLearn, save, play, stop, record;
 	
 	public static boolean isCmd(String val){
-		valueOf(val);
+		try{
+			valueOf(val);
+		}catch (IllegalArgumentException e) {
+			return false;
+		}
 		return true;
 	}
 }

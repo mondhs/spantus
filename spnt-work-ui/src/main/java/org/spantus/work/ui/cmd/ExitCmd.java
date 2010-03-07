@@ -47,7 +47,7 @@ public class ExitCmd extends AbsrtactCmd {
 	public String execute(SpantusWorkInfo ctx){
 //		frame.saveEnv();
 		WorkUIServiceFactory.createInfoManager().saveWorkInfo(getCurrentEvent().getCtx());
-		System.exit(0);
+		System.exit(1);
 		return null;
 	}
 

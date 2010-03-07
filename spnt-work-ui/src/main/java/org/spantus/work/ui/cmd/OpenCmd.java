@@ -37,7 +37,7 @@ import de.crysandt.util.FileFilterExtension;
 public class OpenCmd extends AbsrtactCmd {
 	
 
-	public static final String[] FILES = {"wav", "txt"};
+	public static final String[] FILES = {"wav", "mp3", "txt"};
 	
 	public static final String OPEN_DIALOG_TITLE ="spantus.work.ui.sample.open-dialog-title";
 	

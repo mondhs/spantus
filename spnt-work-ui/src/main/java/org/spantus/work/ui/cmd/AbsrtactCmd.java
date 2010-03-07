@@ -40,7 +40,7 @@ public abstract class AbsrtactCmd implements SpantusWorkCommand {
 	}
 	
 	public void execute(SpantusWorkUIEvent event){
-		log.debug("[execute][{0}] cmd:{1};",getClass().getName(),event.getCmd());
+		log.debug("[execute][{0}] cmd:{1};[{2}]",getClass().getName(),event.getCmd(), event.getValue());
 		this.currentEvent = event;
 		String newCmd = execute(event.getCtx());
 		if(newCmd != null){
