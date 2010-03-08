@@ -64,6 +64,8 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 	
 	private Float min = Float.MAX_VALUE;
 	private Float max = Float.MIN_VALUE;
+	
+	private Polygon polygon; 
 
 	public AreaChartInstance(String description, FrameVectorValues values,
 			ChartStyle style) {
@@ -114,13 +116,9 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 		}
 		this.min = _min;
 		this.max = _max;
-	}
-
-	public synchronized void paintFunction(Graphics g) {
-//		log.debug("paint: " + description + "; size: " + values.size());
-//		Integer fx = null, fy = null, lx = null, ly = null;
-		Polygon polygon = new Polygon();
-		try{
+		
+		polygon = new Polygon();
+		
 		for (Point p : minPoints) {
 			if(p==null)continue;
 			polygon.addPoint(p.x, p.y);
@@ -129,9 +127,14 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 			if(p==null)continue;
 			polygon.addPoint(p.x, p.y);
 		}
+	}
 
-//		log.debug("polygon size: " + minPoints.size());
-		g.fillPolygon(polygon);
+	public synchronized void paintFunction(Graphics g) {
+//		log.debug("paint: " + description + "; size: " + values.size());
+//		Integer fx = null, fy = null, lx = null, ly = null;
+		try{
+		//		log.debug("polygon size: " + minPoints.size());
+			g.fillPolygon(polygon);
 		}catch (IllegalPathStateException e) {
 			log.info(e.getMessage());
 		}

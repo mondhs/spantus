@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>org.tritonus</groupId>
 			<artifactId>tritonus_share</artifactId>
-			<version>1.0</version>
+			<version>0.3.6</version>
 		</dependency>
 		<dependency>
 			<groupId>net.javazoom</groupId>
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>net.javazoom</groupId>
 			<artifactId>jlayer</artifactId>
-			<version>1.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		
 	</dependencies>
