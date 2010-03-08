@@ -50,7 +50,11 @@ public class ExtremeSegment {
 
 	@Override
 	public String toString() {
-		String toString = MessageFormat.format("{0}[{1};{2};{3}]", getClass().getSimpleName(), getStartEntry(),getMiddleEntry(), getEndEntry());
+		String toString = MessageFormat.format("{0}[{1}={2};{3}={4};{5}={6}]", getClass().getSimpleName(),
+				getStartEntry().getIndex(), getStartEntry().getValue().toString(),
+				getMiddleEntry().getIndex(), getMiddleEntry().getValue().toString(),
+				getEndEntry().getIndex(), getEndEntry().getValue().toString()
+				);
 		return toString;
 	}
 	public boolean isIncrease(){

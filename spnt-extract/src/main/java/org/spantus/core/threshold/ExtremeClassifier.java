@@ -53,12 +53,15 @@ public class ExtremeClassifier extends AbstractClassifier {
 		}
 
 		Iterator<Float> valIter = getOutputValues().iterator();
+		Float minValue= null;
 		for (int index = 0; index < getOutputValues().size(); index++) {
 			Float val = valIter.next();
+			minValue = minValue == null?val:minValue;
+			minValue = Math.min(minValue, val);
 			if (changePoints.containsKey(index)) {
 				threashoValues.add(val);
 			} else {
-				threashoValues.add(0F);
+				threashoValues.add(minValue);
 			}
 		}
 	}

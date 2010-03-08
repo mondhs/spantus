@@ -14,11 +14,11 @@ import org.spantus.chart.impl.MarkeredTimeSeriesMultiChart;
 import org.spantus.chart.marker.MarkerComponent;
 import org.spantus.chart.marker.MarkerSetComponent;
 import org.spantus.core.marker.Marker;
+import org.spantus.event.SpantusEvent;
 import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
-import org.spantus.work.ui.cmd.CommandExecutionFacade;
 import org.spantus.work.ui.cmd.GlobalCommands;
-import org.spantus.work.ui.cmd.SpantusWorkCommand;
+import org.spantus.work.ui.dto.SelectionDto;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class MarkerComponentEventHandler extends MouseAdapter implements MouseMotionListener, KeyListener{
@@ -40,8 +40,8 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
 	public void setChart(MarkeredTimeSeriesMultiChart chart) {
 		this.chart = chart;
 	}
-	public MarkerComponentEventHandler(SpantusWorkInfo info) {
-		this.popup = new MarkerPopupMenu();
+	public MarkerComponentEventHandler(SpantusWorkInfo info, SpantusEventMulticaster eventMulticaster) {
+		this.popup = new MarkerPopupMenu(eventMulticaster);
 		this.popup.setInfo(info);
 //		this.popup.setHandler(handler);
 		popup.initialize();
@@ -130,10 +130,13 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
         	 //space to play the segment
          	if(e.getComponent() instanceof MarkerComponent){
          		Marker m = ((MarkerComponent)e.getComponent()).getMarker();
-         		//TODO fix this
-//         		popup.getInfo().getProject().setFrom(m.getStart()/1000f);
-//         		popup.getInfo().getProject().setLength(m.getLength()/1000f);
-//         		popup.getHandler().execute(GlobalCommands.sample.play.name(), popup.getInfo());
+         		SelectionDto selectionDto = new SelectionDto(
+    					m.getStart().floatValue()/1000,
+    					m.getLength().floatValue()/1000);
+         		
+         		popup.getEventMulticaster().multicastEvent(SpantusEvent.createEvent(
+    					this, GlobalCommands.sample.play.name()
+    					,selectionDto));
          	}
          }else if(127 == keyChar){
         	 //delete to remove segment

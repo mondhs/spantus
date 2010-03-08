@@ -60,7 +60,7 @@ public class ExtremeClassifierServiceImpl {
 		ctx.setValues(values);
 		extractExtremes(ctx);
 		extractSements(ctx);
-//		initialCleanup(ctx);
+		initialCleanup(ctx);
 		extractMarkerSet(ctx);
 		return ctx;
 		
@@ -243,7 +243,7 @@ public class ExtremeClassifierServiceImpl {
 					segments.add(entry);
 					log.debug("[initialCleanup]reusing:{0}; size: {1} ",  entry, segments.size());
 				}
-				log.debug("[initialCleanup]size {0} ", segments);				
+				log.debug("[initialCleanup]size {0} ", segments.size());				
 //
 //				// join increased and decreasing parts
 //				if (prevMax != null) {
@@ -328,37 +328,37 @@ public class ExtremeClassifierServiceImpl {
 	 * @param centers
 	 */
 	public void writeDebug(List<List<Float>> vectors, ClusterCollection centers) {
-		try {
-			FileOutputStream fos = new FileOutputStream(new File(
-					"./target/result.csv"));
-			DataOutputStream oos = new DataOutputStream(fos);
-			for (List<Float> list : vectors) {
-				String seperator = "";
-				StringBuilder sb = new StringBuilder();
-				for (Float float1 : list) {
-					sb.append(float1).append(seperator);
-					seperator = ";";
-				}
-				oos.writeBytes(sb.toString());
-			}
+//		try {
+//			FileOutputStream fos = new FileOutputStream(new File(
+//					"./target/result.csv"));
+//			DataOutputStream oos = new DataOutputStream(fos);
+//			for (List<Float> list : vectors) {
+//				String seperator = "";
+//				StringBuilder sb = new StringBuilder();
+//				for (Float float1 : list) {
+//					sb.append(float1).append(seperator);
+//					seperator = ";";
+//				}
+//				oos.writeBytes(sb.toString());
+//			}
 			for (Entry<Integer, List<Float>> entry : centers.entrySet()) {
 				List<Float> list = entry.getValue();
 				String seperator = "";
 				StringBuilder sb = new StringBuilder();
 				for (Float float1 : list) {
-					sb.append(float1).append(seperator);
+					sb.append(seperator).append(float1);
 					seperator = ";";
 				}
-				oos.writeBytes(sb.toString());
-				log.debug("cluster {0} center: area, length:{1}", entry
+//				oos.writeBytes(sb.toString());
+				log.debug("cluster {0} center: area, length:[{1}]", entry
 						.getKey(), sb.toString());
 			}
-			oos.close();
-		} catch (FileNotFoundException e) {
-			log.error(e);
-		} catch (IOException e) {
-			log.error(e);
-		}
+//			oos.close();
+//		} catch (FileNotFoundException e) {
+//			log.error(e);
+//		} catch (IOException e) {
+//			log.error(e);
+//		}
 
 	}
 

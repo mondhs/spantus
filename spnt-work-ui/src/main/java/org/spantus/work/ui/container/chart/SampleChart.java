@@ -76,6 +76,7 @@ public class SampleChart extends JPanel {
 		super(new BorderLayout());
 		this.eventMulticaster = eventMulticaster;
 		setBorder(BorderFactory.createLineBorder(Color.black));
+		markerComponentEventHandler = new MarkerComponentEventHandler(getInfo(), eventMulticaster);
 		this.setSize(300, 200);
 
 	}
@@ -211,9 +212,6 @@ public class SampleChart extends JPanel {
 
 
 	protected MarkerComponentEventHandler getMarkerComponentEventHandler() {
-		if(markerComponentEventHandler == null){
-			markerComponentEventHandler = new MarkerComponentEventHandler(getInfo());
-		}
 		return markerComponentEventHandler;
 	}
 	
