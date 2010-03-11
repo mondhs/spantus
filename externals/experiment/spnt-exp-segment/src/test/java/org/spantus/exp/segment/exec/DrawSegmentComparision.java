@@ -43,8 +43,8 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioFactory;
 import org.spantus.core.io.AudioReader;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.threshold.IClassifier;
-import org.spantus.core.threshold.ThresholdEnum;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.services.ExpServiceFactory;
 import org.spantus.extractor.ExtractorsFactory;
@@ -116,7 +116,7 @@ public class DrawSegmentComparision extends ApplicationFrame {
 					.createReader(reader.getAudioFormat(urlFile));
 			ExtractorUtils.registerThreshold(bufferedReader, new ExtractorEnum[] {
 					ExtractorEnum.ENERGY_EXTRACTOR,
-			}, null, ThresholdEnum.offline);
+			}, null, ClassifierEnum.offline);
 			reader.readSignal(urlFile, bufferedReader);
 			return bufferedReader;
 		} catch (MalformedURLException e) {

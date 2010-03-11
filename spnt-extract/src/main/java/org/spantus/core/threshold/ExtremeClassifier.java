@@ -9,7 +9,7 @@ import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.logger.Logger;
 
-public class ExtremeClassifier extends AbstractClassifier {
+public class ExtremeClassifier extends AbstractThreshold {
 
 	 private Logger log = Logger.getLogger(ExtremeClassifier.class);
 

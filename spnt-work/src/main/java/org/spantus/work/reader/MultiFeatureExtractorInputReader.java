@@ -11,6 +11,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractClassifier;
+import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.extractor.ExtractorConfigUtil;
@@ -158,7 +159,7 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 				Float threasholdCoef = ExtractorParamUtils.<Float>getValue(param, 
 						ExtractorParamUtils.commonParam.threasholdCoef.name(), Float.valueOf(1.1f));
 				if(threshold instanceof AbstractClassifier){
-					((AbstractClassifier)threshold).setCoef(threasholdCoef);	
+					((AbstractThreshold)threshold).setCoef(threasholdCoef);	
 				}
 				return;
 			}

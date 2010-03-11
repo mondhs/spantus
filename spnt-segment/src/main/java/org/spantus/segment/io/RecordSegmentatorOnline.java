@@ -20,6 +20,7 @@
  */
 package org.spantus.segment.io;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +38,9 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
+import org.spantus.utils.Assert;
 import org.spantus.utils.FileUtils;
+import org.spantus.utils.StringUtils;
 
 /**
  * 
@@ -77,8 +80,10 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 		long offset = (-reader.getOffset()); 
 //		int fromIndex =(int)(offset + marker.getExtractionData().getStartSampleNum())*bytesPerSample;
 //		int toIndex = fromIndex + (marker.getExtractionData().getLengthSampleNum().intValue()*bytesPerSample);
-                Float fromIndex = (marker.getStart().floatValue()*sampleRate)/1000;
-                fromIndex = (fromIndex/bytesPerSample)+offset;
+		Float timeFrom = marker.getStart().floatValue();      
+//		timeFrom -= 160;
+		Float fromIndex = (timeFrom*sampleRate)/1000;
+        fromIndex = (fromIndex*bytesPerSample)-offset;
 		Float toIndexF = fromIndex+(marker.getLength().floatValue()*sampleRate)/1000;
 //                toIndexF = toIndexF * bytesPerSample;
                 Integer toIndex = toIndexF.intValue();
@@ -110,6 +115,7 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 	 * @return
 	 */
 	public URL saveSegmentAccepted(List<Byte> data, String name){
+		Assert.isTrue(StringUtils.hasText(name), "Name cannot be empty");
 		if(path!= null && !"".equals(path)){
                     String path1 = getPath()+"/"+name+".wav";
                     FileUtils.checkDirs(getPath());
@@ -122,7 +128,7 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 	public URL saveSegmentAccepted(List<Byte> data, File file){
 	    InputStream bais = new ByteListInputStream(data);
             FileUtils.checkDirs(file.getParent());
-            log.error(file.getParent());
+//            log.error(file.getParent());
             AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size()/reader.getFormat().getFrameSize());
 	    try {
 	    	AudioSystem.write(ais, AudioFileFormat.Type.WAVE, file);

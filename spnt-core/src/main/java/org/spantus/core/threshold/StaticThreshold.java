@@ -21,7 +21,7 @@ package org.spantus.core.threshold;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.logger.Logger;
 
-public class StaticThreshold extends AbstractClassifier {
+public class StaticThreshold extends AbstractThreshold {
 
 	private Logger log = Logger.getLogger(StaticThreshold.class);
 	private int windowsLearned;

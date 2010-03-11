@@ -29,18 +29,16 @@ import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.logger.Logger;
-import org.spantus.utils.Assert;
 
 public abstract class AbstractClassifier implements IClassifier, IExtractorListener {
 	
 	private Logger log = Logger.getLogger(AbstractClassifier.class); 
 	private IExtractor extractor;
-	private FrameValues thereshold;
-	private Float coef =null;
 	private MarkerSet markSet;
 	private Marker marker;
 	private Set<IClassificationListener> classificationListeners;
 	private long classifierSampleNum =0l;
+	private FrameValues thresholdValues;
 	/**
 	 * @param classifierSampleNum the classifierSampleNum to set
 	 */
@@ -54,15 +52,15 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	public long getClassifierSampleNum() {
 		return classifierSampleNum;
 	}
-
-	/**
-	 * 
-	 * @param windowValue
-	 * @return
-	 */
-	public abstract Float calculateThreshold(Float windowValue);
 	
-	public abstract boolean isSignalState(Float windowValue);
+	
+	public FrameValues getThresholdValues() {
+		if(thresholdValues == null){
+			thresholdValues = new FrameValues();
+		}
+		return thresholdValues;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.spantus.core.threshold.IClassifier#addClassificationListener(org.spantus.core.threshold.IClassificationListener)
@@ -102,15 +100,6 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		FrameValues fv = getExtractor().calculateWindow(window);
 		return fv;
 	}
-	/**
-	 * Apply coef for given value
-	 * @param value
-	 * @return
-	 */
-	public Float applyCoef(Float value){
-		return 	value + Math.abs(value* getCoef());
-
-	}
 
 	public void putValues(Long sample, FrameValues values) {
 		getExtractor().putValues(sample, values);
@@ -120,34 +109,6 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		getExtractor().setConfig(config);		
 	}
 
-	public void afterCalculated(Long sample, FrameValues result) {
-		getThresholdValues().setSampleRate(getExtractorSampleRate());
-		for (Float float1 : result) {
-			processDiscriminator(sample, float1);
-		}
-		cleanup();
-	}
-	protected void cleanup(){
-//		getState().setSampleRate(getExtractorSampleRate());
-		Assert.isTrue(getConfig() != null, "cofiguration not set");
-		int i = getThresholdValues().size() - getConfig().getBufferSize();
-		while( i > 0 ){
-			getThresholdValues().poll();
-//			getState().poll();
-			i--;
-		}
-	}
-	/**
-	 * 
-	 */
-	protected void processDiscriminator(Long sample, Float float1){
-		Float threshold = calculateThreshold(float1);
-		if(threshold != null){
-			getThresholdValues().add(threshold);
-			calculateState(getClassifierSampleNum(), float1);
-		}
-		setClassifierSampleNum(getClassifierSampleNum() + 1);
-	}
 	
 	/**
 	 * 
@@ -164,60 +125,8 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	
 //	private Long prevSample;
 	
-	/**
-	 * calculate State at the sample moment with given value
-	 * 
-	 * @param windowValue
-	 * @param threshold
-	 * @return
-	 */
-	protected void calculateState(Long sample, Float windowValue){
-		Float timeFloat = getThresholdValues().toTime(sample.intValue())*1000;
-		Long time = timeFloat.longValue();
-		if(isSignalState(windowValue)){
-			//segment
-			if(getMarker()==null){
-				setMarker(new Marker());
-				getMarker().setStart(time);
-				getMarker().setLabel(sample.toString());
-//				getMarker().getExtractionData().setStartSampleNum(sample);
-				for (IClassificationListener listener : getClassificationListeners()) {
-					listener.onSegmentedStarted(
-							new SegmentEvent(getName(),time,getMarker(),sample));
-				}
-			}
-		}else {
-			//silent
-			if(getMarker()!=null){
-				getMarker().setEnd(time);
-				getMarkSet().getMarkers().add(getMarker());
-//				getMarker().getExtractionData().setEndSampleNum(sample);
-				for (IClassificationListener listener : getClassificationListeners()) {
-					listener.onSegmentedEnded(
-							new SegmentEvent(getName(),time,getMarker(),sample));
-				}
-				setMarker(null);
-			}
-		}
-		//notify that segment processed
-		for (IClassificationListener listener : getClassificationListeners()) {
-			listener.onSegmentedProcessed(
-					new SegmentEvent(getName(),time,getMarker(),sample));
-		}
-	}
 
 
-
-	public Float getCoef() {
-		if(coef == null){
-			coef = 0.1F;//*10%
-		}
-		return coef;
-	}
-
-	public void setCoef(Float coef) {
-		this.coef = coef;
-	}
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + ":" + getName();
@@ -246,13 +155,6 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		return getExtractor().getOutputValues();
 	}
 	
-	public FrameValues getThresholdValues() {
-		if(thereshold == null){
-			thereshold = new FrameValues();
-		}
-		return thereshold;
-	}
-
 	public IExtractorConfig getConfig() {
 		return getExtractor().getConfig();
 	}
