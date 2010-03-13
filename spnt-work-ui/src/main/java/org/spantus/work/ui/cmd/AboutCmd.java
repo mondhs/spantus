@@ -18,7 +18,6 @@
 */
 package org.spantus.work.ui.cmd;
 
-import java.awt.Frame;
 import java.util.Set;
 
 import org.spantus.work.ui.container.panel.SpantusAboutDialog;

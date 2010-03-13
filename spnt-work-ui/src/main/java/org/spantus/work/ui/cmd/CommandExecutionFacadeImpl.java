@@ -25,7 +25,6 @@ import java.util.Map;
 import org.spantus.chart.util.ChartUtils;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.ProcessedFrameLinstener;
-import org.spantus.event.SpantusEvent;
 import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
 import org.spantus.work.ui.container.SpantusWorkFrame;

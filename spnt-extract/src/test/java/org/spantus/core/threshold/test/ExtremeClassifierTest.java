@@ -3,16 +3,18 @@ package org.spantus.core.threshold.test;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.spantus.core.FrameValues;
-import org.spantus.core.threshold.ExtremeCtx;
-import org.spantus.core.threshold.ExtremeEntry;
-import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.core.threshold.ExtremeClassifierServiceImpl;
+import org.spantus.core.threshold.ExtremeEntry;
+import org.spantus.core.threshold.ExtremeOfflineCtx;
+import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.core.threshold.ExtremeEntry.SignalStates;
 
-public class ExtremeClassifierTest extends TestCase {
+public class ExtremeClassifierTest{
 	ExtremeClassifierServiceImpl extremeThresholdService;
 	
 	public static final Float[] empty = new Float[]{};
@@ -31,26 +33,26 @@ public class ExtremeClassifierTest extends TestCase {
 		1F, 0F};
 
 	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		extremeThresholdService = new ExtremeClassifierServiceImpl();
 	}
 	/**
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testExtractExtremes() throws Exception {
 		Map<Integer, ExtremeEntry> extremes = null;
 		extremes = extremeThresholdService.extractExtremes(createExtremeCtx(empty));
-		assertEquals(0, extremes.size());
+		Assert.assertEquals(0, extremes.size());
 		extremes = extremeThresholdService.extractExtremes(createExtremeCtx(singleMax));
-		assertEquals(3, extremes.size());
+		Assert.assertEquals(3, extremes.size());
 		assertMinState(1, extremes);
 		assertMaxState(4, extremes);
 		assertMinState(7, extremes);
 		extremes = extremeThresholdService.extractExtremes(createExtremeCtx(doubleMax));
-		assertEquals(5, extremes.size());
+		Assert.assertEquals(5, extremes.size());
 		assertMinState(1, extremes);
 		assertMaxState(4, extremes);
 		assertMinState(7, extremes);
@@ -61,32 +63,34 @@ public class ExtremeClassifierTest extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Test
 	public void testExtractSegments() throws Exception {
-		ExtremeCtx ctx = null;
+		ExtremeOfflineCtx ctx = null;
 		ctx = extremeThresholdService.calculateSegments(createValues(empty));
-		assertEquals(0, ctx.getSegments().size());
+		Assert.assertEquals(0, ctx.getSegments().size());
 		ctx = extremeThresholdService.calculateSegments(createValues(singleMax));
-		assertEquals(1, ctx.getSegments().size());
+		Assert.assertEquals(1, ctx.getSegments().size());
 		ctx = extremeThresholdService.calculateSegments(createValues(doubleMax));
-		assertEquals(2, ctx.getSegments().size());
-		assertNotNull(ctx.getMarkerSet());
+		Assert.assertEquals(2, ctx.getSegments().size());
+		Assert.assertNotNull(ctx.getMarkerSet());
 		
 	}
 	
+	@Test
 	public void testProcessSegments() throws Exception { 
 		Map<Integer, ExtremeEntry> extemes  = null;
-		ExtremeCtx ctx = createExtremeCtx(complexMinMax);
+		ExtremeOfflineCtx ctx = createExtremeCtx(complexMinMax);
 		
 		extemes = extremeThresholdService.extractExtremes(ctx);
-		assertEquals(25, extemes.size());
+		Assert.assertEquals(25, extemes.size());
 		List<ExtremeSegment> segments = extremeThresholdService.extractSements(ctx);
-		assertEquals(12, segments.size());
+		Assert.assertEquals(12, segments.size());
 		segments = extremeThresholdService.initialCleanup(ctx);
-		assertEquals(9, segments.size());
+		Assert.assertEquals(9, segments.size());
 	}
 
-	protected ExtremeCtx createExtremeCtx(Float[] fvArr){
-		ExtremeCtx extremeCtx = new ExtremeCtx();
+	protected ExtremeOfflineCtx createExtremeCtx(Float[] fvArr){
+		ExtremeOfflineCtx extremeCtx = new ExtremeOfflineCtx();
 		extremeCtx.setValues(createValues(fvArr));
 		return extremeCtx;
 	}
@@ -101,9 +105,9 @@ public class ExtremeClassifierTest extends TestCase {
 	}
 	
 	public void assertMinState(int index, Map<Integer, ExtremeEntry> extemes){
-		assertEquals(SignalStates.min, extemes.get(index).getSignalState());
+		Assert.assertEquals(SignalStates.min, extemes.get(index).getSignalState());
 	}
 	public void assertMaxState(int index, Map<Integer, ExtremeEntry> extemes){
-		assertEquals(SignalStates.max, extemes.get(index).getSignalState());
+		Assert.assertEquals(SignalStates.max, extemes.get(index).getSignalState());
 	}
 }

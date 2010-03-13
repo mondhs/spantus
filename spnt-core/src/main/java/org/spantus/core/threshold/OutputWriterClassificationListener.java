@@ -37,7 +37,7 @@ public class OutputWriterClassificationListener implements
 	/**
 	 * 
 	 */
-	public void onSegmentedStarted(SegmentEvent event) {
+	public void onSegmentStarted(SegmentEvent event) {
 		try {
 			getWriter().write("H");
 			getWriter().flush();
@@ -49,7 +49,7 @@ public class OutputWriterClassificationListener implements
 	/**
 	 * 
 	 */
-	public void onSegmentedEnded(SegmentEvent event) {
+	public void onSegmentEnded(SegmentEvent event) {
 		try {
 			getWriter().write("H");
 			getWriter().flush();
@@ -61,7 +61,11 @@ public class OutputWriterClassificationListener implements
 	/**
 	 * 
 	 */
-	public void onSegmentedProcessed(SegmentEvent event) {
+	public void onSegmentProcessed(SegmentEvent event) {
+		// do nothing
+	}
+	
+	public void onNoiseProcessed(SegmentEvent event) {
 		// do nothing
 	}
 	/**
@@ -82,5 +86,6 @@ public class OutputWriterClassificationListener implements
 		}
 		return out;
 	}
+	
 
 }

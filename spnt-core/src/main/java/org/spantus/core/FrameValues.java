@@ -97,13 +97,17 @@ public class FrameValues extends LinkedList<Float>{
 	public float getSampleRate() {
 		return sampleRate;
 	}
-
+	float milsSamplePeriod = 1; 
 	public void setSampleRate(float sampleRate) {
 		this.sampleRate = sampleRate;
+		milsSamplePeriod = 1000/sampleRate;
 	}
 	
 	public float toTime(int i){
 		return (float)i / (sampleRate);
+	}
+	public Long indextoMils(int i){
+		return (long)(milsSamplePeriod * i);
 	}
 	public int toIndex(float f){
 		return (int)(f * sampleRate);

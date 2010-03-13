@@ -31,17 +31,22 @@ public interface IClassificationListener {
 	 * 
 	 * @param event
 	 */
-	public void onSegmentedStarted(SegmentEvent event);
+	public void onSegmentStarted(SegmentEvent event);
 	/**
 	 * 
 	 * @param event
 	 */
-	public void onSegmentedEnded(SegmentEvent event);
+	public void onSegmentEnded(SegmentEvent event);
 	/**
 	 * 
 	 * @param event
 	 */
-	public void onSegmentedProcessed(SegmentEvent event);
+	public void onSegmentProcessed(SegmentEvent event);
+	/**
+	 * 
+	 * @param event
+	 */
+	public void onNoiseProcessed(SegmentEvent event);
 	/**
 	 * Notify listener that it was registered
 	 * 

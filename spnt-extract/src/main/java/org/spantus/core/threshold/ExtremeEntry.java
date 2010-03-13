@@ -1,5 +1,7 @@
 package org.spantus.core.threshold;
 
+import java.io.Serializable;
+
 
 /**
  * 
@@ -7,8 +9,13 @@ package org.spantus.core.threshold;
  * 
  *
  */
-public class ExtremeEntry {
+public class ExtremeEntry implements Cloneable, Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public enum SignalStates{stable, max, increasing, min, decreasing} 
 
 	
@@ -73,5 +80,13 @@ public class ExtremeEntry {
 	@Override
 	public String toString() {
 		return getIndex() +"=>["+getValue() + "; " + getSignalState() + "]";
+	}
+	
+	public ExtremeEntry clone(){
+		try {
+			return (ExtremeEntry)super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalArgumentException(e);
+		}
 	}
 }

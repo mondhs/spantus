@@ -8,7 +8,7 @@ import java.util.Map;
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.MarkerSet;
 
-public class ExtremeCtx {
+public class ExtremeOfflineCtx {
 	private FrameValues values;
 	private ExtremeSequences sequence;
 	private List<ExtremeSegment> segments;

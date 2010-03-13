@@ -56,18 +56,22 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 		return markerSet;
 	}
 
-	public void onSegmentedStarted(SegmentEvent event) {
+	public void onSegmentStarted(SegmentEvent event) {
+		//do nothing
 //		log.debug("[onSegmentedStarted] {0}", event);
 	}
 
-	public void onSegmentedEnded(SegmentEvent event) {
+	public void onSegmentEnded(SegmentEvent event) {
+		//do nothing
 //		log.debug("[onSegmentedStarted] {0}", event);
-
+	}
+	public void onNoiseProcessed(SegmentEvent event) {
+		//do nothing
 	}
 	/**
 	 * 
 	 */
-	public void onSegmentedProcessed(SegmentEvent event) {
+	public void onSegmentProcessed(SegmentEvent event) {
 //		log.debug("[onSegmentedProcessed] {0}", event);
 		SegmentEvent multievent = event.clone();
 		multievent.setMarker(null);
@@ -189,8 +193,5 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 		this.currentMarker = marker;
 	}
 
-	
-
-	
 
 }

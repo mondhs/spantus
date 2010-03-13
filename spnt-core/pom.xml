@@ -12,22 +12,7 @@
 	<name>Spantus - Core module</name>
 	<version>0.2-SNAPSHOT</version>
 
-	<repositories>
-		<repository>
-			<id>jboss</id>
-			<url>http://repository.jboss.org/maven2/</url>
-		</repository>
-		<repository>
-			<id>ppnetmedia.com</id>
-			<name>PPNetMedia Repository for Maven</name>
-			<url>http://ppnetmedia.com/repository/</url>
-			<layout>default</layout>
-		</repository>
-
-	</repositories>
-
 	<dependencies>
-
 
 	</dependencies>
 

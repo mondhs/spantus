@@ -74,8 +74,10 @@ public class DecisionSegmentatorOnline extends MultipleSegmentatorListenerOnline
 		ctx.setSample(sample);
 //		ctx.setState(state);//getVoteForState(time, extractor, val));
 		if(ctx.getState() == null) return;
+		
+		String actionStr = getRuleBaseService().testOnRuleBase(ctx);
 
-		RuleBaseEnum.action action = getRuleBaseService().testOnRuleBase(ctx);
+		RuleBaseEnum.action action = RuleBaseEnum.action.valueOf(actionStr);
 		
 		switch (action) {
 		case processNoise:

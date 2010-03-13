@@ -20,23 +20,24 @@
  */
 package org.spantus.core.extractors.impl.test;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.spantus.core.FrameValues;
 import org.spantus.extractor.ExtractorConfig;
 import org.spantus.extractor.impl.SignalExtractor;
 import org.spantus.extractor.modifiers.MeanExtractor;
 import org.spantus.logger.Logger;
 
-public class SignalExtractorTest extends TestCase{
+public class SignalExtractorTest{
 
 	protected Logger log = Logger.getLogger(getClass());
 	FrameValues x;
 	ExtractorConfig config;
 	
-	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		x = new FrameValues();
 		for (float i = 1; i < 6.4 * Math.PI; i+=.3) {
 			x.add(new Float(Math.sin(i)));
@@ -44,6 +45,7 @@ public class SignalExtractorTest extends TestCase{
 		config=new ExtractorConfig();
 		config.setSampleRate(8000);
 	}
+	@Test
 	public void testSignal(){
 		SignalExtractor extractor = new SignalExtractor();
 		extractor.setDownScale(1);
@@ -51,8 +53,8 @@ public class SignalExtractorTest extends TestCase{
 		extractor.setConfig(config);
 		FrameValues y = extractor.calculate(0L, x);
 		log.debug(extractor.getName() + ": " + y);
-		assertEquals(expectedSize, y.size());
-		assertEquals(extractor.getExtractorSampleRate(), extractor.getConfig().getSampleRate());
+		Assert.assertEquals(expectedSize, y.size());
+		Assert.assertEquals(extractor.getExtractorSampleRate(), extractor.getConfig().getSampleRate());
 	}
 	
 	public void testMean(){
@@ -60,8 +62,8 @@ public class SignalExtractorTest extends TestCase{
 		for (int i = 1; i < 10; i++) {
 			meanExtractor.calculateMean((float)i);
 		}
-		assertEquals(5F, meanExtractor.getMean()) ;
-		assertEquals(2.738613F, meanExtractor.getStdev()) ;
+		Assert.assertEquals(5F, meanExtractor.getMean()) ;
+		Assert.assertEquals(2.738613F, meanExtractor.getStdev()) ;
 		
 	}
 	
@@ -72,8 +74,8 @@ public class SignalExtractorTest extends TestCase{
 		extractor.setConfig(config);
 		FrameValues y = extractor.calculate(0L,x);
 		log.debug(extractor.getName() + ": " + y);
-		assertEquals(expectedSize, y.size());
-		assertEquals(extractor.getExtractorSampleRate()*2, extractor.getConfig().getSampleRate());
+		Assert.assertEquals(expectedSize, y.size());
+		Assert.assertEquals(extractor.getExtractorSampleRate()*2, extractor.getConfig().getSampleRate());
 		
 	}
 }

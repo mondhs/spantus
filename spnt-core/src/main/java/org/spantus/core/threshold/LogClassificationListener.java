@@ -30,20 +30,23 @@ public class LogClassificationListener implements IClassificationListener {
 	/**
 	 * 
 	 */
-	public void onSegmentedStarted(SegmentEvent event) {
-		log.debug("[onSegmentedStarted]{0}: {1}", event.getId(), event.getMarker());
+	public void onSegmentStarted(SegmentEvent event) {
+		log.debug("[onSegmentStarted]{0}: {1}", event.getId(), event.getMarker());
 	}
 	/**
 	 * 
 	 */
-	public void onSegmentedEnded(SegmentEvent event) {
-		log.debug("[onSegmentedEnded]{0}: {1}",event.getId(), event.getMarker());
+	public void onSegmentEnded(SegmentEvent event) {
+		log.debug("[onSegmentEnded]{0}: {1}",event.getId(), event.getMarker());
 	}
 	/**
 	 * 
 	 */
-	public void onSegmentedProcessed(SegmentEvent event) {
-		log.debug("[onSegmentedProcessed]{0}: {1}", event.getId(), event.getMarker());
+	public void onSegmentProcessed(SegmentEvent event) {
+		log.debug("[onSegmentProcessed]{0}: {1}", event.getId(), event.getMarker());
+	}
+	public void onNoiseProcessed(SegmentEvent event) {
+		log.debug("[onNoiseProcessed]{0}: {1}", event.getId(), event.getMarker());		
 	}
 	/**
 	 * 
@@ -51,5 +54,6 @@ public class LogClassificationListener implements IClassificationListener {
 	public void registered(String id) {
 		// do nothing
 	}
+	
 
 }

@@ -32,7 +32,7 @@ public class SortedListModel extends AbstractListModel {
 		return model.size();
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public void sort(Comparator<ModelEntry> comparator){
 		if(model instanceof List<?>){
 			Collections.sort((List)model,comparator);

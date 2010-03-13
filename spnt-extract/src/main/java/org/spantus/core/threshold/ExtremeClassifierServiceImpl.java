@@ -50,8 +50,8 @@ public class ExtremeClassifierServiceImpl {
 	 * @param extremes
 	 * @return
 	 */
-	public ExtremeCtx calculateSegments(FrameValues values) {
-		ExtremeCtx ctx = new ExtremeCtx();
+	public ExtremeOfflineCtx calculateSegments(FrameValues values) {
+		ExtremeOfflineCtx ctx = new ExtremeOfflineCtx();
 		ctx.setValues(values);
 		extractExtremes(ctx);
 		extractSements(ctx);
@@ -65,7 +65,7 @@ public class ExtremeClassifierServiceImpl {
 	 * @param extremeCtx
 	 * @return
 	 */
-	public List<ExtremeSegment> extractSements(ExtremeCtx extremeCtx) {
+	public List<ExtremeSegment> extractSements(ExtremeOfflineCtx extremeCtx) {
 
 		List<ExtremeSegment> segments = new LinkedList<ExtremeSegment>();
 		
@@ -100,7 +100,7 @@ public class ExtremeClassifierServiceImpl {
 	 * @param values
 	 * @return
 	 */
-	public Map<Integer, ExtremeEntry> extractExtremes(ExtremeCtx extremeCtx) {
+	public Map<Integer, ExtremeEntry> extractExtremes(ExtremeOfflineCtx extremeCtx) {
 		
 		FrameValues values = extremeCtx.getValues();
 		
@@ -198,7 +198,7 @@ public class ExtremeClassifierServiceImpl {
 	 * 
 	 * @param sequence
 	 */
-	public List<ExtremeSegment> initialCleanup(ExtremeCtx ctx) {
+	public List<ExtremeSegment> initialCleanup(ExtremeOfflineCtx ctx) {
 		if (log.isDebugMode()) {
 			for (ExtremeSegment extremeSegment : ctx.getSegments()) {
 				log.debug("[initialCleanup]before intial cleanup {0} ", extremeSegment);				
@@ -543,7 +543,7 @@ public class ExtremeClassifierServiceImpl {
 	 * @return
 	 */
 	public MarkerSet extractMarkerSet(
-			ExtremeCtx ctx) {
+			ExtremeOfflineCtx ctx) {
 		MarkerSet markerSet = new MarkerSet();
 		ctx.setMarkerSet(markerSet);
 		int i = 0;

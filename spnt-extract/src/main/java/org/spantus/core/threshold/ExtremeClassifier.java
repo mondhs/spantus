@@ -19,7 +19,7 @@ public class ExtremeClassifier extends AbstractThreshold {
 	public void flush() {
 		super.flush();
 		getThresholdValues().clear();
-		ExtremeCtx extremeCtx = extremeThresholdService.calculateSegments(getOutputValues());
+		ExtremeOfflineCtx extremeCtx = extremeThresholdService.calculateSegments(getOutputValues());
 		setMarkSet(extremeCtx.getMarkerSet());
 		refreshThreasholdInfo(getMarkSet());
 

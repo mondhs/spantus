@@ -32,7 +32,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioFactory;
 import org.spantus.core.io.DefaultAudioReader;
 import org.spantus.core.io.WraperExtractorReader;
-import org.spantus.core.threshold.AbstractClassifier;
+import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.externals.recognition.segment.RecognitionSegmentatorOnline;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.ExtractorsFactory;
@@ -95,11 +95,11 @@ public class RecognitionPlot extends JFrame {
 		RecognitionSegmentatorOnline multipleSegmentator = new RecognitionSegmentatorOnline(bufferedReader);
 		multipleSegmentator.setParam(createParam());
 		
-		AbstractClassifier segmentator = null;
+		AbstractThreshold segmentator = null;
 		ExtractorParam param = new ExtractorParam();
 		ExtractorParamUtils.setBoolean(param, 
 				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
-		segmentator = (AbstractClassifier)ExtractorUtils.registerThreshold(bufferedReader, ExtractorEnum.ENERGY_EXTRACTOR, param);
+		segmentator = (AbstractThreshold)ExtractorUtils.registerThreshold(bufferedReader, ExtractorEnum.ENERGY_EXTRACTOR, param);
 		segmentator.addClassificationListener(multipleSegmentator);
 		segmentator.setCoef(4f);
 		

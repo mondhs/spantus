@@ -4,11 +4,15 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 
 public class RuleBaseServiceImpl implements RuleBaseService{
 	
+	
+	public String testOnRuleBase(DecisionCtx ctx){
+		return testOnRuleBase(ctx, true).name();
+	}
 //	private Logger log = Logger.getLogger(RuleBaseServiceImpl.class);
 	/**
 	 * 
 	 */
-	public RuleBaseEnum.action testOnRuleBase(DecisionCtx ctx){
+	public RuleBaseEnum.action testOnRuleBase(DecisionCtx ctx, Boolean isEnum){
 		Long segmentLength = ctx.getSegmentLength();
 		Long noiseLength = ctx.getNoiseLength();
 		Boolean state = ctx.getState();

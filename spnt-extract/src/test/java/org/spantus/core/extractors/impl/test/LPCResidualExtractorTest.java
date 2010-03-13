@@ -20,8 +20,10 @@
  */
 package org.spantus.core.extractors.impl.test;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.spantus.core.FrameValues;
 import org.spantus.extractor.impl.LPCResidualExtractor;
 /**
@@ -32,22 +34,21 @@ import org.spantus.extractor.impl.LPCResidualExtractor;
  * Created Jun 3, 2009
  *
  */
-public class LPCResidualExtractorTest extends TestCase {
+public class LPCResidualExtractorTest {
 	LPCResidualExtractor lpcResidualExtractor;
 	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		lpcResidualExtractor = new LPCResidualExtractor();
 	}
-	
+	@Test
 	public void testLPCResidual() throws Exception {
 		Integer[] dArr = new Integer[100];
 		for (int i = 0; i < dArr.length; i++) {
 			dArr[i]=i;
 		}
 		FrameValues fv = lpcResidualExtractor.calculateWindow(convert(dArr));
-		assertTrue( fv.get(0)>0F);
+		Assert.assertTrue( fv.get(0)>0F);
 	}
 	
 	public FrameValues convert(Integer[] intArr){
