@@ -196,7 +196,7 @@ public class SampleChart extends JPanel {
 			SelectionDto selectionDto = new SelectionDto(from, length);
 			SpantusEvent event = SpantusEvent.createEvent(
 					this,
-					GlobalCommands.sample.zoomChanged.name(), selectionDto );
+					GlobalCommands.sample.selectionChanged.name(), selectionDto );
 			getEventMulticaster().multicastEvent(event);
 		}
 

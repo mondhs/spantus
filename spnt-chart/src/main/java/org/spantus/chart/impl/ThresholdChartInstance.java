@@ -60,15 +60,19 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 	private int[] polylinesYt = null;
 	private Polygon statePoligon = null;
 	private int[] polylinesY = null;
+	Polygon polylygonY;
+	Polygon polylygonYt;
 
 	Logger log = Logger.getLogger(this.getClass());
 
 	public ThresholdChartInstance(ClassifierChartContext ctx) {
 		this.ctx = ctx;
 		this.description = ctx.getDescription();
-		for (Float float1 : ctx.getValues()) {
-			minmax(float1);
-		}
+//		for (Float float1 : ctx.getValues()) {
+//			minmax(float1);
+//		}
+		Float min = ctx.getValues().getMinValue();
+		Float max = ctx.getValues().getMaxValue();
 		setOrder(0);
 		log.debug("name: " + description + "; order: " + getOrder() + "; min="
 				+ min + "; max: " + max + "; sampleRate:"
@@ -78,22 +82,14 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 
 	public void renderFunction(BigDecimal[] xCoordinate,
 			BigDecimal[] yCoordinate, BigDecimal xScalar, BigDecimal yScalar) {
-		//
-//		if (polylinesX == null)
-//			return;
 		FrameValues clonedValues = getCtx().getValues();
-//		synchronized (getCtx().getValues()) {
-//			clonedValues = new FrameValues(getCtx().getValues());
+//		Float _min = Float.MAX_VALUE;
+//		Float _max = -Float.MAX_VALUE;
+//
+//		for (Float float1 : clonedValues) {
+//			_min = Math.min(_min, float1);
+//			_max = Math.max(_max, float1);
 //		}
-		Float _min = Float.MAX_VALUE;
-		Float _max = -Float.MAX_VALUE;
-
-		for (Float float1 : clonedValues) {
-			_min = Math.min(_min, float1);
-			_max = Math.max(_max, float1);
-		}
-		this.min = _min;
-		this.max = _max;
 
 		FrameValues threshold = getCtx().getThreshold();
 
@@ -101,6 +97,9 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		polylinesY = toCoordinatesValues(clonedValues, yScalar.floatValue());
 		polylinesYt = toCoordinatesValues(threshold, yScalar.floatValue());
 		statePoligon =  constructStatePolygon(polylinesX, ctx.getMarkSet(), xScalar.floatValue(), yScalar.floatValue());
+		polylygonY = new Polygon(polylinesX, polylinesY, polylinesX.length);
+		polylygonYt = new Polygon(polylinesX, polylinesYt, polylinesX.length);
+
 //		polylinesYstate = toCoordinatesSates(getCtx().getMarkSet(), yScalar
 //				.floatValue());
 
@@ -113,18 +112,23 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		Color currentColor = ((Color) getCtx().getStyle().getPaint());
 		Color currentColorTransparent = new Color(
 				currentColor.getRGB() & 0x00FFFFFF | 0x33000000, true);
-		if(polylinesY!=null){
-			g.drawPolyline(polylinesX, polylinesY, polylinesX.length);
+		long time = System.currentTimeMillis();
+		if(polylygonY!=null){
+			g.drawPolygon(polylygonY);
 		}
-		if (polylinesYt != null && polylinesYt.length > 0) {
+//		log.debug("[paintFunction] y time: {0} ", ( System.currentTimeMillis()-time) );
+//		time = System.currentTimeMillis();
+		if (polylygonYt != null ) {
 			g2.setPaint(currentColor.darker().darker());
-			g2.drawPolyline(polylinesX, polylinesYt, polylinesX.length);
+			g2.drawPolygon(polylygonYt);
 		}
+//		log.debug("[paintFunction] threshold time: {0} ", ( System.currentTimeMillis()-time) );
+//		time = System.currentTimeMillis();
 		if(statePoligon != null){
 			g2.setPaint(currentColorTransparent);
 			g2.fillPolygon(statePoligon);
 		}
-
+//		log.debug("[paintFunction] state time: {0} ", ( System.currentTimeMillis()-time) );
 	}
 	
 
@@ -201,13 +205,13 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		return temp;
 	}
 
-	Float min = Float.MAX_VALUE;
-	Float max = -Float.MAX_VALUE;
-
-	private void minmax(Float f1) {
-		min = Math.min(min, f1);
-		max = Math.max(max, f1);
-	}
+//	Float min = Float.MAX_VALUE;
+//	Float max = -Float.MAX_VALUE;
+//
+//	private void minmax(Float f1) {
+//		min = Math.min(min, f1);
+//		max = Math.max(max, f1);
+//	}
 
 	private int[] toCoordinatesValues(FrameValues vals, float scalar) {
 		return toCoordinatesValues(vals, scalar, 1f);
@@ -293,6 +297,10 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 
 	private int[] toCoordinatesValues(FrameValues vals, float scalar, float coef) {
 		FrameValues valsClone = vals;
+		Float min = ctx.getValues().getMinValue();
+//		Float max = ctx.getValues().getMaxValue();
+		Float delta = ctx.getValues().getDeltaValue();
+		
 		if (vals == null || vals.size() == 0) {
 			return null;
 		}
@@ -300,17 +308,18 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		// valsClone = new FrameValues(vals);
 		// }
 		int start = 0;
-		int end = vals.size();
+		int end = ctx.getValues().size();
 		if (domain != null && domain.getFrom() != null) {
-			start = vals.toIndex(domain.getFrom().floatValue());
-			end = vals.toIndex(domain.getUntil().floatValue());
+			start = ctx.getValues().toIndex(domain.getFrom().floatValue());
+			end = ctx.getValues().toIndex(domain.getUntil().floatValue());
 			end = Math.min(end, vals.size());
 		}
 		int length = end - start;
 		int[] temp = new int[length];
 
 		int i = 0, skip = 0;
-		float delta = max - min;
+		
+		
 		for (Float floatValue : valsClone) {
 			if (skip < start) {
 				skip++;
@@ -337,9 +346,9 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 
 	public void setOrder(float order) {
 		getCtx().setOrder(order);
-		for (Float f1 : getCtx().getValues()) {
-			minmax(f1);
-		}
+//		for (Float f1 : getCtx().getValues()) {
+//			minmax(f1);
+//		}
 		// coordinateBoundary = getCoordinateBoundary(getCtx().getValues());
 	}
 

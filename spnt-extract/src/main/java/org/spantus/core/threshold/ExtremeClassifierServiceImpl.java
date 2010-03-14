@@ -76,7 +76,7 @@ public class ExtremeClassifierServiceImpl {
 			ExtremeEntry entry = iter.next();
 			if (iter.isCurrentMaxExtream()) {
 				ExtremeSegment extremeSegment = new ExtremeSegment();
-				extremeSegment.setMiddleEntry(entry);
+				extremeSegment.setPeakEntry(entry);
 				extremeSegment.setStartEntry(entry.getPrevious());
 				extremeSegment.setEndEntry(entry.getNext());
 				segments.add(extremeSegment);
@@ -297,10 +297,10 @@ public class ExtremeClassifierServiceImpl {
 		joined.setStartEntry(prior.getStartEntry());
 		joined.setEndEntry(next.getEndEntry());
 
-		if(s1.getMiddleEntry().getValue().compareTo(s2.getMiddleEntry().getValue())>0){
-			joined.setMiddleEntry(s1.getMiddleEntry());
+		if(s1.getPeakEntry().getValue().compareTo(s2.getPeakEntry().getValue())>0){
+			joined.setPeakEntry(s1.getPeakEntry());
 		}else{
-			joined.setMiddleEntry(s2.getMiddleEntry());	
+			joined.setPeakEntry(s2.getPeakEntry());	
 		}
 
 //		joined.setNext(next.getNext());

@@ -41,7 +41,9 @@ public class FrameValues extends LinkedList<Float>{
 	private static final long serialVersionUID = 1L;
 //	public static final int DEFAULT_FRAME_BUFFER_SIZE = 65536;
 //	int frameBufferSize;
-	float sampleRate = 1;
+	private float sampleRate = 1;
+	private Float minValue = null;
+	private Float maxValue = null;
 
 
 	public FrameValues() {
@@ -65,6 +67,20 @@ public class FrameValues extends LinkedList<Float>{
 //	public void setFrameBufferSize(int bufferSize) {
 //		this.frameBufferSize = bufferSize;
 //	}
+	@Override
+	public boolean add(Float e) {
+		updateMinMax(e);
+		return super.add(e);
+	}
+	@Override
+	public boolean addAll(Collection<? extends Float> c) {
+		if(c instanceof FrameValues){
+			FrameValues fv = (FrameValues)c;
+			updateMinMax(fv.getMinValue());
+			updateMinMax(fv.getMaxValue());
+		}
+		return super.addAll(c);
+	}
 	
 	public void add(int index, float element) {
 		super.add(index, new Float(element));
@@ -111,6 +127,34 @@ public class FrameValues extends LinkedList<Float>{
 	}
 	public int toIndex(float f){
 		return (int)(f * sampleRate);
+	}
+
+	public Float getMinValue() {
+		return minValue;
+	}
+
+	public Float getMaxValue() {
+		return maxValue;
+	}
+	public Float getDeltaValue() {
+		return maxValue-minValue;
+	}
+	
+	
+	public void updateMinMax(Float value){
+		if(value == null){
+			return;
+		}
+		if(minValue == null){
+			minValue = value;
+		}else{
+			minValue = Math.min(minValue, value);
+		}
+		if(maxValue == null){
+			maxValue = value;
+		}else{
+			maxValue = Math.max(maxValue, value);
+		}
 	}
 
 }

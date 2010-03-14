@@ -58,4 +58,19 @@ public class VectorUtils {
 	public static Float min(List<Float> vector){
 		return Collections.min(vector);
 	}
+
+	public static Integer minArg(Float... args){
+		Integer minIndex = null;
+		Float minValue = Float.MAX_VALUE;
+		int i = 0;
+		for (Float float1 : args) {
+			if(minValue>float1){
+				minValue = float1;
+				minIndex = i;
+			}
+			i++;
+		}
+		return minIndex;
+	}
+	
 }

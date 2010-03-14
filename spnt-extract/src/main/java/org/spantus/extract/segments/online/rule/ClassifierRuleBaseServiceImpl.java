@@ -26,6 +26,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		ExtremeSegment lastSegment = null;
 		boolean foundEndSegment = ctx.getFoundEndSegment();
 		boolean foundStartSegment = ctx.getFoundStartSegment();
+		boolean foundPeakSegment = ctx.getFoundPeakSegment();
 
 		if (ctx.getExtremeSegments().size() > 0) {
 			lastSegment = ctx.getExtremeSegments().getLast();
@@ -39,23 +40,19 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		if (lastSegment == null) {
 			if (foundStartSegment) {
 				return ClassifierRuleBaseEnum.action.startMarker;
-			}else if (currentSegment.getCalculatedLength() > 20
-					&& ctx.getMarkerState() == null) {
+			}else if (ctx.isIn(state.start)) {
 				return ClassifierRuleBaseEnum.action.startMarkerApproved;
 			} else if (foundEndSegment && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.endMarkerApproved;
 			} else if (ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
-//			} else if (currentSegment.getCalculatedLength() > 20
-//					&& (ctx.isIn(state.start) || ctx.isIn(state.segment))) {
-//				return ClassifierRuleBaseEnum.action.processSignal;
 			}
 
 		}
 		if (lastSegment != null) {
-			if (foundStartSegment) {
+			if (foundStartSegment && ctx.isIn(null)) {
 				return ClassifierRuleBaseEnum.action.startMarker;
-			} else if (ctx.isIn(state.start) && currentSegment.getCalculatedLength() > 20) {
+			} else if ((ctx.isIn(state.start) || ctx.isIn(null)) && foundPeakSegment) {
 				return ClassifierRuleBaseEnum.action.startMarkerApproved;
 			} else if (foundEndSegment && currentSegment.isIncrease()
 					&& lastSegment.isIncrease()) {
@@ -63,19 +60,26 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			} else if (foundEndSegment && currentSegment.isDecrease()
 					&& lastSegment.isDecrease()) {
 				return ClassifierRuleBaseEnum.action.join;
-			} else if (ctx.isIn(state.segment)) {
+			} else if (!foundEndSegment && !foundStartSegment && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
 			} else if (foundEndSegment
-					&& currentSegment.getCalculatedLength() > 20) {
+					 ) {//&& lastSegment.getCalculatedLength() > 40
 				return ClassifierRuleBaseEnum.action.endMarkerApproved;
+			}else if(foundEndSegment && ctx.isIn(state.segment)){
+				return ClassifierRuleBaseEnum.action.delete;
+			}else if(ctx.isIn(state.segment)){
+				return ClassifierRuleBaseEnum.action.processSignal;
 			}
+			log.debug("[testOnRuleBase] NC not handled area and length {0}, {1}",
+						currentSegment.getCalculatedArea(), currentSegment
+								.getCalculatedLength());
 			return ClassifierRuleBaseEnum.action.processNoise;
 		}
 
 		// log.debug("[testOnRuleBase] area and length {0}, {1}",
 		// segment.getCalculatedArea(), segment.getCalculatedLength());
 
-		log.debug("[testOnRuleBase] not handled area and length {0}, {1}",
+		log.debug("[testOnRuleBase] UC not handled area and length {0}, {1}",
 				currentSegment.getCalculatedArea(), currentSegment
 						.getCalculatedLength());
 

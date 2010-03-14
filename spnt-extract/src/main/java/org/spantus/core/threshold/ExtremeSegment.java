@@ -8,40 +8,34 @@ import org.spantus.core.FrameValues;
 
 public class ExtremeSegment {
 	private ExtremeEntry startEntry;
-	private ExtremeEntry middleEntry;
+	private ExtremeEntry peakEntry;
 	private ExtremeEntry endEntry;
 	
 	private List<ExtremeEntry> peakEntries;
 
 	private FrameValues values;
-		
-	public ExtremeEntry getStartEntry() {
-		return startEntry;
+	
+	public boolean isIncrease(){
+		return getEndEntry().getValue().compareTo(getStartEntry().getValue())>0;
 	}
-	public void setStartEntry(ExtremeEntry startEntry) {
-		this.startEntry = startEntry;
+	public boolean isDecrease(){
+		return getStartEntry().getValue().compareTo(getEndEntry().getValue())>0;
 	}
-	public ExtremeEntry getMiddleEntry() {
-		return middleEntry;
-	}
-	public void setMiddleEntry(ExtremeEntry middleEntry) {
-		this.middleEntry = middleEntry;
-	}
-	public ExtremeEntry getEndEntry() {
-		return endEntry;
-	}
-	public void setEndEntry(ExtremeEntry endEntry) {
-		this.endEntry = endEntry;
+	
+	//calculates
+	public Double getCalculatedArea(){
+		Double area = 0D;
+		for (Float f1: getValues()) {
+			area += f1;
+		}
+		return area;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public Long getPeakLength(){
-		return (long)(getEndEntry().getIndex()-getStartEntry().getIndex());
+	public Long getCalculatedLength(){
+		Long time = getValues().indextoMils(getValues().size());
+		return time;
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -51,8 +45,8 @@ public class ExtremeSegment {
 		}else{
 			sb.append("-;");
 		}
-		if(getMiddleEntry() != null){
-			sb.append(getMiddleEntry().getIndex()).append("=").append(getMiddleEntry().getValue()).append(";");
+		if(getPeakEntry() != null){
+			sb.append(getPeakEntry().getIndex()).append("=").append(getPeakEntry().getValue()).append(";");
 		}else{
 			sb.append("-;");
 		}
@@ -70,12 +64,30 @@ public class ExtremeSegment {
 //				);
 		return sb.toString();
 	}
-	public boolean isIncrease(){
-		return getEndEntry().getValue().compareTo(getStartEntry().getValue())>0;
+	
+	//getters and setters
+	
+	
+	
+	public ExtremeEntry getStartEntry() {
+		return startEntry;
 	}
-	public boolean isDecrease(){
-		return getStartEntry().getValue().compareTo(getEndEntry().getValue())>0;
+	public void setStartEntry(ExtremeEntry startEntry) {
+		this.startEntry = startEntry;
 	}
+	public ExtremeEntry getPeakEntry() {
+		return peakEntry;
+	}
+	public void setPeakEntry(ExtremeEntry middleEntry) {
+		this.peakEntry = middleEntry;
+	}
+	public ExtremeEntry getEndEntry() {
+		return endEntry;
+	}
+	public void setEndEntry(ExtremeEntry endEntry) {
+		this.endEntry = endEntry;
+	}
+	
 	public FrameValues getValues() {
 		return values;
 	}
@@ -83,18 +95,6 @@ public class ExtremeSegment {
 		this.values = values;
 	}
 	
-	public Double getCalculatedArea(){
-		Double area = 0D;
-		for (Float f1: getValues()) {
-			area += f1;
-		}
-		return area;
-	}
-
-	public Long getCalculatedLength(){
-		Long time = getValues().indextoMils(getValues().size());
-		return time;
-	}
 	public List<ExtremeEntry> getPeakEntries() {
 		if(peakEntries == null){
 			peakEntries = new LinkedList<ExtremeEntry>();

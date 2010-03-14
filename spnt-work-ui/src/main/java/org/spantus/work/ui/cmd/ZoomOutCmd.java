@@ -46,9 +46,9 @@ public class ZoomOutCmd extends AbsrtactCmd {
 	}
 	public String execute(SpantusWorkInfo ctx) {
 		SelectionDto selectionDto = new SelectionDto();
-		getExecutionFacade().fireEvent(GlobalCommands.sample.zoomChanged, selectionDto);
+		getExecutionFacade().fireEvent(GlobalCommands.sample.selectionChanged, selectionDto);
 		//TODO: hack
-//		((CommandExecutionFacadeImpl)getExecutionFacade()).changedZoom(null, null);
+		((CommandExecutionFacadeImpl)getExecutionFacade()).changedZoom(null, null);
 		return null;
 	}
 

@@ -246,7 +246,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 			Dimension d = getSize();
 			d.height -= getHeaderHeight();
 			graph.setSize(d);
-			log.debug("repaint");
+			log.debug("[repaint]");
 			graph.render();
 			graph.repaint();
 		}

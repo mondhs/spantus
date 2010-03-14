@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
+import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.core.threshold.test.ExtremeClassifierTest;
 import org.spantus.extract.segments.online.ExtremeOnlineClassifier;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
@@ -73,10 +74,13 @@ public class ExtremeOnlineClassifierTest {
 
 		classifier = feedData(ExtremeClassifierTest.complexMinMax, ruleBaseService);
 		Assert.assertEquals(8, classifier.getExtremeSegments().size());
-		Assert.assertEquals(11, classifier.getMarkSet().getMarkers().size());
+		log.debug("[testOnlineMarkersExtractionRule] markers {0}",classifier.getMarkSet().getMarkers());
+		
+		Assert.assertEquals(3, classifier.getMarkSet().getMarkers().size());
 		
 
 	}
+	
 
 	
 	protected void logData(Float[] data){
@@ -102,6 +106,7 @@ public class ExtremeOnlineClassifierTest {
 			values.add(windowValue);
 		}
 		classifier.afterCalculated(0L, values);
+		classifier.flush();
 		return classifier;
 	}
 

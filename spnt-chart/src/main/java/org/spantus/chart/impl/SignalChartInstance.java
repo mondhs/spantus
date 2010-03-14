@@ -24,9 +24,9 @@ package org.spantus.chart.impl;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.math.BigDecimal;
 import java.text.Format;
-import java.util.ArrayList;
 
 import net.quies.math.plot.ChartStyle;
 import net.quies.math.plot.CoordinateBoundary;
@@ -55,18 +55,25 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 	
 	ChartStyle style;
 
-	private final ArrayList<int[]> polylinesX = new ArrayList<int[]>();
-	private final ArrayList<int[]> polylinesY = new ArrayList<int[]>();
-
+//	private final ArrayList<int[]> polylinesX = new ArrayList<int[]>();
+//	private final ArrayList<int[]> polylinesY = new ArrayList<int[]>();
+	private Polygon signalPolygon; 
+	BigDecimal xScalar = new BigDecimal(1);
+	BigDecimal yScalar = new BigDecimal(1);
+	
 	Logger log = Logger.getLogger(this.getClass());
 
 	public SignalChartInstance(String description, FrameValues values, ChartStyle style) {
 		this.description = description;
 		this.values = values;
 		this.style = style;
-		for (Float float1 : values) {
-			minmax(float1);
-		}
+		float min = values.getMinValue();
+		float max = values.getMaxValue();
+		
+		
+//		for (Float float1 : values) {
+//			minmax(float1);
+//		}
 		setOrder(0);
 		log.debug("name: " + description + "; order: " + getOrder() + "; min=" +min + "; max: " + max +
 				"; sampleRate:" + values.getSampleRate() + "; length: " + values.size());
@@ -75,24 +82,37 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 	public void renderFunction(BigDecimal[] xCoordinate,
 			BigDecimal[] yCoordinate, BigDecimal xScalar, BigDecimal yScalar) {
 //
-		if(polylinesX.size() > 0) return;
+//		if(polylinesX.size() > 0) return;
 
-		polylinesX.add(toCoordinatesTime(values.size(), xScalar.floatValue()));
-		polylinesY.add(toCoordinatesValues(values, yScalar.floatValue()));
-
+//		int[] x = toCoordinatesTime(values.size(), xScalar.floatValue());
+//		int[] y = toCoordinatesValues(values, yScalar.floatValue());
+		
+//		polylinesX.add(x);
+//		polylinesY.add(y);
+		if(signalPolygon==null){
+			signalPolygon =toPolygon(values, xScalar.floatValue(), yScalar.floatValue());
+		}
+		this.xScalar = xScalar;
+		this.yScalar = yScalar;
 	}
 
 	public void paintFunction(Graphics g) {
+//		long time = System.currentTimeMillis();
 //		log.debug("paint: " + description);
 //		int i = polylinesX.size();
 //		while (--i >= 0) {
-		for (int i = 0; i < polylinesX.size(); i++) {
-			int[] x = polylinesX.get(i);
-			int[] y = polylinesY.get(i);
-			g.drawPolyline(x, y, x.length);
+//		for (int i = 0; i < polylinesX.size(); i++) {
+//			int[] x = polylinesX.get(i);
+//			int[] y = polylinesY.get(i);
+//			g.drawPolygon(x, y, x.length);
+//		}
+		if(signalPolygon != null){
+			g.drawPolygon(signalPolygon);
 		}
+		
+//		log.debug("[paintFunction] time: " + (System.currentTimeMillis()-time));
 	}
-
+	
 	private CoordinateBoundary getCoordinateBoundary(FrameValues values) {
 
 		Float xMin = 0f, xMax = new Float(values.toTime(values.size())), yMin = 0f+getOrder(), yMax = 1f+getOrder();
@@ -136,8 +156,8 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 	
 	public void render(BigDecimal xScalar, BigDecimal yScalar, Format yFormat,
 			FontMetrics fontMetrics) {
-		polylinesX.clear();
-		polylinesY.clear();
+//		polylinesX.clear();
+//		polylinesY.clear();
 		renderFunction(null, null, xScalar, yScalar);
 	}
 
@@ -149,35 +169,78 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 		this.domain = domain;
 	}
 
-	private int[] toCoordinatesTime(int size,
-			float scalar) {
-		int[] temp = new int[size];
-		for (int j = 0; j < size; j++) {
-			temp[j] = (int)(j / (scalar*values.getSampleRate())) ;			
-		}
-		return temp;
-	}
+//	private int[] toCoordinatesTime(int size,
+//			float scalar) {
+//		int[] temp = new int[size];
+//		for (int j = 0; j < size; j++) {
+//			temp[j] = (int)(j / (scalar*values.getSampleRate())) ;			
+//		}
+//		return temp;
+//	}
 	
-	Float min = Float.MAX_VALUE;
-	Float max = Float.MIN_VALUE;
-	private void minmax(Float f1){
-		min = Math.min(min, f1);
-		max = Math.max(max, f1);
-	}
-	
-	private int[] toCoordinatesValues(FrameValues vals,
-			float scalar) {
-		int[] temp = new int[vals.size()];
+	private Polygon toPolygon(FrameValues vals,
+			float xScalar, float yScalar) {
+		Polygon polygon = new Polygon();
+//		int[] temp = new int[size];
+//		for (int j = 0; j < size; j++) {
+//			temp[j] = (int)(j / (scalar*values.getSampleRate())) ;			
+//		}
+//		temp[i] = (int)(floatValue/scalar);
+		
+		float delta =  vals.getDeltaValue();
 		int i=0; 
+		Integer previousIndex = null;
+		
 		for (Float floatValue : vals) {
-			float delta =  max-min;
-			floatValue = (floatValue-min)/delta;
+			
+			Integer index = (int)(i / (xScalar*values.getSampleRate()));
+			
+			if(previousIndex == null){
+				previousIndex = index;
+				floatValue = (floatValue-vals.getMinValue())/delta;
+				floatValue += getOrder();
+				Integer value = (int)(floatValue/yScalar);
+				polygon.addPoint(index, value);
+				i++;
+				continue;
+			}
+			
+			if(index == previousIndex){
+				i++;
+				continue;
+			}
+			previousIndex = index;
+			floatValue = (floatValue-vals.getMinValue())/delta;
 			floatValue += getOrder();
-			temp[i] = (int)(floatValue/scalar);
+			Integer value = (int)(floatValue/yScalar);
+			polygon.addPoint(index, value);
 			i++;
 		}
-		return temp;
+		
+
+		return polygon;
 	}
+	
+//	Float min = Float.MAX_VALUE;
+//	Float max = Float.MIN_VALUE;
+//	private void minmax(Float f1){
+//		min = Math.min(min, f1);
+//		max = Math.max(max, f1);
+//	}
+	
+//	private int[] toCoordinatesValues(FrameValues vals,
+//			float scalar) {
+//		int[] temp = new int[vals.size()];
+//		int i=0; 
+//		float delta =  vals.getDeltaValue();
+//		for (Float floatValue : vals) {
+//			floatValue = (floatValue-vals.getMinValue())/delta;
+//			floatValue += getOrder();
+//			temp[i] = (int)(floatValue/scalar);
+//			i++;
+//		}
+//		return temp;
+//	}
 
 	public float getOrder() {
 		return order;
@@ -185,9 +248,9 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 
 	public void setOrder(float order) {
 		this.order = order;
-		for (Float f1 : values) {
-			minmax(f1);
-		}
+//		for (Float f1 : values) {
+//			minmax(f1);
+//		}
 		coordinateBoundary = getCoordinateBoundary(values);
 	}
 	

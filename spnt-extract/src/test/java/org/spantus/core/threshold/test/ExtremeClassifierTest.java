@@ -20,7 +20,19 @@ public class ExtremeClassifierTest{
 	public static final Float[] empty = new Float[]{};
 	public static final Float[] singleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F}; 
 	public static final Float[] doubleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F};
-	
+	/**
+	 * 
+	 * 
+	 * <pre>
+	 *            9
+	 *            /\ 11
+	 *        7  /  \/\ 13
+	 *     5  /\/      \/\
+	 *     /\/            \
+	 * 2  /                \ 15  19  23
+	 * /\/                  \/\/\/\/\/\/\
+	 * </pre>
+	 */
 	public static final Float[] complexMinMax = new Float[]{
 		0F, 1F, 0F,
 		1F, 3F, 2F, 4F, 3F, 6F,

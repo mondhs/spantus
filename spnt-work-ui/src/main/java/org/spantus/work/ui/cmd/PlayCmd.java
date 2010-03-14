@@ -17,12 +17,12 @@ public class PlayCmd extends AbsrtactCmd {
 	public Set<String> getExpectedActions() {
 		return createExpectedActions(
 				GlobalCommands.sample.play.name(),
-				GlobalCommands.sample.zoomChanged.name()
+				GlobalCommands.sample.selectionChanged.name()
 				);
 	}
 
 	public String execute(SpantusWorkInfo ctx) {
-		if(GlobalCommands.sample.zoomChanged.name().equals(getCurrentEvent().getCmd())){
+		if(GlobalCommands.sample.selectionChanged.name().equals(getCurrentEvent().getCmd())){
 			this.dto = ((SelectionDto)getCurrentEvent().getValue());
 			return null;
 		}

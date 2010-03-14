@@ -158,7 +158,7 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 				param = ExtractorParamUtils.getSafeParam(params, key);
 				Float threasholdCoef = ExtractorParamUtils.<Float>getValue(param, 
 						ExtractorParamUtils.commonParam.threasholdCoef.name(), Float.valueOf(1.1f));
-				if(threshold instanceof AbstractClassifier){
+				if(threshold instanceof AbstractThreshold){
 					((AbstractThreshold)threshold).setCoef(threasholdCoef);	
 				}
 				return;

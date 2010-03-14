@@ -29,10 +29,14 @@ import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractClassifier;
 import org.spantus.core.threshold.DynamicThreshold;
 import org.spantus.core.threshold.IClassifier;
-import org.spantus.core.threshold.ExtremeClassifier;
+import org.spantus.core.threshold.ExtremeOfflineClassifier;
 import org.spantus.core.threshold.OfflineThreshold;
 import org.spantus.core.threshold.StaticThreshold;
 import org.spantus.core.threshold.ClassifierEnum;
+import org.spantus.extract.segments.online.ExtremeOnlineClassifier;
+import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
+import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
+import org.spantus.extract.segments.online.rule.ClassifierRuleBaseServiceImpl;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.AbstractExtractor3D;
 import org.spantus.extractor.ExtractorResultBuffer;
@@ -253,7 +257,13 @@ public abstract class ExtractorUtils {
 			threshold = new OfflineThreshold();
 			break;
 		case rules:
-			threshold = new ExtremeClassifier();
+			threshold = new ExtremeOfflineClassifier();
+			break;
+		case rulesOnline:
+			ExtremeOnlineClassifier eo = new ExtremeOnlineClassifier();
+			eo.setRuleBaseService(new ClassifierRuleBaseServiceImpl());
+			threshold = eo;
+			break;
 		default:
 			break;
 		}
