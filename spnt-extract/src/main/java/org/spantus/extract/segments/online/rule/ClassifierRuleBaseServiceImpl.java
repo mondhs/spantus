@@ -24,9 +24,9 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			ExtremeSegmentsOnlineCtx ctx, Boolean isEnum) {
 
 		ExtremeSegment lastSegment = null;
-		boolean foundEndSegment = ctx.getFoundEndSegment();
-		boolean foundStartSegment = ctx.getFoundStartSegment();
-		boolean foundPeakSegment = ctx.getFoundPeakSegment();
+		boolean segmentEnd = ctx.getFoundEndSegment();
+		boolean segmentStart = ctx.getFoundStartSegment();
+		boolean segmentPeak = ctx.getFoundPeakSegment();
 
 		if (ctx.getExtremeSegments().size() > 0) {
 			lastSegment = ctx.getExtremeSegments().getLast();
@@ -38,11 +38,11 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			return ClassifierRuleBaseEnum.action.processNoise;
 		}
 		if (lastSegment == null) {
-			if (foundStartSegment) {
+			if (segmentStart) {
 				return ClassifierRuleBaseEnum.action.startMarker;
 			}else if (ctx.isIn(state.start)) {
 				return ClassifierRuleBaseEnum.action.startMarkerApproved;
-			} else if (foundEndSegment && ctx.isIn(state.segment)) {
+			} else if (segmentEnd && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.endMarkerApproved;
 			} else if (ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
@@ -51,23 +51,23 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		}
 		if (lastSegment != null) {
 			String className = ctx.getClassName(lastSegment);
-			if (foundStartSegment && ctx.isIn(null)) {
+			if (segmentStart && ctx.isIn(null)) {
 				return ClassifierRuleBaseEnum.action.startMarker;
-			} else if ((ctx.isIn(state.start) || ctx.isIn(null)) && foundPeakSegment) {
+			} else if ((ctx.isIn(state.start) || ctx.isIn(null)) && segmentPeak) {
 				return ClassifierRuleBaseEnum.action.startMarkerApproved;
-			} else if (foundEndSegment && currentSegment.isIncrease()
+			} else if (segmentEnd && currentSegment.isIncrease()
 					&& lastSegment.isIncrease()) {
 				return ClassifierRuleBaseEnum.action.join;
-			} else if (foundEndSegment && currentSegment.isDecrease()
+			} else if (segmentEnd && currentSegment.isDecrease()
 					&& lastSegment.isDecrease()) {
 				return ClassifierRuleBaseEnum.action.join;
-			} else if (!foundEndSegment && !foundStartSegment && ctx.isIn(state.segment)) {
+			} else if (!segmentEnd && !segmentStart && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
-			} else if (foundEndSegment
+			} else if (segmentEnd
 					&& !"0".equals(className)
 					 ) {//&& lastSegment.getCalculatedLength() > 40
 				return ClassifierRuleBaseEnum.action.endMarkerApproved;
-			}else if(foundEndSegment && ctx.isIn(state.segment)){
+			}else if(segmentEnd && ctx.isIn(state.segment)){
 				return ClassifierRuleBaseEnum.action.delete;
 			}else if(ctx.isIn(state.segment)){
 				return ClassifierRuleBaseEnum.action.processSignal;

@@ -76,6 +76,7 @@ public class ExtremeOnlineClassifierTest {
 		Assert.assertEquals(9, classifier.getExtremeSegments().size());
 		log.debug("[testOnlineMarkersExtractionRule] markers {0}",classifier.getMarkSet().getMarkers());
 //		
+		
 		Assert.assertEquals(3, classifier.getMarkSet().getMarkers().size());
 		
 

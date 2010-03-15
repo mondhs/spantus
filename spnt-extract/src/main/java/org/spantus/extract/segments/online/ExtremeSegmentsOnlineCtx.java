@@ -55,6 +55,9 @@ public class ExtremeSegmentsOnlineCtx {
 		Long length = segment.getCalculatedLength();
 		Integer peaks =  segment.getPeakEntries().size();
 		SegmentInnerData innerData = new SegmentInnerData(peaks,area,length);
+		if(area == 0D && length == 0 && peaks == 0){
+			return;
+		}
 		
 //		log.debug("[learn]  area {0}, length:{1}, peaks: {2}",  
 //				""+area, ""+length, peaks);
@@ -103,17 +106,29 @@ public class ExtremeSegmentsOnlineCtx {
 		Double area = segment.getCalculatedArea();
 		Long length = segment.getCalculatedLength();
 		Integer peaks =  segment.getPeakEntries().size();
+/*
+		if(0<=area && area< 34000){
+			return "0";
+		}else if(34000<area && area< 55000){
+			return "1";
+		}else if(55000<area && area< 450000){
+			return "2";
+		}		
+*/	
 		
 		SegmentInnerData data = new SegmentInnerData(peaks,area,length);
 		Float distanceToMin = data.distance(segmentStats.get(0));
 		Float distanceToMax = data.distance(segmentStats.get(1));
+		Float avgDistance = (distanceToMax+distanceToMin)/2;
 //		Float distanceToMax = data.distance(getOnlineCtx().segmentStats.get(2));
 		if(distanceToMin.equals(distanceToMax)){
 			return "1";
-		}else{
-			VectorUtils.minArg(distanceToMin, distanceToMax/10, distanceToMax/5);
 		}
-		Integer argNum = VectorUtils.minArg(distanceToMin, distanceToMax/10, distanceToMax/1);
+		Integer argNum = VectorUtils.minArg(distanceToMin, avgDistance/10, avgDistance*2);
+		
+//		if(0 != argNum){
+//			return argNum + "[" +distanceToMin+":"+distanceToMax+"]";
+//		}
 		
 //		log.debug("[getClassName]  toMin {0}, toMax:{1}; index {2};maxmax {3}",  
 //				distanceToMin, distanceToMax/2, argNum, this.maxDistance);

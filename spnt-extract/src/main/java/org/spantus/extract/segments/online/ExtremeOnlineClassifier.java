@@ -1,5 +1,7 @@
 package org.spantus.extract.segments.online;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.spantus.core.FrameValues;
@@ -30,6 +32,13 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	}
 
 	public void afterCalculated(Long sample, FrameValues result) {
+//		SegmentInnerData[peaks: 1; area: 1688.3544311523438; length: 20], SegmentInnerData[peaks: 3; area: 304871.712890625; length: 203]
+		//SegmentInnerData inner = null;
+		//inner = new SegmentInnerData(1, 1688.35D, 20L);
+		//getOnlineCtx().segmentStats.add(inner);
+		//inner = new SegmentInnerData(3, 304871.71D, 203L);
+		//getOnlineCtx().segmentStats.add(inner);
+
 		for (Float value : result) {
 			getThresholdValues().updateMinMax(value);
 			processValue(value);
