@@ -407,7 +407,7 @@ public class ExtremeClassifierServiceImpl {
 	protected List<Float> createVector(Long length, Double area) {
 		List<Float> vector = new ArrayList<Float>();
 		vector.add(area.floatValue());
-		vector.add(length.floatValue());
+//		vector.add(length.floatValue());
 		return vector;
 	}
 

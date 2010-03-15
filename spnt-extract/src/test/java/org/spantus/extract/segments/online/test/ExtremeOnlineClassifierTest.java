@@ -73,9 +73,9 @@ public class ExtremeOnlineClassifierTest {
 //		Assert.assertEquals(2, classifier.getMarkSet().getMarkers().size());
 
 		classifier = feedData(ExtremeClassifierTest.complexMinMax, ruleBaseService);
-		Assert.assertEquals(8, classifier.getExtremeSegments().size());
+		Assert.assertEquals(9, classifier.getExtremeSegments().size());
 		log.debug("[testOnlineMarkersExtractionRule] markers {0}",classifier.getMarkSet().getMarkers());
-		
+//		
 		Assert.assertEquals(3, classifier.getMarkSet().getMarkers().size());
 		
 

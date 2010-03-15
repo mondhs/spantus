@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum;
+import org.spantus.math.VectorUtils;
 
 public class ExtremeSegmentsOnlineCtx {
 	private LinkedList<ExtremeSegment> extremeSegments;
@@ -15,7 +16,7 @@ public class ExtremeSegmentsOnlineCtx {
 	
 	public LinkedList<SegmentInnerData> semgnetFeatures = new LinkedList<SegmentInnerData>();
 	public List<SegmentInnerData> segmentStats = new ArrayList<SegmentInnerData>(3);
-	
+	public Float maxDistance;
 	
 	public Integer increase(){
 		return ++index;
@@ -46,6 +47,78 @@ public class ExtremeSegmentsOnlineCtx {
 			return getMarkerState() == null;
 		}
 		return givenState.equals(getMarkerState());
+	}
+	
+	
+	public void learn(ExtremeSegment segment){
+		Double area = segment.getCalculatedArea();
+		Long length = segment.getCalculatedLength();
+		Integer peaks =  segment.getPeakEntries().size();
+		SegmentInnerData innerData = new SegmentInnerData(peaks,area,length);
+		
+//		log.debug("[learn]  area {0}, length:{1}, peaks: {2}",  
+//				""+area, ""+length, peaks);
+		semgnetFeatures.add(innerData);
+		
+		if(segmentStats.size()==0){
+			segmentStats.add(innerData.clone());
+			segmentStats.add(innerData.clone());
+//			onlineCtx.segmentStats.add(new SegmentInnerData(peaks,area,length));
+		}
+		Float maxDistance = null;
+		SegmentInnerData maxData1 = null;
+//		Float maxDistance2 = null;
+		SegmentInnerData maxData2= null;
+		
+		for (SegmentInnerData iData : semgnetFeatures) {
+			for (SegmentInnerData jData : semgnetFeatures) {
+			Float distance = iData.distance(jData);
+//			if(minDistance == null || minDistance>distance){
+//				minDistance = distance;
+//				minData = iData;
+//			}
+				if(maxDistance == null || maxDistance<distance){
+					maxDistance = distance;
+					maxData1 = iData;
+					maxData2 = jData;
+				}
+			}
+		}
+		if(maxData1.compareTo(maxData2)>0){
+			segmentStats.set(0, maxData1);
+			segmentStats.set(1, maxData2);
+		}else {
+			segmentStats.set(0, maxData2);
+			segmentStats.set(1, maxData1);
+		}
+		this.maxDistance = maxDistance;
+		
+		
+	}
+	
+	public String getClassName(ExtremeSegment segment){
+		if(segmentStats == null || segmentStats.size()==0){
+			return "0";
+		}
+		Double area = segment.getCalculatedArea();
+		Long length = segment.getCalculatedLength();
+		Integer peaks =  segment.getPeakEntries().size();
+		
+		SegmentInnerData data = new SegmentInnerData(peaks,area,length);
+		Float distanceToMin = data.distance(segmentStats.get(0));
+		Float distanceToMax = data.distance(segmentStats.get(1));
+//		Float distanceToMax = data.distance(getOnlineCtx().segmentStats.get(2));
+		if(distanceToMin.equals(distanceToMax)){
+			return "1";
+		}else{
+			VectorUtils.minArg(distanceToMin, distanceToMax/10, distanceToMax/5);
+		}
+		Integer argNum = VectorUtils.minArg(distanceToMin, distanceToMax/10, distanceToMax/1);
+		
+//		log.debug("[getClassName]  toMin {0}, toMax:{1}; index {2};maxmax {3}",  
+//				distanceToMin, distanceToMax/2, argNum, this.maxDistance);
+		
+		return "" + argNum;
 	}
 	
 	

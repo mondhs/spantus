@@ -14,7 +14,6 @@ import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum.state;
 import org.spantus.logger.Logger;
-import org.spantus.math.VectorUtils;
 import org.spantus.utils.StringUtils;
 
 public class ExtremeOnlineClassifier extends AbstractClassifier{
@@ -24,7 +23,6 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	private ExtremeSegmentsOnlineCtx onlineCtx;
 //	private ExtremeSegment extremeSegment;
 	private SignalStates lastState = null;
-	public Float maxDistance;
 	private ClassifierRuleBaseService ruleBaseService;
 	
 	public ExtremeOnlineClassifier() {
@@ -41,7 +39,15 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	@Override
 	public void flush() {
 		super.flush();
-		processResult(onlineCtx.getCurrentSegment());
+		
+//		processResult(onlineCtx.getCurrentSegment());
+		if(onlineCtx.getCurrentSegment() != null){
+			ExtremeEntry entry = new ExtremeEntry(onlineCtx.getIndex().intValue(),
+				previous, SignalStates.min);
+			onlineCtx.getCurrentSegment().setEndEntry(entry);
+			onlineCtx.getExtremeSegments().add(onlineCtx.getCurrentSegment());
+			endMarkerApproved(onlineCtx);
+		}
 //		log.debug("[flush] stats: {0};",getOnlineCtx().segmentStats);
 //		log.debug("[flush] features: {0}", getOnlineCtx().semgnetFeatures);
 //		for (SegmentInnerData data : getOnlineCtx().semgnetFeatures) {
@@ -178,6 +184,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			join(onlineCtx);
 			break;
 		case delete:
+			onlineCtx.learn(last);
 			break;
 		default:
 			log.error("Not impl: " + anAction);
@@ -212,34 +219,40 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	
 	public void endMarkerApproved(ExtremeSegmentsOnlineCtx ctx){
 		Marker marker = getMarker();
+		if(marker == null){
+			log.debug("Marker not initialized");
+			return;
+		}
 		ExtremeSegment last = null;
 		if(ctx.getExtremeSegments().size()>0){
 			 last = ctx.getExtremeSegments().getLast();
 		}else{
-			return;
-//			 last = ctx.getCurrentSegment();
+//			onlineCtx.learn(ctx.getCurrentSegment());
+//			return;
+			 last = ctx.getCurrentSegment();
 		}
-		learn(last);
-
+		
+		onlineCtx.learn(last);		
 		Long startTime = getOutputValues().indextoMils(last.getStartEntry().getIndex());
 		Long endTime = getOutputValues().indextoMils(last.getEndEntry().getIndex());
-		String className = getClassName(last);
+		String className = onlineCtx.getClassName(last);
 		marker.setLabel(marker.getLabel()+":" + className);
 		marker.setStart(startTime);
 		marker.setEnd(endTime); 
 		
 		for (Marker iMarker : getMarkSet().getMarkers()) {
 			if(iMarker.getEnd()>startTime){
-				throw new IllegalArgumentException("conflicts " + iMarker + " with " + marker);
+				log.error("conflicts " + iMarker + " with " + marker);
+				return;
 			}
 		}
 		
 //		if(last.getCalculatedLength()>90){
 //		if(last.getCalculatedArea()>90000){
-		if(!"0".equals(className)){
+		
 			getMarkSet().getMarkers().add(marker);
 			log.debug("[endMarkerApproved] adding marker {0}", marker );
-		}
+//		}
 		setMarker(null);
 		onlineCtx.setMarkerState(null);
 		for (IClassificationListener listener : getClassificationListeners()) {
@@ -295,72 +308,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 //		return newExtremeSegment;
 	}
 	
-	public String getClassName(ExtremeSegment segment){
-		if(getOnlineCtx().segmentStats == null || getOnlineCtx().segmentStats.size()==0){
-			return "0";
-		}
-		Double area = segment.getCalculatedArea();
-		Long length = segment.getCalculatedLength();
-		Integer peaks =  segment.getPeakEntries().size();
-		
-		SegmentInnerData data = new SegmentInnerData(peaks,area,length);
-		Float distanceToMin = data.distance(getOnlineCtx().segmentStats.get(0));
-		Float distanceToMax = data.distance(getOnlineCtx().segmentStats.get(1));
-//		Float distanceToMax = data.distance(getOnlineCtx().segmentStats.get(2));
-
-		Integer argNum = VectorUtils.minArg(distanceToMin, distanceToMax/10, distanceToMax);
-		
-		log.debug("[getClassName]  toMin {0}, toMax:{1}; index {2};maxmax {3}",  
-				distanceToMin, distanceToMax/2, argNum, this.maxDistance);
-		
-		return "" + argNum;
-	}
 	
-	public void learn(ExtremeSegment segment){
-		Double area = segment.getCalculatedArea();
-		Long length = segment.getCalculatedLength();
-		Integer peaks =  segment.getPeakEntries().size();
-		SegmentInnerData innerData = new SegmentInnerData(peaks,area,length);
-		
-		log.debug("[learn]  area {0}, length:{1}, peaks: {2}",  
-				""+area, ""+length, peaks);
-		onlineCtx.semgnetFeatures.add(innerData);
-		
-		if(onlineCtx.segmentStats.size()==0){
-			onlineCtx.segmentStats.add(innerData.clone());
-			onlineCtx.segmentStats.add(innerData.clone());
-//			onlineCtx.segmentStats.add(new SegmentInnerData(peaks,area,length));
-		}
-		Float maxDistance = null;
-		SegmentInnerData maxData1 = null;
-//		Float maxDistance2 = null;
-		SegmentInnerData maxData2= null;
-		
-		for (SegmentInnerData iData : onlineCtx.semgnetFeatures) {
-			for (SegmentInnerData jData : onlineCtx.semgnetFeatures) {
-			Float distance = iData.distance(jData);
-//			if(minDistance == null || minDistance>distance){
-//				minDistance = distance;
-//				minData = iData;
-//			}
-				if(maxDistance == null || maxDistance<distance){
-					maxDistance = distance;
-					maxData1 = iData;
-					maxData2 = jData;
-				}
-			}
-		}
-		if(maxData1.compareTo(maxData2)>0){
-			onlineCtx.segmentStats.set(0, maxData1);
-			onlineCtx.segmentStats.set(1, maxData2);
-		}else {
-			onlineCtx.segmentStats.set(0, maxData2);
-			onlineCtx.segmentStats.set(1, maxData1);
-		}
-		this.maxDistance = maxDistance;
-		
-		
-	}
 	
 	protected ExtremeSegment createExtremeSegment(){
 		ExtremeSegment newExtremeSegment = new ExtremeSegment();

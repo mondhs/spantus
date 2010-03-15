@@ -50,6 +50,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 
 		}
 		if (lastSegment != null) {
+			String className = ctx.getClassName(lastSegment);
 			if (foundStartSegment && ctx.isIn(null)) {
 				return ClassifierRuleBaseEnum.action.startMarker;
 			} else if ((ctx.isIn(state.start) || ctx.isIn(null)) && foundPeakSegment) {
@@ -63,6 +64,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			} else if (!foundEndSegment && !foundStartSegment && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
 			} else if (foundEndSegment
+					&& !"0".equals(className)
 					 ) {//&& lastSegment.getCalculatedLength() > 40
 				return ClassifierRuleBaseEnum.action.endMarkerApproved;
 			}else if(foundEndSegment && ctx.isIn(state.segment)){
