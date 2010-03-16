@@ -18,6 +18,7 @@
 */
 package org.spantus.work.ui.container;
 
+import java.awt.dnd.DropTarget;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
@@ -161,6 +162,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 
 			setContentPane(spantusContentPane);
 		}
+		new DropTarget(getContentPane(), new WavDropTargetListener(getExecutionFacade(),getInfo()));
 		spantusContentPane.initialize();
 		contructTitle();
 		validate();
@@ -203,7 +205,6 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 //			jContentPane.setLayout(new BorderLayout());
 //			jContentPane.add(getToolBar(), BorderLayout.NORTH);
 //			jContentPane.add(getSampleRepresentationPanel(),BorderLayout.CENTER);
-//			new DropTarget(jContentPane, new WavDropTargetListener(getHandler(),getInfo()));
 //		}
 //		return jContentPane;
 //	}

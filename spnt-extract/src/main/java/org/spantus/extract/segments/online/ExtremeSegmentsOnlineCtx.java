@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum;
-import org.spantus.math.VectorUtils;
 
 public class ExtremeSegmentsOnlineCtx {
 	private LinkedList<ExtremeSegment> extremeSegments;
@@ -49,44 +48,6 @@ public class ExtremeSegmentsOnlineCtx {
 		return givenState.equals(getMarkerState());
 	}
 	
-	
-	
-	public String getClassName(ExtremeSegment segment){
-		if(segmentStats == null || segmentStats.size()==0){
-			return "0";
-		}
-		Double area = segment.getCalculatedArea();
-		Long length = segment.getCalculatedLength();
-		Integer peaks =  segment.getPeakEntries().size();
-
-//		if(0<=area && area< 34000){
-//			return "0";
-//		}else if(34000<area && area< 155000){
-//			return "1";
-//		}else if(155000<area && area< 1650000){
-//			return "2";
-//		}		
-	
-		
-		SegmentInnerData data = new SegmentInnerData(peaks,area,length);
-		Float distanceToMin = data.distance(segmentStats.get(0));
-		Float distanceToMax = data.distance(segmentStats.get(1));
-		Float avgDistance = (distanceToMax+distanceToMin)/2;
-//		Float distanceToMax = data.distance(getOnlineCtx().segmentStats.get(2));
-		if(distanceToMin.equals(distanceToMax)){
-			return "1";
-		}
-		Integer argNum = VectorUtils.minArg(distanceToMin, avgDistance/10, avgDistance*2);
-		
-//		if(0 != argNum){
-//			return argNum + "[" +distanceToMin+":"+distanceToMax+"]";
-//		}
-		
-//		log.debug("[getClassName]  toMin {0}, toMax:{1}; index {2};maxmax {3}",  
-//				distanceToMin, distanceToMax/2, argNum, this.maxDistance);
-		
-		return "" + argNum;
-	}
 	
 	
 	public ExtremeSegmentsOnlineCtx() {

@@ -2,16 +2,23 @@ package org.spantus.extract.segments.online.test;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
 import org.spantus.core.threshold.test.ExtremeClassifierTest;
 import org.spantus.extract.segments.online.ExtremeOnlineClassifier;
+import org.spantus.extract.segments.online.ExtremeOnlineClusterServiceImpl;
 import org.spantus.extract.segments.online.rule.ClassifierPostProcessServiceBaseImpl;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseServiceImpl;
 import org.spantus.logger.Logger;
-
+/**
+ *  
+ * @author Mindaugas Greibus
+ * 
+ * @since 0.2
+ * Created Mar 16, 2010
+ *
+ */
 public class ExtremeOnlineClassifierTest {
 
 	Logger log = Logger.getLogger(getClass());
@@ -60,7 +67,8 @@ public class ExtremeOnlineClassifierTest {
 	public void testOnlineMarkersExtractionRule() throws Exception {
 		ExtremeOnlineClassifier classifier = null;
 
-		ClassifierRuleBaseService ruleBaseService = new ClassifierRuleBaseServiceImpl();
+		ClassifierRuleBaseServiceImpl ruleBaseService = new ClassifierRuleBaseServiceImpl();
+		ruleBaseService.setClusterService(new ExtremeOnlineClusterServiceImpl());
 		
 		classifier  = feedData(ExtremeClassifierTest.empty, ruleBaseService);
 		Assert.assertEquals(0, classifier.getMarkSet().getMarkers().size());
@@ -101,6 +109,7 @@ public class ExtremeOnlineClassifierTest {
 		classifier.setExtractor(new MockOnlineExtractor());
 		classifier.getExtractor().getOutputValues().setSampleRate(100);//10ms
 		classifier.setRuleBaseService(ruleBase);
+		classifier.setClusterService(new ExtremeOnlineClusterServiceImpl());
 		FrameValues values = new FrameValues();
 		for (Float windowValue : data) {
 			values.add(windowValue);

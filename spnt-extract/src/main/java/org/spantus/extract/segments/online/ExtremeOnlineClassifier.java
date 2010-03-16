@@ -1,5 +1,6 @@
 package org.spantus.extract.segments.online;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.spantus.core.FrameValues;
@@ -25,6 +26,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 //	private ExtremeSegment extremeSegment;
 	private SignalStates lastState = null;
 	private ClassifierRuleBaseService ruleBaseService;
+	private ExtremeOnlineClusterService clusterService;
 	
 	public ExtremeOnlineClassifier() {
 		onlineCtx = new ExtremeSegmentsOnlineCtx();
@@ -198,7 +200,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			join(onlineCtx);
 			break;
 		case delete:
-			learn(last, onlineCtx);
+			getClusterService().learn(last, onlineCtx);
 			break;
 		default:
 			log.error("Not impl: " + anAction);
@@ -219,7 +221,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		Integer startSample = segment.getStartEntry().getIndex();
 		Long time = getOutputValues().indextoMils(startSample);
 		Marker marker = new Marker();
-		marker.setLabel("" + (ctx.getIndex()));
+		marker.setLabel("" + (segment.getStartEntry().getIndex()));
 		marker.setStart(time);
 		marker.getExtractionData().setStartSampleNum(startSample.longValue()-1);
 		setMarker(marker);
@@ -248,7 +250,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			 last = ctx.getCurrentSegment();
 		}
 		
-		learn(last,ctx);
+		getClusterService().learn(last,ctx);
 		
 		Integer startSample = last.getStartEntry().getIndex();
 		Integer endSample = last.getEndEntry().getIndex();
@@ -256,9 +258,10 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		Long startTime = getOutputValues().indextoMils(startSample);
 		Long endTime = getOutputValues().indextoMils(endSample);
 		
-		String className = onlineCtx.getClassName(last);
+		String className = getClusterService().getClassName(last, ctx);
 		
-		marker.setLabel(marker.getLabel()+":" + className);
+		marker.setLabel(MessageFormat.format("{0}:{1}",last.getStartEntry().getIndex() , className)
+				);
 		marker.setStart(startTime);
 		marker.setEnd(endTime);
 		marker.getExtractionData().setStartSampleNum(startSample.longValue()-1);
@@ -272,13 +275,15 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 				valid = false;
 			}
 		}
+		if("0".equals(className)){
+			valid = false;
+		}
 		
-//		if(last.getCalculatedLength()>90){
-//		if(last.getCalculatedArea()>90000){
 		if(valid){
-			className = onlineCtx.getClassName(last);
-			getMarkSet().getMarkers().add(marker);
 			log.debug("[endMarkerApproved] adding marker {0}", marker );
+			className = getClusterService().getClassName(last, ctx);
+			getMarkSet().getMarkers().add(marker);
+			
 		}
 		setMarker(null);
 		onlineCtx.setMarkerState(null);
@@ -293,7 +298,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		ExtremeSegment current = ctx.getCurrentSegment();
 		ExtremeSegment last = ctx.getExtremeSegments().getLast();
 		last.setEndEntry(current.getEndEntry());
-		last.getValues().addAll(last.getValues());
+		last.getValues().addAll(current.getValues());
 		last.getPeakEntries().add(current.getPeakEntry());
 		
 		Float maxValue = last.getPeakEntry().getValue();
@@ -307,6 +312,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		
 		ctx.setCurrentSegment(createExtremeSegment());
 		onlineCtx.getCurrentSegment().setStartEntry(current.getEndEntry().clone());
+		startMarker(onlineCtx);
 		
 	}
 	public void processSegment(ExtremeSegmentsOnlineCtx ctx){
@@ -336,55 +342,6 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	}
 	
 	
-	public void learn(ExtremeSegment segment, ExtremeSegmentsOnlineCtx ctx){
-		Double area = segment.getCalculatedArea();
-		Long length = segment.getCalculatedLength();
-		Integer peaks =  segment.getPeakEntries().size();
-		SegmentInnerData innerData = new SegmentInnerData(peaks,area,length);
-		if(area == 0D && length == 0 && peaks == 0){
-			return;
-		}
-		
-		log.debug("[learn]  area {0}, length:{1}, peaks: {2}",  
-				""+area, ""+length, peaks);
-		ctx.semgnetFeatures.add(innerData);
-		
-		if(ctx.segmentStats.size()==0){
-			ctx.segmentStats.add(innerData.clone());
-			ctx.segmentStats.add(innerData.clone());
-//			onlineCtx.segmentStats.add(new SegmentInnerData(peaks,area,length));
-		}
-		Float maxDistance = null;
-		SegmentInnerData maxData1 = null;
-//		Float maxDistance2 = null;
-		SegmentInnerData maxData2= null;
-		
-		for (SegmentInnerData iData : ctx.semgnetFeatures) {
-			for (SegmentInnerData jData : ctx.semgnetFeatures) {
-			Float distance = iData.distance(jData);
-//			if(minDistance == null || minDistance>distance){
-//				minDistance = distance;
-//				minData = iData;
-//			}
-				if(maxDistance == null || maxDistance<distance){
-					maxDistance = distance;
-					maxData1 = iData;
-					maxData2 = jData;
-				}
-			}
-		}
-		if(maxData1.compareTo(maxData2)>0){
-			ctx.segmentStats.set(0, maxData1);
-			ctx.segmentStats.set(1, maxData2);
-		}else {
-			ctx.segmentStats.set(0, maxData2);
-			ctx.segmentStats.set(1, maxData1);
-		}
-		ctx.maxDistance = maxDistance;
-		
-		
-	}
-	
 	
 	protected ExtremeSegment createExtremeSegment(){
 		ExtremeSegment newExtremeSegment = new ExtremeSegment();
@@ -407,6 +364,18 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 
 	public ExtremeSegmentsOnlineCtx getOnlineCtx() {
 		return onlineCtx;
+	}
+
+	public ExtremeOnlineClusterService getClusterService() {
+		if(clusterService == null){
+			clusterService = 
+				ExtremeOnClassifierServiceFactory.createClusterService();
+		}
+		return clusterService;
+	}
+
+	public void setClusterService(ExtremeOnlineClusterService clusterService) {
+		this.clusterService = clusterService;
 	}
 
 

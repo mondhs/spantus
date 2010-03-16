@@ -1,19 +1,28 @@
 package org.spantus.extract.segments.online.rule;
 
 import org.spantus.core.threshold.ExtremeSegment;
+import org.spantus.extract.segments.online.ExtremeOnClassifierServiceFactory;
+import org.spantus.extract.segments.online.ExtremeOnlineClusterService;
 import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum.state;
 import org.spantus.logger.Logger;
 
 /**
  * 
- * @author mondhs
+ * @author Mindaugas Greibus
  * 
+ * @since 0.2
+ * Created Mar 16, 2010
+ *
  */
 public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService {
 
 	Logger log = Logger.getLogger(getClass());
 
+	private ExtremeOnlineClusterService clusterService;
+	/**
+	 * test on rule base
+	 */
 	public String testOnRuleBase(ExtremeSegmentsOnlineCtx ctx) {
 		ClassifierRuleBaseEnum.action actionVal = testOnRuleBase(ctx,
 				Boolean.TRUE);
@@ -40,7 +49,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		if (lastSegment == null) {
 			if (segmentStart) {
 				return ClassifierRuleBaseEnum.action.startMarker;
-			}else if (ctx.isIn(state.start)) {
+			} else if (ctx.isIn(state.start)) {
 				return ClassifierRuleBaseEnum.action.startMarkerApproved;
 			} else if (segmentEnd && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.endMarkerApproved;
@@ -50,7 +59,11 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 
 		}
 		if (lastSegment != null) {
-			String className = ctx.getClassName(lastSegment);
+			String className = getClusterService().getClassName(lastSegment,
+					ctx);
+			Double lastArea = lastSegment.getCalculatedArea();
+			Double currentArea = currentSegment.getCalculatedArea();
+
 			if (segmentStart && ctx.isIn(null)) {
 				return ClassifierRuleBaseEnum.action.startMarker;
 			} else if ((ctx.isIn(state.start) || ctx.isIn(null)) && segmentPeak) {
@@ -61,20 +74,22 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			} else if (segmentEnd && currentSegment.isDecrease()
 					&& lastSegment.isDecrease()) {
 				return ClassifierRuleBaseEnum.action.join;
+//			} else if (segmentEnd && lastArea < currentArea
+//					) {
+//				return ClassifierRuleBaseEnum.action.join;				
 			} else if (!segmentEnd && !segmentStart && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
-			} else if (segmentEnd
-					&& !"0".equals(className)
-					 ) {//&& lastSegment.getCalculatedLength() > 40
+			} else if (segmentEnd && !"0".equals(className)) {
 				return ClassifierRuleBaseEnum.action.endMarkerApproved;
-			}else if(segmentEnd && ctx.isIn(state.segment)){
+			} else if (segmentEnd && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.delete;
-			}else if(ctx.isIn(state.segment)){
+			} else if (ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
 			}
-			log.debug("[testOnRuleBase] NC not handled area and length {0}, {1}",
-						currentSegment.getCalculatedArea(), currentSegment
-								.getCalculatedLength());
+			log.debug(
+					"[testOnRuleBase] NC not handled area and length {0}, {1}",
+					currentSegment.getCalculatedArea(), currentSegment
+							.getCalculatedLength());
 			return ClassifierRuleBaseEnum.action.processNoise;
 		}
 
@@ -86,5 +101,18 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 						.getCalculatedLength());
 
 		return ClassifierRuleBaseEnum.action.processNoise;
+	}
+
+	public ExtremeOnlineClusterService getClusterService() {
+		if (clusterService == null) {
+			clusterService = ExtremeOnClassifierServiceFactory
+					.createClusterService();
+
+		}
+		return clusterService;
+	}
+
+	public void setClusterService(ExtremeOnlineClusterService clusterService) {
+		this.clusterService = clusterService;
 	}
 }
