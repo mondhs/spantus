@@ -7,11 +7,10 @@ import java.util.Map;
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
-import org.spantus.logger.Logger;
 
 public class ExtremeOfflineClassifier extends AbstractThreshold {
 
-	 private Logger log = Logger.getLogger(ExtremeOfflineClassifier.class);
+//	 private Logger log = Logger.getLogger(ExtremeOfflineClassifier.class);
 
 	private ExtremeClassifierServiceImpl extremeThresholdService = new ExtremeClassifierServiceImpl();
 
@@ -21,7 +20,7 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 		getThresholdValues().clear();
 		ExtremeOfflineCtx extremeCtx = extremeThresholdService.calculateSegments(getOutputValues());
 		setMarkSet(extremeCtx.getMarkerSet());
-		refreshThreasholdInfo(getMarkSet());
+		getThresholdValues().addAll(refreshThreasholdInfo(getMarkSet(), getOutputValues()));
 
 	}
 	
@@ -34,11 +33,13 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 	 * 
 	 * @param markerSet
 	 */
-	public void refreshThreasholdInfo(MarkerSet markerSet) {
+	public static FrameValues refreshThreasholdInfo(MarkerSet markerSet, FrameValues values) {
 
 		Map<Integer,Float> changePoints = new HashMap<Integer,Float>();
 		
-		FrameValues threashoValues = getThresholdValues();
+		FrameValues threasholds = new FrameValues();
+		threasholds.setSampleRate(values.getSampleRate());
+		
 
 		for (Marker marker : markerSet.getMarkers()) {
 			int start = marker.getExtractionData().getStartSampleNum()
@@ -48,22 +49,23 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 							.intValue();
 			changePoints.put(start,1000F);
 			changePoints.put(end,1000F);
-			log.debug("[refreshThreasholdInfo] marker: {0}", marker);
+//			log.debug("[refreshThreasholdInfo] marker: {0}", marker);
 
 		}
 
-		Iterator<Float> valIter = getOutputValues().iterator();
+		Iterator<Float> valIter = values.iterator();
 		Float minValue= null;
-		for (int index = 0; index < getOutputValues().size(); index++) {
+		for (int index = 0; index < values.size(); index++) {
 			Float val = valIter.next();
 			minValue = minValue == null?val:minValue;
 			minValue = Math.min(minValue, val);
 			if (changePoints.containsKey(index)) {
-				threashoValues.add(val);
+				threasholds.add(val);
 			} else {
-				threashoValues.add(minValue);
+				threasholds.add(minValue);
 			}
 		}
+		return threasholds;
 	}
 
 	@Override

@@ -5,11 +5,10 @@ import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
-import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.core.threshold.test.ExtremeClassifierTest;
 import org.spantus.extract.segments.online.ExtremeOnlineClassifier;
-import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
 import org.spantus.extract.segments.online.rule.ClassifierPostProcessServiceBaseImpl;
+import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseServiceImpl;
 import org.spantus.logger.Logger;
 
@@ -18,7 +17,7 @@ public class ExtremeOnlineClassifierTest {
 	Logger log = Logger.getLogger(getClass());
 	
 	
-	@Test @Ignore("temporally")
+	@Test
 	public void testOnlineExtremeSegmentExtraction() throws Exception {
 		ExtremeOnlineClassifier classifier = null;
 		
@@ -38,7 +37,7 @@ public class ExtremeOnlineClassifierTest {
 
 	}
 	
-	@Test @Ignore("temporally")
+	@Test
 	public void testOnlineMarkersExtractionBase() throws Exception {
 		ExtremeOnlineClassifier classifier = null;
 
@@ -63,21 +62,21 @@ public class ExtremeOnlineClassifierTest {
 
 		ClassifierRuleBaseService ruleBaseService = new ClassifierRuleBaseServiceImpl();
 		
-//		classifier  = feedData(ExtremeClassifierTest.empty, ruleBaseService);
-//		Assert.assertEquals(0, classifier.getMarkSet().getMarkers().size());
+		classifier  = feedData(ExtremeClassifierTest.empty, ruleBaseService);
+		Assert.assertEquals(0, classifier.getMarkSet().getMarkers().size());
 //
-//		classifier = feedData(ExtremeClassifierTest.singleMax, ruleBaseService);
-//		Assert.assertEquals(1, classifier.getMarkSet().getMarkers().size());
-//		
-//		classifier = feedData(ExtremeClassifierTest.doubleMax, ruleBaseService);
-//		Assert.assertEquals(2, classifier.getMarkSet().getMarkers().size());
-
-		classifier = feedData(ExtremeClassifierTest.complexMinMax, ruleBaseService);
-		Assert.assertEquals(9, classifier.getExtremeSegments().size());
-		log.debug("[testOnlineMarkersExtractionRule] markers {0}",classifier.getMarkSet().getMarkers());
-//		
+		classifier = feedData(ExtremeClassifierTest.singleMax, ruleBaseService);
+		Assert.assertEquals(1, classifier.getMarkSet().getMarkers().size());
 		
-		Assert.assertEquals(3, classifier.getMarkSet().getMarkers().size());
+		classifier = feedData(ExtremeClassifierTest.doubleMax, ruleBaseService);
+		Assert.assertEquals(2, classifier.getMarkSet().getMarkers().size());
+//
+		classifier = feedData(ExtremeClassifierTest.complexMinMax, ruleBaseService);
+		Assert.assertEquals(8, classifier.getExtremeSegments().size());
+		log.debug("[testOnlineMarkersExtractionRule] markers {0}",classifier.getMarkSet().getMarkers());
+		
+		
+		Assert.assertEquals(4, classifier.getMarkSet().getMarkers().size());
 		
 
 	}

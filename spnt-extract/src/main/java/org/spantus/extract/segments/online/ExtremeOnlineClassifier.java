@@ -1,13 +1,12 @@
 package org.spantus.extract.segments.online;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.AbstractClassifier;
 import org.spantus.core.threshold.ExtremeEntry;
+import org.spantus.core.threshold.ExtremeOfflineClassifier;
 import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.core.threshold.IClassificationListener;
 import org.spantus.core.threshold.SegmentEvent;
@@ -48,15 +47,21 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	@Override
 	public void flush() {
 		super.flush();
-		
+		log.debug("[flush]");
 //		processResult(onlineCtx.getCurrentSegment());
-		if(onlineCtx.getCurrentSegment() != null){
-			ExtremeEntry entry = new ExtremeEntry(onlineCtx.getIndex().intValue(),
-				previous, SignalStates.min);
-			onlineCtx.getCurrentSegment().setEndEntry(entry);
-			onlineCtx.getExtremeSegments().add(onlineCtx.getCurrentSegment());
+		if(onlineCtx.getExtremeSegments().size()>0 &&
+				onlineCtx.getExtremeSegments().getLast() != null){
+			
+//			ExtremeEntry entry = new ExtremeEntry(onlineCtx.getIndex().intValue(),
+//				previous, SignalStates.min);
+//			onlineCtx.getCurrentSegment().setEndEntry(entry);
+//			onlineCtx.getExtremeSegments().add(onlineCtx.getCurrentSegment());
+			if(getMarker() == null){
+				startMarker(onlineCtx);
+			}
 			endMarkerApproved(onlineCtx);
 		}
+		getThresholdValues().addAll(ExtremeOfflineClassifier.refreshThreasholdInfo(getMarkSet(), getOutputValues()));
 //		log.debug("[flush] stats: {0};",getOnlineCtx().segmentStats);
 //		log.debug("[flush] features: {0}", getOnlineCtx().semgnetFeatures);
 //		for (SegmentInnerData data : getOnlineCtx().semgnetFeatures) {
@@ -77,7 +82,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			previous = value;
 			log.debug("[processValue]first: {0} on {1}",previous,index);
 			index = onlineCtx.increase();
-			getThresholdValues().add(getThresholdValues().getMinValue());
+//			getThresholdValues().add(getThresholdValues().getMinValue());
 			return;
 		}
 		if(lastState == null){
@@ -112,11 +117,11 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		//updated iterative data
 		previous = value;
 		 onlineCtx.increase();
-		 if(getMarker()==null){
-			 getThresholdValues().add(value);
-		 }else {
-			 getThresholdValues().add(getThresholdValues().getMinValue());
-		}
+//		 if(getMarker()==null){
+//			 getThresholdValues().add(value);
+//		 }else {
+//			 getThresholdValues().add(getThresholdValues().getMinValue());
+//		}
 	}
 	
 	protected void onMinFound(Integer index, float previous, float value){
@@ -193,7 +198,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			join(onlineCtx);
 			break;
 		case delete:
-			onlineCtx.learn(last);
+			learn(last, onlineCtx);
 			break;
 		default:
 			log.error("Not impl: " + anAction);
@@ -211,10 +216,12 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	
 	public void startMarker(ExtremeSegmentsOnlineCtx ctx){
 		ExtremeSegment segment = ctx.getCurrentSegment();
-		Long time = getOutputValues().indextoMils(segment.getStartEntry().getIndex());
+		Integer startSample = segment.getStartEntry().getIndex();
+		Long time = getOutputValues().indextoMils(startSample);
 		Marker marker = new Marker();
 		marker.setLabel("" + (ctx.getIndex()));
 		marker.setStart(time);
+		marker.getExtractionData().setStartSampleNum(startSample.longValue()-1);
 		setMarker(marker);
 		onlineCtx.setMarkerState(state.start);
 		for (IClassificationListener listener : getClassificationListeners()) {
@@ -241,27 +248,38 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			 last = ctx.getCurrentSegment();
 		}
 		
-		onlineCtx.learn(last);		
-		Long startTime = getOutputValues().indextoMils(last.getStartEntry().getIndex());
-		Long endTime = getOutputValues().indextoMils(last.getEndEntry().getIndex());
+		learn(last,ctx);
+		
+		Integer startSample = last.getStartEntry().getIndex();
+		Integer endSample = last.getEndEntry().getIndex();
+		
+		Long startTime = getOutputValues().indextoMils(startSample);
+		Long endTime = getOutputValues().indextoMils(endSample);
+		
 		String className = onlineCtx.getClassName(last);
+		
 		marker.setLabel(marker.getLabel()+":" + className);
 		marker.setStart(startTime);
-		marker.setEnd(endTime); 
+		marker.setEnd(endTime);
+		marker.getExtractionData().setStartSampleNum(startSample.longValue()-1);
+		marker.getExtractionData().setEndSampleNum(endSample.longValue()-1);
+		
+		boolean valid = true;
 		
 		for (Marker iMarker : getMarkSet().getMarkers()) {
 			if(iMarker.getEnd()>startTime){
 				log.error("conflicts " + iMarker + " with " + marker);
-				return;
+				valid = false;
 			}
 		}
 		
 //		if(last.getCalculatedLength()>90){
 //		if(last.getCalculatedArea()>90000){
-		
+		if(valid){
+			className = onlineCtx.getClassName(last);
 			getMarkSet().getMarkers().add(marker);
 			log.debug("[endMarkerApproved] adding marker {0}", marker );
-//		}
+		}
 		setMarker(null);
 		onlineCtx.setMarkerState(null);
 		for (IClassificationListener listener : getClassificationListeners()) {
@@ -317,6 +335,55 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 //		return newExtremeSegment;
 	}
 	
+	
+	public void learn(ExtremeSegment segment, ExtremeSegmentsOnlineCtx ctx){
+		Double area = segment.getCalculatedArea();
+		Long length = segment.getCalculatedLength();
+		Integer peaks =  segment.getPeakEntries().size();
+		SegmentInnerData innerData = new SegmentInnerData(peaks,area,length);
+		if(area == 0D && length == 0 && peaks == 0){
+			return;
+		}
+		
+		log.debug("[learn]  area {0}, length:{1}, peaks: {2}",  
+				""+area, ""+length, peaks);
+		ctx.semgnetFeatures.add(innerData);
+		
+		if(ctx.segmentStats.size()==0){
+			ctx.segmentStats.add(innerData.clone());
+			ctx.segmentStats.add(innerData.clone());
+//			onlineCtx.segmentStats.add(new SegmentInnerData(peaks,area,length));
+		}
+		Float maxDistance = null;
+		SegmentInnerData maxData1 = null;
+//		Float maxDistance2 = null;
+		SegmentInnerData maxData2= null;
+		
+		for (SegmentInnerData iData : ctx.semgnetFeatures) {
+			for (SegmentInnerData jData : ctx.semgnetFeatures) {
+			Float distance = iData.distance(jData);
+//			if(minDistance == null || minDistance>distance){
+//				minDistance = distance;
+//				minData = iData;
+//			}
+				if(maxDistance == null || maxDistance<distance){
+					maxDistance = distance;
+					maxData1 = iData;
+					maxData2 = jData;
+				}
+			}
+		}
+		if(maxData1.compareTo(maxData2)>0){
+			ctx.segmentStats.set(0, maxData1);
+			ctx.segmentStats.set(1, maxData2);
+		}else {
+			ctx.segmentStats.set(0, maxData2);
+			ctx.segmentStats.set(1, maxData1);
+		}
+		ctx.maxDistance = maxDistance;
+		
+		
+	}
 	
 	
 	protected ExtremeSegment createExtremeSegment(){

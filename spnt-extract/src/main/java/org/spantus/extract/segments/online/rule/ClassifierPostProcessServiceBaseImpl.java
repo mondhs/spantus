@@ -16,7 +16,9 @@ public class ClassifierPostProcessServiceBaseImpl implements
 		if(ctx.getExtremeSegments().size()==0){
 			return ClassifierRuleBaseEnum.action.processNoise.name();
 		}
-		if(ctx.getFoundEndSegment()){
+		if(ctx.getFoundStartSegment()){
+			return ClassifierRuleBaseEnum.action.startMarkerApproved.name();
+		}else if(ctx.getFoundEndSegment()){
 			//		ExtremeSegment segment = ctx.getExtremeSegments().getLast();
 			return ClassifierRuleBaseEnum.action.endMarkerApproved.name();
 		}
