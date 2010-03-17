@@ -3,8 +3,8 @@ package org.spantus.extract.segments.online;
 import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.logger.Logger;
 
-public class ExtremeOnlineClusterServiceStaticImpl implements
-		ExtremeOnlineClusterService {
+public class ExtremeOnlineClusterServiceStaticImpl 
+	extends ExtremeOnlineClusterServiceSimpleImpl {
 	Logger log = Logger.getLogger(ExtremeOnlineClusterServiceStaticImpl.class);
 
 	/**
@@ -27,6 +27,7 @@ public class ExtremeOnlineClusterServiceStaticImpl implements
 		float noiseLimit = 
 //			66000
 			3900
+//			500
 			;
 		float highLimit = 155000;
 		if (0 <= area && area < noiseLimit) {
@@ -41,17 +42,5 @@ public class ExtremeOnlineClusterServiceStaticImpl implements
 		throw new IllegalArgumentException("not impl: " + innerData);
 	}
 
-	public SegmentInnerData learn(ExtremeSegment segment,
-			ExtremeSegmentsOnlineCtx ctx) {
-		Double area = segment.getCalculatedArea();
-		Long length = segment.getCalculatedLength();
-		Integer peaks = segment.getPeakEntries().size();
-		SegmentInnerData innerData = new SegmentInnerData(peaks, area, length);
-		String className = getClassName(segment, ctx);
-		log
-				.debug("[learn]innerData: {0}; className: {1}", innerData,
-						className);
-		return null;
-	}
 
 }

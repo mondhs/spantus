@@ -275,9 +275,9 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 				valid = false;
 			}
 		}
-		if("0".equals(className)){
-			valid = false;
-		}
+//		if("0".equals(className)){
+//			valid = false;
+//		}
 		
 		if(valid){
 			log.debug("[endMarkerApproved] adding marker {0}", marker );
