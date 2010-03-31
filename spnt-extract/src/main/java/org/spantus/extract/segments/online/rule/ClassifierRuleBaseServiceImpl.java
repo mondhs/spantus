@@ -2,8 +2,8 @@ package org.spantus.extract.segments.online.rule;
 
 import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.extract.segments.online.ExtremeOnClassifierServiceFactory;
-import org.spantus.extract.segments.online.ExtremeOnlineClusterService;
 import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
+import org.spantus.extract.segments.online.cluster.ExtremeOnlineClusterService;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum.state;
 import org.spantus.logger.Logger;
 
@@ -36,6 +36,8 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		boolean segmentEnd = ctx.getFoundEndSegment();
 		boolean segmentStart = ctx.getFoundStartSegment();
 		boolean segmentPeak = ctx.getFoundPeakSegment();
+		boolean noiseClass = true;
+		
 
 		if (ctx.getExtremeSegments().size() > 0) {
 			lastSegment = ctx.getExtremeSegments().getLast();
@@ -61,25 +63,47 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		if (lastSegment != null) {
 			String className = getClusterService().getClassName(lastSegment,
 					ctx);
-			Double lastArea = lastSegment.getCalculatedArea();
-			Double currentArea = currentSegment.getCalculatedArea();
+//			Double lastArea = lastSegment.getCalculatedArea();
+//			Double currentArea = currentSegment.getCalculatedArea();
+			Integer lastPeak = lastSegment.getPeakEntries().size();
+			Integer currentPeak = currentSegment.getPeakEntries().size();
+			Long lastLength = lastSegment.getCalculatedLength();
+			Long currentLength = currentSegment.getCalculatedLength();
+			noiseClass = "0".equals(className);
 
+			
 			if (segmentStart && ctx.isIn(null)) {
 				return ClassifierRuleBaseEnum.action.startMarker;
 			} else if ((ctx.isIn(state.start) || ctx.isIn(null)) && segmentPeak) {
 				return ClassifierRuleBaseEnum.action.startMarkerApproved;
 			} else if (segmentEnd && currentSegment.isIncrease()
-					&& lastSegment.isIncrease()) {
+					&& lastSegment.isIncrease() 
+//					&& !noiseClass
+					) {
 				return ClassifierRuleBaseEnum.action.join;
 			} else if (segmentEnd && currentSegment.isDecrease()
-					&& lastSegment.isDecrease()) {
+					&& lastSegment.isDecrease() 
+//					&& !noiseClass
+					) {
 				return ClassifierRuleBaseEnum.action.join;
-//			} else if (segmentEnd && lastArea < currentArea
+//			} else if (segmentEnd && currentSegment.isDecrease()
+//					&& lastSegment.isIncrease()
+//					&& lastLength >20 && currentLength > 20) {
+//				return ClassifierRuleBaseEnum.action.join;
+			} else if (segmentEnd && currentPeak == lastPeak
+			) {
+				return ClassifierRuleBaseEnum.action.join;	
+
+			} else if (segmentEnd && lastLength == currentLength
+					) {
+				return ClassifierRuleBaseEnum.action.join;	
+//			} else if (segmentEnd && lastLength<50 && currentLength < 50
+//					&& !noiseClass
 //					) {
-//				return ClassifierRuleBaseEnum.action.join;				
+//				return ClassifierRuleBaseEnum.action.join;	
 			} else if (!segmentEnd && !segmentStart && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
-			} else if (segmentEnd && !"0".equals(className)) {
+			} else if (segmentEnd && !noiseClass) {
 				return ClassifierRuleBaseEnum.action.endMarkerApproved;
 			} else if (segmentEnd && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.delete;

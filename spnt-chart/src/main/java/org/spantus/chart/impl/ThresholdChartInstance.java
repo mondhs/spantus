@@ -112,7 +112,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		Color currentColor = ((Color) getCtx().getStyle().getPaint());
 		Color currentColorTransparent = new Color(
 				currentColor.getRGB() & 0x00FFFFFF | 0x33000000, true);
-		long time = System.currentTimeMillis();
+//		long time = System.currentTimeMillis();
 		if(polylygonY!=null){
 			g.drawPolygon(polylygonY);
 		}

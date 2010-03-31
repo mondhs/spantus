@@ -75,9 +75,9 @@ public class FFTExtractor extends AbstractExtractor3D {
 		
 		List<Float> fftOutput = MathServicesFactory.createFFTService().calculateFFTMagnitude(calculatedTempValues);
 //		upperLimit = Math.min(upperLimit, fftOutput.size());
-		int upperLimit = (int)(7000*fftOutput.size()/sampleRate);
+		int upperLimit = (int)(5000*fftOutput.size()/sampleRate);
 		upperLimit = Math.min(upperLimit, fftOutput.size());
-		fftOutput = fftOutput.subList(1, upperLimit);
+		fftOutput = fftOutput.subList(2, upperLimit);
 		calculatedValues.add(
 				fftOutput
 		);

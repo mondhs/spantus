@@ -22,6 +22,10 @@ public class SegmentInnerData implements Serializable, Cloneable, Comparable<Seg
 		this.length = length;
 	}
 	
+	public Boolean getIsNull(){
+		return area == 0D && length == 0 && peaks == 0;
+	}
+	
 	public void updateAsMin(Integer peaks, Double area, Long length){
 		this.peaks = Math.min(this.peaks, peaks);
 		this.area = Math.min(this.area, area);
@@ -77,5 +81,31 @@ public class SegmentInnerData implements Serializable, Cloneable, Comparable<Seg
 		int lengthDiff = o.length>this.length?1:-1;
 		int peaksDiff = o.peaks>this.peaks?1:-1;
 		return areaDiff+lengthDiff+peaksDiff;
+	}
+
+	//getters and setters
+	
+	public Integer getPeaks() {
+		return peaks;
+	}
+
+	public void setPeaks(Integer peaks) {
+		this.peaks = peaks;
+	}
+
+	public Double getArea() {
+		return area;
+	}
+
+	public void setArea(Double area) {
+		this.area = area;
+	}
+
+	public Long getLength() {
+		return length;
+	}
+
+	public void setLength(Long length) {
+		this.length = length;
 	}
 }

@@ -1,13 +1,18 @@
-package org.spantus.extract.segments.online;
+package org.spantus.extract.segments.online.cluster;
 
 import org.spantus.core.threshold.ExtremeSegment;
+import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
+import org.spantus.extract.segments.online.SegmentInnerData;
 import org.spantus.logger.Logger;
 import org.spantus.math.VectorUtils;
 
-public class ExtremeOnlineClusterServiceImpl implements ExtremeOnlineClusterService{
+public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterServiceSimpleImpl{
 
 	Logger log = Logger.getLogger(ExtremeOnlineClusterServiceImpl.class);
-	
+	/**
+	 * 
+	 */
+	@Override
 	public String getClassName(ExtremeSegment segment,
 			ExtremeSegmentsOnlineCtx ctx) {
 		if(ctx.segmentStats == null || ctx.segmentStats.size()==0){
@@ -16,7 +21,9 @@ public class ExtremeOnlineClusterServiceImpl implements ExtremeOnlineClusterServ
 		Double area = segment.getCalculatedArea();
 		Long length = segment.getCalculatedLength();
 		Integer peaks =  segment.getPeakEntries().size();
-
+		if(length<30){
+			return "0";
+		}
 		
 		SegmentInnerData data = new SegmentInnerData(peaks,area,length);
 		Float distanceToMin = data.distance(ctx.segmentStats.get(0));
@@ -26,29 +33,32 @@ public class ExtremeOnlineClusterServiceImpl implements ExtremeOnlineClusterServ
 		if(distanceToMin.equals(distanceToMax)){
 			return "1";
 		}
-		Integer argNum = VectorUtils.minArg(distanceToMin, avgDistance/20, avgDistance/10);
+		Float toOneClass = avgDistance/20;
+		Float toTwoClass = distanceToMax;
+		Integer argNum = VectorUtils.minArg(distanceToMin, toOneClass, toTwoClass);
 		
 //		if(0 != argNum){
 //			return argNum + "[" +distanceToMin+":"+distanceToMax+"]";
 //		}
 		
-//		log.debug("[getClassName]  toMin {0}, toMax:{1}; index {2};maxmax {3}",  
-//				distanceToMin, distanceToMax/2, argNum, this.maxDistance);
+//		log.debug("[getClassName]  to0: {0}, to1: {1}; to2: {2}; toMax:{3}; index {4};",  
+//				distanceToMin, toOneClass, toTwoClass, distanceToMax, argNum);
 		
 		return "" + argNum;
 	}
-
+	/**
+	 * 
+	 */
+	@Override
 	public SegmentInnerData learn(ExtremeSegment segment, ExtremeSegmentsOnlineCtx ctx){
-		Double area = segment.getCalculatedArea();
-		Long length = segment.getCalculatedLength();
-		Integer peaks =  segment.getPeakEntries().size();
-		SegmentInnerData innerData = new SegmentInnerData(peaks,area,length);
-		if(area == 0D && length == 0 && peaks == 0){
+//		Double area = segment.getCalculatedArea();
+//		Long length = segment.getCalculatedLength();
+//		Integer peaks =  segment.getPeakEntries().size();
+		SegmentInnerData innerData = super.learn(segment, ctx);
+		if(innerData.getIsNull()){
 			return innerData;
 		}
-		
-		log.debug("[learn]  area {0}, length:{1}, peaks: {2}",  
-				""+area, ""+length, peaks);
+
 		ctx.semgnetFeatures.add(innerData);
 		
 		if(ctx.segmentStats.size()==0){
@@ -83,6 +93,8 @@ public class ExtremeOnlineClusterServiceImpl implements ExtremeOnlineClusterServ
 			ctx.segmentStats.set(1, maxData1);
 		}
 		ctx.maxDistance = maxDistance;
+		log.debug("[learn]  maxDistance: {0};",  
+				maxDistance);
 		return innerData;
 		
 	}

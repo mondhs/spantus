@@ -1,6 +1,8 @@
-package org.spantus.extract.segments.online;
+package org.spantus.extract.segments.online.cluster;
 
 import org.spantus.core.threshold.ExtremeSegment;
+import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
+import org.spantus.extract.segments.online.SegmentInnerData;
 /**
  * 
  * @author Mindaugas Greibus

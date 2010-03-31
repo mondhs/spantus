@@ -166,7 +166,8 @@ public class WavDropTargetListener implements DropTargetListener {
 	 * @return
 	 */
 	protected boolean isSupportedFile(URL file) {
-		return file != null && file.getFile().endsWith(".wav");
+		return file != null && 
+		( file.getFile().endsWith(".wav") || file.getFile().endsWith(".txt"));
 	}
 	/**
 	 * 

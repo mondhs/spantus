@@ -84,6 +84,15 @@ public class WavformExtractor extends AbstractExtractor3D {
 		
 		Context ctx = new Context();
 		
+		//if single value in the window, put got sample as min and max
+		if(window.size() == 1){
+			FrameValues fv = new FrameValues();
+			fv.addAll(window);
+			fv.addAll(window);
+			calculatedValues.add(fv);	
+			return calculatedValues;	
+		}
+		
 		int chunkSize  = (window.size()/devideInto)+1;
 		ctx.chunkSize = chunkSize;
 		

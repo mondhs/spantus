@@ -12,6 +12,7 @@ import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.core.threshold.IClassificationListener;
 import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.core.threshold.ExtremeEntry.SignalStates;
+import org.spantus.extract.segments.online.cluster.ExtremeOnlineClusterService;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum.state;
@@ -45,33 +46,29 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			processValue(value);
 		}
 	}
-	
+	/**
+	 * 
+	 */
 	@Override
 	public void flush() {
 		super.flush();
 		log.debug("[flush]");
-//		processResult(onlineCtx.getCurrentSegment());
 		if(onlineCtx.getExtremeSegments().size()>0 &&
 				onlineCtx.getExtremeSegments().getLast() != null){
 			
-//			ExtremeEntry entry = new ExtremeEntry(onlineCtx.getIndex().intValue(),
-//				previous, SignalStates.min);
-//			onlineCtx.getCurrentSegment().setEndEntry(entry);
-//			onlineCtx.getExtremeSegments().add(onlineCtx.getCurrentSegment());
 			if(getMarker() == null){
 				startMarker(onlineCtx);
 			}
 			endMarkerApproved(onlineCtx);
 		}
+		StringBuilder sb = new StringBuilder();
+		for (SegmentInnerData innerData : onlineCtx.semgnetFeatures) {
+			sb.append(innerData.getArea()).append(",").append(innerData.getLength())
+			.append(",").append(innerData.getPeaks())
+			.append("\n");
+		}
+		log.error("\n" + sb);
 		getThresholdValues().addAll(ExtremeOfflineClassifier.refreshThreasholdInfo(getMarkSet(), getOutputValues()));
-//		log.debug("[flush] stats: {0};",getOnlineCtx().segmentStats);
-//		log.debug("[flush] features: {0}", getOnlineCtx().semgnetFeatures);
-//		for (SegmentInnerData data : getOnlineCtx().semgnetFeatures) {
-//			log.debug("[flush] disance to min: {0};", data.distance(getOnlineCtx().segmentStats.get(0)));
-//			log.debug("[flush] disance to avg: {0};", data.distance(getOnlineCtx().segmentStats.get(1)));
-//			log.debug("[flush] disance to max: {0};", data.distance(getOnlineCtx().segmentStats.get(2)));
-//
-//		}
 	}
 	/**
 	 * 
@@ -127,8 +124,8 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	}
 	
 	protected void onMinFound(Integer index, float previous, float value){
-		log.debug("[onMinFound]found min on {0} value {1}->{2}",
-				index - 1, previous, value);
+//		log.debug("[onMinFound]found min on {0} value {1}->{2}",
+//				index - 1, previous, value);
 		
 		if(onlineCtx.getCurrentSegment() == null){
 			//first min
@@ -166,18 +163,18 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			last = onlineCtx.getExtremeSegments().getLast();
 		}
 //		log.debug("[processResult]+++");
-		log.debug("[processResult] on {2} [{3}]; current: {1}; segments: {0}; ", 
-				last, 
-				onlineCtx.getCurrentSegment(), 
-				onlineCtx.getIndex(),
-				onlineCtx.getMarkerState());
+//		log.debug("[processResult] on {2} [{3}]; current: {1}; segments: {0}; ", 
+//				last, 
+//				onlineCtx.getCurrentSegment(), 
+//				onlineCtx.getIndex(),
+//				onlineCtx.getMarkerState());
 		
 		String actionStr = getRuleBaseService().testOnRuleBase(onlineCtx);
 		ClassifierRuleBaseEnum.action anAction = null;
 		if(StringUtils.hasText(actionStr)){
 			anAction = ClassifierRuleBaseEnum.action.valueOf(actionStr);			
 		}
-		log.debug("[processResult]>>>action {0}", anAction);
+//		log.debug("[processResult]>>>action {0}", anAction);
 		switch (anAction) {
 		case startMarker:
 			startMarker(onlineCtx);
@@ -254,8 +251,10 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		
 		Integer startSample = last.getStartEntry().getIndex();
 		Integer endSample = last.getEndEntry().getIndex();
+		Long step = getOutputValues().indextoMils(1);
+//		step /=2;
 		
-		Long startTime = getOutputValues().indextoMils(startSample);
+		Long startTime = getOutputValues().indextoMils(startSample)+step;
 		Long endTime = getOutputValues().indextoMils(endSample);
 		
 		String className = getClusterService().getClassName(last, ctx);

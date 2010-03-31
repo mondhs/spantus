@@ -48,9 +48,17 @@ public class NoiseLevelExtractor extends AbstractSpectralExtractor {
 		Float max = -Float.MAX_VALUE;
 		for (Float value : window) {
 			max = Math.max(max, estimate(value));
-//			rtnValues.add(estimate(value));
 		}
 		rtnValues.add(max);
+
+		
+//		float windowVal = 0f;
+//		for (Float float1 : window) {
+//			Float val = (float1 - max); 
+//			val = (float)Math.pow(val, 2);
+//			windowVal += val;
+//		}
+//		rtnValues.add(windowVal);
 		return rtnValues;
 	}
 
