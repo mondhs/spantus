@@ -19,7 +19,7 @@ public class ExtremeClassifierTest{
 	
 	public static final Float[] empty = new Float[]{};
 	public static final Float[] singleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F}; 
-	public static final Float[] doubleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F};
+	public static final Float[] doubleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F, 1F, 2F, 3.1F, 2F, 1.5F, 1F, 0F, 0F};
 	/**
 	 * 
 	 * 
@@ -69,7 +69,7 @@ public class ExtremeClassifierTest{
 		assertMaxState(4, extremes);
 		assertMinState(7, extremes);
 		assertMaxState(11, extremes);
-		assertMinState(14, extremes);
+		assertMinState(15, extremes);
 	}
 	/**
 	 * 

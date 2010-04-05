@@ -62,7 +62,7 @@ public class ExtremeOnlineClassifierTest {
 		Assert.assertEquals(2, classifier.getMarkSet().getMarkers().size());
 
 		classifier = feedData(ExtremeClassifierTest.complexMinMax, ruleBaseService);
-		Assert.assertEquals(11, classifier.getMarkSet().getMarkers().size());
+		Assert.assertEquals(6, classifier.getMarkSet().getMarkers().size());
 
 	}
 	/**
@@ -80,19 +80,21 @@ public class ExtremeOnlineClassifierTest {
 		
 		classifier  = feedData(ExtremeClassifierTest.empty, ruleBaseService, clusterService);
 		Assert.assertEquals(0, classifier.getMarkSet().getMarkers().size());
-//
+		
 		classifier = feedData(ExtremeClassifierTest.singleMax, ruleBaseService, clusterService);
 		Assert.assertEquals(1, classifier.getMarkSet().getMarkers().size());
 		
+		
+		
 		classifier = feedData(ExtremeClassifierTest.doubleMax, ruleBaseService, clusterService);
-		Assert.assertEquals(2, classifier.getMarkSet().getMarkers().size());
-//
+		Assert.assertEquals(1, classifier.getMarkSet().getMarkers().size());
+
 		classifier = feedData(ExtremeClassifierTest.complexMinMax, ruleBaseService, clusterService);
-		Assert.assertEquals(8, classifier.getExtremeSegments().size());
+		Assert.assertEquals(5, classifier.getExtremeSegments().size());
 		log.debug("[testOnlineMarkersExtractionRule] markers {0}",classifier.getMarkSet().getMarkers());
 		
 		
-		Assert.assertEquals(4, classifier.getMarkSet().getMarkers().size());
+		Assert.assertEquals(3, classifier.getMarkSet().getMarkers().size());
 		
 
 	}

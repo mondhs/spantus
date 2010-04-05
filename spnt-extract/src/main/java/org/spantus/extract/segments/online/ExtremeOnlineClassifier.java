@@ -61,13 +61,15 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			}
 			endMarkerApproved(onlineCtx);
 		}
-		StringBuilder sb = new StringBuilder();
-		for (SegmentInnerData innerData : onlineCtx.semgnetFeatures) {
-			sb.append(innerData.getArea()).append(",").append(innerData.getLength())
-			.append(",").append(innerData.getPeaks())
-			.append("\n");
-		}
-		log.error("\n" + sb);
+//		if(log.isDebugMode()){
+//			StringBuilder sb = new StringBuilder();
+//			for (SegmentInnerData innerData : onlineCtx.semgnetFeatures) {
+//				sb.append(innerData.getArea()).append(",").append(innerData.getLength())
+//				.append(",").append(innerData.getPeaks())
+//				.append("\n");
+//			}
+//			log.error("\n" + sb);
+//		}
 		getThresholdValues().addAll(ExtremeOfflineClassifier.refreshThreasholdInfo(getMarkSet(), getOutputValues()));
 	}
 	/**
@@ -200,7 +202,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			getClusterService().learn(last, onlineCtx);
 			break;
 		default:
-			log.error("Not impl: " + anAction);
+			log.error("[processResult]Not impl: " + anAction);
 			throw new IllegalArgumentException("Not impl: " + anAction);
 		}
 		log.debug("[processResult]---");
@@ -270,7 +272,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		
 		for (Marker iMarker : getMarkSet().getMarkers()) {
 			if(iMarker.getEnd()>startTime){
-				log.error("conflicts " + iMarker + " with " + marker);
+				log.error("[endMarkerApproved]conflicts " + iMarker + " with " + marker);
 				valid = false;
 			}
 		}
