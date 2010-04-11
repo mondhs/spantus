@@ -63,13 +63,13 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		if (lastSegment != null) {
 			String className = getClusterService().getClassName(lastSegment,
 					ctx);
-//			Double lastArea = lastSegment.getCalculatedArea();
-//			Double currentArea = currentSegment.getCalculatedArea();
+			Double lastArea = lastSegment.getCalculatedArea();
+			Double currentArea = currentSegment.getCalculatedArea();
 			Integer lastPeak = lastSegment.getPeakEntries().size();
 			Integer currentPeak = currentSegment.getPeakEntries().size();
 			Long lastLength = lastSegment.getCalculatedLength();
 			Long currentLength = currentSegment.getCalculatedLength();
-			noiseClass = "0".equals(className);
+//			noiseClass = "0".equals(className);
 
 			
 			if (segmentStart && ctx.isIn(null)) {
@@ -87,28 +87,37 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 					) {
 				return ClassifierRuleBaseEnum.action.join;
 //			} else if (segmentEnd && currentSegment.isDecrease()
+//					&& lastSegment.isIncrease() 
+//					&& lastArea>currentArea/2
+//					) {
+//				return ClassifierRuleBaseEnum.action.join;				
+//			} else if (segmentEnd && currentSegment.isDecrease()
 //					&& lastSegment.isIncrease()
 //					&& lastLength >20 && currentLength > 20) {
 //				return ClassifierRuleBaseEnum.action.join;
-			} else if (segmentEnd && currentPeak == lastPeak
-			) {
-				return ClassifierRuleBaseEnum.action.join;	
+//			} else if (segmentEnd && currentPeak == lastPeak
+//			) {
+//				return ClassifierRuleBaseEnum.action.join;	
 
-			} else if (segmentEnd && lastLength == currentLength
-					) {
-				return ClassifierRuleBaseEnum.action.join;	
+//			} else if (segmentEnd && lastLength == currentLength
+//					) {
+//				return ClassifierRuleBaseEnum.action.join;	
 //			} else if (segmentEnd && lastLength<50 && currentLength < 50
 //					&& !noiseClass
 //					) {
 //				return ClassifierRuleBaseEnum.action.join;	
 			} else if (!segmentEnd && !segmentStart && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
-			} else if (segmentEnd && !noiseClass) {
+			} else if (segmentEnd) {
 				return ClassifierRuleBaseEnum.action.endMarkerApproved;
 			} else if (segmentEnd && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.delete;
 			} else if (ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
+			}else if (segmentStart) { 
+				return ClassifierRuleBaseEnum.action.processNoise;
+			}else {
+				
 			}
 			log.debug(
 					"[testOnRuleBase] NC not handled area and length {0}, {1}",

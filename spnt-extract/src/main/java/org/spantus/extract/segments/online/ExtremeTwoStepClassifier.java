@@ -18,11 +18,17 @@ public class ExtremeTwoStepClassifier extends ExtremeOnlineClassifier {
 	@Override
 	public void flush() {
 		super.flush();
+		
+		log.debug("[flush][[[[[[[[[[[[[[[[[[[[[[[[[ recalculating ]]]]]]]]]]]]]]]]]]]]]]]]]]]]");
+		
 		getThresholdValues().clear();
 		getOnlineCtx().setIndex(0);
 		getMarkSet().getMarkers().clear(); 
 		getOnlineCtx().getExtremeSegments().clear();
+		getOnlineCtx().setCurrentSegment(null);
 
+		getOnlineCtx().setPrevious(Float.MAX_VALUE);
+		
 		for (Float value : getOutputValues()) {
 			processValue(value);
 		}

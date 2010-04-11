@@ -23,7 +23,7 @@ import org.spantus.logger.Logger;
  */
 public class ExtremeOnlineClassifierTest {
 
-	Logger log = Logger.getLogger(getClass());
+	Logger log = Logger.getLogger(getClass());	
 	
 	
 	@Test
@@ -90,7 +90,7 @@ public class ExtremeOnlineClassifierTest {
 		Assert.assertEquals(1, classifier.getMarkSet().getMarkers().size());
 
 		classifier = feedData(ExtremeClassifierTest.complexMinMax, ruleBaseService, clusterService);
-		Assert.assertEquals(4, classifier.getExtremeSegments().size());
+		Assert.assertEquals(5, classifier.getExtremeSegments().size());
 		log.debug("[testOnlineMarkersExtractionRule] markers {0}",classifier.getMarkSet().getMarkers());
 		
 		

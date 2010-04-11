@@ -12,10 +12,14 @@ public class ExtremeSegmentsOnlineCtx {
 	private ExtremeSegment currentSegment;
 	private Integer index=0;
 	private ClassifierRuleBaseEnum.state markerState;
+	private Float previous;
+
 	
 	public LinkedList<SegmentInnerData> semgnetFeatures = new LinkedList<SegmentInnerData>();
 	public List<SegmentInnerData> segmentStats = new ArrayList<SegmentInnerData>(3);
 	public Float maxDistance;
+
+
 	
 	public Integer increase(){
 		return ++index;
@@ -86,6 +90,12 @@ public class ExtremeSegmentsOnlineCtx {
 	}
 	public void setIndex(Integer index) {
 		this.index = index;
+	}
+	public Float getPrevious() {
+		return previous;
+	}
+	public void setPrevious(Float previous) {
+		this.previous = previous;
 	}
 
 }

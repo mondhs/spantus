@@ -48,11 +48,11 @@ public class SegmentInnerData implements Serializable, Cloneable, Comparable<Seg
 	
 	public static Float distance(SegmentInnerData d1, SegmentInnerData d2){
 		Double areaDiff = d1.area-d2.area;
-		Long lengthDiff = d1.length-d2.length;
-		Integer peaksDiff = d1.peaks-d2.peaks;
+//		Long lengthDiff = d1.length-d2.length;
+//		Integer peaksDiff = d1.peaks-d2.peaks;
 		Double distanceSum = areaDiff*areaDiff;
-		distanceSum += lengthDiff*lengthDiff;
-		distanceSum += peaksDiff*peaksDiff;
+//		distanceSum += lengthDiff*lengthDiff;
+//		distanceSum += peaksDiff*peaksDiff;
 		distanceSum = Math.sqrt(distanceSum);
 		return distanceSum.floatValue();
 	}

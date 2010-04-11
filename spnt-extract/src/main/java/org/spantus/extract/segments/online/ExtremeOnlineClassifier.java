@@ -22,7 +22,6 @@ import org.spantus.utils.StringUtils;
 public class ExtremeOnlineClassifier extends AbstractClassifier{
 
 	private Logger log = Logger.getLogger(ExtremeOnlineClassifier.class); 
-	private Float previous;
 	private ExtremeSegmentsOnlineCtx onlineCtx;
 //	private ExtremeSegment extremeSegment;
 	private SignalStates lastState = null;
@@ -79,32 +78,32 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	 */
 	protected void processValue(Float value) {
 		Integer index = onlineCtx.getIndex();
-		if (previous == null) {
-			previous = value;
-			log.debug("[processValue]first: {0} on {1}",previous,index);
+		if (onlineCtx.getPrevious() == null) {
+			onlineCtx.setPrevious(value);
+			log.debug("[processValue]first: {0} on {1}",onlineCtx.getPrevious(), index);
 			index = onlineCtx.increase();
 //			getThresholdValues().add(getThresholdValues().getMinValue());
 			return;
 		}
 		if(lastState == null){
-			if (value > previous) {
+			if (value > onlineCtx.getPrevious()) {
 				log.debug("[processValue]found 1st min");
 				lastState = SignalStates.min;
-				onMinFound(index, previous, value);
-			}else if(value < previous){
+				onMinFound(index, onlineCtx.getPrevious(), value);
+			}else if(value < onlineCtx.getPrevious()){
 				log.debug("[processValue]found 1st max");
-				onMaxFound(index, previous, value);
+				onMaxFound(index, onlineCtx.getPrevious(), value);
 				lastState = SignalStates.max;
 			}
 		}else if(SignalStates.min.equals(lastState)){
-			if(value <= previous){
+			if(value <= onlineCtx.getPrevious()){
 				lastState = SignalStates.max;
-				onMaxFound(index, previous, value);
+				onMaxFound(index, onlineCtx.getPrevious(), value);
 			}
 		}else if(SignalStates.max.equals(lastState)){
-			if(value >= previous){
+			if(value >= onlineCtx.getPrevious()){
 				lastState = SignalStates.min;
-				onMinFound(index, previous, value);
+				onMinFound(index, onlineCtx.getPrevious(), value);
 			}
 		}
 		if(onlineCtx.getCurrentSegment() != null){
@@ -116,7 +115,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		updateLastExtremeSegment(onlineCtx, onlineCtx.getCurrentSegment());
 		
 		//updated iterative data
-		previous = value;
+		onlineCtx.setPrevious(value);
 		 onlineCtx.increase();
 //		 if(getMarker()==null){
 //			 getThresholdValues().add(value);
@@ -165,18 +164,18 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			last = onlineCtx.getExtremeSegments().getLast();
 		}
 //		log.debug("[processResult]+++");
-//		log.debug("[processResult] on {2} [{3}]; current: {1}; segments: {0}; ", 
-//				last, 
-//				onlineCtx.getCurrentSegment(), 
-//				onlineCtx.getIndex(),
-//				onlineCtx.getMarkerState());
+		log.debug("[processResult] on {2} [{3}]; current: {1}; segments: {0}; ", 
+				last, 
+				onlineCtx.getCurrentSegment(), 
+				onlineCtx.getIndex(),
+				onlineCtx.getMarkerState());
 		
 		String actionStr = getRuleBaseService().testOnRuleBase(onlineCtx);
 		ClassifierRuleBaseEnum.action anAction = null;
 		if(StringUtils.hasText(actionStr)){
 			anAction = ClassifierRuleBaseEnum.action.valueOf(actionStr);			
 		}
-//		log.debug("[processResult]>>>action {0}", anAction);
+		log.debug("[processResult]>>>action {0}", anAction);
 		switch (anAction) {
 		case startMarker:
 			startMarker(onlineCtx);

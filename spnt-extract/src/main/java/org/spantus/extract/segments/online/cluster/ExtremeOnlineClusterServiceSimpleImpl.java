@@ -21,8 +21,8 @@ public class ExtremeOnlineClusterServiceSimpleImpl implements ExtremeOnlineClust
 		Integer peaks = segment.getPeakEntries().size();
 		SegmentInnerData innerData = new SegmentInnerData(peaks, area, length);
 		String className = getClassName(segment, ctx);
-		log.debug("[learn]innerData: {0}; className: {1}", innerData,
-						className);
+//		log.debug("[learn]innerData: {0}; className: {1}", innerData,
+//						className);
 		return innerData;
 	}
 
