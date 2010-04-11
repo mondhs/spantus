@@ -2,17 +2,24 @@ package org.spantus.work.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioFactory;
-import org.spantus.core.io.MergeMultipleAudioReader;
-import org.spantus.core.io.MergedWraperExtractorReader;
+import org.spantus.core.io.AudioReader;
+import org.spantus.core.io.AudioUtil;
+import org.spantus.core.io.ByteListInputStream;
 import org.spantus.core.io.SignalReader;
 import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorConfigUtil;
@@ -57,26 +64,62 @@ public class CalculateFeaturesServiceImpl{
 	/**
 	 * Merge streams and calculate features
 	 */
-	public MergeMultipleAudioReader merge(URL mainSignal, URL noiseSignal){
-		log.debug("merging signal [{0}] and noise[{1}]",mainSignal.toString(),noiseSignal.toString());
-		MergeMultipleAudioReader merger = (MergeMultipleAudioReader)AudioFactory.createAudioReader(noiseSignal);
-		IExtractorInputReader bufferedReader = new ExtractorInputReader();
+	public FrameValues merge(List<URL> urls){
+		log.debug("[merge]merging [{0}]",urls);
+//		List<URL> urls = new ArrayList<URL>(2);
+//		urls.add(mainSignal);
+//		urls.add(noiseSignal);
+		AudioReader merger = AudioFactory.createAudioReader();
+		ExtractorInputReader bufferedReader = new ExtractorInputReader();
 		ExtractorUtils.register(bufferedReader, new ExtractorEnum[]{
 				ExtractorEnum.ENERGY_EXTRACTOR,
 		}, null);
 		
-		bufferedReader.setConfig(setupReaderByFile(mainSignal));
-		merger.readSignal(mainSignal, bufferedReader);
-		return merger;
+		bufferedReader.setConfig(setupReaderByFile(urls.get(0)));
+		merger.readSignal(urls, bufferedReader);
+		return bufferedReader.getValues();
 	}
 	
 	/**
 	 * Save processed data
 	 */
-	public void saveMergedWav(MergeMultipleAudioReader merger, File saveFile){
-		URL savedFile = ((MergedWraperExtractorReader)merger.getWraperExtractorReader())
-			.saveMerged(saveFile, merger.getWraperExtractorReader().getFormat());
-		log.debug("Merged file saved to " + savedFile.toString());
+	public void saveMergedWav(List<URL> urls, File saveFile){
+		AudioReader merger = AudioFactory.createAudioReader();
+		AudioFileFormat fileFormat = merger.getAudioFormat(urls.get(0));
+		int sizeInBits = fileFormat.getFormat().getSampleSizeInBits();
+		FrameValues mergeValues = merge(urls);
+		List<Byte> mergedBuffer = new ArrayList<Byte>();
+
+		for (Float float1 : mergeValues) {
+			Byte[] bs = null;
+			switch (sizeInBits) {
+			   case 8:
+				   bs = AudioUtil.get8(float1, fileFormat.getFormat());
+				   for (Byte byte1 : bs) {
+					   mergedBuffer.add(byte1);
+				   }
+				   break;
+			   case 16:
+				   bs = AudioUtil.get16(float1, fileFormat.getFormat());
+				   for (Byte byte1 : bs) {
+					   mergedBuffer.add(byte1);
+				   }
+				   break;
+			}
+		}
+		InputStream bais = new ByteListInputStream(mergedBuffer);
+		AudioInputStream ais = new AudioInputStream(bais, fileFormat.getFormat(), mergedBuffer.size());
+		try {
+			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, saveFile);
+		} catch (IOException e) {
+			log.error(e);
+			throw new ProcessingException(e);
+		}
+//		URL savedFile = ((MergedWraperExtractorReader)merger.getWraperExtractorReader())
+//			.saveMerged(saveFile, merger.getWraperExtractorReader().getFormat());
+		
+
+		log.debug("Merged file saved to " + saveFile.toString());
 	}
 	
 	/**

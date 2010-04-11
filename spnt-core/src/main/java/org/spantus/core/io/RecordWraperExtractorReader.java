@@ -35,7 +35,7 @@ public class RecordWraperExtractorReader extends WraperExtractorReader{
 //	private Logger log = Logger.getLogger(getClass());
 	
 	public RecordWraperExtractorReader(IExtractorInputReader reader) {
-		super(reader);
+		super(reader, 1);
 	}	
 
 	protected Integer getSampleInBytes(){

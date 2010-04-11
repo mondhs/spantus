@@ -2,6 +2,7 @@ package org.spantus.work.io;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -42,8 +43,9 @@ public class Mp3SignalReader extends DefaultAudioReader {
 	}
 	
 	@Override
-	public void readAudioInternal(URL url)
+	public void readAudioInternal(List<URL> urls)
 			throws UnsupportedAudioFileException, IOException {
+		URL url = urls.get(0);
 //		AudioFileFormat audioFileFormat = AudioSystem.getAudioFileFormat(url);
 
 		AudioInputStream in = AudioSystem.getAudioInputStream(url);

@@ -70,16 +70,21 @@ public class OpenCmd extends AbsrtactCmd {
 		int returnValue = getFileChooser().showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = getFileChooser().getSelectedFile();
-			try {
-				ctx.getProject().getSample().setCurrentFile(
-						selectedFile.toURI().toURL());
-				ctx.getProject().setWorkingDir(selectedFile.getParentFile());
-			} catch (MalformedURLException e1) {
-				throw new ProcessingException(e1);
-			}
+			setSelectedFile(ctx, selectedFile);
 			return true;
 		}
 		return false;
+	}
+	
+	protected void setSelectedFile(SpantusWorkInfo ctx, File selectedFile){
+		try {
+			ctx.getProject().getSample().setCurrentFile(
+					selectedFile.toURI().toURL());
+			ctx.getProject().getSample().setNoiseFile(null);
+			ctx.getProject().setWorkingDir(selectedFile.getParentFile());
+		} catch (MalformedURLException e1) {
+			throw new ProcessingException(e1);
+		}
 	}
 	
 	protected JFileChooser getFileChooser(){

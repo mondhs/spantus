@@ -1,6 +1,7 @@
 package org.spantus.work.io;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -49,18 +50,28 @@ public class WorkAudioReader extends AbstractAudioReader{
 	public AudioFileFormat getAudioFormat(URL url) {
 		return workReader.getAudioFormat(url);
 	}
-	
-	public void readSignal(URL url, IExtractorInputReader extractor)
-	throws ProcessingException {
-		if(extractor instanceof MultiFeatureExtractorInputReader){
-			MultiFeatureExtractorInputReader mf = (MultiFeatureExtractorInputReader)extractor;
-			mf.getMpeg7Reader().getConfig().setSampleRate(getFormat(url).getSampleRate());
-			mpeg7Reader.readSignal(url, mf.getMpeg7Reader());
-			workReader.readSignal(url, mf.getDefaultReader());
+	/**
+	 * Read and merge all the Urls in the list
+	 */
+	public void readSignal(List<URL> urls, IExtractorInputReader reader)
+			throws ProcessingException {
+		if(reader instanceof MultiFeatureExtractorInputReader){
+			MultiFeatureExtractorInputReader mf = (MultiFeatureExtractorInputReader)reader;
+			mf.getMpeg7Reader().getConfig().setSampleRate(getFormat(urls.get(0)).getSampleRate());
+			mpeg7Reader.readSignal(urls, mf.getMpeg7Reader());
+			workReader.readSignal(urls, mf.getDefaultReader());
 		}else{
-			workReader.readSignal(url, extractor);	
+			workReader.readSignal(urls, reader);	
 		}
-		postProcess(extractor);
+		postProcess(reader);
+
+	}
+	
+	public void readSignal(URL url, IExtractorInputReader reader)
+			throws ProcessingException {
+		List<URL> urls = new ArrayList<URL>(1);
+		urls.add(url);
+		readSignal(urls, reader);
 	}
 	
 	protected void postProcess(IExtractorInputReader reader){
@@ -135,5 +146,6 @@ public class WorkAudioReader extends AbstractAudioReader{
 	public boolean isFormatSupported(URL url) {
 		return workReader.isFormatSupported(url);
 	}
+
 
 }

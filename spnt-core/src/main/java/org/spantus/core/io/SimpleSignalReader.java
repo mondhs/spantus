@@ -23,11 +23,14 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.SignalFormat;
 import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
+import org.spantus.utils.StringUtils;
 /**
  * 
  * @author Mindaugas Greibus
@@ -114,5 +117,56 @@ public class SimpleSignalReader implements SignalReader {
 			log.error(e);
 		}
 	}
+
+	public void readSignal(List<URL> urls, IExtractorInputReader reader)
+			throws ProcessingException {
+		List<BufferedReader> bfreaders = new ArrayList<BufferedReader>();
+		List<DataInputStream> inputs = new ArrayList<DataInputStream>();
+		
+ 		try {
+ 			for (URL file : urls) {
+				if(file!=null){
+					// Open the file that is the first
+					// command line parameter
+					FileInputStream fstream = new FileInputStream(file.getFile());
+					// Get the object of DataInputStream
+					DataInputStream in = new DataInputStream(fstream);
+					inputs.add(in);
+					BufferedReader br = new BufferedReader(new InputStreamReader(in));
+					bfreaders.add(br);
+				}
+			}
+ 			boolean filesEnded = false;
+ 			long sample = 0;
+ 			// Read File Line By Line
+ 			while(!filesEnded){
+ 				Float sum = 0F;
+ 				for (BufferedReader bufferedReader : bfreaders) {
+ 					String strLine = bufferedReader.readLine();
+ 					if(StringUtils.hasText(strLine)){
+ 						sum += Float.valueOf(strLine);
+ 					}else{
+ 						filesEnded = true;
+ 					}
+ 				}	
+ 				if (sample > 1) {
+ 					reader.put(sample, sum);
+ 				}
+ 				sample++;
+			}
+			reader.pushValues(sample);
+			// Close the input stream
+			for (DataInputStream in : inputs) {
+				in.close();
+			}
+ 		} catch (NumberFormatException e) {
+			log.error(e);
+			throw new ProcessingException(e);
+ 		} catch (Exception e) {// Catch exception if any
+			log.error(e);
+			throw new ProcessingException(e);
+		}
+	}
+	
 
 }

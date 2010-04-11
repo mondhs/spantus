@@ -10,7 +10,7 @@ import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioCapture;
-import org.spantus.core.io.WraperExtractorReader;
+import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
@@ -38,7 +38,7 @@ public class MonitorPlot extends JFrame {
 //					ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
 //					ExtractorEnum.WAVFORM_EXTRACTOR, 
 				}, null);
-		capture = new AudioCapture(new WraperExtractorReader(reader));
+		capture = new AudioCapture(new RecordWraperExtractorReader(reader));
 		capture.setFormat(getFormat());
 		initGraph(reader);
 		capture.start();

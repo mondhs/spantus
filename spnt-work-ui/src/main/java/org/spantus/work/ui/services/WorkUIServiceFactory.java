@@ -1,8 +1,14 @@
 package org.spantus.work.ui.services;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.io.ProcessedFrameLinstener;
+import org.spantus.utils.Assert;
 import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
@@ -28,12 +34,21 @@ public abstract class WorkUIServiceFactory {
 	public static IExtractorInputReader read(SpantusWorkInfo ctx, ProcessedFrameLinstener processedFrameLinstener){
 		setThreshold(ctx.getProject(), ctx.getProject().getFeatureReader().getWorkConfig());
 		WorkSample workSample = ctx.getProject().getSample();
-//		workSample.setLength(createReaderService().getFormat(workSample.getCurrentFile()));
-//		workSample.setFormat(createReaderService().getFormat(workSample.getCurrentFile()));
 		ReaderService readerService = createReaderService();
-		workSample.setSignalFormat(readerService.getSignalFormat(workSample.getCurrentFile()));
+		SignalFormat sfSignal = readerService.getSignalFormat(workSample.getCurrentFile());
+		//check if noise and signal frequencies are the same
+		if(workSample.getNoiseFile() !=null){
+			SignalFormat sfNoise =readerService.getSignalFormat(workSample.getNoiseFile());
+			Assert.isTrue(sfSignal.getSampleRate() == sfNoise.getSampleRate(),"Noise and singal sample rate has to be same");
+		}
+		workSample.setSignalFormat(sfSignal);
+		List<URL> urls = new ArrayList<URL>();
+		urls.add(workSample.getCurrentFile());
+		if(workSample.getNoiseFile() != null){
+			urls.add(workSample.getNoiseFile());
+		}
 		return readerService.read(
-				workSample.getCurrentFile(), 
+				urls, 
 				ctx.getProject().getFeatureReader(),
 				processedFrameLinstener);
 	}

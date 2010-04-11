@@ -10,6 +10,8 @@ import org.spantus.core.marker.MarkerSetHolder;
 public class WorkSample {
 	private URL currentFile;
 	
+	private URL noiseFile;
+	
 	private String title;
 	
 	private SignalFormat signalFormat;
@@ -63,6 +65,14 @@ public class WorkSample {
 	public void setMarkerSetHolder(MarkerSetHolder markerSetHolder) {
 		this.markerSetHolder.getMarkerSets().clear();
 		this.markerSetHolder.getMarkerSets().putAll(markerSetHolder.getMarkerSets());
+	}
+
+	public URL getNoiseFile() {
+		return noiseFile;
+	}
+
+	public void setNoiseFile(URL noiseFile) {
+		this.noiseFile = noiseFile;
 	}
 
 	

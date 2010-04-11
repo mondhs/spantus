@@ -23,6 +23,8 @@ package org.spantus.work.ui.cmd;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18n;
@@ -61,6 +63,17 @@ public abstract class AbsrtactCmd implements SpantusWorkCommand {
 			actionSet.add(action);
 		}
 		return actionSet;
+	}
+	
+	protected void error(String message, SpantusWorkInfo ctx){
+		String messageBody = getMessage(message);
+		log.error(messageBody);
+		
+//		if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
+			JOptionPane.showMessageDialog(null,messageBody,
+					getMessage("Error"),
+					JOptionPane.ERROR_MESSAGE);	
+//		}		
 	}
 	
 	protected String getMessage(String key){

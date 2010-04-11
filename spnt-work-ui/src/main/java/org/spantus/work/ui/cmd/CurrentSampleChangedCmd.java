@@ -23,8 +23,6 @@ package org.spantus.work.ui.cmd;
 import java.awt.Toolkit;
 import java.util.Set;
 
-import javax.swing.JOptionPane;
-
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
@@ -98,16 +96,7 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 		}
 	}
 
-	protected void error(String message, SpantusWorkInfo ctx){
-		String messageBody = getMessage(message);
-		log.error(messageBody);
-		
-//		if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
-			JOptionPane.showMessageDialog(null,messageBody,
-					getMessage("Error"),
-					JOptionPane.ERROR_MESSAGE);	
-//		}		
-	}
+
 	
 	public WorkInfoManager getWorkInfoManager() {
 		if(workInfoManager == null){

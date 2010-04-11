@@ -2,6 +2,7 @@ package org.spantus.work.ui.cmd;
 
 import java.util.Set;
 
+import org.spantus.exception.ProcessingException;
 import org.spantus.work.ui.dto.SelectionDto;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.wav.AudioManagerFactory;
@@ -30,12 +31,14 @@ public class PlayCmd extends AbsrtactCmd {
 		if(dto == null){
 			this.dto = new SelectionDto();
 		}
-		
+		try{
 		AudioManagerFactory.createAudioManager().play(ctx.getProject().getSample().getCurrentFile(), 
 				dto.getFrom(),
 				dto.getLength()
 				);	
-		
+		}catch (ProcessingException e) {
+			error(e.getLocalizedMessage(), ctx);
+		}
 		return null;
 	}
 

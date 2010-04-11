@@ -21,6 +21,7 @@
 package org.spantus.work.ui.services;
 
 import java.net.URL;
+import java.util.List;
 
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.SignalFormat;
@@ -39,7 +40,7 @@ import org.spantus.work.ui.dto.FeatureReader;
  * 
  */
 public interface ReaderService {
-	public IExtractorInputReader read(URL url, FeatureReader reader,
+	public IExtractorInputReader read(List<URL> urls, FeatureReader reader,
 			ProcessedFrameLinstener processedFrameLinstener);
 	public SignalFormat getSignalFormat(URL url);
 	

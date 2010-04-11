@@ -53,9 +53,9 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 //		
 //	};
 
-	enum toolMenuLabels {
-		segmentation, saveSegments, option
-	};
+//	enum toolMenuLabels {
+//		segmentation, appendNoise, saveSegments, option
+//	};
 	enum helpMenuLabels {
 		about
 	};
@@ -144,6 +144,11 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 					GlobalCommands.file.currentSampleChanged,
 					SpantusWorkToolbar.RELOAD,
 					KeyStroke.getKeyStroke(KeyEvent.VK_R, getCtrlMask())));
+
+			menu.add(
+					createMenuItem(
+							GlobalCommands.tool.appendNoise));
+
 			menu.add(createMenuItem(
 					GlobalCommands.tool.autoSegmentation,
 					KeyStroke.getKeyStroke(KeyEvent.VK_U, getCtrlMask())));

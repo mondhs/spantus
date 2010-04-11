@@ -21,6 +21,7 @@
 package org.spantus.work.ui.services;
 
 import java.net.URL;
+import java.util.List;
 
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
@@ -48,16 +49,17 @@ import org.spantus.work.ui.util.WorkUIExtractorConfigUtil;
 public class DefaultReaderService implements ReaderService {
 	Logger log = Logger.getLogger(DefaultReaderService.class);
 	
-	public IExtractorInputReader read(URL url, FeatureReader readerDto, 
+	
+	public IExtractorInputReader read(List<URL> urls, FeatureReader readerDto, 
 			ProcessedFrameLinstener processedFrameLinstener) {
-		log.debug("[read]reading:" + url);
+		log.debug("[read]reading:" + urls);
 		IExtractorInputReader extractor = null;
-		SignalReader signalReader = createSignalReader(url, readerDto.getReaderPerspective());
+		SignalReader signalReader = createSignalReader(urls, readerDto.getReaderPerspective());
 		
 		switch (readerDto.getReaderPerspective()) {
 		case multiFeature:
 			extractor = new MultiFeatureExtractorInputReader();
-			setConfig(url, extractor, readerDto);
+			setConfig(urls.get(0), extractor, readerDto);
 			break;
 		default:
 			throw new RuntimeException("[read] Not implemented:"
@@ -68,12 +70,12 @@ public class DefaultReaderService implements ReaderService {
 			((ProcessedFrameLinstener)signalReader).registerProcessedFrameLinstener(processedFrameLinstener);
 		}
 		log.debug("[getReader] working with extractor: " + extractor);
-		signalReader.readSignal(url, extractor);
+		signalReader.readSignal(urls, extractor);
 		return extractor;
 	}
 	
-	protected SignalReader createSignalReader(URL url, WorkReadersEnum readerType){
-		SignalReader signalReader = WorkAudioFactory.createAudioReader(url, readerType);
+	protected SignalReader createSignalReader(List<URL> url, WorkReadersEnum readerType){
+		SignalReader signalReader = WorkAudioFactory.createAudioReader(url.get(0), readerType);
 		return signalReader;
 	}
 	
@@ -94,5 +96,7 @@ public class DefaultReaderService implements ReaderService {
 		extractor.setConfig(config);
 
 	}
+
+	
 
 }

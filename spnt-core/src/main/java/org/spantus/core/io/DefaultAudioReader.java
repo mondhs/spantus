@@ -22,7 +22,9 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -50,22 +52,36 @@ public class DefaultAudioReader extends AbstractAudioReader {
 
 	WraperExtractorReader wraperExtractorReader;
 	
-	public void readSignal(URL url, IExtractorInputReader bufferedReader) {
-		wraperExtractorReader = createWraperExtractorReader(bufferedReader);
+	public void readSignal(URL url, IExtractorInputReader reader) {
+		wraperExtractorReader = createWraperExtractorReader(reader, 1);
 		wraperExtractorReader.setFormat(getCurrentAudioFormat(url));
-		readAudio(url, wraperExtractorReader);
+		List<URL> urls = new ArrayList<URL>(1);
+		urls.add(url);
+		readAudio(urls, wraperExtractorReader);
+	}
+
+	public void readSignal(List<URL> urls, IExtractorInputReader reader)
+			throws ProcessingException {
+		wraperExtractorReader = createWraperExtractorReader(reader, urls.size());
+		wraperExtractorReader.setFormat(getCurrentAudioFormat(urls.get(0)));
+		readAudio(urls, wraperExtractorReader);
+
 	}
 	
 	
-	
-	public WraperExtractorReader createWraperExtractorReader(IExtractorInputReader bufferedReader){
-		return new WraperExtractorReader(bufferedReader);
+	public WraperExtractorReader createWraperExtractorReader(IExtractorInputReader bufferedReader, int size){
+		return new WraperExtractorReader(bufferedReader, size);
 	}
-	
 	public void readAudio(URL url, WraperExtractorReader wraperExtractorReader) {
+		List<URL> urls = new ArrayList<URL>(1);
+		urls.add(url);
+		readAudio(urls, wraperExtractorReader);
+	}
+	
+	public void readAudio(List<URL> urls, WraperExtractorReader wraperExtractorReader) {
 		this.wraperExtractorReader = wraperExtractorReader;
 		try {
-			readAudioInternal(url);
+			readAudioInternal(urls);
 		} catch (UnsupportedAudioFileException e) {
 			throw new ProcessingException(e);
 		} catch (IOException e) {
@@ -73,21 +89,34 @@ public class DefaultAudioReader extends AbstractAudioReader {
 		}
 	}
 
-	public void readAudioInternal(URL url)
+	public void readAudioInternal(List<URL> urls)
 			throws UnsupportedAudioFileException, IOException {
-		AudioFileFormat audioFileFormat= AudioSystem.getAudioFileFormat(url);
-		DataInputStream dis = new DataInputStream(new BufferedInputStream(
-				AudioSystem.getAudioInputStream(url)));
+		AudioFileFormat audioFileFormat= AudioSystem.getAudioFileFormat(urls.get(0));
+		List<DataInputStream> diss = new ArrayList<DataInputStream>(urls.size());
+		for (URL url : urls) {
+			if(url != null){
+				DataInputStream dis = new DataInputStream(new BufferedInputStream(
+					AudioSystem.getAudioInputStream(url)));
+				diss.add(dis);
+			}
+		}
+		
 		Long size = Long.valueOf(audioFileFormat.getFrameLength()*audioFileFormat.getFormat().getFrameSize()); 
 		started(size);
 		for (long index = 0; index < size; index++) {
-			int readByte = dis.read();
-			if(readByte == -1) break;
-			wraperExtractorReader.put((byte)readByte);
+			List<Byte> array = new ArrayList<Byte>(diss.size());
+			for (DataInputStream dis : diss) {
+				int readByte = dis.read();
+				if(readByte == -1) break;
+				array.add((byte)readByte);
+			}
+			wraperExtractorReader.put(array);
 			processed(Long.valueOf(index), size);
 		}
 		wraperExtractorReader.pushValues();
-		dis.close();
+		for (DataInputStream dis : diss) {
+			dis.close();
+		}
 		ended();
 
 	}
@@ -155,5 +184,7 @@ public class DefaultAudioReader extends AbstractAudioReader {
 		return audioFileFormat != null;
 	}
 
+
+	
 	
 }

@@ -19,6 +19,7 @@
 package org.spantus.core.io;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
@@ -36,14 +37,19 @@ import org.spantus.core.extractor.preemphasis.PreemphasisFactory;
 public class WraperExtractorReader {
 	AudioFormat format;
 	IExtractorInputReader reader;
-	List<Byte> shortBuffer;
+//	List<Byte> shortBuffer;
+	List<List<Byte>> shortBuffers;
 	Preemphasis preemphasisFilter;
 	Long sample;
 	Float lastValue;
 	
-	public WraperExtractorReader(IExtractorInputReader reader) {
+	public WraperExtractorReader(IExtractorInputReader reader, int size) {
 		this.reader = reader;
-		this.shortBuffer = new ArrayList<Byte>();
+		shortBuffers = new ArrayList<List<Byte>>(size);
+		for (int i = 0; i < size; i++) {
+			List<Byte> shortBuffer = new ArrayList<Byte>(3);
+			shortBuffers.add(shortBuffer);
+		}
 		preemphasisFilter = PreemphasisFactory.createPreemphasis(reader.getConfig().getPreemphasis());
 		sample = 0L;
 	}	
@@ -56,6 +62,7 @@ public class WraperExtractorReader {
 						));
 				break;
 		case 16:
+			List<Byte> shortBuffer = shortBuffers.get(0); 
 			shortBuffer.add(value);
 			if(shortBuffer.size() == 2){
 				float f = AudioUtil.read16(shortBuffer.get(0), 
@@ -63,6 +70,41 @@ public class WraperExtractorReader {
 						getFormat());
 				reader.put(sample++, preemphasis(f));
 				shortBuffer.clear();
+			}
+			break;
+		default:
+			throw new java.lang.IllegalArgumentException(format.getSampleSizeInBits()
+					+ " bits/sample not supported");
+		}
+		
+	}
+	//colleaction
+	public void put(List<Byte> value){
+		Float sum = 0F;
+		switch (format.getSampleSizeInBits()) {
+		case 8:
+			
+			for (Byte byte1 : value) {
+				sum += AudioUtil.read8(byte1, getFormat());
+			}
+				reader.put(sample++, preemphasis(sum));
+				break;
+		case 16:
+			Iterator<Byte> valIterator = value.iterator();
+			Iterator<List<Byte>> buffIterator = shortBuffers.iterator();
+			while(valIterator.hasNext()){
+				buffIterator.next().add(valIterator.next());
+			}
+			int size =  shortBuffers.get(0).size();
+			if(size == 2){
+				for (List<Byte> shortBuffer : shortBuffers) {
+					sum += AudioUtil.read16(shortBuffer.get(0), 
+							shortBuffer.get(1), 
+							getFormat());
+					shortBuffer.clear();
+				}
+				
+				reader.put(sample++, preemphasis(sum));
 			}
 			break;
 		default:

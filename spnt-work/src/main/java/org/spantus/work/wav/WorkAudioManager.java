@@ -149,6 +149,7 @@ public class WorkAudioManager implements AudioManager {
 			stream = createAudioInputStream(fileURL);
 		} catch (UnsupportedAudioFileException e) {
 			log.error(e);
+			throw new ProcessingException(e);
 		} catch (IOException e) {
 			log.error(e);
 		}

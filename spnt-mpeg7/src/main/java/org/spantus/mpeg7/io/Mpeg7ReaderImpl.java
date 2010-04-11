@@ -46,7 +46,10 @@ public class Mpeg7ReaderImpl implements AudioReader {
 		}
 	}
 
-	
+	public void readSignal(List<URL> urls, IExtractorInputReader reader){
+		readSignal(urls.get(0), reader);
+	}
+
 	public void readSignal(URL url, IExtractorInputReader reader)
 			throws ProcessingException {
 		try {

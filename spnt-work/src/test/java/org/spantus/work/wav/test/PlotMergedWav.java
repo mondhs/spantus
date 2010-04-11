@@ -23,6 +23,8 @@ package org.spantus.work.wav.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
@@ -78,12 +80,15 @@ public class PlotMergedWav extends JFrame {
 			throws UnsupportedAudioFileException, IOException {
 		URL mainSignal = new File("/home/mindas/temp/521.wav").toURI().toURL();
 		URL noiseSignal = new File("/home/mindas/temp/noise11k.wav").toURI().toURL();
-		AudioReader reader = AudioFactory.createAudioReader(noiseSignal);
+		List<URL> urls =new ArrayList<URL>();
+		urls.add(mainSignal);
+		urls.add(noiseSignal);
+		AudioReader reader = AudioFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = new ExtractorInputReader();
 		ExtractorUtils.register(bufferedReader, new ExtractorEnum[]{
 				ExtractorEnum.SIGNAL_EXTRACTOR,
 		}, null);
-		reader.readSignal(mainSignal, bufferedReader);
+		reader.readSignal(urls, bufferedReader);
 		return bufferedReader;
 	}
 

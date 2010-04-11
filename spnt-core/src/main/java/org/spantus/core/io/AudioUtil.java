@@ -31,11 +31,11 @@ public abstract class AudioUtil {
 		return b1.floatValue();
 	}
 	
-	public static Float read16(Integer b1, Integer b2, AudioFormat format){
-		return read16(b1.byteValue(), b2.byteValue(), format);
-	}
+//	public static Float read16(int b1, int b2, AudioFormat format){
+//		return read16((byte)b1, (byte)b2, format);
+//	}
 	
-	public static Float read16(Byte b1, Byte b2, AudioFormat format) {
+	public static Float read16(byte b1, byte b2, AudioFormat format) {
 		boolean signed = (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED);
 		boolean bigEndian = (format.isBigEndian());
 		int value = 0;
@@ -50,5 +50,27 @@ public abstract class AudioUtil {
 			value = (hiByte << 8) | loByte;
 		}
 		return (float) value ;// Short.MAX_VALUE;
+	}
+	
+	public static Byte[] get16(Float f1, AudioFormat format) {
+		Byte[] bs = new Byte[2];
+		boolean signed = (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED);
+		boolean bigEndian = (format.isBigEndian());
+		int value = f1.intValue();
+		byte b1 =0, b2=0;
+		// deal with endianness
+//		if (signed) {
+			b1 = (byte) (value >> 8);
+			b2 = (byte) (value - (b2 << 8));
+//		} else {
+//			b2 = (byte) (value >> 8);
+//		}
+		byte hiByte = (bigEndian ? b1 : b2);
+		byte loByte = (bigEndian ? b2 : b1);
+
+		return new Byte[]{hiByte, loByte} ;// Short.MAX_VALUE;
+	}
+	public static Byte[] get8(Float f1, AudioFormat format) {
+		return new Byte[]{f1.byteValue()};
 	}
 }

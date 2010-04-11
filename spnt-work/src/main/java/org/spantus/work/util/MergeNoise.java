@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -11,7 +13,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.MergeMultipleAudioReader;
 import org.spantus.exception.ProcessingException;
 import org.spantus.utils.FileUtils;
 import org.spantus.work.services.CalculateFeaturesServiceImpl;
@@ -31,8 +32,10 @@ public class MergeNoise {
 	
 	
 	public void merge(){
-		MergeMultipleAudioReader merger = getCalculateFeaturesService().merge(mainSignal, noiseSignal);
-		getCalculateFeaturesService().saveMergedWav(merger, saveWavFile);
+		List<URL> urls = new ArrayList<URL>();
+		urls.add(mainSignal);
+		urls.add(noiseSignal);
+		getCalculateFeaturesService().saveMergedWav(urls, saveWavFile);
 		AudioFormat audioFormat;
 		try {
 			try {

@@ -133,4 +133,8 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 		return offset;
 	}
 
+	public FrameValues getValues() {
+		return values;
+	}
+
 }

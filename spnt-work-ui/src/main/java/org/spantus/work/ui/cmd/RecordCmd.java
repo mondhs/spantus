@@ -321,7 +321,7 @@ public class RecordCmd extends AbsrtactCmd {
 		if(isRecordable(workConfig)){
 			wraperExtractorReader =  new RecordWraperExtractorReader(reader);
 		}else{
-			wraperExtractorReader = new WraperExtractorReader(reader);
+			wraperExtractorReader = new WraperExtractorReader(reader,1);
 		}
 		wraperExtractorReader.setFormat(getFormat(workConfig));
 		return wraperExtractorReader;

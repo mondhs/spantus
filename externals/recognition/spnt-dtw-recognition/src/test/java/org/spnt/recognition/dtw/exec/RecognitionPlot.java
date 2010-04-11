@@ -87,7 +87,7 @@ public class RecognitionPlot extends JFrame {
 		DefaultAudioReader audioReader = (DefaultAudioReader)AudioFactory.createAudioReader();
 		ExtractorInputReader bufferedReader = (ExtractorInputReader)ExtractorsFactory.createReader(audioReader.getAudioFormat(urlFile));
 
-		WraperExtractorReader wraperExtractorReader =  new WraperExtractorReader(bufferedReader);
+		WraperExtractorReader wraperExtractorReader =  new WraperExtractorReader(bufferedReader,1);
 		wraperExtractorReader.setFormat(audioReader.getAudioFormat(urlFile).getFormat());
 		
 		bufferedReader.getConfig().setBufferSize(3000);

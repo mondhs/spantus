@@ -34,10 +34,10 @@ public abstract class AudioFactory {
 	public static AudioReader createAudioReader(){
 		return new DefaultAudioReader();
 	}
-	public static AudioReader createAudioReader(URL noiseUrl){
-		MergeMultipleAudioReader audioReader = new MergeMultipleAudioReader();
-		audioReader.setNoiseUrl(noiseUrl);
-		return audioReader;
-	}
+//	public static AudioReader createAudioReader(URL noiseUrl){
+//		MergeMultipleAudioReader audioReader = new MergeMultipleAudioReader();
+//		audioReader.setNoiseUrl(noiseUrl);
+//		return audioReader;
+//	}
 
 }
