@@ -77,7 +77,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	 * @param sample
 	 * @param value
 	 */
-	private void processValue(Float value) {
+	protected void processValue(Float value) {
 		Integer index = onlineCtx.getIndex();
 		if (previous == null) {
 			previous = value;
@@ -254,9 +254,9 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		Integer startSample = last.getStartEntry().getIndex();
 		Integer endSample = last.getEndEntry().getIndex();
 		Long step = getOutputValues().indextoMils(1);
-//		step /=2;
+		step /=2;
 		
-		Long startTime = getOutputValues().indextoMils(startSample)+step;
+		Long startTime = getOutputValues().indextoMils(startSample);
 		Long endTime = getOutputValues().indextoMils(endSample);
 		
 		String className = getClusterService().getClassName(last, ctx);

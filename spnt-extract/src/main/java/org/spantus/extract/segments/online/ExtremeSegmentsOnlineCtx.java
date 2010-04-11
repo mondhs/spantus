@@ -84,5 +84,8 @@ public class ExtremeSegmentsOnlineCtx {
 	public void setMarkerState(ClassifierRuleBaseEnum.state markerState) {
 		this.markerState = markerState;
 	}
+	public void setIndex(Integer index) {
+		this.index = index;
+	}
 
 }
