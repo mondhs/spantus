@@ -13,13 +13,25 @@ public class ExtremeSegmentsOnlineCtx {
 	private Integer index=0;
 	private ClassifierRuleBaseEnum.state markerState;
 	private Float previous;
-
+	private Boolean skipLearn = Boolean.FALSE;
+	
 	
 	public LinkedList<SegmentInnerData> semgnetFeatures = new LinkedList<SegmentInnerData>();
 	public List<SegmentInnerData> segmentStats = new ArrayList<SegmentInnerData>(3);
+	public List<SegmentInnerData> segmentCenters = new ArrayList<SegmentInnerData>(3);
 	public Float maxDistance;
+	
 
-
+	public SegmentInnerData normalizeArea(SegmentInnerData data){
+		SegmentInnerData cloned = data.clone();
+		Double delta = segmentStats.get(1).getArea() - segmentStats.get(0).getArea();
+		if(delta == 0D ){
+			delta = 1D;
+		}
+		Double area = (cloned.getArea()-segmentStats.get(0).getArea())/delta;
+		cloned.setArea(area);
+		return cloned;
+	}
 	
 	public Integer increase(){
 		return ++index;
@@ -96,6 +108,14 @@ public class ExtremeSegmentsOnlineCtx {
 	}
 	public void setPrevious(Float previous) {
 		this.previous = previous;
+	}
+
+	public Boolean getSkipLearn() {
+		return skipLearn;
+	}
+
+	public void setSkipLearn(Boolean skipLearn) {
+		this.skipLearn = skipLearn;
 	}
 
 }

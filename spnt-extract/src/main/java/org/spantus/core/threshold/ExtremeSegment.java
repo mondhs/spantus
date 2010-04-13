@@ -16,12 +16,47 @@ public class ExtremeSegment {
 	private FrameValues values;
 	
 	public boolean isIncrease(){
-		return getEndEntry().getValue().compareTo(getStartEntry().getValue())>0;
+		Float start = getStartEntry().getValue();
+		Float end = getEndEntry().getValue();
+		return end.compareTo(start)>0;
 	}
 	public boolean isDecrease(){
-		return getStartEntry().getValue().compareTo(getEndEntry().getValue())>0;
+		Float start = getStartEntry().getValue();
+		Float end = getEndEntry().getValue();
+		return start.compareTo(end)>0;
 	}
-	
+	public boolean isDecrease(ExtremeSegment segment){
+		Float thisPeak = this.getPeakEntry().getValue();
+		Float otherPeak = segment.getPeakEntry().getValue();
+		boolean decrease = isDecrease() && segment.isDecrease() && thisPeak>otherPeak; 
+		return decrease;
+	}
+
+	public boolean isIncrease(ExtremeSegment segment){
+		Float thisPeak = this.getPeakEntry().getValue();
+		Float otherPeak = segment.getPeakEntry().getValue();
+		boolean increase = isIncrease() && this.isIncrease() && thisPeak<otherPeak;  
+		return increase;
+	}
+	public boolean isSimilar(ExtremeSegment segment){
+		Double lastArea = segment.getCalculatedArea();
+		Double currentArea = this.getCalculatedArea();
+		Integer lastPeak = segment.getPeakEntries().size();
+		Integer currentPeak = this.getPeakEntries().size();
+		Long lastLength = segment.getCalculatedLength();
+		Long currentLength = this.getCalculatedLength();
+		
+		double similarity = lastArea>currentArea*.9 && lastArea<currentArea?0.50:0;
+		similarity += currentArea>lastArea*.9 && currentArea<lastArea?0.50:0;
+		similarity += currentArea==lastArea?0.50:0;
+		similarity += lastLength==currentLength?0.25:0;
+		similarity += lastLength>currentLength*.9 && lastLength<currentLength?0.25:0;
+		similarity += currentLength>lastLength*.9 && currentLength<lastLength?0.25:0;
+		similarity += lastPeak==currentPeak?0.25:0;
+		boolean similar = similarity>=.5;
+		return similar;
+	}
+
 	//calculates
 	public Double getCalculatedArea(){
 		Double area = 0D;

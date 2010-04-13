@@ -2,6 +2,7 @@ package org.spantus.extract.segments.online.test;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
 import org.spantus.core.threshold.test.ExtremeClassifierTest;
@@ -69,7 +70,7 @@ public class ExtremeOnlineClassifierTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Test @Ignore
 	public void testOnlineMarkersExtractionRule() throws Exception {
 		ExtremeOnlineClassifier classifier = null;
 		ExtremeOnlineClusterService clusterService = new ExtremeOnlineClusterServiceImpl(); 

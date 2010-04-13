@@ -23,7 +23,7 @@ public class SegmentInnerData implements Serializable, Cloneable, Comparable<Seg
 	}
 	
 	public Boolean getIsNull(){
-		return area == 0D && length == 0 && peaks == 0;
+		return area == 0D || (length == 0 && peaks == 0);
 	}
 	
 	public void updateAsMin(Integer peaks, Double area, Long length){

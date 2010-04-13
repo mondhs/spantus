@@ -61,14 +61,15 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 
 		}
 		if (lastSegment != null) {
-			String className = getClusterService().getClassName(lastSegment,
-					ctx);
+//			String className = getClusterService().getClassName(lastSegment,
+//					ctx);
 			Double lastArea = lastSegment.getCalculatedArea();
 			Double currentArea = currentSegment.getCalculatedArea();
 			Integer lastPeak = lastSegment.getPeakEntries().size();
 			Integer currentPeak = currentSegment.getPeakEntries().size();
 			Long lastLength = lastSegment.getCalculatedLength();
 			Long currentLength = currentSegment.getCalculatedLength();
+			
 //			noiseClass = "0".equals(className);
 
 			
@@ -76,14 +77,17 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 				return ClassifierRuleBaseEnum.action.startMarker;
 			} else if ((ctx.isIn(state.start) || ctx.isIn(null)) && segmentPeak) {
 				return ClassifierRuleBaseEnum.action.startMarkerApproved;
-			} else if (segmentEnd && currentSegment.isIncrease()
-					&& lastSegment.isIncrease() 
+			} else if (segmentEnd && currentSegment.isIncrease(lastSegment)
+//					&& currentArea>lastArea*.9 && currentArea<lastArea
 //					&& !noiseClass
 					) {
 				return ClassifierRuleBaseEnum.action.join;
-			} else if (segmentEnd && currentSegment.isDecrease()
-					&& lastSegment.isDecrease() 
+			} else if (segmentEnd && currentSegment.isDecrease(lastSegment)
+//					&& lastArea>currentArea*.9 && lastArea<currentArea
 //					&& !noiseClass
+					) {
+				return ClassifierRuleBaseEnum.action.join;
+			} else if (segmentEnd && currentSegment.isSimilar(lastSegment)
 					) {
 				return ClassifierRuleBaseEnum.action.join;
 //			} else if (segmentEnd && currentSegment.isDecrease()
@@ -95,7 +99,8 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 //					&& lastSegment.isIncrease()
 //					&& lastLength >20 && currentLength > 20) {
 //				return ClassifierRuleBaseEnum.action.join;
-//			} else if (segmentEnd && currentPeak == lastPeak
+//			} else if (segmentEnd && currentPeak == lastPeak 
+//					&& (lastArea>currentArea*.9 && lastArea<currentArea)
 //			) {
 //				return ClassifierRuleBaseEnum.action.join;	
 

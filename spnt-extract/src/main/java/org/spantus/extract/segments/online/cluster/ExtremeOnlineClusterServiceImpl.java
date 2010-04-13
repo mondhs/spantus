@@ -1,5 +1,7 @@
 package org.spantus.extract.segments.online.cluster;
 
+import java.text.MessageFormat;
+
 import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.extract.segments.online.SegmentInnerData;
@@ -21,26 +23,38 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 //		if(length<30){
 //			return "0";
 //		}
-		
 		if(ctx.segmentStats == null || ctx.segmentStats.size() == 0){
 			return "0";
 		}
 
 		Double delta = ctx.segmentStats.get(1).getArea() - ctx.segmentStats.get(0).getArea();
 		area = (area-ctx.segmentStats.get(0).getArea())/delta;
+
+//		SegmentInnerData min = ctx.normalizeArea(ctx.segmentStats.get(0));
+//		SegmentInnerData max = ctx.normalizeArea(ctx.segmentStats.get(1));
 		
 		SegmentInnerData data = new SegmentInnerData(peaks,area,length);
+		
+		log.debug("[getClassName] data: {0}", data);
 
-		Float distanceToMin = data.distance(ctx.segmentStats.get(0));
-		Float distanceToMax = data.distance(ctx.segmentStats.get(1));
-		Float avgDistance = (distanceToMax+distanceToMin)/2;
+		Float distanceToMin = data.distance(ctx.segmentCenters.get(0));
+		Float avgDistance = data.distance(ctx.segmentCenters.get(1));
+		Float distanceToMax = data.distance(ctx.segmentCenters.get(2));
 //		Float distanceToMax = data.distance(getOnlineCtx().segmentStats.get(2));
 		if(distanceToMin.equals(distanceToMax)){
 			return "1";
 		}
+		
+//		StringBuilder sb = new StringBuilder();
+//		for (SegmentInnerData idat : ctx.semgnetFeatures) {
+//			sb.append(MessageFormat.format("{0}\n", ""+idat.getArea()));
+//		}
+//		log.debug(sb.toString());
+		
 		Float toOneClass = avgDistance;
 		Float toTwoClass = distanceToMax;
 		Integer argNum = VectorUtils.minArg(distanceToMin, toOneClass, toTwoClass);
+
 		
 //		if(0 != argNum){
 //			return argNum + "[" +distanceToMin+":"+distanceToMax+"]";
@@ -60,7 +74,7 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 //		Long length = segment.getCalculatedLength();
 //		Integer peaks =  segment.getPeakEntries().size();
 		SegmentInnerData innerData = super.learn(segment, ctx);
-		if(innerData.getIsNull()){
+		if(innerData.getIsNull() || Boolean.TRUE.equals(ctx.getSkipLearn())){
 			return innerData;
 		}
 		//picku stats
@@ -75,34 +89,64 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 				ctx.segmentStats.set(1, innerData.clone());
 			}
 		}
-		Double delta = ctx.segmentStats.get(1).getArea() - ctx.segmentStats.get(0).getArea();
-		innerData.setArea((innerData.getArea()-ctx.segmentStats.get(0).getArea())/delta);
-		ctx.semgnetFeatures.add(innerData);
-		
-		if(ctx.segmentStats.size()==0){
-			ctx.segmentStats.add(innerData.clone());
-			ctx.segmentStats.add(innerData.clone());
-//			onlineCtx.segmentStats.add(new SegmentInnerData(peaks,area,length));
+		SegmentInnerData normData = ctx.normalizeArea(innerData);
+
+		if(innerData.getArea() > 0D){
+			ctx.semgnetFeatures.add(normData);
 		}
-		Float maxDistance = null;
-		SegmentInnerData maxData1 = null;
-//		Float maxDistance2 = null;
-		SegmentInnerData maxData2= null;
+		
+		SegmentInnerData min = ctx.normalizeArea(ctx.segmentStats.get(0));
+		SegmentInnerData max = ctx.normalizeArea(ctx.segmentStats.get(1));
+		SegmentInnerData avg = ctx.normalizeArea(ctx.segmentStats.get(1));
+//		Float maxDistance = null;
+//		SegmentInnerData minData = null;
+////		Float maxDistance2 = null;
+//		SegmentInnerData maxData= null;
+		Double minArea = min.getArea();
+		Double maxArea = max.getArea();
 		
 		for (SegmentInnerData iData : ctx.semgnetFeatures) {
-			for (SegmentInnerData jData : ctx.semgnetFeatures) {
-			Float distance = iData.distance(jData);
-//			if(minDistance == null || minDistance>distance){
-//				minDistance = distance;
-//				minData = iData;
-//			}
-				if(maxDistance == null || maxDistance<distance){
-					maxDistance = distance;
-					maxData1 = iData;
-					maxData2 = jData;
-				}
+			Float distanceToMin = iData.distance(min)*1.8F;
+			Float distanceToMax = iData.distance(max)/2;
+			if(distanceToMin<distanceToMax){
+				minArea = (minArea+iData.getArea())/2;
+			}else{
+				maxArea = (maxArea+iData.getArea())/2;
 			}
 		}
+		min.setArea(minArea);
+		avg.setArea((minArea+maxArea)/2);
+		max.setArea(maxArea);
+		
+		if(ctx.segmentCenters.size()==0){
+			ctx.segmentCenters.add(min);
+			ctx.segmentCenters.add(avg);
+			ctx.segmentCenters.add(max);
+		}else{
+			ctx.segmentCenters.set(0, min);
+			ctx.segmentCenters.set(1, avg);
+			ctx.segmentCenters.set(2, max);
+		}
+		
+		
+//		for (SegmentInnerData iData : ctx.semgnetFeatures) {
+//			for (SegmentInnerData jData : ctx.semgnetFeatures) {
+//			if(iData.getArea() == 0D || jData.getArea() == 0D){
+//				continue;
+//			}
+//			Float distance = iData.distance(jData);
+////			if(minDistance == null || minDistance>distance){
+////				minDistance = distance;
+////				minData = iData;
+//			
+////			}
+//				if(maxDistance == null || maxDistance<distance){
+//					maxDistance = distance;
+//					maxData1 = iData;
+//					maxData2 = jData;
+//				}
+//			}
+//		}
 		
 		
 		
@@ -113,13 +157,12 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 //			ctx.segmentStats.set(0, maxData2);
 //			ctx.segmentStats.set(1, maxData1);
 //		}
-		log.debug("[learn]innerData: {0};", innerData);
+		log.debug("[learn]innerData: {0};", normData);
 
-		ctx.maxDistance = maxDistance;
-		log.debug("[learn]  maxDistance: {0};",  
-				maxDistance);
+//		ctx.maxDistance = maxDistance;
+		log.debug("[learn]  minArea: {0}; maxArea: {1}",  
+				minArea, maxArea);
 		return innerData;
 		
 	}
-
 }

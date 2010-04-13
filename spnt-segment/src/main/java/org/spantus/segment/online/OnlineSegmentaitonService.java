@@ -91,8 +91,12 @@ public class OnlineSegmentaitonService extends MergeSegmentatorServiceImpl {
 			event.setTime(index);
 			multipleSegmentator.noiseDetected(event);
 		}
-		
-		
+		index++;
+		SegmentEvent event = new SegmentEvent();
+		event.setId(id);
+		event.setSample(index);
+		event.setTime(index);
+		multipleSegmentator.noiseDetected(event);
 		
 		
 		
