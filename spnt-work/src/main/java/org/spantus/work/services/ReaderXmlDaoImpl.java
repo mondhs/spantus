@@ -14,12 +14,14 @@ import org.spantus.core.extractor.ExtractorVectorOutputHolder;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
 import org.spantus.work.services.converter.FrameValues3DConverter;
 import org.spantus.work.services.converter.FrameValuesConverter;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;
 
 public class ReaderXmlDaoImpl implements ReaderDao {
@@ -36,8 +38,11 @@ public class ReaderXmlDaoImpl implements ReaderDao {
 			FileReader inFile = new FileReader(file);
 			reader = (IExtractorInputReader)getXsteam().fromXML(inFile);
 			log.debug("extractors file read correctly. info: " + file.getAbsolutePath());
+		}catch (ConversionException e) {
+			log.debug("error while reading: " + file.getAbsolutePath());
+			throw new ProcessingException(e);
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
+			throw new ProcessingException(e);
 		}
 
 		return reader;
@@ -83,6 +88,7 @@ public class ReaderXmlDaoImpl implements ReaderDao {
 	protected XStream getXsteam(){
 		if(xstream == null){
 			xstream = new XStream();
+			xstream.omitField(IExtractorInputReader.class, "log");
 			xstream.registerConverter(new EnumConverter());
 			xstream.registerConverter(new FrameValuesConverter());
 			xstream.registerConverter(new FrameValues3DConverter());

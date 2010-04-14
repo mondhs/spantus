@@ -54,15 +54,15 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 		}
 
 		Iterator<Float> valIter = values.iterator();
-		Float minValue= null;
+//		Float minValue= null;
 		for (int index = 0; index < values.size(); index++) {
 			Float val = valIter.next();
-			minValue = minValue == null?val:minValue;
-			minValue = Math.min(minValue, val);
+//			minValue = minValue == null?val:minValue;
+//			minValue = Math.min(minValue, val);
 			if (changePoints.containsKey(index)) {
 				threasholds.add(val);
 			} else {
-				threasholds.add(minValue);
+				threasholds.add(values.getMinValue());
 			}
 		}
 		return threasholds;

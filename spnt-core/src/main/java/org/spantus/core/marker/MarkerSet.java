@@ -19,6 +19,7 @@
 package org.spantus.core.marker;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -78,6 +79,15 @@ public class MarkerSet implements Serializable,Cloneable {
 		} catch (CloneNotSupportedException e) {
 			throw new IllegalArgumentException(e);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		int size = 0;
+		size = getMarkers() == null?0:getMarkers().size();
+		String str = MessageFormat.format("{0}: {1} markers: {2};", 
+				getClass().getSimpleName(), getMarkerSetType(), size);
+		return str;
 	}
 
 }

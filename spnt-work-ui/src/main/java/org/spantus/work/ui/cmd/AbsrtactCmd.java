@@ -67,7 +67,7 @@ public abstract class AbsrtactCmd implements SpantusWorkCommand {
 	
 	protected void error(String message, SpantusWorkInfo ctx){
 		String messageBody = getMessage(message);
-		log.error(messageBody);
+		log.error("[error]" + messageBody);
 		
 //		if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
 			JOptionPane.showMessageDialog(null,messageBody,

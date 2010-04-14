@@ -59,6 +59,7 @@ public class MarkerXmlDaoImpl implements MarkerDao {
 	protected XStream getXsteam(){
 		if(xstream == null){
 			xstream = new XStream();
+//			xstream.omitField(type, fieldName);
 			xstream.alias(MarkerSetHolder.class.getSimpleName(), MarkerSetHolder.class);
 			xstream.alias(MarkerSet.class.getSimpleName(), MarkerSet.class);
 			xstream.alias(Marker.class.getSimpleName(), Marker.class);

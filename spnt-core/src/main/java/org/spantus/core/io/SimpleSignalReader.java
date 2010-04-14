@@ -57,7 +57,8 @@ public class SimpleSignalReader implements SignalReader {
 			while ((strLine = br.readLine()) != null) {
 				switch (i++) {
 				case 0:
-					if (!strLine.matches("\\d*\\.\\d*")) {
+					if (!( strLine.matches("\\d*\\.\\d*")
+							|| strLine.matches("\\d*"))) {
 						log.debug("Format not supported");
 						return null;
 					}

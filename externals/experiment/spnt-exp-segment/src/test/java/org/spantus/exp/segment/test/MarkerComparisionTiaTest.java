@@ -18,7 +18,7 @@ public class MarkerComparisionTiaTest extends TestCase{
 		super.setUp();
 		makerComparison = new MakerComparisonTIAImpl();
 	}
-	
+
 	public void testTiaComparision(){
 		MarkerSetHolder original = getOriginalMarkerSet();
 		MarkerSetHolder test = getTestMarkerSet();

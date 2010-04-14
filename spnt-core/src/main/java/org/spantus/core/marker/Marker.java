@@ -19,6 +19,7 @@
 package org.spantus.core.marker;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 
 import org.spantus.utils.Assert;
 /**
@@ -77,8 +78,10 @@ public class Marker implements Serializable, Cloneable{
 	public String toString() {
 		long saveStart = getStart() == null?0L:getStart();
 		long saveLength = getLength() == null?0L:getLength();
-		
-		return getClass().getSimpleName() + ": " + getLabel() +"[" + saveStart + "; " + (saveStart+saveLength) + "]";
+		String str = MessageFormat.format("{0}: {1} [{2}; {3}]", 
+				getClass().getSimpleName(), getLabel(),
+				saveStart, (saveStart+saveLength));
+		return str;
 	}
 	
 	@Override

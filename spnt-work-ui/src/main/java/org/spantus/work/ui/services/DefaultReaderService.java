@@ -78,6 +78,10 @@ public class DefaultReaderService implements ReaderService {
 		SignalReader signalReader = WorkAudioFactory.createAudioReader(url.get(0), readerType);
 		return signalReader;
 	}
+	protected SignalReader createSignalReader(List<URL> url){
+		SignalReader signalReader = WorkAudioFactory.createAudioReader(url.get(0), WorkReadersEnum.multiFeature);
+		return signalReader;
+	}
 	
 	public SignalFormat getSignalFormat(URL url) {
 		SignalFormat signalFormat = WorkAudioFactory.createAudioReader(url, WorkReadersEnum.multiFeature)

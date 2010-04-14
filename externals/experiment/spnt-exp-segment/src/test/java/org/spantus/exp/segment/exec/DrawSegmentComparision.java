@@ -40,8 +40,7 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.AudioFactory;
-import org.spantus.core.io.AudioReader;
+import org.spantus.core.io.SignalReader;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.threshold.IClassifier;
@@ -50,7 +49,11 @@ import org.spantus.exp.segment.services.ExpServiceFactory;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
+import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
+import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
+import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
+import org.spantus.work.io.WorkAudioFactory;
 import org.spantus.work.services.WorkServiceFactory;
 
 /**
@@ -70,18 +73,20 @@ public class DrawSegmentComparision extends ApplicationFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public static String FILE_wavName ="../../../data/t_1_2.wav";
+	public static String FILE_markerName = "../../../data/t_1_2_expert.mspnt.xml";
 	/**
      * A demonstration application showing an XY series containing a null value.
      *
      * @param title  the frame title.
      */
-    public DrawSegmentComparision(final String title) {
+    public DrawSegmentComparision(final String title, String wavName, String markerName) {
         super(title);
         final CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new NumberAxis("Time"));
         plot.setGap(10.0);
         plot.setOrientation(PlotOrientation.VERTICAL);
         
-        XYSeries[] seriesArr = createSeries();
+        XYSeries[] seriesArr = createSeries(wavName, markerName);
         for (XYSeries series : seriesArr) {
         	 final XYSeriesCollection data1 = new XYSeriesCollection(series);
              final XYItemRenderer renderer1 = new StandardXYItemRenderer();
@@ -105,22 +110,23 @@ public class DrawSegmentComparision extends ApplicationFrame {
 
     }
 
-	public IExtractorInputReader readSignal()
+    
+	public IExtractorInputReader readSignal(String wavName)
 			{
-		File wavFile = new File("./target/test-classes/t_1_2.wav");
+		File wavFile = new File(wavName);
 		URL urlFile;
 		try {
 			urlFile = wavFile.toURI().toURL();
-			AudioReader reader = AudioFactory.createAudioReader();
+			SignalReader reader = WorkAudioFactory.createAudioReader(urlFile);
 			IExtractorInputReader bufferedReader = ExtractorsFactory
-					.createReader(reader.getAudioFormat(urlFile));
+					.createReader(reader.getFormat(urlFile));
+			
 			ExtractorUtils.registerThreshold(bufferedReader, new ExtractorEnum[] {
 					ExtractorEnum.ENERGY_EXTRACTOR,
-			}, null, ClassifierEnum.offline);
+			}, null, ClassifierEnum.rules);
 			reader.readSignal(urlFile, bufferedReader);
 			return bufferedReader;
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	
@@ -138,17 +144,18 @@ public class DrawSegmentComparision extends ApplicationFrame {
     /**
      * @return
      */
-    private XYSeries[] createSeries() {
+    private XYSeries[] createSeries(String wavName, String markerName) {
 
-        IExtractorInputReader reader = readSignal();
+        IExtractorInputReader reader = readSignal(wavName);
 		Set<IClassifier> thresholds = new HashSet<IClassifier>();
 		for (IExtractor extractor : reader.getExtractorRegister()) {
 			if(extractor instanceof IClassifier)
 				thresholds.add((IClassifier)extractor);
 		}
-		MarkerSetHolder testMarkerSet = SegmentFactory.createSegmentator().extractSegments(thresholds);
-		MarkerSetHolder holder = WorkServiceFactory.createMarkerDao().read(new File("./target/test-classes/t_1_2.mrk.xml"));
+		MarkerSetHolder testMarkerSet = extractSegments(thresholds);
+		MarkerSetHolder holder = WorkServiceFactory.createMarkerDao().read(new File(markerName));
 		ComparisionResult result = ExpServiceFactory.createMakerComparison().compare(holder, testMarkerSet);
+		WorkServiceFactory.createMarkerDao().write(testMarkerSet, new File("tst.spnt.xml"));
     	
         final XYSeries[] series = new XYSeries[]{
         		new XYSeries("Segmentation Result"),
@@ -180,10 +187,38 @@ public class DrawSegmentComparision extends ApplicationFrame {
         return series;
 
     }
+    /**
+     * extractuion with params
+     * @param classifiers
+     * @return
+     */
+    protected MarkerSetHolder extractSegments(Set<IClassifier> classifiers){
+    	MarkerSetHolder testMarkerSet = null;
+    	OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
+    	param.setMinSpace(0L);
+    	param.setMinLength(0L);
+    	param.setExpandStart(0L);
+    	param.setExpandEnd(0L);
+    	ISegmentatorService online = (ISegmentatorService) SegmentFactory.createSegmentator(SegmentatorServiceEnum.online.name());
+    	testMarkerSet = online.extractSegments(classifiers, param);
+    	return testMarkerSet;
+    }
 
+    
     public static void main(final String[] args) {
 
-        final DrawSegmentComparision demo = new DrawSegmentComparision("Segmenation Result");
+    	String wavName = FILE_wavName;
+    	String markerName = FILE_markerName;
+//    	
+    	String root = "/home/studijos/wav/data/";
+    	wavName = root+"accelerometer.txt";
+    	markerName = root+"accelerometer.mspnt.xml";
+    	
+        final DrawSegmentComparision demo = new DrawSegmentComparision(
+        		"Segmenation Result", 
+        		wavName,
+        		markerName
+        		);
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);

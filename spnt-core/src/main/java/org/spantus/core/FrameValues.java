@@ -126,7 +126,7 @@ public class FrameValues extends LinkedList<Float>{
 		return (long)(milsSamplePeriod * i);
 	}
 	public int toIndex(float f){
-		return (int)(f * sampleRate);
+		return (int)(f * sampleRate)-1;
 	}
 
 	public Float getMinValue() {

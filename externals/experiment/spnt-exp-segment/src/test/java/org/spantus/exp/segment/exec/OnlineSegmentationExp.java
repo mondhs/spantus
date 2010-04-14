@@ -274,9 +274,9 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 //			expertPath = args[0];
 //			testPath = args[1];
 //		}
-		String expertPath = "E:/home/studijos/wav/on_off_up_down_wav/on_off_up_down.mspnt.xml";
+		String expertPath = "c:/home/studijos/wav/on_off_up_down_wav/on_off_up_down.mspnt.xml";
 //		String _testPath = "E:/home/studijos/wav/on_off_up_down_wav/on_off_up_down.sspnt.xml";
-		String _testPath = "E:/home/studijos/wav/on_off_up_down_wav/on_off_up_down_8.sspnt.xml";
+		String _testPath = "c:/home/studijos/wav/on_off_up_down_wav/on_off_up_down_8.sspnt.xml";
 //		String _testPath = "E:/home/studijos/wav/on_off_up_down_wav/shower_on_off_up_down.prep.sspnt.xml";
 
 		new OnlineSegmentationExp().process(expertPath, _testPath);

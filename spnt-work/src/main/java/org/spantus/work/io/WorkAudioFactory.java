@@ -8,6 +8,9 @@ import org.spantus.exception.ProcessingException;
 import org.spantus.work.WorkReadersEnum;
 
 public abstract class WorkAudioFactory {
+	public static SignalReader createAudioReader(URL url){
+		return createAudioReader(url, WorkReadersEnum.multiFeature);
+	}
 	public static SignalReader createAudioReader(URL url, WorkReadersEnum readerType){
 		SignalReader signalReader = null;//new WorkAudioReader();
 

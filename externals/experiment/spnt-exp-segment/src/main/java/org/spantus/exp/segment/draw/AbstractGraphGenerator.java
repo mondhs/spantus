@@ -84,7 +84,7 @@ public abstract class AbstractGraphGenerator {
 
 	private boolean generateCharts = true;
 
-	public static final String DEFAULT_TEST_DATA_PATH = "../../../data/t_1_2.sspnt.xml";
+	public static final String DEFAULT_TEST_DATA_PATH = "../../../data/t_1_2.wav.sspnt.xml";
 	public static final String DEFAULT_EXPERT_MARKS_PATH = "../../../data/t_1_2_expert.mspnt.xml";
 
 	public abstract List<ComparisionResult> compare();

@@ -25,6 +25,7 @@ import javax.sound.sampled.AudioFormat;
 
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.SignalFormat;
 import org.spantus.utils.Assert;
 /**
  * 
@@ -35,6 +36,13 @@ import org.spantus.utils.Assert;
  *
  */
 public abstract class ExtractorsFactory {
+	
+	public static IExtractorInputReader createReader(SignalFormat format){
+		ExtractorInputReader reader = new ExtractorInputReader();
+		reader.setConfig(createConfig(format));
+		return reader;
+		
+	}
 	public static IExtractorInputReader createReader(AudioFormat format){
 		ExtractorInputReader reader = new ExtractorInputReader();
 		reader.setConfig(createConfig(format));
@@ -44,6 +52,10 @@ public abstract class ExtractorsFactory {
 	public static IExtractorConfig createConfig(AudioFormat format){
 		return ExtractorConfigUtil.defaultConfig(format.getSampleRate(), 
 				format.getSampleSizeInBits());
+	}
+	public static IExtractorConfig createConfig(SignalFormat format){
+		return ExtractorConfigUtil.defaultConfig(format.getSampleRate(), 
+				0);
 	}
 	
 	public static IExtractorInputReader createReader(AudioFileFormat format){

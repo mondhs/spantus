@@ -242,7 +242,7 @@ public class DecisionSegmentationExp extends AbstractGraphGenerator {
 	}
 
 	public static void main(final String[] args) {
-		String _testPath = "E:/home/studijos/wav/on_off_up_down_wav/on_off_up_down.sspnt.xml";
+		String _testPath = "c:/home/studijos/wav/on_off_up_down_wav/on_off_up_down.sspnt.xml";
 		if (args.length > 0) {
 			_testPath = args[0];
 		}

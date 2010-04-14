@@ -190,10 +190,15 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 		float delta =  vals.getDeltaValue();
 		int i=0; 
 		Integer previousIndex = null;
+
+		Integer index = (int)(i / (xScalar*values.getSampleRate()));
+		Integer minValue = (int)(vals.getMinValue()/yScalar);
+		polygon.addPoint(index, minValue);
+
 		
 		for (Float floatValue : vals) {
 			
-			Integer index = (int)(i / (xScalar*values.getSampleRate()));
+			index = (int)(i / (xScalar*values.getSampleRate()));
 			
 			if(previousIndex == null){
 				previousIndex = index;
@@ -216,7 +221,7 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 			polygon.addPoint(index, value);
 			i++;
 		}
-		
+		polygon.addPoint(index, minValue);
 
 		return polygon;
 	}
