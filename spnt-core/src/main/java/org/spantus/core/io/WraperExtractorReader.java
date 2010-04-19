@@ -93,17 +93,22 @@ public class WraperExtractorReader {
 			Iterator<Byte> valIterator = value.iterator();
 			Iterator<List<Byte>> buffIterator = shortBuffers.iterator();
 			while(valIterator.hasNext()){
-				buffIterator.next().add(valIterator.next());
+				Byte ival = valIterator.next();
+				buffIterator.next().add(ival);
 			}
-			int size =  shortBuffers.get(0).size();
-			if(size == 2){
+			int size =  shortBuffers.get(0).size(); 
+			if(shortBuffers.get(0).size() == 2){
 				for (List<Byte> shortBuffer : shortBuffers) {
-					sum += AudioUtil.read16(shortBuffer.get(0), 
+					if(shortBuffer.size()==2){
+						sum += AudioUtil.read16(shortBuffer.get(0), 
 							shortBuffer.get(1), 
 							getFormat());
+					}else{
+						getFormat();
+					}
+						
 					shortBuffer.clear();
 				}
-				
 				reader.put(sample++, preemphasis(sum));
 			}
 			break;

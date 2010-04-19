@@ -18,6 +18,7 @@
 */
 package org.spantus.core.extractor;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 	
 	private float sampleRate;
 	
-	private int bitsPerSample;
+//	private int bitsPerSample;
 	
 	private String windowing;
 	
@@ -76,7 +77,7 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 		this.extractors = cloning.getExtractors();
 		this.parameters = cloning.getParameters();
 		this.windowing = cloning.getWindowing();
-		this.bitsPerSample = cloning.getBitsPerSample();
+//		this.bitsPerSample = cloning.getBitsPerSample();
 	}
 	
 	
@@ -88,13 +89,13 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 		this.sampleRate = sampleRate;
 	}
 
-	public int getBitsPerSample() {
-		return bitsPerSample;
-	}
+//	public int getBitsPerSample() {
+//		return bitsPerSample;
+//	}
 
-	public void setBitsPerSample(int bitsPerSample) {
-		this.bitsPerSample = bitsPerSample;
-	}
+//	public void setBitsPerSample(int bitsPerSample) {
+//		this.bitsPerSample = bitsPerSample;
+//	}
 
 	public int getBufferSize() {
 		return bufferSize;
@@ -156,4 +157,13 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 	public void setPreemphasis(String preemphasis) {
 		this.preemphasis = preemphasis;
 	}
+	
+	@Override
+	public String toString() {
+		String msg = MessageFormat.format("{0} [sampleRate: {1}, windowSize: {2}, windowOverlap: {3}, frameSize: {4}]",
+				getClass().getSimpleName(),
+				sampleRate, windowSize, windowOverlap, frameSize);
+		return msg;
+	}
+	
 }

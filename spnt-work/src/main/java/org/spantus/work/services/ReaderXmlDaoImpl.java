@@ -12,8 +12,8 @@ import org.spantus.core.extractor.DefaultExtractorConfig;
 import org.spantus.core.extractor.ExtractorOutputHolder;
 import org.spantus.core.extractor.ExtractorVectorOutputHolder;
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
@@ -88,7 +88,6 @@ public class ReaderXmlDaoImpl implements ReaderDao {
 	protected XStream getXsteam(){
 		if(xstream == null){
 			xstream = new XStream();
-			xstream.omitField(IExtractorInputReader.class, "log");
 			xstream.registerConverter(new EnumConverter());
 			xstream.registerConverter(new FrameValuesConverter());
 			xstream.registerConverter(new FrameValues3DConverter());

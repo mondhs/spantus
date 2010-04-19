@@ -58,9 +58,8 @@ public class ConfigPropertiesDao implements ConfigDao {
 		overlapInPerc = overlapInPerc == null?66:overlapInPerc;
 		
 		DefaultExtractorConfig config = (DefaultExtractorConfig)ExtractorConfigUtil.defaultConfig(
-				format.getSampleRate(),format.getSampleSizeInBits()
-				,windowLengthInMilsec, overlapInPerc); 
-		config.setBitsPerSample(format.getSampleSizeInBits());
+				format.getSampleRate(), windowLengthInMilsec, overlapInPerc); 
+//		config.setBitsPerSample(format.getSampleSizeInBits());
 		
 		configDefaults(config, properties);
 		

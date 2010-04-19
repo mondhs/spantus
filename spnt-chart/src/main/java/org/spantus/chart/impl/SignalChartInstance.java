@@ -27,6 +27,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.math.BigDecimal;
 import java.text.Format;
+import java.text.MessageFormat;
 
 import net.quies.math.plot.ChartStyle;
 import net.quies.math.plot.CoordinateBoundary;
@@ -261,11 +262,14 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 	
 	public String getValueOn(BigDecimal x) {
 		int index = values.toIndex(x.floatValue());
-		if(index>=values.size()){
-			return "";
+		Float value = null;
+		if(index > 0 && index<values.size()){
+			value = values.get(index);
 		}
-		Float value = values.get(index);
-		return value.toString();
+		String valueStr = MessageFormat.format(
+				"{0,number} \n index: {1}", value,
+				 index);
+		return valueStr;
 	}
 
 }

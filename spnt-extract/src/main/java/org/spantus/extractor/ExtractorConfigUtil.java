@@ -34,9 +34,9 @@ import org.spantus.exception.ProcessingException;
  */
 public abstract class ExtractorConfigUtil {
 	public static IExtractorConfig  defaultConfig(AudioFormat format){
-		return defaultConfig(format.getSampleRate(), format.getSampleSizeInBits());
+		return defaultConfig(format.getSampleRate());
 	}
-	public static IExtractorConfig  defaultConfig(float sampleRate, int sampleSizeInBits){
+	public static IExtractorConfig  defaultConfig(float sampleRate){
 //		ExtractorConfig config = new ExtractorConfig();
 //		config.setSampleRate(sampleRate);
 //		Float windowSize = sampleRate*.01f;//10ms/1000
@@ -47,19 +47,26 @@ public abstract class ExtractorConfigUtil {
 //		config.setFrameSize(frameSize.intValue());
 //		config.setBitsPerSample(sampleSizeInBits);
 //		config.setBufferSize(bufferSize);
-		return defaultConfig(sampleRate,sampleSizeInBits, 10, 10);
+		return defaultConfig(sampleRate, 10, 10);
 	}
 	public static IExtractorConfig  defaultConfig(float sampleRate, 
-			int sampleSizeInBits, int windowLengthInMilSec, int overlapInPerc ){
+			 int windowLengthInMilSec, int overlapInPerc ){
 		ExtractorConfig config = new ExtractorConfig();
 		config.setSampleRate(sampleRate);
+		config.setBufferSize(3000);
 		Float windowSize = sampleRate * windowLengthInMilSec / 1000;
+		windowSize = Math.max(1, windowSize);
 		config.setWindowSize(windowSize.intValue());
-		Float windowOverlap = windowSize - (windowSize / overlapInPerc);
+		float windowOverlapPercent = ((float)overlapInPerc)/100;
+		
+		Float windowOverlap = windowSize - (windowSize * windowOverlapPercent);
+		windowOverlap = Math.max(1, windowOverlap);
 		config.setWindowOverlap(windowOverlap.intValue());
+		
+		
 		Float frameSize = (windowSize * 10)+windowOverlap;
 		config.setFrameSize(frameSize.intValue());
-		config.setBitsPerSample(sampleSizeInBits);
+//		config.setBitsPerSample(sampleSizeInBits);
 		config.setBufferSize(config.getFrameSize()*10);
 		return config;
 	}

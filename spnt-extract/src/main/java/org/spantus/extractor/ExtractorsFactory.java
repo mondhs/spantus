@@ -41,8 +41,14 @@ public abstract class ExtractorsFactory {
 		ExtractorInputReader reader = new ExtractorInputReader();
 		reader.setConfig(createConfig(format));
 		return reader;
-		
 	}
+	
+	public static IExtractorInputReader createReader(IExtractorConfig extractorConfig){
+		ExtractorInputReader reader = new ExtractorInputReader();
+		reader.setConfig(extractorConfig);
+		return reader;
+	}
+	
 	public static IExtractorInputReader createReader(AudioFormat format){
 		ExtractorInputReader reader = new ExtractorInputReader();
 		reader.setConfig(createConfig(format));
@@ -50,12 +56,10 @@ public abstract class ExtractorsFactory {
 	}
 	
 	public static IExtractorConfig createConfig(AudioFormat format){
-		return ExtractorConfigUtil.defaultConfig(format.getSampleRate(), 
-				format.getSampleSizeInBits());
+		return ExtractorConfigUtil.defaultConfig(format.getSampleRate());
 	}
 	public static IExtractorConfig createConfig(SignalFormat format){
-		return ExtractorConfigUtil.defaultConfig(format.getSampleRate(), 
-				0);
+		return ExtractorConfigUtil.defaultConfig(format.getSampleRate());
 	}
 	
 	public static IExtractorInputReader createReader(AudioFileFormat format){

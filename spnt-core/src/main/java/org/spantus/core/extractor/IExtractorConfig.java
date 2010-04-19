@@ -34,7 +34,7 @@ public interface IExtractorConfig extends Cloneable, Serializable {
 	public void setSampleRate(float sampleRate);
 	public int getWindowSize();
 	public void setWindowSize(int windowSize);
-	public int getBitsPerSample();
+//	public int getBitsPerSample();
 	public int getBufferSize();
 	public void setBufferSize(int bufferSize);
 	public int getFrameSize();

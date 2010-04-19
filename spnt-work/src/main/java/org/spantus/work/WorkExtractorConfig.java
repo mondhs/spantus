@@ -20,9 +20,9 @@ public class WorkExtractorConfig implements IExtractorConfig {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public int getBitsPerSample() {
-		return config.getBitsPerSample();
-	}
+//	public int getBitsPerSample() {
+//		return config.getBitsPerSample();
+//	}
 
 	public int getBufferSize() {
 		return config.getBufferSize();

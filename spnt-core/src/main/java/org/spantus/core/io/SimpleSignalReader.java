@@ -93,7 +93,7 @@ public class SimpleSignalReader implements SignalReader {
 
 	public void readSignal(URL url, IExtractorInputReader reader)
 			throws ProcessingException {
-
+		log.debug("[readSignal]Reading signal with config: {0}", reader.getConfig() );
 		try {
 			// Open the file that is the first
 			// command line parameter
@@ -121,6 +121,7 @@ public class SimpleSignalReader implements SignalReader {
 
 	public void readSignal(List<URL> urls, IExtractorInputReader reader)
 			throws ProcessingException {
+		log.debug("[readSignal]Reading signal with config: {0}", reader.getConfig() );
 		List<BufferedReader> bfreaders = new ArrayList<BufferedReader>();
 		List<DataInputStream> inputs = new ArrayList<DataInputStream>();
 		
