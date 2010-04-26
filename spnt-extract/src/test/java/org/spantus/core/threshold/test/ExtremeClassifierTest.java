@@ -8,11 +8,11 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
-import org.spantus.core.threshold.ExtremeClassifierServiceImpl;
-import org.spantus.core.threshold.ExtremeEntry;
-import org.spantus.core.threshold.ExtremeOfflineCtx;
-import org.spantus.core.threshold.ExtremeSegment;
-import org.spantus.core.threshold.ExtremeEntry.SignalStates;
+import org.spantus.extract.segments.offline.ExtremeClassifierServiceImpl;
+import org.spantus.extract.segments.offline.ExtremeEntry;
+import org.spantus.extract.segments.offline.ExtremeOfflineCtx;
+import org.spantus.extract.segments.offline.ExtremeSegment;
+import org.spantus.extract.segments.offline.ExtremeEntry.SignalStates;
 
 public class ExtremeClassifierTest{
 	ExtremeClassifierServiceImpl extremeThresholdService;

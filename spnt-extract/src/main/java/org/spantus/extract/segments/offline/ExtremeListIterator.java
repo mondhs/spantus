@@ -1,11 +1,11 @@
-package org.spantus.core.threshold;
+package org.spantus.extract.segments.offline;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
 import org.spantus.core.FrameValues;
-import org.spantus.core.threshold.ExtremeEntry.SignalStates;
+import org.spantus.extract.segments.offline.ExtremeEntry.SignalStates;
 import org.spantus.logger.Logger;
 
 public class ExtremeListIterator implements ListIterator<ExtremeEntry> {

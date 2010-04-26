@@ -242,7 +242,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 	
 	public void repaint() {
 		super.repaint();
-		if (graph != null) {
+		if (graph != null && graph.getFont() != null) {
 			Dimension d = getSize();
 			d.height -= getHeaderHeight();
 			graph.setSize(d);

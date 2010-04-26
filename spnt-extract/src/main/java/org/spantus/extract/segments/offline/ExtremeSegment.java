@@ -1,4 +1,4 @@
-package org.spantus.core.threshold;
+package org.spantus.extract.segments.offline;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -46,8 +46,8 @@ public class ExtremeSegment {
 		Long lastLength = segment.getCalculatedLength();
 		Long currentLength = this.getCalculatedLength();
 		
-		double similarity = lastArea>currentArea*.9 && lastArea<currentArea?0.50:0;
-		similarity += currentArea>lastArea*.9 && currentArea<lastArea?0.50:0;
+		double similarity = lastArea>currentArea*.99 && lastArea<currentArea?0.50:0;
+		similarity += currentArea>lastArea*.99 && currentArea<lastArea?0.50:0;
 		similarity += currentArea==lastArea?0.50:0;
 		similarity += lastLength==currentLength?0.25:0;
 		similarity += lastLength>currentLength*.9 && lastLength<currentLength?0.25:0;

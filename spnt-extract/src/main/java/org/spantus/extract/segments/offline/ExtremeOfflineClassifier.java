@@ -1,4 +1,4 @@
-package org.spantus.core.threshold;
+package org.spantus.extract.segments.offline;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,6 +7,7 @@ import java.util.Map;
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.threshold.AbstractThreshold;
 
 public class ExtremeOfflineClassifier extends AbstractThreshold {
 

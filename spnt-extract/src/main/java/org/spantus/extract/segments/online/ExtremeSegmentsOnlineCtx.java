@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.spantus.core.threshold.ExtremeSegment;
+import org.spantus.extract.segments.offline.ExtremeSegment;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum;
 
 public class ExtremeSegmentsOnlineCtx {
@@ -34,7 +34,8 @@ public class ExtremeSegmentsOnlineCtx {
 	}
 	
 	public Integer increase(){
-		return ++index;
+		index++;
+		return getIndex();
 	}
 	public Boolean getFoundStartSegment() {
 		if(getCurrentSegment()!=null){

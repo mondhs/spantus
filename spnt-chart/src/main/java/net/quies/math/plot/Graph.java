@@ -27,6 +27,7 @@ OF SUCH DAMAGE.
 */
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -41,8 +42,11 @@ import java.text.Format;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
+
+import sun.util.logging.resources.logging;
 
 
 /**
@@ -322,8 +326,21 @@ getRender(AxisInstance xAxis, AxisInstance yAxis, ArrayList<FunctionInstance> fu
 	int zeroPointY = yAxis.ZERO.divide(yScalar, MathContext.DECIMAL32).intValue();
 	xOffset -= Math.min(zeroPointX, xAxis.MIN.divide(xScalar, MathContext.DECIMAL32).intValue());
 	yOffset -= Math.min(zeroPointY, yAxis.MAX.divide(yScalar, MathContext.DECIMAL32).intValue());
-
-	FontMetrics fontMetrics = getFontMetrics(getFont());
+	Font font =getFont();
+	int j = 10;
+	if(font==null){
+		getFont();
+	}
+//	while(font == null || j !=0){
+//		try {
+//			wait(50);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//		font = getFont();
+//		j--;
+//	}
+	FontMetrics fontMetrics = getFontMetrics(font);
 	xAxis.render(zeroPointY, fontMetrics);
 	yAxis.render(zeroPointX, fontMetrics);
 

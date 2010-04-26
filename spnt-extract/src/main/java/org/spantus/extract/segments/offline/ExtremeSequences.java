@@ -1,4 +1,4 @@
-package org.spantus.core.threshold;
+package org.spantus.extract.segments.offline;
 
 import java.util.Collection;
 import java.util.Iterator;

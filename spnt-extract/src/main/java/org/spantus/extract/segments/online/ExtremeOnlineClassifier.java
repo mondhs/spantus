@@ -6,12 +6,12 @@ import java.util.List;
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.AbstractClassifier;
-import org.spantus.core.threshold.ExtremeEntry;
-import org.spantus.core.threshold.ExtremeOfflineClassifier;
-import org.spantus.core.threshold.ExtremeSegment;
 import org.spantus.core.threshold.IClassificationListener;
 import org.spantus.core.threshold.SegmentEvent;
-import org.spantus.core.threshold.ExtremeEntry.SignalStates;
+import org.spantus.extract.segments.offline.ExtremeEntry;
+import org.spantus.extract.segments.offline.ExtremeOfflineClassifier;
+import org.spantus.extract.segments.offline.ExtremeSegment;
+import org.spantus.extract.segments.offline.ExtremeEntry.SignalStates;
 import org.spantus.extract.segments.online.cluster.ExtremeOnlineClusterService;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
@@ -78,6 +78,8 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	 */
 	protected void processValue(Float value) {
 		Integer index = onlineCtx.getIndex();
+		log.debug("[processValue] {0} value {1}->{2}",
+				index - 1, onlineCtx.getPrevious(), value);
 		if (onlineCtx.getPrevious() == null) {
 			onlineCtx.setPrevious(value);
 			log.debug("[processValue]first: {0} on {1}",onlineCtx.getPrevious(), index);
@@ -125,8 +127,8 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	}
 	
 	protected void onMinFound(Integer index, float previous, float value){
-//		log.debug("[onMinFound]found min on {0} value {1}->{2}",
-//				index - 1, previous, value);
+		log.debug("[onMinFound]found min on {0} value {1}->{2}",
+				index - 1, previous, value);
 		
 		if(onlineCtx.getCurrentSegment() == null){
 			//first min
@@ -211,6 +213,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		if(getMarker()==null){
 			startMarker(ctx);
 		}
+		
 		onlineCtx.setMarkerState(state.segment);
 	}
 	
@@ -231,6 +234,35 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	}
 	public void endMarker(ExtremeSegmentsOnlineCtx ctx){
 		log.debug("[endMarker]!");
+		Marker marker = getMarker();
+		if(marker == null){
+			log.debug("Marker not initialized");
+			return;
+		}
+		ExtremeSegment last = null;
+		if(ctx.getExtremeSegments().size()>0){
+			 last = ctx.getExtremeSegments().getLast();
+		}else{
+//			onlineCtx.learn(ctx.getCurrentSegment());
+//			return;
+			 last = ctx.getCurrentSegment();
+			 
+		}
+		Integer startSample = last.getStartEntry().getIndex();
+		Integer endSample = last.getEndEntry().getIndex();
+		
+		Long startTime = getOutputValues().indextoMils(startSample);
+		Long endTime = getOutputValues().indextoMils(endSample);
+		
+		String className = getClusterService().getClassName(last, ctx);
+		
+		marker.setLabel(MessageFormat.format("{0}:{1}",last.getStartEntry().getIndex() , className)
+				);
+		marker.setStart(startTime);
+		marker.setEnd(endTime);
+		marker.getExtractionData().setStartSampleNum(startSample.longValue()-1);
+		marker.getExtractionData().setEndSampleNum(endSample.longValue()-1);
+		onlineCtx.setMarkerState(state.end);
 	}
 	
 	public void endMarkerApproved(ExtremeSegmentsOnlineCtx ctx){
@@ -252,8 +284,6 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		
 		Integer startSample = last.getStartEntry().getIndex();
 		Integer endSample = last.getEndEntry().getIndex();
-		Long step = getOutputValues().indextoMils(1);
-		step /=2;
 		
 		Long startTime = getOutputValues().indextoMils(startSample);
 		Long endTime = getOutputValues().indextoMils(endSample);
@@ -311,7 +341,11 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 
 		
 		ctx.setCurrentSegment(createExtremeSegment());
-		onlineCtx.getCurrentSegment().setStartEntry(current.getEndEntry().clone());
+		if(current.getEndEntry() !=null){
+			onlineCtx.getCurrentSegment().setStartEntry(current.getEndEntry().clone());
+		}else {
+			onlineCtx.getCurrentSegment().setStartEntry(last.getStartEntry().clone());
+		}
 		startMarker(onlineCtx);
 		
 	}

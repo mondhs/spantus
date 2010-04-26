@@ -53,8 +53,8 @@ public abstract class AudioUtil {
 	}
 	
 	public static Byte[] get16(Float f1, AudioFormat format) {
-		Byte[] bs = new Byte[2];
-		boolean signed = (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED);
+//		Byte[] bs = new Byte[2];
+//		boolean signed = (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED);
 		boolean bigEndian = (format.isBigEndian());
 		int value = f1.intValue();
 		byte b1 =0, b2=0;

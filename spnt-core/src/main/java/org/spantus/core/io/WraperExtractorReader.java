@@ -96,7 +96,6 @@ public class WraperExtractorReader {
 				Byte ival = valIterator.next();
 				buffIterator.next().add(ival);
 			}
-			int size =  shortBuffers.get(0).size(); 
 			if(shortBuffers.get(0).size() == 2){
 				for (List<Byte> shortBuffer : shortBuffers) {
 					if(shortBuffer.size()==2){

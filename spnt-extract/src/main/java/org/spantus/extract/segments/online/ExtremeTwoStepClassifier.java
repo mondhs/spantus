@@ -1,6 +1,6 @@
 package org.spantus.extract.segments.online;
 
-import org.spantus.core.threshold.ExtremeOfflineClassifier;
+import org.spantus.extract.segments.offline.ExtremeOfflineClassifier;
 import org.spantus.logger.Logger;
 
 public class ExtremeTwoStepClassifier extends ExtremeOnlineClassifier {

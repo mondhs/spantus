@@ -1,6 +1,6 @@
 package org.spantus.extract.segments.online.rule;
 
-import org.spantus.core.threshold.ExtremeSegment;
+import org.spantus.extract.segments.offline.ExtremeSegment;
 import org.spantus.extract.segments.online.ExtremeOnClassifierServiceFactory;
 import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.extract.segments.online.cluster.ExtremeOnlineClusterService;
@@ -75,20 +75,28 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			
 			if (segmentStart && ctx.isIn(null)) {
 				return ClassifierRuleBaseEnum.action.startMarker;
+//			} else if (ctx.isIn(state.start) && segmentPeak && currentLength <=20) {
+//				log.debug("too short for segment");
+//				return ClassifierRuleBaseEnum.action.join;
 			} else if ((ctx.isIn(state.start) || ctx.isIn(null)) && segmentPeak) {
 				return ClassifierRuleBaseEnum.action.startMarkerApproved;
 			} else if (segmentEnd && currentSegment.isIncrease(lastSegment)
+//					&& !currentSegment.isSimilar(lastSegment)
 //					&& currentArea>lastArea*.9 && currentArea<lastArea
 //					&& !noiseClass
 					) {
+				log.debug("increase");
 				return ClassifierRuleBaseEnum.action.join;
 			} else if (segmentEnd && currentSegment.isDecrease(lastSegment)
+//					&& !currentSegment.isSimilar(lastSegment)
 //					&& lastArea>currentArea*.9 && lastArea<currentArea
 //					&& !noiseClass
 					) {
+				log.debug("decrease");
 				return ClassifierRuleBaseEnum.action.join;
 			} else if (segmentEnd && currentSegment.isSimilar(lastSegment)
 					) {
+				log.debug("similar" + currentSegment.isSimilar(lastSegment));
 				return ClassifierRuleBaseEnum.action.join;
 //			} else if (segmentEnd && currentSegment.isDecrease()
 //					&& lastSegment.isIncrease() 
@@ -114,7 +122,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			} else if (!segmentEnd && !segmentStart && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
 			} else if (segmentEnd) {
-				return ClassifierRuleBaseEnum.action.endMarkerApproved;
+				return ClassifierRuleBaseEnum.action.endMarker;
 			} else if (segmentEnd && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.delete;
 			} else if (ctx.isIn(state.segment)) {
