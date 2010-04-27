@@ -1,26 +1,34 @@
 package org.spantus.extract.segments.offline;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.spantus.core.FrameValues;
 
 
-public class ExtremeSegment {
+public class ExtremeSegment implements Serializable, Cloneable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private ExtremeEntry startEntry;
 	private ExtremeEntry peakEntry;
 	private ExtremeEntry endEntry;
+	public boolean joined = false;
 	
 	private List<ExtremeEntry> peakEntries;
 
 	private FrameValues values;
 	
 	public boolean isIncrease(){
+		if(getStartEntry() == null) return false;
 		Float start = getStartEntry().getValue();
 		Float end = getEndEntry().getValue();
 		return end.compareTo(start)>0;
 	}
 	public boolean isDecrease(){
+		if(getStartEntry() == null) return false;
 		Float start = getStartEntry().getValue();
 		Float end = getEndEntry().getValue();
 		return start.compareTo(end)>0;
@@ -35,7 +43,7 @@ public class ExtremeSegment {
 	public boolean isIncrease(ExtremeSegment segment){
 		Float thisPeak = this.getPeakEntry().getValue();
 		Float otherPeak = segment.getPeakEntry().getValue();
-		boolean increase = isIncrease() && this.isIncrease() && thisPeak<otherPeak;  
+		boolean increase = isIncrease() && segment.isIncrease() && thisPeak<otherPeak;  
 		return increase;
 	}
 	public boolean isSimilar(ExtremeSegment segment){
@@ -86,9 +94,9 @@ public class ExtremeSegment {
 			sb.append("-;");
 		}
 		if(getEndEntry() != null){
-			sb.append(getEndEntry().getIndex()).append("=").append(getEndEntry().getValue()).append(";");
+			sb.append(getEndEntry().getIndex()).append("=").append(getEndEntry().getValue());
 		}else{
-			sb.append("-;");
+			sb.append("-");
 		}
 		
 		sb.append("]");
@@ -139,6 +147,18 @@ public class ExtremeSegment {
 	public void setPeakEntries(List<ExtremeEntry> peakEntries) {
 		this.peakEntries = peakEntries;
 	}
-
+	
+	public ExtremeSegment clone(){
+		try {
+			ExtremeSegment esCloned =  (ExtremeSegment)super.clone();
+			esCloned.setPeakEntries(new LinkedList<ExtremeEntry>());
+			for (ExtremeEntry ee : this.getPeakEntries()) {
+				esCloned.getPeakEntries().add(ee.clone());
+			}
+			return esCloned;
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
 
 }

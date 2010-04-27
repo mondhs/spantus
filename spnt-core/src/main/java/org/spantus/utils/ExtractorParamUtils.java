@@ -65,6 +65,9 @@ public abstract class ExtractorParamUtils {
 		return (E)param.getProperties().get(propertyName);
 	}
 	public static <E> E getValue(ExtractorParam param,String propertyName, E defaultVal){
+		if(param.getProperties().isEmpty()){
+			return defaultVal;
+		}
 		E val = ExtractorParamUtils.<E>getValue(param, propertyName);
 		if(val == null){
 			val = defaultVal;

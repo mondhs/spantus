@@ -358,12 +358,13 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 
 	public String getValueOn(BigDecimal x) {
 		int index = getCtx().getValues().toIndex(x.floatValue());
+		index++;
 		Float value = null;
-		if (index < getCtx().getValues().size()) {
+		if (index < getCtx().getValues().size() && index>0) {
 			value = getCtx().getValues().get(index);
 		}
 		Float thresholdValue = null;
-		if (index < getCtx().getThreshold().size()) {
+		if (index < getCtx().getThreshold().size() && index>0) {
 			thresholdValue = getCtx().getThreshold().get(index);
 		}
 		String thresholdValueStr = thresholdValue == null ? "-"

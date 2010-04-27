@@ -27,6 +27,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	private SignalStates lastState = null;
 	private ClassifierRuleBaseService ruleBaseService;
 	private ExtremeOnlineClusterService clusterService;
+	private Marker freshMarker;
 	
 	public ExtremeOnlineClassifier() {
 		onlineCtx = new ExtremeSegmentsOnlineCtx();
@@ -52,23 +53,41 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	public void flush() {
 		super.flush();
 		log.debug("[flush]");
+		log.debug("[flush] markers {0}", getMarkSet().getMarkers());
 		if(onlineCtx.getExtremeSegments().size()>0 &&
 				onlineCtx.getExtremeSegments().getLast() != null){
-			
+			ExtremeSegment current = onlineCtx.getCurrentSegment();
 			if(getMarker() == null){
 				startMarker(onlineCtx);
 			}
-			endMarkerApproved(onlineCtx);
-		}
-//		if(log.isDebugMode()){
-//			StringBuilder sb = new StringBuilder();
-//			for (SegmentInnerData innerData : onlineCtx.semgnetFeatures) {
-//				sb.append(innerData.getArea()).append(",").append(innerData.getLength())
-//				.append(",").append(innerData.getPeaks())
-//				.append("\n");
+			//endMarkerApproved(onlineCtx);
+			String className = getClusterService().getClassName(current, onlineCtx);
+			log.debug("[flush] current {0}", current);
+			if(current != null && current.getPeakEntry() != null && current.getEndEntry() == null){
+				ExtremeEntry entry = new ExtremeEntry(onlineCtx.getIndex().intValue(),
+						onlineCtx.getPrevious(), SignalStates.min);
+				current.setEndEntry(entry);
+				approveMarker(onlineCtx.getIndex(), current, className);
+				log.debug("[flush] current {0}", current);
+			}
+			
+			
+//			if(onlineCtx.getCurrentSegment() != null && onlineCtx.getCurrentSegment().getEndEntry() != null){
+//				onlineCtx.getExtremeSegments().add(onlineCtx.getCurrentSegment() );
+//				setMarker(new Marker());
+//				endMarkerApproved(onlineCtx);
 //			}
-//			log.error("\n" + sb);
-//		}
+		}
+		if(log.isDebugMode()){
+			StringBuilder sb = new StringBuilder();
+			for (SegmentInnerData innerData : onlineCtx.semgnetFeatures) {
+				sb.append(innerData.getArea()).append(",").append(innerData.getLength())
+				.append(",").append(innerData.getPeaks())
+				.append("\n");
+			}
+			log.error("\n" + sb);
+		}
+		
 		getThresholdValues().addAll(ExtremeOfflineClassifier.refreshThreasholdInfo(getMarkSet(), getOutputValues()));
 	}
 	/**
@@ -79,7 +98,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	protected void processValue(Float value) {
 		Integer index = onlineCtx.getIndex();
 		log.debug("[processValue] {0} value {1}->{2}",
-				index - 1, onlineCtx.getPrevious(), value);
+				index , onlineCtx.getPrevious(), value);
 		if (onlineCtx.getPrevious() == null) {
 			onlineCtx.setPrevious(value);
 			log.debug("[processValue]first: {0} on {1}",onlineCtx.getPrevious(), index);
@@ -128,7 +147,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	
 	protected void onMinFound(Integer index, float previous, float value){
 		log.debug("[onMinFound]found min on {0} value {1}->{2}",
-				index - 1, previous, value);
+				index, previous, value);
 		
 		if(onlineCtx.getCurrentSegment() == null){
 			//first min
@@ -150,7 +169,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 
 	protected void onMaxFound(Integer index, float previous, float value){
 		log.debug("[onMaxFound]found max on {0} value {1}->{2}",
-				index - 1, previous, value);
+				index , previous, value);
 //		if extreme segment not created skip it
 		if(onlineCtx.getCurrentSegment() != null){
 			ExtremeEntry middleEntry = new ExtremeEntry(index.intValue(),
@@ -210,8 +229,20 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	}
 	
 	public void startMarkerApproved(ExtremeSegmentsOnlineCtx ctx){
+		endMarkerApproved(ctx);
 		if(getMarker()==null){
 			startMarker(ctx);
+		}
+		ExtremeSegment segment = ctx.getCurrentSegment();
+		Integer startSample = segment.getStartEntry().getIndex();
+		Long time = getOutputValues().indextoMils(startSample);
+		setMarker(getFreshMarker());
+		setFreshMarker(null);
+		log.debug("[startMarkerApproved]started new marker" + getMarker());
+		
+		for (IClassificationListener listener : getClassificationListeners()) {
+			listener.onSegmentStarted(
+					new SegmentEvent(getName(),time,getMarker(), ctx.getIndex().longValue()));
 		}
 		
 		onlineCtx.setMarkerState(state.segment);
@@ -221,17 +252,17 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		ExtremeSegment segment = ctx.getCurrentSegment();
 		Integer startSample = segment.getStartEntry().getIndex();
 		Long time = getOutputValues().indextoMils(startSample);
-		Marker marker = new Marker();
-		marker.setLabel("" + (segment.getStartEntry().getIndex()));
-		marker.setStart(time);
-		marker.getExtractionData().setStartSampleNum(startSample.longValue()-1);
-		setMarker(marker);
+		Marker freshMarker = new Marker();
+		freshMarker.setLabel("" + (segment.getStartEntry().getIndex()));
+		freshMarker.setStart(time);
+		freshMarker.getExtractionData().setStartSampleNum(startSample.longValue()-1);
+		setFreshMarker(freshMarker);
 		onlineCtx.setMarkerState(state.start);
-		for (IClassificationListener listener : getClassificationListeners()) {
-			listener.onSegmentStarted(
-					new SegmentEvent(getName(),time,getMarker(),ctx.getIndex().longValue()));
-		}
 	}
+	/**
+	 * end marker found. prepare for approve {@link #endMarkerApproved(ExtremeSegmentsOnlineCtx)}
+	 * @param ctx
+	 */
 	public void endMarker(ExtremeSegmentsOnlineCtx ctx){
 		log.debug("[endMarker]!");
 		Marker marker = getMarker();
@@ -249,6 +280,12 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			 
 		}
 		Integer startSample = last.getStartEntry().getIndex();
+		
+		//after join lost will lose its end index
+		if(last.getEndEntry() == null){
+			last.setEndEntry(ctx.getCurrentSegment().getEndEntry().clone());
+			onlineCtx.setCurrentSegment(createExtremeSegment());
+		}
 		Integer endSample = last.getEndEntry().getIndex();
 		
 		Long startTime = getOutputValues().indextoMils(startSample);
@@ -264,13 +301,12 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		marker.getExtractionData().setEndSampleNum(endSample.longValue()-1);
 		onlineCtx.setMarkerState(state.end);
 	}
-	
+	/**
+	 * if marker end found just update data end add to {@link #getMarkSet()}
+	 * 
+	 * @param ctx
+	 */
 	public void endMarkerApproved(ExtremeSegmentsOnlineCtx ctx){
-		Marker marker = getMarker();
-		if(marker == null){
-			log.debug("Marker not initialized");
-			return;
-		}
 		ExtremeSegment last = null;
 		if(ctx.getExtremeSegments().size()>0){
 			 last = ctx.getExtremeSegments().getLast();
@@ -279,16 +315,37 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 //			return;
 			 last = ctx.getCurrentSegment();
 		}
-		
 		getClusterService().learn(last,ctx);
+		String className = getClusterService().getClassName(last, ctx);
+		approveMarker(ctx.getIndex(), last, className);
+		
+	}
+	/**
+	 * 
+	 * @param index
+	 * @param last
+	 * @param className
+	 */
+	public void approveMarker(Integer index, ExtremeSegment last, String className){
+		Marker marker = getMarker();
+		if(last.joined){
+			log.debug("[approveMarker]Already joined {0}", last);
+			return;
+		}
+		if(marker == null){
+			startMarker(onlineCtx);
+			marker = getFreshMarker();
+		}
+		if(marker == null || last.getEndEntry() == null){
+			log.debug("[approveMarker]Marker not initialized marker:{0}; lastEnd: {1}", marker, last.getEndEntry());
+			return;
+		}
 		
 		Integer startSample = last.getStartEntry().getIndex();
 		Integer endSample = last.getEndEntry().getIndex();
 		
 		Long startTime = getOutputValues().indextoMils(startSample);
 		Long endTime = getOutputValues().indextoMils(endSample);
-		
-		String className = getClusterService().getClassName(last, ctx);
 		
 		marker.setLabel(MessageFormat.format("{0}:{1}",last.getStartEntry().getIndex() , className)
 				);
@@ -300,18 +357,31 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		boolean valid = true;
 		
 		for (Marker iMarker : getMarkSet().getMarkers()) {
-			if(iMarker.getEnd()>startTime){
-				log.error("[endMarkerApproved]conflicts " + iMarker + " with " + marker);
+			if(iMarker.getStart().equals(marker.getStart())){
+				log.error("[approveMarker]conflicts " + iMarker + " with " + marker);
+//				log.error("[approveMarker]join conflicted " + iMarker + " with " + marker);
+//				iMarker.setLength(marker.getLength());
+//				iMarker.setLabel(marker.getLabel());
+//				iMarker.getExtractionData().setLengthSampleNum(marker.getExtractionData().getLengthSampleNum());
+				valid = false;
+			}else if(iMarker.getEnd()>startTime){
+				log.error("[approveMarker]conflicts " + iMarker + " with " + marker);
 				valid = false;
 			}
 		}
 		if("0".equals(className)){
+			log.debug("[approveMarker] marker {3}is not valid class: {0} on [{1};{2}] ", 
+					className,
+					marker.getExtractionData().getStartSampleNum(),
+					(marker.getExtractionData().getStartSampleNum() + marker.getExtractionData().getLengthSampleNum()),
+					marker
+					);
+			
 			valid = false;
 		}
 		
 		if(valid){
-			log.debug("[endMarkerApproved] adding marker {0}", marker );
-			className = getClusterService().getClassName(last, ctx);
+			log.debug("[endMarkerApproved] !!!!!! adding marker {0}", marker );
 			getMarkSet().getMarkers().add(marker);
 			
 		}
@@ -319,15 +389,24 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		onlineCtx.setMarkerState(null);
 		for (IClassificationListener listener : getClassificationListeners()) {
 			listener.onSegmentEnded(
-					new SegmentEvent(getName(),startTime,getMarker(),ctx.getIndex().longValue()));
+					new SegmentEvent(getName(),startTime,getMarker(),index.longValue()));
 		}
 	}
 	
-	
+	/**
+	 * Join to segments
+	 * @param ctx
+	 */
 	public void join(ExtremeSegmentsOnlineCtx ctx){
 		ExtremeSegment current = ctx.getCurrentSegment();
 		ExtremeSegment last = ctx.getExtremeSegments().getLast();
-		last.setEndEntry(current.getEndEntry());
+		
+		log.debug("[join]++++ on {2} [{3}]; current: {1}; last: {0}; ", 
+				last, 
+				current, 
+				onlineCtx.getIndex(),
+				onlineCtx.getMarkerState());
+		
 		last.getValues().addAll(current.getValues());
 		last.getPeakEntries().add(current.getPeakEntry());
 		
@@ -338,17 +417,42 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 				last.setPeakEntry(extremeEntry);
 			}
 		}
-
 		
-		ctx.setCurrentSegment(createExtremeSegment());
-		if(current.getEndEntry() !=null){
-			onlineCtx.getCurrentSegment().setStartEntry(current.getEndEntry().clone());
-		}else {
-			onlineCtx.getCurrentSegment().setStartEntry(last.getStartEntry().clone());
+		
+		//segment not finished yet
+		if(current.getEndEntry() == null){
+//			current.getEndEntry();
+//			last.setEndEntry(null);
+			current = last.clone();
+			current.setEndEntry(null);
+			ctx.setCurrentSegment(current);
+			last.joined = true;
+			onlineCtx.setMarkerState(state.segment);
+			
+		}else{
+			
+			last.setEndEntry(current.getEndEntry());	
+			current=createExtremeSegment();
+			ctx.setCurrentSegment(current);
+			if(current.getEndEntry() !=null){
+				onlineCtx.getCurrentSegment().setStartEntry(current.getEndEntry().clone());
+			}else {
+				onlineCtx.getCurrentSegment().setStartEntry(last.getStartEntry().clone());
+			}
+			startMarker(onlineCtx);
+			onlineCtx.setMarkerState(ClassifierRuleBaseEnum.state.segment);
 		}
-		startMarker(onlineCtx);
+		log.debug("[join]---- on {2} [{3}]; current: {1}; last: {0}; ", 
+				last, 
+				current, 
+				onlineCtx.getIndex(),
+				onlineCtx.getMarkerState());
 		
 	}
+	/**
+	 * process segment
+	 * @param ctx
+	 */
 	public void processSegment(ExtremeSegmentsOnlineCtx ctx){
 		onlineCtx.setMarkerState(state.segment);
 		Long time = getOutputValues().indextoMils(ctx.getIndex());
@@ -410,6 +514,14 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 
 	public void setClusterService(ExtremeOnlineClusterService clusterService) {
 		this.clusterService = clusterService;
+	}
+
+	public Marker getFreshMarker() {
+		return freshMarker;
+	}
+
+	public void setFreshMarker(Marker freshMarker) {
+		this.freshMarker = freshMarker;
 	}
 
 

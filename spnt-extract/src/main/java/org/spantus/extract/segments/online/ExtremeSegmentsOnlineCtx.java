@@ -38,8 +38,8 @@ public class ExtremeSegmentsOnlineCtx {
 		return getIndex();
 	}
 	public Boolean getFoundStartSegment() {
-		if(getCurrentSegment()!=null){
-			return (getIndex()-1) == getCurrentSegment().getStartEntry().getIndex();
+		if(getCurrentSegment()!=null && getCurrentSegment().getStartEntry()!=null){
+			return (getIndex()) == getCurrentSegment().getStartEntry().getIndex();
 		}
 		
 		return false;

@@ -26,6 +26,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 	public String testOnRuleBase(ExtremeSegmentsOnlineCtx ctx) {
 		ClassifierRuleBaseEnum.action actionVal = testOnRuleBase(ctx,
 				Boolean.TRUE);
+		log.debug("[testOnRuleBase] {0}", actionVal.name());
 		return actionVal.name();
 	}
 
@@ -54,7 +55,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			} else if (ctx.isIn(state.start)) {
 				return ClassifierRuleBaseEnum.action.startMarkerApproved;
 			} else if (segmentEnd && ctx.isIn(state.segment)) {
-				return ClassifierRuleBaseEnum.action.endMarkerApproved;
+				return ClassifierRuleBaseEnum.action.endMarker;
 			} else if (ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
 			}
@@ -71,71 +72,62 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			Long currentLength = currentSegment.getCalculatedLength();
 			
 //			noiseClass = "0".equals(className);
-
+			log.debug(
+					"[testOnRuleBase] processing Area: ({0}<>{1}), length: ({2}<>{3}), state {4}, isEnd: {5}, isPeak: {6}",
+						currentArea, lastArea,
+						currentLength, lastLength
+							, ctx.getMarkerState(),
+							segmentEnd, segmentPeak);
 			
 			if (segmentStart && ctx.isIn(null)) {
 				return ClassifierRuleBaseEnum.action.startMarker;
-//			} else if (ctx.isIn(state.start) && segmentPeak && currentLength <=20) {
-//				log.debug("too short for segment");
+//			} else if (segmentPeak && currentLength < 20 && lastLength > 100 ) {
+//				log.debug("[testOnRuleBase] too short for start new currentLength: {0}, lastLength:{1}", currentLength, lastLength  );
 //				return ClassifierRuleBaseEnum.action.join;
-			} else if ((ctx.isIn(state.start) || ctx.isIn(null)) && segmentPeak) {
+			}else if (ctx.isIn(null) && !segmentPeak) {
+				log.debug("[testOnRuleBase] state not defined");
+				return ClassifierRuleBaseEnum.action.startMarkerApproved;
+			} else if ( segmentPeak) {
 				return ClassifierRuleBaseEnum.action.startMarkerApproved;
 			} else if (segmentEnd && currentSegment.isIncrease(lastSegment)
-//					&& !currentSegment.isSimilar(lastSegment)
 //					&& currentArea>lastArea*.9 && currentArea<lastArea
 //					&& !noiseClass
 					) {
-				log.debug("increase");
+				log.debug("[testOnRuleBase] increase");
 				return ClassifierRuleBaseEnum.action.join;
 			} else if (segmentEnd && currentSegment.isDecrease(lastSegment)
-//					&& !currentSegment.isSimilar(lastSegment)
 //					&& lastArea>currentArea*.9 && lastArea<currentArea
 //					&& !noiseClass
 					) {
-				log.debug("decrease");
+				log.debug("[testOnRuleBase] decrease");
 				return ClassifierRuleBaseEnum.action.join;
 			} else if (segmentEnd && currentSegment.isSimilar(lastSegment)
 					) {
-				log.debug("similar" + currentSegment.isSimilar(lastSegment));
+				log.debug("[testOnRuleBase] similar");
 				return ClassifierRuleBaseEnum.action.join;
-//			} else if (segmentEnd && currentSegment.isDecrease()
-//					&& lastSegment.isIncrease() 
-//					&& lastArea>currentArea/2
-//					) {
-//				return ClassifierRuleBaseEnum.action.join;				
-//			} else if (segmentEnd && currentSegment.isDecrease()
-//					&& lastSegment.isIncrease()
-//					&& lastLength >20 && currentLength > 20) {
-//				return ClassifierRuleBaseEnum.action.join;
-//			} else if (segmentEnd && currentPeak == lastPeak 
-//					&& (lastArea>currentArea*.9 && lastArea<currentArea)
-//			) {
-//				return ClassifierRuleBaseEnum.action.join;	
-
-//			} else if (segmentEnd && lastLength == currentLength
-//					) {
-//				return ClassifierRuleBaseEnum.action.join;	
-//			} else if (segmentEnd && lastLength<50 && currentLength < 50
-//					&& !noiseClass
-//					) {
-//				return ClassifierRuleBaseEnum.action.join;	
 			} else if (!segmentEnd && !segmentStart && ctx.isIn(state.segment)) {
-				return ClassifierRuleBaseEnum.action.processSignal;
+ 				return ClassifierRuleBaseEnum.action.processSignal;
+//			} else if (segmentEnd && lastLength < 30 && currentLength > 30 ) {
+//				log.debug("[testOnRuleBase] too short for start new currentLength: {0}, lastLength:{1}", currentLength, lastLength  );
+//				return ClassifierRuleBaseEnum.action.join;
 			} else if (segmentEnd) {
-				return ClassifierRuleBaseEnum.action.endMarker;
+				return ClassifierRuleBaseEnum.action.endMarkerApproved;
 			} else if (segmentEnd && ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.delete;
 			} else if (ctx.isIn(state.segment)) {
 				return ClassifierRuleBaseEnum.action.processSignal;
+//			} else if (ctx.isIn(state.end) && currentLength<30) {
+//				return ClassifierRuleBaseEnum.action.processSignal;
 			}else if (segmentStart) { 
 				return ClassifierRuleBaseEnum.action.processNoise;
 			}else {
 				
 			}
 			log.debug(
-					"[testOnRuleBase] NC not handled area and length {0}, {1}",
+					"[testOnRuleBase] NC not handled area: {0}, length: {1}, state {2}, isEnd: {3}",
 					currentSegment.getCalculatedArea(), currentSegment
-							.getCalculatedLength());
+							.getCalculatedLength(), ctx.getMarkerState(),
+							segmentEnd);
 			return ClassifierRuleBaseEnum.action.processNoise;
 		}
 
