@@ -15,35 +15,44 @@ public class ExtremeSegment implements Serializable, Cloneable{
 	private ExtremeEntry startEntry;
 	private ExtremeEntry peakEntry;
 	private ExtremeEntry endEntry;
-	public boolean joined = false;
+	public boolean approved = false;
 	
 	private List<ExtremeEntry> peakEntries;
 
 	private FrameValues values;
 	
 	public boolean isIncrease(){
-		if(getStartEntry() == null) return false;
+		if(getStartEntry() == null || getEndEntry() == null) return false;
 		Float start = getStartEntry().getValue();
 		Float end = getEndEntry().getValue();
-		return end.compareTo(start)>0;
+		return end.compareTo(start)<0;
 	}
 	public boolean isDecrease(){
-		if(getStartEntry() == null) return false;
+		if(getStartEntry() == null || getEndEntry() == null) return false;
 		Float start = getStartEntry().getValue();
 		Float end = getEndEntry().getValue();
 		return start.compareTo(end)>0;
 	}
 	public boolean isDecrease(ExtremeSegment segment){
+//		Float thisPeak = this.getPeakEntry().getValue();
+//		Float otherPeak = segment.getPeakEntry().getValue();
+//		boolean decrease = isDecrease() && segment.isDecrease() && thisPeak>otherPeak; 
 		Float thisPeak = this.getPeakEntry().getValue();
 		Float otherPeak = segment.getPeakEntry().getValue();
-		boolean decrease = isDecrease() && segment.isDecrease() && thisPeak>otherPeak; 
+		Float thisStart = this.getStartEntry().getValue();
+		Float otherStart = segment.getStartEntry().getValue();
+		boolean decrease = thisPeak<otherPeak && thisStart < otherStart;
 		return decrease;
 	}
 
-	public boolean isIncrease(ExtremeSegment segment){
+	public boolean isIncrease(ExtremeSegment previousSegment){
 		Float thisPeak = this.getPeakEntry().getValue();
-		Float otherPeak = segment.getPeakEntry().getValue();
-		boolean increase = isIncrease() && segment.isIncrease() && thisPeak<otherPeak;  
+		Float otherPeak = previousSegment.getPeakEntry().getValue();
+		Float thisStart = this.getStartEntry().getValue();
+		Float otherStart = previousSegment.getStartEntry().getValue();
+		boolean increase = thisPeak>otherPeak && thisStart > otherStart;
+		 
+//		boolean increase = isIncrease() && previousSegment.isIncrease() && thisPeak>otherPeak;  
 		return increase;
 	}
 	public boolean isSimilar(ExtremeSegment segment){

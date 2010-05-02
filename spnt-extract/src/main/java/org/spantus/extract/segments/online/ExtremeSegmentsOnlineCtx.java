@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.spantus.extract.segments.offline.ExtremeEntry;
 import org.spantus.extract.segments.offline.ExtremeSegment;
+import org.spantus.extract.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum;
 
 public class ExtremeSegmentsOnlineCtx {
@@ -12,7 +14,10 @@ public class ExtremeSegmentsOnlineCtx {
 	private ExtremeSegment currentSegment;
 	private Integer index=0;
 	private ClassifierRuleBaseEnum.state markerState;
-	private Float previous;
+	private Float previousValue;
+	protected ExtremeEntry prevSegmentEntry = null;
+	protected ExtremeEntry segmentEntry  = null;
+
 	private Boolean skipLearn = Boolean.FALSE;
 	
 	
@@ -37,14 +42,14 @@ public class ExtremeSegmentsOnlineCtx {
 		index++;
 		return getIndex();
 	}
-	public Boolean getFoundStartSegment() {
-		if(getCurrentSegment()!=null && getCurrentSegment().getStartEntry()!=null){
-			return (getIndex()) == getCurrentSegment().getStartEntry().getIndex();
-		}
-		
-		return false;
-	}
-	public Boolean getFoundEndSegment() {
+//	public Boolean getFoundStartSegment() {
+//		if(getCurrentSegment()!=null && getCurrentSegment().getStartEntry()!=null){
+//			return (getIndex()) == getCurrentSegment().getStartEntry().getIndex();
+//		}
+//		
+//		return false;
+//	}
+	public Boolean getFoundChangePoint() {
 		if(getCurrentSegment()!=null && getCurrentSegment().getEndEntry() != null){
 			return getIndex().equals(getCurrentSegment().getEndEntry().getIndex());
 		}
@@ -64,7 +69,57 @@ public class ExtremeSegmentsOnlineCtx {
 		}
 		return givenState.equals(getMarkerState());
 	}
-	
+	/**
+	 * is Feature Increase
+	 * @return
+	 */
+	public boolean isFeatureIncrease(){
+		return isFeatureState(FeatureStates.min);
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isFeatureInMin(){
+		if(getSegmentEntry() == null){
+			return false;
+		}
+		return FeatureStates.min.equals(getSegmentEntry().getSignalState());
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isFeatureInMax(){
+		ExtremeEntry lastEntry = getSegmentEntry();
+		if(lastEntry == null){
+			return false;
+		}
+		
+		return FeatureStates.max.equals(lastEntry.getSignalState());
+	}
+	/**
+	 * is Feature Decrease
+	 * @return
+	 */
+	public boolean isFeatureDecrease(){
+		return isFeatureState(FeatureStates.max);
+	}
+	/**
+	 * 
+	 * @param givenState
+	 * @return
+	 */
+	public boolean isFeatureState(FeatureStates givenState){
+		if(segmentEntry == null && prevSegmentEntry == null){
+			return true;
+		}
+		if(segmentEntry == null){
+			return givenState.equals(prevSegmentEntry.getSignalState()) || prevSegmentEntry == null;
+		}
+		boolean inState = givenState.equals(segmentEntry.getSignalState()) || segmentEntry == null;
+		return inState;
+	}
 	
 	
 	public ExtremeSegmentsOnlineCtx() {
@@ -104,11 +159,11 @@ public class ExtremeSegmentsOnlineCtx {
 	public void setIndex(Integer index) {
 		this.index = index;
 	}
-	public Float getPrevious() {
-		return previous;
+	public Float getPreviousValue() {
+		return previousValue;
 	}
-	public void setPrevious(Float previous) {
-		this.previous = previous;
+	public void setPreviousValue(Float previous) {
+		this.previousValue = previous;
 	}
 
 	public Boolean getSkipLearn() {
@@ -118,5 +173,25 @@ public class ExtremeSegmentsOnlineCtx {
 	public void setSkipLearn(Boolean skipLearn) {
 		this.skipLearn = skipLearn;
 	}
+
+	public ExtremeEntry getSegmentEntry() {
+		return segmentEntry;
+	}
+
+	public void setSegmentEntry(ExtremeEntry segmentEntry) {
+		if(segmentEntry != null){
+			prevSegmentEntry= segmentEntry;
+		}
+		this.segmentEntry = segmentEntry;
+	}
+
+	
+//
+//	public void setFeatureState(FeatureStates featureState) {
+//		if(featureState != this.prevFeatureState && featureState != null){
+//			prevFeatureState = featureState;
+//		}
+//		this.featureState = featureState;
+//	}
 
 }

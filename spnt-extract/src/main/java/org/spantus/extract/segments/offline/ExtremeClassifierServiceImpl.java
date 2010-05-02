@@ -15,7 +15,7 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.service.IMarkerService;
 import org.spantus.core.marker.service.MarkerServiceFactory;
-import org.spantus.extract.segments.offline.ExtremeEntry.SignalStates;
+import org.spantus.extract.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.logger.Logger;
 import org.spantus.math.cluster.ClusterCollection;
 import org.spantus.math.services.MathServicesFactory;
@@ -116,8 +116,8 @@ public class ExtremeClassifierServiceImpl {
 
 		int index = 0;
 		Float previous = null;
-		SignalStates maxState = SignalStates.stable;
-		SignalStates minState = SignalStates.stable;
+		FeatureStates maxState = FeatureStates.stable;
+		FeatureStates minState = FeatureStates.stable;
 		ListIterator<Float> listIter = values.listIterator();
 		// search for the first minimum
 		while (listIter.hasNext()) {
@@ -141,7 +141,7 @@ public class ExtremeClassifierServiceImpl {
 		listIter.previous();
 		index--;
 		ExtremeEntry firstMinExtreamEntry = new ExtremeEntry(index, previous,
-				SignalStates.min);
+				FeatureStates.min);
 		iterator.add(firstMinExtreamEntry);
 		log.debug("[extractExtremes]adding min  {0} ", firstMinExtreamEntry
 				.toString());
@@ -152,30 +152,30 @@ public class ExtremeClassifierServiceImpl {
 			int entryIndex = index;
 			// track if values is increasing
 			if (value > previous) {
-				maxState = SignalStates.max;
+				maxState = FeatureStates.max;
 			} else {
 				// Changed point if values are equals or decreasing.
-				if (SignalStates.max.equals(maxState)) {
+				if (FeatureStates.max.equals(maxState)) {
 					ExtremeEntry currentExtreamEntry = new ExtremeEntry(
 							entryIndex, previous, maxState);
 					iterator.add(currentExtreamEntry);
 					log.debug("[extractExtremes]adding max  {0} ",
 							currentExtreamEntry);
 				}
-				maxState = SignalStates.decreasing;
+				maxState = FeatureStates.decreasing;
 			}
 
 			if (value < previous) {
-				minState = SignalStates.min;
+				minState = FeatureStates.min;
 			} else {
-				if (SignalStates.min.equals(minState)) {
+				if (FeatureStates.min.equals(minState)) {
 					ExtremeEntry currentExtreamEntry = new ExtremeEntry(
 							entryIndex, previous, minState);
 					log.debug("[extractExtremes]adding min  {0} ",
 							currentExtreamEntry);
 					iterator.add(currentExtreamEntry);
 				}
-				minState = SignalStates.increasing;
+				minState = FeatureStates.increasing;
 			}
 
 			previous = value;
@@ -183,7 +183,7 @@ public class ExtremeClassifierServiceImpl {
 		}
 		if (iterator.isCurrentMaxExtream()) {
 			ExtremeEntry lastMinExtreamEntry = new ExtremeEntry(index,
-					previous, SignalStates.min);
+					previous, FeatureStates.min);
 			iterator.add(lastMinExtreamEntry);
 			log.debug("[extractExtremes]adding min  {0} ", lastMinExtreamEntry
 					.toString());

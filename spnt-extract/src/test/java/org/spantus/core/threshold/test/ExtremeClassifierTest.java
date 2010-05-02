@@ -12,7 +12,7 @@ import org.spantus.extract.segments.offline.ExtremeClassifierServiceImpl;
 import org.spantus.extract.segments.offline.ExtremeEntry;
 import org.spantus.extract.segments.offline.ExtremeOfflineCtx;
 import org.spantus.extract.segments.offline.ExtremeSegment;
-import org.spantus.extract.segments.offline.ExtremeEntry.SignalStates;
+import org.spantus.extract.segments.offline.ExtremeEntry.FeatureStates;
 
 public class ExtremeClassifierTest{
 	ExtremeClassifierServiceImpl extremeThresholdService;
@@ -117,9 +117,9 @@ public class ExtremeClassifierTest{
 	}
 	
 	public void assertMinState(int index, Map<Integer, ExtremeEntry> extemes){
-		Assert.assertEquals(SignalStates.min, extemes.get(index).getSignalState());
+		Assert.assertEquals(FeatureStates.min, extemes.get(index).getSignalState());
 	}
 	public void assertMaxState(int index, Map<Integer, ExtremeEntry> extemes){
-		Assert.assertEquals(SignalStates.max, extemes.get(index).getSignalState());
+		Assert.assertEquals(FeatureStates.max, extemes.get(index).getSignalState());
 	}
 }

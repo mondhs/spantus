@@ -27,7 +27,7 @@ public class ExtremeTwoStepClassifier extends ExtremeOnlineClassifier {
 		getOnlineCtx().getExtremeSegments().clear();
 		getOnlineCtx().setCurrentSegment(null);
 
-		getOnlineCtx().setPrevious(Float.MAX_VALUE);
+		getOnlineCtx().setPreviousValue(null);
 		getOnlineCtx().setSkipLearn(Boolean.TRUE);
 		for (Float value : getOutputValues()) {
 			processValue(value);

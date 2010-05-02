@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 import org.spantus.core.FrameValues;
-import org.spantus.extract.segments.offline.ExtremeEntry.SignalStates;
+import org.spantus.extract.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.logger.Logger;
 
 public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
@@ -55,7 +55,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 		if(getLastReturned() == null || getLastReturned().getPrevious() == null){
 			return true;
 		}
-		return SignalStates.min.equals(getLastReturned().getPrevious().getSignalState());
+		return FeatureStates.min.equals(getLastReturned().getPrevious().getSignalState());
 	}
 	/**
 	 * 
@@ -65,7 +65,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 		if(lastReturned == null){
 			return true;
 		}
-		return SignalStates.max.equals(getLastReturned().getSignalState());
+		return FeatureStates.max.equals(getLastReturned().getSignalState());
 	}
 	/**
 	 * 
@@ -82,7 +82,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 		if(getLastReturned() == null || getLastReturned().getNext() == null){
 			return true;
 		}
-		return SignalStates.min.equals(getLastReturned().getNext().getSignalState());
+		return FeatureStates.min.equals(getLastReturned().getNext().getSignalState());
 	}
 	/**
 	 * 
@@ -90,7 +90,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	 */
 	public ExtremeEntry getNextEntry(){
 		if(getLastReturned() == null || getLastReturned().getNext() == null){
-			return new ExtremeEntry(list.size(), getLastReturned().getValue(),SignalStates.min);
+			return new ExtremeEntry(list.size(), getLastReturned().getValue(),FeatureStates.min);
 		}
 		return getLastReturned().getNext();
 	}
@@ -100,7 +100,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 	 */
 	public ExtremeEntry getPreviousEntry(){
 		if(getLastReturned().getPrevious() == null){
-			return new ExtremeEntry(0, getLastReturned().getValue(),SignalStates.min);
+			return new ExtremeEntry(0, getLastReturned().getValue(),FeatureStates.min);
 		}
 		return getLastReturned().getPrevious();
 	}
@@ -175,7 +175,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 		return getLastReturned();
 	}
 	
-	public ExtremeEntry getNext(SignalStates signalState) {
+	public ExtremeEntry getNext(FeatureStates signalState) {
 		ExtremeEntry current = getLastReturned();
 		while(current.getNext()!=null){
 			current = current.getNext();
@@ -185,7 +185,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 		}
 		return null;
 	}
-	public ExtremeEntry getPrevious(SignalStates signalState) {
+	public ExtremeEntry getPrevious(FeatureStates signalState) {
 		ExtremeEntry current = getLastReturned();
 		while(current.getPrevious()!=null){
 			current = current.getPrevious();
