@@ -121,7 +121,7 @@ public class ExtremeOnlineClassifierTest {
 		Assert.assertEquals(10, classifier.getExtremeSegments().size());
 		
 		
-		Assert.assertEquals(3, classifier.getMarkSet().getMarkers().size());
+		Assert.assertEquals(10, classifier.getMarkSet().getMarkers().size());
 	}
 	
 	protected ExtremeOnlineClusterService createClusterService(){

@@ -8,6 +8,8 @@ import org.spantus.extract.segments.online.SegmentInnerData;
 import org.spantus.logger.Logger;
 import org.spantus.math.VectorUtils;
 
+import com.sun.org.apache.regexp.internal.recompile;
+
 public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterServiceSimpleImpl{
 
 	Logger log = Logger.getLogger(ExtremeOnlineClusterServiceImpl.class);
@@ -26,9 +28,18 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		if(ctx.segmentStats == null || ctx.segmentStats.size() == 0){
 			return "0";
 		}
+		if(ctx.segmentStats.get(1).getArea() == ctx.segmentStats.get(0).getArea()){
+			log.error("same min max");
+			return "1";
+		}
 
 		Double delta = ctx.segmentStats.get(1).getArea() - ctx.segmentStats.get(0).getArea();
 		area = (area-ctx.segmentStats.get(0).getArea())/delta;
+		if(area <= 0 ){
+			log.error("area neagative or 0");
+			return "1";
+		}
+//		area = delta == 0?0:area;
 
 //		SegmentInnerData min = ctx.normalizeArea(ctx.segmentStats.get(0));
 //		SegmentInnerData max = ctx.normalizeArea(ctx.segmentStats.get(1));
@@ -62,6 +73,10 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		
 		log.debug("[getClassName]  to0: {0}, to1: {1}; to2: {2}; toMax:{3}; index {4};",  
 				distanceToMin, toOneClass, toTwoClass, distanceToMax, argNum);
+//		if(peaks>2){
+//			log.debug("index 0, but has peaks {0}. say is 1", peaks);
+//			return "1";
+//		}
 		
 		return "" + argNum;
 	}

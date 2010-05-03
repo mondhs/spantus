@@ -231,9 +231,9 @@ public class DrawSegmentComparision extends ApplicationFrame {
 		wavName = root + "accelerometer.txt";
 //		noise = root + "accelerometer.noises.txt";
 //		noise = root + "accelerometer.noises.1-2.txt";
-		noise = root + "accelerometer.noises.2-0.txt";
+//		noise = root + "accelerometer.noises.2-0.txt";
 //		noise = root + "accelerometer.noises.5-0.txt";
-//		noise = root + "accelerometer.noises.10-0.txt";
+		noise = root + "accelerometer.noises.10-0.txt";
 		
 		markerName = root + "accelerometer.mspnt.xml";
 		

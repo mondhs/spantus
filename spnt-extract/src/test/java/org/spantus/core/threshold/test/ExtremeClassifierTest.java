@@ -98,7 +98,7 @@ public class ExtremeClassifierTest{
 		List<ExtremeSegment> segments = extremeThresholdService.extractSements(ctx);
 		Assert.assertEquals(12, segments.size());
 		segments = extremeThresholdService.initialCleanup(ctx);
-		Assert.assertEquals(9, segments.size());
+		Assert.assertEquals(11, segments.size());
 	}
 
 	protected ExtremeOfflineCtx createExtremeCtx(Float[] fvArr){

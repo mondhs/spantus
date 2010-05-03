@@ -61,13 +61,7 @@
     		</snapshots>
     	</repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>twdata-m2-repository</id>
-            <name>twdata.org Maven 2 Repository</name>
-            <url>http://twdata-m2-repository.googlecode.com/svn/</url>
-        </pluginRepository>
-    </pluginRepositories>
+
     <build>
         <extensions>
             <!-- Enabling the use of FTP -->

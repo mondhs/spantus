@@ -65,7 +65,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 				isIncrease = currentSegment.isIncrease(lastSegment);
 				isDecrease = currentSegment.isDecrease(lastSegment);
 				
-				log.debug("[testOnRuleBase] Similar: {0}, Increase: {1}; Decrease: {2}",
+				log.debug("[testOnRuleBase] Similar: {0}, Increase: {1}; Decrease: {2};",
 						currentSegment.isSimilar(lastSegment),
 						isIncrease,
 						isDecrease
@@ -88,6 +88,8 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			return ClassifierRuleBaseEnum.action.changePoint;	
 		}else 	if(ctx.isFeatureInMax() && isIncrease){
 			log.debug("Found max. join as increase");
+			return ClassifierRuleBaseEnum.action.join;
+		}else if(ctx.isFeatureInMax() && currentLength<40 && lastLength > 100){
 			return ClassifierRuleBaseEnum.action.join;
 //		}else 	if(ctx.isFeatureInMax() && isDecrease){
 //			log.debug("Found max. join as decrease");
@@ -178,7 +180,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		// log.debug("[testOnRuleBase] area and length {0}, {1}",
 		// segment.getCalculatedArea(), segment.getCalculatedLength());
 
-		log.debug("[testOnRuleBase] UC not handled area and length {0}, {1}",
+		log.debug("[testOnRuleBase]  not handled area and length {0}, {1}",
 				currentArea, currentLength);
 
 		return ClassifierRuleBaseEnum.action.processNoise;

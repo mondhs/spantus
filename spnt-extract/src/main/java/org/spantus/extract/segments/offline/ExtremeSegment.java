@@ -15,7 +15,7 @@ public class ExtremeSegment implements Serializable, Cloneable{
 	private ExtremeEntry startEntry;
 	private ExtremeEntry peakEntry;
 	private ExtremeEntry endEntry;
-	public boolean approved = false;
+	private boolean approved = false;
 	
 	private List<ExtremeEntry> peakEntries;
 
@@ -168,6 +168,12 @@ public class ExtremeSegment implements Serializable, Cloneable{
 		} catch (CloneNotSupportedException e) {
 			throw new IllegalArgumentException(e);
 		}
+	}
+	public boolean getApproved() {
+		return approved;
+	}
+	public void setApproved(boolean approved) {
+		this.approved = approved;
 	}
 
 }

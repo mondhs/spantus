@@ -59,7 +59,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		}else if(onlineCtx.getExtremeSegments().size()>0 &&
 				onlineCtx.getExtremeSegments().getLast() != null
 				&& onlineCtx.getExtremeSegments().getLast().getPeakEntry() != null
-				&& !onlineCtx.getExtremeSegments().getLast().approved){
+				&& !onlineCtx.getExtremeSegments().getLast().getApproved()){
 			changePointLastApproved(onlineCtx);
 			
 //			ExtremeSegment current = onlineCtx.getCurrentSegment();
@@ -255,7 +255,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			currentSegment.setEndEntry(changeEntry);
 			log.debug("[changePointCurrentApproved] ending {0}",
 					currentSegment);
-			currentSegment.approved = true;
+			currentSegment.setApproved(true);
 			ctx.getExtremeSegments().add(currentSegment);
 			//learn and get class
 			getClusterService().learn(currentSegment, ctx);
@@ -298,14 +298,15 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		//record history
 		ExtremeSegment lastSegment = onlineCtx.getExtremeSegments().getLast();
 		
-		if(lastSegment != null && !lastSegment.approved ){
+		//is apporved but not added to markers
+		if(lastSegment != null && (!lastSegment.getApproved() || getMarkSet().getMarkers().size()== 0)){
 //			lastSegment.setEndEntry(ctx.getCurrentSegment().getStartEntry());
 			log.debug("[changePointLastApproved] ending {0}",
 					lastSegment);
-			if(ctx.getCurrentSegment().getEndEntry()==null){
+			if(lastSegment.getEndEntry()==null){
 				return;
 			}
-			lastSegment.approved = true;
+			lastSegment.setApproved(true);
 			getClusterService().learn(lastSegment, ctx);
 			String className = getClusterService().getClassName(lastSegment, ctx);
 			syncMarker(currentMarker, lastSegment, className);
@@ -316,12 +317,17 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			}
 			Marker newMarker = createMarker(ctx.getCurrentSegment(), "0");
 			setMarker(newMarker);
+		}else if(lastSegment != null && lastSegment.getApproved() && getMarkSet().getMarkers().size()>0){
+			Marker lastMarker = getMarkSet().getMarkers().get(getMarkSet().getMarkers().size()-1); 
+			getClusterService().learn(lastSegment, ctx);
+			String className = getClusterService().getClassName(lastSegment, ctx);
+			syncMarker(lastMarker, lastSegment, className);
 		}else{
 			log.debug("[changePointLastApproved] already approved {0}. adding current {1}",
 					lastSegment,
 					ctx.getCurrentSegment());
 			
-			log.debug("[changePointLastApproved] addeding {0}",
+			log.debug("[changePointLastApproved] adding {0}",
 					ctx.getCurrentSegment());
 			ctx.getExtremeSegments().add(ctx.getCurrentSegment());
 			ctx.setCurrentSegment(createExtremeSegment());
@@ -364,10 +370,12 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 		if(currentSegment != null){
 			if(currentSegment.getStartEntry()==null){
 				currentSegment.setStartEntry(changeEntry);
+				log.debug("[changePoint] setting start: {0}",
+						currentSegment);
 			}else{
 				currentSegment.setEndEntry(changeEntry);
-				log.debug("[changePointLastApproved] addeding {0}",
-						ctx.getCurrentSegment());
+				log.debug("[changePointLastApproved] adding {0}",
+						currentSegment);
 				ctx.getExtremeSegments().add(currentSegment);
 				currentSegment = createExtremeSegment();
 				ctx.setCurrentSegment(currentSegment);
