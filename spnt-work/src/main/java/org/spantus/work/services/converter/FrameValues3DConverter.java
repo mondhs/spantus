@@ -14,7 +14,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class FrameValues3DConverter implements Converter{
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	public boolean canConvert(Class type) {
 		return FrameVectorValues.class == type;
 	}

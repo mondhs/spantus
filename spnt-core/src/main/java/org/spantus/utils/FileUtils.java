@@ -40,6 +40,19 @@ public abstract class FileUtils {
 		return file;
 	}
 	/**
+	 * Fix this
+	 * @param file
+	 * @return
+	 */
+	public static String truncateDir(String file){
+		if(file == null){
+			return file;
+		}
+		file = file.replaceAll("/home/studijos/wav/data/","");
+		return file;
+	}
+	
+	/**
          * Check if dir exists. if not create all of them
          * @param dirName
          * @return

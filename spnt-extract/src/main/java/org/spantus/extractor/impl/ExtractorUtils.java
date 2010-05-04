@@ -19,7 +19,9 @@
 package org.spantus.extractor.impl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.ExtractorWrapper;
@@ -32,7 +34,6 @@ import org.spantus.core.threshold.DynamicThreshold;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.core.threshold.OfflineThreshold;
 import org.spantus.core.threshold.StaticThreshold;
-import org.spantus.extract.segments.offline.ExtremeOfflineClassifier;
 import org.spantus.extract.segments.online.ExtremeOnClassifierServiceFactory;
 import org.spantus.extract.segments.online.ExtremeOnlineClassifier;
 import org.spantus.extract.segments.online.ExtremeTwoStepClassifier;
@@ -306,5 +307,16 @@ public abstract class ExtractorUtils {
 					ExtractorParamUtils.getSafeParam(params, extractor.name())
 					);
 		}
+	}
+	/**
+	 * 
+	 */
+	public static Set<IClassifier> filterOutClassifers(IExtractorInputReader reader){
+		Set<IClassifier> classifiers = new HashSet<IClassifier>();
+		for (IExtractor extractor : reader.getExtractorRegister()) {
+			if (extractor instanceof IClassifier)
+				classifiers.add((IClassifier) extractor);
+		}
+		return classifiers;
 	}
 }

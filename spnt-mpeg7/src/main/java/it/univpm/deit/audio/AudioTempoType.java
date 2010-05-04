@@ -5,13 +5,20 @@
  */
 package it.univpm.deit.audio;
 
-import java.util.*;
-import de.crysandt.audio.mpeg7audio.msgs.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import de.crysandt.audio.mpeg7audio.msgs.Msg;
+import de.crysandt.audio.mpeg7audio.msgs.MsgAudioTempoType;
+import de.crysandt.audio.mpeg7audio.msgs.MsgListener;
+import de.crysandt.audio.mpeg7audio.msgs.MsgResizer;
+import de.crysandt.audio.mpeg7audio.msgs.MsgSpeaker;
 
 /**
  * @author Francesco Saletti
  */
-@SuppressWarnings(value={"unchecked","rawtypes"})
+@SuppressWarnings(value={"unchecked"})
 public class AudioTempoType
   extends MsgSpeaker
   implements MsgListener

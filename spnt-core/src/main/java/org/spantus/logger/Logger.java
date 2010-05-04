@@ -33,6 +33,7 @@ import java.lang.reflect.InvocationTargetException;
 public class Logger implements ILogger {
 	ILogger logger;
 
+	
 	public Logger(ILogger logger) {
 		this.logger = logger;
 	}

@@ -11,6 +11,7 @@ public class ExtremeOnlineClusterServiceStaticImpl
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	public String getClassName(ExtremeSegment segment,
 			ExtremeSegmentsOnlineCtx ctx) {
 		Double area = segment.getCalculatedArea();

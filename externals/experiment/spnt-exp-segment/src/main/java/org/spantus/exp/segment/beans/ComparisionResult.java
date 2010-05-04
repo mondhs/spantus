@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.threshold.IClassifier;
 /**
  * 
@@ -34,21 +35,25 @@ public class ComparisionResult {
 	public enum paramEnum{avgTstLength, minTstLength, maxTstLength, 
 		avgTstDistance, minTstDistance, maxTstDistance};
 	
-	String name;
+	private String name;
 	
-	FrameValues sequenceResult;
+	private FrameValues sequenceResult;
 
-	FrameValues signal;
+	private FrameValues signal;
 
-	IClassifier threshold;
+	private IClassifier threshold;
 	
-	FrameValues original;
+	private FrameValues original;
 	
-	FrameValues test;
+	private FrameValues test;
 	
-	float totalResult;
+	private float totalResult;
 	
-	Map<String, Number> params;
+	private MarkerSetHolder originalMarkers;
+	
+	private MarkerSetHolder testMarkers;
+	
+	private Map<String, Number> params;
 	
 	public Map<String, Number> getParams() {
 		if(params == null){
@@ -110,6 +115,22 @@ public class ComparisionResult {
 
 	public void setThreshold(IClassifier threshold) {
 		this.threshold = threshold;
+	}
+
+	public MarkerSetHolder getOriginalMarkers() {
+		return originalMarkers;
+	}
+
+	public void setOriginalMarkers(MarkerSetHolder originalMarkers) {
+		this.originalMarkers = originalMarkers;
+	}
+
+	public MarkerSetHolder getTestMarkers() {
+		return testMarkers;
+	}
+
+	public void setTestMarkers(MarkerSetHolder testMarkers) {
+		this.testMarkers = testMarkers;
 	}
 
 }

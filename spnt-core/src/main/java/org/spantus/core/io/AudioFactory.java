@@ -18,7 +18,6 @@
 */
 package org.spantus.core.io;
 
-import java.net.URL;
 
 /**
  * 

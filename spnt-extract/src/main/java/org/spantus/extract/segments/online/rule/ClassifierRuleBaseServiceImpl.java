@@ -28,7 +28,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		log.debug("[testOnRuleBase] {0}", actionVal.name());
 		return actionVal.name();
 	}
-
+	@SuppressWarnings("unused")
 	public ClassifierRuleBaseEnum.action testOnRuleBase(
 			ExtremeSegmentsOnlineCtx ctx, Boolean isEnum) {
 
@@ -36,6 +36,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		ExtremeSegment lastSegment = null;
 //		boolean segmentEnd = ctx.getFoundEndSegment();
 //		boolean segmentStart = ctx.getFoundStartSegment();
+		
 		boolean segmentPeak = ctx.getFoundPeakSegment();
 		boolean noiseClass = true;
 

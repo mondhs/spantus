@@ -1,6 +1,5 @@
 package org.spantus.extract.segments.online.rule;
 
-import org.spantus.extract.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.logger.Logger;
 

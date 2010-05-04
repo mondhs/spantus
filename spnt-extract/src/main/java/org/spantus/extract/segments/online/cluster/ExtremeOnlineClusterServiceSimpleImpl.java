@@ -13,7 +13,8 @@ public class ExtremeOnlineClusterServiceSimpleImpl implements ExtremeOnlineClust
 			ExtremeSegmentsOnlineCtx ctx) {
 		return "1";
 	}
-
+	
+	@SuppressWarnings("unused")
 	public SegmentInnerData learn(ExtremeSegment segment,
 			ExtremeSegmentsOnlineCtx ctx) {
 		Double area = segment.getCalculatedArea();

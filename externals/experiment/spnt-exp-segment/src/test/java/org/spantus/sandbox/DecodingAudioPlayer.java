@@ -126,7 +126,7 @@ public class DecodingAudioPlayer
 		{
 			out("###  cannot read input file: " + strFilename);
 		}
-		AudioFormat	sourceFormat = audioInputStream.getFormat();
+//		AudioFormat	sourceFormat = audioInputStream.getFormat();
 		AudioFormat.Encoding	targetEncoding = AudioFormat.Encoding.PCM_SIGNED;
 		audioInputStream = AudioSystem.getAudioInputStream(targetEncoding, audioInputStream);
 		AudioFormat	audioFormat = audioInputStream.getFormat();
@@ -162,7 +162,7 @@ public class DecodingAudioPlayer
 			}
 			if (nBytesRead >= 0)
 			{
-				int	nBytesWritten = line.write(abData, 0, nBytesRead);
+//				int	nBytesWritten = line.write(abData, 0, nBytesRead);
 			}
 		}
 		// line.close();

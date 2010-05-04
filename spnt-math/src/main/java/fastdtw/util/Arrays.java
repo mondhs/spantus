@@ -7,7 +7,7 @@ package fastdtw.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-@SuppressWarnings(value={"unchecked","rawtypes"})
+@SuppressWarnings(value={"unchecked"})
 public class Arrays
 {
 

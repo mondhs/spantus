@@ -32,6 +32,7 @@ public class ExtremeTwoStepClassifier extends ExtremeOnlineClassifier {
 		for (Float value : getOutputValues()) {
 			processValue(value);
 		}
+		endupPendingSegments(getOnlineCtx());
 		getThresholdValues().addAll(ExtremeOfflineClassifier.refreshThreasholdInfo(getMarkSet(), getOutputValues()));
 
 	}

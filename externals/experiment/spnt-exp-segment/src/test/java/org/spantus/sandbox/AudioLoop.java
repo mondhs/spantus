@@ -305,6 +305,7 @@ extends Thread
 
 
 
+	@SuppressWarnings("unused")
 	private static void printUsageAndExit()
 	{
 		out("AudioLoop: usage:");

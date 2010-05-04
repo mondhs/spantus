@@ -49,47 +49,33 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	public void flush() {
 		super.flush();
 		log.debug("[flush]");
-		log.debug("[flush] markers {0}", getMarkSet().getMarkers());
 		
+		endupPendingSegments(getOnlineCtx());
+		
+		getThresholdValues().addAll(ExtremeOfflineClassifier.refreshThreasholdInfo(getMarkSet(), getOutputValues()));
+	}
+	
+	protected void endupPendingSegments(ExtremeSegmentsOnlineCtx ctx){
+		log.debug("[endupPendingSegments] markers {0} before end up", getMarkSet().getMarkers());
 		ExtremeSegment current = onlineCtx.getCurrentSegment();
 		
 		if(current!= null &&
 				current.getPeakEntry() != null){
-			changePointCurrentApproved(onlineCtx);
-		}else if(onlineCtx.getExtremeSegments().size()>0 &&
-				onlineCtx.getExtremeSegments().getLast() != null
-				&& onlineCtx.getExtremeSegments().getLast().getPeakEntry() != null
-				&& !onlineCtx.getExtremeSegments().getLast().getApproved()){
-			changePointLastApproved(onlineCtx);
-			
-//			ExtremeSegment current = onlineCtx.getCurrentSegment();
-//			if(getMarker() == null){
-//				startMarker(onlineCtx);
-//			}
-//			//endMarkerApproved(onlineCtx);
-//			String className = getClusterService().getClassName(current, onlineCtx);
-//			log.debug("[flush] current {0}", current);
-//			if(current != null && current.getPeakEntry() != null && current.getEndEntry() == null){
-//				ExtremeEntry entry = new ExtremeEntry(onlineCtx.getIndex().intValue(),
-//						onlineCtx.getPrevious(), SignalStates.min);
-//				current.setEndEntry(entry);
-//				approveMarker(onlineCtx.getIndex(), current, className);
-//				log.debug("[flush] current {0}", current);
-//			}
-//			
-//			
-//		}
-//		if(log.isDebugMode()){
-//			StringBuilder sb = new StringBuilder();
-//			for (SegmentInnerData innerData : onlineCtx.semgnetFeatures) {
-//				sb.append(innerData.getArea()).append(",").append(innerData.getLength())
-//				.append(",").append(innerData.getPeaks())
-//				.append("\n");
-//			}
-//			log.error("\n" + sb);
+			changePointCurrentApproved(ctx);
+		}else if(ctx.getExtremeSegments().size()>0){
+			ExtremeSegment last = ctx.getExtremeSegments().getLast();
+			if(last.getEndEntry() == null){
+				ExtremeEntry endEntry = new ExtremeEntry(ctx.getIndex(), 
+						ctx.getPreviousValue(), FeatureStates.min);
+				last.setEndEntry(endEntry);
+			}
+			if( last != null
+				&& last.getPeakEntry() != null
+				&& !last.getApproved()){
+			changePointLastApproved(ctx);
+			}
 		}
-		log.debug("[flush] markers {0}", getMarkSet().getMarkers());
-		getThresholdValues().addAll(ExtremeOfflineClassifier.refreshThreasholdInfo(getMarkSet(), getOutputValues()));
+		log.debug("[flush] markers {0} after end up", getMarkSet().getMarkers());
 	}
 	
 	/**
@@ -294,7 +280,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			return;
 		}
 		Marker currentMarker = getMarker();
-
+		
 		//record history
 		ExtremeSegment lastSegment = onlineCtx.getExtremeSegments().getLast();
 		
@@ -391,7 +377,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	 * @param ctx
 	 */
 	public void join(ExtremeSegmentsOnlineCtx ctx){
-		ExtremeEntry changeEntry = ctx.prevSegmentEntry;
+//		ExtremeEntry changeEntry = ctx.prevSegmentEntry;
 		ExtremeSegment currentSegment = onlineCtx.getCurrentSegment();
 		ExtremeSegment lastSegment = onlineCtx.getExtremeSegments().getLast();
 		if(currentSegment != null){

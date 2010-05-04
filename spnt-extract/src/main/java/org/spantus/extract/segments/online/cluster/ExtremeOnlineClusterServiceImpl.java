@@ -1,14 +1,10 @@
 package org.spantus.extract.segments.online.cluster;
 
-import java.text.MessageFormat;
-
 import org.spantus.extract.segments.offline.ExtremeSegment;
 import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.extract.segments.online.SegmentInnerData;
 import org.spantus.logger.Logger;
 import org.spantus.math.VectorUtils;
-
-import com.sun.org.apache.regexp.internal.recompile;
 
 public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterServiceSimpleImpl{
 

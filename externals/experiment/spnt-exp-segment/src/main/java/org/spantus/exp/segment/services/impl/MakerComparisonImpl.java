@@ -46,15 +46,22 @@ public class MakerComparisonImpl implements MakerComparison{
 	
 	public static final Long STEP_IN_MILS = 10L; 
 	
-	public ComparisionResult compare(MarkerSetHolder original,MarkerSetHolder test){
+	
+	/**
+	 * 
+	 */
+	public ComparisionResult compare(MarkerSetHolder originalMarkers,MarkerSetHolder testMarkers){
 		ComparisionResult result = new ComparisionResult();
-		result.setOriginal(createSequence(original)); 
-		result.setTest(createSequence(test));
+		result.setOriginal(createSequence(originalMarkers)); 
+		result.setTest(createSequence(testMarkers));
 		compare(result);
 		result.getParams().clear();
-		result.getParams().putAll(analyze(test));
+		result.getParams().putAll(analyze(testMarkers));
+		result.setOriginalMarkers(originalMarkers);
+		result.setTestMarkers(testMarkers);
 		return result;
 	}
+	
 	
 	protected Map<String, Long> analyze(MarkerSetHolder markerSetHolder){
 		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());

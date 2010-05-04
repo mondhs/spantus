@@ -4,7 +4,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.Ignore;

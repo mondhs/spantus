@@ -38,9 +38,6 @@ package org.spantus.sandbox;
  |<---            this code is formatted to fit into 80 columns             --->|
  */
 
-import java.util.List;
-
-import javax.sound.sampled.AudioInputStream;
 
 /**
  * Mixing of multiple AudioInputStreams to one AudioInputStream. This class

@@ -53,60 +53,61 @@ import javax.sound.sampled.AudioSystem;
 public class SequenceAudioInputStream
 	extends		AudioInputStream
 {
+	@SuppressWarnings("unused")
 	private static final boolean	DEBUG = true;
 
-	private List			m_audioInputStreamList;
+	private List<AudioInputStream>			m_audioInputStreamList;
 	private	int			m_nCurrentStream;
 
 
 
-	public SequenceAudioInputStream(AudioFormat audioFormat, Collection audioInputStreams)
+	public SequenceAudioInputStream(AudioFormat audioFormat, Collection<AudioInputStream> audioInputStreams)
 	{
 		super(new ByteArrayInputStream(new byte[0]), audioFormat, AudioSystem.NOT_SPECIFIED);
-		m_audioInputStreamList = new ArrayList(audioInputStreams);
+		m_audioInputStreamList = new ArrayList<AudioInputStream>(audioInputStreams);
 		m_nCurrentStream = 0;
 	}
 
 
 
 	// TODO: remove
-	private boolean addAudioInputStream(AudioInputStream audioStream)
-	{
-		if (DEBUG)
-		{
-			out("SequenceAudioInputStream.addAudioInputStream(): called.");
-		}
-		// Contract.check(audioStream != null);
-		if (!getFormat().matches(audioStream.getFormat()))
-		{
-			if (DEBUG)
-			{
-				out("SequenceAudioInputStream.addAudioInputStream(): audio formats do not match, trying to convert.");
-			}
-			AudioInputStream	asold = audioStream;
-			audioStream = AudioSystem.getAudioInputStream(getFormat(), asold);
-			if (audioStream == null)
-			{
-				out("###  SequenceAudioInputStream.addAudioInputStream(): could not convert.");
-				return false;
-			}
-			if (DEBUG)
-			{
-				out(" converted");
-			}
-		}
-		// Contract.check(audioStream != null);
-		synchronized (m_audioInputStreamList)
-		{
-			m_audioInputStreamList.add(audioStream);
-			m_audioInputStreamList.notifyAll();
-		}
-		if (DEBUG)
-		{
-			out("SequenceAudioInputStream.addAudioInputStream(): enqueued " + audioStream);
-		}
-		return true;
-	}
+//	private boolean addAudioInputStream(AudioInputStream audioStream)
+//	{
+//		if (DEBUG)
+//		{
+//			out("SequenceAudioInputStream.addAudioInputStream(): called.");
+//		}
+//		// Contract.check(audioStream != null);
+//		if (!getFormat().matches(audioStream.getFormat()))
+//		{
+//			if (DEBUG)
+//			{
+//				out("SequenceAudioInputStream.addAudioInputStream(): audio formats do not match, trying to convert.");
+//			}
+//			AudioInputStream	asold = audioStream;
+//			audioStream = AudioSystem.getAudioInputStream(getFormat(), asold);
+//			if (audioStream == null)
+//			{
+//				out("###  SequenceAudioInputStream.addAudioInputStream(): could not convert.");
+//				return false;
+//			}
+//			if (DEBUG)
+//			{
+//				out(" converted");
+//			}
+//		}
+//		// Contract.check(audioStream != null);
+//		synchronized (m_audioInputStreamList)
+//		{
+//			m_audioInputStreamList.add(audioStream);
+//			m_audioInputStreamList.notifyAll();
+//		}
+//		if (DEBUG)
+//		{
+//			out("SequenceAudioInputStream.addAudioInputStream(): enqueued " + audioStream);
+//		}
+//		return true;
+//	}
 
 
 
@@ -129,10 +130,10 @@ public class SequenceAudioInputStream
 	public long getFrameLength()
 	{
 		long	lLengthInFrames = 0;
-		Iterator	streamIterator = m_audioInputStreamList.iterator();
+		Iterator<AudioInputStream>	streamIterator = m_audioInputStreamList.iterator();
 		while (streamIterator.hasNext())
 		{
-			AudioInputStream	stream = (AudioInputStream) streamIterator.next();
+			AudioInputStream	stream =  streamIterator.next();
 			long	lLength = stream.getFrameLength();
 			if (lLength == AudioSystem.NOT_SPECIFIED)
 			{
@@ -272,6 +273,7 @@ public class SequenceAudioInputStream
 
 
 
+	@SuppressWarnings("unused")
 	private static void out(String strMessage)
 	{
 		System.out.println(strMessage);

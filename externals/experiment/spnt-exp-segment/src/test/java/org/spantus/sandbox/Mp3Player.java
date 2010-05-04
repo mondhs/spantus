@@ -38,11 +38,13 @@ public class Mp3Player {
 		if (line != null) {
 			// Start
 			line.start();
-			int nBytesRead = 0, nBytesWritten = 0;
+			int nBytesRead = 0; 
+//			int nBytesWritten = 0;
 			while (nBytesRead != -1) {
 				nBytesRead = din.read(data, 0, data.length);
-				if (nBytesRead != -1)
-					nBytesWritten = line.write(data, 0, nBytesRead);
+				if (nBytesRead != -1){
+//					nBytesWritten = line.write(data, 0, nBytesRead);
+				}
 			}
 			// Stop
 			line.drain();

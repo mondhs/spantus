@@ -5,13 +5,21 @@
  */
 package it.univpm.deit.audio;
 
-import de.crysandt.audio.mpeg7audio.msgs.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import de.crysandt.audio.mpeg7audio.msgs.Msg;
+import de.crysandt.audio.mpeg7audio.msgs.MsgDigitalZero;
+import de.crysandt.audio.mpeg7audio.msgs.MsgEndOfSignal;
+import de.crysandt.audio.mpeg7audio.msgs.MsgListener;
+import de.crysandt.audio.mpeg7audio.msgs.MsgResizer;
+import de.crysandt.audio.mpeg7audio.msgs.MsgSpeaker;
 
 /**
  * @author Guido Raparo
  */
-@SuppressWarnings(value={"unchecked","rawtypes"})
+@SuppressWarnings(value={"unchecked"})
 public class DigitalZero
         extends MsgSpeaker
 		implements MsgListener{

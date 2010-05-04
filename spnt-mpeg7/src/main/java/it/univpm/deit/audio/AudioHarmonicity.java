@@ -5,12 +5,21 @@
 */
 package it.univpm.deit.audio;
 
-import de.crysandt.audio.mpeg7audio.msgs.*;
-import de.crysandt.math.Function;
-
 import it.univpm.deit.FFT2N;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
+
+import de.crysandt.audio.mpeg7audio.msgs.Msg;
+import de.crysandt.audio.mpeg7audio.msgs.MsgAudioFundamentalFrequency;
+import de.crysandt.audio.mpeg7audio.msgs.MsgAudioHarmonicity;
+import de.crysandt.audio.mpeg7audio.msgs.MsgAudioSpectrum;
+import de.crysandt.audio.mpeg7audio.msgs.MsgListener;
+import de.crysandt.audio.mpeg7audio.msgs.MsgSpeaker;
+import de.crysandt.math.Function;
 
 /**
  * User: Francesco
@@ -19,7 +28,7 @@ import java.util.*;
  *
  * @author Francesco Saletti
  */
-@SuppressWarnings(value={"unchecked","rawtypes"})
+@SuppressWarnings(value={"unchecked"})
 public class AudioHarmonicity
     extends MsgSpeaker
     implements MsgListener

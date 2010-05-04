@@ -5,8 +5,15 @@
  */
 package it.univpm.deit.audio;
 
-import de.crysandt.audio.mpeg7audio.msgs.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+
+import de.crysandt.audio.mpeg7audio.msgs.Msg;
+import de.crysandt.audio.mpeg7audio.msgs.MsgClick;
+import de.crysandt.audio.mpeg7audio.msgs.MsgEndOfSignal;
+import de.crysandt.audio.mpeg7audio.msgs.MsgListener;
+import de.crysandt.audio.mpeg7audio.msgs.MsgResizer;
+import de.crysandt.audio.mpeg7audio.msgs.MsgSpeaker;
 
 /**
  * @author Guido Raparo
@@ -14,7 +21,7 @@ import java.util.*;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-@SuppressWarnings(value={"unchecked","rawtypes"})
+@SuppressWarnings(value={"unchecked"})
 public class Click
 	extends MsgSpeaker                
 	implements MsgListener

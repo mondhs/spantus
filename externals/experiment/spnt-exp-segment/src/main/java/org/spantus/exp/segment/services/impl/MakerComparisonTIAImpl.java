@@ -41,13 +41,15 @@ public class MakerComparisonTIAImpl extends MakerComparisonImpl{
 	 * 
 	 */
 	
-	public ComparisionResult compare(MarkerSetHolder original,MarkerSetHolder test){
+	public ComparisionResult compare(MarkerSetHolder originalMarkers, MarkerSetHolder testMarkers){
 		ComparisionResultTia result = new ComparisionResultTia();
-		result.setOriginal(createSequence(original)); 
-		result.setTest(createSequence(test));
+		result.setOriginal(createSequence(originalMarkers)); 
+		result.setTest(createSequence(testMarkers));
 		result.setSequenceResult(compare(result));
 		result.getParams().clear();
-		result.getParams().putAll(analyze(test));
+		result.getParams().putAll(analyze(testMarkers));
+		result.setOriginalMarkers(originalMarkers);
+		result.setTestMarkers(testMarkers);
 		return result;
 	}
 	
