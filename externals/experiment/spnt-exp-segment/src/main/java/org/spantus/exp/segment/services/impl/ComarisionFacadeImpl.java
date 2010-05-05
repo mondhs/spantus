@@ -5,8 +5,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.SignalFormat;
@@ -34,6 +36,8 @@ import org.spantus.work.io.WorkAudioFactory;
  */
 public class ComarisionFacadeImpl implements ComarisionFacade {
 	
+	private Map<String, ExtractorParam> extractorParams;
+	
 	/* (non-Javadoc)
 	 * @see org.spantus.exp.segment.services.impl.ComarisionFacade#readSignal(java.util.List, org.spantus.extractor.impl.ExtractorEnum[])
 	 */
@@ -58,7 +62,7 @@ public class ComarisionFacadeImpl implements ComarisionFacade {
 					.registerThreshold(
 							bufferedReader,
 							extractors,
-							null, ClassifierEnum.rules);
+							getExtractorParams(), ClassifierEnum.rules);
 			reader.readSignal(urlFiles, bufferedReader);
 			return bufferedReader;
 		} catch (MalformedURLException e) {
@@ -88,5 +92,14 @@ public class ComarisionFacadeImpl implements ComarisionFacade {
 				.createSegmentator(SegmentatorServiceEnum.online.name());
 		testMarkerSet = online.extractSegments(classifiers, param);
 		return testMarkerSet;
+	}
+	
+	/////////////// Getters and setters
+	
+	public Map<String, ExtractorParam> getExtractorParams() {
+		return extractorParams;
+	}
+	public void setExtractorParams(Map<String, ExtractorParam> params) {
+		this.extractorParams = params;
 	}
 }

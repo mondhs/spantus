@@ -2,8 +2,11 @@ package org.spantus.exp.segment.exec.classification;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.services.ExpServiceFactory;
@@ -26,7 +29,7 @@ import org.spantus.work.services.WorkServiceFactory;
  *
  */
 public class ExpSegmentation {
-	private ComarisionFacade comarisionFacade;
+	private ComarisionFacadeImpl comarisionFacade;
 	private MarkerDao markerDao;
 	private MakerComparison makerComparison;
 	//tune
@@ -55,13 +58,15 @@ public class ExpSegmentation {
 	 * @param markerName
 	 * @return
 	 */
-	public List<ComparisionResult> multipleMixtureExperiment(String signalName, List<String> noiseNames, String markerName){
+	public List<ComparisionResult> multipleMixtureExperiment(List<String> signalNames, List<String> noiseNames, String markerName){
 		List<ComparisionResult> results = new ArrayList<ComparisionResult>();
-		
-		for (String noise : noiseNames) {
-			List<String> signals = CollectionUtils.toList(signalName, noise);
-			ComparisionResult result = singleMixtureExperiment(signals, markerName);
-			results.add(result);
+		for (String signal : signalNames) {
+			for (String noise : noiseNames) {
+				noise = "".equals(noise)?null:noise;
+				List<String> signals = CollectionUtils.toList(signal, noise);
+				ComparisionResult result = singleMixtureExperiment(signals, markerName);
+				results.add(result);
+			}
 		}
 		return results;
 	}
@@ -97,13 +102,20 @@ public class ExpSegmentation {
 			log.debug("Name {0}; Result: {1}" , result.getName(), result.getTotalResult());
 		}
 	}
-
-	////////////////////////////////////////// MAIN
-	public static void main(String[] args) {
+	/**
+	 * 
+	 */
+	public static void acceleromerData(){
 		ExpSegmentation expSegmentation = new ExpSegmentation();
 		expSegmentation.init();
+//		expSegmentation.setExtractors(
+//				new ExtractorEnum[] { ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR });
+		expSegmentation.setExtractors(
+				new ExtractorEnum[] { ExtractorEnum.ENERGY_EXTRACTOR });
 		String root = "/home/studijos/wav/data/";
-		String signalName = root + "accelerometer.txt";
+		String signalName = root + "iaccelerometer.txt";
+		String markerName = root + "iaccelerometer_system.mspnt.xml";
+		root += "noises/";
 		String[] noisesArr = new String[]{
 				null,
 				root + "accelerometer.noises.txt",
@@ -113,9 +125,63 @@ public class ExpSegmentation {
 				root + "accelerometer.noises.10-0.txt"
 				};
 		List<String> noises = CollectionUtils.toList(noisesArr);
-		String markerName = root + "accelerometer.mspnt.xml";
-		List<ComparisionResult> results = expSegmentation.multipleMixtureExperiment(signalName, noises, markerName);
+		
+
+		expSegmentation.getParam().setExpandEnd(30L);
+		expSegmentation.getParam().setExpandStart(30L);
+
+		List<ComparisionResult> results = expSegmentation.multipleMixtureExperiment(CollectionUtils.toList(signalName), noises, markerName);
 		expSegmentation.logResult(results);
+	}
+	/**
+	 * 
+	 */
+	public static void wavData(){
+		ExpSegmentation expSegmentation = new ExpSegmentation();
+		expSegmentation.init();
+		Map<String, ExtractorParam> extractorParams = new HashMap<String, ExtractorParam>();
+		expSegmentation.setExtractors(
+				new ExtractorEnum[] { ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR });
+		expSegmentation.getParam().setMinSpace(60L);
+		expSegmentation.getParam().setMinLength(90L);
+		expSegmentation.getParam().setExpandEnd(60L);
+		expSegmentation.getParam().setExpandStart(60L);
+		
+		String root = "/home/studijos/wav/on_off_up_down_wav/";
+		String markerName = root + "exp/_on_off_up_down.mspnt.xml";
+		String[] signalArr = new String[]{
+				root + "dentist.wav",
+				 root + "hammer.wav",
+				 root + "keyboard.wav",
+				 root + "original.wav",
+				 root + "plane.wav",
+				 root + "rain.wav",
+				 root + "shower.wav",
+				 root + "traffic.wav"
+				};
+
+		
+		List<String> noises = CollectionUtils.toList("");
+
+		
+//		ExtractorParam extractorParam = new ExtractorParam();
+//		extractorParam.getProperties().put(ExtractorModifiersEnum.mean.name(), Boolean.TRUE);
+//		extractorParam.setClassName(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
+//		extractorParams.put(extractorParam.getClassName(), extractorParam);
+//		expSegmentation.comarisionFacade.setExtractorParams(extractorParams);
+		
+		List<ComparisionResult> results = expSegmentation.multipleMixtureExperiment(
+				CollectionUtils.toList(signalArr), noises, markerName);
+		
+		
+		
+		expSegmentation.logResult(results);
+	}
+
+	////////////////////////////////////////// MAIN
+	public static void main(String[] args) {
+		acceleromerData();
+//		wavData();
 	}
 	
 	
@@ -123,7 +189,7 @@ public class ExpSegmentation {
 	public ComarisionFacade getComarisionFacade() {
 		return comarisionFacade;
 	}
-	public void setComarisionFacade(ComarisionFacade comarisionFacade) {
+	public void setComarisionFacade(ComarisionFacadeImpl comarisionFacade) {
 		this.comarisionFacade = comarisionFacade;
 	}
 	public MarkerDao getMarkerDao() {
@@ -140,7 +206,7 @@ public class ExpSegmentation {
 	}
 	public ExtractorEnum[] getExtractors() {
 		if(extractors == null){
-			extractors = new ExtractorEnum[] { ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR};
+			extractors = new ExtractorEnum[] { ExtractorEnum.ENERGY_EXTRACTOR};
 		}
 		return extractors;
 	}
@@ -154,6 +220,7 @@ public class ExpSegmentation {
 			param.setMinLength(0L);
 			param.setExpandStart(0L);
 			param.setExpandEnd(0L);
+			this.param = param;
 		}
 		return param;
 	}

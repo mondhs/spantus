@@ -22,7 +22,9 @@ package org.spantus.exp.segment.exec;
 
 import java.awt.Dimension;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -36,13 +38,14 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.exp.segment.ExpUtils;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.services.ExpServiceFactory;
-import org.spantus.exp.segment.services.impl.ComarisionFacade;
 import org.spantus.exp.segment.services.impl.ComarisionFacadeImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.utils.CollectionUtils;
 import org.spantus.work.services.WorkServiceFactory;
@@ -71,7 +74,8 @@ public class DrawSegmentComparision extends ApplicationFrame {
 	private String markerName = null;
 	private OnlineDecisionSegmentatorParam param;
 	private ExtractorEnum[] extractors; 
-	private ComarisionFacade comarisionFacade; 
+	private ComarisionFacadeImpl comarisionFacade; 
+	private Map<String, ExtractorParam> extractorParams;
 
 	public DrawSegmentComparision(final String title) {
 		super(title);
@@ -131,8 +135,10 @@ public class DrawSegmentComparision extends ApplicationFrame {
 	 * @return
 	 */
 	private XYSeries[] createSeries(List<String> signalName, String markerName) {
-
+		comarisionFacade.setExtractorParams(getExtractorParams());
+		
 		MarkerSetHolder testMarkerSet = comarisionFacade.calculateMarkers(signalName, getExtractors(), getParam());
+		
 		MarkerSetHolder holder = WorkServiceFactory.createMarkerDao().read(
 				new File(markerName));
 		ComparisionResult result = ExpServiceFactory.createMakerComparison()
@@ -153,7 +159,89 @@ public class DrawSegmentComparision extends ApplicationFrame {
 	}
 	
 
-	//////////////Getters setters
+	
+	
+	public static void populateAcceleromerData(DrawSegmentComparision demo){
+		String wavName = null;
+		String markerName = null;
+		String noise = null;
+		
+		String root = "/home/studijos/wav/data/";
+		wavName = root + "iaccelerometer.txt";
+		markerName = root + "iaccelerometer_system.mspnt.xml";
+		root += "noises/";
+//		noise = root + "accelerometer.noises.txt";
+//		noise = root + "accelerometer.noises.1-2.txt";
+		noise = root + "accelerometer.noises.2-0.txt";
+//		noise = root + "accelerometer.noises.5-0.txt";
+//		noise = root + "accelerometer.noises.10-0.txt";
+		demo.getParam().setExpandEnd(30L);
+		demo.getParam().setExpandStart(30L);
+		
+		demo.setWavName(CollectionUtils.toList(wavName, noise));
+		demo.setMarkerName(markerName);
+	}
+	public static void populateWav(DrawSegmentComparision demo){
+		String wavName = null;
+		String markerName = null;
+		String noise = null;
+		Map<String, ExtractorParam> extractorParams = new HashMap<String, ExtractorParam>();
+		
+		String root = "/home/studijos/wav/on_off_up_down_wav/";
+//		wavName = root + "dentist.wav";
+		wavName = root + "hammer.wav";
+//		wavName = root + "keyboard.wav";
+//		wavName = root + "original.wav";
+//		wavName = root + "plane.wav";
+//		wavName = root + "rain.wav";
+//		wavName = root + "shower.wav";
+//		wavName = root + "traffic.wav";
+
+		markerName = root + "exp/_on_off_up_down.mspnt.xml";
+		demo.setWavName(CollectionUtils.toList(wavName, noise));
+		demo.setMarkerName(markerName);
+		demo.getParam().setMinSpace(60L);
+		demo.getParam().setMinLength(90L);
+//		demo.getParam().setExpandEnd(60L);
+//		demo.getParam().setExpandStart(60L);
+		demo.setExtractors(new ExtractorEnum[] { 
+				ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR});
+		
+		
+		ExtractorParam extractorParam = new ExtractorParam();
+		extractorParam.getProperties().put(ExtractorModifiersEnum.mean.name(), Boolean.TRUE);
+		extractorParam.setClassName(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
+		extractorParams.put(extractorParam.getClassName(), extractorParam);
+
+		demo.setExtractorParams(extractorParams);
+
+	}
+	////////// MAIN ///////////////
+	
+	public static void main(final String[] args) {
+
+		String wavName = FILE_wavName;
+		String markerName = FILE_markerName;
+		String noise = null;
+		
+		
+		DrawSegmentComparision demo = new DrawSegmentComparision(
+				"Segmenation Result");
+		
+		demo.setWavName(CollectionUtils.toList(wavName, noise));
+		demo.setMarkerName(markerName);
+		populateAcceleromerData(demo);
+//		populateWav(demo);
+		demo.init();
+		demo.pack();
+		RefineryUtilities.centerFrameOnScreen(demo);
+		demo.setVisible(true);
+
+	}
+	
+	
+	
+//////////////Getters setters
 	public List<String> getWavName() {
 		return wavName;
 	}
@@ -168,7 +256,7 @@ public class DrawSegmentComparision extends ApplicationFrame {
 	}
 	public ExtractorEnum[] getExtractors() {
 		if(extractors == null){
-			extractors = new ExtractorEnum[] { ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR};
+			extractors = new ExtractorEnum[] { ExtractorEnum.ENERGY_EXTRACTOR};
 		}
 		return extractors;
 	}
@@ -182,42 +270,18 @@ public class DrawSegmentComparision extends ApplicationFrame {
 			param.setMinLength(0L);
 			param.setExpandStart(0L);
 			param.setExpandEnd(0L);
+			this.param = param;
 		}
 		return param;
 	}
 	public void setParam(OnlineDecisionSegmentatorParam param) {
 		this.param = param;
 	}
-	
-	////////// MAIN ///////////////
-	
-	public static void main(final String[] args) {
-
-		String wavName = FILE_wavName;
-		String markerName = FILE_markerName;
-		String noise = null;
-		
-		String root = "/home/studijos/wav/data/";
-		wavName = root + "accelerometer.txt";
-//		noise = root + "accelerometer.noises.txt";
-		noise = root + "accelerometer.noises.1-2.txt";
-//		noise = root + "accelerometer.noises.2-0.txt";
-//		noise = root + "accelerometer.noises.5-0.txt";
-//		noise = root + "accelerometer.noises.10-0.txt";
-		markerName = root + "accelerometer.mspnt.xml";
-		
-		DrawSegmentComparision demo = new DrawSegmentComparision(
-				"Segmenation Result");
-		demo.setWavName(CollectionUtils.toList(wavName, noise));
-		demo.setMarkerName(markerName);
-//		demo.getParam().setMinSpace(60L);
-//		demo.getParam().setMinLength(90L);
-//		demo.setExtractors(new ExtractorEnum[] { ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR });
-		demo.init();
-		demo.pack();
-		RefineryUtilities.centerFrameOnScreen(demo);
-		demo.setVisible(true);
-
+	public Map<String, ExtractorParam> getExtractorParams() {
+		return extractorParams;
+	}
+	public void setExtractorParams(Map<String, ExtractorParam> params) {
+		this.extractorParams = params;
 	}
 	
 	

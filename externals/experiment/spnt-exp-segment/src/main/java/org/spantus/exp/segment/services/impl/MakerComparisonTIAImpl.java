@@ -124,10 +124,10 @@ public class MakerComparisonTIAImpl extends MakerComparisonImpl{
 			if(i<onsetIndex){
 				ctx.voiceFrameOnsetFailed += f1==0?1:0;
 				ctx.voiceFrameOnsetTotal++;
-			}if(i>onsetIndex && i<offsetIndex){
+			}else if(i>onsetIndex && i<offsetIndex){
 				ctx.voiceFrameSteadyFailed += f1==0?1:0;
 				ctx.voiceFrameSteadyTotal++;
-			}if(i>offsetIndex){
+			}else if(i>offsetIndex){
 				ctx.voiceFrameOffsetFailed += f1==0?1:0;
 				ctx.voiceFrameOffsetTotal++;
 			}
