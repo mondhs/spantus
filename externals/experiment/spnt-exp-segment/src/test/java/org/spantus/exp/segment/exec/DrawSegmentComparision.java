@@ -42,6 +42,7 @@ import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.exp.segment.ExpUtils;
 import org.spantus.exp.segment.beans.ComparisionResult;
+import org.spantus.exp.segment.exec.classification.ExpSegmentationUtil;
 import org.spantus.exp.segment.services.ExpServiceFactory;
 import org.spantus.exp.segment.services.impl.ComarisionFacadeImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -181,25 +182,12 @@ public class DrawSegmentComparision extends ApplicationFrame {
 		demo.setWavName(CollectionUtils.toList(wavName, noise));
 		demo.setMarkerName(markerName);
 	}
+	
+	
 	public static void populateWav(DrawSegmentComparision demo){
-		String wavName = null;
-		String markerName = null;
-		String noise = null;
 		Map<String, ExtractorParam> extractorParams = new HashMap<String, ExtractorParam>();
 		
-		String root = "/home/studijos/wav/on_off_up_down_wav/";
-//		wavName = root + "dentist.wav";
-		wavName = root + "hammer.wav";
-//		wavName = root + "keyboard.wav";
-//		wavName = root + "original.wav";
-//		wavName = root + "plane.wav";
-//		wavName = root + "rain.wav";
-//		wavName = root + "shower.wav";
-//		wavName = root + "traffic.wav";
-
-		markerName = root + "exp/_on_off_up_down.mspnt.xml";
-		demo.setWavName(CollectionUtils.toList(wavName, noise));
-		demo.setMarkerName(markerName);
+		
 		demo.getParam().setMinSpace(60L);
 		demo.getParam().setMinLength(90L);
 //		demo.getParam().setExpandEnd(60L);
@@ -211,11 +199,43 @@ public class DrawSegmentComparision extends ApplicationFrame {
 		ExtractorParam extractorParam = new ExtractorParam();
 		extractorParam.getProperties().put(ExtractorModifiersEnum.mean.name(), Boolean.TRUE);
 		extractorParam.setClassName(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
-		extractorParams.put(extractorParam.getClassName(), extractorParam);
+//		extractorParams.put(extractorParam.getClassName(), extractorParam);
 
 		demo.setExtractorParams(extractorParams);
 
 	}
+	
+	public static void populateExpWav(DrawSegmentComparision demo){
+		populateWav(demo);
+		String root = ExpSegmentationUtil.NOIZEUS_ROOT + ExpSegmentationUtil.SUFIX_on_off_up_down ;
+		String wavName = null;
+		String markerName = null;
+//		wavName = root + "dentist.wav";
+		wavName = root + "hammer.wav";
+//		wavName = root + "keyboard.wav";
+//		wavName = root + "original.wav";
+//		wavName = root + "plane.wav";
+//		wavName = root + "rain.wav";
+//		wavName = root + "shower.wav";
+//		wavName = root + "traffic.wav";
+
+		markerName = root + "_on_off_up_down.mspnt.xml";
+		demo.setWavName(CollectionUtils.toList(wavName, null));
+		demo.setMarkerName(markerName);
+	}
+	public static void populateNoizeusWav(DrawSegmentComparision demo){
+		populateWav(demo);
+		String root = ExpSegmentationUtil.NOIZEUS_ROOT;
+		String wavName = null;
+		String markerName = null;
+		wavName = root + "sp01.wav";
+//		wavName = root + "traffic.wav";
+
+		markerName = root + "sp01.mspnt.xml";
+		demo.setWavName(CollectionUtils.toList(wavName, null));
+		demo.setMarkerName(markerName);
+	}
+	
 	////////// MAIN ///////////////
 	
 	public static void main(final String[] args) {
@@ -230,8 +250,9 @@ public class DrawSegmentComparision extends ApplicationFrame {
 		
 		demo.setWavName(CollectionUtils.toList(wavName, noise));
 		demo.setMarkerName(markerName);
-		populateAcceleromerData(demo);
-//		populateWav(demo);
+//		populateAcceleromerData(demo);
+//		populateExpWav(demo);
+		populateNoizeusWav(demo);
 		demo.init();
 		demo.pack();
 		RefineryUtilities.centerFrameOnScreen(demo);

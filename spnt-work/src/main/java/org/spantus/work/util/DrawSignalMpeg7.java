@@ -64,7 +64,7 @@ public class DrawSignalMpeg7 extends JFrame {
 	public DrawSignalMpeg7(String name) {
 		File audioFile = new File(name);
 		this.path =  FileUtils.getPath(audioFile);
-		this.name =  FileUtils.getOnlyFileName(audioFile);
+		this.name =  FileUtils.stripExtention(audioFile);
 		try {
 			reader = readSignal(audioFile);
 		} catch (UnsupportedAudioFileException e) {

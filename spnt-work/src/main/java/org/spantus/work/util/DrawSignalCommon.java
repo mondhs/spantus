@@ -74,7 +74,7 @@ public class DrawSignalCommon extends JFrame {
 	public DrawSignalCommon(String name) {
 		File audioFile = new File(name);
 		this.path = FileUtils.getPath(audioFile);
-		this.name = FileUtils.getOnlyFileName(audioFile);
+		this.name = FileUtils.stripExtention(audioFile);
 		try {
 			reader = readSignal(audioFile);
 		} catch (UnsupportedAudioFileException e) {

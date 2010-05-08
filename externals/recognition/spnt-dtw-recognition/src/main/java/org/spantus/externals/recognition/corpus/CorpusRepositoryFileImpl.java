@@ -88,9 +88,9 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 			file = saveFile(entry.getCorpusEntry());
 		}
 		if(entry.getWavFile().exists()){
-			String wavName = FileUtils.getOnlyFileName(entry.getWavFile());
-			String entryName = FileUtils.getOnlyFileName(
-					FileUtils.getOnlyFileName(file.getName())); 
+			String wavName = FileUtils.stripExtention(entry.getWavFile());
+			String entryName = FileUtils.stripExtention(
+					FileUtils.stripExtention(file.getName())); 
 			if(!wavName.equals(entryName)){
 				File dest = new File(entry.getWavFile().getParent(),
 						entryName
@@ -121,8 +121,8 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 			fileEntry.setCorpusEntry(corpusEntry);
 			fileEntry.setEntryFile(entryFile);
 			File wavFile = new File(entryFile.getParent(),
-					FileUtils.getOnlyFileName(
-							FileUtils.getOnlyFileName(entryFile))+".wav");
+					FileUtils.stripExtention(
+							FileUtils.stripExtention(entryFile))+".wav");
 			fileEntry.setWavFile(wavFile);
 		} catch (FileNotFoundException e) {
 			throw new ProcessingException(e);

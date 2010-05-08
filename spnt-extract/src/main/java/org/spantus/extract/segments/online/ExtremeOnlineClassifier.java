@@ -299,7 +299,14 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			if(!"0".equals(className)){
 				appendMarker(currentMarker);
 			}else{
-				log.debug("[changePointLastApproved]not appended {0}", currentMarker);
+				int lastIndex = getMarkSet().getMarkers().size()-1;
+				Marker prevMarker = lastIndex>=0?getMarkSet().getMarkers().get(lastIndex):null;
+				if(prevMarker!= null && 
+						(!prevMarker.getLabel().endsWith(":0"))){
+					appendMarker(currentMarker);
+				}else{
+					log.debug("[changePointLastApproved]not appended {0}", currentMarker);
+				}
 			}
 			Marker newMarker = createMarker(ctx.getCurrentSegment(), "0");
 			setMarker(newMarker);

@@ -37,6 +37,8 @@ import org.spantus.work.io.WorkAudioFactory;
 public class ComarisionFacadeImpl implements ComarisionFacade {
 	
 	private Map<String, ExtractorParam> extractorParams;
+	private ClassifierEnum classifier = ClassifierEnum.rules;
+	private SegmentatorServiceEnum segmentation = SegmentatorServiceEnum.online;
 	
 	/* (non-Javadoc)
 	 * @see org.spantus.exp.segment.services.impl.ComarisionFacade#readSignal(java.util.List, org.spantus.extractor.impl.ExtractorEnum[])
@@ -62,7 +64,7 @@ public class ComarisionFacadeImpl implements ComarisionFacade {
 					.registerThreshold(
 							bufferedReader,
 							extractors,
-							getExtractorParams(), ClassifierEnum.rules);
+							getExtractorParams(), getClassifier());
 			reader.readSignal(urlFiles, bufferedReader);
 			return bufferedReader;
 		} catch (MalformedURLException e) {
@@ -89,7 +91,7 @@ public class ComarisionFacadeImpl implements ComarisionFacade {
 	protected MarkerSetHolder extractSegments(Set<IClassifier> classifiers, OnlineDecisionSegmentatorParam param) {
 		MarkerSetHolder testMarkerSet = null;
 		ISegmentatorService online = (ISegmentatorService) SegmentFactory
-				.createSegmentator(SegmentatorServiceEnum.online.name());
+				.createSegmentator(getSegmentation().name());
 		testMarkerSet = online.extractSegments(classifiers, param);
 		return testMarkerSet;
 	}
@@ -101,5 +103,17 @@ public class ComarisionFacadeImpl implements ComarisionFacade {
 	}
 	public void setExtractorParams(Map<String, ExtractorParam> params) {
 		this.extractorParams = params;
+	}
+	public ClassifierEnum getClassifier() {
+		return classifier;
+	}
+	public void setClassifier(ClassifierEnum classifier) {
+		this.classifier = classifier;
+	}
+	public SegmentatorServiceEnum getSegmentation() {
+		return segmentation;
+	}
+	public void setSegmentation(SegmentatorServiceEnum segmentation) {
+		this.segmentation = segmentation;
 	}
 }

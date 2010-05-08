@@ -126,8 +126,8 @@ public class MergeNoise {
 			e.printStackTrace();
 			return;
 		}
-		String savedFileName = FileUtils.getOnlyFileName(noiseSignalFile)+
-		"_" + FileUtils.getOnlyFileName(mainSignalFile);
+		String savedFileName = FileUtils.stripExtention(noiseSignalFile)+
+		"_" + FileUtils.stripExtention(mainSignalFile);
 		File saveWavFile = new File(mainSignalFile.getParent(),
 				savedFileName+".wav");
 		if(saveWavFile.exists()){

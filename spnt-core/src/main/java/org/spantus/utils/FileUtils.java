@@ -30,12 +30,11 @@ import java.util.regex.Pattern;
  */
 public abstract class FileUtils {
 	
-	public static String getOnlyFileName(File file){
+	public static String stripExtention(File file){
 		String fileName = file.getName();
-		fileName = fileName.replaceAll("\\.\\w{2,4}$","");
-		return fileName;
+		return stripExtention(fileName);
 	}
-	public static String getOnlyFileName(String file){
+	public static String stripExtention(String file){
 		file = file.replaceAll("\\.\\w{2,5}$","");
 		return file;
 	}
@@ -44,12 +43,12 @@ public abstract class FileUtils {
 	 * @param file
 	 * @return
 	 */
-	public static String truncateDir(String file){
-		if(file == null){
-			return file;
+	public static String truncateDir(String fileName){
+		if(fileName == null){
+			return fileName;
 		}
-		file = file.replaceAll("/home/studijos/wav/data/","");
-		return file;
+		File file = new File(fileName);
+		return file.getName();
 	}
 	
 	/**

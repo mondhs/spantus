@@ -75,7 +75,7 @@ public class ExportCmd extends AbsrtactCmd {
 		//set file name for export file chooser
 		try {
 			file = new File(ctx.getProject().getSample().getCurrentFile().toURI());
-			String fileName = FileUtils.getOnlyFileName(file);
+			String fileName = FileUtils.stripExtention(file);
 			File newFile = new File(file.getParent(),fileName);
 			if(file != null){
 				fileChooser.setSelectedFile(newFile);
