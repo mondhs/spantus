@@ -29,6 +29,7 @@ import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractClassifier;
+import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.threshold.DynamicThreshold;
 import org.spantus.core.threshold.IClassifier;
@@ -233,6 +234,22 @@ public abstract class ExtractorUtils {
 		registerThreshold(bufferedReader, extractors, params, ClassifierEnum.online);
 	}
 	/**
+	 * Apply params 
+	 * 
+	 * @param abstractThreshold
+	 * @param param
+	 * @return
+	 */
+	protected static AbstractThreshold applyParams(AbstractThreshold abstractThreshold, ExtractorParam param){
+		if(param == null){
+			return abstractThreshold;
+		}
+		Float threasholdCoef = ExtractorParamUtils.<Float>getValue(param, 
+		ExtractorParamUtils.commonParam.threasholdCoef.name(), Float.valueOf(0.1f));
+		abstractThreshold.setCoef(threasholdCoef);	
+		return abstractThreshold;
+	}
+	/**
 	 * 
 	 * @param bufferedReader
 	 * @param extractorType
@@ -248,13 +265,13 @@ public abstract class ExtractorUtils {
 		
 		switch (thresholdType) {
 		case online:
-			threshold = new StaticThreshold();
+			threshold = applyParams(new StaticThreshold(), param);
 			break;
 		case dynamic:
-			threshold = new DynamicThreshold();
+			threshold = applyParams(new DynamicThreshold(), param);
 			break;
 		case offline:
-			threshold = new OfflineThreshold();
+			threshold = applyParams(new OfflineThreshold(), param);
 			break;
 		case rules:
 //			threshold = new ExtremeOnlineClassifier();

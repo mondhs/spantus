@@ -19,6 +19,9 @@
 package org.spantus.utils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /**
@@ -91,5 +94,41 @@ public abstract class FileUtils {
 		}
 		return file;
 	}
-
+	/**
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public static String findFirstMatchFullPath(String root, String sufix){
+		File rootDir = new File(root);
+		if(rootDir.isDirectory()){
+			for (String file : rootDir.list()) {
+				if(file.endsWith(sufix)){
+					return root + file;
+				}
+				
+			}
+		}
+		return null;
+	}
+	/**
+	 * 
+	 */
+	public static List<String> findAllMatchFullPath(String root, String sufix){
+		File rootDir = new File(root);
+		
+		List<String> results = new ArrayList<String>();
+		
+ 		if(rootDir.isDirectory()){
+			for (String file : rootDir.list()) {
+				if(file.endsWith(sufix)){
+					results.add( root + file);
+				}
+				
+			}
+		}
+ 		
+ 		Collections.sort(results);
+		return results;
+	}
 }

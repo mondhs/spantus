@@ -235,8 +235,8 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		Float sampledXScalar = xScalar * getCtx().getValues().getSampleRate();
 		polygon.addPoint(0, minvalue);
 		for (Marker marker : markerSet.getMarkers()) {
-			int startIndex = getCtx().getValues().toIndex(marker.getStart()/1000f);
-			int endIndex = getCtx().getValues().toIndex(marker.getEnd()/1000f);
+			int startIndex = getCtx().getValues().toIndex(marker.getStart()/1000f)+2;
+			int endIndex = getCtx().getValues().toIndex(marker.getEnd()/1000f)+2;
 			Float start = startIndex/sampledXScalar;
 			Float end = endIndex/sampledXScalar;
 			polygon.addPoint(start.intValue(), minvalue);

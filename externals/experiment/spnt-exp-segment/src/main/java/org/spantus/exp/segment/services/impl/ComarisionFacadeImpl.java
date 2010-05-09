@@ -56,7 +56,7 @@ public class ComarisionFacadeImpl implements ComarisionFacade {
 					.get(0));
 			SignalFormat format = reader.getFormat(urlFiles.get(0));
 			IExtractorConfig config = ExtractorConfigUtil.defaultConfig(format
-					.getSampleRate(), 30, 66);
+					.getSampleRate(), 30, 66);//30 ms and 66 % 
 			IExtractorInputReader bufferedReader = ExtractorsFactory
 					.createReader(config);
 

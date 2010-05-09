@@ -28,6 +28,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		log.debug("[testOnRuleBase] {0}", actionVal.name());
 		return actionVal.name();
 	}
+
 	@SuppressWarnings("unused")
 	public ClassifierRuleBaseEnum.action testOnRuleBase(
 			ExtremeSegmentsOnlineCtx ctx, Boolean isEnum) {
@@ -48,12 +49,16 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		Long lastLength = null;
 		boolean isIncrease = false;
 		boolean isDecrease = false;
+		int lastSizeValues = 0;
+		int currentSizeValues = 0;
+		String className = "";
 		
 		if(ctx.getCurrentSegment() != null){
 			currentSegment = ctx.getCurrentSegment();
 			currentArea = currentSegment.getCalculatedArea();
 			currentPeak = currentSegment.getPeakEntries().size();
 			currentLength = currentSegment.getCalculatedLength();
+			currentSizeValues = currentSegment.getValues().size();
 		}
 		
 		if (ctx.getExtremeSegments().size() > 0) {
@@ -61,24 +66,29 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			lastArea = lastSegment.getCalculatedArea();
 			lastPeak = lastSegment.getPeakEntries().size();
 			lastLength = lastSegment.getCalculatedLength();
+			lastSizeValues = lastSegment.getValues().size();
+
 			
 			if(currentSegment.getPeakEntry() != null){
 				isIncrease = currentSegment.isIncrease(lastSegment);
 				isDecrease = currentSegment.isDecrease(lastSegment);
+				className = getClusterService().getClassName(lastSegment, ctx);
+
 				
-				log.debug("[testOnRuleBase] Similar: {0}, Increase: {1}; Decrease: {2};",
+				log.debug("[testOnRuleBase] Similar: {0}, Increase: {1}; Decrease: {2}; className:{3}",
 						currentSegment.isSimilar(lastSegment),
 						isIncrease,
-						isDecrease
+						isDecrease,
+						className
 						);
 			}
 		}
 		
 		if(currentSegment == null &&  ctx.isFeatureInMin()){
-			log.debug("Current not initialized");
+			log.debug("Current not initialized. This first segment");
 			return ClassifierRuleBaseEnum.action.changePointCurrentApproved;	
 		} else if(lastSegment == null &&  ctx.isFeatureInMin()){
-			log.debug("Previous not initialized");
+			log.debug("Previous not initialized. this is second segment");
 			return ClassifierRuleBaseEnum.action.changePointCurrentApproved;	
 		} else if(lastSegment == null &&  ctx.isFeatureInMax()){
 			//do nothing
@@ -91,100 +101,23 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 			log.debug("Found max. join as increase");
 			return ClassifierRuleBaseEnum.action.join;
 		}else if(ctx.isFeatureInMax() && currentLength<40 && lastLength > 100){
+			log.debug("too small gap for new segment {0}<40, {1}>100", currentLength, lastLength);
 			return ClassifierRuleBaseEnum.action.join;
-//		}else 	if(ctx.isFeatureInMax() && isDecrease){
-//			log.debug("Found max. join as decrease");
-//			return ClassifierRuleBaseEnum.action.join;
+		}else 	if(ctx.isFeatureInMax() && isDecrease && lastLength < 100){
+			log.debug("Found max. join as decrease {0}", currentSegment.isDecrease(lastSegment));
+			return ClassifierRuleBaseEnum.action.join;
+		}else if(ctx.isFeatureInMax() && "0".equals(className)){
+			log.debug("Found max. delete segment as noise");
+			return ClassifierRuleBaseEnum.action.delete;
 		}else if(ctx.isFeatureInMax()){
 			log.debug("Found max. approve previous change point");
 			return ClassifierRuleBaseEnum.action.changePointLastApproved;	
 		}
 
-
-//		if (currentSegment == null) {
-//			return ClassifierRuleBaseEnum.action.processNoise;
-//		}
-//		if (lastSegment == null) {
-//			if (segmentStart) {
-//				return ClassifierRuleBaseEnum.action.changePoint;
-//			} else if (ctx.isIn(state.start)) {
-//				return ClassifierRuleBaseEnum.action.startMarkerApproved;
-//			} else if (segmentEnd && ctx.isIn(state.segment)) {
-//				return ClassifierRuleBaseEnum.action.endMarker;
-//			} else if (ctx.isIn(state.segment)) {
-//				return ClassifierRuleBaseEnum.action.processSignal;
-//			}
-//
-//		}
-//		if (lastSegment != null) {
-//			String className = getClusterService().getClassName(lastSegment,
-//					ctx);
-			
-			
-//			noiseClass = "0".equals(className);
-//			log.debug(
-//					"[testOnRuleBase] processing Area: ({0}<>{1}), length: ({2}<>{3}), state {4}, isEnd: {5}, isPeak: {6}",
-//						currentArea, lastArea,
-//						currentLength, lastLength
-//							, ctx.getMarkerState(),
-//							segmentEnd, segmentPeak);
-//			
-//			if (currentSegment == null) {
-//				return ClassifierRuleBaseEnum.action.processNoise;
-//			}else if (ctx.isIn(null) && !segmentPeak) {
-//				log.debug("[testOnRuleBase] state not defined");
-//				return ClassifierRuleBaseEnum.action.startMarkerApproved;
-//			} else if ( segmentPeak) {
-//				return ClassifierRuleBaseEnum.action.startMarkerApproved;
-//			} else if (segmentEnd && currentSegment.isIncrease(lastSegment)
-////					&& currentArea>lastArea*.9 && currentArea<lastArea
-////					&& !noiseClass
-//					) {
-//				log.debug("[testOnRuleBase] increase");
-//				return ClassifierRuleBaseEnum.action.join;
-//			} else if (segmentEnd && currentSegment.isDecrease(lastSegment)
-////					&& lastArea>currentArea*.9 && lastArea<currentArea
-////					&& !noiseClass
-//					) {
-//				log.debug("[testOnRuleBase] decrease");
-//				return ClassifierRuleBaseEnum.action.join;
-//			} else if (segmentEnd && currentSegment.isSimilar(lastSegment)
-//					) {
-//				log.debug("[testOnRuleBase] similar");
-//				return ClassifierRuleBaseEnum.action.join;
-//			} else if (!segmentEnd && !segmentStart && ctx.isIn(state.segment)) {
-// 				return ClassifierRuleBaseEnum.action.processSignal;
-////			} else if (segmentEnd && lastLength < 30 && currentLength > 30 ) {
-////				log.debug("[testOnRuleBase] too short for start new currentLength: {0}, lastLength:{1}", currentLength, lastLength  );
-////				return ClassifierRuleBaseEnum.action.join;
-//			} else if (segmentEnd) {
-//				return ClassifierRuleBaseEnum.action.endMarkerApproved;
-//			} else if (segmentEnd && ctx.isIn(state.segment)) {
-//				return ClassifierRuleBaseEnum.action.delete;
-//			} else if (ctx.isIn(state.segment)) {
-//				return ClassifierRuleBaseEnum.action.processSignal;
-////			} else if (ctx.isIn(state.end) && currentLength<30) {
-////				return ClassifierRuleBaseEnum.action.processSignal;
-//			}else if (segmentStart) { 
-//				return ClassifierRuleBaseEnum.action.processNoise;
-//			}else {
-//				
-//			}
-//			log.debug(
-//					"[testOnRuleBase] NC not handled area: {0}, length: {1}, state {2}, isEnd: {3}",
-//					currentSegment.getCalculatedArea(), currentSegment
-//							.getCalculatedLength(), ctx.getMarkerState(),
-//							segmentEnd);
-//			return ClassifierRuleBaseEnum.action.processNoise;
-//		}
-
-		// log.debug("[testOnRuleBase] area and length {0}, {1}",
-		// segment.getCalculatedArea(), segment.getCalculatedLength());
-
 		log.debug("[testOnRuleBase]  not handled area and length {0}, {1}",
 				currentArea, currentLength);
 
-		return ClassifierRuleBaseEnum.action.processNoise;
+		return ClassifierRuleBaseEnum.action.processSignal;
 	}
 
 	public ExtremeOnlineClusterService getClusterService() {

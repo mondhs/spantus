@@ -18,6 +18,7 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		Double area = segment.getCalculatedArea();
 		Long length = segment.getCalculatedLength();
 		Integer peaks =  segment.getPeakEntries().size();
+		log.debug("[getClassName]get class for segment {0}",segment);
 //		if(length<30){
 //			return "0";
 //		}
@@ -42,7 +43,7 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		
 		SegmentInnerData data = new SegmentInnerData(peaks,area,length);
 		
-		log.debug("[getClassName] data: {0}", data);
+		log.debug("[getClassName] data: {0}", data, ctx.semgnetFeatures);
 
 		Float distanceToMin = data.distance(ctx.segmentCenters.get(0));
 		Float avgDistance = data.distance(ctx.segmentCenters.get(1));

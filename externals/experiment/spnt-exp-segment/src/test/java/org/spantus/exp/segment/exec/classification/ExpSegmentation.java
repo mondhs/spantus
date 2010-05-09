@@ -1,7 +1,6 @@
 package org.spantus.exp.segment.exec.classification;
 
 import java.io.File;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,13 @@ public class ExpSegmentation {
 		comarisionFacade = new ComarisionFacadeImpl();
 		markerDao = WorkServiceFactory.createMarkerDao();
 		makerComparison = ExpServiceFactory.createMakerComparison();
-		comarisionFacade.setClassifier(ClassifierEnum.rules);
+	}
+	public List<ComparisionResult> multipleMixtureExperiments(List<ExpCriteria> expCriterias){
+		List<ComparisionResult> results = new ArrayList<ComparisionResult>();
+		for (ExpCriteria expCriteria : expCriterias) {
+			results.addAll(multipleMixtureExperiment(expCriteria));
+		}
+		return results;
 	}
 	/**
 	 * 
@@ -58,18 +63,18 @@ public class ExpSegmentation {
 	 * @param markerName
 	 * @return
 	 */
-	public List<ComparisionResult> multipleMixtureExperiment(List<String> signalNames, List<String> noiseNames, String markerName){
+	public List<ComparisionResult> multipleMixtureExperiment(ExpCriteria expCriteria){
 		List<ComparisionResult> results = new ArrayList<ComparisionResult>();
-		List<String> noiseNamesList = noiseNames;
+		List<String> noiseNamesList = expCriteria.getNoiseNames();
 		if(noiseNamesList == null){
 			noiseNamesList = CollectionUtils.toList("");
 		}
 		
-		for (String signal : signalNames) {
+		for (String signal : expCriteria.getSignalNames()) {
 			for (String noise : noiseNamesList) {
 				noise = "".equals(noise)?null:noise;
 				List<String> signals = CollectionUtils.toList(signal, noise);
-				ComparisionResult result = singleMixtureExperiment(signals, markerName);
+				ComparisionResult result = singleMixtureExperiment(signals, expCriteria.getMarkerName());
 				results.add(result);
 			}
 		}
@@ -82,6 +87,17 @@ public class ExpSegmentation {
 	 * @return
 	 */
 	public ComparisionResult singleMixtureExperiment(List<String> signals, String markerName){
+		//remove this hack
+		if(ClassifierEnum.offline.equals(getComarisionFacade().getClassifier())){
+			if(signals.get(0).contains("__")){
+				ExpSegmentationUtil.addThresholdCoef(getComarisionFacade().getExtractorParams(), 7F);
+			}else {
+				ExpSegmentationUtil.addThresholdCoef(getComarisionFacade().getExtractorParams(), 1F);
+			}
+		}else {
+			getComarisionFacade().getExtractorParams().clear();
+		}
+		
 		MarkerSetHolder testMarkerSet = comarisionFacade.calculateMarkers(
 				signals, getExtractors(), getParam());
 		MarkerSetHolder holder = markerDao.read(
@@ -94,11 +110,11 @@ public class ExpSegmentation {
 	
 	public void generateExpName(ComparisionResult result, List<String> signals){
 		StringBuilder sb = new StringBuilder();
-		sb.append(comarisionFacade.getSegmentation()).append(",").append(comarisionFacade.getClassifier()).append(",");
+		sb.append(comarisionFacade.getSegmentation()).append(";").append(comarisionFacade.getClassifier()).append(";");
 		String separator = "";
 		for (String signal : signals) {
 			if(StringUtils.hasText(signal)){
-				sb.append(separator).append(FileUtils.truncateDir(signal));
+				sb.append(separator).append(FileUtils.truncateDir(signal).replaceAll(".wav", ""));
 				separator ="-";
 			}
 		}
@@ -107,11 +123,12 @@ public class ExpSegmentation {
 	}
 	public void logResult(List<ComparisionResult> results){
 		StringBuilder sb = new StringBuilder();
-		sb.append("Segmentation, Classifier, Name, Result\n");
+		sb.append("Segmentation;Classifier;Name;Result\n");
 		for (ComparisionResult comparisionResult : results) {
 			ComparisionResult result = comparisionResult;
 //			ComparisionResultTia result = (ComparisionResultTia)comparisionResult;
-			sb.append(MessageFormat.format("{0}, {1}\n", result.getName(), result.getTotalResult()));
+			sb.append(result.getName()).append(";")
+			.append(result.getTotalResult()).append("\n");
 			
 		}
 		log.debug("\n{0}" , sb);
@@ -120,12 +137,24 @@ public class ExpSegmentation {
 	////////////////////////////////////////// MAIN
 	public static void main(String[] args) {
 		List<ComparisionResult> results = null;
-//		results = ExpSegmentationUtil.acceleromerData(ExpSegmentationUtil.SUFIX_accelerometer);
-//		results.addAll(ExpSegmentationUtil.acceleromerData(ExpSegmentationUtil.SUFIX_iaccelerometer));
+		List<ExpCriteria> criterias = null;
+		ExpSegmentation expSegmentation = ExpSegmentationFactory.createWavExpSegmentation();
+		expSegmentation.getComarisionFacade().setClassifier(ClassifierEnum.rulesOnline);
+		
+//		results = ExpSegmentationUtil.acceleromerData(ExpSegmentationUtil.SUFIX_accelerometer,
+//				ExpSegmentationUtil.SUFIX_iaccelerometer
+//				);
 //		results = ExpSegmentationUtil.wavNoizeusData(ExpSegmentationUtil.SUFIX_on_off_up_down);
-		results = ExpSegmentationUtil.wavNoizeusData(ExpSegmentationUtil.NOIZEUS_01);
-		results.addAll(ExpSegmentationUtil.wavNoizeusData(ExpSegmentationUtil.NOIZEUS_21));
-		(new ExpSegmentation()).logResult(results);
+		criterias = ExpSegmentationFactory.createNoizeusExpCriterias(
+				ExpSegmentationUtil.NOIZEUS_01,
+				ExpSegmentationUtil.NOIZEUS_02,
+				ExpSegmentationUtil.NOIZEUS_04,
+				ExpSegmentationUtil.NOIZEUS_07,
+				ExpSegmentationUtil.NOIZEUS_10,
+				ExpSegmentationUtil.NOIZEUS_21
+				);
+		results = expSegmentation.multipleMixtureExperiments(criterias);
+		expSegmentation.logResult(results);
 	}
 	
 	
