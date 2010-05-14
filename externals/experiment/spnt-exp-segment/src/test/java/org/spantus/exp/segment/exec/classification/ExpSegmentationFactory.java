@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.spantus.core.extractor.ExtractorParam;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.utils.CollectionUtils;
@@ -51,17 +52,33 @@ public abstract class ExpSegmentationFactory {
 				.multipleMixtureExperiment(expCriteria);
 		return results;
 	}
+	
+	
+	/**
+	 * 
+	 * @param enum1
+	 * @return
+	 */
+	public static ExpSegmentation createWavExpSegmentation(ExpSegmentation expSegmentation, ClassifierEnum enum1) {
+		expSegmentation = createWavExpSegmentation(expSegmentation);
+		expSegmentation.getComarisionFacade().setClassifier(enum1);
+		return expSegmentation;
+	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public static ExpSegmentation createWavExpSegmentation() {
-		ExpSegmentation expSegmentation = new ExpSegmentation();
+	public static ExpSegmentation createWavExpSegmentation(ExpSegmentation expSegmentation) {
+		
+		if(expSegmentation == null){
+			expSegmentation = new ExpSegmentation();
+		}
+		
 		expSegmentation.init();
 
 		expSegmentation
-				.setExtractors(new ExtractorEnum[] { ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR });
+				.setExtractors(new ExtractorEnum[] { ExtractorEnum.ENERGY_EXTRACTOR, ExtractorEnum.ENVELOPE_EXTRACTOR});
 		expSegmentation.getParam().setMinSpace(60L);
 		expSegmentation.getParam().setMinLength(90L);
 		expSegmentation.getParam().setExpandEnd(60L);

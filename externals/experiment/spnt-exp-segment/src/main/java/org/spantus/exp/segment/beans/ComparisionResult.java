@@ -55,6 +55,13 @@ public class ComparisionResult {
 	
 	private Map<String, Number> params;
 	
+	private String noiseType;
+	
+	private String noiseLevel;
+	
+	private String classifier;
+	
+	
 	public Map<String, Number> getParams() {
 		if(params == null){
 			params = new HashMap<String, Number>();
@@ -131,6 +138,30 @@ public class ComparisionResult {
 
 	public void setTestMarkers(MarkerSetHolder testMarkers) {
 		this.testMarkers = testMarkers;
+	}
+
+	public String getNoiseType() {
+		return noiseType;
+	}
+
+	public void setNoiseType(String noiseType) {
+		this.noiseType = noiseType;
+	}
+
+	public String getNoiseLevel() {
+		return noiseLevel;
+	}
+
+	public void setNoiseLevel(String noiseLevel) {
+		this.noiseLevel = noiseLevel;
+	}
+
+	public String getClassifier() {
+		return classifier;
+	}
+
+	public void setClassifier(String classifier) {
+		this.classifier = classifier;
 	}
 
 }

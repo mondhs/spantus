@@ -138,13 +138,11 @@ public class ExpSegmentation {
 	public static void main(String[] args) {
 		List<ComparisionResult> results = null;
 		List<ExpCriteria> criterias = null;
-		ExpSegmentation expSegmentation = ExpSegmentationFactory.createWavExpSegmentation();
-		expSegmentation.getComarisionFacade().setClassifier(ClassifierEnum.rulesOnline);
+		ExpSegmentation expSegmentation = ExpSegmentationFactory.createWavExpSegmentation(null, ClassifierEnum.rulesOnline);
 		
 //		results = ExpSegmentationUtil.acceleromerData(ExpSegmentationUtil.SUFIX_accelerometer,
 //				ExpSegmentationUtil.SUFIX_iaccelerometer
 //				);
-//		results = ExpSegmentationUtil.wavNoizeusData(ExpSegmentationUtil.SUFIX_on_off_up_down);
 		criterias = ExpSegmentationFactory.createNoizeusExpCriterias(
 				ExpSegmentationUtil.NOIZEUS_01,
 				ExpSegmentationUtil.NOIZEUS_02,
@@ -154,6 +152,7 @@ public class ExpSegmentation {
 				ExpSegmentationUtil.NOIZEUS_21
 				);
 		results = expSegmentation.multipleMixtureExperiments(criterias);
+//		results = ExpSegmentationFactory.calcResultForAllNoizeus();
 		expSegmentation.logResult(results);
 	}
 	

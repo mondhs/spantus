@@ -29,35 +29,40 @@ package org.spantus.extractor.impl;
  *
  */
 public enum ExtractorEnum {
-	FFT_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector),
-	ENERGY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	NOISE_LEVEL_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	LPC_RESIDUAL_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	SIGNAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	LOUDNESS_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	PEAK_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	CROSSING_ZERO_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	SIGNAL_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	LOG_ATTACK_TIME(ExtractorTypeEnum.SequenceOfScalar),
-	WAVFORM_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector),
-	LPC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector),
-	MFCC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector),
-	AUTOCORRELATION_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	ENVELOPE_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	SPECTRAL_CENTROID_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	SPECTRAL_FLUX_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	SPECTRAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
-	SPECTRUM_POWER_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar),
+	FFT_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector, "FFT"),
+	ENERGY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Energy"),
+	NOISE_LEVEL_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Noise Level"),
+	LPC_RESIDUAL_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "LPC Residual"),
+	SIGNAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Signal Entropy"),
+	LOUDNESS_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Loudness"),
+	PEAK_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Peak"),
+	CROSSING_ZERO_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Crossing Zero"),
+	SIGNAL_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Signal"),
+	LOG_ATTACK_TIME(ExtractorTypeEnum.SequenceOfScalar, "Log Attact"),
+	WAVFORM_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector,"Wavform"),
+	LPC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector, "LPC"),
+	MFCC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector,"MFCC"),
+	AUTOCORRELATION_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Autocorrelation"),
+	ENVELOPE_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar,"Envelope"),
+	SPECTRAL_CENTROID_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Speactral Centroid"),
+	SPECTRAL_FLUX_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Spectral Flux"),
+	SPECTRAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Spectral Entoropy"),
+	SPECTRUM_POWER_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Spectrum Power"),
 //	HarmonicProductSpectrum(ExtractorTypeEnum.SequenceOfScalar),
-	SPECTRAL_GAIN_FACTOR(ExtractorTypeEnum.SequenceOfVector)
+	SPECTRAL_GAIN_FACTOR(ExtractorTypeEnum.SequenceOfVector, "Spegtral Gain Factor")
 	;
 	
-	ExtractorEnum(ExtractorTypeEnum type) {
+	ExtractorEnum(ExtractorTypeEnum type, String displayName) {
 		this.type = type;
+		this.displayName = displayName;
 	}
 	
 	ExtractorTypeEnum type;
+	String displayName;
 	public ExtractorTypeEnum getType(){
 		return type;
+	}
+	public String getDisplayName() {
+		return displayName;
 	}
 }

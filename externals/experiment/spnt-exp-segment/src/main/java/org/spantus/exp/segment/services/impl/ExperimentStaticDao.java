@@ -67,20 +67,27 @@ public class ExperimentStaticDao implements ExperimentDao {
 	public void init(){
 		//Do nothing
 	}
-	
+	/**
+	 * 
+	 * @param comparisionResult
+	 * @param features
+	 * @param experimentID
+	 * @param experimentName
+	 * @return
+	 */
 	protected ExperimentResult createExperimentResult(
 			ComparisionResult comparisionResult, String features, 
 			Long experimentID, 
 			String experimentName){
 		ExperimentResult experimentResult = new ExperimentResult();
-		if(comparisionResult instanceof ComparisionResultTia){
-			experimentResult = createTiaExperimentResult((ComparisionResultTia)comparisionResult, 
-					features, experimentID, experimentName);
-		}
+		
 		experimentResult.setFeatures(features);
 		experimentResult.setExperimentID(experimentID);
 		experimentResult.setResource(experimentName);
 		experimentResult.setTotalResult(comparisionResult.getTotalResult());
+		experimentResult.setClassifier(comparisionResult.getClassifier());
+		experimentResult.setNoiseLevel(comparisionResult.getNoiseLevel());
+		experimentResult.setNoiseType(comparisionResult.getNoiseType());
 		return experimentResult;
 		
 	}

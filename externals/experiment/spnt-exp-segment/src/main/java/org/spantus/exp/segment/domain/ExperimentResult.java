@@ -43,6 +43,13 @@ public class ExperimentResult extends Entity {
 	String features;
 	
 	Float totalResult;
+	
+	String noiseType;
+	
+	String noiseLevel;
+	
+	String classifier;
+
 
 
 	public String getFeatures() {
@@ -79,6 +86,30 @@ public class ExperimentResult extends Entity {
 
 	public void setExperimentID(Long experimentID) {
 		this.experimentID = experimentID;
+	}
+
+	public String getNoiseType() {
+		return noiseType;
+	}
+
+	public void setNoiseType(String noiseType) {
+		this.noiseType = noiseType;
+	}
+
+	public String getNoiseLevel() {
+		return noiseLevel;
+	}
+
+	public void setNoiseLevel(String noiseLevel) {
+		this.noiseLevel = noiseLevel;
+	}
+
+	public String getClassifier() {
+		return classifier;
+	}
+
+	public void setClassifier(String segmentator) {
+		this.classifier = segmentator;
 	}
 
 }
