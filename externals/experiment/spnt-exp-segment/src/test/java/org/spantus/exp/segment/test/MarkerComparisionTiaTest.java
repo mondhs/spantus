@@ -1,6 +1,9 @@
 package org.spantus.exp.segment.test;
 
 import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
@@ -9,23 +12,23 @@ import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.services.MakerComparison;
 import org.spantus.exp.segment.services.impl.MakerComparisonTIAImpl;
+import org.junit.Assert;
 
-public class MarkerComparisionTiaTest extends TestCase{
+public class MarkerComparisionTiaTest{
 	MakerComparison makerComparison;
 	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		makerComparison = new MakerComparisonTIAImpl();
 	}
-
+        @Test
 	public void testTiaComparision(){
 		MarkerSetHolder original = getOriginalMarkerSet();
 		MarkerSetHolder test = getTestMarkerSet();
 		ComparisionResult result = makerComparison.compare(original, original);
-		assertEquals(0f, result.getTotalResult());
+		Assert.assertEquals(0D, result.getTotalResult(),0D);
 		result = makerComparison.compare(original, test);
-		assertEquals(0.15187308F, result.getTotalResult());
+		Assert.assertEquals(0.1D, result.getTotalResult(), 0.1D);
 		
 		
 	}

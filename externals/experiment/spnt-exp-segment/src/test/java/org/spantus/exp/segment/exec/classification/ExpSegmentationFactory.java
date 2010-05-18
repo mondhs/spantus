@@ -78,11 +78,19 @@ public abstract class ExpSegmentationFactory {
 		expSegmentation.init();
 
 		expSegmentation
-				.setExtractors(new ExtractorEnum[] { ExtractorEnum.ENERGY_EXTRACTOR, ExtractorEnum.ENVELOPE_EXTRACTOR});
-		expSegmentation.getParam().setMinSpace(60L);
-		expSegmentation.getParam().setMinLength(90L);
-		expSegmentation.getParam().setExpandEnd(60L);
-		expSegmentation.getParam().setExpandStart(60L);
+				.setExtractors(new ExtractorEnum[] {
+                    ExtractorEnum.LOUDNESS_EXTRACTOR,
+                    ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
+                    ExtractorEnum.LPC_RESIDUAL_EXTRACTOR,
+                    ExtractorEnum.NOISE_LEVEL_EXTRACTOR,
+                    ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
+                    ExtractorEnum.ENERGY_EXTRACTOR,
+                    ExtractorEnum.ENVELOPE_EXTRACTOR,
+                });
+		expSegmentation.getParam().setMinSpace(20L);
+		expSegmentation.getParam().setMinLength(0L);
+		expSegmentation.getParam().setExpandEnd(0L);
+		expSegmentation.getParam().setExpandStart(0L);
 
 		Map<String, ExtractorParam> extractorParams = new HashMap<String, ExtractorParam>();
 

@@ -43,7 +43,7 @@ public class ExperimentHsqlDao extends ExperimentStaticDao{
 		String insertQuery = 
 			"INSERT INTO ExperimentResult" +
 			"( RESOURCE, FEATURES, TOTALRESULT, FEATURENUM, noiseType, noiseLevel, segmentator) VALUES" +
-			"(''{1}'', ''{2}'', {3,number},  " +
+			"(''{1}'', ''{2}'', {3},  " +
 			"{4,number}, " +
 			"''{5}'', ''{6}'',''{7}''" +
 			");"; 
@@ -107,7 +107,7 @@ public class ExperimentHsqlDao extends ExperimentStaticDao{
 	
 	@Override
 	public ExperimentResult save(ExperimentResult experimentResult) {
-		if(experimentResult.getTotalResult() >= 1 ) return experimentResult;
+//		if(experimentResult.getTotalResult() >= 1 ) return experimentResult;
 		ExperimentResult result = experimentResult;
 		try {
 			int featureNum = result.getFeatures().split("-").length;
@@ -118,7 +118,7 @@ public class ExperimentHsqlDao extends ExperimentStaticDao{
 						result.getExperimentID(),
 						result.getResource(),
 						result.getFeatures(),
-						result.getTotalResult(),
+						result.getTotalResult().toString(),
 						featureNum,
 						result.getNoiseType(),
 						result.getNoiseLevel(),

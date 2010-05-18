@@ -12,6 +12,7 @@ import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.SignalFormat;
+import org.spantus.core.extractor.preemphasis.Preemphasis.PreemphasisEnum;
 import org.spantus.core.io.SignalReader;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.threshold.ClassifierEnum;
@@ -56,7 +57,8 @@ public class ComarisionFacadeImpl implements ComarisionFacade {
 					.get(0));
 			SignalFormat format = reader.getFormat(urlFiles.get(0));
 			IExtractorConfig config = ExtractorConfigUtil.defaultConfig(format
-					.getSampleRate(), 30, 66);//30 ms and 66 % 
+					.getSampleRate(), 30, 66);//30 ms and 66 %
+                        config.setPreemphasis(PreemphasisEnum.middle.name());
 			IExtractorInputReader bufferedReader = ExtractorsFactory
 					.createReader(config);
 
