@@ -61,6 +61,8 @@ public class ComparisionResult {
 	
 	private String classifier;
 	
+	private long processTime;
+	
 	
 	public Map<String, Number> getParams() {
 		if(params == null){
@@ -162,6 +164,14 @@ public class ComparisionResult {
 
 	public void setClassifier(String classifier) {
 		this.classifier = classifier;
+	}
+
+	public long getProcessTime() {
+		return processTime;
+	}
+
+	public void setProcessTime(long processTime) {
+		this.processTime = processTime;
 	}
 
 }

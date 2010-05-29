@@ -3,7 +3,6 @@ package org.spantus.exp.segment.exec.classification;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -11,6 +10,7 @@ import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.services.impl.ExperimentHsqlDao;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.logger.Logger;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
 
@@ -25,12 +25,12 @@ public class ExpDBSegmentation extends ExpSegmentation {
     public static ExtractorEnum[] extractorEnums =
             new ExtractorEnum[]{
         ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
-//        ExtractorEnum.LOUDNESS_EXTRACTOR,
-//        ExtractorEnum.LPC_RESIDUAL_EXTRACTOR,
+        ExtractorEnum.LOUDNESS_EXTRACTOR,
+        ExtractorEnum.LPC_RESIDUAL_EXTRACTOR,
 //        ExtractorEnum.NOISE_LEVEL_EXTRACTOR,
-//        ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
-//        ExtractorEnum.ENERGY_EXTRACTOR,
-//        ExtractorEnum.ENVELOPE_EXTRACTOR
+        ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
+        ExtractorEnum.ENERGY_EXTRACTOR,
+        ExtractorEnum.ENVELOPE_EXTRACTOR
     };
     ExperimentHsqlDao experimentDao = new ExperimentHsqlDao();
 
@@ -62,7 +62,10 @@ public class ExpDBSegmentation extends ExpSegmentation {
                         result.setNoiseType(parts[1]);
                     }
                     if (parts.length > 2) {
-                        result.setNoiseLevel(parts[2]);
+                    	String level = parts[2];
+                    	level = level.replace("sn5", "05");
+                    	level = level.replace("sn", "");
+                        result.setNoiseLevel(level);
                     }
                     break;
                 }
@@ -105,6 +108,7 @@ public class ExpDBSegmentation extends ExpSegmentation {
     public static void main(String[] args) {
         Toolkit.getDefaultToolkit().beep();
         Toolkit.getDefaultToolkit().beep();
+        Logger log = Logger.getLogger(ExpDBSegmentation.class);
         Set<Set<ExtractorEnum>> enums = new HashSet<Set<ExtractorEnum>>();
         for (ExtractorEnum extractorEntry : extractorEnums) {
             for (ExtractorEnum extractorEntry2 : extractorEnums) {
@@ -118,13 +122,13 @@ public class ExpDBSegmentation extends ExpSegmentation {
                         calcResultForAllNoizeus(
                                 (ExtractorEnum[]) testEnums.toArray(
                                 new ExtractorEnum[testEnums.size()]));
-                        System.err.print("DUN" + testEnums);
+                        log.error("DUN" + testEnums);
                     }
                 }
             }
 
         }
-        System.err.print("DUN");
+        log.error("DUN");
         Toolkit.getDefaultToolkit().beep();
 
     }

@@ -88,6 +88,7 @@ public class ExperimentStaticDao implements ExperimentDao {
 		experimentResult.setClassifier(comparisionResult.getClassifier());
 		experimentResult.setNoiseLevel(comparisionResult.getNoiseLevel());
 		experimentResult.setNoiseType(comparisionResult.getNoiseType());
+		experimentResult.setProcessTime(comparisionResult.getProcessTime());
 		return experimentResult;
 		
 	}

@@ -35,18 +35,20 @@ public class ExperimentHsqlDao extends ExperimentStaticDao{
 	Statement statement = null;
 	boolean recreate = false;
 	
+	public final static String INSERT_QUERY = "INSERT INTO ExperimentResult" +
+	"( RESOURCE, FEATURES, TOTALRESULT, FEATURENUM, noiseType, noiseLevel, segmentator, PROCESSTIME) VALUES" +
+	"(''{1}'', ''{2}'', {3},  " +
+	"{4,number}, " +
+	"''{5}'', ''{6}'',''{7}''," +
+	"{8}"+
+	");"; 
+	
 	
 	public ExperimentHsqlDao() {
 	}
 	
 	protected String getInsertExperimentResulQuery(){
-		String insertQuery = 
-			"INSERT INTO ExperimentResult" +
-			"( RESOURCE, FEATURES, TOTALRESULT, FEATURENUM, noiseType, noiseLevel, segmentator) VALUES" +
-			"(''{1}'', ''{2}'', {3},  " +
-			"{4,number}, " +
-			"''{5}'', ''{6}'',''{7}''" +
-			");"; 
+		String insertQuery = INSERT_QUERY;
 		return insertQuery;
 	}
 	
@@ -70,6 +72,7 @@ public class ExperimentHsqlDao extends ExperimentStaticDao{
 "resource VARCHAR NOT NULL,"+ 
 "features VARCHAR NOT NULL,"+
 "totalResult FLOAT NOT NULL,"+
+"PROCESSTIME BIGINT,"+
 //"S_ONSET FLOAT,"+
 //"S_STEADY FLOAT,"+
 //"S_OFFSET FLOAT,"+
@@ -122,7 +125,8 @@ public class ExperimentHsqlDao extends ExperimentStaticDao{
 						featureNum,
 						result.getNoiseType(),
 						result.getNoiseLevel(),
-						result.getClassifier()
+						result.getClassifier(),
+						result.getProcessTime()
 					);
 			statement.executeUpdate(query);
 			connection.commit();

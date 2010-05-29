@@ -97,13 +97,15 @@ public class ExpSegmentation {
 		}else {
 			getComarisionFacade().getExtractorParams().clear();
 		}
-		
+		long startTime = System.currentTimeMillis(); 
 		MarkerSetHolder testMarkerSet = comarisionFacade.calculateMarkers(
 				signals, getExtractors(), getParam());
+		long endTime = System.currentTimeMillis();
 		MarkerSetHolder holder = markerDao.read(
 				new File(markerName));
 		ComparisionResult result = makerComparison
 				.compare(holder, testMarkerSet);
+		result.setProcessTime(endTime-startTime);
 		generateExpName(result, signals);
 		return result;
 	}

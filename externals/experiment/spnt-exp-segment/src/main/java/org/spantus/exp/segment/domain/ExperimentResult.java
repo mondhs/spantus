@@ -50,6 +50,7 @@ public class ExperimentResult extends Entity {
 	
 	String classifier;
 
+	Long processTime; 
 
 
 	public String getFeatures() {
@@ -110,6 +111,14 @@ public class ExperimentResult extends Entity {
 
 	public void setClassifier(String segmentator) {
 		this.classifier = segmentator;
+	}
+
+	public Long getProcessTime() {
+		return processTime;
+	}
+
+	public void setProcessTime(Long processTime) {
+		this.processTime = processTime;
 	}
 
 }
