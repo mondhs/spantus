@@ -7,13 +7,13 @@ package fastdtw;
 
 import java.util.ArrayList;
 
-import fastdtw.dtw.DTW;
-import fastdtw.dtw.SearchWindow;
-import fastdtw.dtw.TimeWarpInfo;
-import fastdtw.dtw.WarpPath;
-import fastdtw.dtw.WarpPathWindow;
-import fastdtw.timeseries.PAA;
-import fastdtw.timeseries.TimeSeries;
+import net.sf.javaml.distance.fastdtw.dtw.DTW;
+import net.sf.javaml.distance.fastdtw.dtw.SearchWindow;
+import net.sf.javaml.distance.fastdtw.dtw.TimeWarpInfo;
+import net.sf.javaml.distance.fastdtw.dtw.WarpPath;
+import net.sf.javaml.distance.fastdtw.dtw.WarpPathWindow;
+import net.sf.javaml.distance.fastdtw.timeseries.PAA;
+import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 
 
 /**

@@ -78,8 +78,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	public String execute(SpantusWorkInfo ctx) {
 		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader()
 				.getWorkConfig();
-		//hack
-		IExtractorInputReader reader = ((CommandExecutionFacadeImpl)getExecutionFacade()).getReader();
+		IExtractorInputReader reader = getReader();
 		if (reader == null) {
 			log.info("Nothing to segment");
 		}

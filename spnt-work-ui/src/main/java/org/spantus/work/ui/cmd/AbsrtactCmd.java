@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
+import org.spantus.core.extractor.IExtractorInputReader;
 
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -35,7 +36,7 @@ public abstract class AbsrtactCmd implements SpantusWorkCommand {
 	private Logger log = Logger.getLogger(AbsrtactCmd.class);
 	
 	private CommandExecutionFacade executionFacade;
-	SpantusWorkUIEvent currentEvent;
+	private SpantusWorkUIEvent currentEvent;
 	
 	public AbsrtactCmd(CommandExecutionFacade executionFacade) {
 		this.executionFacade = executionFacade;
@@ -90,4 +91,11 @@ public abstract class AbsrtactCmd implements SpantusWorkCommand {
 	public SpantusWorkUIEvent getCurrentEvent() {
 		return currentEvent;
 	}
+        
+        public IExtractorInputReader getReader() {
+            //hack. this should not depend on server impl
+            return ((CommandExecutionFacadeImpl)getExecutionFacade()).getReader();
+        }
+
+
 }

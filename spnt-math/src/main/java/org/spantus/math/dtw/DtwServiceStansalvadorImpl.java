@@ -7,6 +7,7 @@ import fastdtw.dtw.TimeWarpInfo;
 import fastdtw.timeseries.ITimeSeries;
 import fastdtw.timeseries.ScalarValuesTimeSeries;
 import fastdtw.timeseries.VectorValuesTimeSeries;
+
 /**
  * 
  * @author Mindaugas Greibus
@@ -17,26 +18,33 @@ import fastdtw.timeseries.VectorValuesTimeSeries;
  */
 public class DtwServiceStansalvadorImpl implements DtwService {
 
-	public Float calculateDistance(List<Float> targetVector,
-			List<Float> sampleVector) {
+    private DTW dtw;
+
+    public Float calculateDistance(List<Float> targetVector,
+            List<Float> sampleVector) {
         ITimeSeries tsI = new ScalarValuesTimeSeries(sampleVector);
         ITimeSeries tsJ = new ScalarValuesTimeSeries(targetVector);
-        TimeWarpInfo info = new DTW().getWarpInfoBetween(tsI, tsJ);
-		return info.getDistance().floatValue();
-	}
+        TimeWarpInfo info = getDtw().getWarpInfoBetween(tsI, tsJ);
+        return info.getDistance().floatValue();
+    }
 
-	public Float calculateDistance(DtwInfo info) {
-		return null;
-	}
+    public Float calculateDistance(DtwInfo info) {
+        return null;
+    }
 
-	public Float calculateDistanceVector(List<List<Float>> targetMatrix,
-			List<List<Float>> sampleMatrix) {
+    public Float calculateDistanceVector(List<List<Float>> targetMatrix,
+            List<List<Float>> sampleMatrix) {
         ITimeSeries tsI = new VectorValuesTimeSeries(sampleMatrix);
         ITimeSeries tsJ = new VectorValuesTimeSeries(targetMatrix);
-        TimeWarpInfo info = new DTW().getWarpInfoBetween(tsI, tsJ);
-		return info.getDistance().floatValue();
+        TimeWarpInfo info = getDtw().getWarpInfoBetween(tsI, tsJ);
+        return info.getDistance().floatValue();
 
-	}
-
+    }
+    public DTW getDtw() {
+        if(dtw == null){
+            dtw = new DTW();
+        }
+        return dtw;
+    }
 
 }

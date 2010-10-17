@@ -47,7 +47,7 @@ public class MarkerPopupMenu extends JPopupMenu {
 	SpantusEventMulticaster eventMulticaster;
 	
 	enum menuItemsEnum {
-		play, edit, add, remove
+		play, edit, add, remove, learn, recognize
 	}
 
 	public MarkerPopupMenu(SpantusEventMulticaster eventMulticaster) {
@@ -61,6 +61,9 @@ public class MarkerPopupMenu extends JPopupMenu {
 		cmpMap.put(menuItemsEnum.remove, createMenuItemp(menuItemsEnum.remove.name()));
 		cmpMap.put(menuItemsEnum.edit, createMenuItemp(menuItemsEnum.edit.name()));
 		cmpMap.put(menuItemsEnum.play, createMenuItemp(menuItemsEnum.play.name()));
+                cmpMap.put(menuItemsEnum.learn, createMenuItemp(menuItemsEnum.learn.name()));
+		cmpMap.put(menuItemsEnum.recognize, createMenuItemp(menuItemsEnum.recognize.name()));
+
 		for (menuItemsEnum menuName : menuItemsEnum.values()) {
 			add(cmpMap.get(menuName));	
 		}
@@ -150,26 +153,47 @@ public class MarkerPopupMenu extends JPopupMenu {
 
 	public void play(JComponent source) {
 		Component invoker = getInvoker(source);
-		if (invoker instanceof MarkerSetComponent) {
-			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
-			MarkerComponentEventHandler ml = getShower(source);
-			Marker _marker = ml.getCurrentMarker().getMarker();
-			SelectionDto selectionDto = new SelectionDto(
-					_marker.getStart().floatValue()/1000,
-					_marker.getLength().floatValue()/1000);
+                Marker marker = findMarker(source);
+		if (marker != null) {
+			MarkerSetComponent markerSetComponent = ((MarkerSetComponent) invoker);
+			SelectionDto selectionDto = new SelectionDto(marker);
 			getEventMulticaster().multicastEvent(SpantusEvent.createEvent(
-					this, GlobalCommands.sample.play.name()
+					this, GlobalCommands.sample.play
 					,selectionDto));
-			log.debug("palyed: " + _marker);
-			_markerSetComponent.repaint();
+			log.debug("palyed: " + marker);
+			markerSetComponent.repaint();
 		}
 
 		
 	}
+
+        public void learn(JComponent source) {
+            Marker marker = findMarker(source);
+            getEventMulticaster().multicastEvent(SpantusEvent.createEvent(
+					this, GlobalCommands.tool.learn
+					,marker));
+        }
+        public void recognize(JComponent source) {
+          Marker marker = findMarker(source);
+            getEventMulticaster().multicastEvent(SpantusEvent.createEvent(
+					this, GlobalCommands.tool.recognize
+					,marker));
+        }
 	
 	protected String getResource(String str){
 		return I18nFactory.createI18n().getMessage(str);
 	}
+
+        protected Marker findMarker(JComponent source){
+            Component invoker = getInvoker(source);
+            if (invoker instanceof MarkerSetComponent) {
+			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
+			MarkerComponentEventHandler ml = getShower(source);
+			Marker _marker = ml.getCurrentMarker().getMarker();
+                        return _marker;
+            }
+            return null;
+        }
 
 	public class MenuListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -187,12 +211,20 @@ public class MarkerPopupMenu extends JPopupMenu {
 			case play:
 				play((JComponent) e.getSource());
 				break;
+			case learn:
+				learn((JComponent) e.getSource());
+				break;
+			case recognize:
+				recognize((JComponent) e.getSource());
+				break;
+
 			default:
 				break;
 			}
 			((JMenuItem)e.getSource()).setSelected(false);
 			log.debug(("Selected: " + e.getActionCommand()));
 		}
+
 	}
 
 	/**

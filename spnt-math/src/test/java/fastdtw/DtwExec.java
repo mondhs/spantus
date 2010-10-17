@@ -5,9 +5,9 @@ package fastdtw;
  * PROJECT DESCRIPTION
  */
 
-import fastdtw.dtw.DTW;
-import fastdtw.dtw.TimeWarpInfo;
-import fastdtw.timeseries.TimeSeries;
+import net.sf.javaml.distance.fastdtw.dtw.DTW;
+import net.sf.javaml.distance.fastdtw.dtw.TimeWarpInfo;
+import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 
 
 public class DtwExec
@@ -25,7 +25,7 @@ public class DtwExec
       {
          final TimeSeries tsI = new TimeSeries(args[0], false, false, ',');
          final TimeSeries tsJ = new TimeSeries(args[1], false, false, ',');
-         final TimeWarpInfo info = new DTW().getWarpInfoBetween(tsI, tsJ);
+         final TimeWarpInfo info = DTW.getWarpInfoBetween(tsI, tsJ);
 
          System.out.println("Warp Distance: " + info.getDistance());
          System.out.println("Warp Path:     " + info.getPath());

@@ -21,7 +21,7 @@
 package org.spantus.math.services;
 
 import org.spantus.math.dtw.DtwService;
-import org.spantus.math.dtw.DtwServiceStansalvadorImpl;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 import org.spantus.math.knn.KNNService;
 import org.spantus.math.knn.KNNServiceImpl;
 
@@ -57,7 +57,7 @@ public abstract class MathServicesFactory {
 
 	public static DtwService createDtwService(){
 		if(dtwService == null){
-			dtwService = new DtwServiceStansalvadorImpl();
+			dtwService = new DtwServiceJavaMLImpl();
 //			return new DtwServiceImpl();
 		}
 		return dtwService;

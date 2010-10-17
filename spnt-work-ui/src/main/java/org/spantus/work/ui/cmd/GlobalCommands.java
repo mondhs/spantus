@@ -29,7 +29,7 @@ public class GlobalCommands {
 		currentProjectChanged, exportFile, importFile, currentSampleChanged,
 		exit}
 	public enum sample{play, stop, record, zoomin, zoomout, selectionChanged, reloadSampleChart}
-	public enum tool{option, reloadResources, autoSegmentation, saveSegments, appendNoise}
+	public enum tool{option, reloadResources, autoSegmentation, saveSegments, appendNoise, learn, recognize}
 	public enum help{signalInfo, about, userGuide}
 	
 }

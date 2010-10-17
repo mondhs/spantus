@@ -9,7 +9,8 @@ public abstract class WorkServiceFactory {
 	private static MarkerDao markerDao;
 	private static ReaderDao readerDao;
 	private static  BundleDao bundleDao;
-	
+        private static ExtractorReaderService extractorReaderService;
+
 	public static MarkerDao createMarkerDao(){
 		if(markerDao == null){
 			markerDao = new MarkerProxyDao();
@@ -31,5 +32,12 @@ public abstract class WorkServiceFactory {
 		}
 		return bundleDao; 
 	}
+        public static ExtractorReaderService createExtractorReaderService() {
+            if(extractorReaderService == null){
+                extractorReaderService = new ExtractorReaderServiceImpl();
+            }
+            return extractorReaderService;
+        }
+
 	
 }

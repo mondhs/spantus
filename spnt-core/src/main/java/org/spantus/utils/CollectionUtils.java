@@ -23,4 +23,17 @@ public abstract class CollectionUtils {
 		}
 		return objList;
 	}
+        /**
+         * 
+         * @param values
+         * @return
+         */
+        public static Double[] toDoubleArray(List<Float> values){
+            Double[] doubles = new Double[values.size()];
+            int i = 0;
+            for (Float float1 : values) {
+                doubles[i++]=float1.doubleValue();
+            }
+            return doubles;
+        }
 }

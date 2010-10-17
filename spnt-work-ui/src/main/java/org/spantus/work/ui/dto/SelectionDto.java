@@ -1,10 +1,17 @@
 package org.spantus.work.ui.dto;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
+import org.spantus.core.marker.Marker;
 
-public class SelectionDto {
-	private Float from;
-
+public class SelectionDto implements Serializable{
+	/**
+         * In seconds
+         */
+        private Float from;
+        /**
+         * In seconds
+         */
 	private Float length;
 
 	public SelectionDto() {
@@ -17,7 +24,10 @@ public class SelectionDto {
 		this.length = length;
 	}
 
-
+        public SelectionDto(Marker marker) {
+		this(marker.getStart().floatValue()/1000,
+                        marker.getLength().floatValue()/1000);
+	}
 
 	public Float getFrom() {
 		return from;

@@ -1,6 +1,8 @@
 package org.spantus.externals.recognition.services;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -30,7 +32,24 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		RecognitionResult match = findBestMatch(featureData);
 		return match;
 	}
-	
+        /**
+         * 
+         * @param target
+         * @return
+         */
+	public List<RecognitionResult> multipleMatch(FeatureData target) {
+                TreeMap<Float, RecognitionResult> results = new TreeMap<Float, RecognitionResult>();
+		for (CorpusEntry sample : getCorpus().findAllEntries()) {
+			RecognitionResult res = compare(target, sample);
+			results.put(res.getDistance(),res);
+		}
+
+		if(log.isDebugMode()){
+			log.debug("[multipleMatch] sample: {0}", results);
+		}
+		return new ArrayList<RecognitionResult>(results.values()).subList(0, 3);
+        }
+
 	public boolean learn(String label, FeatureData featureData) {
 		CorpusEntry entry = new CorpusEntry();
 		entry.setName(label);
@@ -45,7 +64,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @return
 	 */
 	protected RecognitionResult findBestMatch(FeatureData target){
-		Map<Float, RecognitionResult> results = new TreeMap<Float, RecognitionResult>();
+		TreeMap<Float, RecognitionResult> results = new TreeMap<Float, RecognitionResult>();
 		Float min = Float.MAX_VALUE;
 		RecognitionResult match = null;
 		for (CorpusEntry sample : getCorpus().findAllEntries()) {
@@ -64,7 +83,12 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		log.info(MessageFormat.format("[findBestMatch] sample: {0};[{1}]", match, results.values()));
 		return match;
 	}
-	
+	/**
+         * 
+         * @param target
+         * @param sample
+         * @return
+         */
 	protected RecognitionResult compare(FeatureData target,
 			CorpusEntry sample) {
 		RecognitionResult result = new RecognitionResult();
@@ -92,5 +116,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		}
 		return dtwService;
 	}
+
+
 
 }

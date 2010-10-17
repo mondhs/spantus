@@ -41,5 +41,9 @@ public class SpantusEvent extends EventObject{
 		return new SpantusEvent(source, cmd, value);
 	}
 
+        public static SpantusEvent createEvent(Object source, Enum<?> cmd, Object value){
+		return createEvent(source, cmd.name(), value);
+	}
+
 	
 }

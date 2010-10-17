@@ -11,9 +11,6 @@ public class ScalarValuesTimeSeries implements ITimeSeries {
 		this.values = new ArrayList<Float>(values);
 	}
 
-	public void clear() {
-	}
-
 	public List<Float> getMeasurementVector(int pointIndex) {
 		List<Float> flist = new LinkedList<Float>();
 		flist.add(values.get(pointIndex));

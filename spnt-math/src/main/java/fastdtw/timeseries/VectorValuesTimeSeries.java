@@ -10,9 +10,6 @@ public class VectorValuesTimeSeries implements ITimeSeries {
 		this.values = new ArrayList<List<Float>>(values);
 	}
 
-	public void clear() {
-	}
-
 	public List<Float> getMeasurementVector(int pointIndex) {
 		return values.get(pointIndex);
 	}
