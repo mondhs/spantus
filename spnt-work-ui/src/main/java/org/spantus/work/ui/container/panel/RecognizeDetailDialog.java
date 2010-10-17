@@ -41,6 +41,14 @@ public class RecognizeDetailDialog extends SpantusAboutDialog {
 
             sb.append("</tr>");
         }
+        if(results.isEmpty()){
+            sb.append("<tr>");
+            sb.append("<td>")
+                    .append("No recognition pattern is found. Try to learn program some patterns first.")
+                    .append("</td>");
+
+            sb.append("</tr>");
+        }
         sb.append("</table>");
         return sb;
     }

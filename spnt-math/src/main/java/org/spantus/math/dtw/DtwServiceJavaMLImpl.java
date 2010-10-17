@@ -24,8 +24,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
         TimeSeries tsTarget = toTimeSeries(targetVector);
         TimeSeries tsSample = toTimeSeries(sampleVector);
 
-        TimeWarpInfo info = DTW.getWarpInfoBetween(tsSample, tsTarget);
-        return Double.valueOf(info.getDistance()).floatValue();
+        Double info = DTW.getWarpDistBetween(tsSample, tsTarget);
+        return info.floatValue();
     }
 
     public Float calculateDistance(DtwInfo info) {
@@ -37,8 +37,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
         TimeSeries tsSample = toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
         TimeSeries tsTarget = toTimeSeries(targetMatrix, targetMatrix.get(0).size());
 
-        TimeWarpInfo info = DTW.getWarpInfoBetween(tsSample, tsTarget);
-        return Double.valueOf(info.getDistance()).floatValue();
+        Double info = DTW.getWarpDistBetween(tsSample, tsTarget);
+        return info.floatValue();
 
     }
 

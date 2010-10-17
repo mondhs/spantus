@@ -4,7 +4,6 @@
  */
 package org.spantus.work.ui.cmd;
 
-import java.awt.Frame;
 import java.util.List;
 import java.util.Set;
 import org.spantus.core.FrameVectorValues;
@@ -18,7 +17,6 @@ import org.spantus.logger.Logger;
 import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.container.panel.RecognizeDetailDialog;
-import org.spantus.work.ui.container.panel.SignalInfoDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 /**

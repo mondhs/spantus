@@ -2,8 +2,8 @@ package org.spantus.externals.recognition.services;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 import org.spantus.externals.recognition.bean.CorpusEntry;
@@ -14,6 +14,7 @@ import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.services.MathServicesFactory;
+import org.spantus.utils.CollectionUtils;
 /**
  * 
  * @author Mindaugas Greibus
@@ -47,7 +48,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		if(log.isDebugMode()){
 			log.debug("[multipleMatch] sample: {0}", results);
 		}
-		return new ArrayList<RecognitionResult>(results.values()).subList(0, 3);
+                if(results.isEmpty()){
+                    return new ArrayList<RecognitionResult>();
+                }
+		return new ArrayList<RecognitionResult>(results.values());
         }
 
 	public boolean learn(String label, FeatureData featureData) {

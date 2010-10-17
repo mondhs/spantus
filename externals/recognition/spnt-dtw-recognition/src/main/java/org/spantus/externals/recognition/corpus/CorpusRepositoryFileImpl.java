@@ -14,6 +14,7 @@ import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.utils.FileUtils;
 import org.spantus.work.services.converter.FrameValues3DConverter;
 import org.spantus.work.services.converter.FrameValuesConverter;
+import org.spantus.logger.Logger;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;
@@ -22,6 +23,8 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 
 	private XStream xstream;
 	
+        private static Logger log = Logger.getLogger(CorpusRepositoryFileImpl.class);
+
 	private File repoDir = null;
 	
 	public final static String CORPUS_ENTRY_FILE_EXT =".cspnt.xml";
@@ -54,9 +57,14 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 			}
 		return repoFiles;
 	}
-
+        /**
+         * Save and reset repo
+         * @param entry
+         */
 	public void save(CorpusEntry entry) {
 		saveFile(entry);
+                //reset repo
+                repo = null;
 	}
 	
 	public File saveFile(CorpusEntry entry) {
@@ -73,7 +81,7 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 			FileWriter outputFile = new FileWriter(file,false);	
 			getXsteam().toXML(entry, outputFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+                    log.error(e);
 		}
 		return file;
 	}
