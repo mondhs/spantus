@@ -75,7 +75,7 @@ public class SpantusAboutDialog extends JDialog {
 	 * 
 	 * @return void
 	 */
-	protected void initialize() {
+	private void initialize() {
 		this.setSize(SpantusWorkSwingUtils.currentWindowSize(0.5, 0.25));
 		SpantusWorkSwingUtils.centerWindow(this);
 		setTitle(I18nFactory.createI18n().getMessage("about"));

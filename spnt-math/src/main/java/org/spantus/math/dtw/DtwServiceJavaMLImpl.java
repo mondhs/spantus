@@ -1,10 +1,12 @@
 package org.spantus.math.dtw;
 
+import java.awt.Point;
 import java.util.List;
 import net.sf.javaml.distance.fastdtw.dtw.DTW;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.fastdtw.dtw.TimeWarpInfo;
+import net.sf.javaml.distance.fastdtw.matrix.ColMajorCell;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
 
@@ -28,9 +30,6 @@ public class DtwServiceJavaMLImpl implements DtwService {
         return info.floatValue();
     }
 
-    public Float calculateDistance(DtwInfo info) {
-        return null;
-    }
 
     public Float calculateDistanceVector(List<List<Float>> targetMatrix,
             List<List<Float>> sampleMatrix) {
@@ -39,6 +38,24 @@ public class DtwServiceJavaMLImpl implements DtwService {
 
         Double info = DTW.getWarpDistBetween(tsSample, tsTarget);
         return info.floatValue();
+
+    }
+
+    public DtwResult calculateInfoVector(List<List<Float>> targetMatrix,
+            List<List<Float>> sampleMatrix) {
+        TimeSeries tsSample = toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
+        TimeSeries tsTarget = toTimeSeries(targetMatrix, targetMatrix.get(0).size());
+
+        TimeWarpInfo info = DTW.getWarpInfoBetween(tsSample, tsTarget);
+        DtwResult result =  new DtwResult();
+        result.setResult(Double.valueOf(info.getDistance()).floatValue());
+
+        for (int i=1; i<info.getPath().size()-1; i++){
+            ColMajorCell cell = info.getPath().get(i);
+            Point point = new Point(cell.getRow(), cell.getCol());
+            result.getPath().add(point);
+        }
+        return result;
 
     }
 

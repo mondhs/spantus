@@ -2,19 +2,19 @@ package org.spantus.externals.recognition.services;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.externals.recognition.bean.RecognitionResult;
+import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.externals.recognition.corpus.CorpusRepository;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
+import org.spantus.math.dtw.DtwResult;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.services.MathServicesFactory;
-import org.spantus.utils.CollectionUtils;
 /**
  * 
  * @author Mindaugas Greibus
@@ -38,20 +38,21 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @param target
          * @return
          */
-	public List<RecognitionResult> multipleMatch(FeatureData target) {
-                TreeMap<Float, RecognitionResult> results = new TreeMap<Float, RecognitionResult>();
+	public List<RecognitionResultDetails> findMultipleMatch(FeatureData target) {
+                TreeMap<Float, RecognitionResultDetails> results = new TreeMap<Float, RecognitionResultDetails>();
 		for (CorpusEntry sample : getCorpus().findAllEntries()) {
-			RecognitionResult res = compare(target, sample);
-			results.put(res.getDistance(),res);
-		}
-
-		if(log.isDebugMode()){
-			log.debug("[multipleMatch] sample: {0}", results);
+			RecognitionResultDetails result = new RecognitionResultDetails();
+                        result.setInfo(sample);
+                        DtwResult dtwResult = getDtwService().calculateInfoVector(target.getValues(),
+                                sample.getFeatureMap().get(target.getName()).getValues());
+                        result.setDistance(dtwResult.getResult());
+                        result.setPath(dtwResult.getPath());
+			results.put(result.getDistance(),result);
 		}
                 if(results.isEmpty()){
-                    return new ArrayList<RecognitionResult>();
+                    return new ArrayList<RecognitionResultDetails>();
                 }
-		return new ArrayList<RecognitionResult>(results.values());
+		return new ArrayList<RecognitionResultDetails>(results.values());
         }
 
 	public boolean learn(String label, FeatureData featureData) {

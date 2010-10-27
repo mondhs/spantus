@@ -9,7 +9,7 @@ import java.util.Set;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.bean.FeatureData;
-import org.spantus.externals.recognition.bean.RecognitionResult;
+import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.externals.recognition.services.CorpusService;
 import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -44,7 +44,7 @@ public class RecognizeCmd extends AbsrtactCmd {
 
         FeatureData fd = new FeatureData();
         fd.setValues(fvv);
-        List<RecognitionResult> results = corpusService.multipleMatch(fd);
+        List<RecognitionResultDetails> results = corpusService.findMultipleMatch(fd);
         getInfoPnl().updateCtx(ctx,results);
 	getInfoPnl().setVisible(true);
         return null;
