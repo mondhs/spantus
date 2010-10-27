@@ -4,8 +4,13 @@
  */
 package org.spantus.work.ui.container.panel;
 
+import java.awt.Color;
 import java.awt.Frame;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
 import java.util.List;
+import java.util.StringTokenizer;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import org.spantus.externals.recognition.bean.RecognitionResult;
@@ -18,6 +23,8 @@ import org.spantus.work.ui.i18n.I18nFactory;
  * @author mondhs
  */
 public class RecognizeDetailDialog extends SpantusAboutDialog {
+
+    private List<RecognitionResultDetails> results;
 
     public RecognizeDetailDialog(Frame owner) {
         super(owner);
@@ -32,6 +39,8 @@ public class RecognizeDetailDialog extends SpantusAboutDialog {
         super.getJEditorPane().setText("<html>" + css + "<body><p>" + representResults(results) + "</p></body></html>");
         super.getJEditorPane().setCaretPosition(0);
 
+        this.results = results;
+
     }
 
     private StringBuilder representResults(List<RecognitionResultDetails> results) {
@@ -40,8 +49,7 @@ public class RecognizeDetailDialog extends SpantusAboutDialog {
         for (RecognitionResult recognitionResult : results) {
             sb.append("<tr>");
             sb.append("<td>").
-                    append("<a href=\"").append(recognitionResult.getInfo().getId())
-                    .append("\">").
+                    append("<a href=\"").append(recognitionResult.getInfo().getId()).append("\">").
                     append(recognitionResult.getInfo().getName()).append("</a></td>");
             sb.append("<td>").append(recognitionResult.getDistance()).append("</td>");
 
@@ -60,9 +68,32 @@ public class RecognizeDetailDialog extends SpantusAboutDialog {
     class RecognitionHyperlinkListener implements HyperlinkListener {
 
         public void hyperlinkUpdate(HyperlinkEvent e) {
-            if(HyperlinkEvent.EventType.ACTIVATED == e.getEventType()){
-                String desc = e.getDescription();
-                desc.charAt(1);
+            if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+                StringTokenizer st = new StringTokenizer(e.getDescription(), " ");
+                if (st.hasMoreTokens()) {
+                    String s = st.nextToken();
+                    Long key = Long.valueOf(s);
+                    for (RecognitionResultDetails recognitionResultDetails : results) {
+                        if (recognitionResultDetails.getInfo().getId().equals(key)) {
+                            Graphics2D g = (Graphics2D) getjLabel().getGraphics();
+                            g.setColor(Color.white);
+                            g.fillRect(0, 0, getjLabel().getHeight(), getjLabel().getWidth());
+                            g.setColor(Color.red);
+                            int[] xArr = new int[recognitionResultDetails.getPath().size()];
+                            int[] yArr = new int[recognitionResultDetails.getPath().size()];
+                            int i = 0;
+                            for (Point p : recognitionResultDetails.getPath()) {
+                                xArr[i] = p.x;
+                                yArr[i] = p.y;
+                                i++;
+                            }
+                            g.drawPolyline(xArr, yArr,xArr.length);
+                            break;
+                        }
+                    }
+                }
+
+                e.getClass();
             }
         }
     }

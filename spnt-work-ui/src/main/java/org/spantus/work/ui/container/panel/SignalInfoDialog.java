@@ -48,10 +48,10 @@ public class SignalInfoDialog extends SpantusAboutDialog{
 
 	public SignalInfoDialog(Frame owner) {
 		super(owner);
+                initialize();
 	}
-	@Override
-	protected void initialize() {
-		super.initialize();
+
+        private void initialize() {
 		this.setSize(SpantusWorkSwingUtils.currentWindowSize(0.25, 0.5));
 		setTitle(I18nFactory.createI18n().getMessage("information"));
 	}
