@@ -4,18 +4,18 @@
 	<parent>
 		<artifactId>spnt-root-pom</artifactId>
 		<groupId>org.spantus</groupId>
-		<version>0.2-SNAPSHOT</version>
+		<version>0.2</version>
 	</parent>
 
 	<artifactId>spnt-segment</artifactId>
 	<name>Spantus - Segmentation module</name>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.2</version>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-core</artifactId>
-			<version>0.2-SNAPSHOT</version>
+			<version>0.2</version>
 		</dependency>
 	</dependencies>
 </project>
