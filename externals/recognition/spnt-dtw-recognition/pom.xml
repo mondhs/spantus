@@ -4,19 +4,19 @@
     <parent>
         <artifactId>spnt-root-pom</artifactId>
         <groupId>org.spantus</groupId>
-        <version>0.2</version>
+        <version>0.3-SNAPSHOT</version>
     </parent>
 
     <groupId>org.spantus.externals.recognition</groupId>
     <artifactId>spnt-dtw-recognition</artifactId>
     <name>Spantus - External - DTW recognition</name>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>org.spantus</groupId>
             <artifactId>spnt-work</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
