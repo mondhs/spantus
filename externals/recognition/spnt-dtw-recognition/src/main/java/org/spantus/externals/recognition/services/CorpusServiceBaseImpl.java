@@ -1,9 +1,13 @@
 package org.spantus.externals.recognition.services;
 
+import java.awt.Point;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
+import org.spantus.core.FrameVectorValues;
 
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.FeatureData;
@@ -15,6 +19,7 @@ import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwResult;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.services.MathServicesFactory;
+import org.spantus.utils.CollectionUtils;
 /**
  * 
  * @author Mindaugas Greibus
@@ -38,23 +43,41 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @param target
          * @return
          */
-	public List<RecognitionResultDetails> findMultipleMatch(FeatureData target) {
+	public List<RecognitionResultDetails> findMultipleMatch(Map<String, FrameVectorValues> target) {
                 TreeMap<Float, RecognitionResultDetails> results = new TreeMap<Float, RecognitionResultDetails>();
-		for (CorpusEntry sample : getCorpus().findAllEntries()) {
-			RecognitionResultDetails result = new RecognitionResultDetails();
-                        result.setInfo(sample);
-                        DtwResult dtwResult = getDtwService().calculateInfoVector(target.getValues(),
-                                sample.getFeatureMap().get(target.getName()).getValues());
-                        result.setDistance(dtwResult.getResult());
-                        result.setPath(dtwResult.getPath());
-			results.put(result.getDistance(),result);
+		if(target == null || target.isEmpty()){
+                    return new ArrayList<RecognitionResultDetails>(results.values());
+                }
+                for (CorpusEntry sample : getCorpus().findAllEntries()) {
+                        RecognitionResultDetails result = new RecognitionResultDetails();
+                        result.setPath(new HashMap<String, List<Point>>());
+                        Float distance = 0F;
+                        for (Map.Entry<String, FrameVectorValues> entry : target.entrySet()) {
+                            if(sample.getFeatureMap().get(entry.getKey()).getValues() == null){
+                                continue;
+                            }
+
+                            result.setInfo(sample);
+                            DtwResult dtwResult = getDtwService().calculateInfoVector(entry.getValue(),
+                                    sample.getFeatureMap().get(entry.getKey()).getValues());
+                            result.getPath().put(entry.getKey(),dtwResult.getPath());
+                            distance +=dtwResult.getResult();
+                        }
+                        result.setDistance(distance);
+                        results.put(distance,result);
 		}
                 if(results.isEmpty()){
                     return new ArrayList<RecognitionResultDetails>();
                 }
 		return new ArrayList<RecognitionResultDetails>(results.values());
         }
-
+        /**
+         * learn on single feature value
+         *
+         * @param label
+         * @param featureData
+         * @return
+         */
 	public boolean learn(String label, FeatureData featureData) {
 		CorpusEntry entry = new CorpusEntry();
 		entry.setName(label);
@@ -62,7 +85,25 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		getCorpus().save(entry);
 		return true;
 	}
+        /**
+         * learn with multiple features
+         * @param label
+         * @param featureDataMap
+         * @return
+         */
+        public boolean learn(String label, Map<String, FrameVectorValues> featureDataMap) {
+            CorpusEntry entry = new CorpusEntry();
+            entry.setName(label);
+            for (Map.Entry<String, FrameVectorValues> entry1 : featureDataMap.entrySet()) {
+                FeatureData fd = new FeatureData();
+                fd.setName(entry1.getKey());
+                fd.setValues(entry1.getValue());
+                entry.getFeatureMap().put(entry1.getKey(), fd);
+            }
 
+            getCorpus().save(entry);
+            return true;
+        }
 	/**
 	 * find best match in the corpus
 	 * @param target

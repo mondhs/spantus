@@ -5,6 +5,7 @@
 package org.spantus.work.ui.cmd;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.marker.Marker;
@@ -39,12 +40,10 @@ public class RecognizeCmd extends AbsrtactCmd {
 
         Marker marker = ((Marker) getCurrentEvent().getValue());
 
-        FrameVectorValues fvv = extractorReaderService.findFeatureVectorValuesForMarker(getReader(),
-                marker, ExtractorEnum.MFCC_EXTRACTOR.name());
+        Map<String, FrameVectorValues> fvv = extractorReaderService.findAllVectorValuesForMarker(getReader(),
+                marker);
 
-        FeatureData fd = new FeatureData();
-        fd.setValues(fvv);
-        List<RecognitionResultDetails> results = corpusService.findMultipleMatch(fd);
+        List<RecognitionResultDetails> results = corpusService.findMultipleMatch(fvv);
         getInfoPnl().updateCtx(ctx,results);
 	getInfoPnl().setVisible(true);
         return null;

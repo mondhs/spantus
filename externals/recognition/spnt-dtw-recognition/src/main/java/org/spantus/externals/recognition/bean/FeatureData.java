@@ -5,6 +5,7 @@ import org.spantus.core.FrameVectorValues;
 public class FeatureData {
 	String name;
 	FrameVectorValues values;
+
 	public String getName() {
 		return name;
 	}

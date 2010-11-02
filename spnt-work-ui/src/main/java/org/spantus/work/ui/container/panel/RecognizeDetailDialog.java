@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -46,7 +47,7 @@ public class RecognizeDetailDialog extends SpantusAboutDialog {
     private StringBuilder representResults(List<RecognitionResultDetails> results) {
         StringBuilder sb = new StringBuilder();
         sb.append("<table>");
-        for (RecognitionResult recognitionResult : results) {
+        for (RecognitionResultDetails recognitionResult : results) {
             sb.append("<tr>");
             sb.append("<td>").
                     append("<a href=\"").append(recognitionResult.getInfo().getId()).append("\">").
@@ -66,7 +67,26 @@ public class RecognizeDetailDialog extends SpantusAboutDialog {
     }
 
     class RecognitionHyperlinkListener implements HyperlinkListener {
-
+        /**
+         * 
+         * @param g
+         * @param points
+         */
+        protected void drawPaths(Graphics2D g, List<Point> points) {
+            int[] xArr = new int[points.size()];
+            int[] yArr = new int[points.size()];
+            int i = 0;
+            for (Point p : points) {
+                xArr[i] = p.x;
+                yArr[i] = p.y;
+                i++;
+            }
+            g.drawPolyline(xArr, yArr, xArr.length);
+        }
+        /**
+         *
+         * @param e
+         */
         public void hyperlinkUpdate(HyperlinkEvent e) {
             if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
                 StringTokenizer st = new StringTokenizer(e.getDescription(), " ");
@@ -79,15 +99,10 @@ public class RecognizeDetailDialog extends SpantusAboutDialog {
                             g.setColor(Color.white);
                             g.fillRect(0, 0, getjLabel().getHeight(), getjLabel().getWidth());
                             g.setColor(Color.red);
-                            int[] xArr = new int[recognitionResultDetails.getPath().size()];
-                            int[] yArr = new int[recognitionResultDetails.getPath().size()];
-                            int i = 0;
-                            for (Point p : recognitionResultDetails.getPath()) {
-                                xArr[i] = p.x;
-                                yArr[i] = p.y;
-                                i++;
+                            for (Entry<String,List<Point>> detail : recognitionResultDetails.getPath().entrySet()) {
+                                drawPaths(g, detail.getValue());
                             }
-                            g.drawPolyline(xArr, yArr,xArr.length);
+                            
                             break;
                         }
                     }

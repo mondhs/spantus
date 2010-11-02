@@ -5,6 +5,7 @@
 
 package org.spantus.work.services;
 
+import java.util.Map;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
@@ -16,4 +17,6 @@ import org.spantus.core.marker.Marker;
  */
 public interface ExtractorReaderService {
     public FrameVectorValues findFeatureVectorValuesForMarker(IExtractorInputReader reader, Marker marker, String featureName);
+    public Map<String, FrameVectorValues> findAllVectorValuesForMarker(IExtractorInputReader reader, Marker marker);
+
 }

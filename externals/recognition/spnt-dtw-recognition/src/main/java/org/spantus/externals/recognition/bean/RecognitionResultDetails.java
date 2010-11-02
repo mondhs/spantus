@@ -6,6 +6,7 @@ package org.spantus.externals.recognition.bean;
 
 import java.awt.Point;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -13,13 +14,13 @@ import java.util.List;
  */
 public class RecognitionResultDetails extends RecognitionResult {
 
-    private List<Point> path;
+    private Map<String,List<Point>> path;
 
-    public void setPath(List<Point> path) {
+    public void setPath(Map<String, List<Point>> path) {
         this.path = path;
     }
 
-    public List<Point> getPath() {
+    public Map<String,List<Point>> getPath() {
         return path;
     }
 }

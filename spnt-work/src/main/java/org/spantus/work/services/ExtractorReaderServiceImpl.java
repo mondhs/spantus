@@ -4,6 +4,8 @@
  */
 package org.spantus.work.services;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
@@ -19,7 +21,7 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
             Marker marker, String featureName) {
         for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
             //extractors can have prefixes, jus check if ends with
-            if(! extractor.getName().endsWith(featureName)){
+            if (!extractor.getName().endsWith(featureName)) {
                 continue;
             }
             FrameVectorValues values = extractor.getOutputValues();
@@ -29,5 +31,19 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
             return fvv;
         }
         return null;
+    }
+
+    public Map<String,FrameVectorValues> findAllVectorValuesForMarker(IExtractorInputReader reader, Marker marker) {
+        Map<String, FrameVectorValues> result = new HashMap<String, FrameVectorValues>();
+        for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
+            //extractors can have prefixes, jus check if ends with
+            FrameVectorValues values = extractor.getOutputValues();
+            Float fromIndex = (marker.getStart().floatValue() * values.getSampleRate()) / 1000;
+            Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
+            FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
+            String key = extractor.getName().replace("BUFFERED_", "");
+            result.put(key, fvv);
+        }
+        return result;
     }
 }

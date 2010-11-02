@@ -5,6 +5,7 @@
 
 package org.spantus.work.ui.cmd;
 
+import java.util.Map;
 import java.util.Set;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.marker.Marker;
@@ -35,12 +36,10 @@ public class LearnCmd extends AbsrtactCmd{
 
         Marker marker =((Marker)getCurrentEvent().getValue());
         
-        FrameVectorValues fvv = extractorReaderService.findFeatureVectorValuesForMarker(getReader(),
-                marker, ExtractorEnum.MFCC_EXTRACTOR.name());
+        Map<String, FrameVectorValues> fvv = extractorReaderService.findAllVectorValuesForMarker(getReader(),
+                marker);
         
-        FeatureData fd = new FeatureData();
-        fd.setValues(fvv);
-        corpusService.learn(marker.getLabel(), fd);
+        corpusService.learn(marker.getLabel(), fvv);
         return null;
     }
 
