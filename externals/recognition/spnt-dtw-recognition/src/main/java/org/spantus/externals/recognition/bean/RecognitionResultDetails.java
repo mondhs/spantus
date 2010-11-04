@@ -14,13 +14,22 @@ import java.util.Map;
  */
 public class RecognitionResultDetails extends RecognitionResult {
 
-    private Map<String,List<Point>> path;
+    private Map<String, List<Point>> path;
+    private Map<String, Float> scores;
 
     public void setPath(Map<String, List<Point>> path) {
         this.path = path;
     }
 
-    public Map<String,List<Point>> getPath() {
+    public Map<String, List<Point>> getPath() {
         return path;
+    }
+
+    public Map<String, Float> getScores() {
+        return scores;
+    }
+
+    public void setScores(Map<String, Float> score) {
+        this.scores = score;
     }
 }

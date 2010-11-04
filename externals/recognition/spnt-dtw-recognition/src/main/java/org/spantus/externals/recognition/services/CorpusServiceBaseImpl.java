@@ -39,6 +39,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		return match;
 	}
         /**
+         * Find mutliple match
          * 
          * @param target
          * @return
@@ -48,19 +49,22 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		if(target == null || target.isEmpty()){
                     return new ArrayList<RecognitionResultDetails>(results.values());
                 }
+                //iterate all entires in corpus
                 for (CorpusEntry sample : getCorpus().findAllEntries()) {
                         RecognitionResultDetails result = new RecognitionResultDetails();
                         result.setPath(new HashMap<String, List<Point>>());
+                        result.setScores(new HashMap<String, Float>());
                         Float distance = 0F;
                         for (Map.Entry<String, FrameVectorValues> entry : target.entrySet()) {
                             if(sample.getFeatureMap().get(entry.getKey()).getValues() == null){
                                 continue;
                             }
-
+                            String featureName =  entry.getKey();
                             result.setInfo(sample);
                             DtwResult dtwResult = getDtwService().calculateInfoVector(entry.getValue(),
                                     sample.getFeatureMap().get(entry.getKey()).getValues());
-                            result.getPath().put(entry.getKey(),dtwResult.getPath());
+                            result.getPath().put(featureName,dtwResult.getPath());
+                            result.getScores().put(featureName, dtwResult.getResult());
                             distance +=dtwResult.getResult();
                         }
                         result.setDistance(distance);
