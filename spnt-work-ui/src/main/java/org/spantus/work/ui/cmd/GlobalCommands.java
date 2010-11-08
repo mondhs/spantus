@@ -28,7 +28,7 @@ public class GlobalCommands {
 	public enum file{open, newProject, openProject, saveProject, 
 		currentProjectChanged, exportFile, importFile, currentSampleChanged,
 		exit}
-	public enum sample{play, stop, record, zoomin, zoomout, selectionChanged, reloadSampleChart}
+	public enum sample{play, stop, record, zoomin, zoomout, selectionChanged, reloadMarkers, reloadSampleChart}
 	public enum tool{option, reloadResources, autoSegmentation, saveSegments, appendNoise, learn, recognize}
 	public enum help{signalInfo, about, userGuide}
 	

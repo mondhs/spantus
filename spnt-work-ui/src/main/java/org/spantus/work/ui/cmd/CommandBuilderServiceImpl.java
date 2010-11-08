@@ -101,6 +101,8 @@ public class CommandBuilderServiceImpl implements CommandBuilderService {
 		safePut(cmds, new ZoomInCmd(executionFacade));
 		safePut(cmds, new ZoomOutCmd(executionFacade));
 		safePut(cmds, new ReloadSampleChartCmd(executionFacade));
+                safePut(cmds, new ReloadMarkersCmd(executionFacade));
+
 	}
 	/**
 	 * 

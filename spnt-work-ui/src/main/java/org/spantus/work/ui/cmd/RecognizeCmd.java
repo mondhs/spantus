@@ -27,6 +27,8 @@ public class RecognizeCmd extends AbsrtactCmd {
 
     private static Logger log = Logger.getLogger(RecognizeCmd.class);
     private RecognizeDetailDialog info;
+    private CorpusService corpusService;
+    private ExtractorReaderService extractorReaderService;
 
     public RecognizeCmd(CommandExecutionFacade executionFacade) {
         super(executionFacade);
@@ -34,18 +36,19 @@ public class RecognizeCmd extends AbsrtactCmd {
 
     @Override
     public String execute(SpantusWorkInfo ctx) {
-        CorpusService corpusService = RecognitionServiceFactory.createCorpusService();
-        ExtractorReaderService extractorReaderService = WorkServiceFactory.createExtractorReaderService();
 
         Marker marker = ((Marker) getCurrentEvent().getValue());
 
-        Map<String, FrameVectorValues> fvv = extractorReaderService.findAllVectorValuesForMarker(getReader(),
+        Map<String, FrameVectorValues> fvv = getExtractorReaderService().findAllVectorValuesForMarker(getReader(),
                 marker);
 
-        List<RecognitionResultDetails> results = corpusService.findMultipleMatch(fvv);
+        List<RecognitionResultDetails> results = getCorpusService().findMultipleMatch(fvv);
+        if(results!=null && results.size()>0){
+            marker.setLabel(results.get(0).getInfo().getName());
+        }
         getInfoPnl().updateCtx(results);
 	getInfoPnl().setVisible(true);
-        return null;
+        return GlobalCommands.sample.reloadMarkers.name();
     }
 
     public Set<String> getExpectedActions() {
@@ -60,4 +63,27 @@ public class RecognizeCmd extends AbsrtactCmd {
         }
         return info;
     }
+    public CorpusService getCorpusService() {
+        if(corpusService == null){
+            corpusService = RecognitionServiceFactory.createCorpusService();
+        }
+        return corpusService;
+    }
+
+    public void setCorpusService(CorpusService corpusService) {
+        this.corpusService = corpusService;
+    }
+
+    public ExtractorReaderService getExtractorReaderService() {
+        if(extractorReaderService == null){
+            extractorReaderService = WorkServiceFactory.createExtractorReaderService();
+        }
+        return extractorReaderService;
+    }
+
+    public void setExtractorReaderService(ExtractorReaderService extractorReaderService) {
+        this.extractorReaderService = extractorReaderService;
+    }
+
+
 }

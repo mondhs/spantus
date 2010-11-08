@@ -1,12 +1,13 @@
 package org.spantus.externals.recognition.bean;
 
-import java.awt.Point;
-import java.util.List;
+import java.util.Map;
 
 public class RecognitionResult {
 
     private CorpusEntry info;
     private Float distance;
+    private Map<String, Float> scores;
+
 
 
     public CorpusEntry getInfo() {
@@ -24,6 +25,16 @@ public class RecognitionResult {
     public void setDistance(Float distance) {
         this.distance = distance;
     }
+
+
+    public Map<String, Float> getScores() {
+        return scores;
+    }
+
+    public void setScores(Map<String, Float> score) {
+        this.scores = score;
+    }
+
 
     @Override
     public String toString() {

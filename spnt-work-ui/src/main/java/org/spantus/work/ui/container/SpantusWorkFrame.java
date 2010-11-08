@@ -60,7 +60,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 	private SpantusWorkMenuBar jJMenuBar = null;
 	private SpantusWorkInfo info = null;
 	private Logger log= Logger.getLogger(SpantusWorkFrame.class);
-	
+	 
 	private SpantusUIServiceImpl spantusUIService;
 	private WorkInfoManager workInfoManager;
 	private JProgressBar recordMonitor;

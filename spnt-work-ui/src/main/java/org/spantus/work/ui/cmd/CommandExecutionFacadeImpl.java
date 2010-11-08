@@ -133,6 +133,11 @@ public class CommandExecutionFacadeImpl implements CommandExecutionFacade {
 		frame.getSampleRepresentationPanel().getSampleChart().updateContent();
 	}
 
+        public void updateMarkers() {
+            frame.getSampleRepresentationPanel().getSampleChart().updateMarker();
+	}
+
+
 	public void initialize() {
 		frame.getSampleRepresentationPanel().getSampleChart().initialize();
 

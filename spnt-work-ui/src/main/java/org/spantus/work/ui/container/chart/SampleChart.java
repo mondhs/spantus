@@ -105,6 +105,13 @@ public class SampleChart extends JPanel {
 	public void updateContent() {
 		initializeChart(getReader());
 	}
+        public void updateMarker() {
+            if( chart instanceof MarkeredTimeSeriesMultiChart ){
+		MarkeredTimeSeriesMultiChart _chart = ((MarkeredTimeSeriesMultiChart)chart);
+                _chart.getMarkerGraph().repaint();
+            }
+        }
+
 
 	private void initializeChart(IExtractorInputReader reader) {
 		removeAll();

@@ -108,7 +108,6 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 		super.changedZoom(from, length);
 		repaint();
 		getMarkerGraph().resetScreenCoord();
-//		getMarkerGraph().resize(getSize());
 		repaint(); 
 	}
 	

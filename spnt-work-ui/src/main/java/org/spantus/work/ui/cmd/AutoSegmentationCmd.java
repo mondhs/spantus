@@ -26,11 +26,13 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
+import org.spantus.core.FrameVectorValues;
 
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
@@ -39,11 +41,16 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
+import org.spantus.externals.recognition.bean.RecognitionResult;
+import org.spantus.externals.recognition.services.CorpusService;
+import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
 import org.spantus.segment.SegmentatorParam;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
+import org.spantus.work.services.ExtractorReaderService;
+import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 
@@ -61,9 +68,11 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 
 	public static final String segmentAutoPanelMessageHeader = "segmentAutoPanelMessageHeader";
 	public static final String segmentAutoPanelMessageBody = "segmentAutoPanelMessageBody";
+	protected static Logger log = Logger.getLogger(AutoSegmentationCmd.class);
 
+        private CorpusService corpusService;
+        private ExtractorReaderService extractorReaderService;
 
-	protected Logger log = Logger.getLogger(getClass());
 
 	public AutoSegmentationCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
@@ -78,6 +87,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	public String execute(SpantusWorkInfo ctx) {
 		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader()
 				.getWorkConfig();
+                boolean autoRecognize = true;
 		IExtractorInputReader reader = getReader();
 		if (reader == null) {
 			log.info("Nothing to segment");
@@ -110,7 +120,12 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 			if(markerSet == null){
 				markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
 			}
-			putLabels(ctx);
+
+                        if(autoRecognize){
+                            putLabelsRecognized(ctx);
+                        }else{
+                            putLabels(ctx);
+                        }
 
 		}
 		if (markerSet == null) {
@@ -179,6 +194,18 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 
 	}
 
+        public void putLabelsRecognized(SpantusWorkInfo ctx) {
+            MarkerSet markerSet = ctx.getProject().getSample()
+		.getMarkerSetHolder().getMarkerSets().get(
+				MarkerSetHolderEnum.word.name());
+            for (Marker marker : markerSet.getMarkers()) {
+                Map<String, FrameVectorValues> fvv = getExtractorReaderService().
+                        findAllVectorValuesForMarker(getReader(), marker);
+                RecognitionResult result = getCorpusService().match(fvv);
+                marker.setLabel(result.getInfo().getName());
+            }
+        }
+
 	/**
 	 * 
 	 * @param ctx
@@ -240,4 +267,26 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		}
 		return;
 	}
+        public CorpusService getCorpusService() {
+            if (corpusService == null) {
+                corpusService = RecognitionServiceFactory.createCorpusService();
+            }
+            return corpusService;
+        }
+
+        public void setCorpusService(CorpusService corpusService) {
+            this.corpusService = corpusService;
+        }
+        public ExtractorReaderService getExtractorReaderService() {
+            if (extractorReaderService == null) {
+                extractorReaderService = WorkServiceFactory.createExtractorReaderService();
+            }
+            return extractorReaderService;
+        }
+
+        public void setExtractorReaderService(ExtractorReaderService extractorReaderService) {
+            this.extractorReaderService = extractorReaderService;
+        }
+
+
 }
