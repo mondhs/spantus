@@ -18,6 +18,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.spantus.chart.bean.VectorSeriesColorEnum;
 import org.spantus.logger.Logger;
+import org.spantus.ui.SwingUtils;
 import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.dto.EnviromentRepresentation;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -32,19 +33,19 @@ public class SpantusUIServiceImpl {
 	public void setupEnv(SpantusWorkInfo info, Frame frame) {
 		EnviromentRepresentation env = info.getEnv();
 		if (env == null) {
-			SpantusWorkSwingUtils.fullWindow(frame);
+			SwingUtils.fullWindow(frame);
 			info.setEnv(new EnviromentRepresentation());
 
 			info.getEnv().setLaf(
 					UIManager.getLookAndFeel().getClass().getName());
 		} else {
 			if (isEmpty(env.getMainWindowDimension())) {
-				env.setMainWindowDimension(SpantusWorkSwingUtils.currentWindowSize(
+				env.setMainWindowDimension(SwingUtils.currentWindowSize(
 						.75, .75));
 				env.setMainWindowState(JFrame.MAXIMIZED_BOTH);
 			}
 			if (env.getMainWindowState() == JFrame.MAXIMIZED_BOTH) {
-				env.setMainWindowDimension(SpantusWorkSwingUtils.currentWindowSize(
+				env.setMainWindowDimension(SwingUtils.currentWindowSize(
 						.75, .75));
 			}
 			frame.setSize(env.getMainWindowDimension().width,

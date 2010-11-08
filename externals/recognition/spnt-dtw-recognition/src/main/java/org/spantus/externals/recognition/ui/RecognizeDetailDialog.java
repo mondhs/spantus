@@ -1,0 +1,324 @@
+/*
+Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+Part of program for analyze speech signal
+http://spantus.sourceforge.net
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+package org.spantus.externals.recognition.ui;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.StringTokenizer;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.Document;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
+import org.spantus.core.beans.I18n;
+import org.spantus.externals.recognition.bean.RecognitionResult;
+import org.spantus.externals.recognition.bean.RecognitionResultDetails;
+import org.spantus.ui.SwingUtils;
+
+/**
+ *
+ * @author mondhs
+ */
+public class RecognizeDetailDialog extends JDialog {
+
+    private List<RecognitionResultDetails> results;
+    private Long selctedId = null;
+    private JPanel jContentPane = null;
+    private JPanel mainPanel = null;
+    private JScrollPane resultScrollPane = null;
+    private JEditorPane resultPane;
+    private JPanel chartPanel = null;
+    private I18n i18n;
+
+    /**
+     * @param owner
+     */
+    public RecognizeDetailDialog(Frame owner, I18n i18n) {
+        super(owner);
+        this.i18n = i18n;
+        initialize();
+    }
+
+    /**
+     * This method initializes this
+     *
+     * @return void
+     */
+    private void initialize() {
+        this.setSize(SwingUtils.currentWindowSize(0.5, 0.5));
+        SwingUtils.centerWindow(this);
+        setTitle(getI18n().getMessage("RecognitionResults"));
+        this.setContentPane(getJContentPane());
+    }
+
+    @Override
+    protected JRootPane createRootPane() {
+        KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        JRootPane thisRootPane = super.createRootPane();
+        thisRootPane.registerKeyboardAction(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        }, stroke,
+                JComponent.WHEN_IN_FOCUSED_WINDOW);
+        return thisRootPane;
+    }
+
+    /**
+     * This method initializes jContentPane
+     *
+     * @return javax.swing.JPanel
+     */
+    private JPanel getJContentPane() {
+        if (jContentPane == null) {
+            jContentPane = new JPanel();
+            jContentPane.setLayout(new BorderLayout());
+            jContentPane.add(getMainPanel(), BorderLayout.CENTER);
+        }
+        return jContentPane;
+    }
+
+    /**
+     * This method initializes jPanel
+     *
+     * @return javax.swing.JPanel
+     */
+    private JPanel getMainPanel() {
+        if (mainPanel == null) {
+            mainPanel = new JPanel();
+            mainPanel.setLayout(new BorderLayout());
+            mainPanel.add(getResultScrollPane(), BorderLayout.CENTER);
+            mainPanel.add(getChartPanel(), BorderLayout.EAST);
+        }
+        return mainPanel;
+    }
+
+    /**
+     * This method initializes jScrollPane
+     *
+     * @return javax.swing.JScrollPane
+     */
+    private JScrollPane getResultScrollPane() {
+        if (resultScrollPane == null) {
+            resultScrollPane = new JScrollPane();
+            resultScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            resultScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            resultScrollPane.setViewportView(getResultPane());
+        }
+        return resultScrollPane;
+    }
+
+    protected JPanel getChartPanel() {
+        if (chartPanel == null) {
+            chartPanel = new JPanel();
+        }
+        return chartPanel;
+    }
+
+    /**
+     * This method initializes jEditorPane
+     *
+     * @return javax.swing.JEditorPane
+     */
+    protected JEditorPane getResultPane() {
+        if (resultPane == null) {
+            HTMLEditorKit kit = new HTMLEditorKit();
+            resultPane = new JEditorPane();
+            resultPane.setEditable(false);
+            resultPane.setContentType("text/html");
+            resultPane.addHyperlinkListener(new RecognitionHyperlinkListener());
+            resultPane.setCaretPosition(0);
+            resultPane.setEditorKit(kit);
+            StyleSheet styleSheet = kit.getStyleSheet();
+            styleSheet.addRule("table{border-width: 1px;}");
+            styleSheet.addRule("table{border-style: solid;}");
+            styleSheet.addRule("table{border-color: gray;}");
+            styleSheet.addRule("table{border-spacing: 0x;}");
+            styleSheet.addRule("table{width: 100%;}");
+            styleSheet.addRule("th {border-width: 1px;}");
+            styleSheet.addRule("th {border-style: solid;}");
+            styleSheet.addRule("th {border-color: gray;}");
+            styleSheet.addRule("th {padding: 5px;}");
+            styleSheet.addRule("td {border-width: 1px;}");
+            styleSheet.addRule("td {border-style: solid;}");
+            styleSheet.addRule("td {border-color: gray;}");
+            styleSheet.addRule("td {padding: 5px;}");
+            styleSheet.addRule("div {width: 100%;}");
+            styleSheet.addRule("div {position: absolute;}");
+            styleSheet.addRule("div {text-align: center;}");
+            styleSheet.addRule("div {padding: 5px;}");
+
+        }
+        return resultPane;
+    }
+
+    public void updateCtx(List<RecognitionResultDetails> results) {
+        
+        
+        HTMLEditorKit kit = ((HTMLEditorKit) getResultPane().getEditorKit());
+//        StyleSheet styleSheet = kit.getStyleSheet();
+
+
+        Document doc = kit.createDefaultDocument();
+        getResultPane().setDocument(doc);
+        getResultPane().setText("<html><body>"
+                + "<p>" + representResults(results) + "</p></body></html>");
+        getResultPane().setCaretPosition(0);
+
+        this.results = results;
+
+    }
+
+    private StringBuilder representEmptyResults() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<div>").append("No recognition pattern is found. Try to learn program some patterns first.").append("</div>");
+        return sb;
+    }
+
+    private StringBuilder representResults(List<RecognitionResultDetails> results) {
+        StringBuilder sb = new StringBuilder();
+        if (results.isEmpty()) {
+            return representEmptyResults();
+        }
+
+        sb.append("<table class=\"resultTable\">");
+        sb.append("<tr><th>").append("Label").append("</th><th>").append("Total Score").append("</th><th>Feature</th><th>Feature Score</th></tr>");
+        for (RecognitionResultDetails recognitionResult : results) {
+            StringBuilder subTable = new StringBuilder();
+            int rowsize = 1;
+            if (recognitionResult.getInfo().getId().equals(selctedId)) {
+                rowsize = recognitionResult.getScores().size() + 1;
+                for (Entry<String, Float> scoreEntry : recognitionResult.getScores().entrySet()) {
+                    subTable.append("<tr>");
+                    subTable.append("<td>").
+                            append(getI18n().getMessage(scoreEntry.getKey())).
+                            append("</td><td>").
+                            append(getI18n().getDecimalFormat().format(scoreEntry.getValue())).
+                            append("</td>");
+
+                    subTable.append("</tr>");
+                }
+            }
+
+            sb.append("<tr>");
+            sb.append("<td ROWSPAN=").append(rowsize).append(">").
+                    append("<a href=\"").append(recognitionResult.getInfo().getId()).append("\">").
+                    append(recognitionResult.getInfo().getName()).append("</a></td>");
+            sb.append("<td ROWSPAN=").append(rowsize).append(">").
+                    append(getI18n().getDecimalFormat().format(
+                            recognitionResult.getDistance()))
+                    .append("</td>");
+            if (rowsize == 1) {
+                sb.append("<td>").append("</td>");
+                sb.append("<td>").append("</td>");
+            }
+            sb.append("</tr>");
+            sb.append(subTable);
+
+        }
+
+        sb.append("</table>");
+        return sb;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        selctedId = null;
+        results = null;
+    }
+
+
+
+    public I18n getI18n() {
+        return i18n;
+    }
+
+    public void setI18n(I18n i18n) {
+        this.i18n = i18n;
+    }
+
+    class RecognitionHyperlinkListener implements HyperlinkListener {
+
+        /**
+         * 
+         * @param g
+         * @param points
+         */
+        protected void drawPaths(Graphics2D g, List<Point> points) {
+            int[] xArr = new int[points.size()];
+            int[] yArr = new int[points.size()];
+            int i = 0;
+            for (Point p : points) {
+                xArr[i] = p.x;
+                yArr[i] = p.y;
+                i++;
+            }
+            g.drawPolyline(xArr, yArr, xArr.length);
+        }
+
+        /**
+         *
+         * @param e
+         */
+        public void hyperlinkUpdate(HyperlinkEvent e) {
+            if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
+                StringTokenizer st = new StringTokenizer(e.getDescription(), " ");
+                if (st.hasMoreTokens()) {
+                    String s = st.nextToken();
+                    Long key = Long.valueOf(s);
+                    selctedId = key;
+                    updateCtx(results);
+                    for (RecognitionResultDetails recognitionResultDetails : results) {
+                        if (recognitionResultDetails.getInfo().getId().equals(key)) {
+
+                            Graphics2D g = (Graphics2D) getChartPanel().getGraphics();
+                            g.setColor(Color.white);
+                            g.fillRect(0, 0, getChartPanel().getHeight(), getChartPanel().getWidth());
+                            g.setColor(Color.red);
+
+                            for (Entry<String, List<Point>> detail : recognitionResultDetails.getPath().entrySet()) {
+                                drawPaths(g, detail.getValue());
+                            }
+
+                            break;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}

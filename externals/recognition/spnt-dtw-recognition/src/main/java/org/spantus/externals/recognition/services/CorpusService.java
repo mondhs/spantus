@@ -8,8 +8,7 @@ import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 
 public interface CorpusService {
-	public RecognitionResult match(FeatureData featureData);
+	public RecognitionResult match(Map<String, FrameVectorValues> featureDataMap);
         public List<RecognitionResultDetails> findMultipleMatch(Map<String, FrameVectorValues> featureDataMap);
-        public boolean learn(String label, FeatureData featureData);
         public boolean learn(String label, Map<String, FrameVectorValues> featureDataMap);
 }

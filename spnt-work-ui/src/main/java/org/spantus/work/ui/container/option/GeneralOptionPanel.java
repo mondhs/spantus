@@ -19,7 +19,7 @@ import org.spantus.chart.bean.VectorSeriesColorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.ui.MapComboBoxModel;
 import org.spantus.ui.ModelEntry;
-import org.spantus.work.ui.i18n.I18n;
+import org.spantus.core.beans.I18n;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;

@@ -1,6 +1,6 @@
 /*
  	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
- 	Part of program for analyze speech signal 
+ 	Part of program for analyze speech signal
  	http://spantus.sourceforge.net
 
     This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@ import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 
-import org.spantus.work.ui.container.SpantusWorkSwingUtils;
+import org.spantus.ui.SwingUtils;
 import org.spantus.work.ui.i18n.HtmlResourcesEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
 import org.spantus.work.ui.i18n.ImageResourcesEnum;
@@ -76,8 +76,8 @@ public class SpantusAboutDialog extends JDialog {
 	 * @return void
 	 */
 	private void initialize() {
-		this.setSize(SpantusWorkSwingUtils.currentWindowSize(0.5, 0.25));
-		SpantusWorkSwingUtils.centerWindow(this);
+		this.setSize(SwingUtils.currentWindowSize(0.5, 0.25));
+		SwingUtils.centerWindow(this);
 		setTitle(I18nFactory.createI18n().getMessage("about"));
 		this.setContentPane(getJContentPane());
 	}

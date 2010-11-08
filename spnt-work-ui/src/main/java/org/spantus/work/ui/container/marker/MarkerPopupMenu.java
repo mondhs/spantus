@@ -139,10 +139,11 @@ public class MarkerPopupMenu extends JPopupMenu {
 		Long start = _marker.getStart();
 		Long length = _marker.getLength();
 		ModifyObjectPopup modifyObjectPopup = new ModifyObjectPopup();
+                modifyObjectPopup.setI18n(I18nFactory.createI18n());
 		Set<String> includeFields = new HashSet<String>();
 		includeFields.addAll(Arrays.asList(new String[]{"start","length", "label"}));
 		modifyObjectPopup.setIncludeFields(includeFields);
-		modifyObjectPopup.modifyObject(null, "Modify", _marker);
+		modifyObjectPopup.modifyObject(null, "Marker.Modify.Popup", _marker);
 		
 		if(!_marker.getStart().equals(start) || !_marker.getLength().equals(length) ){
 			markerComponent.resetScreenCoord();
@@ -189,8 +190,10 @@ public class MarkerPopupMenu extends JPopupMenu {
             if (invoker instanceof MarkerSetComponent) {
 			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
 			MarkerComponentEventHandler ml = getShower(source);
-			Marker _marker = ml.getCurrentMarker().getMarker();
-                        return _marker;
+                        if(ml.getCurrentMarker()!=null){
+                            Marker _marker = ml.getCurrentMarker().getMarker();
+                            return _marker;
+                        }
             }
             return null;
         }

@@ -28,7 +28,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
-import org.spantus.work.ui.i18n.I18n;
+import org.spantus.core.beans.I18n;
 import org.spantus.work.ui.i18n.I18nFactory;
 
 public abstract class AbsrtactCmd implements SpantusWorkCommand {

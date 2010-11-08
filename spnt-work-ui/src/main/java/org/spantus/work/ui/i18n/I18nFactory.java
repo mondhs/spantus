@@ -21,6 +21,7 @@
 
 package org.spantus.work.ui.i18n;
 
+import org.spantus.core.beans.I18n;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 /**
@@ -43,9 +44,15 @@ public abstract class I18nFactory {
 	}
 	
 	public static I18n createI18n(SpantusWorkInfo info){
-		ConfigedI18n configedI18n = new ConfigedI18n();
-		configedI18n.setInfo(info);
-		i18n = configedI18n;
+                ConfigedI18n configedI18n = null;
+                if(i18n == null || !(i18n instanceof ConfigedI18n) ){
+                    configedI18n = new ConfigedI18n();
+                    i18n = configedI18n;
+                }else{
+                    configedI18n = (ConfigedI18n) i18n;
+                }
+
+                configedI18n.setCurrentLocale(info.getLocale());
 		return i18n;
 	}	
 }

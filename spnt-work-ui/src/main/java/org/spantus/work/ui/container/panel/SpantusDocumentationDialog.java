@@ -17,8 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import org.spantus.ui.SwingUtils;
 
-import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.i18n.HtmlResourcesEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
 
@@ -58,11 +58,12 @@ public class SpantusDocumentationDialog extends JDialog {
 	 */
 	private void initialize() {
 //		this.setSize(503, 215);
-		this.setSize(SpantusWorkSwingUtils.currentWindowSize(0.75, 0.75));
-		SpantusWorkSwingUtils.centerWindow(this);
+		this.setSize(SwingUtils.currentWindowSize(0.75, 0.75));
+		SwingUtils.centerWindow(this);
 		this.setContentPane(getJContentPane());
 	}
 
+        @Override
 	protected JRootPane createRootPane() {
 		KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 		JRootPane rootPane = super.createRootPane();

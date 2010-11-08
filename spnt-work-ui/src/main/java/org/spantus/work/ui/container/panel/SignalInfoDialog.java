@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 import javax.swing.JEditorPane;
 
 import org.spantus.core.extractor.SignalFormat;
-import org.spantus.work.ui.container.SpantusWorkSwingUtils;
+import org.spantus.ui.SwingUtils;
 import org.spantus.work.ui.container.option.WindowOptionPnl;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
@@ -52,7 +52,7 @@ public class SignalInfoDialog extends SpantusAboutDialog{
 	}
 
         private void initialize() {
-		this.setSize(SpantusWorkSwingUtils.currentWindowSize(0.25, 0.5));
+		this.setSize(SwingUtils.currentWindowSize(0.25, 0.5));
 		setTitle(I18nFactory.createI18n().getMessage("information"));
 	}
 	

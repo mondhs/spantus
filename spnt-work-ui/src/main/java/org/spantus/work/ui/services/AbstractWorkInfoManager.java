@@ -36,7 +36,7 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
-import org.spantus.work.ui.i18n.I18n;
+import org.spantus.core.beans.I18n;
 import org.spantus.work.ui.i18n.I18nFactory;
 /**
  * 

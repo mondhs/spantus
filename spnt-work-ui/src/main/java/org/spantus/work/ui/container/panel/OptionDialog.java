@@ -21,9 +21,9 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.spantus.logger.Logger;
+import org.spantus.ui.SwingUtils;
 import org.spantus.work.ui.container.I18nTreeNode;
 import org.spantus.work.ui.container.ReloadableComponent;
-import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.container.option.AbstractOptionPanel;
 import org.spantus.work.ui.container.option.ExtractorsOptionPanel;
 import org.spantus.work.ui.container.option.GeneralOptionPanel;
@@ -68,7 +68,7 @@ public class OptionDialog extends JDialog implements ReloadableComponent, KeyLis
 		super(owner,getMessage("option"),true);
 		this.setContentPane(getJContentPane());
 		this.setSize(900, 600);
-		SpantusWorkSwingUtils.centerWindow(this);
+		SwingUtils.centerWindow(this);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package org.spantus.externals.recognition.segment;
 
 import java.net.URL;
+import java.util.Map;
 
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.IExtractorVector;
@@ -12,14 +13,18 @@ import org.spantus.externals.recognition.services.CorpusService;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
+import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.FeatureExtractor;
 import org.spantus.work.services.FeatureExtractorImpl;
+import org.spantus.work.services.WorkServiceFactory;
 
 public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 	
 	private CorpusService corpusService;
 	
 	private FeatureExtractorImpl featureExtractor;
+
+        private ExtractorReaderService extractorReaderService;
 	
 	private CorpusMatchListener corpusMatchListener ;
 	
@@ -44,38 +49,22 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 	 * 
 	 * @param marker
 	 */
-	protected void findBestMatach(Marker marker){
-		for (IExtractorVector extractor : getReader().getReader().getExtractorRegister3D()) {
-			
-			FrameVectorValues values = extractor.getOutputValues();
-			Float fromIndex = (marker.getStart().floatValue()*values.getSampleRate())/1000;
-			Float toIndexF = fromIndex+(marker.getLength().floatValue()*values.getSampleRate())/1000;
-                        Integer toIndex = toIndexF.intValue();
-                        if(toIndex>values.size()){
-                            toIndex = values.size();
-//                            throw new IllegalArgumentException("too big index" + toIndex +";" +values.size());
-                        }
-                        FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
-			
-			FeatureData featureData = new FeatureData();
-			featureData.setName(extractor.getName());
-			featureData.setValues(fvv);
-			
-			if(getLearnMode()){
-				getCorpusService().learn(marker.getLabel(),featureData);
-			}else{
-                            RecognitionResult result = getCorpusService().match(featureData);
-                            if(result !=null){
-				marker.setLabel(result.getInfo().getName());
-                            }else{
-                                log.info("[findBestMatach] there is no match");
-                            }
-			}
-		}
-		
-		log.info("[findBestMatach]" + marker);
-		
-	}
+        protected void findBestMatach(Marker marker) {
+            Map<String, FrameVectorValues> featureData = getExtractorReaderService().findAllVectorValuesForMarker(getReader().getReader(), marker);
+            if (getLearnMode()) {
+                getCorpusService().learn(marker.getLabel(), featureData);
+            } else {
+                RecognitionResult result = getCorpusService().match(featureData);
+                if (result != null) {
+                    marker.setLabel(result.getInfo().getName());
+                } else {
+                    log.info("[findBestMatach] there is no match");
+                }
+            }
+
+            log.info("[findBestMatach]" + marker);
+
+        }
 
 	/**
 	 * 
@@ -120,7 +109,13 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 		this.corpusMatchListener = corpusMatchListener;
 	}
 	
-	
+        public ExtractorReaderService getExtractorReaderService() {
+            if (extractorReaderService == null) {
+                this.extractorReaderService = WorkServiceFactory.createExtractorReaderService();
+            }
+            return extractorReaderService;
+        }
+
 	
 
 }

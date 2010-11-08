@@ -4,7 +4,7 @@ import javax.swing.JPanel;
 
 import org.spantus.work.ui.container.ReloadableComponent;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
-import org.spantus.work.ui.i18n.I18n;
+import org.spantus.core.beans.I18n;
 import org.spantus.work.ui.i18n.I18nFactory;
 
 public abstract class AbstractOptionPanel extends JPanel implements

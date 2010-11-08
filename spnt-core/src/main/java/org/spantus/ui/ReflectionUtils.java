@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import org.spantus.exception.ProcessingException;
 /**
  * 
  * @author Mindaugas Greibus
@@ -106,7 +107,7 @@ public abstract class ReflectionUtils {
 	 * Returns true if the specified class is a Set, otherwise it returns false
 	 * 
 	 * @param c
-	 *            The class to examine to see if it’s a set
+	 *            The class to examine to see if itï¿½s a set
 	 * @return True if the specified class is a Set, false otherwise
 	 * @throws RXMLException
 	 */
@@ -118,7 +119,7 @@ public abstract class ReflectionUtils {
 	 * Returns true if the specified class is a List, otherwise it returns false
 	 * 
 	 * @param c
-	 *            The class to examine to see if it’s a list
+	 *            The class to examine to see if itï¿½s a list
 	 * @return True if the specified class is a List, false otherwise
 	 * @throws RXMLException
 	 */
@@ -130,7 +131,7 @@ public abstract class ReflectionUtils {
 	 * Returns true if the specified class is a Map, otherwise it returns false
 	 * 
 	 * @param c
-	 *            The class to examine to see if it’s a map
+	 *            The class to examine to see if itï¿½s a map
 	 * @return True if the specified class is a Map, false otherwise
 	 * @throws RXMLException
 	 */
@@ -281,7 +282,7 @@ public abstract class ReflectionUtils {
 						.charAt(3))
 						+ methodName.substring(4);
 
-				// Ensure that the return type is void; setters shouldn’t return
+				// Ensure that the return type is void; setters shouldnï¿½t return
 				// any values
 				String returnClass = methods[i].getReturnType().getName();
 				if (returnClass.equals("void")) {
@@ -324,7 +325,7 @@ public abstract class ReflectionUtils {
 	}
 
 	/**
-	 * Returns the Property object for the specified class’s property
+	 * Returns the Property object for the specified classï¿½s property
 	 * 
 	 * @param c
 	 * @param propertyName
@@ -363,7 +364,7 @@ public abstract class ReflectionUtils {
 	}
 
 	/**
-	 * Returns the setter method for the specifed class’s property
+	 * Returns the setter method for the specifed classï¿½s property
 	 * 
 	 * @param className
 	 * @param propertyName
@@ -377,7 +378,7 @@ public abstract class ReflectionUtils {
 	}
 
 	/**
-	 * Returns the setter method for the specifed class’s property
+	 * Returns the setter method for the specifed classï¿½s property
 	 * 
 	 * @param c
 	 * @param propertyName
@@ -392,7 +393,7 @@ public abstract class ReflectionUtils {
 	}
 
 	/**
-	 * Returns the setter method for the specifed class’s property
+	 * Returns the setter method for the specifed classï¿½s property
 	 * 
 	 * @param className
 	 * @param propertyName
@@ -406,7 +407,7 @@ public abstract class ReflectionUtils {
 	}
 
 	/**
-	 * Returns the getter method for the specified class’s property
+	 * Returns the getter method for the specified classï¿½s property
 	 * 
 	 * @param c
 	 * @param propertyName
@@ -487,7 +488,7 @@ public abstract class ReflectionUtils {
 	}
 
 	/**
-	 * Returns the value of the specified setter property’s annotation’s
+	 * Returns the value of the specified setter propertyï¿½s annotationï¿½s
 	 * property.
 	 * 
 	 * @param className
@@ -510,7 +511,7 @@ public abstract class ReflectionUtils {
 	}
 
 	/**
-	 * Returns the value of the specified setter property’s annotation’s
+	 * Returns the value of the specified setter propertyï¿½s annotationï¿½s
 	 * property.
 	 * 
 	 * @param c
@@ -677,7 +678,7 @@ public abstract class ReflectionUtils {
 	public static boolean isSetter(Method method) {
 		String methodName = method.getName();
 		Class<?> returnClass = method.getReturnType();
-		// Ensure that the return type is void; setters shouldn’t
+		// Ensure that the return type is void; setters shouldnï¿½t
 		// return
 		// any values
 		// Get the list of parameter types; there should only be
@@ -713,7 +714,7 @@ public abstract class ReflectionUtils {
 							+ methodName.substring(4);
 
 					Class<?> parameterType = methods[i].getParameterTypes()[0];
-					// We have a setter method, let’s see if we have a
+					// We have a setter method, letï¿½s see if we have a
 					// corresponding property to set
 					if (propertyMap.containsKey(propertyName)) {
 						// Convert the value...
@@ -740,11 +741,10 @@ public abstract class ReflectionUtils {
 			// Return the property map
 			return o;
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			throw new ProcessingException(e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			throw new ProcessingException(e);
 		}
-		return null;
 	}
 
 	/**

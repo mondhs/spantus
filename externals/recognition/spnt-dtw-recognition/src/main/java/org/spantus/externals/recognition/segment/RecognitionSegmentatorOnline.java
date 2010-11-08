@@ -1,5 +1,7 @@
 package org.spantus.externals.recognition.segment;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
@@ -11,14 +13,19 @@ import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
+import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.FeatureExtractor;
 import org.spantus.work.services.FeatureExtractorImpl;
+import org.spantus.work.services.WorkServiceFactory;
 
 public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 	
 	private ExtractorInputReader bufferedReader;
+
 	
 	private FeatureExtractor featureExtractor;
+
+        private ExtractorReaderService extractorReaderService;
 	
 	private CorpusService corpusService;
 	
@@ -34,31 +41,18 @@ public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 	protected boolean onSegmentEnded(Marker marker) {
 		if(!super.onSegmentEnded(marker)) return false; 
 
-		for (IExtractorVector extractor : bufferedReader.getExtractorRegister3D()) {
-			
-			FrameVectorValues values = extractor.getOutputValues();
-			Float fromIndex = (marker.getStart().floatValue()*values.getSampleRate())/1000;
-			Float toIndex = fromIndex+(marker.getLength().floatValue()*values.getSampleRate())/1000;
-			FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
-			
-			FeatureData featureData = new FeatureData();
-			featureData.setName(extractor.getName());
-			featureData.setValues(fvv);
-			
-			if(getLearnMode()){
-				getCorpusService().learn(marker.getLabel(),featureData);
-			}else{
-				RecognitionResult result = getCorpusService().match(featureData);
-				if(result == null){
-					log.error("Does not matched");
-					continue;
-				}
-				marker.setLabel(getCorpusService().match(featureData).getInfo().getName());
-			}
-		}
-		
-		
-		
+                Map<String, FrameVectorValues> featureData = getExtractorReaderService()
+                        .findAllVectorValuesForMarker(bufferedReader, marker);
+
+                if (getLearnMode()) {
+                    getCorpusService().learn(marker.getLabel(), featureData);
+                } else {
+                    RecognitionResult result = getCorpusService().match(featureData);
+                    if (result == null) {
+                        log.error("Does not matched");
+                    }
+                    marker.setLabel(getCorpusService().match(featureData).getInfo().getName());
+                }
 		
 		log.error(marker.toString());
 		return true;
@@ -86,4 +80,10 @@ public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 	public RecognitionSegmentatorOnline(ExtractorInputReader bufferedReader){
 		this.bufferedReader = bufferedReader;
 	}
+        public ExtractorReaderService getExtractorReaderService() {
+            if(extractorReaderService==null){
+                 this.extractorReaderService =  WorkServiceFactory.createExtractorReaderService();
+            }
+            return extractorReaderService;
+        }
 }

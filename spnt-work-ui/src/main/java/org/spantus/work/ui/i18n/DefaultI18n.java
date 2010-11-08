@@ -20,6 +20,7 @@
  */
 package org.spantus.work.ui.i18n;
 
+import org.spantus.core.beans.I18n;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

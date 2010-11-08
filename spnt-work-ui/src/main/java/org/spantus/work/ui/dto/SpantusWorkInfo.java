@@ -24,7 +24,7 @@ package org.spantus.work.ui.dto;
 import java.io.Serializable;
 import java.util.Locale;
 
-import org.spantus.work.ui.i18n.I18n;
+import org.spantus.core.beans.I18n;
 
 /**
  * 

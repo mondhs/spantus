@@ -1,4 +1,4 @@
-package org.spantus.work.ui.i18n;
+package org.spantus.core.beans;
 
 import java.text.DecimalFormat;
 import java.util.Locale;

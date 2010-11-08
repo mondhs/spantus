@@ -35,26 +35,16 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
  */
 public class ConfigedI18n extends DefaultI18n {
 
-	Locale backupedLocale;
-	
-	SpantusWorkInfo info;
-	
+	Locale currentLocale;
 
-	public String getMessage(String key) {
-		if(backupedLocale == null){
-			backupedLocale = info.getLocale();
-			setLocale(backupedLocale);
-		}
-		if(!backupedLocale.equals(info.getLocale())){
-			backupedLocale = info.getLocale();
-			setLocale(backupedLocale);
+
+	public void setCurrentLocale(Locale newLocale) {
+		if(currentLocale == null || !currentLocale.equals(newLocale)){
+			currentLocale = newLocale;
+			setLocale(currentLocale);
 			setBundle(null);
 		}
-		return super.getMessage(key);
-	}
-	public void setInfo(SpantusWorkInfo info) {
-		this.info = info;
-	}
+        }
 
 
 

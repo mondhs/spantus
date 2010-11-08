@@ -9,16 +9,15 @@ import java.util.Map;
 import java.util.Set;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.marker.Marker;
-import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.externals.recognition.services.CorpusService;
 import org.spantus.externals.recognition.services.RecognitionServiceFactory;
-import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
-import org.spantus.work.ui.container.panel.RecognizeDetailDialog;
+import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.i18n.I18nFactory;
 
 /**
  *
@@ -44,7 +43,7 @@ public class RecognizeCmd extends AbsrtactCmd {
                 marker);
 
         List<RecognitionResultDetails> results = corpusService.findMultipleMatch(fvv);
-        getInfoPnl().updateCtx(ctx,results);
+        getInfoPnl().updateCtx(results);
 	getInfoPnl().setVisible(true);
         return null;
     }
@@ -56,8 +55,7 @@ public class RecognizeCmd extends AbsrtactCmd {
 
     private RecognizeDetailDialog getInfoPnl() {
         if (info == null) {
-            info = new RecognizeDetailDialog(null);
-
+            info = new RecognizeDetailDialog(null,I18nFactory.createI18n());
             info.setModal(true);
         }
         return info;
