@@ -87,7 +87,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	public String execute(SpantusWorkInfo ctx) {
 		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader()
 				.getWorkConfig();
-                boolean autoRecognize = true;
+                boolean autoRecognize = (Boolean.TRUE.equals(ctx.getEnv().getAutoRecognition()));
 		IExtractorInputReader reader = getReader();
 		if (reader == null) {
 			log.info("Nothing to segment");
@@ -120,7 +120,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 			if(markerSet == null){
 				markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
 			}
-
+                        //chek if needed try read from file or recognize segments
                         if(autoRecognize){
                             putLabelsRecognized(ctx);
                         }else{

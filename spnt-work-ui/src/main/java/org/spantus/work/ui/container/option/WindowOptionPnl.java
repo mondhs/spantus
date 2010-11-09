@@ -77,6 +77,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		segmentationMinLength, segmentationMinSpace,
 		segmentationExpandStart, segmentationExpandEnd, 
 		autoSegmentation,
+                autoRegonition,
 		automatedSegmentaionParameters,
 		windowingType, preemphasis
 		} 
@@ -117,6 +118,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		optionsLabels[] segmentLabels = new optionsLabels[]{
 				optionsLabels.automatedSegmentaionParameters,
 				optionsLabels.autoSegmentation,
+                                optionsLabels.autoRegonition,
 				optionsLabels.segmentationServiceType,
 				optionsLabels.segmentationMinLength, optionsLabels.segmentationMinSpace, 
 				optionsLabels.segmentationExpandStart, optionsLabels.segmentationExpandEnd, 
@@ -299,6 +301,12 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				fieldEntry.getValue().setVisible(isAdvanced());
 				Boolean isAutoSegmentValue = Boolean.TRUE.equals(getInfo().getEnv().getAutoSegmentation()); 
 				setLabelControlVisible(optionsLabels.segmentationServiceType, isAutoSegmentValue.toString());
+                                setLabelControlVisible(optionsLabels.autoRegonition, isAutoSegmentValue.toString());
+				break;
+                        case autoRegonition:
+				((JCheckBox)cmp).setSelected(Boolean.TRUE.equals(getInfo().getEnv().getAutoRecognition()));
+				boolean isAutoSegmentValueForRecognition = Boolean.TRUE.equals(getInfo().getEnv().getAutoSegmentation());
+                                fieldEntry.getValue().setVisible(isAdvanced() && isAutoSegmentValueForRecognition);
 				break;
 			case thresholdType:
 				((JComboBox)fieldEntry.getValue().getControl()).setSelectedItem(
@@ -427,12 +435,20 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				public void itemStateChanged(ItemEvent evt) {
 					if (evt.getStateChange() == ItemEvent.SELECTED) { 
 						setLabelControlVisible(optionsLabels.segmentationServiceType, Boolean.TRUE.toString());
-					}else if (evt.getStateChange() == ItemEvent.DESELECTED) { 
+                                                setLabelControlVisible(optionsLabels.autoRegonition, Boolean.TRUE.toString());
+                                        }else if (evt.getStateChange() == ItemEvent.DESELECTED) {
 						setLabelControlVisible(optionsLabels.segmentationServiceType, Boolean.FALSE.toString());
+                                                setLabelControlVisible(optionsLabels.autoRegonition, Boolean.FALSE.toString());
 					}
 				}
 			});
 			addFieldList(autoSegmentationChb, optionsLabels.autoSegmentation.name());
+
+
+                        JCheckBox autoRecognitionChb = new JCheckBox();
+			autoRecognitionChb.setSelected(Boolean.TRUE
+					.equals(getInfo().getEnv().getAutoRecognition()));
+			addFieldList(autoRecognitionChb, optionsLabels.autoRegonition.name());
 			
 			JCheckBox auto = new JCheckBox("",true);
 			auto.setEnabled(false);
@@ -552,6 +568,10 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				getInfo().getEnv().setAutoSegmentation(((JCheckBox)cmp).isSelected());
 				fieldEntry.getValue().setVisible(isAdvanced());
 				break;
+                        case autoRegonition:
+				getInfo().getEnv().setAutoRecognition(((JCheckBox)cmp).isSelected());
+				fieldEntry.getValue().setVisible(isAdvanced());
+				break;
 			case thresholdType:
 				ClassifierEnum thresholdType = (ClassifierEnum)getThresholdModel().getSelectedObject();
 				if(thresholdType!=null){
@@ -604,6 +624,9 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		case segmentationServiceType:
 			boolean val = Boolean.valueOf(value);
 			labelControlEntry.setVisible(val);
+			break;
+                case autoRegonition:
+			labelControlEntry.setVisible(Boolean.valueOf(value));
 			break;
 
 		default:

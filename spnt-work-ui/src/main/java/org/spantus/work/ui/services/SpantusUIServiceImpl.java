@@ -78,6 +78,9 @@ public class SpantusUIServiceImpl {
 		if (info.getEnv().getAutoSegmentation() == null) {
 			info.getEnv().setAutoSegmentation(Boolean.TRUE);
 		}
+                if (info.getEnv().getAutoRecognition() == null) {
+			info.getEnv().setAutoSegmentation(Boolean.FALSE);
+		}
 		if (info.getEnv().getVectorChartColorTypes() == null) {
 			info.getEnv().setVectorChartColorTypes(VectorSeriesColorEnum.blackWhite.name());
 		}

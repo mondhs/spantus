@@ -46,6 +46,7 @@ public class RecognizeCmd extends AbsrtactCmd {
         if(results!=null && results.size()>0){
             marker.setLabel(results.get(0).getInfo().getName());
         }
+        info = null;
         getInfoPnl().updateCtx(results);
 	getInfoPnl().setVisible(true);
         return GlobalCommands.sample.reloadMarkers.name();

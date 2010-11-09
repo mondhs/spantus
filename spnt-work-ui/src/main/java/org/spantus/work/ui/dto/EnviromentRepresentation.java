@@ -45,10 +45,13 @@ public class EnviromentRepresentation {
 	private String spantusVersion;
 	
 	private String laf;
+        private Boolean autoRecognition;
 
 	public Dimension getMainWindowDimension() {
 		return mainWindowDimension;
 	}
+
+
 
 	public void setMainWindowDimension(Dimension clientWindow) {
 		this.mainWindowDimension = clientWindow;
@@ -128,5 +131,11 @@ public class EnviromentRepresentation {
 		this.spantusVersion = spantusVersion;
 	}
 
+        public Boolean getAutoRecognition() {
+               return autoRecognition;
+        }
+        public void setAutoRecognition(Boolean autoRecognition) {
+            this.autoRecognition = autoRecognition;
+        }
 
 }

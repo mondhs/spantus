@@ -20,15 +20,20 @@ package org.spantus.externals.recognition.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -45,6 +50,7 @@ import org.spantus.core.beans.I18n;
 import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.ui.SwingUtils;
+import org.spantus.utils.StringUtils;
 
 /**
  *
@@ -53,12 +59,16 @@ import org.spantus.ui.SwingUtils;
 public class RecognizeDetailDialog extends JDialog {
 
     private List<RecognitionResultDetails> results;
-    private Long selctedId = null;
+    
+    private Long selctedSampleId = null;
+    private String selctedFeatureId = null;
+
+
     private JPanel jContentPane = null;
     private JPanel mainPanel = null;
     private JScrollPane resultScrollPane = null;
     private JEditorPane resultPane;
-    private JPanel chartPanel = null;
+    private DtwChartPanel chartPanel = null;
     private I18n i18n;
 
     /**
@@ -120,6 +130,8 @@ public class RecognizeDetailDialog extends JDialog {
             mainPanel = new JPanel();
             mainPanel.setLayout(new BorderLayout());
             mainPanel.add(getResultScrollPane(), BorderLayout.CENTER);
+
+
             mainPanel.add(getChartPanel(), BorderLayout.EAST);
         }
         return mainPanel;
@@ -140,10 +152,11 @@ public class RecognizeDetailDialog extends JDialog {
         return resultScrollPane;
     }
 
-    protected JPanel getChartPanel() {
+    protected DtwChartPanel getChartPanel() {
         if (chartPanel == null) {
-            chartPanel = new JPanel();
+            chartPanel = new DtwChartPanel();
         }
+        
         return chartPanel;
     }
 
@@ -217,13 +230,15 @@ public class RecognizeDetailDialog extends JDialog {
         sb.append("<tr><th>").append("Label").append("</th><th>").append("Total Score").append("</th><th>Feature</th><th>Feature Score</th></tr>");
         for (RecognitionResultDetails recognitionResult : results) {
             StringBuilder subTable = new StringBuilder();
-            int rowsize = 1;
-            if (recognitionResult.getInfo().getId().equals(selctedId)) {
-                rowsize = recognitionResult.getScores().size() + 1;
+            int rowsSize = 1;
+            if (recognitionResult.getInfo().getId().equals(selctedSampleId)) {
+                rowsSize = recognitionResult.getScores().size() + 1;
                 for (Entry<String, Float> scoreEntry : recognitionResult.getScores().entrySet()) {
                     subTable.append("<tr>");
                     subTable.append("<td>").
+                            append(html("<a href=\"{0}\">",  scoreEntry.getKey())).
                             append(getI18n().getMessage(scoreEntry.getKey())).
+                            append("</a>").
                             append("</td><td>").
                             append(getI18n().getDecimalFormat().format(scoreEntry.getValue())).
                             append("</td>");
@@ -233,14 +248,23 @@ public class RecognizeDetailDialog extends JDialog {
             }
 
             sb.append("<tr>");
-            sb.append("<td ROWSPAN=").append(rowsize).append(">").
-                    append("<a href=\"").append(recognitionResult.getInfo().getId()).append("\">").
+            sb.append(html("<td ROWSPAN=\"{0}\">",rowsSize));
+            if(recognitionResult.getInfo().getId().equals(selctedSampleId)){
+                //collapsed +
+                sb.append("&#8863");
+            }else{
+                //expanded -
+                sb.append("&#8862");
+
+            }
+            sb.append(html("<a href=\"{0,number,#}\">",  recognitionResult.getInfo().getId())).
                     append(recognitionResult.getInfo().getName()).append("</a></td>");
-            sb.append("<td ROWSPAN=").append(rowsize).append(">").
+            sb.append(html("<td ROWSPAN=\"{0}\">",rowsSize)).
                     append(getI18n().getDecimalFormat().format(
                             recognitionResult.getDistance()))
                     .append("</td>");
-            if (rowsize == 1) {
+            //how features are generated
+            if (rowsSize == 1) {
                 sb.append("<td>").append("</td>");
                 sb.append("<td>").append("</td>");
             }
@@ -253,10 +277,15 @@ public class RecognizeDetailDialog extends JDialog {
         return sb;
     }
 
+    protected String html(String patter, Object... args){
+        return MessageFormat.format(patter, args);
+    }
+
     @Override
     public void dispose() {
         super.dispose();
-        selctedId = null;
+        selctedFeatureId = null;
+        selctedSampleId = null;
         results = null;
     }
 
@@ -273,23 +302,6 @@ public class RecognizeDetailDialog extends JDialog {
     class RecognitionHyperlinkListener implements HyperlinkListener {
 
         /**
-         * 
-         * @param g
-         * @param points
-         */
-        protected void drawPaths(Graphics2D g, List<Point> points) {
-            int[] xArr = new int[points.size()];
-            int[] yArr = new int[points.size()];
-            int i = 0;
-            for (Point p : points) {
-                xArr[i] = p.x;
-                yArr[i] = p.y;
-                i++;
-            }
-            g.drawPolyline(xArr, yArr, xArr.length);
-        }
-
-        /**
          *
          * @param e
          */
@@ -297,25 +309,42 @@ public class RecognizeDetailDialog extends JDialog {
             if (HyperlinkEvent.EventType.ACTIVATED.equals(e.getEventType())) {
                 StringTokenizer st = new StringTokenizer(e.getDescription(), " ");
                 if (st.hasMoreTokens()) {
-                    String s = st.nextToken();
-                    Long key = Long.valueOf(s);
-                    selctedId = key;
+                    String selectedID = st.nextToken();
+                    //check if number that mean sample id
+                    if(Pattern.matches("^\\d*$", selectedID)){
+                        Long key = Long.valueOf(selectedID);
+                        if(key.equals(selctedSampleId)){
+                            selctedSampleId = null;
+                        }else{
+                            selctedSampleId = key;
+                        }
+                        selctedFeatureId=null;
+                    }else{
+                        //if this not a number lets say is feature id
+                        selctedFeatureId = selectedID;
+                    }
                     updateCtx(results);
+                    if(selctedSampleId == null){
+                        getChartPanel().setRecognitionResultDetails(null);
+                        getChartPanel().repaint();
+                        return;
+                    }
                     for (RecognitionResultDetails recognitionResultDetails : results) {
-                        if (recognitionResultDetails.getInfo().getId().equals(key)) {
-
-                            Graphics2D g = (Graphics2D) getChartPanel().getGraphics();
-                            g.setColor(Color.white);
-                            g.fillRect(0, 0, getChartPanel().getHeight(), getChartPanel().getWidth());
-                            g.setColor(Color.red);
-
-                            for (Entry<String, List<Point>> detail : recognitionResultDetails.getPath().entrySet()) {
-                                drawPaths(g, detail.getValue());
+                        if (recognitionResultDetails.getInfo().getId().equals(selctedSampleId)) {
+                            List<Point> points = recognitionResultDetails.getPath().get(selctedFeatureId);
+                            if(points != null){
+                                //if some feature selected paint only this feature
+                                Map<String, List<Point>> pointMap = new HashMap<String, List<Point>>();
+                                pointMap.put(selectedID, points);
+                                getChartPanel().setRecognitionResultDetails(pointMap);
+                            }else{
+                                //if none feature is selected paint all features
+                                getChartPanel().setRecognitionResultDetails(recognitionResultDetails.getPath());
                             }
-
                             break;
                         }
                     }
+                    getChartPanel().repaint();
                 }
 
             }
