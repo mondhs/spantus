@@ -34,4 +34,8 @@ public class DtwServiceImpl implements DtwService {
         info.resetIterationCount();
         return DTW.dtwRecusion(info);
     }
+
+    public DtwResult calculateInfo(List<Float> targetVector, List<Float> sampleVector) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

@@ -29,7 +29,7 @@ import java.util.List;
  * Created 2008.02.29
  *
  */
-public class FrameVectorValues extends LinkedList<List<Float>>{
+public class FrameVectorValues extends LinkedList<List<Float>> implements IValues{
 	
 	public static float max = Float.MIN_VALUE;
 	public static float min = Float.MAX_VALUE;
@@ -110,7 +110,9 @@ public class FrameVectorValues extends LinkedList<List<Float>>{
 	
 	public FrameVectorValues subList(int fromIndex, int toIndex) {
 		List<List<Float>> lst = super.subList(fromIndex, toIndex);
-		return new FrameVectorValues(lst);
+                FrameVectorValues fv = new FrameVectorValues(lst);
+                fv.setSampleRate(this.getSampleRate());
+		return fv;
 	}
 
 	public float getTime() {
@@ -131,4 +133,13 @@ public class FrameVectorValues extends LinkedList<List<Float>>{
 	public int toIndex(float f){
 		return (int)(f * sampleRate);
 	}
+
+        public int getDmention() {
+            if(size()==0){
+                return 0;
+            }else{
+                return get(0).size();
+            }
+        }
+
 }

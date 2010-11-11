@@ -73,7 +73,6 @@ public class EnergyExtractor extends AbstractExtractor {
 			windowVal += float1;
 		}
 		calculatedValues.add(windowVal/window.size());
-
 		return calculatedValues;
 	}	
 	public String getName() {

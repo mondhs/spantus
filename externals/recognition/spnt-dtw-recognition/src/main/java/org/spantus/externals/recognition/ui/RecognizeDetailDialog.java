@@ -325,7 +325,7 @@ public class RecognizeDetailDialog extends JDialog {
                     }
                     updateCtx(results);
                     if(selctedSampleId == null){
-                        getChartPanel().setRecognitionResultDetails(null);
+                        getChartPanel().setRecognitionResult(null);
                         getChartPanel().repaint();
                         return;
                     }
@@ -334,12 +334,10 @@ public class RecognizeDetailDialog extends JDialog {
                             List<Point> points = recognitionResultDetails.getPath().get(selctedFeatureId);
                             if(points != null){
                                 //if some feature selected paint only this feature
-                                Map<String, List<Point>> pointMap = new HashMap<String, List<Point>>();
-                                pointMap.put(selectedID, points);
-                                getChartPanel().setRecognitionResultDetails(pointMap);
+                                getChartPanel().setRecognitionResult(recognitionResultDetails, selctedFeatureId);
                             }else{
                                 //if none feature is selected paint all features
-                                getChartPanel().setRecognitionResultDetails(recognitionResultDetails.getPath());
+                                getChartPanel().setRecognitionResult(recognitionResultDetails);
                             }
                             break;
                         }

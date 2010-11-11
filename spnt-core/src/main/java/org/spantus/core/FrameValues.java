@@ -32,7 +32,7 @@ import java.util.List;
  * Created 2008.02.20
  *
  */
-public class FrameValues extends LinkedList<Float>{
+public class FrameValues extends LinkedList<Float> implements IValues, List<Float>{
 	
 //	Logger log = Logger.getLogger(FrameValues.class);
 	/**
@@ -118,7 +118,9 @@ public class FrameValues extends LinkedList<Float>{
 		this.sampleRate = sampleRate;
 		milsSamplePeriod = 1000/sampleRate;
 	}
-	
+	public float getTime() {
+		return size()/sampleRate;
+	}
 	public float toTime(int i){
 		return (float)i / (sampleRate);
 	}
@@ -156,5 +158,8 @@ public class FrameValues extends LinkedList<Float>{
 			maxValue = Math.max(maxValue, value);
 		}
 	}
+        public int getDmention() {
+            return 1;
+        }
 
 }

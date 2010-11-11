@@ -60,7 +60,7 @@ public class ExtractorResultBuffer implements IExtractor {
 
 
 	public String getName() {
-		return "BUFFERED_" + extractor.getName();
+		return extractor.getName();
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
@@ -73,14 +73,15 @@ public class ExtractorResultBuffer implements IExtractor {
 
 
 	public FrameValues calculate(Long sample, FrameValues values) {
-		FrameValues outputValues = extractor.calculate(sample, getFrameValues());
-		getOutputValues().addAll(outputValues);
+		FrameValues val = extractor.calculate(sample, getFrameValues());
+		getOutputValues().addAll(val);
 		int i = getOutputValues().size() - getConfig().getBufferSize();
 		while( i > 0 ){
 			getOutputValues().poll();
 			i--;
 		}
-		return outputValues;
+                val.setSampleRate(getExtractorSampleRate());
+		return val;
 	}
 
 	

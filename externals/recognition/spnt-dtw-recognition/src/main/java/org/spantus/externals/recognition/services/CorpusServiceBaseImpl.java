@@ -9,8 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
+import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
+import org.spantus.core.IValues;
 
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.FeatureData;
@@ -37,7 +38,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	private CorpusRepository corpus;
 	
 
-	public RecognitionResult match(Map<String, FrameVectorValues> target) {
+	public RecognitionResult match(Map<String, IValues> target) {
 		RecognitionResult match = findBestMatch(target);
 		return match;
 	}
@@ -47,7 +48,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @param target
          * @return
          */
-	public List<RecognitionResultDetails> findMultipleMatch(Map<String, FrameVectorValues> target) {
+	public List<RecognitionResultDetails> findMultipleMatch(Map<String, IValues> target) {
                 List<RecognitionResultDetails> results = new ArrayList<RecognitionResultDetails>();
 		if(target == null || target.isEmpty()){
                     return results;
@@ -60,18 +61,36 @@ public class CorpusServiceBaseImpl implements CorpusService {
                         log.debug("[findMultipleMatch] sample [{0}]: {1} ", sample.getId(), sample.getName());
                         RecognitionResultDetails result = new RecognitionResultDetails();
                         result.setPath(new HashMap<String, List<Point>>());
+                        result.setPath(new HashMap<String, List<Point>>());
                         result.setScores(new HashMap<String, Float>());
-                        for (Map.Entry<String, FrameVectorValues> entry : target.entrySet()) {
-                            if(sample.getFeatureMap().get(entry.getKey()).getValues() == null){
+                        result.setTargetLegths(new HashMap<String, Float>());
+                        result.setSampleLegths(new HashMap<String, Float>());
+                        for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
+                            if(sample.getFeatureMap().get(targetEntry.getKey()) == null ||
+                                    sample.getFeatureMap().get(targetEntry.getKey()).getValues() == null){
                                 continue;
                             }
-                            String featureName =  entry.getKey();
-                            log.debug("[findMultipleMatch] entry [{0}]: {1} ", featureName, entry.getValue());
-                            log.debug("[findMultipleMatch] sample [{0}]: {1} ", featureName,
-                                    sample.getFeatureMap().get(entry.getKey()).getValues());
+                            String featureName =  targetEntry.getKey();
+                            FeatureData sampleFeatureData = sample.getFeatureMap().get(targetEntry.getKey());
+                            log.debug("[findMultipleMatch] target [{0}]: {1} ", featureName, targetEntry.getValue());
+                            log.debug("[findMultipleMatch] sample [{0}]: {1} ", featureName,sampleFeatureData.getValues());
+                            result.getSampleLegths().put(featureName, 
+                                   (float)Math.round( sampleFeatureData.getValues().getTime()*1000));
+                            result.getTargetLegths().put(featureName, 
+                                    (float)Math.round(targetEntry.getValue().getTime()*1000));
                             result.setInfo(sample);
-                            DtwResult dtwResult = getDtwService().calculateInfoVector(entry.getValue(),
-                                    sample.getFeatureMap().get(entry.getKey()).getValues());
+
+                            DtwResult dtwResult = null;
+                            //yuo know your stuff
+                            if(targetEntry.getValue().getDmention()==1){
+                                dtwResult = (DtwResult) getDtwService().calculateInfo(
+                                    (FrameValues)targetEntry.getValue(),
+                                    (FrameValues)sampleFeatureData.getValues());
+                            }else{
+                                dtwResult = getDtwService().calculateInfoVector(
+                                        (FrameVectorValues)targetEntry.getValue(),
+                                    (FrameVectorValues)sampleFeatureData.getValues());
+                            }
                             result.getPath().put(featureName,dtwResult.getPath());
                             result.getScores().put(featureName, dtwResult.getResult());
                             updateMinMax(featureName, dtwResult.getResult(), minimum, maximum);
@@ -185,10 +204,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @param featureDataMap
          * @return
          */
-        public boolean learn(String label, Map<String, FrameVectorValues> featureDataMap) {
+        public boolean learn(String label, Map<String, IValues> featureDataMap) {
             CorpusEntry entry = new CorpusEntry();
             entry.setName(label);
-            for (Map.Entry<String, FrameVectorValues> entry1 : featureDataMap.entrySet()) {
+            for (Map.Entry<String, IValues> entry1 : featureDataMap.entrySet()) {
                 FeatureData fd = new FeatureData();
                 fd.setName(entry1.getKey());
                 fd.setValues(entry1.getValue());
@@ -203,7 +222,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param target
 	 * @return
 	 */
-	protected RecognitionResult findBestMatch(Map<String, FrameVectorValues> target){
+	protected RecognitionResult findBestMatch(Map<String, IValues> target){
                 List<RecognitionResult> results = new ArrayList<RecognitionResult>();
                 Map<String, Float> minimum = new HashMap<String, Float> ();
                 Map<String, Float> maximum = new HashMap<String, Float> ();
@@ -211,7 +230,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
                     RecognitionResult result = new RecognitionResult();
                     result.setScores(new HashMap<String, Float>());
                     result.setInfo(corpusSample);
-                    for (Map.Entry<String, FrameVectorValues> targetEntry : target.entrySet()) {
+                    for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
                        String featureName =  targetEntry.getKey();
                        RecognitionResult result1 = compare(featureName, targetEntry.getValue(), corpusSample);
                         if (result == null) {
@@ -233,16 +252,27 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @param sample
          * @return
          */
-	protected RecognitionResult compare(String featureName, FrameVectorValues targetValues,
+	protected RecognitionResult compare(String featureName, IValues targetValues,
 			CorpusEntry sample) {
-             if(sample.getFeatureMap().get(featureName) == null){
+             FeatureData fd = sample.getFeatureMap().get(featureName);
+             if(fd == null){
                  return null;
              }
 		RecognitionResult result = new RecognitionResult();
 		result.setInfo(sample);
-		result.setDistance(getDtwService().calculateDistanceVector(targetValues,
-				sample.getFeatureMap().get(featureName).getValues()
-		));
+                if(targetValues.getDmention()==1){
+                     result.setDistance(getDtwService().calculateDistance(
+                            (FrameValues)targetValues,
+                            (FrameValues)fd.getValues()
+                    ));
+                }else{
+                    result.setDistance(getDtwService().calculateDistanceVector(
+                            (FrameVectorValues)targetValues,
+                            (FrameVectorValues)fd.getValues()
+                    ));
+                }
+
+		
 		return result;
 	}
 

@@ -10,10 +10,9 @@ import org.spantus.extractor.ExtractorConfig;
 import org.spantus.extractor.impl.SpectralCentroid;
 import org.spantus.extractor.impl.SpectralEntropy;
 import org.spantus.extractor.impl.SpectralFlux;
-import org.spantus.logger.Logger;
 
 public class SpectralTest {
-	protected Logger log = Logger.getLogger(getClass());
+//	protected Logger log = Logger.getLogger(getClass());
 	FrameValues x;
 	ExtractorConfig config;
 	
@@ -32,7 +31,7 @@ public class SpectralTest {
 		AbstractExtractor extractor = new SpectralCentroid();
 		extractor.setConfig(config);
 		FrameValues y = extractor.calculateWindow(x);
-		log.debug(extractor.getName() + ": " + y);
+//		log.debug(extractor.getName() + ": " + y);
 		Assert.assertEquals(1, y.size());
 	}
 	@Test
@@ -40,7 +39,7 @@ public class SpectralTest {
 		AbstractExtractor extractor = new SpectralEntropy();
 		extractor.setConfig(config);
 		FrameValues y = extractor.calculateWindow(x);
-		log.debug(extractor.getName() + ": " + y);
+//		log.debug(extractor.getName() + ": " + y);
 		Assert.assertEquals(1, y.size());
 	}
 	
@@ -49,7 +48,7 @@ public class SpectralTest {
 		AbstractExtractor extractor = new SpectralFlux();
 		extractor.setConfig(config);
 		FrameValues y = extractor.calculateWindow(x);
-		log.debug(extractor.getName() + ": " + y);
+//		log.debug(extractor.getName() + ": " + y);
 		Assert.assertEquals(1, y.size());
 	}
 }

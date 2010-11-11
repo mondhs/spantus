@@ -3,10 +3,8 @@ package org.spantus.externals.recognition.segment;
 import java.net.URL;
 import java.util.Map;
 
-import org.spantus.core.FrameVectorValues;
-import org.spantus.core.extractor.IExtractorVector;
+import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
-import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.corpus.CorpusMatchListener;
 import org.spantus.externals.recognition.services.CorpusService;
@@ -50,7 +48,7 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 	 * @param marker
 	 */
         protected void findBestMatach(Marker marker) {
-            Map<String, FrameVectorValues> featureData = getExtractorReaderService().findAllVectorValuesForMarker(getReader().getReader(), marker);
+            Map<String, IValues> featureData = getExtractorReaderService().findAllVectorValuesForMarker(getReader().getReader(), marker);
             if (getLearnMode()) {
                 getCorpusService().learn(marker.getLabel(), featureData);
             } else {

@@ -110,14 +110,17 @@ public abstract class AbstractExtractor3D implements IExtractorVector {
 			getWindowValues().poll();
 			windowsIndex--;
 		}
-	
+                calculatedValues.setSampleRate(getExtractorSampleRate());
+
 		
 //		log.debug("[calculate]---");
 		return calculatedValues;
 	}
 
 	protected FrameVectorValues calculateWindow(FrameValues windowedWindow, FrameValues realValues){
-		return calculateWindow(windowedWindow);
+                FrameVectorValues fv = calculateWindow(windowedWindow);
+                fv.setSampleRate(getExtractorSampleRate());
+                return fv;
 	}
 	
 	public int getWinowSize() {

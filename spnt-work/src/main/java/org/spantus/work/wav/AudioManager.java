@@ -34,4 +34,5 @@ import java.net.URL;
 public interface AudioManager {
 	public void play(URL file, Float starts, Float length);
 	public String save(URL file, Float starts, Float length, String pathToSave);
+        public Float findLength(URL file);
 }

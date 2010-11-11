@@ -8,8 +8,6 @@ public class RecognitionResult {
     private Float distance;
     private Map<String, Float> scores;
 
-
-
     public CorpusEntry getInfo() {
         return info;
     }
@@ -34,7 +32,7 @@ public class RecognitionResult {
     public void setScores(Map<String, Float> score) {
         this.scores = score;
     }
-
+   
 
     @Override
     public String toString() {

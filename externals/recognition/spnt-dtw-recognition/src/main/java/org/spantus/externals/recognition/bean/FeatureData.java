@@ -1,10 +1,10 @@
 package org.spantus.externals.recognition.bean;
 
-import org.spantus.core.FrameVectorValues;
+import org.spantus.core.IValues;
 
 public class FeatureData {
 	String name;
-	FrameVectorValues values;
+	IValues values;
 
 	public String getName() {
 		return name;
@@ -12,10 +12,10 @@ public class FeatureData {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public FrameVectorValues getValues() {
+	public IValues getValues() {
 		return values;
 	}
-	public void setValues(FrameVectorValues values) {
+	public void setValues(IValues values) {
 		this.values = values;
 	}
 

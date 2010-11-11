@@ -15,6 +15,9 @@ import java.util.Map;
 public class RecognitionResultDetails extends RecognitionResult {
 
     private Map<String, List<Point>> path;
+    private Map<String, Float> targetLegths;
+    private Map<String, Float> sampleLegths;
+
 
     public void setPath(Map<String, List<Point>> path) {
         this.path = path;
@@ -22,6 +25,21 @@ public class RecognitionResultDetails extends RecognitionResult {
 
     public Map<String, List<Point>> getPath() {
         return path;
+    }
+
+    public Map<String, Float> getTargetLegths() {
+        return targetLegths;
+    }
+
+    public void setTargetLegths(Map<String, Float> targetLegths) {
+        this.targetLegths = targetLegths;
+    }
+    public Map<String, Float> getSampleLegths() {
+        return sampleLegths;
+    }
+
+    public void setSampleLegths(Map<String, Float> sampleLegths) {
+        this.sampleLegths = sampleLegths;
     }
 
 }

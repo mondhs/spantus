@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 import junit.framework.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
+import org.spantus.core.IValues;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.externals.recognition.bean.RecognitionResult;
@@ -48,23 +48,23 @@ public class CorpusServiceBaseImplTest {
         CorpusEntry corpusEntry = new CorpusEntry();
         corpusEntry.setId(1L);
         corpusEntry.setName(VIENAS);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature1, 1F, 1F, 1F, 1F);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 2F, 2F, 2F, 2F);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature1, 0F, 1F, 1F, 1F, 1F);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 0F, 2F, 2F, 2F, 2F);
         corpusEntries.add(corpusEntry);
 
 
         corpusEntry = new CorpusEntry();
         corpusEntry.setId(2L);
         corpusEntry.setName(DU);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature1, 1F, 1F, 1F, 1F);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 4F, 5F, 6F, 7F);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature1, 0F, 1F, 1F, 1F, 1F);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 0F, 4F, 5F, 6F, 7F);
         corpusEntries.add(corpusEntry);
 
         corpusEntry = new CorpusEntry();
         corpusEntry.setId(3L);
         corpusEntry.setName(TRYS);
         addFeatureData(corpusEntry.getFeatureMap(), Feature1, 1F, 2F, 3F, 4F);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 4F, 5F, 6F, 7F);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 4F, 5F, 6F, 7F, 8F);
         corpusEntries.add(corpusEntry);
     }
 
@@ -73,9 +73,9 @@ public class CorpusServiceBaseImplTest {
          //given
         Mockito.when(corpusRepository.findAllEntries()).thenReturn(corpusEntries);
         //when
-        Map<String, FrameVectorValues> target = new HashMap<String, FrameVectorValues>();
+        Map<String, IValues> target = new HashMap<String, IValues>();
         target.put(Feature1, createFrameValues(1F, 2F, 3F, 4F));
-        target.put(Feature2, createFrameValues(4F, 5F, 6F, 7F));
+        target.put(Feature2, createFrameValues(4F, 5F, 6F, 7F, 8F));
         RecognitionResult result = corpusServiceBaseImpl.match(target);
          //then
         Assert.assertEquals(3, result.getInfo().getId().intValue());
@@ -88,18 +88,26 @@ public class CorpusServiceBaseImplTest {
         Mockito.when(corpusRepository.findAllEntries()).thenReturn(corpusEntries);
 
         //when
-        Map<String, FrameVectorValues> target = new HashMap<String, FrameVectorValues>();
+        Map<String, IValues> target = new HashMap<String, IValues>();
         target.put(Feature1, createFrameValues(1F, 2F, 3F, 4F));
         target.put(Feature2, createFrameValues(4F, 5F, 6F, 7F));
         List<RecognitionResultDetails> results = corpusServiceBaseImpl.findMultipleMatch(target);
 
         //then
         Assert.assertEquals("All 3 entries ", 3, results.size());
-        Assert.assertEquals("match", 3, results.get(0).getInfo().getId().longValue());
+        RecognitionResultDetails first = results.get(0);
+        RecognitionResultDetails second = results.get(1);
+        Assert.assertEquals("match", 3, first.getInfo().getId().longValue());
+        Assert.assertEquals("first sample length", 40f, first.getSampleLegths().get(Feature1));
+        Assert.assertEquals("first target length", 40f, first.getTargetLegths().get(Feature1));
+        Assert.assertEquals("second sample length", 50f, second.getSampleLegths().get(Feature2));
+        Assert.assertEquals("second target length", 40f, second.getTargetLegths().get(Feature2));
+
     }
 
     protected FrameVectorValues createFrameValues(Float... args) {
         FrameVectorValues vectors = new FrameVectorValues();
+        vectors.setSampleRate(.1f);
         for (Float f : args) {
             vectors.add(new FrameValues(new Float[]{f, f}));
         }

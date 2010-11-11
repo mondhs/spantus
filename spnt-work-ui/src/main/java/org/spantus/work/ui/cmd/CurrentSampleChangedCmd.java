@@ -22,16 +22,20 @@ package org.spantus.work.ui.cmd;
 
 import java.awt.Toolkit;
 import java.util.Set;
+import org.spantus.core.extractor.IExtractor;
 
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
+import org.spantus.utils.Assert;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.services.WorkInfoManager;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
+import org.spantus.work.wav.AudioManagerFactory;
 
 public class CurrentSampleChangedCmd extends AbsrtactCmd {
 
@@ -80,11 +84,20 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 				error(e.getLocalizedMessage(), ctx);
 				return;
 			}
-			if(reader.getExtractorRegister().size() == 0 && 
-					reader.getExtractorRegister3D().size() == 0){
+			if(reader.getExtractorRegister().isEmpty() &&
+					reader.getExtractorRegister3D().isEmpty()){
 				getExecutionFacade().reload();
 				return;
 			}
+//                        float length = AudioManagerFactory.createAudioManager().findLength(ctx.getProject().getSample().getCurrentFile());
+//                        for (IExtractorVector vals : reader.getExtractorRegister3D()) {
+//                            Assert.isTrue(Math.abs(length - vals.getOutputValues().getTime())<1,
+//                                    "length does not match");
+//                        }
+//                        for (IExtractor vals : reader.getExtractorRegister()) {
+//                            Assert.isTrue(Math.abs(length - vals.getOutputValues().getTime())<1,
+//                                    "length does not match");
+//                        }
 			getExecutionFacade().changedReader(reader);
 			if(Boolean.TRUE.equals(ctx.getEnv().getPopupNotifications())){
 				Toolkit.getDefaultToolkit().beep();

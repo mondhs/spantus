@@ -29,7 +29,7 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
     }
 
     public Set<IExtractor> getExtractorRegister() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return new HashSet<IExtractor>();
     }
 
     public Set<IExtractorVector> getExtractorRegister3D() {

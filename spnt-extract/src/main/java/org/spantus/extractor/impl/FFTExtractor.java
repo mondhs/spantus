@@ -78,9 +78,7 @@ public class FFTExtractor extends AbstractExtractor3D {
 		int upperLimit = (int)(5000*fftOutput.size()/sampleRate);
 		upperLimit = Math.min(upperLimit, fftOutput.size());
 		fftOutput = fftOutput.subList(2, upperLimit);
-		calculatedValues.add(
-				fftOutput
-		);
+		calculatedValues.add(fftOutput);
 		
 		return  calculatedValues;
 	}

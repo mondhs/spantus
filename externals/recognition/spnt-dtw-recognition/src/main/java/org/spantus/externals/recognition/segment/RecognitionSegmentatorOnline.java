@@ -1,12 +1,9 @@
 package org.spantus.externals.recognition.segment;
 
-import java.util.HashMap;
 import java.util.Map;
-import org.spantus.core.FrameVectorValues;
+import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.marker.Marker;
-import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.services.CorpusService;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
@@ -41,7 +38,7 @@ public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 	protected boolean onSegmentEnded(Marker marker) {
 		if(!super.onSegmentEnded(marker)) return false; 
 
-                Map<String, FrameVectorValues> featureData = getExtractorReaderService()
+                Map<String, IValues> featureData = getExtractorReaderService()
                         .findAllVectorValuesForMarker(bufferedReader, marker);
 
                 if (getLearnMode()) {

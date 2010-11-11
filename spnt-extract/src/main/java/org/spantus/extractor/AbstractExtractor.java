@@ -99,12 +99,15 @@ public abstract class AbstractExtractor implements IExtractor {
 			
 			
 		}
+                calculatedValues.setSampleRate(getExtractorSampleRate());
 //		log.debug("[calculate]---");
 		return calculatedValues;
 	}
 
 	protected FrameValues calculateWindow(FrameValues windowedWindow, FrameValues realValues){
-		return calculateWindow(windowedWindow);
+            FrameValues fv = calculateWindow(windowedWindow);
+            fv.setSampleRate(getExtractorSampleRate());
+            return fv;
 	}
 	
 	public int getDimension() {
@@ -123,8 +126,6 @@ public abstract class AbstractExtractor implements IExtractor {
 	}
 	
 	public float getExtractorSampleRate() {
-//		int overlap = (getConfig().getWindowSize() - getConfig().getWindowOverlap());
-//		float calibratePrecent = (1-(overlap/getConfig().getWindowSize()));
 		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()));
 	}
 

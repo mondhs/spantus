@@ -1,7 +1,21 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal
+ 	http://spantus.sourceforge.net
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 package org.spantus.externals.recognition.ui;
 
 import java.awt.Color;
@@ -21,7 +35,8 @@ import org.spantus.externals.recognition.bean.RecognitionResultDetails;
  */
 public class DtwChartPanel extends JPanel {
 
-    private Map<String, List<Point>> pointMap;
+    private RecognitionResultDetails recognitionResult;
+    private String selctedFeatureId;
 
     public DtwChartPanel() {
         setPreferredSize(new Dimension(400, 100));
@@ -39,9 +54,12 @@ public class DtwChartPanel extends JPanel {
 
          g2d.translate(10, 10);
 
-        if(pointMap != null){
+        if(recognitionResult != null){
             g2d.scale(1.9, 1.9);
-            for (Entry<String, List<Point>> detail : pointMap.entrySet()) {
+            for (Entry<String, List<Point>> detail : recognitionResult.getPath().entrySet()) {
+                if(!(selctedFeatureId == null || detail.getKey().equals(selctedFeatureId))){
+                    continue;
+                }
                 List<Point> list = detail.getValue();
                 Point firstPoint = list.get(0);
                 Point lastPoint = list.get(list.size()-1);
@@ -52,6 +70,8 @@ public class DtwChartPanel extends JPanel {
                 g2d.drawRect(firstPoint.x, firstPoint.y, lastPoint.x, lastPoint.y);
                 g2d.rotate(Math.toRadians(90));
                 g2d.drawString(detail.getKey().replace("_EXTRACTOR", ""), firstPoint.x+20, firstPoint.y -20);
+                g2d.drawString("T"+recognitionResult.getTargetLegths().get(detail.getKey()), 0, -lastPoint.y );
+                g2d.drawString("S"+recognitionResult.getSampleLegths().get(detail.getKey()), lastPoint.x, -firstPoint.y );
                 g2d.rotate(Math.toRadians(-90));
                 int height = getHeight();
                 g2d.translate(lastPoint.x+10, .1);
@@ -78,12 +98,17 @@ public class DtwChartPanel extends JPanel {
         }
         g.drawPolyline(xArr, yArr, xArr.length);
     }
-
-    public Map<String, List<Point>> getPointMap() {
-        return pointMap;
+    public RecognitionResultDetails getRecognitionResult() {
+        return recognitionResult;
     }
 
-    public void setRecognitionResultDetails(Map<String, List<Point>> pointMap) {
-        this.pointMap = pointMap;
+    public void setRecognitionResult(RecognitionResultDetails recognitionResult) {
+        this.recognitionResult = recognitionResult;
+        this.selctedFeatureId = null;
+    }
+
+    void setRecognitionResult(RecognitionResultDetails recognitionResultDetails, String selctedFeatureId) {
+        this.recognitionResult = recognitionResult;
+        this.selctedFeatureId = selctedFeatureId;
     }
 }

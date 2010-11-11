@@ -40,7 +40,32 @@ public class DtwServiceJavaMLImpl implements DtwService {
         return info.floatValue();
 
     }
+    /**
+     * 
+     * @param targetVector
+     * @param sampleVector
+     * @return
+     */
+    public DtwResult calculateInfo(List<Float> targetVector, List<Float> sampleVector) {
+        TimeSeries tsTarget = toTimeSeries(targetVector);
+        TimeSeries tsSample = toTimeSeries(sampleVector);
 
+        TimeWarpInfo info = DTW.getWarpInfoBetween(tsSample, tsTarget);
+        DtwResult result =  new DtwResult();
+        result.setResult(Double.valueOf(info.getDistance()).floatValue());
+        for (int i=1; i<info.getPath().size()-1; i++){
+            ColMajorCell cell = info.getPath().get(i);
+            Point point = new Point(cell.getRow(), cell.getCol());
+            result.getPath().add(point);
+        }
+        return result;
+    }
+    /**
+     * 
+     * @param targetMatrix
+     * @param sampleMatrix
+     * @return
+     */
     public DtwResult calculateInfoVector(List<List<Float>> targetMatrix,
             List<List<Float>> sampleMatrix) {
         TimeSeries tsSample = toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
@@ -89,4 +114,5 @@ public class DtwServiceJavaMLImpl implements DtwService {
         }
         return ts;
     }
+
 }

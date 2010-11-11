@@ -32,7 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
-import org.spantus.core.FrameVectorValues;
+import org.spantus.core.IValues;
 
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
@@ -199,7 +199,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		.getMarkerSetHolder().getMarkerSets().get(
 				MarkerSetHolderEnum.word.name());
             for (Marker marker : markerSet.getMarkers()) {
-                Map<String, FrameVectorValues> fvv = getExtractorReaderService().
+                Map<String, IValues> fvv = getExtractorReaderService().
                         findAllVectorValuesForMarker(getReader(), marker);
                 RecognitionResult result = getCorpusService().match(fvv);
                 marker.setLabel(result.getInfo().getName());

@@ -75,7 +75,7 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 	}
 
 	public String getName() {
-		return "BUFFERED_" + extractor.getName();
+		return extractor.getName();
 	}
 
 //	public int getWinowSize() {
@@ -91,6 +91,7 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 			getOutputValues().poll();
 			i--;
 		}
+                outputValues.setSampleRate(getExtractorSampleRate());
 		return outputValues;
 	}
 
