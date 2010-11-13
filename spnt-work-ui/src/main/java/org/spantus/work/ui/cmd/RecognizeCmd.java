@@ -53,7 +53,8 @@ public class RecognizeCmd extends AbsrtactCmd {
 
         Marker marker = ((Marker) getCurrentEvent().getValue());
 
-        Map<String, IValues> fvv = getExtractorReaderService().findAllVectorValuesForMarker(getReader(),
+        Map<String, IValues> fvv = getExtractorReaderService().findAllVectorValuesForMarker(
+                getReader(),
                 marker);
 
         List<RecognitionResultDetails> results = getCorpusService().findMultipleMatch(fvv);
@@ -61,6 +62,8 @@ public class RecognizeCmd extends AbsrtactCmd {
             marker.setLabel(results.get(0).getInfo().getName());
         }
         info = null;
+        getInfoPnl().setTargetWavURL(ctx.getProject().getSample().getCurrentFile());
+        getInfoPnl().setTargetMarker(marker);
         getInfoPnl().updateCtx(results);
 	getInfoPnl().setVisible(true);
         return GlobalCommands.sample.reloadMarkers.name();

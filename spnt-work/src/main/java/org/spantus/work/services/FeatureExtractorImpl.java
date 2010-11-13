@@ -8,7 +8,7 @@ import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
-import org.spantus.core.io.AudioFactory;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -23,7 +23,7 @@ public class FeatureExtractorImpl implements FeatureExtractor{
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e);
 		}
-		AudioReader reader = AudioFactory.createAudioReader();
+		AudioReader reader = AudioReaderFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader.getAudioFormat(urlFile));
 		ExtractorUtils.register(bufferedReader, extractors, null);
 		reader.readSignal(urlFile, bufferedReader);

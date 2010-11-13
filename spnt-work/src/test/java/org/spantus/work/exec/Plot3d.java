@@ -18,7 +18,7 @@ import org.spantus.chart.InteractiveChart;
 import org.spantus.chart.functions.FrameValueMatrixFuncton;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.AudioFactory;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
 import org.spantus.extractor.ExtractorResultBuffer;
 import org.spantus.extractor.ExtractorResultBuffer3D;
@@ -144,7 +144,7 @@ public class Plot3d extends JFrame {
 			 {
 		File wavFile = new File("../data/t_1_2.wav");
 		URL urlFile = wavFile.toURI().toURL();
-		AudioReader reader = AudioFactory.createAudioReader();
+		AudioReader reader = AudioReaderFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader
 				.getAudioFormat(urlFile));
 		

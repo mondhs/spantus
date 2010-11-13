@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.AudioFactory;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -49,7 +49,7 @@ public class SingleThresholdPlot extends JFrame {
 			throws UnsupportedAudioFileException, IOException {
 		File wavFile = new File("../data/t_1_2.wav");
 		URL urlFile = wavFile.toURI().toURL();
-		AudioReader reader = AudioFactory.createAudioReader();
+		AudioReader reader = AudioReaderFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = ExtractorsFactory
 				.createReader(reader.getAudioFormat(urlFile));
 		ExtractorUtils.registerThreshold(bufferedReader, new ExtractorEnum[] {

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.sound.sampled.AudioInputStream;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
@@ -59,12 +60,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
                 //iterate all entires in corpus
                 for (CorpusEntry sample : getCorpus().findAllEntries()) {
                         log.debug("[findMultipleMatch] sample [{0}]: {1} ", sample.getId(), sample.getName());
-                        RecognitionResultDetails result = new RecognitionResultDetails();
-                        result.setPath(new HashMap<String, List<Point>>());
-                        result.setPath(new HashMap<String, List<Point>>());
-                        result.setScores(new HashMap<String, Float>());
-                        result.setTargetLegths(new HashMap<String, Float>());
-                        result.setSampleLegths(new HashMap<String, Float>());
+                        RecognitionResultDetails result = createRecognitionResultDetail();
+
                         for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
                             if(sample.getFeatureMap().get(targetEntry.getKey()) == null ||
                                     sample.getFeatureMap().get(targetEntry.getKey()).getValues() == null){
@@ -96,10 +93,24 @@ public class CorpusServiceBaseImpl implements CorpusService {
                             updateMinMax(featureName, dtwResult.getResult(), minimum, maximum);
                         }
                         result.setDistance(null);
+                        result.setAudioFilePath(getCorpus().findAudioFileById(result.getInfo().getId()));
                         results.add(result);
 		}
                 results = postProcessResult(results, minimum, maximum);
 		return results;
+        }
+        /**
+         * 
+         * @return
+         */
+        private RecognitionResultDetails createRecognitionResultDetail() {
+            RecognitionResultDetails result = new RecognitionResultDetails();
+            result.setPath(new HashMap<String, List<Point>>());
+            result.setPath(new HashMap<String, List<Point>>());
+            result.setScores(new HashMap<String, Float>());
+            result.setTargetLegths(new HashMap<String, Float>());
+            result.setSampleLegths(new HashMap<String, Float>());
+            return result;
         }
         /**
          * Update information with min max for each feature
@@ -196,7 +207,19 @@ public class CorpusServiceBaseImpl implements CorpusService {
             log.debug("[postProcessResult]---");
             return results;
         }
-
+        /**
+         * Same as {@link #learn(java.lang.String, java.util.Map)} only with audio
+         * stream
+         * @param label
+         * @param featureDataMap
+         * @param audioStream
+         * @return
+         */
+        public CorpusEntry learn(String label, Map<String, IValues> featureDataMap, AudioInputStream audioStream) {
+            CorpusEntry corpusEntry = learn(label, featureDataMap);
+            getCorpus().update(corpusEntry, audioStream);
+            return corpusEntry;
+        }
 
         /**
          * learn with multiple features
@@ -204,7 +227,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @param featureDataMap
          * @return
          */
-        public boolean learn(String label, Map<String, IValues> featureDataMap) {
+        public CorpusEntry learn(String label, Map<String, IValues> featureDataMap) {
             CorpusEntry entry = new CorpusEntry();
             entry.setName(label);
             for (Map.Entry<String, IValues> entry1 : featureDataMap.entrySet()) {
@@ -213,9 +236,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
                 fd.setValues(entry1.getValue());
                 entry.getFeatureMap().put(entry1.getKey(), fd);
             }
-
-            getCorpus().save(entry);
-            return true;
+            return getCorpus().save(entry);
         }
 	/**
 	 * find best match in the corpus
@@ -293,7 +314,6 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		}
 		return dtwService;
 	}
-
 
 
 

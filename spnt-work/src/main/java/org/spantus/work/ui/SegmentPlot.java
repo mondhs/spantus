@@ -9,7 +9,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.AudioFactory;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.DefaultAudioReader;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.extractor.ExtractorsFactory;
@@ -27,7 +27,7 @@ public class SegmentPlot extends AbstractSegmentPlot {
 	private static final long serialVersionUID = 2800396484363931372L;
 	
 	Logger log = Logger.getLogger(getClass());
-	DefaultAudioReader audioReader = (DefaultAudioReader)AudioFactory.createAudioReader();
+	DefaultAudioReader audioReader = (DefaultAudioReader)AudioReaderFactory.createAudioReader();
 
 	public static final String DEFAULT_FILE_NAME = 
 		"../data/t_1_2.wav"

@@ -10,7 +10,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import junit.framework.TestCase;
 
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.AudioFactory;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
 import org.spantus.extractor.ExtractorResultBuffer;
 import org.spantus.extractor.ExtractorsFactory;
@@ -22,7 +22,7 @@ public class SignalReadTest extends TestCase {
 			IOException {
 		File wavFile = new File("../data/text1.wav");
 		URL urlFile = wavFile.toURI().toURL();
-		AudioReader reader = AudioFactory.createAudioReader();
+		AudioReader reader = AudioReaderFactory.createAudioReader();
 
 		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader
 				.getAudioFormat(urlFile));

@@ -24,15 +24,17 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
+import org.spantus.externals.recognition.bean.CorpusEntry;
 
 import org.spantus.externals.recognition.bean.CorpusFileEntry;
+import org.spantus.externals.recognition.corpus.CorpusRepository;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
 import org.spantus.work.wav.AudioManagerFactory;
@@ -45,10 +47,10 @@ public class AdminPanel extends JPanel {
 	private JTable table;
 	private Logger log = Logger.getLogger(AdminPanel.class);
 
-	private CorpusRepositoryFileImpl corpusRepository;
+	private CorpusRepository corpusRepository;
 	
 	private JToolBar toolbar;
-	List<CorpusFileEntry> corpusFileEntries;
+	private Collection<? extends CorpusEntry> corpusFileEntries;
 	/**
 	 * @param owner
 	 */
@@ -62,7 +64,7 @@ public class AdminPanel extends JPanel {
 	 * @return void
 	 */
 	private void initialize() {
-		corpusFileEntries = getCorpusRepository().findAllFileEntries();
+		corpusFileEntries = getCorpusRepository().findAllEntries();
 		this.setSize(640, 480);
 //		this.setSize(SpantusWorkSwingUtils.currentWindowSize(0.5, 0.25));
 //		SpantusWorkSwingUtils.centerWindow(this);
@@ -75,7 +77,8 @@ public class AdminPanel extends JPanel {
 	
 	private JTable getTable() {
 		if (table == null) {
-			table = new JTable(new CorpusEntryTableModel(corpusFileEntries));
+			table = new JTable(new CorpusEntryTableModel(
+                                (Collection<CorpusEntry>) corpusFileEntries));
 			table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 //			table.setFillsViewportHeight(true);
 		}
@@ -107,26 +110,31 @@ public class AdminPanel extends JPanel {
 	
 	public void play(){
 		if(getTable().getSelectedRow()>=0){
-			CorpusFileEntry entry = corpusFileEntries.get(getTable().getSelectedRow());
-			if(entry.getWavFile().exists()){
-				try {
-					AudioManagerFactory.createAudioManager().play(entry.getWavFile().toURI().toURL(), null, null);
-				} catch (MalformedURLException e) {
-					log.error(e);
-				}
-			}else{
-				log.debug("File not exists " + entry.getWavFile());
-			}
+                    
+			CorpusEntry entry = (CorpusEntry) corpusFileEntries.
+                                toArray()[getTable().getSelectedRow()];
+                        if(entry instanceof CorpusFileEntry){
+                            CorpusFileEntry fileEntry = (CorpusFileEntry)entry;
+                            if(fileEntry.getWavFile().exists()){
+                                    try {
+                                            AudioManagerFactory.createAudioManager().play(fileEntry.getWavFile().toURI().toURL());
+                                    } catch (MalformedURLException e) {
+                                            log.error(e);
+                                    }
+                            }else{
+                                    log.debug("File not exists " + fileEntry.getWavFile());
+                            }
+                        }
 		}
 	}
 	
 	public void save(){
-		for (CorpusFileEntry entry : corpusFileEntries) {
+		for (CorpusEntry entry : corpusFileEntries) {
 			getCorpusRepository().update(entry);
 		}
 	}
 	
-	public CorpusRepositoryFileImpl getCorpusRepository() {
+	public CorpusRepository getCorpusRepository() {
 		if(corpusRepository == null){
 			corpusRepository = new CorpusRepositoryFileImpl();
 		}

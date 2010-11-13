@@ -19,7 +19,7 @@ import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
-import org.spantus.core.io.AudioFactory;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
 import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorsFactory;
@@ -129,7 +129,7 @@ public class DrawSignalCommon extends JFrame {
 
 	public IExtractorInputReader readSignal(File audioFile)
 			throws UnsupportedAudioFileException, IOException {
-		AudioReader reader = AudioFactory.createAudioReader();
+		AudioReader reader = AudioReaderFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader
 				.getAudioFormat(audioFile.toURI().toURL()).getFormat());
 		ExtractorUtils.register(bufferedReader, ExtractorEnum.values(), null);

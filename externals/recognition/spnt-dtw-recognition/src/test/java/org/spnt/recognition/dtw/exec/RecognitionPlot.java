@@ -29,7 +29,7 @@ import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.AudioFactory;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.DefaultAudioReader;
 import org.spantus.core.io.WraperExtractorReader;
 import org.spantus.core.threshold.AbstractThreshold;
@@ -84,7 +84,7 @@ public class RecognitionPlot extends JFrame {
 //		File wavFile = new File("/home/mindas/src/spnt-code/spnt-work-ui/ijunk_ishjunk/ijunk_isjunk.wav");
 		
 		URL urlFile = wavFile.toURI().toURL();
-		DefaultAudioReader audioReader = (DefaultAudioReader)AudioFactory.createAudioReader();
+		DefaultAudioReader audioReader = (DefaultAudioReader)AudioReaderFactory.createAudioReader();
 		ExtractorInputReader bufferedReader = (ExtractorInputReader)ExtractorsFactory.createReader(audioReader.getAudioFormat(urlFile));
 
 		WraperExtractorReader wraperExtractorReader =  new WraperExtractorReader(bufferedReader,1);

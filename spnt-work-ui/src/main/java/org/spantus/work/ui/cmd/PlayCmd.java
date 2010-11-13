@@ -32,7 +32,8 @@ public class PlayCmd extends AbsrtactCmd {
 			this.dto = new SelectionDto();
 		}
 		try{
-		AudioManagerFactory.createAudioManager().play(ctx.getProject().getSample().getCurrentFile(), 
+		AudioManagerFactory.createAudioManager().play(
+                        ctx.getProject().getSample().getCurrentFile(),
 				dto.getFrom(),
 				dto.getLength()
 				);	

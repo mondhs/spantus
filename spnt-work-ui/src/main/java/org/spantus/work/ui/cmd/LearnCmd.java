@@ -7,6 +7,7 @@ package org.spantus.work.ui.cmd;
 
 import java.util.Map;
 import java.util.Set;
+import javax.sound.sampled.AudioInputStream;
 import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.services.CorpusService;
@@ -14,6 +15,7 @@ import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.wav.AudioManagerFactory;
 
 /**
  *
@@ -35,8 +37,13 @@ public class LearnCmd extends AbsrtactCmd{
         
         Map<String, IValues> fvv = extractorReaderService.findAllVectorValuesForMarker(getReader(),
                 marker);
-        
-        corpusService.learn(marker.getLabel(), fvv);
+        AudioInputStream ais = 
+                AudioManagerFactory.createAudioManager().findInputStream(
+                ctx.getProject().getSample().getCurrentFile(),
+                (marker.getStart().floatValue()/1000),
+                (marker.getLength().floatValue()/1000));
+  
+        corpusService.learn(marker.getLabel(), fvv, ais);
         return null;
     }
 

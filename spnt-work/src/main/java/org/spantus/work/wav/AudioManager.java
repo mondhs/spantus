@@ -21,6 +21,7 @@
 package org.spantus.work.wav;
 
 import java.net.URL;
+import javax.sound.sampled.AudioInputStream;
 /**
  * 
  * 
@@ -33,6 +34,23 @@ import java.net.URL;
  */
 public interface AudioManager {
 	public void play(URL file, Float starts, Float length);
+        public void play(URL file);
+        /**
+         * 
+         * @param file - wav file
+         * @param starts - in mills
+         * @param length - in mills
+         * @param pathToSave
+         * @return
+         */
 	public String save(URL file, Float starts, Float length, String pathToSave);
         public Float findLength(URL file);
+        /**
+         * 
+         * @param file
+         * @param starts - in mills
+         * @param length - in mills
+         * @return
+         */
+        public AudioInputStream findInputStream(URL file, Float starts, Float length);
 }

@@ -32,7 +32,7 @@ import javax.swing.JFrame;
 import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.AudioFactory;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -83,7 +83,7 @@ public class PlotMergedWav extends JFrame {
 		List<URL> urls =new ArrayList<URL>();
 		urls.add(mainSignal);
 		urls.add(noiseSignal);
-		AudioReader reader = AudioFactory.createAudioReader();
+		AudioReader reader = AudioReaderFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = new ExtractorInputReader();
 		ExtractorUtils.register(bufferedReader, new ExtractorEnum[]{
 				ExtractorEnum.SIGNAL_EXTRACTOR,

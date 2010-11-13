@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.logging.Level;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -52,11 +53,13 @@ public class WorkAudioManager implements AudioManager {
          AudioInputStream stream = createInput(file);
          return getTotalTime(stream);
     }
+    
+    
 
-//	public void play(URL fileURL) {
-//		AudioInputStream stream = createInput(fileURL);
-//		play(stream, 0, getTotalTime(stream));
-//	}
+    public void play(URL fileURL) {
+        play(fileURL, null, null);
+    }
+    
     public void play(URL fileURL, Float from, Float length) {
         AudioInputStream stream = createInput(fileURL);
         float fromVal = from == null ? 0 : from.floatValue();
@@ -89,19 +92,40 @@ public class WorkAudioManager implements AudioManager {
     public String save(URL fileURL, Float startsObj, Float lengthObj, String pathToSavePrefered) {
         log.debug("[save] from:{0}; lenght:{1}; pathToSave:{2}", startsObj,
                 lengthObj, pathToSavePrefered);
-        AudioInputStream stream = createInput(fileURL);
+        AudioInputStream ais = findInputStream(fileURL, startsObj, lengthObj);
+        File nextAvaible = FileUtils.findNextAvaibleFile(pathToSavePrefered);
+        try {
+            AudioSystem.write(ais, AudioFileFormat.Type.WAVE, nextAvaible);
+            return nextAvaible.getAbsolutePath();
+
+        } catch (IOException ex) {
+            throw new ProcessingException(ex);
+        }
+       
+
+    }
+    /**
+     * 
+     * @param file
+     * @param starts
+     * @param length
+     * @return
+     */
+    public AudioInputStream findInputStream(URL file, Float starts, Float length) {
+        log.debug("[findInputStream] {2} from:{0}; lenght:{1}; ", starts,
+                length, file);
+        
+        AudioInputStream stream = createInput(file);
 
         Float totalTime = getTotalTime(stream);
-
-        Float starts = startsObj == null ? 0 : startsObj.floatValue();
-        Float length = lengthObj == null ? totalTime : lengthObj.floatValue();
+        
+        starts = starts == null ? 0L : starts;
+        length = length == null ? totalTime : length;
 
 
         double ends = starts + length;
         double adaptedLength = ends > totalTime ? totalTime - starts : length;
         if (starts > totalTime) {
-            log.error("[save] Cannot save due stars:" + starts
-                    + " more than total time:" + totalTime);
             throw new ProcessingException("Cannot save due stars:" + starts
                     + " more than total time:" + totalTime);
         }
@@ -118,13 +142,10 @@ public class WorkAudioManager implements AudioManager {
             stream.read(data);
             InputStream bais = new ByteArrayInputStream(data);
             AudioInputStream ais = new AudioInputStream(bais, stream.getFormat(), data.length / 2);
-            File nextAvaible = FileUtils.findNextAvaibleFile(pathToSavePrefered);
-            AudioSystem.write(ais, AudioFileFormat.Type.WAVE, FileUtils.findNextAvaibleFile(pathToSavePrefered));
-            return nextAvaible.getAbsolutePath();
+            return ais;
         } catch (IOException e) {
             throw new ProcessingException(e);
         }
-
     }
 
     /**
@@ -164,7 +185,13 @@ public class WorkAudioManager implements AudioManager {
      */
     public static final AudioInputStream createAudioInputStream(URL fileURL) throws UnsupportedAudioFileException, IOException {
         AudioInputStream stream = null;
-        stream = AudioSystem.getAudioInputStream(fileURL);
+        try{
+            stream = AudioSystem.getAudioInputStream(fileURL);
+        }catch(NullPointerException npe){
+            //hmmm thats bad is problem in JVM
+            throw new IOException(npe);
+            
+        }
         AudioFormat format = stream.getFormat();
         // log.debug("[createInput]Audio format: " + format);
 
@@ -183,6 +210,8 @@ public class WorkAudioManager implements AudioManager {
         }
         return stream;
     }
+
+
 
     private class Playback extends Thread {
 

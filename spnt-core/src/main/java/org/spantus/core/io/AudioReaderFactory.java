@@ -29,7 +29,7 @@ package org.spantus.core.io;
  * Created 2008.04.11
  *
  */
-public abstract class AudioFactory {
+public abstract class AudioReaderFactory {
 	public static AudioReader createAudioReader(){
 		return new DefaultAudioReader();
 	}

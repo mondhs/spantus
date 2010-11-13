@@ -2,18 +2,9 @@ package org.spantus.externals.recognition.bean;
 
 import java.io.File;
 
-public class CorpusFileEntry{
-	CorpusEntry corpusEntry;
+public class CorpusFileEntry extends CorpusEntry{
 	File entryFile;
 	File wavFile;
-
-	public CorpusEntry getCorpusEntry() {
-		return corpusEntry;
-	}
-
-	public void setCorpusEntry(CorpusEntry corpusEntry) {
-		this.corpusEntry = corpusEntry;
-	}
 
 	public File getEntryFile() {
 		return entryFile;

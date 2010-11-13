@@ -1,23 +1,23 @@
 package org.spantus.externals.recognition.ui;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import org.spantus.externals.recognition.bean.CorpusEntry;
 
-import org.spantus.externals.recognition.bean.CorpusFileEntry;
 
 public class CorpusEntryTableModel implements TableModel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	List<CorpusFileEntry> corpusEntries;
+	Collection<CorpusEntry> corpusEntries;
 	Class<?>[] columnClasses = new Class<?>[]{Long.class,String.class};
 	String[] columnNames = new String[]{"id", "Name"};
 	
 	
-	public CorpusEntryTableModel(List<CorpusFileEntry> corpusEntries) {
+	public CorpusEntryTableModel(Collection<CorpusEntry> corpusEntries) {
 		this.corpusEntries = corpusEntries;
 	}
 
@@ -40,13 +40,13 @@ public class CorpusEntryTableModel implements TableModel {
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Object obj = null;
-		CorpusFileEntry entry = corpusEntries.get(rowIndex);
+		CorpusEntry entry = (CorpusEntry)corpusEntries.toArray()[rowIndex];
 		switch (columnIndex) {
 		case 0:
 			obj = (rowIndex+1);
 			break;
 		case 1:
-			obj = entry.getCorpusEntry().getName();
+			obj = entry.getName();
 			break;
 		default:
 			break;
@@ -60,12 +60,12 @@ public class CorpusEntryTableModel implements TableModel {
 
 
 	public void setValueAt(Object obj, int rowIndex, int columnIndex) {
-		CorpusFileEntry entry = corpusEntries.get(rowIndex);
+		CorpusEntry entry = (CorpusEntry) corpusEntries.toArray()[rowIndex];
 		switch (columnIndex) {
 		case 0:
 			throw new IllegalArgumentException();
 		case 1:
-			entry.getCorpusEntry().setName((String) obj);
+			entry.setName((String) obj);
 			break;
 		default:
 			break;

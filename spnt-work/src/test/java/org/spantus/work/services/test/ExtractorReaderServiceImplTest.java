@@ -50,7 +50,7 @@ public class ExtractorReaderServiceImplTest {
         Assert.assertEquals(3, fvv.size());
         Assert.assertEquals("", 0.003F, fvv.get(extractorName).getTime(),0);
     }
-    @Test @Ignore
+    @Test 
     public void testFindAllVectorValuesForMarker(){
          //given
         IExtractorInputReader reader = new DumyExtractorInputReader();

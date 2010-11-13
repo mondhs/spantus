@@ -17,6 +17,7 @@ public class RecognitionResultDetails extends RecognitionResult {
     private Map<String, List<Point>> path;
     private Map<String, Float> targetLegths;
     private Map<String, Float> sampleLegths;
+    private String audioFilePath;
 
 
     public void setPath(Map<String, List<Point>> path) {
@@ -40,6 +41,14 @@ public class RecognitionResultDetails extends RecognitionResult {
 
     public void setSampleLegths(Map<String, Float> sampleLegths) {
         this.sampleLegths = sampleLegths;
+    }
+
+    public String getAudioFilePath() {
+        return this.audioFilePath;
+    }
+    
+    public void setAudioFilePath(String audioFilePath) {
+        this.audioFilePath = audioFilePath;
     }
 
 }

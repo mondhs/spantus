@@ -60,7 +60,8 @@ public class WorkAudioManagerTest extends TestCase {
 //		AudioInputStream inputStream = WorkAudioManager.createAudioInputStream(inputWavFile.toURI().toURL());
 		Float start = .877F,
 			length = .937F;
-		String filePathSaved = audioManager.save(inputWavFile.toURI().toURL(), start, length, outputWavFilePrefered);
+		String filePathSaved = audioManager.save(inputWavFile.toURI().toURL(), 
+                        start, length, outputWavFilePrefered);
 		File fileSaved = new File(filePathSaved);
 		AudioInputStream outputStream = WorkAudioManager.createAudioInputStream(fileSaved.toURI().toURL());
 		assertEquals("same frame length",41321,outputStream.getFrameLength());

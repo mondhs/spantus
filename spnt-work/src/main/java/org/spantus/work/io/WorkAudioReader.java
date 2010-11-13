@@ -18,7 +18,7 @@ import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.io.AbstractAudioReader;
-import org.spantus.core.io.AudioFactory;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
 import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.exception.ProcessingException;
@@ -33,10 +33,10 @@ public class WorkAudioReader extends AbstractAudioReader{
 	public WorkAudioReader(WorkReadersEnum readerType) {
 		switch (readerType) {
 		case simple: 
-			workReader = AudioFactory.createAudioReader();
+			workReader = AudioReaderFactory.createAudioReader();
 			break;
 		case multiFeature:
-			workReader = AudioFactory.createAudioReader();
+			workReader = AudioReaderFactory.createAudioReader();
 			if(workReader instanceof ProcessedFrameLinstener){
 				((ProcessedFrameLinstener)workReader).registerProcessedFrameLinstener(this);
 			}

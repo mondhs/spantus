@@ -19,18 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 package org.spantus.externals.recognition.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
@@ -47,10 +45,12 @@ import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import org.spantus.core.beans.I18n;
-import org.spantus.externals.recognition.bean.RecognitionResult;
+import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
+import org.spantus.logger.Logger;
 import org.spantus.ui.SwingUtils;
-import org.spantus.utils.StringUtils;
+import org.spantus.work.ui.ImageResourcesEnum;
+import org.spantus.work.wav.AudioManagerFactory;
 
 /**
  *
@@ -63,6 +63,7 @@ public class RecognizeDetailDialog extends JDialog {
     private Long selctedSampleId = null;
     private String selctedFeatureId = null;
 
+    Logger log = Logger.getLogger(RecognizeDetailDialog.class);
 
     private JPanel jContentPane = null;
     private JPanel mainPanel = null;
@@ -70,6 +71,9 @@ public class RecognizeDetailDialog extends JDialog {
     private JEditorPane resultPane;
     private DtwChartPanel chartPanel = null;
     private I18n i18n;
+    private URL targetWavURL;
+    private Marker targetMarker;
+
 
     /**
      * @param owner
@@ -225,9 +229,17 @@ public class RecognizeDetailDialog extends JDialog {
         if (results.isEmpty()) {
             return representEmptyResults();
         }
+        String playImgSrc = getClass().getClassLoader().getResource(ImageResourcesEnum.play.getCode())
+                    .toString();
 
+         sb.
+            append(html("Target: <a href=\"play={0,number,#}\">", -1)).
+            append(html("<img src=\"{0}\" alt=\"play\" border=\"0\" width=\"24\" height=\"24\" />", playImgSrc)).
+            append("</a>");
         sb.append("<table class=\"resultTable\">");
-        sb.append("<tr><th>").append("Label").append("</th><th>").append("Total Score").append("</th><th>Feature</th><th>Feature Score</th></tr>");
+        sb.append("<tr><th>").append("Sample Label").append("</th><th>").
+                append("Total Score").
+                append("</th><th>Feature</th><th>Feature Score</th></tr>");
         for (RecognitionResultDetails recognitionResult : results) {
             StringBuilder subTable = new StringBuilder();
             int rowsSize = 1;
@@ -236,7 +248,7 @@ public class RecognizeDetailDialog extends JDialog {
                 for (Entry<String, Float> scoreEntry : recognitionResult.getScores().entrySet()) {
                     subTable.append("<tr>");
                     subTable.append("<td>").
-                            append(html("<a href=\"{0}\">",  scoreEntry.getKey())).
+                            append(html("<a href=\"show={0}\">",  scoreEntry.getKey())).
                             append(getI18n().getMessage(scoreEntry.getKey())).
                             append("</a>").
                             append("</td><td>").
@@ -249,6 +261,14 @@ public class RecognizeDetailDialog extends JDialog {
 
             sb.append("<tr>");
             sb.append(html("<td ROWSPAN=\"{0}\">",rowsSize));
+            
+
+
+            sb.
+                    append(html("<a href=\"play={0,number,#}\">",recognitionResult.getInfo().getId())).
+                    append(html("<img src=\"{0}\" alt=\"play\" border=\"0\" width=\"24\" height=\"24\" />", playImgSrc)).
+                    append("</a>").
+                    append(html("<a href=\"show={0,number,#}\">",  recognitionResult.getInfo().getId()));
             if(recognitionResult.getInfo().getId().equals(selctedSampleId)){
                 //collapsed +
                 sb.append("&#8863");
@@ -257,12 +277,12 @@ public class RecognizeDetailDialog extends JDialog {
                 sb.append("&#8862");
 
             }
-            sb.append(html("<a href=\"{0,number,#}\">",  recognitionResult.getInfo().getId())).
-                    append(recognitionResult.getInfo().getName()).append("</a></td>");
+            sb.append(recognitionResult.getInfo().getName()).append("</a>").
+                    append("</td>");
             sb.append(html("<td ROWSPAN=\"{0}\">",rowsSize)).
                     append(getI18n().getDecimalFormat().format(
-                            recognitionResult.getDistance()))
-                    .append("</td>");
+                            recognitionResult.getDistance())).
+                     append("</td>");
             //how features are generated
             if (rowsSize == 1) {
                 sb.append("<td>").append("</td>");
@@ -298,6 +318,82 @@ public class RecognizeDetailDialog extends JDialog {
     public void setI18n(I18n i18n) {
         this.i18n = i18n;
     }
+    
+    public Marker getTargetMarker() {
+        return targetMarker;
+    }
+
+    public void setTargetMarker(Marker targetMarker) {
+        this.targetMarker = targetMarker;
+    }
+
+    public URL getTargetWavURL() {
+        return targetWavURL;
+    }
+
+    public void setTargetWavURL(URL targetWavURL) {
+        this.targetWavURL = targetWavURL;
+    }
+    protected void showResult(String id) {
+        //check if number that mean sample id
+        if (Pattern.matches("^\\d*$", id)) {
+            Long key = Long.valueOf(id);
+            if (key.equals(selctedSampleId)) {
+                selctedSampleId = null;
+            } else {
+                selctedSampleId = key;
+            }
+            selctedFeatureId = null;
+        } else {
+            //if this not a number lets say is feature id
+            selctedFeatureId = id;
+        }
+        updateCtx(results);
+        if (selctedSampleId == null) {
+            getChartPanel().setRecognitionResult(null);
+            getChartPanel().repaint();
+            return;
+        }
+        for (RecognitionResultDetails recognitionResultDetails : results) {
+            if (recognitionResultDetails.getInfo().getId().equals(selctedSampleId)) {
+                List<Point> points = recognitionResultDetails.getPath().get(selctedFeatureId);
+                if (points != null) {
+                    //if some feature selected paint only this feature
+                    getChartPanel().setRecognitionResult(recognitionResultDetails, selctedFeatureId);
+                } else {
+                    //if none feature is selected paint all features
+                    getChartPanel().setRecognitionResult(recognitionResultDetails);
+                }
+                break;
+            }
+        }
+        getChartPanel().repaint();
+    }
+
+    protected void playResult(String id){
+        Long lid = Long.valueOf(id);
+        if(lid == -1){
+            AudioManagerFactory.createAudioManager().play(
+                            getTargetWavURL(),  
+                            (getTargetMarker().getStart().floatValue()/1000),
+                            (getTargetMarker().getLength().floatValue()/1000)
+                            );
+        }
+        for (RecognitionResultDetails recognitionResultDetails : results) {
+            if (recognitionResultDetails.getInfo().getId().equals(
+                    lid)) {
+                try {
+                    AudioManagerFactory.createAudioManager().play(
+                            (new File(recognitionResultDetails.getAudioFilePath()
+                            ).toURI().toURL()));
+                    break;
+                } catch (MalformedURLException ex) {
+                    log.error(ex);
+                }
+            }
+        } 
+    }
+
 
     class RecognitionHyperlinkListener implements HyperlinkListener {
 
@@ -310,39 +406,16 @@ public class RecognizeDetailDialog extends JDialog {
                 StringTokenizer st = new StringTokenizer(e.getDescription(), " ");
                 if (st.hasMoreTokens()) {
                     String selectedID = st.nextToken();
-                    //check if number that mean sample id
-                    if(Pattern.matches("^\\d*$", selectedID)){
-                        Long key = Long.valueOf(selectedID);
-                        if(key.equals(selctedSampleId)){
-                            selctedSampleId = null;
-                        }else{
-                            selctedSampleId = key;
-                        }
-                        selctedFeatureId=null;
-                    }else{
-                        //if this not a number lets say is feature id
-                        selctedFeatureId = selectedID;
+                   
+                    if(selectedID.startsWith("play=")){
+                        selectedID = selectedID.replace("play=","");
+                        playResult(selectedID);
+                    }else if(selectedID.startsWith("show=")){
+                        selectedID = selectedID.replace("show=", "");
+                        showResult(selectedID);
                     }
-                    updateCtx(results);
-                    if(selctedSampleId == null){
-                        getChartPanel().setRecognitionResult(null);
-                        getChartPanel().repaint();
-                        return;
-                    }
-                    for (RecognitionResultDetails recognitionResultDetails : results) {
-                        if (recognitionResultDetails.getInfo().getId().equals(selctedSampleId)) {
-                            List<Point> points = recognitionResultDetails.getPath().get(selctedFeatureId);
-                            if(points != null){
-                                //if some feature selected paint only this feature
-                                getChartPanel().setRecognitionResult(recognitionResultDetails, selctedFeatureId);
-                            }else{
-                                //if none feature is selected paint all features
-                                getChartPanel().setRecognitionResult(recognitionResultDetails);
-                            }
-                            break;
-                        }
-                    }
-                    getChartPanel().repaint();
+
+                    
                 }
 
             }

@@ -135,7 +135,7 @@ public class MeanExtractor extends AbstractExtractorModifier {
 	}
 	
 	public String getName() {
-		return ExtractorModifiersEnum.mean.name()+"_" + getExtractor().getName();
+		return getExtractor().getName();
 	}
 	
 	@Override

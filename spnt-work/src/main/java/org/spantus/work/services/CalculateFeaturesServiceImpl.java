@@ -16,7 +16,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.AudioFactory;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
 import org.spantus.core.io.AudioUtil;
 import org.spantus.core.io.ByteListInputStream;
@@ -69,7 +69,7 @@ public class CalculateFeaturesServiceImpl{
 //		List<URL> urls = new ArrayList<URL>(2);
 //		urls.add(mainSignal);
 //		urls.add(noiseSignal);
-		AudioReader merger = AudioFactory.createAudioReader();
+		AudioReader merger = AudioReaderFactory.createAudioReader();
 		ExtractorInputReader bufferedReader = new ExtractorInputReader();
 		ExtractorUtils.register(bufferedReader, new ExtractorEnum[]{
 				ExtractorEnum.ENERGY_EXTRACTOR,
@@ -84,7 +84,7 @@ public class CalculateFeaturesServiceImpl{
 	 * Save processed data
 	 */
 	public void saveMergedWav(List<URL> urls, File saveFile){
-		AudioReader merger = AudioFactory.createAudioReader();
+		AudioReader merger = AudioReaderFactory.createAudioReader();
 		AudioFileFormat fileFormat = merger.getAudioFormat(urls.get(0));
 		int sizeInBits = fileFormat.getFormat().getSampleSizeInBits();
 		FrameValues mergeValues = merge(urls);

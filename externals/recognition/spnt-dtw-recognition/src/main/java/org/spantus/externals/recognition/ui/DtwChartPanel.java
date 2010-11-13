@@ -20,11 +20,11 @@ package org.spantus.externals.recognition.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.JPanel;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
@@ -52,10 +52,12 @@ public class DtwChartPanel extends JPanel {
         g2d.fillRect(0, 0, getHeight(), getWidth());
         g2d.setColor(Color.red);
 
-         g2d.translate(10, 10);
+        FontMetrics fm = g2d.getFontMetrics(g2d.getFont());
+        
+        g2d.translate(20, fm.stringWidth("1000ms"));
 
         if(recognitionResult != null){
-            g2d.scale(1.9, 1.9);
+//            g2d.scale(1.9, 1.9);
             for (Entry<String, List<Point>> detail : recognitionResult.getPath().entrySet()) {
                 if(!(selctedFeatureId == null || detail.getKey().equals(selctedFeatureId))){
                     continue;
@@ -69,12 +71,17 @@ public class DtwChartPanel extends JPanel {
                 g2d.setColor(Color.gray);
                 g2d.drawRect(firstPoint.x, firstPoint.y, lastPoint.x, lastPoint.y);
                 g2d.rotate(Math.toRadians(90));
-                g2d.drawString(detail.getKey().replace("_EXTRACTOR", ""), firstPoint.x+20, firstPoint.y -20);
-                g2d.drawString("T"+recognitionResult.getTargetLegths().get(detail.getKey()), 0, -lastPoint.y );
-                g2d.drawString("S"+recognitionResult.getSampleLegths().get(detail.getKey()), lastPoint.x, -firstPoint.y );
+                String targetLength = ""+Math.round(recognitionResult.getTargetLegths().get(detail.getKey()));
+                String sampleLength = ""+Math.round(recognitionResult.getSampleLegths().get(detail.getKey()));
+                
+                String zero = "0 ms";
+                g2d.drawString(zero, -fm.stringWidth(zero), 0 );
+                g2d.drawString(detail.getKey().replace("_EXTRACTOR", ""), firstPoint.x+10, firstPoint.y -10);
+                g2d.drawString(targetLength, -fm.stringWidth(targetLength), -lastPoint.x );
+                g2d.drawString(sampleLength, lastPoint.y, -firstPoint.x );
                 g2d.rotate(Math.toRadians(-90));
                 int height = getHeight();
-                g2d.translate(lastPoint.x+10, .1);
+                g2d.translate(lastPoint.x+40, .1);
 
             }
         }
@@ -108,7 +115,6 @@ public class DtwChartPanel extends JPanel {
     }
 
     void setRecognitionResult(RecognitionResultDetails recognitionResultDetails, String selctedFeatureId) {
-        this.recognitionResult = recognitionResult;
         this.selctedFeatureId = selctedFeatureId;
     }
 }

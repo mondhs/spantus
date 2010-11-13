@@ -1,10 +1,16 @@
 package org.spantus.externals.recognition.corpus;
 
-import java.util.List;
+import java.util.Collection;
+import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.externals.recognition.bean.CorpusEntry;
 
 public interface CorpusRepository {
-	public List<CorpusEntry> findAllEntries();
-	public void save(CorpusEntry entry);
+	public Collection<CorpusEntry> findAllEntries();
+	public CorpusEntry save(CorpusEntry entry);
+        public CorpusEntry update(CorpusEntry entry);
+        public CorpusEntry update(CorpusEntry corpusEntry, AudioInputStream audioStream);
+        public CorpusEntry delete(CorpusEntry entry);
+        public String findAudioFileById(Long id);
+        
 }
