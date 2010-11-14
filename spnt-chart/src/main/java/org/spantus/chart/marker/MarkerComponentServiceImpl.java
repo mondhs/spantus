@@ -30,7 +30,7 @@ public class MarkerComponentServiceImpl {
 		
 		relable(markerSetComponent.getMarkerSet());
 		
-		markerSetComponent.repaint();
+		markerSetComponent.repaint(30L);
 	}
 	/**
 	 * 
@@ -63,7 +63,7 @@ public class MarkerComponentServiceImpl {
 			markerSetComponent.getMarkerSet().getMarkers().remove(_marker);
 			markerSetComponent.remove(markerComponent);
 			relable(markerSetComponent.getMarkerSet());
-			markerSetComponent.repaint();
+			markerSetComponent.repaint(30L);
 			return _marker;
 	}
 }

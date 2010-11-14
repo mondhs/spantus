@@ -26,6 +26,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -204,22 +205,50 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 	public void mousePressed(MouseEvent e) {
 		Component component = findComponentAt(e.getPoint());
 		if (component instanceof MarkerComponent) {
+                        Component previous = currentMarkerComponent;
 			currentMarkerComponent = ((MarkerComponent) component);
 			currentMarkerComponent.requestFocus();
 			updateCursor(e.getPoint(), currentMarkerComponent);
 			updateDragState(e.getPoint());
+                        currentMarkerComponent.repaint(30L);
+                        if(previous!=null){
+                            previous.repaint(30L);
+                        }
 		}
 //		repaintMarkers();
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		currentMarkerComponent = null;
+//		currentMarkerComponent = null;
 		lastMouseX = null;
 	}
 
 	public void mouseDragged(MouseEvent e) {
 		if (currentMarkerComponent != null) {
 			MarkerComponent markerComponent = currentMarkerComponent;
+                        Rectangle dragBound = markerComponent.getBounds();
+                        
+                        MarkerComponent next = nextMarkers(markerComponent.getMarker());
+                        MarkerComponent previous = previousMarkers(markerComponent.getMarker());
+                        
+//                        dragBound.x -=100;
+//                        dragBound.width +=200;
+//                        dragBound.x = previous.getEndX()>dragBound.x?next.getEndX()+1:dragBound.x;
+                        if(previous != null){
+                            int expand= dragBound.x - previous.getEndX() + 10  ;
+                            dragBound.x -= expand;
+                            dragBound.width +=expand;
+                        }
+                        if(next != null){
+                            dragBound.width = next.getStartX()-10 - dragBound.x;
+                        }
+                        if(!dragBound.contains(e.getPoint())){
+                            log.debug("[mouseDragged] [{2}] {0} in comp:{1};", e.getPoint(),
+                                    currentMarkerComponent.getBounds().contains(e.getPoint()),
+                                    currentMarkerComponent.getBounds().x
+                                    );
+                            return;
+                        }
 			if (lastMouseX == null) {
 				lastMouseX = e.getPoint().x;
 			}
@@ -241,7 +270,7 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 			default:
 				break;
 			}
-			this.repaint();
+			this.repaint(30L);
 			// log.debug("[mouseDragged]Dragged: status:{0}; delta:{1};",
 			// dragStatus, delta);
 		}

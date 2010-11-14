@@ -27,6 +27,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.text.Format;
+import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -224,8 +225,22 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 			index = values.size()-1;
 		}
 		List<Float> value = values.get(index);
-		
-		return value.toString();
+		StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                String separator = "";
+                int i=0;
+                for (Float float1 : value) {
+                    sb.append(separator);
+                    sb.append(MessageFormat.format("{0,number,0.000}", float1));
+                    separator = ";";
+                    if(i==12){
+                        sb.append("\n");
+                        i=0;
+                    }
+                    i++;
+                }
+                sb.append("]");
+		return sb.toString();
 	}
 
 }

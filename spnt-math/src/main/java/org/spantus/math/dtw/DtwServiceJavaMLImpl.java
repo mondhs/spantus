@@ -5,8 +5,15 @@ import java.util.List;
 import net.sf.javaml.distance.fastdtw.dtw.DTW;
 import net.sf.javaml.core.DenseInstance;
 import net.sf.javaml.core.Instance;
+import net.sf.javaml.distance.fastdtw.dtw.ExpandedResWindow;
+import net.sf.javaml.distance.fastdtw.dtw.FullWindow;
+import net.sf.javaml.distance.fastdtw.dtw.LinearWindow;
+import net.sf.javaml.distance.fastdtw.dtw.ParallelogramWindow;
+import net.sf.javaml.distance.fastdtw.dtw.SearchWindow;
 import net.sf.javaml.distance.fastdtw.dtw.TimeWarpInfo;
+import net.sf.javaml.distance.fastdtw.dtw.WarpPath;
 import net.sf.javaml.distance.fastdtw.matrix.ColMajorCell;
+import net.sf.javaml.distance.fastdtw.timeseries.PAA;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
 
@@ -20,13 +27,27 @@ import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
  */
 public class DtwServiceJavaMLImpl implements DtwService {
 
+    private JavaMLSearchWindow searchWindow;
+    private Integer searchRadius;
+    public enum JavaMLSearchWindow{FullWindow, LinearWindow, ParallelogramWindow, ExpandedResWindow}
+
+
+    public static final Integer DEFAULT_RADIUS = 3;
+
     public Float calculateDistance(List<Float> targetVector,
             List<Float> sampleVector) {
 
         TimeSeries tsTarget = toTimeSeries(targetVector);
         TimeSeries tsSample = toTimeSeries(sampleVector);
 
-        Double info = DTW.getWarpDistBetween(tsSample, tsTarget);
+        Double info = null;
+        if(getSearchWindow()==null){
+           info = DTW.getWarpDistBetween(tsTarget, tsSample);
+        }else{
+           SearchWindow searchWindowInstance = createSearchWindow(tsTarget, tsSample);
+           info = DTW.getWarpDistBetween(tsTarget, tsSample,  searchWindowInstance);
+        }
+        
         return info.floatValue();
     }
 
@@ -36,7 +57,13 @@ public class DtwServiceJavaMLImpl implements DtwService {
         TimeSeries tsSample = toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
         TimeSeries tsTarget = toTimeSeries(targetMatrix, targetMatrix.get(0).size());
 
-        Double info = DTW.getWarpDistBetween(tsSample, tsTarget);
+        Double info = null;
+        if(getSearchWindow()==null){
+           info = DTW.getWarpDistBetween(tsTarget, tsSample);
+        }else{
+           SearchWindow searchWindowInstance = createSearchWindow(tsTarget, tsSample);
+           info = DTW.getWarpDistBetween(tsTarget, tsSample, searchWindowInstance);
+        }
         return info.floatValue();
 
     }
@@ -50,7 +77,16 @@ public class DtwServiceJavaMLImpl implements DtwService {
         TimeSeries tsTarget = toTimeSeries(targetVector);
         TimeSeries tsSample = toTimeSeries(sampleVector);
 
-        TimeWarpInfo info = DTW.getWarpInfoBetween(tsSample, tsTarget);
+        TimeWarpInfo info = null;
+        if(getSearchWindow()==null){
+           info = DTW.getWarpInfoBetween(tsTarget, tsSample);
+        }else{
+           SearchWindow searchWindowInstance = createSearchWindow(tsTarget, tsSample);
+           info = DTW.getWarpInfoBetween(tsTarget, tsSample, searchWindowInstance);
+        }
+
+        
+        
         DtwResult result =  new DtwResult();
         result.setResult(Double.valueOf(info.getDistance()).floatValue());
         for (int i=1; i<info.getPath().size()-1; i++){
@@ -70,8 +106,16 @@ public class DtwServiceJavaMLImpl implements DtwService {
             List<List<Float>> sampleMatrix) {
         TimeSeries tsSample = toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
         TimeSeries tsTarget = toTimeSeries(targetMatrix, targetMatrix.get(0).size());
-
-        TimeWarpInfo info = DTW.getWarpInfoBetween(tsSample, tsTarget);
+        
+        TimeWarpInfo info = null;
+        if(getSearchWindow()==null){
+           info = DTW.getWarpInfoBetween(tsTarget, tsSample);
+        }else{
+           SearchWindow searchWindowInstance = createSearchWindow(tsTarget, tsSample);
+           info = DTW.getWarpInfoBetween(tsTarget, tsSample,searchWindowInstance);
+        }
+        
+        
         DtwResult result =  new DtwResult();
         result.setResult(Double.valueOf(info.getDistance()).floatValue());
 
@@ -98,9 +142,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
         return doubles;
     }
 
-    protected TimeSeries toTimeSeries(List<Float> values) {
-        Instance instanceValues = new DenseInstance(toDoubleArray(values));
-        TimeSeries ts = new TimeSeries(instanceValues);
+    public TimeSeries toTimeSeries(List<Float> values) {
+        TimeSeries ts = new TimeSeries(new DenseInstance(toDoubleArray(values)));
         return ts;
     }
 
@@ -114,5 +157,48 @@ public class DtwServiceJavaMLImpl implements DtwService {
         }
         return ts;
     }
+    
+    protected SearchWindow createSearchWindow(TimeSeries tsTarget, TimeSeries tsSample) {
+        Integer radius = getSearchRadius();
+        if(JavaMLSearchWindow.FullWindow.equals(getSearchWindow())){
+            return new FullWindow(tsTarget, tsSample);
+        }else if(JavaMLSearchWindow.LinearWindow.equals(getSearchWindow())){
+            if(radius == null){
+                return new LinearWindow(tsTarget, tsSample);
+            }else{
+                return new LinearWindow(tsTarget, tsSample, radius);
+            }
+        }else if(JavaMLSearchWindow.ParallelogramWindow.equals(getSearchWindow())){
+            if(radius == null){
+                throw new IllegalArgumentException("please set setSearchRadius()");
+            }
+            return new ParallelogramWindow(tsTarget, tsSample,  radius);
+        }else if(JavaMLSearchWindow.ExpandedResWindow.equals(getSearchWindow())){
+            if(radius == null){
+                throw new IllegalArgumentException("please set setSearchRadius()");
+            }
+            PAA tsTargetPAA = new PAA(tsTarget, radius);
+            PAA tsSamplePAA = new PAA(tsSample, radius);
+            WarpPath warpPath = new WarpPath(radius); 
+            return new ExpandedResWindow(tsTarget, tsSample, tsTargetPAA, tsSamplePAA,warpPath,  radius);
+        }
+        return null;
+    }
+
+    public JavaMLSearchWindow getSearchWindow() {
+        return searchWindow;
+    }
+
+    public void setSearchWindow(JavaMLSearchWindow searchWindow) {
+        this.searchWindow = searchWindow;
+    }
+
+    private Integer getSearchRadius() {
+        return this.searchRadius;
+    }
+    public void setSearchRadius(Integer searchRadius) {
+        this.searchRadius = searchRadius;
+    }
+    
 
 }

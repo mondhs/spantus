@@ -189,7 +189,7 @@
                         <dependency>
                                 <groupId>net.sourceforge</groupId>
                                 <artifactId>javaml</artifactId>
-                                <version>0.1.5</version>
+                                <version>0.1.6-spnt</version>
                         </dependency>
 		</dependencies>
 	</dependencyManagement>

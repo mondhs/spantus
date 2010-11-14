@@ -106,9 +106,8 @@ public class MarkeredTimeSeriesMultiChart extends TimeSeriesMultiChart {
 	@Override
 	public void changedZoom(Float from, Float length) {
 		super.changedZoom(from, length);
-		repaint();
 		getMarkerGraph().resetScreenCoord();
-		repaint(); 
+		repaint(30L); 
 	}
 	
 	public void changeSelection(int start, int length){

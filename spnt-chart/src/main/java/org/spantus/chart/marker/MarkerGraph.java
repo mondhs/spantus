@@ -118,19 +118,19 @@ public class MarkerGraph extends JComponent {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g.create();
-		try {
-			if (isOpaque()) {
-				g2.setBackground(getBackground());
-				g2.clearRect(0, 0, getWidth(), getHeight());
-			}
-			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
-			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		} finally {
-			g2.dispose();
-		}
+//		Graphics2D g2 = (Graphics2D) g.create();
+//		try {
+//			if (isOpaque()) {
+//				g2.setBackground(getBackground());
+//				g2.clearRect(0, 0, getWidth(), getHeight());
+//			}
+//			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+//					RenderingHints.VALUE_ANTIALIAS_ON);
+//			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+//					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+//		} finally {
+//			g2.dispose();
+//		}
 //		log.error("paintComponent");
 		
 	}

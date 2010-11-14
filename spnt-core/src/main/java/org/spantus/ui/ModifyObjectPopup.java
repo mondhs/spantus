@@ -204,8 +204,12 @@ public class ModifyObjectPopup implements java.awt.event.ActionListener {
                 - height / 2);
         //esc handling
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
-        _dlg.getRootPane().registerKeyboardAction(this, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        _dlg.getRootPane().registerKeyboardAction(this, "cancel", stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+       
+        stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+        _dlg.getRootPane().registerKeyboardAction(this, "ok", stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
 
+        
         return _dlg;
     }
 
@@ -267,9 +271,14 @@ public class ModifyObjectPopup implements java.awt.event.ActionListener {
             log.debug("OK pressed");
             this.isOK = true;
         } else {
+            if("ok".equals(e.getActionCommand())){
+                this.isOK = true;
+            }else{
             //cancel or escape
-            log.debug("Cancel pressed");
-            this.isOK = false;
+                log.debug("Cancel pressed");
+                this.isOK = false;
+            }
+            
         }
 
         // Hide the dialog

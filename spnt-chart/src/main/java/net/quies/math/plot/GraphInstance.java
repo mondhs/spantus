@@ -49,7 +49,7 @@ GraphInstance(AxisInstance xAxis, AxisInstance yAxis, ArrayList<FunctionInstance
 }
 
 
-void
+public void
 paint(Graphics g) {
 	g = g.create();
 	g.translate(X_OFFSET , Y_OFFSET);

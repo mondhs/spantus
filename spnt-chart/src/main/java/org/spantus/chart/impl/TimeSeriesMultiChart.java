@@ -248,7 +248,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 			graph.setSize(d);
 			log.debug("[repaint]");
 			graph.render();
-			graph.repaint();
+			graph.repaint(30L);
 		}
 	}
 
@@ -345,7 +345,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		graph.setDomain(domain);
 		graph.setZoomSelection(null);
 		graph.render();
-		graph.repaint();
+		graph.repaint(30L);
 	}
 
 	public InteractiveChart getGraph() {

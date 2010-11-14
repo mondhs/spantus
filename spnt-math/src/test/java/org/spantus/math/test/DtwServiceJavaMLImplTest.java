@@ -8,6 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import junit.framework.Assert;
+import net.sf.javaml.distance.fastdtw.dtw.DTW;
+import net.sf.javaml.distance.fastdtw.dtw.ExpandedResWindow;
+import net.sf.javaml.distance.fastdtw.dtw.FullWindow;
+import net.sf.javaml.distance.fastdtw.dtw.LinearWindow;
+import net.sf.javaml.distance.fastdtw.dtw.SearchWindow;
+import net.sf.javaml.distance.fastdtw.dtw.WarpPath;
+import net.sf.javaml.distance.fastdtw.timeseries.PAA;
+import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
@@ -38,16 +46,43 @@ public class DtwServiceJavaMLImplTest {
     @Test
     public void testCalculateDistance() {
         Assert.assertEquals("dinamic time wraping: ", 2f, dtwService.calculateDistance(target, sample1));
-        Assert.assertEquals("dinamic time wraping: ", 31f, dtwService.calculateDistance(target, sample2));
+        Assert.assertEquals("dinamic time wraping: ", 11f, dtwService.calculateDistance(target, sample2));
         Assert.assertEquals("dinamic time wraping: ", 0f, dtwService.calculateDistance(target, sample3));
     }
+    
+    @Test
+    public void testfdtw(){
+        TimeSeries tsTarget = dtwService.toTimeSeries(target);
+        TimeSeries tsSample = dtwService.toTimeSeries(sample3);
+        int radius =0; 
+//        PAA tsTargetPAA = new PAA(tsTarget, radius);
+//        PAA tsSamplePAA = new PAA(tsSample, radius);
+//        WarpPath warpPath = new WarpPath(1); 
+        SearchWindow sw = 
+//                new FullWindow(tsTarget, tsSample);
+                new LinearWindow(tsTarget, tsSample,radius);
+//                new ExpandedResWindow(tsTarget, tsSample, tsTargetPAA, 
+//                tsSamplePAA,warpPath,  radius);
+//                new  ExpandedResWindow(tsTarget, tsSample, radius);
+        double dtwResult = DTW.getWarpDistBetween(tsTarget, tsSample, sw);
+//    
+        dtwService.setSearchRadius(radius);
+        dtwService.setSearchWindow(
+                DtwServiceJavaMLImpl.JavaMLSearchWindow.LinearWindow);
+        Assert.assertEquals("dinamic time wraping: ", dtwResult, 
+                dtwService.calculateDistance(target, sample3).doubleValue());
+        Assert.assertEquals("DTW: ", 2.0, dtwResult);
+        Assert.assertEquals("dinamic time wraping: ", 16f, dtwService.calculateDistance(target, sample2));
+        Assert.assertEquals("dinamic time wraping: ", 2f, dtwService.calculateDistance(target, sample3));
+    }
 
+    
     @Test
     public void testCalculateDistanceVector() {
         List<List<Float>> targetMatrix = createMatrix(target);
         Assert.assertEquals("dinamic time wraping: ", 2f, dtwService.calculateDistanceVector(targetMatrix,
                 createMatrix(sample1)));
-        Assert.assertEquals("dinamic time wraping: ", 31f, dtwService.calculateDistanceVector(targetMatrix,
+        Assert.assertEquals("dinamic time wraping: ", 11f, dtwService.calculateDistanceVector(targetMatrix,
                 createMatrix(sample2)));
         Assert.assertEquals("dinamic time wraping: ", 0f, dtwService.calculateDistanceVector(targetMatrix,
                 createMatrix(sample3)));

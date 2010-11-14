@@ -21,11 +21,15 @@
 package org.spantus.chart;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,8 +90,65 @@ public class InteractiveChart extends InteractiveGraph {
 //			g.fillOval(currentMousePoint.x-2, currentMousePoint.y-2, 4, 4);
 		}
 	}
-	
-	
+        
+//        @Override
+//        public void paint( Graphics g ){
+//            super.paint(g);
+//        }
+        
+        private Dimension size;
+        /**
+         * A back buffer, used to reduce flicker during painting
+         */
+        private BufferedImage backBuffer;
+        @Override
+        public void paintComponent(Graphics g) {
+//            Dimension currentSize = getSize();
+//            if (size == null || backBuffer == null || currentSize.width != size.width || currentSize.height != size.height) {
+//                size = null;
+//            }
+//        }
+//        @Override
+//        public void paint(Graphics g) {
+//            super.paint(g);
+            
+            boolean repaint = false;
+            // Get the size of our component
+            Dimension currentSize = getSize();
+            // See if we need to recompute the rectangles that host our cylon bars
+            if (backBuffer == null ||size == null 
+                    || currentSize.width != size.width || currentSize.height != size.height) {
+                // Update our size
+                size = currentSize;
+                repaint = true; 
+            }
+            Graphics2D g2 = null;
+            if (repaint) {
+                // We have to create a new back buffer if this is the first time we're running, one does not exist
+                // or we've resized...
+                backBuffer = new BufferedImage(currentSize.width, currentSize.height, BufferedImage.TYPE_USHORT_565_RGB);
+                g2 = (Graphics2D) backBuffer.getGraphics();
+                try {
+//                    if (isOpaque()) {
+                        g2.setBackground(getBackground());
+                        g2.clearRect(0, 0, size.width, size.height);
+//                    }
+
+                    GraphInstance instance = getRender();	// thread-safe
+                    if (instance == null) {
+                        return;
+                    }
+
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                    instance.paint(g2);
+                } finally {
+                    //                g2.dispose();
+                }
+            }
+            g.drawImage(backBuffer, 0, 0, size.width, size.height, null);
+        }
+
 	@Override
 	public void mouseMoved(MouseEvent event) {
 		super.mouseMoved(event);
@@ -213,7 +274,7 @@ public class InteractiveChart extends InteractiveGraph {
 		getToolBar().setZoomPending(null);
 		getZoomSelection().apply();
 		notifyZoomListeners(selection.getZoomDomain());
-		repaint(30L);
+		repaint(1030L);
 		
 	}
 	/**

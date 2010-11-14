@@ -112,7 +112,7 @@ getToolTipText(MouseEvent event) {
 	if (render == null)
 		return "";
 	Point mousePosition = event.getPoint();
-	StringBuffer buffer = new StringBuffer(80);
+	StringBuilder buffer = new StringBuilder(80);
 	buffer.append('(');
 	buffer.append(getXAxis().getFormat().format(render.getXValue(mousePosition.x)));
 	buffer.append(", ");

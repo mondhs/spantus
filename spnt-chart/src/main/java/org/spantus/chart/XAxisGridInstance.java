@@ -49,7 +49,8 @@ public void paint(Graphics g) {
 	for (Shape shape : getNailRender()) {
 		Line2D.Float line = (Line2D.Float)((Line2D.Float)shape).clone();
 		line.y1 = 0;
-		line.y2 = new Float(g2.getClip().getBounds2D().getMinY())+10;
+                line.y2 = 10;
+//		line.y2 = new Float(g2.getClip().getBounds2D().getMinY())+10;
 		g2.draw(line);
 		Line2D.Float linePrev = (Line2D.Float)line.clone();
 		linePrev.x1=(line.x1+prevPoint)/2;

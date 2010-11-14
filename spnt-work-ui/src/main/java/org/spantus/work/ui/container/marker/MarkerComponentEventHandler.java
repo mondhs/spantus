@@ -67,6 +67,7 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
 	public void mouseDragged(MouseEvent e){
 		Component currentComponent = ((JComponent)e.getSource()).findComponentAt(e.getPoint());
 		if(currentComponent instanceof MarkerComponent){
+                        log.debug("[mouseDragged] {0}", e.getComponent().toString());
 			getChart().changeSelection(currentComponent.getX(), currentComponent.getWidth());
 		}else if(currentComponent instanceof MarkerSetComponent){
 			for (MarkerComponent markCmp : ((MarkerSetComponent)currentComponent).getMarkerComponents()) {
@@ -89,7 +90,7 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
 			//edit
 			if(currentComponent instanceof MarkerComponent){
 				popup.editMarker((MarkerComponent)currentComponent, (MarkerSetComponent) e.getSource());
-				currentComponent.getParent().repaint();
+				currentComponent.getParent().repaint(30L);
 			//add
 			}else if(currentComponent instanceof MarkerSetComponent){
 				popup.getMarkerComponentService()
@@ -144,6 +145,13 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
          		MarkerComponent markerComponent =(MarkerComponent)e.getComponent();
          		removeMarker(markerComponent);
          	}
+         }else if(10 == keyChar){
+                //edit -enter
+                if(e.getComponent() instanceof MarkerComponent){
+                    MarkerComponent m = ((MarkerComponent)e.getComponent());		
+                    popup.editMarker(m, (MarkerSetComponent) m.getParent());
+                    m.getParent().repaint(30L);
+                }
          }else{
 //         	log.error("[keyTyped] name" + popup.getName()+ "; keyChar" + keyChar);	
          }

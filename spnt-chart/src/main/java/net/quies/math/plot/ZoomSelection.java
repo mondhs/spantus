@@ -119,7 +119,7 @@ apply() {
 				else
 					graph.setDomain(new GraphDomain(B, A));
 				graph.render();
-				graph.repaint();
+				graph.repaint(30L);
 			} finally {
 				graph.setEnabled(true);
 				graph.setCursor(InteractiveGraph.DEFAULT_CURSOR);

@@ -128,7 +128,7 @@ public class MarkerPopupMenu extends JPopupMenu {
 	 */
 	public void editMarker(MarkerComponent markerComponent, MarkerSetComponent markerSetComponent) {
 		edit(markerComponent);
-		markerSetComponent.repaint();
+		markerSetComponent.repaint(30L);
 	}
 	/**
 	 * 
