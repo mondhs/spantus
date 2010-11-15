@@ -57,9 +57,13 @@ public abstract class MathServicesFactory {
 
 	public static DtwService createDtwService(){
 		if(dtwService == null){
-			dtwService = new DtwServiceJavaMLImpl();
+                        DtwServiceJavaMLImpl dtwServiceImpl = new DtwServiceJavaMLImpl();
+
+			dtwService = dtwServiceImpl;
 //			return new DtwServiceImpl();
 		}
+//                dtwService.setSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.LinearWindow);
+//                dtwService.setSearchRadius(3);
 		return dtwService;
 	}
 	

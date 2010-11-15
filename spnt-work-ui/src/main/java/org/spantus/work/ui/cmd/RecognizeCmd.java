@@ -57,7 +57,8 @@ public class RecognizeCmd extends AbsrtactCmd {
                 getReader(),
                 marker);
 
-        List<RecognitionResultDetails> results = getCorpusService().findMultipleMatch(fvv);
+        List<RecognitionResultDetails> results = getCorpusService().findMultipleMatch(
+                fvv);
         if(results!=null && results.size()>0){
             marker.setLabel(results.get(0).getInfo().getName());
         }

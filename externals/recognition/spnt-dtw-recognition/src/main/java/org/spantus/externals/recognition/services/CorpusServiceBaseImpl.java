@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import javax.sound.sampled.AudioInputStream;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
@@ -37,9 +38,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	private DtwService dtwService;
 
 	private CorpusRepository corpus;
-	
 
-	public RecognitionResult match(Map<String, IValues> target) {
+        private Set<String> includeFeatures;
+
+        public RecognitionResult match(Map<String, IValues> target) {
 		RecognitionResult match = findBestMatch(target);
 		return match;
 	}
@@ -155,7 +157,12 @@ public class CorpusServiceBaseImpl implements CorpusService {
                     float max = maximum.get(score.getKey());
                     float delta = max-min;
                     float normalizedScore = (score.getValue() - min)/delta;
-                    normalizedSum += normalizedScore;
+                    if(getIncludeFeatures() == null){
+                        normalizedSum += normalizedScore;
+                    }else if(getIncludeFeatures().contains(score.getKey())){
+                        normalizedSum += normalizedScore;
+                    }
+                    
                     normalizedScores.put(score.getKey(), normalizedScore);
                 }
                 result.setDistance(normalizedSum);
@@ -315,6 +322,12 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		return dtwService;
 	}
 
+        public Set<String> getIncludeFeatures() {
+            return includeFeatures;
+        }
 
+        public void setIncludeFeatures(Set<String> includeFeatures) {
+            this.includeFeatures = includeFeatures;
+        }
 
 }
