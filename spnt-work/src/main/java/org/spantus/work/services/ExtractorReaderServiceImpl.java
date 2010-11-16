@@ -68,6 +68,7 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
 //                continue;
 //            }
             Float fromIndex = (marker.getStart().floatValue() * values.getSampleRate()) / 1000;
+            fromIndex = fromIndex<0?0:fromIndex;
             Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
             FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
             String key = extractor.getName().replace("BUFFERED_", "");
@@ -85,6 +86,7 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
 //                continue;
 //            }
             Float fromIndex = (marker.getStart().floatValue() * values.getSampleRate()) / 1000;
+            fromIndex = fromIndex<0?0:fromIndex;
             Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
             FrameValues fv = values.subList(fromIndex.intValue(), toIndex.intValue());
             String key = extractor.getName().replace("BUFFERED_", "");

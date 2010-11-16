@@ -62,8 +62,6 @@ public abstract class MathServicesFactory {
 			dtwService = dtwServiceImpl;
 //			return new DtwServiceImpl();
 		}
-//                dtwService.setSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.LinearWindow);
-//                dtwService.setSearchRadius(3);
 		return dtwService;
 	}
 	

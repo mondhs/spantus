@@ -157,7 +157,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
                     float max = maximum.get(score.getKey());
                     float delta = max-min;
                     float normalizedScore = (score.getValue() - min)/delta;
-                    if(getIncludeFeatures() == null){
+                    if(getIncludeFeatures() == null || getIncludeFeatures().isEmpty()){
                         normalizedSum += normalizedScore;
                     }else if(getIncludeFeatures().contains(score.getKey())){
                         normalizedSum += normalizedScore;
@@ -321,6 +321,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		}
 		return dtwService;
 	}
+        
+        public void setDtwService(DtwService dtwService) {
+            this.dtwService = dtwService;
+        }
 
         public Set<String> getIncludeFeatures() {
             return includeFeatures;

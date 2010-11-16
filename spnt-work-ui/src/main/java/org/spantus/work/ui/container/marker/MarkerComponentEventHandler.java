@@ -152,6 +152,18 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
                     popup.editMarker(m, (MarkerSetComponent) m.getParent());
                     m.getParent().repaint(30L);
                 }
+         }else if(110 == keyChar){//n
+             if(e.getComponent() instanceof MarkerComponent){
+                 MarkerComponent m = ((MarkerComponent)e.getComponent());
+                 MarkerComponent next = ((MarkerSetComponent)m.getParent()).nextMarkers(m.getMarker());
+                 next.requestFocus();
+             }
+          }else if(112 == keyChar){//p
+             if(e.getComponent() instanceof MarkerComponent){
+                 MarkerComponent m = ((MarkerComponent)e.getComponent());
+                 MarkerComponent previous = ((MarkerSetComponent)m.getParent()).previousMarkers(m.getMarker());
+                 previous.requestFocus();
+             }
          }else{
 //         	log.error("[keyTyped] name" + popup.getName()+ "; keyChar" + keyChar);	
          }

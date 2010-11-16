@@ -18,6 +18,7 @@
 */
 package org.spantus.work.ui.cmd;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,11 +26,13 @@ import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.externals.recognition.services.CorpusService;
-import org.spantus.externals.recognition.services.RecognitionServiceFactory;
+import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.logger.Logger;
 import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
+import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
 
@@ -83,10 +86,22 @@ public class RecognizeCmd extends AbsrtactCmd {
         return info;
     }
     public CorpusService getCorpusService() {
-        if(corpusService == null){
-            corpusService = RecognitionServiceFactory.createCorpusService();
-        }
-        return corpusService;
+        CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
+        DtwServiceJavaMLImpl dtwService = new DtwServiceJavaMLImpl();
+        dtwService.setSearchWindow(null);
+        dtwService.setSearchRadius(30);
+        corpusServiceimpl.setDtwService(dtwService);
+        corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
+            corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.MFCC_EXTRACTOR.name());
+             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.LPC_EXTRACTOR.name());
+             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.FFT_EXTRACTOR.name());
+             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
+        corpusService = corpusServiceimpl;
+        return corpusServiceimpl;
+//        if(corpusService == null){
+//            corpusService = RecognitionServiceFactory.createCorpusService();
+//        }
+//        return corpusService;
     }
 
     public void setCorpusService(CorpusService corpusService) {

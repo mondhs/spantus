@@ -19,9 +19,9 @@ public abstract class RecognitionServiceFactory {
         if(corpusService == null){
             CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
             corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
-            corpusServiceimpl.getIncludeFeatures().add("MFCC_EXTRACTOR");
-             corpusServiceimpl.getIncludeFeatures().add("LPC_EXTRACTOR");
-             corpusServiceimpl.getIncludeFeatures().add("FFT_EXTRACTOR");
+//            corpusServiceimpl.getIncludeFeatures().add("MFCC_EXTRACTOR");
+//             corpusServiceimpl.getIncludeFeatures().add("LPC_EXTRACTOR");
+//             corpusServiceimpl.getIncludeFeatures().add("FFT_EXTRACTOR");
             corpusService = corpusServiceimpl;
         }
         return corpusService;
