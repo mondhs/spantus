@@ -88,8 +88,8 @@ public class RecognizeCmd extends AbsrtactCmd {
     public CorpusService getCorpusService() {
         CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
         DtwServiceJavaMLImpl dtwService = new DtwServiceJavaMLImpl();
-        dtwService.setSearchWindow(null);
-        dtwService.setSearchRadius(30);
+        dtwService.setSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow);
+        dtwService.setSearchRadius(15);
         corpusServiceimpl.setDtwService(dtwService);
         corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.MFCC_EXTRACTOR.name());
