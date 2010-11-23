@@ -102,6 +102,15 @@ public class FrameValues extends LinkedList<Float> implements IValues, List<Floa
 		
 		return floats;
 	}
+        public synchronized double[] toDoubleArray() {
+		Object[] objs = super.toArray();
+		double[] doulbes = new double[objs.length];
+                int i = 0;
+                for (float p : this) {
+                    doulbes[i] = p;
+                }
+		return doulbes;
+	}
 	
 	public static Float[] toArray(List<Float> list) {
 		Object[] objs = list.toArray();
