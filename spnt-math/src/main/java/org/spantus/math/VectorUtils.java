@@ -35,42 +35,53 @@ import java.util.List;
  * 
  */
 public class VectorUtils {
-	/** 
-	 * sum vector values
-	 * @param order
-	 * @return
-	 */
-	public static Float sum(List<Float> vector){
-		float sum = 0f;
-		for (Float float1 : vector) {
-			sum += float1;
-		}
-		return sum;
-	}
-	/**
-	 * 
-	 * @param vector
-	 * @return
-	 */
-	public static Float avg(List<Float> vector){
-		return sum(vector)/vector.size();
-	}
-	public static Float min(List<Float> vector){
-		return Collections.min(vector);
-	}
 
-	public static Integer minArg(Float... args){
-		Integer minIndex = null;
-		Float minValue = Float.MAX_VALUE;
-		int i = 0;
-		for (Float float1 : args) {
-			if(minValue>float1){
-				minValue = float1;
-				minIndex = i;
-			}
-			i++;
-		}
-		return minIndex;
-	}
-	
+    /** 
+     * sum vector values
+     * @param order
+     * @return
+     */
+    public static Float sum(List<Float> vector) {
+        float sum = 0f;
+        for (Float float1 : vector) {
+            sum += float1;
+        }
+        return sum;
+    }
+
+    /**
+     * 
+     * @param vector
+     * @return
+     */
+    public static Float avg(List<Float> vector) {
+        return sum(vector) / vector.size();
+    }
+
+    public static Float min(List<Float> vector) {
+        return Collections.min(vector);
+    }
+
+    public static Integer minArg(Float... args) {
+        Integer minIndex = null;
+        Float minValue = Float.MAX_VALUE;
+        int i = 0;
+        for (Float float1 : args) {
+            if (minValue > float1) {
+                minValue = float1;
+                minIndex = i;
+            }
+            i++;
+        }
+        return minIndex;
+    }
+
+    public static double[] toDoubleArray(List<Float> values) {
+        double[] doubles = new double[values.size()];
+        int i = 0;
+        for (Float float1 : values) {
+            doubles[i++] = float1.doubleValue();
+        }
+        return doubles;
+    }
 }

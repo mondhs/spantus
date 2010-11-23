@@ -8,16 +8,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import junit.framework.Assert;
-import net.sf.javaml.distance.fastdtw.dtw.DTW;
-import net.sf.javaml.distance.fastdtw.dtw.ExpandedResWindow;
-import net.sf.javaml.distance.fastdtw.dtw.FullWindow;
-import net.sf.javaml.distance.fastdtw.dtw.LinearWindow;
-import net.sf.javaml.distance.fastdtw.dtw.SearchWindow;
-import net.sf.javaml.distance.fastdtw.dtw.WarpPath;
-import net.sf.javaml.distance.fastdtw.timeseries.PAA;
-import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
+import net.sf.javaml.core.DenseInstance;
+import net.sf.javaml.core.Instance;
+import net.sf.javaml.distance.fastdtw.Abstraction;
 import org.junit.Before;
 import org.junit.Test;
+import org.spantus.math.VectorUtils;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 
 /**
@@ -30,12 +26,14 @@ public class DtwServiceJavaMLImplTest {
     Float[][] sampleArr = new Float[][]{
         new Float[]{1f, 2f, 1f, 4f, 4f, 5f},
         new Float[]{2f, 3f, 5f, 7f, 8f, 9f},
-        new Float[]{1f, 1f, 2f, 3f, 4f, 5f, 5f}
+        new Float[]{1f, 1f, 2f, 3f, 4f, 5f, 5f},
+        new Float[]{10f, 20f, 30f, 40f, 50f }
     };
     List<Float> target = new ArrayList<Float>(Arrays.asList(targetArr));
     List<Float> sample1 = new ArrayList<Float>(Arrays.asList(sampleArr[0]));
     List<Float> sample2 = new ArrayList<Float>(Arrays.asList(sampleArr[1]));
     List<Float> sample3 = new ArrayList<Float>(Arrays.asList(sampleArr[2]));
+    List<Float> sample4 = new ArrayList<Float>(Arrays.asList(sampleArr[3]));
     private DtwServiceJavaMLImpl dtwService;
 
     @Before
@@ -52,28 +50,32 @@ public class DtwServiceJavaMLImplTest {
     
     @Test
     public void testfdtw(){
-        TimeSeries tsTarget = dtwService.toTimeSeries(target);
-        TimeSeries tsSample = dtwService.toTimeSeries(sample3);
-        int radius =0; 
+        Instance tsTarget = new DenseInstance(VectorUtils.toDoubleArray(target));
+        Instance tsSample = new DenseInstance(VectorUtils.toDoubleArray(sample4));
+        int radius =5; 
+        Abstraction ac=new Abstraction(radius);
+        
+        double dtwResult = ac.measure(tsTarget, tsSample);
+        
 //        PAA tsTargetPAA = new PAA(tsTarget, radius);
 //        PAA tsSamplePAA = new PAA(tsSample, radius);
 //        WarpPath warpPath = new WarpPath(1); 
-        SearchWindow sw = 
-//                new FullWindow(tsTarget, tsSample);
-                new LinearWindow(tsTarget, tsSample,radius);
-//                new ExpandedResWindow(tsTarget, tsSample, tsTargetPAA, 
-//                tsSamplePAA,warpPath,  radius);
-//                new  ExpandedResWindow(tsTarget, tsSample, radius);
-        double dtwResult = DTW.getWarpDistBetween(tsTarget, tsSample, sw);
+//        SearchWindow sw = 
+////                new FullWindow(tsTarget, tsSample);
+//                new LinearWindow(tsTarget, tsSample,radius);
+////                new ExpandedResWindow(tsTarget, tsSample, tsTargetPAA, 
+////                tsSamplePAA,warpPath,  radius);
+////                new  ExpandedResWindow(tsTarget, tsSample, radius);
+//        double dtwResult = DTW.getWarpDistBetween(tsTarget, tsSample, sw);
 //    
         dtwService.setSearchRadius(radius);
         dtwService.setSearchWindow(
-                DtwServiceJavaMLImpl.JavaMLSearchWindow.LinearWindow);
+                DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow);
         Assert.assertEquals("dinamic time wraping: ", dtwResult, 
-                dtwService.calculateDistance(target, sample3).doubleValue());
-        Assert.assertEquals("DTW: ", 2.0, dtwResult);
-        Assert.assertEquals("dinamic time wraping: ", 16f, dtwService.calculateDistance(target, sample2));
-        Assert.assertEquals("dinamic time wraping: ", 2f, dtwService.calculateDistance(target, sample3));
+                dtwService.calculateDistance(target, sample4).doubleValue());
+        Assert.assertEquals("DTW: ", 135.0, dtwResult);
+        Assert.assertEquals("dinamic time wraping: ", 11f, dtwService.calculateDistance(target, sample2));
+        Assert.assertEquals("dinamic time wraping: ", 0f, dtwService.calculateDistance(target, sample3));
     }
 
     
