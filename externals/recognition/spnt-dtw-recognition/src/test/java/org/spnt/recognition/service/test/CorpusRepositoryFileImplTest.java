@@ -70,7 +70,7 @@ public class CorpusRepositoryFileImplTest {
     @Test
     public void testUpdateDeleteWav(){
         //given 
-        File inputWavFile = new File("../../../data/test.wav");
+        File inputWavFile = new File("../../../data/text1.wav");
         URL wavUrl = null;
         try {
             wavUrl = inputWavFile.toURI().toURL();
