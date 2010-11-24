@@ -5,6 +5,7 @@
         <artifactId>spnt-root-pom</artifactId>
         <groupId>org.spantus</groupId>
         <version>0.3-SNAPSHOT</version>
+	<relativePath>../../..</relativePath>
     </parent>
 
     <groupId>org.spantus.externals.recognition</groupId>
