@@ -26,7 +26,10 @@ import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import org.spantus.work.wav.AudioManager;
 import org.spantus.work.wav.AudioManagerFactory;
@@ -37,16 +40,15 @@ import org.spantus.work.wav.WorkAudioManager;
  * @since 0.0.1
  * Created Sep 28, 2009
  */
-public class WorkAudioManagerTest extends TestCase {
+public class WorkAudioManagerTest {
 	
 	AudioManager audioManager;
 	
 	File inputWavFile = null;
 	String outputWavFilePrefered = null;
 	
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		audioManager =AudioManagerFactory.createAudioManager();
 		inputWavFile = new File("../data/t_1_2.wav");
 		outputWavFilePrefered = "./target/test1.wav";
@@ -56,20 +58,36 @@ public class WorkAudioManagerTest extends TestCase {
 	 * @throws UnsupportedAudioFileException
 	 * @throws IOException
 	 */
+        @Test
 	public void testExport() throws UnsupportedAudioFileException, IOException{
-//		AudioInputStream inputStream = WorkAudioManager.createAudioInputStream(inputWavFile.toURI().toURL());
-		Float start = .877F,
+		//given
+                Float start = .877F,
 			length = .937F;
-		String filePathSaved = audioManager.save(inputWavFile.toURI().toURL(), 
+                //when
+                String filePathSaved = audioManager.save(inputWavFile.toURI().toURL(),
                         start, length, outputWavFilePrefered);
 		File fileSaved = new File(filePathSaved);
-		AudioInputStream outputStream = WorkAudioManager.createAudioInputStream(fileSaved.toURI().toURL());
-		assertEquals("same frame length",41321,outputStream.getFrameLength());
-//		inputStream.close();
-		outputStream.close();
+                
+		AudioInputStream outputStream = WorkAudioManager.createAudioInputStream(
+                        fileSaved.toURI().toURL());
+                outputStream.close();
+
+                //then
+                Assert.assertTrue("File ends with " +
+                        filePathSaved + " " + outputWavFilePrefered
+                        ,
+                        filePathSaved.endsWith(outputWavFilePrefered));
+                Assert.assertEquals("same frame length",41321,outputStream.getFrameLength());
+
+	}
+        
+        @After
+        public void cleanup(){
+            File fileSaved = new File(outputWavFilePrefered);
+            //finalize
 		if(fileSaved.exists()){
 			fileSaved.delete();
 		}
-	}
+        }
 	
 }

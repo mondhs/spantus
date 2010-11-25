@@ -35,13 +35,14 @@ public class LearnCmd extends AbsrtactCmd{
 
         Marker marker =((Marker)getCurrentEvent().getValue());
         
-        Map<String, IValues> fvv = extractorReaderService.findAllVectorValuesForMarker(getReader(),
+        Map<String, IValues> fvv = extractorReaderService.findAllVectorValuesForMarker(
+                getReader(),
                 marker);
         AudioInputStream ais = 
-                AudioManagerFactory.createAudioManager().findInputStream(
+                AudioManagerFactory.createAudioManager().findInputStreamInMils(
                 ctx.getProject().getSample().getCurrentFile(),
-                (marker.getStart().floatValue()/1000),
-                (marker.getLength().floatValue()/1000));
+                marker.getStart(),
+                marker.getLength());
   
         corpusService.learn(marker.getLabel(), fvv, ais);
         return null;

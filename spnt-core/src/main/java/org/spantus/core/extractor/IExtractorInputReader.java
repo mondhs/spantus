@@ -34,6 +34,7 @@ public interface IExtractorInputReader extends Cloneable{
 	public void pushValues(Long sample);
 	public Set<IExtractor> getExtractorRegister();
 	public Set<IExtractorVector> getExtractorRegister3D();
+        public Set<IGeneralExtractor> getGeneralExtractor();
 	public void registerExtractor(IGeneralExtractor extractor);
 	public void setConfig(IExtractorConfig config);
 	public IExtractorConfig getConfig();

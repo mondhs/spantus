@@ -26,6 +26,14 @@ public class Mpeg7ExtractorInputReader implements IExtractorInputReader {
 		return vectorExtractors;
 	}
 
+        public Set<IGeneralExtractor> getGeneralExtractor() {
+            Set<IGeneralExtractor> generalSet = new HashSet<IGeneralExtractor>();
+            generalSet.addAll(getExtractorRegister());
+            generalSet.addAll(getExtractorRegister3D());
+            return generalSet;
+        }
+
+        
 	
 	public void pushValues(Long sample) {
 		throw new RuntimeException("Should not be used");

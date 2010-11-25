@@ -25,7 +25,9 @@ import org.spantus.segment.online.OnlineSegmentaitonService;
 public class OnlineSegmentationExp extends DecisionSegmentationExp {
 
 	private ISegmentatorService simpleSegmentator;
+        private ISegmentatorService onlineSegmentator;
 
+        
 	private SimpleDecisionSegmentatorServiceImpl decisionSegmentator;
 
 	protected String getGeneratePath() {
@@ -261,10 +263,10 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 	}
 
 	public ISegmentatorService getOnlineSegmentator() {
-		if (simpleSegmentator == null) {
-			simpleSegmentator = new OnlineSegmentaitonService();
+		if (onlineSegmentator == null) {
+			onlineSegmentator = new OnlineSegmentaitonService();
 		}
-		return simpleSegmentator;
+		return onlineSegmentator;
 	}
 
 	public static void main(final String[] args) {

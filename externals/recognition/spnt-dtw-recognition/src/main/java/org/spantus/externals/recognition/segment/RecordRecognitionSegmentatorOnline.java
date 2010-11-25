@@ -12,15 +12,12 @@ import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.work.services.ExtractorReaderService;
-import org.spantus.work.services.FeatureExtractor;
-import org.spantus.work.services.FeatureExtractorImpl;
 import org.spantus.work.services.WorkServiceFactory;
 
 public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 	
 	private CorpusService corpusService;
 	
-	private FeatureExtractorImpl featureExtractor;
 
         private ExtractorReaderService extractorReaderService;
 	
@@ -84,12 +81,7 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 		}
 		return corpusService;
 	}
-	public FeatureExtractor getFeatureExtractor() {
-		if (featureExtractor == null) {
-			featureExtractor = new FeatureExtractorImpl();
-		}
-		return featureExtractor;
-	}
+	
 	
 	public Boolean getLearnMode() {
 		return learnMode;

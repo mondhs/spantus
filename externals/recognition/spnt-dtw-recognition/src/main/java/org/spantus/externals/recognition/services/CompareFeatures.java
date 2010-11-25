@@ -28,8 +28,8 @@ import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.services.MathServicesFactory;
-import org.spantus.work.services.FeatureExtractor;
-import org.spantus.work.services.FeatureExtractorImpl;
+import org.spantus.work.services.ExtractorReaderService;
+import org.spantus.work.services.ExtractorReaderServiceImpl;
 import org.spantus.work.services.ReaderDao;
 import org.spantus.work.services.WorkServiceFactory;
 
@@ -38,14 +38,14 @@ public class CompareFeatures {
 	private String workingExtractor = "LPC";
 	private DtwService dtwService;
 	private ReaderDao readerDao;
-	private FeatureExtractor featureExtractor;
+	private ExtractorReaderService extractorReaderService;
 
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(getClass());
 
 	public Float compareValues(FrameVectorValues targetValues, File sampleFile) {
 		IExtractorInputReader sampleReader = getExtractorInputReader(sampleFile);
-		IGeneralExtractor sampleExtractor = getFeatureExtractor()
+		IGeneralExtractor sampleExtractor = getExtractorReaderService()
 				.findExtractorByName(getWorkingExtractor(), sampleReader);
 		Float distance = calculateDistance(targetValues, sampleExtractor);
 		return distance;
@@ -60,9 +60,9 @@ public class CompareFeatures {
 	public Float compareValues(File targetFile, File sampleFile) {
 		IExtractorInputReader sampleReader = getExtractorInputReader(sampleFile);
 		IExtractorInputReader targetReader = getExtractorInputReader(targetFile);
-		IGeneralExtractor sampleExtractor = getFeatureExtractor()
+		IGeneralExtractor sampleExtractor = getExtractorReaderService()
 				.findExtractorByName(getWorkingExtractor(), sampleReader);
-		IGeneralExtractor targetExtractor = getFeatureExtractor()
+		IGeneralExtractor targetExtractor = getExtractorReaderService()
 				.findExtractorByName(getWorkingExtractor(), targetReader);
 		;
 
@@ -121,11 +121,11 @@ public class CompareFeatures {
 
 	}
 
-	public FeatureExtractor getFeatureExtractor() {
-		if (featureExtractor == null) {
-			featureExtractor = new FeatureExtractorImpl();
+	public ExtractorReaderService getExtractorReaderService() {
+		if (extractorReaderService == null) {
+			extractorReaderService = new ExtractorReaderServiceImpl();
 		}
-		return featureExtractor;
+		return extractorReaderService;
 	}
 
 	public DtwService getDtwService() {

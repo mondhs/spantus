@@ -39,6 +39,11 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
         return extractorRegister3D;
     }
 
+    public Set<IGeneralExtractor> getGeneralExtractor() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    
     public void registerExtractor(IGeneralExtractor extractor) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

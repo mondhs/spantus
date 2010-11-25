@@ -147,6 +147,20 @@ public class WorkAudioManager implements AudioManager {
             throw new ProcessingException(e);
         }
     }
+    /**
+     * 
+     * @param file
+     * @param starts
+     * @param length
+     * @return
+     */
+    public AudioInputStream findInputStreamInMils(URL file, Long starts, Long length) {
+        return findInputStream(
+                file,
+                Float.valueOf(starts.floatValue()/1000),
+                Float.valueOf(length.floatValue()/1000));
+    }
+
 
     /**
      *

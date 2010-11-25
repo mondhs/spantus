@@ -25,9 +25,5 @@
                	<scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>xstream</groupId>
-            <artifactId>xstream</artifactId>
-        </dependency>
     </dependencies>
 </project>

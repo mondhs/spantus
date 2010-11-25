@@ -1,0 +1,48 @@
+package org.spantus.work.test;
+
+import java.io.File;
+
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.spantus.core.extractor.IExtractorInputReader;
+
+
+import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.work.services.ExtractorReaderServiceImpl;
+
+public class ExtractorReaderServiceImplTest {
+
+        private ExtractorReaderServiceImpl extractor;
+    
+        @Before
+        public void setup(){
+            extractor = new ExtractorReaderServiceImpl();
+        }
+    
+        @Test
+	public void testReadSignal(){
+                //given
+		File wavFile = new File("../data/t_1_2.wav");
+                
+                //when
+		IExtractorInputReader reader = extractor.createReaderAndSave(new ExtractorEnum[] { 
+				ExtractorEnum.ENERGY_EXTRACTOR,
+//				ExtractorEnum.AUTOCORRELATION_EXTRACTOR,
+//				ExtractorEnum.CROSSING_ZERO_EXTRACTOR,
+//				ExtractorEnum.ENVELOPE_EXTRACTOR,
+//				ExtractorEnum.LOG_ATTACK_TIME,
+//				ExtractorEnum.LOUDNESS_EXTRACTOR,
+//				ExtractorEnum.LPC_EXTRACTOR,
+//				ExtractorEnum.MFCC_EXTRACTOR,
+//				ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
+//				ExtractorEnum.SMOOTHED_ENERGY_EXTRACTOR,
+//				ExtractorEnum.SPECTRAL_CENTROID_EXTRACTOR,
+//				ExtractorEnum.SPECTRAL_ENTROPY_EXTRACTOR,
+//				ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
+		}, wavFile);
+                
+                //then
+                Assert.assertEquals(1, reader.getExtractorRegister().size());
+	}
+}

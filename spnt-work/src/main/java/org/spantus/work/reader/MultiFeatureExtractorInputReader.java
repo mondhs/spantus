@@ -65,6 +65,15 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 		return extr;
 	}
 
+        public Set<IGeneralExtractor> getGeneralExtractor() {
+            Set<IGeneralExtractor> extr = new LinkedHashSet<IGeneralExtractor>();
+            extr.addAll(getMpeg7Reader().getGeneralExtractor());
+            extr.addAll(getDefaultReader().getGeneralExtractor());
+            return extr;
+        }
+        
+        
+
 	
 	public void pushValues(Long sample) {
 		getDefaultReader().pushValues(sample);

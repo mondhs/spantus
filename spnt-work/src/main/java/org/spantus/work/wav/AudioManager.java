@@ -46,11 +46,19 @@ public interface AudioManager {
 	public String save(URL file, Float starts, Float length, String pathToSave);
         public Float findLength(URL file);
         /**
-         * 
+         * Finds stream in seconds
          * @param file
          * @param starts - in mills
          * @param length - in mills
          * @return
          */
         public AudioInputStream findInputStream(URL file, Float starts, Float length);
+        /**
+         * Finds stream in mils
+         * @param file
+         * @param starts
+         * @param length
+         * @return
+         */
+        public AudioInputStream findInputStreamInMils(URL file, Long starts, Long length);
 }

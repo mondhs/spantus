@@ -11,8 +11,7 @@ import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.work.services.ExtractorReaderService;
-import org.spantus.work.services.FeatureExtractor;
-import org.spantus.work.services.FeatureExtractorImpl;
+import org.spantus.work.services.ExtractorReaderServiceImpl;
 import org.spantus.work.services.WorkServiceFactory;
 
 public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
@@ -20,9 +19,8 @@ public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 	private ExtractorInputReader bufferedReader;
 
 	
-	private FeatureExtractor featureExtractor;
+	private ExtractorReaderService extractorReaderService;
 
-        private ExtractorReaderService extractorReaderService;
 	
 	private CorpusService corpusService;
 	
@@ -55,13 +53,6 @@ public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 		return true;
 	}
 
-	public FeatureExtractor getFeatureExtractor() {
-		if (featureExtractor == null) {
-			featureExtractor = new FeatureExtractorImpl();
-		}
-		return featureExtractor;
-	}
-	
 	public IExtractorInputReader getBufferedReader() {
 		return bufferedReader;
 	}

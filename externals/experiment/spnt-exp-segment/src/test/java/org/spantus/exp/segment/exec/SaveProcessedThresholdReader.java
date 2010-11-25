@@ -47,7 +47,7 @@ public class SaveProcessedThresholdReader {
 	public static void main(String[] args) {
 		SaveProcessedThresholdReader ptr = new SaveProcessedThresholdReader();
 		ptr.process(
-				"../../../data/t_1_2.sspnt.xml",
+				"../../../data/t_1_2.wav.sspnt.xml",
 				"processed_t_1_2"
 		);
 		

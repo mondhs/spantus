@@ -49,7 +49,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 
 	Set<IExtractor> extractorRegister = new LinkedHashSet<IExtractor>();
 	Set<IExtractorVector> extractorRegister3D = new LinkedHashSet<IExtractorVector>();
-	Set<IGeneralExtractor> generalExtractorRegister = new LinkedHashSet<IGeneralExtractor>();
+	Set<IGeneralExtractor> generalExtractor = new LinkedHashSet<IGeneralExtractor>();
 
 	public DefaultExtractorInputReader() {
 		initValues();
@@ -72,12 +72,12 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 	public void registerExtractor(IExtractor extractor) {
 		extractor.setConfig(getConfig());
 		extractorRegister.add(extractor);
-		generalExtractorRegister.add(extractor);
+		generalExtractor.add(extractor);
 	}
 	public void registerExtractor(IExtractorVector extractor) {
 		extractor.setConfig(getConfig());
 		extractorRegister3D.add(extractor);
-		generalExtractorRegister.add(extractor);
+		generalExtractor.add(extractor);
 	}
 	
 	
@@ -92,7 +92,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 
 	
 	public void pushValues(Long sample) {
-		for (IGeneralExtractor element : generalExtractorRegister) {
+		for (IGeneralExtractor element : generalExtractor) {
 			element.putValues(sample, values);
 			element.flush();
 		}
@@ -103,7 +103,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 	 * @param ivalues
 	 */
 	protected void pushValues(Long sample, FrameValues ivalues) {
-		for (IGeneralExtractor element : generalExtractorRegister) {
+		for (IGeneralExtractor element : generalExtractor) {
 			element.putValues(sample, ivalues);
 		}
 	}
@@ -115,6 +115,15 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 		return extractorRegister3D;
 	}
 
+        public Set<IGeneralExtractor> getGeneralExtractor() {
+            return generalExtractor;
+        }
+
+        public void setGeneralExtractor(Set<IGeneralExtractor> generalExtractor) {
+            this.generalExtractor = generalExtractor;
+        }
+
+        
 	public IExtractorConfig getConfig() {
 		if(config == null){
 			config = new DefaultExtractorConfig();
@@ -124,7 +133,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 
 	public void setConfig(IExtractorConfig config) {
 		this.config = config;
-		for (IGeneralExtractor iExtr : generalExtractorRegister) {
+		for (IGeneralExtractor iExtr : generalExtractor) {
 			iExtr.setConfig(config);
 		}
 	}

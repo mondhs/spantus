@@ -26,10 +26,13 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
 
 	
 	public Set<IExtractorVector> getExtractorRegister3D() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+        public Set<IGeneralExtractor> getGeneralExtractor() {
+            return null;
+        }
+        
 	
 	public void pushValues(Long sample) {
 		log.debug("pushValues");
