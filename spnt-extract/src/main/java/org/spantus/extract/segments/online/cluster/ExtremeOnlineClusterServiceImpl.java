@@ -26,14 +26,12 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 			return "0";
 		}
 		if(ctx.segmentStats.get(1).getArea() == ctx.segmentStats.get(0).getArea()){
-			log.error("same min max");
 			return "1";
 		}
 
 		Double delta = ctx.segmentStats.get(1).getArea() - ctx.segmentStats.get(0).getArea();
 		area = (area-ctx.segmentStats.get(0).getArea())/delta;
 		if(area <= 0 ){
-			log.error("area neagative or 0");
 			return "1";
 		}
 //		area = delta == 0?0:area;

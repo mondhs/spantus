@@ -43,15 +43,16 @@ import org.spantus.core.wav.AudioManagerFactory;
  *
  * @author mondhs
  */
-public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor{
-    
-    private static final Logger log = Logger.getLogger(CorpusEntryExtractorFileImpl.class);
+public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 
+    private static final Logger log = Logger.getLogger(CorpusEntryExtractorFileImpl.class);
     private ExtractorReaderService readerService;
     private ExtractorEnum[] extractors;
     private ISegmentatorService segmentator;
     private CorpusService corpusService;
     private AudioManager audioManager;
+    private OnlineDecisionSegmentatorParam segmentionParam;
+
     /**
      * Find segments(markers), then put them to corpus
      * @param filePath
@@ -59,43 +60,55 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor{
      */
     public List<CorpusEntry> extractInMemory(File filePath) {
         Assert.isTrue(filePath.exists(), "file not exists" + filePath);
-        URL fileUrl = null;
-        try {
-            fileUrl = filePath.toURI().toURL();
-        } catch (MalformedURLException ex) {
-            throw new ProcessingException(ex);
-        }
+        URL fileUrl = toUrl(filePath);
         List<CorpusEntry> result = new ArrayList<CorpusEntry>();
         //find markers
         IExtractorInputReader reader = getReaderService().createReaderWithClassifier(
                 getExtractors(), filePath);
+
         MarkerSet words = findMarkers(reader);
-        
+
         //process markers
         Assert.isTrue(words != null);
         for (Marker marker : words.getMarkers()) {
-            Map<String, IValues> fvv = getReaderService().findAllVectorValuesForMarker(
-                    reader,
-                    marker);
-            log.debug("[extractInMemory] {0}", marker);
-            AudioInputStream ais =
-                    AudioManagerFactory.createAudioManager().findInputStreamInMils(
-                    fileUrl,
-                    marker.getStart(),
-                    marker.getLength());
-
-            CorpusEntry corpusEntry =  getCorpusService().learn(marker.getLabel(), fvv, ais);
+            CorpusEntry corpusEntry = learn(fileUrl, marker, reader);
             result.add(corpusEntry);
         }
 
         return result;
     }
+
+    /**
+     * 
+     * @param filePath
+     * @return
+     */
+    public int extractAndSave(File filePath) {
+         Assert.isTrue(filePath.exists(), "file not exists" + filePath);
+        URL fileUrl = toUrl(filePath);
+        int result = 0;
+        //find markers
+        IExtractorInputReader reader = getReaderService().createReaderWithClassifier(
+                getExtractors(), filePath);
+        MarkerSet words = findMarkers(reader);
+
+        //process markers
+        Assert.isTrue(words != null);
+        for (Marker marker : words.getMarkers()) {
+            marker.setLabel(filePath.getName()+"-"+result);
+            learn(fileUrl, marker, reader);
+            result++;
+        }
+
+        return result;
+    }
+
     /**
      * Find markers
      * @param filePath
      * @return
      */
-    protected MarkerSet findMarkers(IExtractorInputReader reader){
+    protected MarkerSet findMarkers(IExtractorInputReader reader) {
 
         Set<IClassifier> clasifiers = new HashSet<IClassifier>();
         for (IGeneralExtractor extractor : reader.getGeneralExtractor()) {
@@ -105,20 +118,67 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor{
         }
         log.debug("[findMarkers] clasifiers size {0}", clasifiers.size());
         MarkerSetHolder markerSetHorlder = getSegmentator().extractSegments(
-                clasifiers, createSegmentatorParam());
+                clasifiers, getSegmentionParam());
         MarkerSet words = markerSetHorlder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
         log.debug("[findMarkers] marker size {0}", words.getMarkers().size());
         return words;
     }
+
+
+    /**
+     * 
+     * @param file
+     * @return
+     */
+    protected URL toUrl(File file) {
+        URL fileUrl = null;
+        try {
+            fileUrl = file.toURI().toURL();
+            return fileUrl;
+        } catch (MalformedURLException ex) {
+            throw new ProcessingException(ex);
+        }
+    }
+
+    /**
+     * 
+     * @param fileUrl
+     * @param marker
+     * @param reader
+     * @return
+     */
+    protected CorpusEntry learn(URL fileUrl, Marker marker, IExtractorInputReader reader) {
+        Map<String, IValues> fvv = getReaderService().findAllVectorValuesForMarker(
+                reader,
+                marker);
+        log.debug("[extractInMemory] {0}", marker);
+        AudioInputStream ais =
+                AudioManagerFactory.createAudioManager().findInputStreamInMils(
+                fileUrl,
+                marker.getStart(),
+                marker.getLength());
+
+        CorpusEntry corpusEntry = getCorpusService().learn(marker.getLabel(), fvv, ais);
+        return corpusEntry;
+    }
+
+    public OnlineDecisionSegmentatorParam getSegmentionParam() {
+        if(segmentionParam == null){
+            segmentionParam = new OnlineDecisionSegmentatorParam();
+            segmentionParam.setMinLength(91L);
+            segmentionParam.setMinSpace(91L);
+            segmentionParam.setExpandStart(60L);
+            segmentionParam.setExpandEnd(60L);
+        }
+        return segmentionParam;
+    }
+
+    public void setSegmentionParam(OnlineDecisionSegmentatorParam segmentionParam) {
+        this.segmentionParam = segmentionParam;
+    }
     
-    protected SegmentatorParam createSegmentatorParam() {
-		OnlineDecisionSegmentatorParam param = new OnlineDecisionSegmentatorParam();
-		param.setMinLength(90L);
-		param.setMinSpace(90L);
-		param.setExpandEnd(60L);
-		param.setExpandStart(60L);
-		return param;
-	}
+    
+    
 
     public ISegmentatorService getSegmentator() {
         if (segmentator == null) {
@@ -150,7 +210,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor{
                         ExtractorEnum.LPC_EXTRACTOR,
                         ExtractorEnum.FFT_EXTRACTOR,
                         ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
-                        ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR
+//                        ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR
                     };
         }
         return extractors;

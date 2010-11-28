@@ -33,6 +33,7 @@ import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.io.AudioReader;
 import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.marker.Marker;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
@@ -57,10 +58,6 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
             Float fromIndex = (marker.getStart().floatValue() * values.getSampleRate()) / 1000;
             Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
             FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
-            log.debug("[findFeatureVectorValuesForMarker] feature[{2}] time: {0} == {1}",
-                    marker.getLength(),
-                    fvv.getTime(),
-                    featureName);
             return fvv;
         }
         return null;
@@ -83,10 +80,6 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
             FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
             String key = extractor.getName().replace("BUFFERED_", "");
             result.put(key, fvv);
-            log.debug("[findFeatureVectorValuesForMarker] feature[{2}] time: {0} == {1}",
-                    marker.getLength(),
-                    fvv.getTime() * 1000,
-                    key);
         }
         for (IExtractor extractor : reader.getExtractorRegister()) {
             //extractors can have prefixes, jus check if ends with
@@ -99,10 +92,6 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
             FrameValues fv = values.subList(fromIndex.intValue(), toIndex.intValue());
             String key = extractor.getName().replace("BUFFERED_", "");
             result.put(key, fv);
-            log.debug("[findFeatureVectorValuesForMarker] feature[{2}] time: {0} == {1}",
-                    marker.getLength(),
-                    fv.getTime() * 1000,
-                    key);
         }
 
         return result;
@@ -124,7 +113,13 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
         AudioReader audioReader = AudioReaderFactory.createAudioReader();
         IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
                 audioReader.getAudioFormat(inputUrl));
-        ExtractorUtils.registerThreshold(extractorReader, extractors, null);
+        log.debug("[createReaderWithClassifier] reader config{0}", extractorReader.getConfig() );
+        ExtractorUtils.
+                registerThreshold(extractorReader, extractors, null, ClassifierEnum.rules);
+//                registerThreshold(extractorReader, extractors, null);
+
+        log.debug("[createReaderWithClassifier] reader features{0}", extractorReader.getGeneralExtractor() );
+
         audioReader.readSignal(inputUrl, extractorReader);
 
         return extractorReader;

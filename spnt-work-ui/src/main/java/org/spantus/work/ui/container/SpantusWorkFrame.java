@@ -147,6 +147,7 @@ public class SpantusWorkFrame extends JFrame implements ReloadableComponent{
 				getInfo().getProject().getType())){
 			spantusContentPane = new RecognitionContentPane(getEventMulticaster()); 
 			setContentPane(spantusContentPane);
+                        spantusContentPane.setInfo(getInfo());
 		}else{
 			SegmentationContentPane pane = new SegmentationContentPane(getEventMulticaster());
 			spantusContentPane = pane;

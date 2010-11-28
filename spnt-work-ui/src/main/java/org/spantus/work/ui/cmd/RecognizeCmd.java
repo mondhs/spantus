@@ -18,6 +18,7 @@
 */
 package org.spantus.work.ui.cmd;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import java.util.Set;
 import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
-import org.spantus.externals.recognition.services.CorpusService;
+import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.logger.Logger;
 import org.spantus.work.services.ExtractorReaderService;
@@ -33,6 +34,7 @@ import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
 
@@ -44,16 +46,23 @@ public class RecognizeCmd extends AbsrtactCmd {
 
     private static Logger log = Logger.getLogger(RecognizeCmd.class);
     private RecognizeDetailDialog info;
-    private CorpusService corpusService;
     private ExtractorReaderService extractorReaderService;
+    private CorpusServiceBaseImpl corpusService;
+    private DtwServiceJavaMLImpl dtwService;
+    private CorpusRepositoryFileImpl corpusRepo;
 
+    
+    
     public RecognizeCmd(CommandExecutionFacade executionFacade) {
         super(executionFacade);
     }
-
+    
     @Override
     public String execute(SpantusWorkInfo ctx) {
-
+        
+       
+        update(ctx); 
+        
         Marker marker = ((Marker) getCurrentEvent().getValue());
 
         Map<String, IValues> fvv = getExtractorReaderService().findAllVectorValuesForMarker(
@@ -77,6 +86,27 @@ public class RecognizeCmd extends AbsrtactCmd {
         return createExpectedActions(
                 GlobalCommands.tool.recognize.name());
     }
+    
+    /**
+     * Update configuration
+     * @param ctx
+     */
+    protected void update(SpantusWorkInfo ctx){
+        String corpusPath = ctx.getProject().getRecognitionConfig().getRepositoryPath();
+        String searchWindowStr= ctx.getProject().getRecognitionConfig().getDtwWindow();
+        JavaMLSearchWindow searchWindow= JavaMLSearchWindow.valueOf(searchWindowStr);
+        int radius = ctx.getProject().getRecognitionConfig().getRadius();
+        
+        File corpusDir =  new File(corpusPath);
+        if (!corpusDir.equals(getCorpusRepository().getRepoDir())) {
+            getCorpusRepository().setRepositoryPath(corpusPath);
+            getCorpusRepository().flush();
+        }
+        if(searchWindow != null){
+            getDtwService().setSearchWindow(searchWindow);
+        }
+        getDtwService().setSearchRadius(radius);
+    }
 
     private RecognizeDetailDialog getInfoPnl() {
         if (info == null) {
@@ -85,29 +115,43 @@ public class RecognizeCmd extends AbsrtactCmd {
         }
         return info;
     }
-    public CorpusService getCorpusService() {
-        CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
-        DtwServiceJavaMLImpl dtwService = new DtwServiceJavaMLImpl();
-        dtwService.setSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow);
-        dtwService.setSearchRadius(15);
-        corpusServiceimpl.setDtwService(dtwService);
-        corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
+    public CorpusServiceBaseImpl getCorpusService() {
+        if (corpusService == null) {
+            CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
+            corpusServiceimpl.setDtwService(getDtwService());
+            corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.MFCC_EXTRACTOR.name());
-             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.LPC_EXTRACTOR.name());
-             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.FFT_EXTRACTOR.name());
-             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
-        corpusService = corpusServiceimpl;
-        return corpusServiceimpl;
-//        if(corpusService == null){
+            corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.LPC_EXTRACTOR.name());
+            corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.FFT_EXTRACTOR.name());
+            corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
+            corpusServiceimpl.setCorpus(getCorpusRepository());
+            corpusService = corpusServiceimpl;
 //            corpusService = RecognitionServiceFactory.createCorpusService();
-//        }
-//        return corpusService;
+        }
+        return corpusService;
     }
+    
+    
+    public DtwServiceJavaMLImpl getDtwService(){
+        if(dtwService == null){
+            dtwService = new DtwServiceJavaMLImpl();
+//            dtwService.setSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow);
+//            dtwService.setSearchRadius(15);
+        }
+        return dtwService;
+    }
+            
 
-    public void setCorpusService(CorpusService corpusService) {
+    public void setCorpusService(CorpusServiceBaseImpl corpusService) {
         this.corpusService = corpusService;
     }
-
+    public CorpusRepositoryFileImpl getCorpusRepository() {
+        if(corpusRepo == null){
+            corpusRepo =  new CorpusRepositoryFileImpl();
+        }
+        return corpusRepo;
+    }
+    
     public ExtractorReaderService getExtractorReaderService() {
         if(extractorReaderService == null){
             extractorReaderService = WorkServiceFactory.createExtractorReaderService();

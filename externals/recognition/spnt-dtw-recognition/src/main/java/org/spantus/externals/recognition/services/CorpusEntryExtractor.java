@@ -6,6 +6,7 @@
 package org.spantus.externals.recognition.services;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 
@@ -20,6 +21,12 @@ public interface CorpusEntryExtractor {
      * @param filePath
      * @return
      */
-    List<CorpusEntry> extractInMemory(File filePath);
+    public List<CorpusEntry> extractInMemory(File filePath);
+    /**
+     * Extract sements and saves in dir. This will not hold markers in memory
+     * @param filePath
+     * @return - dir where it will save learned samples
+     */
+    public int extractAndSave(File filePath);
 
 }

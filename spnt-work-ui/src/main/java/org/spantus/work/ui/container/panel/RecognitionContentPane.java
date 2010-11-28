@@ -53,6 +53,7 @@ public class RecognitionContentPane extends AbstractSpantusContentPane{
 	}
 
 	public void initialize() {
+                recognitionPanel.setRepositoryPath(getInfo().getProject().getRecognitionConfig().getRepositoryPath());
 		toolBar.initialize();
 		recognitionPanel.initialize();
 		

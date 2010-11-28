@@ -6,6 +6,7 @@
 package org.spnt.recognition.services.impl.test;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -19,8 +20,7 @@ import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorFileI
  */
 public class CorpusEntryExtractorFileImplTest {
 
-    public final static String DIR_AD400 = "/home/mondhs/src/garsynai/alpha_digits/speech/400";
-    public final static String DIR_TEST = "/home/mondhs/src/spnt-code/data";
+    public final static String DIR_TEST = "../../../data";
     public final static String FILE_TEST = "t_1_2.wav";
     
     private File path;
@@ -37,8 +37,20 @@ public class CorpusEntryExtractorFileImplTest {
     public void testSegmentExtractInMemory(){
        //given
        File filePath = new File(path, FILE_TEST);
+      
        List<CorpusEntry> entries = extractor.extractInMemory(filePath);
+       //then
        Assert.assertEquals("entries: " , 2, entries.size());
     }
+    
+     @Test
+    public void testSegmentExtractAndSave(){
+         //given
+       File filePath = new File(path, FILE_TEST);
+        //when
+       int entries = extractor.extractAndSave(filePath);
+       //then
+       Assert.assertEquals("entries: " , 2, entries);
+     }
     
 }

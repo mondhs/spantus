@@ -47,7 +47,7 @@ public abstract class ExtractorConfigUtil {
 //		config.setFrameSize(frameSize.intValue());
 //		config.setBitsPerSample(sampleSizeInBits);
 //		config.setBufferSize(bufferSize);
-		return defaultConfig(sampleRate, 10, 10);
+		return defaultConfig(sampleRate, 33, 66);
 	}
 	public static IExtractorConfig  defaultConfig(float sampleRate, 
 			 int windowLengthInMilSec, int overlapInPerc ){

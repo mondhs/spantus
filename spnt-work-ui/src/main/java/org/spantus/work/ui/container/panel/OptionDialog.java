@@ -27,6 +27,7 @@ import org.spantus.work.ui.container.ReloadableComponent;
 import org.spantus.work.ui.container.option.AbstractOptionPanel;
 import org.spantus.work.ui.container.option.ExtractorsOptionPanel;
 import org.spantus.work.ui.container.option.GeneralOptionPanel;
+import org.spantus.work.ui.container.option.RecognitionOptionPnl;
 import org.spantus.work.ui.container.option.SaveableOptionPanel;
 import org.spantus.work.ui.container.option.WindowOptionPnl;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -54,7 +55,7 @@ public class OptionDialog extends JDialog implements ReloadableComponent, KeyLis
 //	
 //	ExtractorsOptionPanel extractorsOptionPnl;
 	
-	enum optionsPanelEnum{general, parameters, feature, spantus	};
+	enum optionsPanelEnum{general, parameters, feature, recognition,spantus	};
 	enum optionsLabelEnum{spantus, ok, cancel};
 	enum optionsCmdEnum{save, discard};
 
@@ -114,12 +115,19 @@ public class OptionDialog extends JDialog implements ReloadableComponent, KeyLis
 	private JTree getJTree() {
 		if (jTree == null) {
 			I18nTreeNode root = new I18nTreeNode(optionsLabelEnum.spantus);
-			I18nTreeNode general = new I18nTreeNode(optionsPanelEnum.general);
-			I18nTreeNode parameters = new I18nTreeNode(optionsPanelEnum.parameters);
-			I18nTreeNode feature = new I18nTreeNode(optionsPanelEnum.feature);
-			root.add(general);
-			root.add(parameters);
-			root.add(feature);
+//			I18nTreeNode general = new I18nTreeNode(optionsPanelEnum.general);
+//			I18nTreeNode parameters = new I18nTreeNode(optionsPanelEnum.parameters);
+//			I18nTreeNode feature = new I18nTreeNode(optionsPanelEnum.feature);
+//                        I18nTreeNode recognition = new I18nTreeNode(optionsPanelEnum.recogntion);
+//			root.add(general);
+//			root.add(parameters);
+//			root.add(feature);
+//                        root.add(recognition);
+                        for (optionsPanelEnum pnlEnum : getSaveablePanels().keySet()) {
+                            I18nTreeNode node = new I18nTreeNode(pnlEnum);
+                            root.add(node);
+                        }
+                        
 			jTree = new JTree(root);
 			jTree.addTreeSelectionListener(new OptionTreeSelectionListener());
 		}
@@ -179,10 +187,12 @@ public class OptionDialog extends JDialog implements ReloadableComponent, KeyLis
 			WindowOptionPnl parametersPnl = new WindowOptionPnl();
 			ExtractorsOptionPanel extractorsOptionPnl = new ExtractorsOptionPanel();
 			GeneralOptionPanel generalOptionPnl = new GeneralOptionPanel();
+                        RecognitionOptionPnl recognitionOptionPnl = new RecognitionOptionPnl();
 
 			saveablePanels.put(optionsPanelEnum.general, generalOptionPnl);
 			saveablePanels.put(optionsPanelEnum.parameters, parametersPnl);
 			saveablePanels.put(optionsPanelEnum.feature, extractorsOptionPnl);
+                        saveablePanels.put(optionsPanelEnum.recognition, recognitionOptionPnl);
 		}
 		return saveablePanels;
 	}

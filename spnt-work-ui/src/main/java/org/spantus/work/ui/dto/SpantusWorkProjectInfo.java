@@ -1,24 +1,21 @@
+/*
+ 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Part of program for analyze speech signal 
+ 	http://spantus.sourceforge.net
 
-/**
- * Part of program for analyze speech signal 
- * Copyright (c) 2008 Mindaugas Greibus (spantus@gmail.com)
- * http://spantus.sourceforge.net
- * 
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- * 
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 675 Mass Ave, Cambridge, MA 02139, USA.
- * 
- */
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 package org.spantus.work.ui.dto;
 
 import java.io.File;
@@ -46,29 +43,14 @@ public class SpantusWorkProjectInfo {
 	private WorkSample sample;
 	
 	private FeatureReader featureReader;
-	
+        
+        private RecognitionConfig recognitionConfig;
+
 	private File workingDir;
 	
 	private String experimentId;
 	
 	private String classifierType;
-	
-//	public float getFrom() {
-//		return from;
-//	}
-//
-//	public void setFrom(float from) {
-//		this.from = from;
-//	}
-//
-//	public float getLength() {
-//		return length;
-//	}
-//
-//	public void setLength(float length) {
-//		this.length = length;
-//	}
-
 	
 	public WorkSample getSample() {
 		if(sample == null){
@@ -130,6 +112,17 @@ public class SpantusWorkProjectInfo {
 		this.classifierType = thresholdType;
 	}
 
+        public RecognitionConfig getRecognitionConfig() {
+            if(recognitionConfig == null){
+                recognitionConfig = new RecognitionConfig();
+            }
+            return recognitionConfig;
+        }
+
+        public void setRecognitionConfig(RecognitionConfig recognitionConfig) {
+            this.recognitionConfig = recognitionConfig;
+        }
+	
 
 
 	

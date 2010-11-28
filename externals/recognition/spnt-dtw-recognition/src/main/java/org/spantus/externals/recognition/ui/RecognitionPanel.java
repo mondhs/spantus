@@ -75,6 +75,9 @@ public class RecognitionPanel extends JPanel implements SpantusEventListener {
 	}
 	
 
+        public void setRepositoryPath(String dirPath){
+            getAdminPanel().setRepositoryPath(dirPath);
+        }
 	
 	public AdminPanel getAdminPanel() {
 		if(adminPanel == null){

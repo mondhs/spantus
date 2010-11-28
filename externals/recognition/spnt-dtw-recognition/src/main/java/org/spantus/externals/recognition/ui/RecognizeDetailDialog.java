@@ -271,10 +271,10 @@ public class RecognizeDetailDialog extends JDialog {
                     append(html("<a href=\"show={0,number,#}\">",  recognitionResult.getInfo().getId()));
             if(recognitionResult.getInfo().getId().equals(selctedSampleId)){
                 //collapsed +
-                sb.append("&#8863");
+                sb.append("&#8863;");
             }else{
                 //expanded -
-                sb.append("&#8862");
+                sb.append("&#8862;");
 
             }
             sb.append(recognitionResult.getInfo().getName()).append("</a>").

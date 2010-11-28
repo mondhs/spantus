@@ -157,6 +157,11 @@ public class AdminPanel extends JPanel {
             table.revalidate();
         }
         
+        public void setRepositoryPath(String dirPath){
+            ((CorpusRepositoryFileImpl)getCorpusRepository()).setRepositoryPath(dirPath);
+            refresh();
+        }
+        
 	public CorpusRepository getCorpusRepository() {
 		if(corpusRepository == null){
 			corpusRepository = new CorpusRepositoryFileImpl();

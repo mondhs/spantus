@@ -37,6 +37,8 @@ import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.core.beans.I18n;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl;
+import org.spantus.work.ui.dto.RecognitionConfig;
 import org.spantus.work.ui.i18n.I18nFactory;
 /**
  * 
@@ -87,6 +89,7 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		project.setType(type);
 		project.setSample(oldProject.getSample());
 		project.setClassifierType(oldProject.getClassifierType());
+                project.setRecognitionConfig(oldProject.getRecognitionConfig());
 		switch (ProjectTypeEnum.valueOf(type)) {
 		case feature:
 		case segmenation:
@@ -115,7 +118,11 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		project.setWorkingDir(new File("."));
 		project.getFeatureReader().setReaderPerspective(WorkReadersEnum.multiFeature);
 		project.getFeatureReader().setWorkConfig(new WorkUIExtractorConfig());
-		initializeExperimentId(project);
+                project.getRecognitionConfig().setRepositoryPath("./corpus");
+                project.getRecognitionConfig().setDtwWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow.name());
+                project.getRecognitionConfig().setRadius(15);
+                
+                initializeExperimentId(project);
 		return project;
 	}
 	/**
@@ -124,9 +131,21 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 	 */
 	protected void updateOnLoad(SpantusWorkInfo info){
 		initializeExperimentId(info.getProject());
-//		if(!StringUtils.hasText(info.getProject().getThresholdType())){
-//			info.getProject().setThresholdType(ThresholdEnum.online.name());
-//		}
+                RecognitionConfig recognition = info.getProject().getRecognitionConfig();
+                if(recognition == null){
+                    info.getProject().setRecognitionConfig(new RecognitionConfig());
+                    recognition = info.getProject().getRecognitionConfig();
+                }
+                if(!StringUtils.hasText(recognition.getDtwWindow())){
+                    recognition.setDtwWindow(
+                            DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow.name());
+                }
+                if(recognition.getRadius() == null){
+                    recognition.setRadius(15);
+                }
+                if(!StringUtils.hasText(recognition.getRepositoryPath())){
+                     recognition.setRepositoryPath("./corpus");
+                }
 
 	}
 	

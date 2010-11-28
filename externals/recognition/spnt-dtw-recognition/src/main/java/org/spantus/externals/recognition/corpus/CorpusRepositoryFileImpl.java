@@ -111,7 +111,7 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 		}
                 if(entry.getEntryFile() == null){
                     File file = new File(getRepoDir(),entry.getName() + "-" + entry.getId() + CORPUS_ENTRY_FILE_EXT);
-                    entry.setEntryFile(file);
+                    entry.setEntryFile(file.getAbsoluteFile());
                 }
 		try {
 			FileWriter outputFile = new FileWriter(entry.getEntryFile(),false);	
@@ -148,7 +148,7 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 	public CorpusEntry update(CorpusEntry entry, AudioInputStream ais) {
                 CorpusFileEntry fileEntry = (CorpusFileEntry)entry;
                 File wavFile = new File(getRepoDir(),entry.getName() + "-" + entry.getId() + WAV_FILE_EXT);
-
+                wavFile = wavFile.getAbsoluteFile();
                 try {
                     AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
                     log.debug("[update] saved to " + wavFile.getAbsolutePath());
