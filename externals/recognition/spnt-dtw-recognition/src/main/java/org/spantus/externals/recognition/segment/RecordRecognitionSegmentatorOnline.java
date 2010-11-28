@@ -1,10 +1,16 @@
 package org.spantus.externals.recognition.segment;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-
+import java.util.logging.Level;
+import javax.sound.sampled.AudioInputStream;
 import org.spantus.core.IValues;
+
 import org.spantus.core.marker.Marker;
+import org.spantus.externals.recognition.bean.CorpusEntry;
+import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.corpus.CorpusMatchListener;
 import org.spantus.externals.recognition.services.CorpusService;
@@ -32,22 +38,31 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 	/**
 	 * 
 	 */
-	@Override
-	public URL processAcceptedSegment(Marker marker){
-		URL path = 
-//			null;
-			super.processAcceptedSegment(marker);
-		findBestMatach(marker);
-		return path;
-	}
+        @Override
+        public URL saveSegmentAccepted(Marker marker, AudioInputStream ais, File file) {
+            if(marker == null){
+                    super.saveSegmentAccepted(marker,ais, file);
+            }
+            URL url = findMatchAndSave(marker, ais);
+            return url;
+        }
 	/**
 	 * 
 	 * @param marker
 	 */
-        protected void findBestMatach(Marker marker) {
+        protected URL findMatchAndSave(Marker marker, AudioInputStream ais) {
             Map<String, IValues> featureData = getExtractorReaderService().findAllVectorValuesForMarker(getReader().getReader(), marker);
+            URL url = null;
             if (getLearnMode()) {
-                getCorpusService().learn(marker.getLabel(), featureData);
+                CorpusEntry corpusEntry = getCorpusService().learn(marker.getLabel(), featureData, ais);
+                if (corpusEntry instanceof CorpusFileEntry) {
+                    try {
+                        url = ((CorpusFileEntry) corpusEntry).getWavFile().toURI().toURL();
+                    } catch (MalformedURLException ex) {
+                        log.error(ex);
+                    }
+                }
+                log.debug("[findMatchAndSave] {0}", url );
             } else {
                 RecognitionResult result = getCorpusService().match(featureData);
                 if (result != null) {
@@ -58,6 +73,7 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
             }
 
             log.info("[findBestMatach]" + marker);
+            return url;
 
         }
 

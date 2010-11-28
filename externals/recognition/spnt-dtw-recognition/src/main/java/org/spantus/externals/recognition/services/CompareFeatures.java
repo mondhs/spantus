@@ -107,19 +107,6 @@ public class CompareFeatures {
 				((IExtractorVector) sampleExtractor).getOutputValues());
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		String samplePath = "./test/du.sspnt.xml";
-		String targetPath = "./test/vienas.sspnt.xml";
-		File sampleFile = new File(samplePath);
-		File targetFile = new File(targetPath);
-		CompareFeatures compareFeatures = new CompareFeatures();
-		Float f = compareFeatures.compareValues(targetFile, sampleFile);
-		System.out.print("[main] comparition result: " + f);
-
-	}
 
 	public ExtractorReaderService getExtractorReaderService() {
 		if (extractorReaderService == null) {

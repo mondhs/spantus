@@ -31,9 +31,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.spantus.work.wav.AudioManager;
-import org.spantus.work.wav.AudioManagerFactory;
-import org.spantus.work.wav.WorkAudioManager;
+import org.spantus.core.wav.AudioManager;
+import org.spantus.core.wav.AudioManagerFactory;
+import org.spantus.core.wav.WorkAudioManager;
 /**
  * Audio Manager test
  * @author Mindaugas Greibus

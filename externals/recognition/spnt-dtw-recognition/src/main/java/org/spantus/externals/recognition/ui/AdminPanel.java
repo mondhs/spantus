@@ -24,7 +24,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
-import java.util.Collection;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -37,7 +36,7 @@ import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.externals.recognition.corpus.CorpusRepository;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
-import org.spantus.work.wav.AudioManagerFactory;
+import org.spantus.core.wav.AudioManagerFactory;
 
 public class AdminPanel extends JPanel {
 	/**
@@ -45,12 +44,12 @@ public class AdminPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-	private Logger log = Logger.getLogger(AdminPanel.class);
+	private CorpusEntryTableModel model;
+        private Logger log = Logger.getLogger(AdminPanel.class);
 
 	private CorpusRepository corpusRepository;
 	
 	private JToolBar toolbar;
-	private Collection<? extends CorpusEntry> corpusFileEntries;
 	/**
 	 * @param owner
 	 */
@@ -64,8 +63,6 @@ public class AdminPanel extends JPanel {
 	 * @return void
 	 */
 	private void initialize() {
-		corpusFileEntries = getCorpusRepository().findAllEntries();
-		this.setSize(640, 480);
 //		this.setSize(SpantusWorkSwingUtils.currentWindowSize(0.5, 0.25));
 //		SpantusWorkSwingUtils.centerWindow(this);
 //		this.setContentPane(getJContentPane());
@@ -77,8 +74,8 @@ public class AdminPanel extends JPanel {
 	
 	private JTable getTable() {
 		if (table == null) {
-			table = new JTable(new CorpusEntryTableModel(
-                                (Collection<CorpusEntry>) corpusFileEntries));
+                        model = new CorpusEntryTableModel(getCorpusRepository());
+			table = new JTable(model);
 			table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 //			table.setFillsViewportHeight(true);
 		}
@@ -101,8 +98,24 @@ public class AdminPanel extends JPanel {
 					save();					
 				}
 			});
+                        JButton deleteBtn = new JButton("delete");
+			deleteBtn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					delete();					
+				}
+			});
+                        JButton refreshBtn = new JButton("refresh");
+			refreshBtn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					refresh();					
+				}
+
+			});
 			toolbar.add(saveCloseBtn);
 			toolbar.add(playBtn);
+                        toolbar.add(deleteBtn);
+                        toolbar.add(refreshBtn);
+                        
 		}
 		return toolbar;
 		
@@ -110,12 +123,11 @@ public class AdminPanel extends JPanel {
 	
 	public void play(){
 		if(getTable().getSelectedRow()>=0){
-                    
-			CorpusEntry entry = (CorpusEntry) corpusFileEntries.
-                                toArray()[getTable().getSelectedRow()];
+                        
+			CorpusEntry entry = model.getCorpusEntry(getTable().getSelectedRow());
                         if(entry instanceof CorpusFileEntry){
                             CorpusFileEntry fileEntry = (CorpusFileEntry)entry;
-                            if(fileEntry.getWavFile().exists()){
+                            if(fileEntry != null && fileEntry.getWavFile().exists()){
                                     try {
                                             AudioManagerFactory.createAudioManager().play(fileEntry.getWavFile().toURI().toURL());
                                     } catch (MalformedURLException e) {
@@ -128,12 +140,23 @@ public class AdminPanel extends JPanel {
 		}
 	}
 	
-	public void save(){
-		for (CorpusEntry entry : corpusFileEntries) {
-			getCorpusRepository().update(entry);
-		}
+	private void save(){
+                 log.debug("save all"); 
+                 model.saveAll();
 	}
 	
+        private void delete() {
+            if (getTable().getSelectedRow() >= 0) {
+                model.delete(getTable().getSelectedRow());
+            }
+            table.revalidate();
+        }
+         
+        private void refresh() {
+            model.refresh();
+            table.revalidate();
+        }
+        
 	public CorpusRepository getCorpusRepository() {
 		if(corpusRepository == null){
 			corpusRepository = new CorpusRepositoryFileImpl();

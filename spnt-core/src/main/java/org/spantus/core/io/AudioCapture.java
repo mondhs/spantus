@@ -61,6 +61,7 @@ public class AudioCapture extends Thread {
 	}
 
 	
+        @Override
 	public synchronized void start() {
 		super.start();
 	}
@@ -68,21 +69,22 @@ public class AudioCapture extends Thread {
 	
 	public void run() {
 		running = true;
-		final AudioFormat format = getFormat();
+		AudioFormat frmt = getFormat();
 		reader.setFormat(format);
-		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+		DataLine.Info info = new DataLine.Info(TargetDataLine.class, frmt);
 		TargetDataLine line;
 		try {
 			line = (TargetDataLine) AudioSystem.getLine(info);
 			line.open(format);
 			line.start();
-			log.error("grabing line. " + running + ": " + AudioSystem.getMixerInfo()[0]);
-			int bufferSize = (int) format.getSampleRate()
+			log.debug("grabing line. {0} : {1}",
+                                running, AudioSystem.getMixerInfo()[0]);
+			int bufferSize = (int) frmt.getSampleRate()
 					* format.getFrameSize();
 			byte buffer[] = new byte[bufferSize];
-			
+                        
 			while (running) {
-				line.read(buffer, 0, buffer.length);
+                                line.read(buffer, 0, buffer.length);
 				for (byte b : buffer) {
 					reader.put(b);
 				}
@@ -103,7 +105,7 @@ public class AudioCapture extends Thread {
 		return running;
 	}
 	
-	public void finalize() {
+	public void kill() {
 //		log.error("finalize");
 		running = false;
 	}

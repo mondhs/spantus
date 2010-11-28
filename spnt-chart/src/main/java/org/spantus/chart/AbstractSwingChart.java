@@ -28,7 +28,7 @@ import org.spantus.chart.bean.ChartInfo;
 
 /**
  * 
- * 
+ * @see {@link MarkeredTimeSeriesMultiChart}, {@link TimeSeriesMultiChart}
  * @author Mindaugas Greibus
  *
  * @since 0.0.1
@@ -42,6 +42,10 @@ public abstract class AbstractSwingChart extends JPanel implements Chart {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ChartInfo info;
+
+        private Boolean showClassifiersOnly;
+
+        private Boolean dirty;
 	
 	public AbstractSwingChart() {
 		super(new BorderLayout());
@@ -58,6 +62,28 @@ public abstract class AbstractSwingChart extends JPanel implements Chart {
 		this.info = info;
 	}
 
+         public Boolean getShowClassifiersOnly() {
+             if(showClassifiersOnly == null){
+                 showClassifiersOnly = Boolean.FALSE;
+             }
+             return showClassifiersOnly;
+        }
+
+        public void setShowClassifiersOnly(Boolean showClassifiersOnly) {
+            this.showClassifiersOnly = showClassifiersOnly;
+        }
+
+        public Boolean getDirty() {
+            if(dirty == null){
+                dirty = Boolean.FALSE;
+            }
+            return dirty;
+        }
+
+        public void setDirty(Boolean dirty) {
+            this.dirty = dirty;
+        }
+        
 	public abstract void changedZoom(Float from, Float length);
 	public abstract void initialize();
 }

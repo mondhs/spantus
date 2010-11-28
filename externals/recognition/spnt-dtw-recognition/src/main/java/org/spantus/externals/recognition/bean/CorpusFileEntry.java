@@ -21,5 +21,5 @@ public class CorpusFileEntry extends CorpusEntry{
 	public void setWavFile(File wavFile) {
 		this.wavFile = wavFile;
 	}
-	
+
 }

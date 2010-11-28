@@ -15,7 +15,7 @@ import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
-import org.spantus.work.wav.AudioManagerFactory;
+import org.spantus.core.wav.AudioManagerFactory;
 
 /**
  *

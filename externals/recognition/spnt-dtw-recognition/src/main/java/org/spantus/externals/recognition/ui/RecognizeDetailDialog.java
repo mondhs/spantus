@@ -50,7 +50,7 @@ import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.logger.Logger;
 import org.spantus.ui.SwingUtils;
 import org.spantus.work.ui.ImageResourcesEnum;
-import org.spantus.work.wav.AudioManagerFactory;
+import org.spantus.core.wav.AudioManagerFactory;
 
 /**
  *

@@ -229,6 +229,12 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
             return repository;
         }
 
+        public void flush() {
+            this.repository = null;
+        }
+        
+        
+
         public void setRepository(Map<Long, CorpusFileEntry> repository) {
             this.repository = repository;
         }

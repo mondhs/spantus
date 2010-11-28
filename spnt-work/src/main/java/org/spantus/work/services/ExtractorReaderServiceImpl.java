@@ -72,12 +72,14 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
         for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
             //extractors can have prefixes, jus check if ends with
             FrameVectorValues values = extractor.getOutputValues();
+            int endIndex = values.size()-1;
 //            if(values.get(0).size()<=2){
 //                continue;
 //            }
             Float fromIndex = (marker.getStart().floatValue() * values.getSampleRate()) / 1000;
             fromIndex = fromIndex < 0 ? 0 : fromIndex;
             Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
+            toIndex = endIndex < toIndex?endIndex:toIndex;
             FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
             String key = extractor.getName().replace("BUFFERED_", "");
             result.put(key, fvv);
@@ -89,12 +91,11 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
         for (IExtractor extractor : reader.getExtractorRegister()) {
             //extractors can have prefixes, jus check if ends with
             FrameValues values = extractor.getOutputValues();
-//            if(values.get(0).size()<=2){
-//                continue;
-//            }
+            int endIndex = values.size()-1;
             Float fromIndex = (marker.getStart().floatValue() * values.getSampleRate()) / 1000;
             fromIndex = fromIndex < 0 ? 0 : fromIndex;
             Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
+            toIndex = endIndex < toIndex?endIndex:toIndex;
             FrameValues fv = values.subList(fromIndex.intValue(), toIndex.intValue());
             String key = extractor.getName().replace("BUFFERED_", "");
             result.put(key, fv);

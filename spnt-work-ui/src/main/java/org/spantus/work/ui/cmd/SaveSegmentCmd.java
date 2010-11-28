@@ -31,7 +31,7 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
-import org.spantus.work.wav.AudioManagerFactory;
+import org.spantus.core.wav.AudioManagerFactory;
 /**
  * 
  * @author Mindaugas Greibus

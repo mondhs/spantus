@@ -296,7 +296,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 //	}
 
 	private int[] toCoordinatesValues(FrameValues vals, float scalar, float coef) {
-		FrameValues valsClone = vals;
+		FrameValues valsClone = new FrameValues(vals);
 		Float min = ctx.getValues().getMinValue();
 //		Float max = ctx.getValues().getMaxValue();
 		Float delta = ctx.getValues().getDeltaValue();

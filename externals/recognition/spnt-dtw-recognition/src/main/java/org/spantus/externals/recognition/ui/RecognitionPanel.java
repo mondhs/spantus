@@ -19,6 +19,7 @@
 package org.spantus.externals.recognition.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -51,13 +52,13 @@ public class RecognitionPanel extends JPanel implements SpantusEventListener {
 	public RecognitionPanel(SpantusEventMulticaster eventMulticaster) {
 		setLayout(new BorderLayout());
 		this.eventMulticaster = eventMulticaster;
-        RecognitionUIActionListenerImpl actionListener = new RecognitionUIActionListenerImpl(this);
-        eventMulticaster.addListener(actionListener);
-
-		eventMulticaster.addListener(this);
+                RecognitionUIActionListenerImpl actionListener = new RecognitionUIActionListenerImpl(this);
+                eventMulticaster.addListener(actionListener);
 	}
 	public void initialize(){
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
+                eventMulticaster.addListener(this);
+
+                JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true,
 				getRecognitionPlot(), getAdminPanel());
 		splitPane.setOneTouchExpandable(true);
 		add(splitPane);
@@ -66,6 +67,8 @@ public class RecognitionPanel extends JPanel implements SpantusEventListener {
 	public RecognitionMonitorPlot getRecognitionPlot(){
 		if (recognitionPlot == null) {
 			recognitionPlot = new RecognitionMonitorPlot();
+                        recognitionPlot.setPreferredSize(new Dimension(200, 200));
+                        recognitionPlot.initialize();
 //			recognitionPlot.setLearnMode(isLearnMode());
 		}
 		return recognitionPlot;

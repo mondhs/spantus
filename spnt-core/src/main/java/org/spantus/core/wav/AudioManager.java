@@ -18,9 +18,11 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.work.wav;
+package org.spantus.core.wav;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 /**
  * 
@@ -54,11 +56,21 @@ public interface AudioManager {
          */
         public AudioInputStream findInputStream(URL file, Float starts, Float length);
         /**
-         * Finds stream in mils
+         *Finds audio file in mils in buffered audio stream
          * @param file
          * @param starts
          * @param length
          * @return
          */
         public AudioInputStream findInputStreamInMils(URL file, Long starts, Long length);
+        /**
+         * Finds input stream in mils in buffered audio stream
+         * 
+         * @param outputStream
+         * @param starts
+         * @param length
+         * @return
+         */
+        public AudioInputStream findInputStreamInMils(ByteArrayOutputStream outputStream, Long starts, Long length,
+                AudioFormat audioFormat);
 }

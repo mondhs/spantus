@@ -18,7 +18,7 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.work.wav;
+package org.spantus.core.wav;
 /**
  * Audio Manager factory.
  * This should by used to construct audio manager

@@ -5,7 +5,7 @@ import java.util.Set;
 import org.spantus.exception.ProcessingException;
 import org.spantus.work.ui.dto.SelectionDto;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
-import org.spantus.work.wav.AudioManagerFactory;
+import org.spantus.core.wav.AudioManagerFactory;
 
 public class PlayCmd extends AbsrtactCmd {
 	private SelectionDto dto;

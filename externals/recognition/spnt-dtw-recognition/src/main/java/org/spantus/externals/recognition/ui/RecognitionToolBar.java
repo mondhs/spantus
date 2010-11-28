@@ -23,21 +23,18 @@ public class RecognitionToolBar extends JToolBar {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public enum LabelEnum{start, stop, train};
+//	public enum LabelEnum{start, stop, train};
 	private SpantusEventMulticaster eventMulticaster;
 	
 	public RecognitionToolBar(SpantusEventMulticaster eventMulticaster) {
 		this.eventMulticaster = eventMulticaster;
 	}
 
-//	RecognitionUIActionListener recognitionUIActionListener;
 	ToolbarActionListener toolbarActionListener;
 	
 	private JButton recordBtn = null;
 
 	private JButton stopBtn = null;
-	
-//	private JButton adminBtn = null;
 	
 	private JCheckBox train;
 	
@@ -64,17 +61,11 @@ public class RecognitionToolBar extends JToolBar {
 		if (stopBtn == null) {
 			ImageIcon icon = createIcon(ImageResourcesEnum.stop.getCode());
 			stopBtn = createButton(icon, RecognitionCmdEnum.stop);
+                        stopBtn.setEnabled(false);
 		}
 		return stopBtn;
 	}
 	
-//	public JButton getAdminBtn() {
-//		if (adminBtn == null) {
-////			ImageIcon icon = createIcon(ImageResourcesEnum.stop.getCode());
-//			adminBtn = createButton(null, LabelEnum.admin.name());
-//		}
-//		return adminBtn;
-//	}
 	
 	protected ImageIcon createIcon(String name){
 		URL url = getClass().getClassLoader().getResource(name); 
@@ -89,7 +80,7 @@ public class RecognitionToolBar extends JToolBar {
 	public JCheckBox getTrainCheckbox() {
 		if (train == null) {
 //			ImageIcon icon = createIcon(ImageResourcesEnum.stop.getCode());
-			train = new JCheckBox(getResource(LabelEnum.train.name())); 
+			train = new JCheckBox(getResource(RecognitionCmdEnum.learn.name())); 
 			train.setSelected(learnMode);
 			train.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -133,16 +124,6 @@ public class RecognitionToolBar extends JToolBar {
 		return key;
 	}
 
-	
-//	public RecognitionUIActionListener getRecognitionUIActionListener() {
-//		return recognitionUIActionListener;
-//	}
-//
-//	public void setRecognitionUIActionListener(
-//			RecognitionUIActionListener recognitionUIActionListener) {
-//		this.recognitionUIActionListener = recognitionUIActionListener;
-//	}
-//
 	public ToolbarActionListener getToolbarActionListener() {
 		if(toolbarActionListener == null){
 			toolbarActionListener =  new ToolbarActionListener();
@@ -155,14 +136,16 @@ public class RecognitionToolBar extends JToolBar {
 
 		public void actionPerformed(ActionEvent e) {
 			getEventMulticaster().multicastEvent(SpantusEvent.createEvent(this, e.getActionCommand()));
-//			LabelEnum cmd = LabelEnum.valueOf(e.getActionCommand());
-//			switch (cmd) {
-//			case start:
-//				getRecognitionUIActionListener().start();
-//				break;
-//			case stop:
-//				getRecognitionUIActionListener().stop();
-//				break;
+			RecognitionCmdEnum cmd = RecognitionCmdEnum.valueOf(e.getActionCommand());
+			switch (cmd) {
+			case record:
+                                getRecordBtn().setEnabled(false);
+                                getStopBtn().setEnabled(true);
+				break;
+			case stop:
+                                getRecordBtn().setEnabled(true);
+                                getStopBtn().setEnabled(false);
+				break;
 //			case train:
 //				learnMode = ((JCheckBox)e.getSource()).isSelected();
 //				getRecognitionUIActionListener().changeLearningStatus(learnMode);
@@ -180,7 +163,7 @@ public class RecognitionToolBar extends JToolBar {
 ////				break;
 //			default:
 //				break;
-//			}
+			}
 //			
 		}
 //		

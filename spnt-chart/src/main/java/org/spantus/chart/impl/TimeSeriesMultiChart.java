@@ -98,39 +98,46 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		graph = new InteractiveChart();
 		toolbar = graph.getToolBar();
 	}
-	public void initialize(){
-		InteractiveChart interactiveChart = graph;
-		interactiveChart.setSize(getSize());
-		interactiveChart.addZoomListeners(new WrapedZoomlistener());
-		interactiveChart.setBackground(Color.WHITE);
-		 graph.getXAxis().setZigZaginess(BigDecimal.valueOf(51L, 2));
-		 graph.getYAxis().setZigZaginess(BigDecimal.valueOf(51L, 2));
-		int i = 0;
-		for (IExtractor buff : reader.getExtractorRegister()) {
-			ChartDescriptionResolver resolver = null;
-			if(buff instanceof IClassifier){
-				resolver = addFunction(interactiveChart, (IClassifier)buff, i++);
-			}else{
-				resolver = addFunction(interactiveChart, buff, i++);
-			}
+        /**
+         * iterate all readers extractor and generate ui.
+         * if {@link #getShowClassifiersOnly()} is true then only 
+         * {@link  IClassifier} interfaces will be dispalayed
+         */
+        public void initialize() {
+            InteractiveChart interactiveChart = graph;
+            interactiveChart.setSize(getSize());
+            interactiveChart.addZoomListeners(new WrapedZoomlistener());
+            interactiveChart.setBackground(Color.WHITE);
+            graph.getXAxis().setZigZaginess(BigDecimal.valueOf(51L, 2));
+            graph.getYAxis().setZigZaginess(BigDecimal.valueOf(51L, 2));
+            int i = 0;
+            for (IExtractor buff : reader.getExtractorRegister()) {
+                ChartDescriptionResolver resolver = null;
+                if (buff instanceof IClassifier) {
+                    resolver = addFunction(interactiveChart, (IClassifier) buff, i++);
+                } else if (!getShowClassifiersOnly()) {
+                    resolver = addFunction(interactiveChart, buff, i++);
+                }
 
-			if(resolver == null){
-				i--;
-			}else{
-				interactiveChart.addResolver(getGlobalMessageResolver().getInstance(resolver));	
-			}
-		}
-		for (IExtractorVector buff : reader.getExtractorRegister3D()) {
-			ChartDescriptionResolver resolver = addFunction(interactiveChart, buff, i++);
-			interactiveChart.addResolver(getGlobalMessageResolver().getInstance(resolver));
-		}
-		add(interactiveChart, BorderLayout.CENTER);
-		
-		if(interactiveChart.getToolBar() instanceof SpantusChartToolbar){
-			toolbar = (SpantusChartToolbar)interactiveChart.getToolBar(); 
-			listeners = toolbar.getSignalSelectionListeners();
-		}
-	}
+                if (resolver == null) {
+                    i--;
+                } else {
+                    interactiveChart.addResolver(getGlobalMessageResolver().getInstance(resolver));
+                }
+            }
+            if (!getShowClassifiersOnly()) {
+                for (IExtractorVector buff : reader.getExtractorRegister3D()) {
+                    ChartDescriptionResolver resolver = addFunction(interactiveChart, buff, i++);
+                    interactiveChart.addResolver(getGlobalMessageResolver().getInstance(resolver));
+                }
+            }
+            add(interactiveChart, BorderLayout.CENTER);
+
+            if (interactiveChart.getToolBar() instanceof SpantusChartToolbar) {
+                toolbar = (SpantusChartToolbar) interactiveChart.getToolBar();
+                listeners = toolbar.getSignalSelectionListeners();
+            }
+        }
 	
 	/**
 	 * 
@@ -240,13 +247,18 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		return 0;
 	}
 	
+        @Override
 	public void repaint() {
 		super.repaint();
 		if (graph != null && graph.getFont() != null) {
 			Dimension d = getSize();
 			d.height -= getHeaderHeight();
 			graph.setSize(d);
-			log.debug("[repaint]");
+//			log.debug("[repaint]");
+                        if(getDirty()){
+                            graph.resetBackBuffer();
+                            setDirty(Boolean.FALSE);
+                        }
 			graph.render();
 			graph.repaint(30L);
 		}

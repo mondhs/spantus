@@ -18,9 +18,7 @@ public class RecognitionAppFrame extends JFrame {
 	
 	private JPanel jContentPane;
 	private RecognitionToolBar toolBar;
-//	private RecognitionMonitorPlot recognitionPlot;
 	private RecognitionPanel recognitionPanel; 
-//	private RecognitionUIActionListener actionListener;
 	private SpantusEventMulticaster eventMulticaster;
 	
 
@@ -30,8 +28,7 @@ public class RecognitionAppFrame extends JFrame {
 	}
 	
 	public void initialize() {
-        eventMulticaster = new BasicSpantusEventMulticaster();
-        
+                eventMulticaster = new BasicSpantusEventMulticaster();
 		this.setContentPane(getMainContentPane());	
 		getToolBar().initialize();
 		getRecognitionPanel().initialize();
@@ -43,41 +40,19 @@ public class RecognitionAppFrame extends JFrame {
 			jContentPane.setLayout(new BorderLayout());
 			jContentPane.add(getToolBar(), BorderLayout.NORTH);
 			jContentPane.add(getRecognitionPanel(),BorderLayout.CENTER);
-//			new DropTarget(jContentPane, new WavDropTargetListener(getHandler(),getInfo()));
 		}
 		return jContentPane;
 	}
 	
-//	public RecognitionMonitorPlot getRecognitionPlot(){
-//		if (recognitionPlot == null) {
-//			recognitionPlot = new RecognitionMonitorPlot();
-//			recognitionPlot.setLearnMode(getToolBar().isLearnMode());
-//		}
-//		return recognitionPlot;
-//	}
+
 	public RecognitionToolBar getToolBar() {
 		if (toolBar == null) {
 			toolBar = new RecognitionToolBar(getEventMulticaster());
-//			toolBar.setRecognitionUIActionListener(getRecognitionUIActionListener());
-//			jJToolBarBar.setInfo(getInfo());
-//			jJToolBarBar.setHandler(getHandler());
-			
 		}
 		return toolBar;
 	}
 
-//	public RecognitionUIActionListener getRecognitionUIActionListener() {
-//		if(actionListener == null){
-//		
-//		}
-//		return actionListener;
-//	}
-	
-//	public void setLearnMode(Boolean learnMode) {
-//		if(recognitionPlot != null){
-//			getRecognitionPlot().setLearnMode(learnMode);
-//		}
-//	}
+
 
 	public RecognitionPanel getRecognitionPanel() {
 		if(recognitionPanel == null){

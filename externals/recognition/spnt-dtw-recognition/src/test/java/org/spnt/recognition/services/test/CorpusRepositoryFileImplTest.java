@@ -20,7 +20,7 @@ import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
-import org.spantus.work.wav.AudioManagerFactory;
+import org.spantus.core.wav.AudioManagerFactory;
 
 /**
  *

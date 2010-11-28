@@ -18,6 +18,7 @@
 */
 package org.spantus.core.io;
 
+import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 
 import org.spantus.core.extractor.IExtractorInputReader;
@@ -29,8 +30,8 @@ import org.spantus.core.extractor.IExtractorInputReader;
  *
  */
 public class RecordWraperExtractorReader extends WraperExtractorReader{
-	LinkedList<Byte> audioBuffer;
-	long offset = 0;
+	private ByteArrayOutputStream audioBuffer;
+//	private long offset = 0;
 	
 //	private Logger log = Logger.getLogger(getClass());
 	
@@ -42,30 +43,31 @@ public class RecordWraperExtractorReader extends WraperExtractorReader{
 		return getFormat().getSampleSizeInBits() >> 3;
 	}
 	
+        @Override
 	public void put(byte value){
 		super.put(value);
-		getAudioBuffer().add(value);
-		int i = getAudioBuffer().size() - (getReader().getConfig().getBufferSize()*100);
-		while( i > 0 ){
-			for (int j = 0; j < getSampleInBytes(); j++) {
-				audioBuffer.poll();
-			}
-			i--;
-			offset++;
-		}
+		getAudioBuffer().write(value);
+//		int i = getAudioBuffer().size() - (getReader().getConfig().getBufferSize()*100);
+//		while( i > 0 ){
+//			for (int j = 0; j < getSampleInBytes(); j++) {
+//				audioBuffer.poll();
+//			}
+//			i--;
+//			offset++;
+//		}
 //		log.error("alue:" + value);
 	}
 
-	public LinkedList<Byte> getAudioBuffer() {
+	public ByteArrayOutputStream getAudioBuffer() {
 		if(audioBuffer == null){
-			audioBuffer = new LinkedList<Byte>();
+			audioBuffer = new ByteArrayOutputStream();
 		}
 		return audioBuffer;
 	}
 
-	public Long getOffset() {
-		return offset;
-	}
+//	public Long getOffset() {
+//		return offset;
+//	}
 
 	
 }

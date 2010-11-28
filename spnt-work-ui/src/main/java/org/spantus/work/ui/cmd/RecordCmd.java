@@ -238,7 +238,7 @@ public class RecordCmd extends AbsrtactCmd {
 		 */
 		private void stop(){
 //			log.error("repaint");
-			getCapture().finalize();
+			getCapture().kill();
 //			isRecordInitialyzed = false;
 			URL wavFile = null;
 			String fullSingalFullPath = getSignalName();

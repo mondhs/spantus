@@ -37,7 +37,6 @@ import org.spantus.core.extractor.preemphasis.PreemphasisFactory;
 public class WraperExtractorReader {
 	AudioFormat format;
 	IExtractorInputReader reader;
-//	List<Byte> shortBuffer;
 	List<List<Byte>> shortBuffers;
 	Preemphasis preemphasisFilter;
 	Long sample;

@@ -12,6 +12,7 @@ import org.spantus.chart.bean.ChartInfo;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.core.io.WraperExtractorReader;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
@@ -63,9 +64,30 @@ public abstract class AbstractSegmentPlot extends JPanel {
 		param.setExpandStart(50L);
 		return param;
 	}
-	
-	protected void initGraph(IExtractorInputReader reader) {
+        /**
+         * Show only minimum charts: {@link IClassifier} only.
+         * @see  {@link #initGraphMaximum(org.spantus.core.extractor.IExtractorInputReader)  }
+         * @param reader
+         */
+        protected void initGraphMinimum(IExtractorInputReader reader) {
+            boolean showClassifiersOnly = true;
+            initGraph(reader, showClassifiersOnly);
+        }
+        /**
+         * Show all charts. 
+         * @see  {@link #initGraphMaximum(org.spantus.core.extractor.IExtractorInputReader) }
+         * @param reader
+         */
+        protected void initGraphMaximum(IExtractorInputReader reader) {
+            boolean showClassifiersOnly = false;
+            initGraph(reader, showClassifiersOnly);
+        }        
+        
+
+        
+	private void initGraph(IExtractorInputReader reader, boolean showClassifiersOnly) {
 		chart = ChartFactory.createChart(reader);
+                chart.setShowClassifiersOnly(showClassifiersOnly);
 		ChartInfo chartInfo = new ChartInfo();
 		chartInfo.setGrid(Boolean.TRUE);
 		chartInfo.setSelfZoomable(false);

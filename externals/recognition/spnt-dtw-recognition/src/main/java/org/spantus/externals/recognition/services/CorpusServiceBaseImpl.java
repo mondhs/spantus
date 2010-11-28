@@ -261,7 +261,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
                     for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
                        String featureName =  targetEntry.getKey();
                        RecognitionResult result1 = compare(featureName, targetEntry.getValue(), corpusSample);
-                        if (result == null) {
+                        if (result1 == null) {
                             log.debug("[findBestMatch]result not found");
                             continue;
                         }
@@ -271,7 +271,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
                     results.add(result);
 		}
 		results = postProcessResult(results, minimum, maximum, true);
-		log.info(MessageFormat.format("[findBestMatch] sample: {0};[{1}]", results.get(0), results));
+		log.info(MessageFormat.format("[findBestMatch] sample: {0}",  results));
 		return results.get(0);
 	}
 	/**

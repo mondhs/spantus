@@ -51,34 +51,35 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 //	private Logger log = Logger.getLogger(SegmentMonitorPlot.class);
 	private DecisionSegmentatorOnline multipleSegmentator;
 	private AudioCapture capture;
+        private AudioFormat format;
 //	private boolean recording;
 	public static final String FILE_NAME = "./config.properties";
 
 	public SegmentMonitorPlot() {
-		ConfigDao configDao = new ConfigPropertiesDao();
-
-		IExtractorConfig config = configDao.read(new File(FILE_NAME));
-		AudioFormat format = getFormat(config.getSampleRate());
 		
-		ExtractorParam param = config.getParameters().get(DefaultExtractorConfig.class.getName());
-
-		setReader(
-				ExtractorsFactory
-				.createReader(format)); 
-
-		getReader().getConfig().setBufferSize(3000);
-		
-		multipleSegmentator = 
-			createSegmentatorRecordable(param);
-//			createSegmentatorDefault(param);
-
-		
-		
-		registerExtractors(param, multipleSegmentator);
-
-		capture = new AudioCapture(getWraperExtractorReader());
-		capture.setFormat(format);
 	}
+        
+        public void initialize() {
+            ConfigDao configDao = new ConfigPropertiesDao();
+
+            IExtractorConfig config = configDao.read(new File(FILE_NAME));
+            format = getFormat(config.getSampleRate());
+
+            ExtractorParam param = config.getParameters().get(DefaultExtractorConfig.class.getName());
+
+            setReader(
+                    ExtractorsFactory.createReader(format));
+
+            getReader().getConfig().setBufferSize(3000);
+
+
+            multipleSegmentator =
+                    createSegmentatorRecordable(param);
+    //			createSegmentatorDefault(param);
+
+            registerExtractors(param, multipleSegmentator);
+           
+        }
 	
 	@Override
 	public void startRecognition(){
@@ -86,6 +87,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 		super.startRecognition();
 	}
 	
+        @Override
 	public void stopRecognition(){
 		stopRecord();
 		super.stopRecognition();
@@ -93,22 +95,28 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 	
 	public void stopRecord(){
 		timer.cancel();
-		capture.finalize();
+		capture.kill();
+                capture = null;
 	}
 	
-	public void startRecord(){
-		capture.start();
-		timer.schedule(new TimerTask() {
-			public void run() {
-				repaint();
-				if( getChart() == null ){
-					if(getReader().getExtractorRegister().iterator().next().getOutputValues().size()>0){
-						initGraph(getReader());
-					}
-				}
-			}
-		}, 1000L, 1000L);
-	}
+        public void startRecord() {
+            capture = new AudioCapture(getWraperExtractorReader());
+            capture.setFormat(format);
+            capture.start();
+            timer.schedule(new TimerTask() {
+
+                public void run() {
+                    if (getChart() == null) {
+                        if (getReader().getExtractorRegister().iterator().next().getOutputValues().size() > 0) {
+                            initGraphMinimum(getReader());
+                        }
+                    } else {
+                        getChart().setDirty(Boolean.TRUE);
+                        getChart().repaint();
+                    }
+                }
+            }, 1000L, 1000L);
+        }
 	
 	public void registerExtractors(ExtractorParam param, ISegmentatorListener multipleSegmentator){
 		IClassifier segmentator = null;

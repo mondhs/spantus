@@ -64,7 +64,7 @@ public class AudioCommon
 
 
 
-	/** TODO:
+	/** 
 	 */
 	public static void listSupportedTargetTypes()
 	{
@@ -101,7 +101,7 @@ public class AudioCommon
 
 
 
-	/** TODO:
+	/** 
 	 */
 	public static void listMixersAndExit()
 	{
@@ -148,7 +148,7 @@ public class AudioCommon
 
 
 
-	/**	TODO:
+	/**	
 		This method tries to return a Mixer.Info whose name
 		matches the passed name. If no matching Mixer.Info is
 		found, null is returned.
@@ -168,7 +168,7 @@ public class AudioCommon
 
 
 
-	/** TODO:
+	/**
 	 */
 	public static TargetDataLine getTargetDataLine(String strMixerName,
 							AudioFormat audioFormat,
@@ -245,7 +245,7 @@ public class AudioCommon
 	}
 
 
-	/** TODO:
+	/** 
 	 */
 	private static void out(String strMessage)
 	{

@@ -35,7 +35,7 @@ import org.spantus.utils.Assert;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.services.WorkInfoManager;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
-import org.spantus.work.wav.AudioManagerFactory;
+import org.spantus.core.wav.AudioManagerFactory;
 
 public class CurrentSampleChangedCmd extends AbsrtactCmd {
 

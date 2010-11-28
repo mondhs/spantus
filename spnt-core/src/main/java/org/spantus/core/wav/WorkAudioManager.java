@@ -18,14 +18,14 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.work.wav;
+package org.spantus.core.wav;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.logging.Level;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -117,7 +117,23 @@ public class WorkAudioManager implements AudioManager {
         
         AudioInputStream stream = createInput(file);
 
-        Float totalTime = getTotalTime(stream);
+        return findInputStream(stream, starts, length);
+        
+    }
+    /**
+     * 
+     * @param inputStream
+     * @param starts
+     * @param length
+     * @return
+     */
+    protected AudioInputStream findInputStream(AudioInputStream inputStream, Float starts, Float length) {
+        log.debug("[findInputStream]  from:{0}; lenght:{1}; ", starts,
+                length);
+        
+
+
+        Float totalTime = getTotalTime(inputStream);
         
         starts = starts == null ? 0L : starts;
         length = length == null ? totalTime : length;
@@ -129,24 +145,25 @@ public class WorkAudioManager implements AudioManager {
             throw new ProcessingException("Cannot save due stars:" + starts
                     + " more than total time:" + totalTime);
         }
-        Long startsBytes = (long) ((starts * stream.getFormat().getFrameRate()) * stream.getFormat().getFrameSize());
-        Long lengthBytes = (long) ((adaptedLength * stream.getFormat().getFrameRate()) * stream.getFormat().getFrameSize());
+        Long startsBytes = (long) ((starts * inputStream.getFormat().getFrameRate()) * inputStream.getFormat().getFrameSize());
+        Long lengthBytes = (long) ((adaptedLength * inputStream.getFormat().getFrameRate()) * inputStream.getFormat().getFrameSize());
 
         try {
             long skipedByteTotal = startsBytes;
-            long skipedByte = stream.available();
-            while ((skipedByte = stream.skip(skipedByteTotal)) != 0) {
+            long skipedByte = inputStream.available();
+            while ((skipedByte = inputStream.skip(skipedByteTotal)) != 0) {
                 skipedByteTotal -= skipedByte;
             }
             byte[] data = new byte[lengthBytes.intValue()];
-            stream.read(data);
+            inputStream.read(data);
             InputStream bais = new ByteArrayInputStream(data);
-            AudioInputStream ais = new AudioInputStream(bais, stream.getFormat(), data.length / 2);
+            AudioInputStream ais = new AudioInputStream(bais, inputStream.getFormat(), data.length / 2);
             return ais;
         } catch (IOException e) {
             throw new ProcessingException(e);
         }
     }
+     
     /**
      * 
      * @param file
@@ -158,6 +175,31 @@ public class WorkAudioManager implements AudioManager {
         return findInputStream(
                 file,
                 Float.valueOf(starts.floatValue()/1000),
+                Float.valueOf(length.floatValue()/1000));
+    }
+    /**
+     * 
+     * @param outputStream
+     * @param starts
+     * @param length
+     * @param audioFormat
+     * @return
+     */
+    public AudioInputStream findInputStreamInMils(ByteArrayOutputStream outputStream, Long starts, Long length,
+            AudioFormat audioFormat) {
+
+        byte audioData[] = outputStream.toByteArray();
+        InputStream byteArrayInputStream = new ByteArrayInputStream(audioData);
+
+        AudioInputStream inputStream =
+                new AudioInputStream(
+                byteArrayInputStream,
+                audioFormat,
+                audioData.length / audioFormat.getFrameSize());
+
+        return findInputStream(
+                inputStream,
+                Float.valueOf(starts.floatValue() / 1000),
                 Float.valueOf(length.floatValue()/1000));
     }
 

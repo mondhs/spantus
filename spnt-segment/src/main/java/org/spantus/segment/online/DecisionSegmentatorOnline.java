@@ -189,12 +189,12 @@ public class DecisionSegmentatorOnline extends MultipleSegmentatorListenerOnline
 		this.ruleBaseService = ruleBaseService;
 	}	
 	protected void debugAction(String msg, DecisionCtx ctx){
-		if(log.isDebugMode()){
-			RuleBaseEnum.state previous = ctx.getPreviousState();
-			if(previous == null ||
-					!previous.equals(ctx.getSegmentState())){
-			log.debug("{0}: {1}",msg, ctx);
-			}
-		}
+//		if(log.isDebugMode()){
+//			RuleBaseEnum.state previous = ctx.getPreviousState();
+//			if(previous == null ||
+//					!previous.equals(ctx.getSegmentState())){
+//			log.debug("{0}: {1}",msg, ctx);
+//			}
+//		}
 	}
 }

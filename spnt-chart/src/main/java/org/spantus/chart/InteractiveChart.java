@@ -58,6 +58,10 @@ public class InteractiveChart extends InteractiveGraph {
 	private SpantusChartToolbar spntToolbar;
 	private List<ChartDescriptionResolver> resolvers;
 	private final Color SELECTION_COLOR = UIManager.getColor("textHighlight");
+        private BufferedImage backBuffer;
+        private Dimension size;
+
+
 
 
 	private Point currentMousePoint;
@@ -72,6 +76,7 @@ public class InteractiveChart extends InteractiveGraph {
 	}
 
 	
+        @Override
 	public SpantusChartToolbar getToolBar() {
 		if (spntToolbar == null) {
 			spntToolbar = new SpantusChartToolbar(this);
@@ -96,11 +101,12 @@ public class InteractiveChart extends InteractiveGraph {
 //            super.paint(g);
 //        }
         
-        private Dimension size;
+        public void resetBackBuffer(){
+            backBuffer = null;
+        }
         /**
          * A back buffer, used to reduce flicker during painting
          */
-        private BufferedImage backBuffer;
         @Override
         public void paintComponent(Graphics g) {
 //            Dimension currentSize = getSize();

@@ -62,7 +62,7 @@ public class SegmentPlot extends AbstractSegmentPlot {
 			throw new RuntimeException();
 		}
 		
-		initGraph(getReader());
+		initGraphMaximum(getReader());
 	}
 
 	public IExtractorInputReader readSignal()

@@ -68,13 +68,7 @@ public class BestMatch {
 		return minDisntanceName;
 	}
 	
-	
-	public static void main(String[] args) {
-		BestMatch bestMatch = new BestMatch();
-		File targetFile = new File("./target/11118.sspnt.xml");
-		bestMatch.findBestMatch(targetFile);
-	}
-	
+		
 	public CompareFeatures getCompareFeatures() {
 		if(compareFeatures == null){
 			compareFeatures = new CompareFeaturesCachable();

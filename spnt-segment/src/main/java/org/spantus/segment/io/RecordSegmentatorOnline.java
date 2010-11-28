@@ -20,12 +20,12 @@
  */
 package org.spantus.segment.io;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.List;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -35,6 +35,7 @@ import org.spantus.core.io.RecordWraperExtractorReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.threshold.SegmentEvent;
+import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.utils.Assert;
@@ -73,78 +74,71 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 	 * @return
 	 */
 	public URL processAcceptedSegment(Marker marker){
-		int bytesPerSample = (reader.getFormat().getSampleSizeInBits()>>3);// 16bit==2; 8bit==1
-                Float sampleRate = reader.getFormat().getSampleRate();
-
-		long offset = (-reader.getOffset()); 
-//		int fromIndex =(int)(offset + marker.getExtractionData().getStartSampleNum())*bytesPerSample;
-//		int toIndex = fromIndex + (marker.getExtractionData().getLengthSampleNum().intValue()*bytesPerSample);
-		Float timeFrom = marker.getStart().floatValue();      
-//		timeFrom -= 160;
-		Float fromIndex = (timeFrom*sampleRate)/1000;
-        fromIndex = (fromIndex*bytesPerSample)-offset;
-		Float toIndexF = fromIndex+(marker.getLength().floatValue()*sampleRate)/1000;
-//                toIndexF = toIndexF * bytesPerSample;
-                Integer toIndex = toIndexF.intValue();
-//                if(toIndex>values.size()){
-                    toIndex = reader.getAudioBuffer().size();
-//                }
-                    if(fromIndex %2==0){
-                        fromIndex--;
-                    }
-
-                log.error("[processAcceptedSegment] offset: " + offset + "; size:" + reader.getAudioBuffer().size());
-
-                log.error("[processAcceptedSegment] FromIndex: " + fromIndex + "; toIndex:" + toIndex);
 		try{
-			getWords().getMarkers().add(marker);
-			List<Byte> data = reader.getAudioBuffer().subList(fromIndex.intValue(), toIndex.intValue());
-			return saveSegmentAccepted(data, marker.getLabel());
+			
+                        AudioInputStream ais = 
+                                AudioManagerFactory.createAudioManager().findInputStreamInMils(
+                                reader.getAudioBuffer(),
+                                marker.getStart(),
+                                marker.getLength(),
+                                reader.getFormat());
+                        getWords().getMarkers().add(marker);
+			return saveSegmentAccepted(marker, ais, stringToFile(marker.getLabel()));
 		}catch (IndexOutOfBoundsException e) {
 			log.error(MessageFormat.format("buffer: {3}.marker: {0}. samples: [{1};{2}]", 
-					marker.toString(),fromIndex, toIndex, reader.getAudioBuffer().size()));
+					marker.toString(),marker.getStart(), 
+                                        marker.getEnd(), reader.getAudioBuffer().size()));
 			log.error(e);
 		}
 		return null;
 	}
+
+        
 	/**
-	 * 
-	 * @param data
-	 * @param name
-	 * @return
-	 */
-	public URL saveSegmentAccepted(List<Byte> data, String name){
-		Assert.isTrue(StringUtils.hasText(name), "Name cannot be empty");
-		if(path!= null && !"".equals(path)){
-                    String path1 = getPath()+"/"+name+".wav";
-                    FileUtils.checkDirs(getPath());
-                    File wavFile = new File(path1);
-                    return saveSegmentAccepted(data, wavFile);
-                    }
-		return null;
-	}
-	
-	public URL saveSegmentAccepted(List<Byte> data, File file){
-	    InputStream bais = new ByteListInputStream(data);
+         * 
+         * @param ais
+         * @param file
+         * @return
+         */
+        protected URL saveSegmentAccepted(Marker marker, AudioInputStream ais, File file) {
             FileUtils.checkDirs(file.getParent());
-//            log.error(file.getParent());
-            AudioInputStream ais = new AudioInputStream(bais, reader.getFormat(), data.size()/reader.getFormat().getFrameSize());
-	    try {
-	    	AudioSystem.write(ais, AudioFileFormat.Type.WAVE, file);
-	    	log.debug("[saveSegmentAccepted] saved{0}", path);
-	    	return file.toURI().toURL();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+            try {
+                AudioSystem.write(ais, AudioFileFormat.Type.WAVE, file);
+                log.debug("[saveSegmentAccepted] {0} saved {1}", marker, path);
+                return file.toURI().toURL();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        /**
+         * 
+         * @param name
+         * @return
+         */
+        public URL saveFullSignal(String name) {
+            Assert.isTrue(StringUtils.hasText(name), "Name cannot be empty");
+            return saveFullSignal(stringToFile(name));
+        }
 	
-	public URL saveFullSignal(String name){
-		return saveSegmentAccepted(reader.getAudioBuffer(), name);
-	}
-	
-	public URL saveFullSignal(File file){
-		return saveSegmentAccepted(reader.getAudioBuffer(), file);
-	}
+       
+       /**
+        * 
+        * @param file
+        * @return
+        */
+        public URL saveFullSignal(File wavFile) {
+            if (wavFile == null) {
+                return null;
+            }
+            byte audioData[] = reader.getAudioBuffer().toByteArray();
+            InputStream byteArrayInputStream = new ByteArrayInputStream(audioData);
+            AudioInputStream ais =
+                    new AudioInputStream(byteArrayInputStream,
+                    reader.getFormat(),
+                    audioData.length / reader.getFormat().
+                    getFrameSize());
+            return saveSegmentAccepted(null, ais, wavFile);
+        }
 	
 	@Override
 	protected Marker createSegment(SegmentEvent event) {
@@ -162,7 +156,15 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 		return marker;
 	}
 	
-	
+	 protected File stringToFile(String name){
+            File wavFile = null;
+            if (path != null && !"".equals(path)) {
+                String pathToWav = getPath() + "/" + name + ".wav";
+                FileUtils.checkDirs(getPath());
+                wavFile = new File(pathToWav);
+            }
+            return wavFile;
+        }
 	public void setReader(RecordWraperExtractorReader reader) {
 		this.reader = reader;
 	}

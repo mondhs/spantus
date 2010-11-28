@@ -12,5 +12,5 @@ public interface CorpusRepository {
         public CorpusEntry update(CorpusEntry corpusEntry, AudioInputStream audioStream);
         public CorpusEntry delete(CorpusEntry entry);
         public String findAudioFileById(Long id);
-        
+        public void flush();
 }

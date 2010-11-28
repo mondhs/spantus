@@ -1,5 +1,6 @@
 package org.spantus.externals.recognition.bean;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,5 +32,12 @@ public class CorpusEntry {
 		}
 		return featureMap;
 	}
+        @Override
+        public String toString() {
+            return MessageFormat.format("{0}]: [name:{1}, id:{2,number,#}", 
+                    getClass().getSimpleName(),
+                    getName(),
+                    getId());
+        }
 
 }
