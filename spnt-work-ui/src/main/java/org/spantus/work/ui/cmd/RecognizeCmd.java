@@ -92,13 +92,14 @@ public class RecognizeCmd extends AbsrtactCmd {
      * @param ctx
      */
     protected void update(SpantusWorkInfo ctx){
+        corpusService = null;
         String corpusPath = ctx.getProject().getRecognitionConfig().getRepositoryPath();
         String searchWindowStr= ctx.getProject().getRecognitionConfig().getDtwWindow();
         JavaMLSearchWindow searchWindow= JavaMLSearchWindow.valueOf(searchWindowStr);
         int radius = ctx.getProject().getRecognitionConfig().getRadius();
         
         File corpusDir =  new File(corpusPath);
-        if (!corpusDir.equals(getCorpusRepository().getRepoDir())) {
+        if (!corpusDir.equals(getCorpusRepository().getRepoDir().getAbsoluteFile())) {
             getCorpusRepository().setRepositoryPath(corpusPath);
             getCorpusRepository().flush();
         }
@@ -123,7 +124,7 @@ public class RecognizeCmd extends AbsrtactCmd {
             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.MFCC_EXTRACTOR.name());
             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.LPC_EXTRACTOR.name());
             corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.FFT_EXTRACTOR.name());
-            corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
+//            corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
             corpusServiceimpl.setCorpus(getCorpusRepository());
             corpusService = corpusServiceimpl;
 //            corpusService = RecognitionServiceFactory.createCorpusService();

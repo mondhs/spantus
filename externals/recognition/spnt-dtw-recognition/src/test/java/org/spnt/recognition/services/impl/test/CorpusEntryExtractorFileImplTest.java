@@ -48,7 +48,7 @@ public class CorpusEntryExtractorFileImplTest {
          //given
        File filePath = new File(path, FILE_TEST);
         //when
-       int entries = extractor.extractAndSave(filePath);
+       int entries = extractor.extractAndLearn(filePath);
        //then
        Assert.assertEquals("entries: " , 2, entries);
      }

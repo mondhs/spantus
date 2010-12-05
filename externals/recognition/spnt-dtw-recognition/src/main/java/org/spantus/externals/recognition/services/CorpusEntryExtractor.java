@@ -27,6 +27,6 @@ public interface CorpusEntryExtractor {
      * @param filePath
      * @return - dir where it will save learned samples
      */
-    public int extractAndSave(File filePath);
+    public int extractAndLearn(File filePath);
 
 }

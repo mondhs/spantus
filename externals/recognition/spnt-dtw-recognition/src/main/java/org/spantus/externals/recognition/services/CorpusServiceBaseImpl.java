@@ -45,6 +45,15 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		RecognitionResult match = findBestMatch(target);
 		return match;
 	}
+        
+        public RecognitionResult matchByCorpusEntry(CorpusEntry corpusEntry) {
+            Map<String, IValues> target = new HashMap<String, IValues>();
+            for (FeatureData featureData : corpusEntry.getFeatureMap().values()) {
+                target.put(featureData.getName(), featureData.getValues());
+            }
+            RecognitionResult match = findBestMatch(target);
+            return match;
+	}
         /**
          * Find mutliple match
          * 
@@ -122,7 +131,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @param maximum
          */
         private void updateMinMax(String feature, Float value, Map<String, Float> minimum, Map<String, Float> maximum) {
-            log.debug("[updateMinMax] feature [{0}]: {1} ", feature, value);
+//            log.debug("[updateMinMax] feature [{0}]: {1} ", feature, value);
             if(minimum.get(feature)==null){
                 minimum.put(feature, Float.MAX_VALUE);
             }
@@ -130,16 +139,16 @@ public class CorpusServiceBaseImpl implements CorpusService {
                 maximum.put(feature, -Float.MAX_VALUE);
             }
             if(minimum.get(feature).compareTo(value)>0){
-                log.debug("[updateMinMax] [{2}] minimum {0}>{1}",
-                        minimum.get(feature),value, feature);
+//                log.debug("[updateMinMax] [{2}] minimum {0}>{1}",
+//                        minimum.get(feature),value, feature);
                 minimum.put(feature, value);
             }
             if(maximum.get(feature).compareTo(value)<0){
-                log.debug("[updateMinMax] [{2}] maximum {0}<{1}",maximum.get(feature)
-                        ,value, feature);
+//                log.debug("[updateMinMax] [{2}] maximum {0}<{1}",maximum.get(feature)
+//                        ,value, feature);
                 maximum.put(feature, value);
             }
-            log.debug("[updateMinMax][{0}] [{1}]", minimum, maximum);
+//            log.debug("[updateMinMax][{0}] [{1}]", minimum, maximum);
         }
         /**
          * post process multi match result. normalize and ordering
@@ -156,7 +165,9 @@ public class CorpusServiceBaseImpl implements CorpusService {
                     float min = minimum.get(score.getKey());
                     float max = maximum.get(score.getKey());
                     float delta = max-min;
-                    float normalizedScore = (score.getValue() - min)/delta;
+//                    float normalizedScore = (score.getValue() - min)/delta;
+                    float normalizedScore = score.getValue();
+
                     if(getIncludeFeatures() == null || getIncludeFeatures().isEmpty()){
                         normalizedSum += normalizedScore;
                     }else if(getIncludeFeatures().contains(score.getKey())){
@@ -222,12 +233,21 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @param audioStream
          * @return
          */
-        public CorpusEntry learn(String label, Map<String, IValues> featureDataMap, AudioInputStream audioStream) {
-            CorpusEntry corpusEntry = learn(label, featureDataMap);
-            getCorpus().update(corpusEntry, audioStream);
-            return corpusEntry;
+        public CorpusEntry learn(CorpusEntry corpusEntry, AudioInputStream audioStream) {
+//            CorpusEntry corpusEntry = create(label, featureDataMap);
+            CorpusEntry learnedCorpusEntry = getCorpus().update(corpusEntry, audioStream);
+            return learnedCorpusEntry;
         }
-
+        /**
+         * 
+         * @param label
+         * @param featureDataMap
+         * @return
+         */
+        public CorpusEntry create(String label, Map<String, IValues> featureDataMap) {
+            return getCorpus().create(label, featureDataMap);
+        }
+        
         /**
          * learn with multiple features
          * @param label
@@ -235,15 +255,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @return
          */
         public CorpusEntry learn(String label, Map<String, IValues> featureDataMap) {
-            CorpusEntry entry = new CorpusEntry();
-            entry.setName(label);
-            for (Map.Entry<String, IValues> entry1 : featureDataMap.entrySet()) {
-                FeatureData fd = new FeatureData();
-                fd.setName(entry1.getKey());
-                fd.setValues(entry1.getValue());
-                entry.getFeatureMap().put(entry1.getKey(), fd);
-            }
-            return getCorpus().save(entry);
+            CorpusEntry corpusEntry =  create(label, featureDataMap);
+            return getCorpus().save(corpusEntry);
         }
 	/**
 	 * find best match in the corpus

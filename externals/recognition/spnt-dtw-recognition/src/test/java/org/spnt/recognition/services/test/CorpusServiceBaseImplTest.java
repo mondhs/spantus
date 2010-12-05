@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.spnt.recognition.service.test;
+package org.spnt.recognition.services.test;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -86,7 +86,8 @@ public class CorpusServiceBaseImplTest {
         Map<String, IValues> features = new HashMap<String, IValues>();
         features.put(Feature1, createFrameValues(1F, 2F, 3F, 4F, 5F));
         features.put(Feature2, createFrameValues(3F, 4F, 5F, 6F));
-        CorpusEntry result = corpusServiceBaseImpl.learn(VIENAS,features, ais);
+        CorpusEntry result = corpusServiceBaseImpl.create(VIENAS,features);
+        result = corpusServiceBaseImpl.learn(result, ais);
         
         //then
         Assert.assertNotNull("Result not saved", result);

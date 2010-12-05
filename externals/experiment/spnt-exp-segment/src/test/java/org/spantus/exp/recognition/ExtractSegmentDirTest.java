@@ -6,9 +6,14 @@ package org.spantus.exp.recognition;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.spantus.externals.recognition.bean.CorpusEntry;
+import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorFileImpl;
@@ -22,10 +27,10 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
  */
 public class ExtractSegmentDirTest {
 
-    public final static String DIR_WAV = "/home/mondhs/src/garsynai/skaiciai/learn";
+    public final static String DIR_LEARN_WAV = "/home/mondhs/src/garsynai/skaiciai/learn";
     public final static String DIR_LEARN = "./target/learn-corpus/";
 
-    private File parent;
+    private File learnDir;
     private CorpusEntryExtractorFileImpl extractor;
     private  CorpusServiceBaseImpl corpusService;
     private CorpusRepositoryFileImpl corpusRepository;
@@ -33,7 +38,7 @@ public class ExtractSegmentDirTest {
 
     @Before
     public void onSetup() {
-        parent = new File(DIR_WAV);
+        learnDir = new File(DIR_LEARN_WAV);
         extractor = new CorpusEntryExtractorFileImpl();
         corpusService = new CorpusServiceBaseImpl();
         corpusRepository = new CorpusRepositoryFileImpl();
@@ -44,7 +49,7 @@ public class ExtractSegmentDirTest {
         OnlineDecisionSegmentatorParam segmentionParam = new OnlineDecisionSegmentatorParam();
         segmentionParam.setMinLength(91L);
         segmentionParam.setMinSpace(261L);
-        segmentionParam.setExpandStart(360L);
+        segmentionParam.setExpandStart(260L);
         segmentionParam.setExpandEnd(360L);
         
         ExtractorEnum[] extractors = new ExtractorEnum[]{
@@ -60,14 +65,38 @@ public class ExtractSegmentDirTest {
 
     @Test
     public void testExtract() {
+        
+        for (CorpusEntry corpusEntry : corpusRepository.findAllEntries()) {
+            corpusRepository.delete(corpusEntry);
+        }
+        corpusRepository.flush();
+                 
         int sum = 0; 
-        for (File filePath : parent.listFiles(new WavFileNameFilter())) {
-           int entries = extractor.extractAndSave(filePath.getAbsoluteFile());
+        for (File filePath : learnDir.listFiles(new WavFileNameFilter())) {
+           int entries = extractor.extractAndLearn(filePath.getAbsoluteFile());
            log.debug("accept: {0}:{1}",filePath, entries);
            sum += entries;
         }
         Assert.assertEquals(30, sum);
+
+        File testDir = new File(learnDir,"../test");
+        for (File filePath : testDir.listFiles(new WavFileNameFilter())) {
+           List<CorpusEntry> entries = extractor.extractInMemory(filePath);
+           log.debug("accept: {0}:{1}",filePath, entries);
+           int index = 0; 
+           Map<Integer,String> results = new LinkedHashMap<Integer, String>();
+           for (CorpusEntry corpusEntry : entries) {
+                RecognitionResult result = corpusService.matchByCorpusEntry(corpusEntry);
+                index++;
+                results.put(index, result.getInfo().getName());
+           }
+            for (Map.Entry<Integer, String> resultEntry : results.entrySet()) {
+                log.debug("[testExtract]result {0}:{1}",resultEntry.getKey(), resultEntry.getValue() );
+            }
+        }
     }
+
+    
     
     public class WavFileNameFilter implements FilenameFilter{
 

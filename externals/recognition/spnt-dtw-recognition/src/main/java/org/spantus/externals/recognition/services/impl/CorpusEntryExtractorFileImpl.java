@@ -71,7 +71,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
         //process markers
         Assert.isTrue(words != null);
         for (Marker marker : words.getMarkers()) {
-            CorpusEntry corpusEntry = learn(fileUrl, marker, reader);
+            CorpusEntry corpusEntry = create( marker, reader);
             result.add(corpusEntry);
         }
 
@@ -83,7 +83,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
      * @param filePath
      * @return
      */
-    public int extractAndSave(File filePath) {
+    public int extractAndLearn(File filePath) {
          Assert.isTrue(filePath.exists(), "file not exists" + filePath);
         URL fileUrl = toUrl(filePath);
         int result = 0;
@@ -95,7 +95,8 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
         //process markers
         Assert.isTrue(words != null);
         for (Marker marker : words.getMarkers()) {
-            marker.setLabel(filePath.getName()+"-"+result);
+            marker.setLabel(filePath.getName()+"-"+
+                    (result+1));
             learn(fileUrl, marker, reader);
             result++;
         }
@@ -140,6 +141,13 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
         }
     }
 
+    protected CorpusEntry create(Marker marker, IExtractorInputReader reader) {
+          Map<String, IValues> fvv = getReaderService().findAllVectorValuesForMarker(
+                reader,
+                marker);
+        CorpusEntry corpusEntry = getCorpusService().create(marker.getLabel(), fvv);
+        return corpusEntry;
+    }
     /**
      * 
      * @param fileUrl
@@ -148,25 +156,23 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
      * @return
      */
     protected CorpusEntry learn(URL fileUrl, Marker marker, IExtractorInputReader reader) {
-        Map<String, IValues> fvv = getReaderService().findAllVectorValuesForMarker(
-                reader,
-                marker);
-        log.debug("[extractInMemory] {0}", marker);
+
         AudioInputStream ais =
                 AudioManagerFactory.createAudioManager().findInputStreamInMils(
                 fileUrl,
                 marker.getStart(),
                 marker.getLength());
 
-        CorpusEntry corpusEntry = getCorpusService().learn(marker.getLabel(), fvv, ais);
+        CorpusEntry corpusEntry = create(marker, reader);
+        getCorpusService().learn(corpusEntry, ais);
         return corpusEntry;
     }
-
+    
     public OnlineDecisionSegmentatorParam getSegmentionParam() {
         if(segmentionParam == null){
             segmentionParam = new OnlineDecisionSegmentatorParam();
             segmentionParam.setMinLength(91L);
-            segmentionParam.setMinSpace(91L);
+            segmentionParam.setMinSpace(61L);
             segmentionParam.setExpandStart(60L);
             segmentionParam.setExpandEnd(60L);
         }

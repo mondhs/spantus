@@ -9,6 +9,7 @@ import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 
 public interface CorpusService {
+    	public RecognitionResult matchByCorpusEntry(CorpusEntry corpusEntry);
 	public RecognitionResult match(Map<String, IValues> featureDataMap);
         public List<RecognitionResultDetails> findMultipleMatch(Map<String, IValues> featureDataMap);
         public CorpusEntry learn(String label, Map<String, IValues> featureDataMap);
@@ -20,6 +21,13 @@ public interface CorpusService {
          * @param audioStream
          * @return
          */
-        public CorpusEntry learn(String label, Map<String, IValues> featureDataMap, AudioInputStream audioStream);
+        public CorpusEntry learn(CorpusEntry corpusEntry, AudioInputStream audioStream);
+        /**
+         * create Corpus entry
+         * @param label
+         * @param featureDataMap
+         * @return
+         */
+        public CorpusEntry create(String label, Map<String, IValues> featureDataMap);
 
 }

@@ -24,6 +24,8 @@ import java.util.Set;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import org.spantus.core.IValues;
+import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.utils.Assert;
 
 public class CorpusRepositoryFileImpl implements CorpusRepository {
@@ -98,6 +100,8 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
                     throw new ProcessingException("Cannot delete");
                 }
             }
+            log.debug("[delete] {0} }", entry);
+
             return entry;
         }
 	/**
@@ -115,7 +119,9 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
                 }
 		try {
 			FileWriter outputFile = new FileWriter(entry.getEntryFile(),false);	
-			getXsteam().toXML(entry, outputFile);
+                        getXsteam().toXML(entry, outputFile);
+                        log.debug("[saveOrUpdateFile] {0} saved to {1}",
+                                entry, outputFile);
 		} catch (IOException e) {
                     throw new ProcessingException(e);
 		}
@@ -146,7 +152,12 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
          * @return
          */
 	public CorpusEntry update(CorpusEntry entry, AudioInputStream ais) {
-                CorpusFileEntry fileEntry = (CorpusFileEntry)entry;
+                
+                CorpusFileEntry fileEntry = (CorpusFileEntry) entry;
+                if(entry.getId() == null){
+			entry.setId(System.currentTimeMillis());
+		}
+
                 File wavFile = new File(getRepoDir(),entry.getName() + "-" + entry.getId() + WAV_FILE_EXT);
                 wavFile = wavFile.getAbsoluteFile();
                 try {
@@ -156,12 +167,33 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
                 } catch (IOException ex) {
                      throw new ProcessingException(ex);
                 }
-       
                 fileEntry = saveOrUpdateFile(fileEntry);
+       
                 return fileEntry;
         }
         
+         /**
+         * 
+         * @param label
+         * @param featureDataMap
+         * @return
+         */
+        public CorpusEntry create(String label, Map<String, IValues> featureDataMap) {
+            CorpusFileEntry corpusEntry = new CorpusFileEntry();
+            corpusEntry.setName(label);
+            for (Map.Entry<String, IValues> entry1 : featureDataMap.entrySet()) {
+                FeatureData fd = new FeatureData();
+                fd.setName(entry1.getKey());
+                fd.setValues(entry1.getValue());
+                corpusEntry.getFeatureMap().put(entry1.getKey(), fd);
+            }
+            return corpusEntry;
+        }
+        
         public String findAudioFileById(Long id) {
+            if(getRepository().get(id) == null){
+                return null;
+            }
             return getRepository().get(id).getWavFile().getAbsolutePath();
         }
         
@@ -211,14 +243,15 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 	}
 
 	public void setRepositoryPath(String repositoryPath) {
-		repoDir = FileUtils.checkDirs(repositoryPath);
+		repoDir = FileUtils.checkDirs(repositoryPath).getAbsoluteFile();
 	}
         
         public Map<Long, CorpusFileEntry> getRepository() {
             if (repository == null) {
+                log.debug("[getRepository] init repo from {0}", getRepoDir());
                 repository= new HashMap<Long, CorpusFileEntry>();
                 if (getRepoDir().isDirectory()) {
-                    for (String fileName : repoDir.list()) {
+                    for (String fileName : getRepoDir().list()) {
                         if (fileName.endsWith(CORPUS_ENTRY_FILE_EXT)) {
                             CorpusFileEntry entry = read(new File(repoDir, fileName));
                             repository.put(entry.getId(), entry);

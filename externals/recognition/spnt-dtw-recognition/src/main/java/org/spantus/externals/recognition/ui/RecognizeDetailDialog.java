@@ -90,7 +90,7 @@ public class RecognizeDetailDialog extends JDialog {
      * @return void
      */
     private void initialize() {
-        this.setSize(SwingUtils.currentWindowSize(0.5, 0.5));
+        this.setSize(SwingUtils.currentWindowSize(0.75, 0.75));
         SwingUtils.centerWindow(this);
         setTitle(getI18n().getMessage("RecognitionResults"));
         this.setContentPane(getJContentPane());

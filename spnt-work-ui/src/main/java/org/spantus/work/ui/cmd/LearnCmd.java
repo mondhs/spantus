@@ -5,7 +5,6 @@
 package org.spantus.work.ui.cmd;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.sound.sampled.AudioInputStream;
@@ -15,9 +14,9 @@ import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.core.wav.AudioManagerFactory;
+import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
-import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 
@@ -51,7 +50,8 @@ public class LearnCmd extends AbsrtactCmd {
                 marker.getStart(),
                 marker.getLength());
 
-        getCorpusService().learn(marker.getLabel(), fvv, ais);
+        CorpusEntry corpusEntry = getCorpusService().create(marker.getLabel(), fvv);
+        getCorpusService().learn(corpusEntry, ais);
         return null;
     }
 
@@ -110,7 +110,8 @@ public class LearnCmd extends AbsrtactCmd {
 
     public CorpusRepositoryFileImpl getCorpusRepository() {
         if (corpusRepo == null) {
-            CorpusRepositoryFileImpl corpusRepo = new CorpusRepositoryFileImpl();
+            CorpusRepositoryFileImpl corpusFileRepo = new CorpusRepositoryFileImpl();
+            corpusRepo = corpusFileRepo;
         }
         return corpusRepo;
     }

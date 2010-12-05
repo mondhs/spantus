@@ -54,7 +54,9 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
             Map<String, IValues> featureData = getExtractorReaderService().findAllVectorValuesForMarker(getReader().getReader(), marker);
             URL url = null;
             if (getLearnMode()) {
-                CorpusEntry corpusEntry = getCorpusService().learn(marker.getLabel(), featureData, ais);
+                
+                CorpusEntry corpusEntry = getCorpusService().create(marker.getLabel(), featureData);
+                getCorpusService().learn(corpusEntry, ais);
                 if (corpusEntry instanceof CorpusFileEntry) {
                     try {
                         url = ((CorpusFileEntry) corpusEntry).getWavFile().toURI().toURL();
