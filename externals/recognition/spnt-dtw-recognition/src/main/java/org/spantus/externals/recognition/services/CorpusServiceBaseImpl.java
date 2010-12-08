@@ -95,6 +95,15 @@ public class CorpusServiceBaseImpl implements CorpusService {
                                     (FrameValues)targetEntry.getValue(),
                                     (FrameValues)sampleFeatureData.getValues());
                             }else{
+                                if(targetEntry.getValue().getDmention() != 
+                                        sampleFeatureData.getValues().getDmention()){
+                                    log.error("[findMultipleMatch] Sample size not same "
+                                            +targetEntry.getKey() +
+                                            targetEntry.getValue().getDmention() 
+                                            +"!=" + sampleFeatureData.getValues().getDmention()
+                                            );
+                                    continue;
+                                }
                                 dtwResult = getDtwService().calculateInfoVector(
                                         (FrameVectorValues)targetEntry.getValue(),
                                     (FrameVectorValues)sampleFeatureData.getValues());
@@ -165,8 +174,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
                     float min = minimum.get(score.getKey());
                     float max = maximum.get(score.getKey());
                     float delta = max-min;
-//                    float normalizedScore = (score.getValue() - min)/delta;
-                    float normalizedScore = score.getValue();
+                    float normalizedScore = (score.getValue() - min)/delta;
+//                    float normalizedScore = score.getValue();
 
                     if(getIncludeFeatures() == null || getIncludeFeatures().isEmpty()){
                         normalizedSum += normalizedScore;
@@ -277,7 +286,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
                         if (result1 == null) {
                             log.debug("[findBestMatch]result not found");
                             continue;
-                        }
+                        } 
                         result.getScores().put(featureName, result1.getDistance());
                         updateMinMax(featureName, result1.getDistance(), minimum, maximum);
                     }
@@ -285,7 +294,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		}
 		results = postProcessResult(results, minimum, maximum, true);
 		log.info(MessageFormat.format("[findBestMatch] sample: {0}",  results));
-		return results.get(0);
+		if(results.isEmpty()){
+                    return null;
+                }
+                return results.get(0);
 	}
 	/**
          * 

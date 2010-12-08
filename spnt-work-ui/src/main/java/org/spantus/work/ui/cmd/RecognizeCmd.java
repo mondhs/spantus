@@ -19,24 +19,20 @@
 package org.spantus.work.ui.cmd;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
-import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
-import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.logger.Logger;
+import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
-import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
-import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
+import org.spantus.work.ui.services.MatchingServiceImpl;
 
 /**
  *
@@ -46,10 +42,11 @@ public class RecognizeCmd extends AbsrtactCmd {
 
     private static Logger log = Logger.getLogger(RecognizeCmd.class);
     private RecognizeDetailDialog info;
+    private MatchingServiceImpl matchingService;
     private ExtractorReaderService extractorReaderService;
-    private CorpusServiceBaseImpl corpusService;
-    private DtwServiceJavaMLImpl dtwService;
-    private CorpusRepositoryFileImpl corpusRepo;
+//    private CorpusServiceBaseImpl corpusService;
+//    private DtwServiceJavaMLImpl dtwService;
+//    private CorpusRepositoryFileImpl corpusRepo;
 
     
     
@@ -61,7 +58,7 @@ public class RecognizeCmd extends AbsrtactCmd {
     public String execute(SpantusWorkInfo ctx) {
         
        
-        update(ctx); 
+        getMatchingService().update(ctx); 
         
         Marker marker = ((Marker) getCurrentEvent().getValue());
 
@@ -69,7 +66,7 @@ public class RecognizeCmd extends AbsrtactCmd {
                 getReader(),
                 marker);
 
-        List<RecognitionResultDetails> results = getCorpusService().findMultipleMatch(
+        List<RecognitionResultDetails> results = getMatchingService().findMultipleMatch(
                 fvv);
         if(results!=null && results.size()>0){
             marker.setLabel(results.get(0).getInfo().getName());
@@ -87,28 +84,6 @@ public class RecognizeCmd extends AbsrtactCmd {
                 GlobalCommands.tool.recognize.name());
     }
     
-    /**
-     * Update configuration
-     * @param ctx
-     */
-    protected void update(SpantusWorkInfo ctx){
-        corpusService = null;
-        String corpusPath = ctx.getProject().getRecognitionConfig().getRepositoryPath();
-        String searchWindowStr= ctx.getProject().getRecognitionConfig().getDtwWindow();
-        JavaMLSearchWindow searchWindow= JavaMLSearchWindow.valueOf(searchWindowStr);
-        int radius = ctx.getProject().getRecognitionConfig().getRadius();
-        
-        File corpusDir =  new File(corpusPath);
-        if (!corpusDir.equals(getCorpusRepository().getRepoDir().getAbsoluteFile())) {
-            getCorpusRepository().setRepositoryPath(corpusPath);
-            getCorpusRepository().flush();
-        }
-        if(searchWindow != null){
-            getDtwService().setSearchWindow(searchWindow);
-        }
-        getDtwService().setSearchRadius(radius);
-    }
-
     private RecognizeDetailDialog getInfoPnl() {
         if (info == null) {
             info = new RecognizeDetailDialog(null,I18nFactory.createI18n());
@@ -116,45 +91,9 @@ public class RecognizeCmd extends AbsrtactCmd {
         }
         return info;
     }
-    public CorpusServiceBaseImpl getCorpusService() {
-        if (corpusService == null) {
-            CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
-            corpusServiceimpl.setDtwService(getDtwService());
-            corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
-            corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.MFCC_EXTRACTOR.name());
-            corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.LPC_EXTRACTOR.name());
-            corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.FFT_EXTRACTOR.name());
-//            corpusServiceimpl.getIncludeFeatures().add(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
-            corpusServiceimpl.setCorpus(getCorpusRepository());
-            corpusService = corpusServiceimpl;
-//            corpusService = RecognitionServiceFactory.createCorpusService();
-        }
-        return corpusService;
-    }
-    
-    
-    public DtwServiceJavaMLImpl getDtwService(){
-        if(dtwService == null){
-            dtwService = new DtwServiceJavaMLImpl();
-//            dtwService.setSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow);
-//            dtwService.setSearchRadius(15);
-        }
-        return dtwService;
-    }
-            
 
-    public void setCorpusService(CorpusServiceBaseImpl corpusService) {
-        this.corpusService = corpusService;
-    }
-    public CorpusRepositoryFileImpl getCorpusRepository() {
-        if(corpusRepo == null){
-            corpusRepo =  new CorpusRepositoryFileImpl();
-        }
-        return corpusRepo;
-    }
-    
     public ExtractorReaderService getExtractorReaderService() {
-        if(extractorReaderService == null){
+        if (extractorReaderService == null) {
             extractorReaderService = WorkServiceFactory.createExtractorReaderService();
         }
         return extractorReaderService;
@@ -164,5 +103,14 @@ public class RecognizeCmd extends AbsrtactCmd {
         this.extractorReaderService = extractorReaderService;
     }
 
+    public MatchingServiceImpl getMatchingService() {
+        if (matchingService == null) {
+            matchingService = MatchingServiceImpl.getInstance();
+        }
+        return matchingService;
+    }
 
+    public void setMatchingService(MatchingServiceImpl matchingService) {
+        this.matchingService = matchingService;
+    }
 }

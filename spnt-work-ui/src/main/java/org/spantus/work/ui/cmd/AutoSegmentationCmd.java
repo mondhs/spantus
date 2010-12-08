@@ -43,7 +43,6 @@ import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.services.CorpusService;
-import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
@@ -53,6 +52,7 @@ import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
+import org.spantus.work.ui.services.MatchingServiceImpl;
 
 /**
  * 
@@ -70,7 +70,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	public static final String segmentAutoPanelMessageBody = "segmentAutoPanelMessageBody";
 	protected static Logger log = Logger.getLogger(AutoSegmentationCmd.class);
 
-        private CorpusService corpusService;
+        private MatchingServiceImpl matchingService;
         private ExtractorReaderService extractorReaderService;
 
 
@@ -85,6 +85,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 	 * 
 	 */
 	public String execute(SpantusWorkInfo ctx) {
+                getMatchingService().update(ctx); 
 		WorkUIExtractorConfig config = ctx.getProject().getFeatureReader()
 				.getWorkConfig();
                 boolean autoRecognize = (Boolean.TRUE.equals(ctx.getEnv().getAutoRecognition()));
@@ -201,8 +202,10 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
             for (Marker marker : markerSet.getMarkers()) {
                 Map<String, IValues> fvv = getExtractorReaderService().
                         findAllVectorValuesForMarker(getReader(), marker);
-                RecognitionResult result = getCorpusService().match(fvv);
-                marker.setLabel(result.getInfo().getName());
+                RecognitionResult result = getMatchingService().match(fvv);
+                if(result!=null){
+                    marker.setLabel(result.getInfo().getName());
+                }
             }
         }
 
@@ -267,15 +270,15 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 		}
 		return;
 	}
-        public CorpusService getCorpusService() {
-            if (corpusService == null) {
-                corpusService = RecognitionServiceFactory.createCorpusService();
+        public MatchingServiceImpl getMatchingService() {
+            if (matchingService == null) {
+                matchingService = MatchingServiceImpl.getInstance();
             }
-            return corpusService;
+            return matchingService;
         }
 
-        public void setCorpusService(CorpusService corpusService) {
-            this.corpusService = corpusService;
+        public void setMatchingService(MatchingServiceImpl matchingService) {
+            this.matchingService = matchingService;
         }
         public ExtractorReaderService getExtractorReaderService() {
             if (extractorReaderService == null) {
