@@ -27,7 +27,8 @@ import java.util.List;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
-import org.spantus.extractor.AbstractExtractor3D;
+import org.spantus.extractor.AbstractExtractorVector;
+import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.math.MatrixUtils;
 
 /**
@@ -42,7 +43,7 @@ import org.spantus.math.MatrixUtils;
  *        Created 2009.06.02
  * 
  */
-public class SpectralGainFactorExtractor extends AbstractExtractor3D {
+public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 //	List<Float> prior = null;
 	List<Float> pCoefs = null;
 	List<Float> aNoiseCoefs = null;
@@ -57,17 +58,17 @@ public class SpectralGainFactorExtractor extends AbstractExtractor3D {
 	Float Kcoef = 4F;
 	int bufferSmmothingDepth = 3;
 	
-	AbstractExtractor3D abstractExtractor3D;
+	AbstractExtractorVector abstractExtractorVector;
 	float signalSampleRate;
 	
 	protected FrameVectorValues calculateFFT(FrameValues window){
 		syncFFTParams();
 		
-		return getAbstractExtractor3D().calculateWindow(window);
+		return getAbstractExtractorVector().calculateWindow(window);
 	}
 	
 	private void syncFFTParams(){
-		getAbstractExtractor3D().setConfig(getConfig());
+		getAbstractExtractorVector().setConfig(getConfig());
 	}
 	
 	/**
@@ -249,10 +250,10 @@ public class SpectralGainFactorExtractor extends AbstractExtractor3D {
 		return ExtractorEnum.SPECTRAL_GAIN_FACTOR.toString();
 	}
 	
-	public AbstractExtractor3D getAbstractExtractor3D() {
-		if(abstractExtractor3D == null){
-			abstractExtractor3D = new FFTExtractor();
+	public AbstractExtractorVector getAbstractExtractorVector() {
+		if(abstractExtractorVector == null){
+			abstractExtractorVector = ExtractorsFactory.createFftExtractor();;
 		}
-		return abstractExtractor3D;
+		return abstractExtractorVector;
 	}
 }

@@ -39,15 +39,13 @@ public class FrameValues extends LinkedList<Float> implements IValues, List<Floa
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-//	public static final int DEFAULT_FRAME_BUFFER_SIZE = 65536;
-//	int frameBufferSize;
 	private float sampleRate = 1;
 	private Float minValue = null;
 	private Float maxValue = null;
+    private Long frameIndex = 0L;
 
 
 	public FrameValues() {
-//		setFrameBufferSize(DEFAULT_FRAME_BUFFER_SIZE);
 	}
 	
 	public FrameValues(Collection<Float> collection){
@@ -61,12 +59,6 @@ public class FrameValues extends LinkedList<Float> implements IValues, List<Floa
 	}
 
 	
-//	public int getFrameBufferSize() {
-//		return frameBufferSize;
-//	}
-//	public void setFrameBufferSize(int bufferSize) {
-//		this.frameBufferSize = bufferSize;
-//	}
 	@Override
 	public boolean add(Float e) {
 		updateMinMax(e);
@@ -171,4 +163,11 @@ public class FrameValues extends LinkedList<Float> implements IValues, List<Floa
             return 1;
         }
 
+        public Long getFrameIndex() {
+            return frameIndex;
+        }
+
+        public void setFrameIndex(Long frameIndex) {
+            this.frameIndex = frameIndex;
+        }
 }

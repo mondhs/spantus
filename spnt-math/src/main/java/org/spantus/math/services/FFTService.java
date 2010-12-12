@@ -31,6 +31,6 @@ import java.util.List;
  *  
  */
 public interface FFTService {
-	public List<Float> calculateFFTMagnitude(List<Float> x);
+	public List<Float> calculateFFTMagnitude(long index, List<Float> x, Float sampleRate);
 
 }

@@ -37,7 +37,8 @@ import klautau.FFT;
  */
 public class FFTServiceImpl implements FFTService{
 
-	public List<Float> calculateFFTMagnitude(List<Float> x) {
+
+	public List<Float> calculateFFTMagnitude(long index, List<Float> x, Float sampleRate) {
 		List<Float> fftInput= new LinkedList<Float>(x);
 		int logm = (int) (Math.log(fftInput.size()) / Math.log(2));
 		int n = 1 << logm;

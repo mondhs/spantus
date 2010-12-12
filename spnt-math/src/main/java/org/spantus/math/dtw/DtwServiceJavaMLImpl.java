@@ -73,7 +73,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
      * 
      * @param targetVector
      * @param sampleVector
-     * @return
+     * @return results
      */
     public DtwResult calculateInfo(List<Float> targetVector, List<Float> sampleVector) {
         TimeSeries tsTarget = toTimeSeries(targetVector);
@@ -192,8 +192,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
     
 
     private static WarpPath expandPath(WarpPath path, PAA tsI, PAA tsJ) {
-        final ArrayList iPoints = new ArrayList();
-        final ArrayList jPoints = new ArrayList();
+        List<Integer> iPoints = new ArrayList<Integer>();
+        List<Integer> jPoints = new ArrayList<Integer>();
 
         iPoints.add(new Integer(0));
         jPoints.add(new Integer(0));
@@ -261,7 +261,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
         int endJ;
 
         for (int p = 1; p < iPoints.size(); p++) {
-            endI = ((Integer) iPoints.get(p)).intValue();
+            endI = (Integer) iPoints.get(p);
             endJ = ((Integer) jPoints.get(p)).intValue();
             expandedPath.addLast(startI, startJ);
 

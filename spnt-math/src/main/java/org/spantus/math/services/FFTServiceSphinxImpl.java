@@ -16,16 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-
 package org.spantus.math.services;
 
+import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
+import klautau.FFT;
+import org.spantus.math.VectorUtils;
 
-import org.spantus.math.MFCC;
-
-import java.util.Collections;
-import java.util.List;
-
-
+import java.util.*;
 
 /**
  * 
@@ -36,25 +33,29 @@ import java.util.List;
  * Created 2008.09.28
  *  
  */
-public class MFCCServiceImpl implements MFCCService {
+public class FFTServiceSphinxImpl implements FFTService{
+    private DiscreteFourierTransform sFft = null;
+    private int numberFftPoints = 0;
 
-	
-	public List<Float> calculateMFCC(List<Float> x, float sampleRate) {
-		int logm = (int) (Math.log(x.size()) / Math.log(2));
+	public List<Float> calculateFFTMagnitude(long index, List<Float> x, Float sampleRate) {
+		List<Float> fftInput= new ArrayList<Float>(x);
+		int logm = (int) (Math.log(fftInput.size()) / Math.log(2));
 		int n = 1 << logm;
-		if(x.size() > n){
+		if(fftInput.size() > n){
 			n = 1 << (logm+1);
 		}
 		int missingSamples = n - x.size();
-		x.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
+		fftInput.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
+		Float[] fftArr = fftInput.toArray(new Float[fftInput.size()]);
+        if(numberFftPoints!=n){
+            numberFftPoints = n;
+            sFft = new DiscreteFourierTransform(n, false);
+            sFft.initialize();
+        }
 
-		List<Float> floats = MFCC.calculateMFCC(x,
-				sampleRate);
-
-		return floats;
+        double[] sResult = sFft.process(VectorUtils.toDoubleArray(x),sampleRate.intValue());
+        List<Float> fftOutput = VectorUtils.toFloatList(sResult);
+		return fftOutput;
 	}
-    public List<Float> calculateMfccFromSpectrum(List<Float> fft, float sampleRate){
-        throw new IllegalAccessError("Not impl");
-    }
 
 }

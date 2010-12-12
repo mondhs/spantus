@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.extractor.AbstractExtractor;
-import org.spantus.extractor.AbstractExtractor3D;
+import org.spantus.extractor.AbstractExtractorVector;
 import org.spantus.math.MatrixUtils;
 /**
  *  Linear predictive coding residual energy
@@ -39,17 +39,17 @@ import org.spantus.math.MatrixUtils;
  *
  */
 public class LPCResidualExtractor extends AbstractExtractor {
-	private AbstractExtractor3D extractor3D = 
+	private AbstractExtractorVector extractorVector =
 		new LPCExtractor();
 	private LinkedList<Float> buffer;
 
 	protected FrameVectorValues calculateExtr3D(FrameValues window){
 		syncLPCParams();
-		return extractor3D.calculateWindow(window);
+		return extractorVector.calculateWindow(window);
 	}
 	
 	private void syncLPCParams(){
-		extractor3D.setConfig(getConfig());
+		extractorVector.setConfig(getConfig());
 	}
 	
 	

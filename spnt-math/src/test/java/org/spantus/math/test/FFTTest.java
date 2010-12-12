@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
 import junit.framework.TestCase;
 
 import org.spantus.math.TransformUtil;
+import org.spantus.math.VectorUtils;
 
 public class FFTTest extends TestCase{
 	Logger log = Logger.getLogger(this.getClass().getSimpleName());
@@ -42,6 +44,20 @@ public class FFTTest extends TestCase{
 		assertEquals(34, result.size());
 		assertCollectionEqual(result, fftData);
 		log.severe("Result: " + result);
+	}
+    public void testFftSpinx(){
+		assertEquals(64, x.size());
+        int logm = (int) (Math.log(x.size()) / Math.log(2));
+        int n = 1 << logm;
+
+        DiscreteFourierTransform sFft = new DiscreteFourierTransform(n, false);
+        sFft.initialize();
+        double[] sResult = sFft.process(VectorUtils.toDoubleArray(new ArrayList<Float>(x)),16000);
+        List<Float> result = VectorUtils.toFloatList(sResult);
+
+		assertEquals(33, result.size());
+//		assertCollectionEqual(result, fftData);
+		log.severe("Sphinx Result: " + result);
 	}
 	
 	

@@ -27,7 +27,8 @@ import java.util.List;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.extractor.AbstractExtractor;
-import org.spantus.extractor.AbstractExtractor3D;
+import org.spantus.extractor.AbstractExtractorVector;
+import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.math.MatrixUtils;
 import org.spantus.math.services.MathServicesFactory;
 /**
@@ -43,18 +44,18 @@ import org.spantus.math.services.MathServicesFactory;
 public class PeakExtractor extends AbstractExtractor {
 
 	
-	AbstractExtractor3D extractor3D = 
-		new FFTExtractor();
+	AbstractExtractorVector extractorVector =
+		ExtractorsFactory.createFftExtractor();;
 //		new MFCCExtractor();
 //		new LPCExtractor();
 
 	protected FrameVectorValues calculateExtr3D(FrameValues window){
 		syncLPCParams();
-		return extractor3D.calculateWindow(window);
+		return extractorVector.calculateWindow(window);
 	}
 	
 	private void syncLPCParams(){
-		extractor3D.setConfig(getConfig());
+		extractorVector.setConfig(getConfig());
 	}
 	
 	public FrameValues calculateWindow(FrameValues window) {
@@ -74,7 +75,9 @@ public class PeakExtractor extends AbstractExtractor {
 			calculatedValues.add(predicted);
 		}
 		
-		List<Float> calculatedFFTValues = MathServicesFactory.createFFTService().calculateFFTMagnitude(calculatedValues);
+		List<Float> calculatedFFTValues = MathServicesFactory.createFFTService().calculateFFTMagnitude(
+                window.getFrameIndex(),
+                calculatedValues, window.getSampleRate());
 		
 		float peak = -Float.MAX_VALUE;
 		Float sum = 0F;

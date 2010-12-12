@@ -43,13 +43,15 @@ public abstract class MathServicesFactory {
 	
 	public static FFTService createFFTService(){
 		if(fftService == null){
-			fftService = new FFTServiceImpl();
+//			fftService = new FFTServiceImpl();
+            fftService = new FFTServiceSphinxImpl();
 		}
 		return fftService;
 	}
 	public static MFCCService createMFCCService(){
 		if(mfccService == null){
-			mfccService = new MFCCKlautauServiceImpl();
+//			mfccService = new MFCCKlautauServiceImpl();
+            mfccService = new MFCCServiceSphinxImpl();
 //			return new MFCCServiceImpl();
 		}
 		return mfccService;

@@ -39,7 +39,7 @@ import klautau.MFCC;
 public class MFCCKlautauServiceImpl implements MFCCService {
 
 	
-	public List<Float> calculateMFCC(List<Float> x, double sampleRate) {
+	public List<Float> calculateMFCC(List<Float> x, float sampleRate) {
 		List<Float> mfccInput= new LinkedList<Float>(x);
 		int logm = (int) (Math.log(x.size()) / Math.log(2));
 		int n = 1 << logm;
@@ -84,4 +84,7 @@ public class MFCCKlautauServiceImpl implements MFCCService {
 		return Arrays.asList(mfccVal);
 	}
 
+    public List<Float> calculateMfccFromSpectrum(List<Float> fft, float sampleRate){
+        throw new IllegalAccessError("Not impl");
+    }
 }

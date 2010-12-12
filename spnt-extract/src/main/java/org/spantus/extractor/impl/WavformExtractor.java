@@ -23,7 +23,7 @@ package org.spantus.extractor.impl;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.ExtractorParam;
-import org.spantus.extractor.AbstractExtractor3D;
+import org.spantus.extractor.AbstractExtractorVector;
 import org.spantus.logger.Logger;
 /**
  * 
@@ -34,7 +34,7 @@ import org.spantus.logger.Logger;
  * Created 2008.02.29
  *
  */
-public class WavformExtractor extends AbstractExtractor3D {
+public class WavformExtractor extends AbstractExtractorVector {
 	private Logger log = Logger.getLogger(getClass());
 	private Float previousMin = null;
 	private Float previousMax = null;

@@ -20,6 +20,8 @@
  */
 package org.spantus.math;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class VectorUtils {
 
     /** 
      * sum vector values
-     * @param order
+     * @param vector
      * @return
      */
     public static Float sum(List<Float> vector) {
@@ -83,5 +85,23 @@ public class VectorUtils {
             doubles[i++] = float1.doubleValue();
         }
         return doubles;
+    }
+
+    public static double[] toDoubleArray(Float[] values) {
+        double[] doubles = new double[values.length];
+        int i = 0;
+        for (Float float1 : values) {
+            doubles[i++] = float1.doubleValue();
+        }
+        return doubles;
+    }
+
+    public static List<Float> toFloatList(double[] values) {
+        List<Float> floatList = new ArrayList<Float>(values.length);
+        int i = 0;
+        for (Double d1 : values) {
+            floatList.add(d1.floatValue());
+        }
+        return floatList;
     }
 }

@@ -21,7 +21,7 @@
 package org.spantus.extractor.impl;
 
 import org.spantus.core.FrameValues;
-import org.spantus.extractor.AbstractExtractor3D;
+import org.spantus.extractor.AbstractExtractorVector;
 /**
  * 
  * 
@@ -108,11 +108,11 @@ public class NoiseLevelExtractor extends AbstractSpectralExtractor {
 		return ExtractorEnum.NOISE_LEVEL_EXTRACTOR.toString();
 	}
 	
-	public AbstractExtractor3D getAbstractExtractor3D() {
-		if(abstractExtractor3D == null){
-			abstractExtractor3D = new SpectralGainFactorExtractor();
+	public AbstractExtractorVector getAbstractExtractor3D() {
+		if(abstractExtractorVector == null){
+			abstractExtractorVector = new SpectralGainFactorExtractor();
 		}
-		return abstractExtractor3D;
+		return abstractExtractorVector;
 	}
 
 

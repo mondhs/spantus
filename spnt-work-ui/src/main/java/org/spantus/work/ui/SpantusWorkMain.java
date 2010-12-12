@@ -1,5 +1,5 @@
 /*
- 	Copyright (c) 2009 Mindaugas Greibus (spantus@gmail.com)
+ 	Copyright (c) 2010 Mindaugas Greibus (spantus@gmail.com)
  	Part of program for analyze speech signal
  	http://spantus.sourceforge.net
 

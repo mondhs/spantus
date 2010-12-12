@@ -39,7 +39,7 @@ import org.spantus.extract.segments.online.ExtremeOnClassifierServiceFactory;
 import org.spantus.extract.segments.online.ExtremeOnlineClassifier;
 import org.spantus.extract.segments.online.ExtremeTwoStepClassifier;
 import org.spantus.extractor.AbstractExtractor;
-import org.spantus.extractor.AbstractExtractor3D;
+import org.spantus.extractor.AbstractExtractorVector;
 import org.spantus.extractor.ExtractorResultBuffer;
 import org.spantus.extractor.ExtractorResultBufferFactory;
 import org.spantus.extractor.modifiers.DeltaExtractor;
@@ -64,7 +64,7 @@ public abstract class ExtractorUtils {
 
         private static Logger log = Logger.getLogger(ExtractorUtils.class);
 	static Map<ExtractorEnum, Class<? extends AbstractExtractor>> extractorMap = new HashMap<ExtractorEnum, Class<? extends AbstractExtractor>>();
-	static Map<ExtractorEnum, Class<? extends AbstractExtractor3D>> extractor3DMap = new HashMap<ExtractorEnum, Class<? extends AbstractExtractor3D>>();
+	static Map<ExtractorEnum, Class<? extends AbstractExtractorVector>> extractor3DMap = new HashMap<ExtractorEnum, Class<? extends AbstractExtractorVector>>();
 
 	static {
 		extractorMap.put(ExtractorEnum.SIGNAL_EXTRACTOR, SignalExtractor.class);
@@ -103,7 +103,7 @@ public abstract class ExtractorUtils {
 		
 		extractor3DMap.put(ExtractorEnum.WAVFORM_EXTRACTOR,
 				WavformExtractor.class);
-		extractor3DMap.put(ExtractorEnum.FFT_EXTRACTOR, FFTExtractor.class);
+		extractor3DMap.put(ExtractorEnum.FFT_EXTRACTOR, FFTExtractorCached.class);
 		extractor3DMap.put(ExtractorEnum.LPC_EXTRACTOR, LPCExtractor.class);
 		extractor3DMap.put(ExtractorEnum.MFCC_EXTRACTOR, MFCCExtractor.class);
 		extractor3DMap.put(ExtractorEnum.SPECTRAL_GAIN_FACTOR,
