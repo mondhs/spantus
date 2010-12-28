@@ -1,4 +1,4 @@
-package org.spantus.extract.segments.offline;
+package org.spantus.extractor.segments.offline;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.service.IMarkerService;
 import org.spantus.core.marker.service.MarkerServiceFactory;
-import org.spantus.extract.segments.offline.ExtremeEntry.FeatureStates;
+import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.logger.Logger;
 import org.spantus.math.cluster.ClusterCollection;
 import org.spantus.math.services.MathServicesFactory;

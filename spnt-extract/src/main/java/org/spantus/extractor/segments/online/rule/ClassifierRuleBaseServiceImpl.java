@@ -1,9 +1,9 @@
-package org.spantus.extract.segments.online.rule;
+package org.spantus.extractor.segments.online.rule;
 
-import org.spantus.extract.segments.offline.ExtremeSegment;
-import org.spantus.extract.segments.online.ExtremeOnClassifierServiceFactory;
-import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
-import org.spantus.extract.segments.online.cluster.ExtremeOnlineClusterService;
+import org.spantus.extractor.segments.offline.ExtremeSegment;
+import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
+import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
+import org.spantus.extractor.segments.online.cluster.ExtremeOnlineClusterService;
 import org.spantus.logger.Logger;
 
 /**

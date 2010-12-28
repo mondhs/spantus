@@ -1,4 +1,4 @@
-package org.spantus.extract.segments.online;
+package org.spantus.extractor.segments.online;
 
 import java.io.Serializable;
 

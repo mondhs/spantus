@@ -1,4 +1,4 @@
-package org.spantus.extract.segments.offline;
+package org.spantus.extractor.segments.offline;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.spantus.extract.segments.online;
+package org.spantus.extractor.segments.online;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -6,14 +6,14 @@ import java.util.List;
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.AbstractClassifier;
-import org.spantus.extract.segments.offline.ExtremeEntry;
-import org.spantus.extract.segments.offline.ExtremeOfflineClassifier;
-import org.spantus.extract.segments.offline.ExtremeSegment;
-import org.spantus.extract.segments.offline.ExtremeEntry.FeatureStates;
-import org.spantus.extract.segments.online.cluster.ExtremeOnlineClusterService;
-import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum;
-import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
-import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum.state;
+import org.spantus.extractor.segments.offline.ExtremeEntry;
+import org.spantus.extractor.segments.offline.ExtremeOfflineClassifier;
+import org.spantus.extractor.segments.offline.ExtremeSegment;
+import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
+import org.spantus.extractor.segments.online.cluster.ExtremeOnlineClusterService;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.state;
 import org.spantus.logger.Logger;
 import org.spantus.utils.StringUtils;
 

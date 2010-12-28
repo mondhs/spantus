@@ -1,6 +1,6 @@
-package org.spantus.extract.segments.online.rule;
+package org.spantus.extractor.segments.online.rule;
 
-import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
+import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.logger.Logger;
 
 /**

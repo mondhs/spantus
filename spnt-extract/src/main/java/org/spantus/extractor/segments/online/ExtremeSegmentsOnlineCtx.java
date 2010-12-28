@@ -1,13 +1,13 @@
-package org.spantus.extract.segments.online;
+package org.spantus.extractor.segments.online;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.spantus.extract.segments.offline.ExtremeEntry;
-import org.spantus.extract.segments.offline.ExtremeSegment;
-import org.spantus.extract.segments.offline.ExtremeEntry.FeatureStates;
-import org.spantus.extract.segments.online.rule.ClassifierRuleBaseEnum;
+import org.spantus.extractor.segments.offline.ExtremeEntry;
+import org.spantus.extractor.segments.offline.ExtremeSegment;
+import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;
 
 public class ExtremeSegmentsOnlineCtx {
 	private LinkedList<ExtremeSegment> extremeSegments;

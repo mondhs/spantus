@@ -1,11 +1,11 @@
-package org.spantus.extract.segments.offline;
+package org.spantus.extractor.segments.offline;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
 import org.spantus.core.FrameValues;
-import org.spantus.extract.segments.offline.ExtremeEntry.FeatureStates;
+import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.logger.Logger;
 
 public class ExtremeListIterator implements ListIterator<ExtremeEntry> {

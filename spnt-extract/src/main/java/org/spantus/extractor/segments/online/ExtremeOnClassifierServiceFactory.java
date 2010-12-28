@@ -1,9 +1,9 @@
-package org.spantus.extract.segments.online;
+package org.spantus.extractor.segments.online;
 
-import org.spantus.extract.segments.online.cluster.ExtremeOnlineClusterService;
-import org.spantus.extract.segments.online.cluster.ExtremeOnlineClusterServiceImpl;
-import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
-import org.spantus.extract.segments.online.rule.ClassifierRuleBaseServiceImpl;
+import org.spantus.extractor.segments.online.cluster.ExtremeOnlineClusterService;
+import org.spantus.extractor.segments.online.cluster.ExtremeOnlineClusterServiceImpl;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseServiceImpl;
 
 public abstract class ExtremeOnClassifierServiceFactory {
 	

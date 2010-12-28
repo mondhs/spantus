@@ -1,8 +1,8 @@
-package org.spantus.extract.segments.online.cluster;
+package org.spantus.extractor.segments.online.cluster;
 
-import org.spantus.extract.segments.offline.ExtremeSegment;
-import org.spantus.extract.segments.online.ExtremeSegmentsOnlineCtx;
-import org.spantus.extract.segments.online.SegmentInnerData;
+import org.spantus.extractor.segments.offline.ExtremeSegment;
+import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
+import org.spantus.extractor.segments.online.SegmentInnerData;
 import org.spantus.logger.Logger;
 import org.spantus.math.VectorUtils;
 

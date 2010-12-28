@@ -1,4 +1,4 @@
-package org.spantus.extract.segments.online.rule;
+package org.spantus.extractor.segments.online.rule;
 
 public class ClassifierRuleBaseEnum {
 	public enum action{changePoint, changePointLastApproved, changePointCurrentApproved, processNoise, processSignal, join, delete};

@@ -5,13 +5,13 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
 import org.spantus.core.threshold.test.ExtremeClassifierTest;
-import org.spantus.extract.segments.offline.ExtremeSegment;
-import org.spantus.extract.segments.online.ExtremeOnlineClassifier;
-import org.spantus.extract.segments.online.cluster.ExtremeOnlineClusterService;
-import org.spantus.extract.segments.online.cluster.ExtremeOnlineClusterServiceSimpleImpl;
-import org.spantus.extract.segments.online.rule.ClassifierPostProcessServiceBaseImpl;
-import org.spantus.extract.segments.online.rule.ClassifierRuleBaseService;
-import org.spantus.extract.segments.online.rule.ClassifierRuleBaseServiceImpl;
+import org.spantus.extractor.segments.offline.ExtremeSegment;
+import org.spantus.extractor.segments.online.ExtremeOnlineClassifier;
+import org.spantus.extractor.segments.online.cluster.ExtremeOnlineClusterService;
+import org.spantus.extractor.segments.online.cluster.ExtremeOnlineClusterServiceSimpleImpl;
+import org.spantus.extractor.segments.online.rule.ClassifierPostProcessServiceBaseImpl;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseServiceImpl;
 import org.spantus.logger.Logger;
 /**
  *  
