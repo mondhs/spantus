@@ -8,7 +8,8 @@ import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseServiceImpl;
 public abstract class ExtremeOnClassifierServiceFactory {
 	
 	public static ExtremeOnlineClusterService createClusterService(){
-		ExtremeOnlineClusterServiceImpl clusgerImpl = new ExtremeOnlineClusterServiceImpl();
+//		ExtremeOnlineClusterServiceKnnImpl clusgerImpl = new ExtremeOnlineClusterServiceKnnImpl();
+              ExtremeOnlineClusterServiceImpl clusgerImpl = new ExtremeOnlineClusterServiceImpl();
 //		ExtremeOnlineClusterServiceStaticImpl clusgerImpl = new ExtremeOnlineClusterServiceStaticImpl();
 		return clusgerImpl;
 	}

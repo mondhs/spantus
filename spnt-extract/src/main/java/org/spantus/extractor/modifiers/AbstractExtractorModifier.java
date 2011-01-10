@@ -18,6 +18,7 @@
 */
 package org.spantus.extractor.modifiers;
 
+import org.spantus.core.extractor.IExtractor;
 import org.spantus.extractor.AbstractExtractor;
 /**
  * Modifier abstract class. Modifier transforms extractor data.
@@ -27,5 +28,12 @@ import org.spantus.extractor.AbstractExtractor;
  *
  */
 public abstract class AbstractExtractorModifier extends AbstractExtractor {
-	
+	public abstract IExtractor getExtractor();
+
+    @Override
+    public void flush() {
+        super.flush();
+        getExtractor().flush();
+    }
+        
 }

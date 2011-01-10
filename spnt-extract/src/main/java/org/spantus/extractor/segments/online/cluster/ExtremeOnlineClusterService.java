@@ -2,7 +2,7 @@ package org.spantus.extractor.segments.online.cluster;
 
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
-import org.spantus.extractor.segments.online.SegmentInnerData;
+import org.spantus.extractor.segments.online.SegmentFeatureData;
 /**
  * 
  * @author Mindaugas Greibus
@@ -25,5 +25,5 @@ public interface ExtremeOnlineClusterService {
 	 * @param ctx
 	 * @return
 	 */
-	public SegmentInnerData learn(ExtremeSegment segment, ExtremeSegmentsOnlineCtx ctx);
+	public SegmentFeatureData learn(ExtremeSegment segment, ExtremeSegmentsOnlineCtx ctx);
 }

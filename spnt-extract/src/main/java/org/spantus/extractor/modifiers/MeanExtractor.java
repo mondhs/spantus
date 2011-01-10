@@ -180,5 +180,6 @@ public class MeanExtractor extends AbstractExtractorModifier {
 		this.order = order;
 	}
 
+        
 
 }

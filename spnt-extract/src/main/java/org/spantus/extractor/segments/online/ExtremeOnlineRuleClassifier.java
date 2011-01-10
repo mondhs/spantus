@@ -17,15 +17,15 @@ import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.state;
 import org.spantus.logger.Logger;
 import org.spantus.utils.StringUtils;
 
-public class ExtremeOnlineClassifier extends AbstractClassifier{
+public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 
-	private Logger log = Logger.getLogger(ExtremeOnlineClassifier.class); 
+	private Logger log = Logger.getLogger(ExtremeOnlineRuleClassifier.class); 
 	private ExtremeSegmentsOnlineCtx onlineCtx;
 
 	private ClassifierRuleBaseService ruleBaseService;
 	private ExtremeOnlineClusterService clusterService;
 	
-	public ExtremeOnlineClassifier() {
+	public ExtremeOnlineRuleClassifier() {
 		onlineCtx = new ExtremeSegmentsOnlineCtx();
 	}
 	/*
@@ -231,18 +231,18 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			ctx.getExtremeSegments().add(currentSegment);
 			//learn and get class
 			getClusterService().learn(currentSegment, ctx);
-			String className = getClusterService().getClassName(currentSegment, ctx);
+			String className = "";//getClusterService().getClassName(currentSegment, ctx);
 			//clreate marker info
 			if(currentMarker == null){
 				currentMarker = createMarker(currentSegment, className);
 			}else {
 				syncMarker(currentMarker, currentSegment, className);
 			}
-			if(!"0".equals(className)){
+//			if(!"0".equals(className)){
 				appendMarker(currentMarker);
-			}else{
-				log.debug("[changePointLastApproved]not appended {0}", currentMarker);
-			}
+//			}else{
+//				log.debug("[changePointLastApproved]not appended {0}", currentMarker);
+//			}
 		}
 		
 		//new segment and marker
@@ -281,20 +281,20 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 			}
 			lastSegment.setApproved(true);
 			getClusterService().learn(lastSegment, ctx);
-			String className = getClusterService().getClassName(lastSegment, ctx);
-			syncMarker(currentMarker, lastSegment, className);
-			if(!"0".equals(className)){
+//			String className = getClusterService().getClassName(lastSegment, ctx);
+			syncMarker(currentMarker, lastSegment, "");
+//			if(!"0".equals(className)){
 				appendMarker(currentMarker);
-			}else{
-				log.debug("[changePointLastApproved]not appended {0}", currentMarker);
-			}
+//			}else{
+//				log.debug("[changePointLastApproved]not appended {0}", currentMarker);
+//			}
 			Marker newMarker = createMarker(currentSegment, "0");
 			setMarker(newMarker);
 		}else if(lastSegment != null && lastSegment.getApproved() && getMarkSet().getMarkers().size()>0){
 			Marker lastMarker = getMarkSet().getMarkers().get(getMarkSet().getMarkers().size()-1); 
 			getClusterService().learn(lastSegment, ctx);
-			String className = getClusterService().getClassName(lastSegment, ctx);
-			syncMarker(lastMarker, lastSegment, className);
+//			String className = getClusterService().getClassName(lastSegment, ctx);
+			syncMarker(lastMarker, lastSegment, "");
 		}else{
 			log.debug("[changePointLastApproved] already approved {0}. adding current {1}",
 					lastSegment,
@@ -334,7 +334,7 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 						currentSegment);
 			}else{
 				currentSegment.setEndEntry(changeEntry);
-				log.debug("[changePointLastApproved] adding {0}",
+				log.debug("[changePoint] adding {0}",
 						currentSegment);
 				ctx.getExtremeSegments().add(currentSegment);
 				currentSegment = createExtremeSegment(ctx.getPreviousValue());
@@ -389,8 +389,10 @@ public class ExtremeOnlineClassifier extends AbstractClassifier{
 	 */
 	public void appendMarker(Marker appendMarker){
 		if(validateMarker(appendMarker)){
-			log.debug("[appendMarker] {0}", appendMarker);
+			log.debug("[appendMarker] appendMarker: {0}", appendMarker);
+                        appendMarker.setLength(appendMarker.getLength()-5);
 			getMarkSet().getMarkers().add(appendMarker);
+                        log.debug("[appendMarker]markers: {0}", getMarkSet().getMarkers());
 		}
 	}
 	/**

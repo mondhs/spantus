@@ -249,7 +249,7 @@ public class MelFrequencyFilterBank  {
             throws IllegalArgumentException {
         double[] in = input;
 
-        if (filter == null || sampleRate != newSampleRate) {
+        if (filter == null || filter[0] == null || sampleRate != newSampleRate) {
             numberFftPoints = (in.length - 1) << 1;
             sampleRate = newSampleRate;
             buildFilterbank(numberFftPoints, numberFilters, minFreq, maxFreq);

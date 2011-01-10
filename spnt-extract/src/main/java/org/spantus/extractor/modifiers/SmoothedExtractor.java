@@ -85,5 +85,6 @@ public class SmoothedExtractor extends AbstractExtractorModifier {
 	public void setExtractor(IExtractor extractor) {
 		this.extractor = extractor;
 	}
+        
 
 }

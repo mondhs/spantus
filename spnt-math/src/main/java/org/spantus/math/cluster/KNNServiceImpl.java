@@ -1,5 +1,6 @@
-package org.spantus.math.knn;
+package org.spantus.math.cluster;
 
+import org.spantus.math.cluster.ClusterService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,12 +11,12 @@ import java.util.Map.Entry;
 import org.spantus.math.MatrixUtils;
 import org.spantus.math.cluster.ClusterCollection;
 
-public class KNNServiceImpl implements KNNService {
+public class KNNServiceImpl implements ClusterService {
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.spantus.math.knn.KNNService#cluster(java.util.List, int)
+	 * @see org.spantus.math.knn.ClusterService#cluster(java.util.List, int)
 	 */
 	public ClusterCollection cluster(List<List<Float>> vectors, int clusterSize) {
 		if (vectors.size() < clusterSize * 2) {

@@ -2,7 +2,7 @@ package org.spantus.extractor.segments.online.cluster;
 
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
-import org.spantus.extractor.segments.online.SegmentInnerData;
+import org.spantus.extractor.segments.online.SegmentFeatureData;
 import org.spantus.logger.Logger;
 
 public class ExtremeOnlineClusterServiceSimpleImpl implements ExtremeOnlineClusterService{
@@ -14,12 +14,12 @@ public class ExtremeOnlineClusterServiceSimpleImpl implements ExtremeOnlineClust
 		return "1";
 	}
 	
-	public SegmentInnerData learn(ExtremeSegment segment,
+	public SegmentFeatureData learn(ExtremeSegment segment,
 			ExtremeSegmentsOnlineCtx ctx) {
 		Double area = segment.getCalculatedArea();
 		Long length = segment.getCalculatedLength();
 		Integer peaks = segment.getPeakEntries().size();
-		SegmentInnerData innerData = new SegmentInnerData(peaks, area, length);
+		SegmentFeatureData innerData = new SegmentFeatureData(peaks, area, length);
 //		String className = getClassName(segment, ctx);
 //		log.debug("[learn]innerData: {0}; className: {1}", innerData,
 //						className);

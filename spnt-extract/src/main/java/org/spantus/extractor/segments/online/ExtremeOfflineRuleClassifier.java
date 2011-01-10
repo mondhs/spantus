@@ -3,11 +3,11 @@ package org.spantus.extractor.segments.online;
 import org.spantus.extractor.segments.offline.ExtremeOfflineClassifier;
 import org.spantus.logger.Logger;
 
-public class ExtremeTwoStepClassifier extends ExtremeOnlineClassifier {
+public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 
-	private Logger log = Logger.getLogger(ExtremeTwoStepClassifier.class);
+	private Logger log = Logger.getLogger(ExtremeOfflineRuleClassifier.class);
 
-	public ExtremeTwoStepClassifier() {
+	public ExtremeOfflineRuleClassifier() {
 		super();
 	}
 

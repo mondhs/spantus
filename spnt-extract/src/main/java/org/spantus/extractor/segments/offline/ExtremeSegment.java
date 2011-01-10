@@ -62,14 +62,22 @@ public class ExtremeSegment implements Serializable, Cloneable{
 		Integer currentPeak = this.getPeakEntries().size();
 		Long lastLength = segment.getCalculatedLength();
 		Long currentLength = this.getCalculatedLength();
-		
-		double similarity = lastArea>currentArea*.99 && lastArea<currentArea?0.50:0;
-		similarity += currentArea>lastArea*.99 && currentArea<lastArea?0.50:0;
-		similarity += currentArea==lastArea?0.50:0;
-		similarity += lastLength==currentLength?0.25:0;
-		similarity += lastLength>currentLength*.9 && lastLength<currentLength?0.25:0;
-		similarity += currentLength>lastLength*.9 && currentLength<lastLength?0.25:0;
-		similarity += lastPeak==currentPeak?0.25:0;
+                float diff = 0;
+                if(this.peakEntry.getValue() < segment.peakEntry.getValue()){
+                    diff = this.peakEntry.getValue()/segment.peakEntry.getValue();
+                }else{
+                    diff = segment.peakEntry.getValue()/this.peakEntry.getValue();
+                }
+                
+                double similarity = 0;
+//                similarity += diff>.99?.5:0;
+//		similarity = lastArea>currentArea*.99 && lastArea<currentArea?0.50:0;
+//		similarity += currentArea>lastArea*.99 && currentArea<lastArea?0.50:0;
+//		similarity += currentArea==lastArea?0.50:0;
+//		similarity += lastLength==currentLength?0.25:0;
+//		similarity += lastLength>currentLength*.9 && lastLength<currentLength?0.25:0;
+//		similarity += currentLength>lastLength*.9 && currentLength<lastLength?0.25:0;
+//		similarity += lastPeak==currentPeak?0.25:0;
 		boolean similar = similarity>=.5;
 		return similar;
 	}

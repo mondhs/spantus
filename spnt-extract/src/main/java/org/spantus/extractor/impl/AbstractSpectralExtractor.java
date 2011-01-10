@@ -76,6 +76,13 @@ public abstract class AbstractSpectralExtractor extends AbstractExtractor {
 		return abstractExtractorVector;
 	}
 
+    @Override
+    public void flush() {
+        super.flush();
+        getAbstractExtractorVector().flush();
+    }
+
+        
 	
 
 }

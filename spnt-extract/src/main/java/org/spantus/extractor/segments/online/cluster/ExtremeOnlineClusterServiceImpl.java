@@ -2,7 +2,7 @@ package org.spantus.extractor.segments.online.cluster;
 
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
-import org.spantus.extractor.segments.online.SegmentInnerData;
+import org.spantus.extractor.segments.online.SegmentFeatureData;
 import org.spantus.logger.Logger;
 import org.spantus.math.VectorUtils;
 
@@ -36,10 +36,10 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		}
 //		area = delta == 0?0:area;
 
-//		SegmentInnerData min = ctx.normalizeArea(ctx.segmentStats.get(0));
-//		SegmentInnerData max = ctx.normalizeArea(ctx.segmentStats.get(1));
+//		SegmentFeatureData min = ctx.normalizeArea(ctx.segmentStats.get(0));
+//		SegmentFeatureData max = ctx.normalizeArea(ctx.segmentStats.get(1));
 		
-		SegmentInnerData data = new SegmentInnerData(peaks,area,length);
+		SegmentFeatureData data = new SegmentFeatureData(peaks,area,length);
 		
 		log.debug("[getClassName] data: {0}", data, ctx.semgnetFeatures);
 
@@ -52,7 +52,7 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		}
 		
 //		StringBuilder sb = new StringBuilder();
-//		for (SegmentInnerData idat : ctx.semgnetFeatures) {
+//		for (SegmentFeatureData idat : ctx.semgnetFeatures) {
 //			sb.append(MessageFormat.format("{0}\n", ""+idat.getArea()));
 //		}
 //		log.debug(sb.toString());
@@ -68,10 +68,10 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		
 		log.debug("[getClassName]  to0: {0}, to1: {1}; to2: {2}; toMax:{3}; index {4};",  
 				distanceToMin, toOneClass, toTwoClass, distanceToMax, argNum);
-//		if(peaks>2){
-//			log.debug("index 0, but has peaks {0}. say is 1", peaks);
-//			return "1";
-//		}
+		if(peaks<3 && length > 150){
+			log.debug("index 0, but has peaks {0}. say is 1", peaks);
+			return "1";
+		}
 		
 		return "" + argNum;
 	}
@@ -79,11 +79,11 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 	 * 
 	 */
 	@Override
-	public SegmentInnerData learn(ExtremeSegment segment, ExtremeSegmentsOnlineCtx ctx){
+	public SegmentFeatureData learn(ExtremeSegment segment, ExtremeSegmentsOnlineCtx ctx){
 //		Double area = segment.getCalculatedArea();
 //		Long length = segment.getCalculatedLength();
 //		Integer peaks =  segment.getPeakEntries().size();
-		SegmentInnerData innerData = super.learn(segment, ctx);
+		SegmentFeatureData innerData = super.learn(segment, ctx);
 		if(innerData.getIsNull() || Boolean.TRUE.equals(ctx.getSkipLearn())){
 			return innerData;
 		}
@@ -99,23 +99,23 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 				ctx.segmentStats.set(1, innerData.clone());
 			}
 		}
-		SegmentInnerData normData = ctx.normalizeArea(innerData);
+		SegmentFeatureData normData = ctx.normalizeArea(innerData);
 
 		if(innerData.getArea() > 0D){
 			ctx.semgnetFeatures.add(normData);
 		}
 		
-		SegmentInnerData min = ctx.normalizeArea(ctx.segmentStats.get(0));
-		SegmentInnerData max = ctx.normalizeArea(ctx.segmentStats.get(1));
-		SegmentInnerData avg = ctx.normalizeArea(ctx.segmentStats.get(1));
+		SegmentFeatureData min = ctx.normalizeArea(ctx.segmentStats.get(0));
+		SegmentFeatureData max = ctx.normalizeArea(ctx.segmentStats.get(1));
+		SegmentFeatureData avg = ctx.normalizeArea(ctx.segmentStats.get(1));
 //		Float maxDistance = null;
-//		SegmentInnerData minData = null;
+//		SegmentFeatureData minData = null;
 ////		Float maxDistance2 = null;
-//		SegmentInnerData maxData= null;
+//		SegmentFeatureData maxData= null;
 		Double minArea = min.getArea();
 		Double maxArea = max.getArea();
 		
-		for (SegmentInnerData iData : ctx.semgnetFeatures) {
+		for (SegmentFeatureData iData : ctx.semgnetFeatures) {
 			Float distanceToMin = iData.distance(min)*1.8F;
 			Float distanceToMax = iData.distance(max)/2;
 			if(distanceToMin<distanceToMax){
@@ -139,8 +139,8 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		}
 		
 		
-//		for (SegmentInnerData iData : ctx.semgnetFeatures) {
-//			for (SegmentInnerData jData : ctx.semgnetFeatures) {
+//		for (SegmentFeatureData iData : ctx.semgnetFeatures) {
+//			for (SegmentFeatureData jData : ctx.semgnetFeatures) {
 //			if(iData.getArea() == 0D || jData.getArea() == 0D){
 //				continue;
 //			}

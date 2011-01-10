@@ -67,4 +67,7 @@ public class SpectralFlux extends AbstractSpectralExtractor {
 		return ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.toString();
 	}
 
+
+
+        
 }

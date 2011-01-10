@@ -2,7 +2,7 @@ package org.spantus.extractor.segments.online;
 
 import java.io.Serializable;
 
-public class SegmentInnerData implements Serializable, Cloneable, Comparable<SegmentInnerData> {
+public class SegmentFeatureData implements Serializable, Cloneable, Comparable<SegmentFeatureData> {
 	
 	/**
 	 * 
@@ -12,10 +12,10 @@ public class SegmentInnerData implements Serializable, Cloneable, Comparable<Seg
 	public Double area;
 	public Long length;
 	
-	public SegmentInnerData() {
+	public SegmentFeatureData() {
 	}
 
-	public SegmentInnerData(Integer peaks, Double area, Long length) {
+	public SegmentFeatureData(Integer peaks, Double area, Long length) {
 		super();
 		this.peaks = peaks;
 		this.area = area;
@@ -42,11 +42,11 @@ public class SegmentInnerData implements Serializable, Cloneable, Comparable<Seg
 		this.length = (this.length + length)/2;
 	}
 	
-	public Float distance(SegmentInnerData d1){
+	public Float distance(SegmentFeatureData d1){
 		return distance(d1, this);
 	}
 	
-	public static Float distance(SegmentInnerData d1, SegmentInnerData d2){
+	public static Float distance(SegmentFeatureData d1, SegmentFeatureData d2){
 		Double areaDiff = d1.area-d2.area;
 //		Long lengthDiff = d1.length-d2.length;
 //		Integer peaksDiff = d1.peaks-d2.peaks;
@@ -68,15 +68,15 @@ public class SegmentInnerData implements Serializable, Cloneable, Comparable<Seg
 	}
 	
 	
-	public SegmentInnerData clone(){
+	public SegmentFeatureData clone(){
 		try {
-			return (SegmentInnerData)super.clone();
+			return (SegmentFeatureData)super.clone();
 		} catch (CloneNotSupportedException e) {
 			throw new IllegalArgumentException(e);
 		}
 	}
 
-	public int compareTo(SegmentInnerData o) {
+	public int compareTo(SegmentFeatureData o) {
 		int areaDiff = o.area>this.area?1:-1;
 		int lengthDiff = o.length>this.length?1:-1;
 		int peaksDiff = o.peaks>this.peaks?1:-1;

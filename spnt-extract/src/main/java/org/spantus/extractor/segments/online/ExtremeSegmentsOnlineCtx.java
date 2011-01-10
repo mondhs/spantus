@@ -21,14 +21,14 @@ public class ExtremeSegmentsOnlineCtx {
 	private Boolean skipLearn = Boolean.FALSE;
 	
 	
-	public LinkedList<SegmentInnerData> semgnetFeatures = new LinkedList<SegmentInnerData>();
-	public List<SegmentInnerData> segmentStats = new ArrayList<SegmentInnerData>(3);
-	public List<SegmentInnerData> segmentCenters = new ArrayList<SegmentInnerData>(3);
+	public LinkedList<SegmentFeatureData> semgnetFeatures = new LinkedList<SegmentFeatureData>();
+	public List<SegmentFeatureData> segmentStats = new ArrayList<SegmentFeatureData>(3);
+	public List<SegmentFeatureData> segmentCenters = new ArrayList<SegmentFeatureData>(3);
 	public Float maxDistance;
 	
 
-	public SegmentInnerData normalizeArea(SegmentInnerData data){
-		SegmentInnerData cloned = data.clone();
+	public SegmentFeatureData normalizeArea(SegmentFeatureData data){
+		SegmentFeatureData cloned = data.clone();
 		Double delta = segmentStats.get(1).getArea() - segmentStats.get(0).getArea();
 		if(delta == 0D ){
 			delta = 1D;

@@ -6,19 +6,20 @@ import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
+import net.sf.javaml.classification.Classifier;
+import net.sf.javaml.classification.KNearestNeighbors;
+import net.sf.javaml.core.Dataset;
+import net.sf.javaml.core.DefaultDataset;
 
-import org.spantus.math.cluster.ClusterCollection;
-import org.spantus.math.cluster.ClusterService;
-import org.spantus.math.cluster.KNNServiceImpl;
+import net.sf.javaml.core.Instance;
+import net.sf.javaml.core.SparseInstance;
 
-public class KNNServiceTest extends TestCase {
+public class JavaMLClusterServiceTest extends TestCase {
 
-	ClusterService knnService;
 	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		knnService = new KNNServiceImpl();
 	}
 	
 	public void testClusterisation() throws Exception {
@@ -27,10 +28,31 @@ public class KNNServiceTest extends TestCase {
 //		vectors.addAll(createVectorList(5, 5));//5
 //		vectors.addAll(createVectorList(5, 20 ));//50
 		Collections.shuffle(vectors);
-		ClusterCollection clusterCenters = knnService.cluster(vectors, 2);
-		assertEquals(2, clusterCenters.size());
-		assertAproxEquals(5.0, clusterCenters.get(0).get(0), 5.0);
-		assertAproxEquals(150.0, clusterCenters.get(1).get(0), 70.0);
+                
+               Dataset data = new DefaultDataset();
+               for (List<Float> floats : vectors) {
+                    Instance tmpInstance = new SparseInstance(floats.size());
+                    int i = 0;
+                    for (Float f1 : floats) {
+                       tmpInstance.put(i++,f1.doubleValue());
+                       tmpInstance.setClassValue(""+i);
+                    }
+                    data.add(tmpInstance);
+               }
+                
+                Classifier knn = new KNearestNeighbors(5);
+                knn.buildClassifier(data);
+
+                Instance testInstance = new SparseInstance(2);
+                testInstance.put(0, 5D);
+                testInstance.put(1, 5D);
+                
+                knn.buildClassifier(data);
+                   
+                Object predictedClassValue = knn.classify(testInstance);
+		assertEquals("2", predictedClassValue.toString());
+//		assertAproxEquals(5.0, clusterCenters.get(0).get(0), 5.0);
+//		assertAproxEquals(150.0, clusterCenters.get(1).get(0), 70.0);
 		
 	}
 
@@ -57,6 +79,11 @@ public class KNNServiceTest extends TestCase {
 		vectors.add(createVector(150, 150));
 		vectors.add(createVector(149, 150));
 		vectors.add(createVector(150, 149));
+                vectors.add(createVector(1151, 1150));
+		vectors.add(createVector(1150, 1151));
+		vectors.add(createVector(1150, 1150));
+		vectors.add(createVector(1149, 1150));
+		vectors.add(createVector(1150, 1149));
 		return vectors;
 	}
 	public List<Float> createVector(Number... numbers) {
