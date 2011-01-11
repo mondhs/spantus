@@ -8,6 +8,7 @@ package org.spantus.externals.recognition.services;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 
 /**
@@ -27,6 +28,6 @@ public interface CorpusEntryExtractor {
      * @param filePath
      * @return - dir where it will save learned samples
      */
-    public int extractAndLearn(File filePath);
+    public MarkerSetHolder extractAndLearn(File filePath);
 
 }

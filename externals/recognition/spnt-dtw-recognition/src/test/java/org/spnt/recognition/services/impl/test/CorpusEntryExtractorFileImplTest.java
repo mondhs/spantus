@@ -6,12 +6,13 @@
 package org.spnt.recognition.services.impl.test;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorFileImpl;
 
@@ -49,9 +50,12 @@ public class CorpusEntryExtractorFileImplTest {
          //given
        File filePath = new File(path, FILE_TEST);
         //when
-       int entries = extractor.extractAndLearn(filePath);
+       MarkerSetHolder entries = extractor.extractAndLearn(filePath);
        //then
-       Assert.assertEquals("entries: " , 2, entries);
+       Assert.assertNotNull(entries);
+       MarkerSet words = entries.getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.word);
+       Assert.assertNotNull(words);
+       Assert.assertEquals("entries: " , 2, words.getMarkers().size());
      }
     
 }

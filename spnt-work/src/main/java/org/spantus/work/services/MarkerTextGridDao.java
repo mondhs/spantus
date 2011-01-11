@@ -114,18 +114,16 @@ public class MarkerTextGridDao implements MarkerDao {
 	}
 
 	public MarkerSetHolder read(InputStream inputStream) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new IllegalArgumentException("Not impl");
 	}
 
 	public void write(MarkerSetHolder holder, File file) {
-		// TODO Auto-generated method stub
+		throw new IllegalArgumentException("Not impl");
 
 	}
 
 	public void write(MarkerSetHolder holder, OutputStream outputStream) {
-		// TODO Auto-generated method stub
-
+		throw new IllegalArgumentException("Not impl");
 	}
 
 	public class ReadListener {

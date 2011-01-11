@@ -12,6 +12,9 @@ import java.util.Map;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
@@ -20,6 +23,8 @@ import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorFileI
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
+import org.spantus.utils.FileUtils;
+import org.spantus.work.services.WorkServiceFactory;
 
 /**
  *
@@ -27,7 +32,10 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
  */
 public class ExtractSegmentDirTest {
 
-    public final static String DIR_LEARN_WAV = "/home/mondhs/src/garsynai/skaiciai/learn";
+    public final static String DIR_LEARN_WAV = 
+            "/mnt/audio/MG"
+//            "/home/mondhs/src/garsynai/skaiciai/learn"
+            ;
     public final static String DIR_LEARN = "./target/learn-corpus/";
 
     private File learnDir;
@@ -65,21 +73,41 @@ public class ExtractSegmentDirTest {
 
     @Test
     public void testExtract() {
-        
+        clearCorpus();
+                 
+        int sum = 0; 
+        for (File filePath : learnDir.listFiles(new WavFileNameFilter())) {
+           MarkerSetHolder markerSetHolder = extractor.extractAndLearn(filePath.getAbsoluteFile());
+           int count = getSegementedMarkers(markerSetHolder).getMarkers().size();
+           String markersPath = FileUtils.stripExtention(filePath);
+           markersPath += ".mspnt.xml";
+           WorkServiceFactory.createMarkerDao().write(markerSetHolder, new File(DIR_LEARN, markersPath));
+           log.debug("accept: {0}:{1}",filePath, markerSetHolder);
+           sum += count;
+        }
+        Assert.assertEquals(70, sum);
+//        verifyMatches();
+
+       
+    }
+    
+    protected MarkerSet getSegementedMarkers(MarkerSetHolder markerSetHolder){
+       MarkerSet segments = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+        if(segments == null){
+            segments = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
+        }
+       return segments;
+    }
+    
+    protected void clearCorpus(){
         for (CorpusEntry corpusEntry : corpusRepository.findAllEntries()) {
             corpusRepository.delete(corpusEntry);
         }
         corpusRepository.flush();
-                 
-        int sum = 0; 
-        for (File filePath : learnDir.listFiles(new WavFileNameFilter())) {
-           int entries = extractor.extractAndLearn(filePath.getAbsoluteFile());
-           log.debug("accept: {0}:{1}",filePath, entries);
-           sum += entries;
-        }
-        Assert.assertEquals(30, sum);
-
-        File testDir = new File(learnDir,"../test");
+    }
+    
+    protected void verifyMatches(){
+         File testDir = new File(learnDir,"../test");
         for (File filePath : testDir.listFiles(new WavFileNameFilter())) {
            List<CorpusEntry> entries = extractor.extractInMemory(filePath);
            log.debug("accept: {0}:{1}",filePath, entries);
@@ -95,7 +123,7 @@ public class ExtractSegmentDirTest {
             }
         }
     }
-
+            
     
     
     public class WavFileNameFilter implements FilenameFilter{

@@ -66,11 +66,13 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
         IExtractorInputReader reader = getReaderService().createReaderWithClassifier(
                 getExtractors(), filePath);
 
-        MarkerSet words = findMarkers(reader);
+        MarkerSetHolder markerSetHorlder = findMarkers(reader);
+        MarkerSet segments = getSegementedMarkers(markerSetHorlder);
 
+        
         //process markers
-        Assert.isTrue(words != null);
-        for (Marker marker : words.getMarkers()) {
+        Assert.isTrue(segments != null);
+        for (Marker marker : segments.getMarkers()) {
             CorpusEntry corpusEntry = create( marker, reader);
             result.add(corpusEntry);
         }
@@ -83,33 +85,50 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
      * @param filePath
      * @return
      */
-    public int extractAndLearn(File filePath) {
+    public MarkerSetHolder extractAndLearn(File filePath) {
          Assert.isTrue(filePath.exists(), "file not exists" + filePath);
         URL fileUrl = toUrl(filePath);
         int result = 0;
         //find markers
         IExtractorInputReader reader = getReaderService().createReaderWithClassifier(
                 getExtractors(), filePath);
-        MarkerSet words = findMarkers(reader);
+        MarkerSetHolder markerSetHorlder = findMarkers(reader);
 
+        MarkerSet segments = getSegementedMarkers(markerSetHorlder);
+        log.debug("[extractAndLearn] marker size {0}", segments.getMarkers().size());
+        
         //process markers
-        Assert.isTrue(words != null);
-        for (Marker marker : words.getMarkers()) {
+        Assert.isTrue(segments != null);
+        for (Marker marker : segments.getMarkers()) {
             marker.setLabel(filePath.getName()+"-"+
                     (result+1));
-            learn(fileUrl, marker, reader);
+            if(marker.getLength()>10){
+                    learn(fileUrl, marker, reader);
+            }
             result++;
         }
 
-        return result;
+        return markerSetHorlder;
     }
-
+    /**
+     * 
+     * @param markerSetHolder
+     * @return
+     */
+    protected MarkerSet getSegementedMarkers(MarkerSetHolder markerSetHolder){
+       MarkerSet segments = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+        if(segments == null){
+            segments = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
+        }
+       return segments;
+    }
+    
     /**
      * Find markers
      * @param filePath
      * @return
      */
-    protected MarkerSet findMarkers(IExtractorInputReader reader) {
+    protected  MarkerSetHolder findMarkers(IExtractorInputReader reader) {
 
         Set<IClassifier> clasifiers = new HashSet<IClassifier>();
         for (IGeneralExtractor extractor : reader.getGeneralExtractor()) {
@@ -120,9 +139,8 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
         log.debug("[findMarkers] clasifiers size {0}", clasifiers.size());
         MarkerSetHolder markerSetHorlder = getSegmentator().extractSegments(
                 clasifiers, getSegmentionParam());
-        MarkerSet words = markerSetHorlder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
-        log.debug("[findMarkers] marker size {0}", words.getMarkers().size());
-        return words;
+        
+        return markerSetHorlder;
     }
 
 
@@ -189,7 +207,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
     public ISegmentatorService getSegmentator() {
         if (segmentator == null) {
             segmentator = SegmentFactory.createSegmentator(
-                    SegmentatorServiceEnum.online.name());
+                    SegmentatorServiceEnum.basic.name());
         }
         return segmentator;
     }

@@ -63,7 +63,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
         boolean isSimilar = false;
         int lastSizeValues = 0;
         int currentSizeValues = 0;
-        Long peaksLength = Long.MAX_VALUE;
+        Long distanceBetweenPaeks = Long.MAX_VALUE;
         String className = "";
 
         if (ctx.getCurrentSegment() != null) {
@@ -90,8 +90,8 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
                 if(currentPeak==1){
                     Integer first = ((LinkedList<ExtremeEntry>)lastSegment.getPeakEntries()).getLast().getIndex();
                     Integer last = ((LinkedList<ExtremeEntry>)currentSegment.getPeakEntries()).getLast().getIndex();
-                    peaksLength = last.longValue() - first;
-                    peaksLength = currentSegment.getValues().indextoMils(peaksLength.intValue());
+                    distanceBetweenPaeks = last.longValue() - first;
+                    distanceBetweenPaeks = currentSegment.getValues().indextoMils(distanceBetweenPaeks.intValue());
                     
                 }
 
@@ -116,7 +116,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
         } else if (ctx.isFeatureInMin()) {
             log.debug("Found min. Possible change point");
             return ClassifierRuleBaseEnum.action.changePoint;
-        }else if(ctx.isFeatureInMax() && peaksLength<66){
+        }else if(ctx.isFeatureInMax() && distanceBetweenPaeks<66 && (lastLength+currentLength)  < 280){
               log.debug("Found max. join as between peaks not enough space");
             return ClassifierRuleBaseEnum.action.join;
         } else if (ctx.isFeatureInMax() && isIncrease  ) {
