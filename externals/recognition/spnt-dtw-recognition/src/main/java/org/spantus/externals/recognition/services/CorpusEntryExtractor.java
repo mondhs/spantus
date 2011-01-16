@@ -8,6 +8,8 @@ package org.spantus.externals.recognition.services;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 
@@ -29,5 +31,13 @@ public interface CorpusEntryExtractor {
      * @return - dir where it will save learned samples
      */
     public MarkerSetHolder extractAndLearn(File filePath);
+    /**
+     * 
+     * @param fileUrl
+     * @param marker
+     * @param reader
+     * @return
+     */
+    public CorpusEntry learn(URL fileUrl, Marker marker, IExtractorInputReader reader);
 
 }

@@ -1,5 +1,9 @@
 package org.spantus.externals.recognition.services;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Maps;
+import com.google.common.primitives.Floats;
+import com.google.common.primitives.Ints;
 import java.awt.Point;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -164,12 +168,14 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @param results
          * @return
          */
-        private List<RecognitionResultDetails> postProcessResult(List<RecognitionResultDetails> results,
+        private <T extends RecognitionResult> List<T> postProcessResult(List<T> results,
                 Map<String, Float> minimum, Map<String, Float> maximum) {
             log.debug("[postProcessResult]+++");
+            
             for (RecognitionResult result : results) {
-                Map<String,Float> normalizedScores = new HashMap<String, Float>();
+                Map<String,Float> normalizedScores = Maps.newHashMap();
                 Float normalizedSum = 0F;
+                
                 for (Entry<String,Float> score : result.getScores().entrySet()) {
                     float min = minimum.get(score.getKey());
                     float max = maximum.get(score.getKey());
@@ -189,51 +195,18 @@ public class CorpusServiceBaseImpl implements CorpusService {
                 result.setScores(normalizedScores);
             }
             log.debug("[postProcessResult] results before sort: {0}", results);
-            Collections.sort(results, new Comparator<RecognitionResultDetails>(){
-                public int compare(RecognitionResultDetails o1, RecognitionResultDetails o2) {
-                    return o1.getDistance().compareTo(o2.getDistance());
-                }
-            });
-            log.debug("[postProcessResult] results after sort: {0}", results);
-            log.debug("[postProcessResult]---");
-            return results;
-        }
-        /**
-         * 
-         * @param results
-         * @param minimum
-         * @param maximum
-         * @param t
-         * @return
-         */
-        private List<RecognitionResult> postProcessResult(List<RecognitionResult> results,
-                Map<String, Float> minimum, Map<String, Float> maximum, boolean t) {
-            log.debug("[postProcessResult]+++");
-            for (RecognitionResult result : results) {
-                Map<String, Float> normalizedScores = new HashMap<String, Float>();
-                Float normalizedSum = 0F;
-                for (Entry<String, Float> score : result.getScores().entrySet()) {
-                    float min = minimum.get(score.getKey());
-                    float max = maximum.get(score.getKey());
-                    float delta = max - min;
-                    float normalizedScore = (score.getValue() - min) / delta;
-                    normalizedSum += normalizedScore;
-                    normalizedScores.put(score.getKey(), normalizedScore);
-                }
-                result.setDistance(normalizedSum);
-                result.setScores(normalizedScores);
-            }
-            log.debug("[postProcessResult] results before sort: {0}", results);
-            Collections.sort(results, new Comparator<RecognitionResult>() {
-
+            Collections.sort(results, new Comparator<RecognitionResult>(){
                 public int compare(RecognitionResult o1, RecognitionResult o2) {
-                    return o1.getDistance().compareTo(o2.getDistance());
+                    return Floats.compare(o1.getDistance(), o2.getDistance());
                 }
             });
+            int maxElementSize = Ints.min(20, results.size()); 
+            
             log.debug("[postProcessResult] results after sort: {0}", results);
             log.debug("[postProcessResult]---");
-            return results;
+            return results.subList(0, maxElementSize);
         }
+        
         /**
          * Same as {@link #learn(java.lang.String, java.util.Map)} only with audio
          * stream
@@ -292,7 +265,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
                     }
                     results.add(result);
 		}
-		results = postProcessResult(results, minimum, maximum, true);
+		results = postProcessResult(results, minimum, maximum);
 		log.info(MessageFormat.format("[findBestMatch] sample: {0}",  results));
 		if(results.isEmpty()){
                     return null;

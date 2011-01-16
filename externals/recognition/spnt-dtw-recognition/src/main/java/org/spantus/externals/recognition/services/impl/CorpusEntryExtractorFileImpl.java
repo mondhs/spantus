@@ -4,6 +4,7 @@
  */
 package org.spantus.externals.recognition.services.impl;
 
+import com.google.common.base.Joiner;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,7 +32,6 @@ import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
 import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
-import org.spantus.segment.SegmentatorParam;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.utils.Assert;
 import org.spantus.work.services.ExtractorReaderService;
@@ -87,8 +87,8 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
      */
     public MarkerSetHolder extractAndLearn(File filePath) {
          Assert.isTrue(filePath.exists(), "file not exists" + filePath);
-        URL fileUrl = toUrl(filePath);
-        int result = 0;
+        
+        
         //find markers
         IExtractorInputReader reader = getReaderService().createReaderWithClassifier(
                 getExtractors(), filePath);
@@ -97,19 +97,39 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
         MarkerSet segments = getSegementedMarkers(markerSetHorlder);
         log.debug("[extractAndLearn] marker size {0}", segments.getMarkers().size());
         
-        //process markers
-        Assert.isTrue(segments != null);
-        for (Marker marker : segments.getMarkers()) {
-            marker.setLabel(filePath.getName()+"-"+
-                    (result+1));
-            if(marker.getLength()>10){
-                    learn(fileUrl, marker, reader);
-            }
-            result++;
-        }
+        extractAndLearn(filePath, markerSetHorlder, reader);
 
         return markerSetHorlder;
     }
+    
+     public MarkerSetHolder extractAndLearn(File filePath, MarkerSetHolder markerSetHolder, IExtractorInputReader reader) {
+        IExtractorInputReader localReader = null;
+        if(reader == null){
+            localReader = getReaderService().createReaderWithClassifier(
+                getExtractors(), filePath);
+        }else{
+            localReader = reader;
+        }
+        MarkerSet segments = getSegementedMarkers(markerSetHolder);
+        URL fileUrl = toUrl(filePath);
+        int result = 0;
+         //process markers
+        Assert.isTrue(segments != null);
+        for (Marker marker : segments.getMarkers()) {
+            marker.setLabel(
+                    Joiner.on("-").join(marker.getLabel().trim(), 
+                    filePath.getName(), (result+1)).toString()
+                    );
+            
+            if(marker.getLength()>10){
+                    learn(fileUrl, marker, localReader);
+            }
+            result++;
+        }
+        return markerSetHolder;
+
+     }
+    
     /**
      * 
      * @param markerSetHolder
@@ -173,7 +193,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
      * @param reader
      * @return
      */
-    protected CorpusEntry learn(URL fileUrl, Marker marker, IExtractorInputReader reader) {
+    public CorpusEntry learn(URL fileUrl, Marker marker, IExtractorInputReader reader) {
 
         AudioInputStream ais =
                 AudioManagerFactory.createAudioManager().findInputStreamInMils(
