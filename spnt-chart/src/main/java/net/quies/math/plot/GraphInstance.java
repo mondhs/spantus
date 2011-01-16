@@ -54,11 +54,11 @@ paint(Graphics g) {
 	g = g.create();
 	g.translate(X_OFFSET , Y_OFFSET);
 
-	xAxis.paint(g);
-//	yAxis.paint(g);
 	int i = functions.size();
 	while (--i >= 0)
 		functions.get(i).paint(g);
+	xAxis.paint(g);
+//	yAxis.paint(g);
 
 	g.dispose();
 }

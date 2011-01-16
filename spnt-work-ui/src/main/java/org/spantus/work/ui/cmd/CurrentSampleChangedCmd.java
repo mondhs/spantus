@@ -22,20 +22,16 @@ package org.spantus.work.ui.cmd;
 
 import java.awt.Toolkit;
 import java.util.Set;
-import org.spantus.core.extractor.IExtractor;
 
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
-import org.spantus.utils.Assert;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.services.WorkInfoManager;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
-import org.spantus.core.wav.AudioManagerFactory;
 
 public class CurrentSampleChangedCmd extends AbsrtactCmd {
 

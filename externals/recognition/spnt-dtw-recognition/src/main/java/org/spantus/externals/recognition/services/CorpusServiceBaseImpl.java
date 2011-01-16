@@ -1,9 +1,5 @@
 package org.spantus.externals.recognition.services;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Maps;
-import com.google.common.primitives.Floats;
-import com.google.common.primitives.Ints;
 import java.awt.Point;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -12,13 +8,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Map.Entry;
+
 import javax.sound.sampled.AudioInputStream;
+
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
-
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.externals.recognition.bean.RecognitionResult;
@@ -29,6 +26,10 @@ import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwResult;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.services.MathServicesFactory;
+
+import com.google.common.collect.Maps;
+import com.google.common.primitives.Floats;
+import com.google.common.primitives.Ints;
 /**
  * 
  * @author Mindaugas Greibus
@@ -80,7 +81,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
                         for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
                             if(sample.getFeatureMap().get(targetEntry.getKey()) == null ||
                                     sample.getFeatureMap().get(targetEntry.getKey()).getValues() == null){
-                                continue;
+
                             }
                             String featureName =  targetEntry.getKey();
                             FeatureData sampleFeatureData = sample.getFeatureMap().get(targetEntry.getKey());
@@ -177,11 +178,11 @@ public class CorpusServiceBaseImpl implements CorpusService {
                 Float normalizedSum = 0F;
                 
                 for (Entry<String,Float> score : result.getScores().entrySet()) {
-                    float min = minimum.get(score.getKey());
-                    float max = maximum.get(score.getKey());
-                    float delta = max-min;
-                    float normalizedScore = (score.getValue() - min)/delta;
-//                    float normalizedScore = score.getValue();
+//                    float min = minimum.get(score.getKey());
+//                    float max = maximum.get(score.getKey());
+//                    float delta = max-min;
+//                    float normalizedScore = (score.getValue() - min)/delta;
+                    float normalizedScore = score.getValue();
 
                     if(getIncludeFeatures() == null || getIncludeFeatures().isEmpty()){
                         normalizedSum += normalizedScore;

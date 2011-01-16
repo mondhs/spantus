@@ -72,7 +72,7 @@ public class MatchingServiceImpl {
             corpusService.setIncludeFeatures(new HashSet<String>());
             corpusService.getIncludeFeatures().add(ExtractorEnum.MFCC_EXTRACTOR.name());
             corpusService.getIncludeFeatures().add(ExtractorEnum.LPC_EXTRACTOR.name());
-            corpusService.getIncludeFeatures().add(ExtractorEnum.FFT_EXTRACTOR.name());
+//            corpusService.getIncludeFeatures().add(ExtractorEnum.FFT_EXTRACTOR.name());
 //            corpusServiceimpl.getIncludeFeatures().add(ExtrasSctorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
 
         }

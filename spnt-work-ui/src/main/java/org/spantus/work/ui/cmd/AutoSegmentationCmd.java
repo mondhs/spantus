@@ -32,8 +32,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
-import org.spantus.core.IValues;
 
+import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
@@ -42,7 +42,6 @@ import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.externals.recognition.bean.RecognitionResult;
-import org.spantus.externals.recognition.services.CorpusService;
 import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
@@ -199,7 +198,17 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
             MarkerSet markerSet = ctx.getProject().getSample()
 		.getMarkerSetHolder().getMarkerSets().get(
 				MarkerSetHolderEnum.word.name());
+            if(markerSet == null){
+            	markerSet = ctx.getProject().getSample()
+        		.getMarkerSetHolder().getMarkerSets().get(
+        				MarkerSetHolderEnum.phone.name());
+
+            }
             for (Marker marker : markerSet.getMarkers()) {
+            	//work around for non-phoneme markers 
+            	if(marker.getLength()<20){
+            		continue;
+            	}
                 Map<String, IValues> fvv = getExtractorReaderService().
                         findAllVectorValuesForMarker(getReader(), marker);
                 RecognitionResult result = getMatchingService().match(fvv);

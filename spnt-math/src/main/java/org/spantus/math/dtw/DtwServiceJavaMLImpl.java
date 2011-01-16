@@ -2,10 +2,12 @@ package org.spantus.math.dtw;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import net.sf.javaml.distance.fastdtw.dtw.DTW;
+
 import net.sf.javaml.core.DenseInstance;
-import net.sf.javaml.distance.fastdtw.dtw.ExpandedResWindow;
+import net.sf.javaml.core.Instance;
+import net.sf.javaml.distance.fastdtw.dtw.DTW;
 import net.sf.javaml.distance.fastdtw.dtw.FullWindow;
 import net.sf.javaml.distance.fastdtw.dtw.LinearWindow;
 import net.sf.javaml.distance.fastdtw.dtw.ParallelogramWindow;
@@ -17,7 +19,9 @@ import net.sf.javaml.distance.fastdtw.matrix.ColMajorCell;
 import net.sf.javaml.distance.fastdtw.timeseries.PAA;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
-import org.spantus.math.VectorUtils;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 
 /**
  * 
@@ -131,16 +135,25 @@ public class DtwServiceJavaMLImpl implements DtwService {
     }
 
     public TimeSeries toTimeSeries(List<Float> values) {
-        TimeSeries ts = new TimeSeries(new DenseInstance(VectorUtils.toDoubleArray(values)));
+    	Instance instance = new DenseInstance(values.size());
+    	int i = 0;
+    	for (Float f1 : values) {
+			instance.put(i++, f1.doubleValue());
+		}
+    	TimeSeries ts = new TimeSeries(instance);
         return ts;
     }
 
     protected TimeSeries toTimeSeries(List<List<Float>> matrix, int numOfDimensions) {
-//        Instance instanceValues = new DenseInstance(toDoubleArray(values));
         TimeSeries ts = new TimeSeries(numOfDimensions);
         double i = 0;
         for (List<Float> list : matrix) {
-            TimeSeriesPoint tsp = new TimeSeriesPoint(VectorUtils.toDoubleArray(list));
+        	Collection<Double> doubles = Collections2.transform(list, new Function<Float, Double>() {
+				public Double apply(Float f1) {
+					return f1.doubleValue();
+				}
+			});
+            TimeSeriesPoint tsp = new TimeSeriesPoint(doubles);
             ts.addLast(i++, tsp);
         }
         return ts;

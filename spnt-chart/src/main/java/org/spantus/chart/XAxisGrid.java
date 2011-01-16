@@ -1,5 +1,6 @@
 package org.spantus.chart;
 
+import java.awt.Color;
 import java.math.BigDecimal;
 
 import net.quies.math.plot.AxisInstance;

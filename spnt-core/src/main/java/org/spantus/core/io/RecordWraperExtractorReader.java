@@ -19,7 +19,6 @@
 package org.spantus.core.io;
 
 import java.io.ByteArrayOutputStream;
-import java.util.LinkedList;
 
 import org.spantus.core.extractor.IExtractorInputReader;
 /**

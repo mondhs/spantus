@@ -18,8 +18,6 @@ package edu.cmu.sphinx.frontend.transform;
 //import edu.cmu.sphinx.frontend.DoubleData;
 import edu.cmu.sphinx.util.Complex;
 
-import java.util.List;
-
 /**
  * Computes the Discrete Fourier Transform (FT) of an input sequence, using Fast Fourier Transform (FFT). Fourier
  * Transform is the process of analyzing a signal into its frequency components. In speech, rather than analyzing the
@@ -63,7 +61,7 @@ public class DiscreteFourierTransform {
     private boolean isNumberFftPointsSet;
     private int numberFftPoints;
     private int logBase2NumberFftPoints;
-    private int numberDataPoints;
+//    private int numberDataPoints;
     private boolean invert;
 
     private Complex[] weightFft;
@@ -319,17 +317,17 @@ public class DiscreteFourierTransform {
      * @param numberSamples the number of samples in the incoming window
      * @return the closest power of 2 that is equal to or larger than the number of samples in the incoming window
      */
-    private  static int getNumberFftPoints(int numberSamples) {
-        int fftPoints = 1;
-
-        while (fftPoints < numberSamples) {
-            fftPoints <<= 1;
-            if (fftPoints < 1) {
-                throw new Error("Invalid # of FFT points: " + fftPoints);
-            }
-        }
-        return fftPoints;
-    }
+//    private  static int getNumberFftPoints(int numberSamples) {
+//        int fftPoints = 1;
+//
+//        while (fftPoints < numberSamples) {
+//            fftPoints <<= 1;
+//            if (fftPoints < 1) {
+//                throw new Error("Invalid # of FFT points: " + fftPoints);
+//            }
+//        }
+//        return fftPoints;
+//    }
 
 
     /**

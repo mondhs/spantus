@@ -115,8 +115,11 @@ public void paint(Graphics g) {
 
 	// paint axis:
 	Paint axisPaint = axis.getPaint();
-	if (axisPaint != null)
+	if (axisPaint != null){
 		g2.setPaint(axisPaint);
+	}else{
+		g2.setPaint(Color.black);
+	}
 	g2.setStroke(axis.getStroke());
 	for (int i = axisRender.length; --i >= 0; g2.draw(axisRender[i]));
 

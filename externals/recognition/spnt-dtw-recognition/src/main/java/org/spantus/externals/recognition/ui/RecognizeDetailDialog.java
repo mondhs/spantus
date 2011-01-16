@@ -29,9 +29,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.StringTokenizer;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
+
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
@@ -44,13 +45,14 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.text.Document;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+
 import org.spantus.core.beans.I18n;
 import org.spantus.core.marker.Marker;
+import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.logger.Logger;
 import org.spantus.ui.SwingUtils;
 import org.spantus.work.ui.ImageResourcesEnum;
-import org.spantus.core.wav.AudioManagerFactory;
 
 /**
  *
@@ -58,7 +60,12 @@ import org.spantus.core.wav.AudioManagerFactory;
  */
 public class RecognizeDetailDialog extends JDialog {
 
-    private List<RecognitionResultDetails> results;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private List<RecognitionResultDetails> results;
     
     private Long selctedSampleId = null;
     private String selctedFeatureId = null;
@@ -275,10 +282,13 @@ public class RecognizeDetailDialog extends JDialog {
             }else{
                 //expanded -
                 sb.append("&#8862;");
-
             }
-            sb.append(recognitionResult.getInfo().getName()).append("</a>").
-                    append("</td>");
+            sb.append(recognitionResult.getInfo().getName()).append("</a>");
+            //show expanded id
+            if(recognitionResult.getInfo().getId().equals(selctedSampleId)){
+            	sb.append("<span>[id=").append(recognitionResult.getInfo().getId()).append("]</span>");
+            }
+            sb.append("</td>");
             sb.append(html("<td ROWSPAN=\"{0}\">",rowsSize)).
                     append(getI18n().getDecimalFormat().format(
                             recognitionResult.getDistance())).

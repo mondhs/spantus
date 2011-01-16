@@ -107,7 +107,7 @@ public class SampleChart extends JPanel {
 	}
         public void updateMarker() {
             if( chart instanceof MarkeredTimeSeriesMultiChart ){
-		MarkeredTimeSeriesMultiChart _chart = ((MarkeredTimeSeriesMultiChart)chart);
+            	MarkeredTimeSeriesMultiChart _chart = ((MarkeredTimeSeriesMultiChart)chart);
                 _chart.getMarkerGraph().repaint(30L);
             }
         }

@@ -127,6 +127,8 @@ public class CommandExecutionFacadeImpl implements CommandExecutionFacade {
 
 	public void changedZoom(Float from, Float length) {
 		frame.getSampleRepresentationPanel().getSampleChart().getChart().changedZoom(from, length);
+		frame.getSampleRepresentationPanel().getSampleChart().getChart().setSize(frame.getSize());
+//		frame.getSampleRepresentationPanel().getSampleChart().getChart().repaint(30L);
 	}
 
 	public void updateContent() {

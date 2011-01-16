@@ -18,7 +18,6 @@
 */
 package org.spantus.work.ui.dto;
 
-import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -27,7 +26,11 @@ import java.io.Serializable;
  */
 public class RecognitionConfig implements Serializable {
 
-    private Integer radius;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Integer radius;
     private String dtwWindow;
     private String repositoryPath;
 

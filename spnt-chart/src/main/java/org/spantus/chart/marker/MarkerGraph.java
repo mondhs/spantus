@@ -22,8 +22,6 @@ package org.spantus.chart.marker;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
@@ -64,15 +62,6 @@ public class MarkerGraph extends JComponent {
 	public void initialize() {
 		Assert.isTrue(getMarkerSetHolder() != null, "Should not be null");
 		setLayout(null);
-//		KeyListener listener = new KeyAdapter() {
-//            @Override
-//            public void keyTyped(KeyEvent e) {
-//                int keyChar = e.getKeyChar();
-//        		log.debug("[keyTyped] name{0}; keyChar{1};", getName(), keyChar);
-//            }
-//        };
-//        this.addKeyListener(listener);
-
 
 		Map<String, MarkerSet> map = getMarkerSetHolder().getMarkerSets();
 		for (Entry<String, MarkerSet> entry : map.entrySet()) {
@@ -82,23 +71,6 @@ public class MarkerGraph extends JComponent {
 			add(comp);
 		}
 
-		// addMouseListener(this);
-		// addMouseMotionListener(this);
-
-//		KeyboardFocusManager.getCurrentKeyboardFocusManager()
-//				.addPropertyChangeListener(new PropertyChangeListener() {
-//					public void propertyChange(PropertyChangeEvent e) {
-//						String prop = e.getPropertyName();
-//						if (e.getNewValue() instanceof MarkerComponent) {
-//							((MarkerComponent) e.getNewValue()).repaint();
-//						}
-//						if (e.getOldValue() instanceof MarkerComponent) {
-//							((MarkerComponent) e.getOldValue()).repaint();
-//						}
-//						 log.debug(prop + ": " + e.getNewValue() + ";" +
-//						 e.getOldValue());
-//					}
-//				});
 	}
 
 	public MarkerSetComponent createMarkerSetComponent(MarkerSet markerSet) {

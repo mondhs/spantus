@@ -3,24 +3,25 @@
  * and open the template in the editor.
  */
 
-package org.spnt.recognition.service.test;
+package org.spnt.recognition.services.test;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.sound.sampled.AudioInputStream;
+
 import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
+import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
-import org.spantus.core.wav.AudioManagerFactory;
 
 /**
  *

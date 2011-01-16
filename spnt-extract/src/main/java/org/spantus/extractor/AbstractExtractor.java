@@ -101,7 +101,7 @@ public abstract class AbstractExtractor extends AbstractGeneralExtractor impleme
 	}
 	
 	public float getExtractorSampleRate() {
-		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()));
+		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()))*.99f;
 	}
 
 }

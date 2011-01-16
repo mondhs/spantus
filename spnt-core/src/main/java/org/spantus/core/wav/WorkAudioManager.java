@@ -248,7 +248,7 @@ public class WorkAudioManager implements AudioManager {
         try{
             stream = AudioSystem.getAudioInputStream(fileURL);
         }catch(NullPointerException npe){
-            //hmmm thats bad is problem in JVM
+            //hmmm thats bad if is problem in JVM
             throw new IOException(npe);
             
         }

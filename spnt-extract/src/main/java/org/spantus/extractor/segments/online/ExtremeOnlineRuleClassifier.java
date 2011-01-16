@@ -354,7 +354,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 //		ExtremeEntry changeEntry = ctx.prevSegmentEntry;
 		ExtremeSegment currentSegment = onlineCtx.getCurrentSegment();
 
-		ExtremeSegment lastSegment = onlineCtx.getExtremeSegments().getLast();
+		ExtremeSegment lastSegment = onlineCtx.getExtremeSegments().removeLast();
 		if(currentSegment != null){
 			log.debug("[join]++++ on {2} [{3}]; current: {1}; last: {0}; ", 
 					lastSegment, 
@@ -373,8 +373,8 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 				}
 			}
 			lastSegment.setEndEntry(null);
-			currentSegment = createExtremeSegment(ctx.getPreviousValue());
-			ctx.setCurrentSegment(currentSegment);
+//			currentSegment = createExtremeSegment(ctx.getPreviousValue());
+			ctx.setCurrentSegment(lastSegment);
 			log.debug("[join]--- on {2} [{3}]; current: {1}; last: {0}; ", 
 					lastSegment, 
 					currentSegment, 
@@ -475,11 +475,11 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 	
 	public void deleteSegment(ExtremeSegmentsOnlineCtx ctx){
 		ExtremeSegment currentSegment = ctx.getCurrentSegment();
-		ExtremeSegment lastSegment = onlineCtx.getExtremeSegments().getLast();
+		ExtremeSegment lastSegment = onlineCtx.getExtremeSegments().removeLast();
 		if(lastSegment==null){
 			return;
 		}
-		getClusterService().learn(lastSegment, ctx);
+//		getClusterService().learn(lastSegment, ctx);
 		log.debug("[deleteSegment] not adding {0}", getMarker());
 		Marker newMarker = createMarker(currentSegment, "0");
 		log.debug("[deleteSegment] created {0}", newMarker);

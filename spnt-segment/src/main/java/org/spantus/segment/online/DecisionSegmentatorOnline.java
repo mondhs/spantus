@@ -44,6 +44,7 @@ public class DecisionSegmentatorOnline extends MultipleSegmentatorListenerOnline
 	
 	
 	
+	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(DecisionSegmentatorOnline.class);
 	/*
 	 * (non-Javadoc)

@@ -6,6 +6,10 @@ import org.spantus.core.marker.Marker;
 
 public class SelectionDto implements Serializable{
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
          * In seconds
          */
         private Float from;

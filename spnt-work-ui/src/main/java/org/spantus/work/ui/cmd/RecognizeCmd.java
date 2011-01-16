@@ -18,16 +18,15 @@
 */
 package org.spantus.work.ui.cmd;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
-import org.spantus.logger.Logger;
 import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
+import org.spantus.logger.Logger;
 import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -75,7 +74,8 @@ public class RecognizeCmd extends AbsrtactCmd {
         getInfoPnl().setTargetWavURL(ctx.getProject().getSample().getCurrentFile());
         getInfoPnl().setTargetMarker(marker);
         getInfoPnl().updateCtx(results);
-	getInfoPnl().setVisible(true);
+        getInfoPnl().setVisible(true);
+        log.debug("Recognize popup shown");
         return GlobalCommands.sample.reloadMarkers.name();
     }
 

@@ -89,7 +89,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
                 className = getClusterService().getClassName(lastSegment, ctx);
                 if(currentPeak==1){
                     Integer first = ((LinkedList<ExtremeEntry>)lastSegment.getPeakEntries()).getLast().getIndex();
-                    Integer last = ((LinkedList<ExtremeEntry>)currentSegment.getPeakEntries()).getLast().getIndex();
+                    Integer last = ((LinkedList<ExtremeEntry>)currentSegment.getPeakEntries()).getFirst().getIndex();
                     distanceBetweenPaeks = last.longValue() - first;
                     distanceBetweenPaeks = currentSegment.getValues().indextoMils(distanceBetweenPaeks.intValue());
                     
@@ -122,9 +122,6 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
         } else if (ctx.isFeatureInMax() && isIncrease  ) {
             log.debug("Found max. join as increase");
             return ClassifierRuleBaseEnum.action.join;
-//        } else if (ctx.isFeatureInMax() && currentLength < 40 && lastLength > 100) {
-//            log.debug("too small gap for new segment {0}<40, {1}>100", currentLength, lastLength);
-//            return ClassifierRuleBaseEnum.action.join;
         } else if (ctx.isFeatureInMax() && isDecrease  && (lastLength+currentLength)  < 180) {
             log.debug("Found max. join as decrease {0}", isDecrease );
             return ClassifierRuleBaseEnum.action.join;
@@ -136,7 +133,10 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 //            return ClassifierRuleBaseEnum.action.join;            
 //        } else if (ctx.isFeatureInMax() && isSimilar) {
 //            log.debug("Found max. join as similar");
-//            return ClassifierRuleBaseEnum.action.join;            
+//            return ClassifierRuleBaseEnum.action.join;      
+//        } else if (ctx.isFeatureInMax() && lastLength < 20) {
+//            log.debug("too small last", lastLength);
+//            return ClassifierRuleBaseEnum.action.delete;
         } else if (ctx.isFeatureInMax() && "0".equals(className)) {
             log.debug("Found max. delete segment as noise");
             return ClassifierRuleBaseEnum.action.delete;
