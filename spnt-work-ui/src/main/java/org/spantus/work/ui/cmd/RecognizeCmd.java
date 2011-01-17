@@ -43,9 +43,6 @@ public class RecognizeCmd extends AbsrtactCmd {
     private RecognizeDetailDialog info;
     private MatchingServiceImpl matchingService;
     private ExtractorReaderService extractorReaderService;
-//    private CorpusServiceBaseImpl corpusService;
-//    private DtwServiceJavaMLImpl dtwService;
-//    private CorpusRepositoryFileImpl corpusRepo;
 
     
     

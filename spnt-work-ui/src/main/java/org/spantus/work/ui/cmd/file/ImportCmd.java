@@ -51,7 +51,20 @@ public class ImportCmd extends AbsrtactCmd {
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			File selectedFile = getFileChooser().getSelectedFile();
 			UIFileFilter fileFilter = (UIFileFilter)getFileChooser().getFileFilter();
-			ExportCmd.ExportType type = ExportCmd.ExportType.valueOf(fileFilter.getType());
+			ExportCmd.ExportType type = null;
+			if(fileFilter != null){
+				type = ExportCmd.ExportType.valueOf(fileFilter.getType());
+			}else{
+				for (String markerType : ExportCmd.MARKER_FILES) {
+					if(selectedFile.getName().endsWith(markerType)){
+						type = ExportCmd.ExportType.markers;
+					}
+				}
+			}
+			if(type == null){
+				throw new ProcessingException("Import file type is not selected");
+			}
+			
 			switch (type) {
 			case markers:
 				ctx.getProject().getSample().setMarkerSetHolder(readMarker(selectedFile));

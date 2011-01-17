@@ -108,6 +108,14 @@ public class MatchingServiceImpl {
     }
 
     public RecognitionResult match(Map<String, IValues> fvv) {
-       return getCorpusService().match(fvv);
+    	RecognitionResult result = getCorpusService().match(fvv);
+    	if(result == null){
+    		return null;
+    	}
+    	Float mfccScore = result.getScores().get("MFCC_EXTRACTOR");
+    	if(mfccScore != null && mfccScore >100){
+    		return null;
+    	}
+    	return result;
     }
 }
