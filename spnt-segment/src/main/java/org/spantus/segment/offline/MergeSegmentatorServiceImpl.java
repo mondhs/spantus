@@ -19,9 +19,9 @@
 package org.spantus.segment.offline;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.spantus.core.marker.Marker;
@@ -47,7 +47,7 @@ public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 	/**
 	 * 
 	 */
-	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers,
+	public MarkerSetHolder extractSegments(Collection<IClassifier> classifiers,
 			SegmentatorParam param) {
 		log.debug("[extractSegments] thresholds.size:" + classifiers.size());
 		MarkerSetHolder holder = new MarkerSetHolder();
@@ -92,7 +92,7 @@ public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 * @param param
 	 * @return
 	 */
-	protected LinkedHashMap<Long, Float> caclculateStatesSums(Set<IClassifier> classifiers, SegmentatorParam param){
+	protected LinkedHashMap<Long, Float> caclculateStatesSums(Collection<IClassifier> classifiers, SegmentatorParam param){
 		LinkedHashMap<Long, Float> statesSums = new LinkedHashMap<Long, Float>();
 
 		for (IClassifier classifier : classifiers) {

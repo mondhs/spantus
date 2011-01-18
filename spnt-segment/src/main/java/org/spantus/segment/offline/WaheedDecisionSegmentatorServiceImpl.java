@@ -18,6 +18,7 @@
 */
 package org.spantus.segment.offline;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -52,7 +53,7 @@ public class WaheedDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 	/**
 	 * 
 	 */
-	public MarkerSetHolder extractSegments(Set<IClassifier> thresholds, SegmentatorParam param) {
+	public MarkerSetHolder extractSegments(Collection<IClassifier> thresholds, SegmentatorParam param) {
 		MarkerSetHolder markerSetHolder = getSegmentator().extractSegments(thresholds, param);
 		MarkerSet markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
 		

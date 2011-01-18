@@ -4,16 +4,19 @@
  */
 package org.spantus.externals.recognition.services.impl;
 
-import com.google.common.base.Joiner;
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Collections2.transform;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import javax.sound.sampled.AudioInputStream;
+
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
@@ -22,6 +25,8 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
+import org.spantus.core.wav.AudioManager;
+import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.exception.ProcessingException;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.services.CorpusEntryExtractor;
@@ -36,8 +41,10 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.utils.Assert;
 import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.ExtractorReaderServiceImpl;
-import org.spantus.core.wav.AudioManager;
-import org.spantus.core.wav.AudioManagerFactory;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Predicates;
 
 /**
  *
@@ -60,7 +67,6 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
      */
     public List<CorpusEntry> extractInMemory(File filePath) {
         Assert.isTrue(filePath.exists(), "file not exists" + filePath);
-        URL fileUrl = toUrl(filePath);
         List<CorpusEntry> result = new ArrayList<CorpusEntry>();
         //find markers
         IExtractorInputReader reader = getReaderService().createReaderWithClassifier(
@@ -150,12 +156,19 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
      */
     protected  MarkerSetHolder findMarkers(IExtractorInputReader reader) {
 
-        Set<IClassifier> clasifiers = new HashSet<IClassifier>();
-        for (IGeneralExtractor extractor : reader.getGeneralExtractor()) {
-            if (extractor instanceof IClassifier) {
-                clasifiers.add((IClassifier) extractor);
-            }
-        }
+    	Function<IGeneralExtractor, IClassifier> castFunction = 
+    		new Function<IGeneralExtractor, IClassifier>() {
+			public IClassifier apply(IGeneralExtractor input) {
+				return (IClassifier)input;
+			}
+			
+		};
+    	
+        Collection<IClassifier> clasifiers = transform(
+        		filter(reader.getGeneralExtractor(),Predicates.instanceOf(IClassifier.class)),
+        		castFunction 
+        		);
+        
         log.debug("[findMarkers] clasifiers size {0}", clasifiers.size());
         MarkerSetHolder markerSetHorlder = getSegmentator().extractSegments(
                 clasifiers, getSegmentionParam());

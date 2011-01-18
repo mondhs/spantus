@@ -85,6 +85,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
                             }
                             String featureName =  targetEntry.getKey();
                             FeatureData sampleFeatureData = sample.getFeatureMap().get(targetEntry.getKey());
+                            if(sampleFeatureData == null){
+                            	continue;
+                            }
+                            	
                             log.debug("[findMultipleMatch] target [{0}]: {1} ", featureName, targetEntry.getValue());
                             log.debug("[findMultipleMatch] sample [{0}]: {1} ", featureName,sampleFeatureData.getValues());
                             result.getSampleLegths().put(featureName, 
@@ -250,7 +254,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
                 List<RecognitionResult> results = new ArrayList<RecognitionResult>();
                 Map<String, Float> minimum = new HashMap<String, Float> ();
                 Map<String, Float> maximum = new HashMap<String, Float> ();
-		for (CorpusEntry corpusSample : getCorpus().findAllEntries()) {
+                for (CorpusEntry corpusSample : getCorpus().findAllEntries()) {
+                	long start = System.currentTimeMillis();
                     RecognitionResult result = new RecognitionResult();
                     result.setScores(new HashMap<String, Float>());
                     result.setInfo(corpusSample);
@@ -265,11 +270,12 @@ public class CorpusServiceBaseImpl implements CorpusService {
                         updateMinMax(featureName, result1.getDistance(), minimum, maximum);
                     }
                     results.add(result);
-		}
-		results = postProcessResult(results, minimum, maximum);
-		log.info(MessageFormat.format("[findBestMatch] sample: {0}",  results));
-		if(results.isEmpty()){
-                    return null;
+                    log.debug("[findBestMatch] iteration in {0} ms", (System.currentTimeMillis()-start));
+				}
+				results = postProcessResult(results, minimum, maximum);
+				log.info(MessageFormat.format("[findBestMatch] sample: {0}",  results));
+				if(results.isEmpty()){
+		                    return null;
                 }
                 return results.get(0);
 	}

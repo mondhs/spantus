@@ -19,13 +19,8 @@
 package org.spantus.extractor;
 
 import org.spantus.core.FrameValues;
-import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.logger.Logger;
-import org.spantus.math.windowing.Windowing;
-import org.spantus.math.windowing.WindowingEnum;
-import org.spantus.math.windowing.WindowingFactory;
 
 /**
  * 
@@ -37,6 +32,7 @@ import org.spantus.math.windowing.WindowingFactory;
  *
  */
 public abstract class AbstractExtractor extends AbstractGeneralExtractor implements IExtractor {
+	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(AbstractExtractor.class);
 
 
@@ -101,7 +97,7 @@ public abstract class AbstractExtractor extends AbstractGeneralExtractor impleme
 	}
 	
 	public float getExtractorSampleRate() {
-		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()))*.99f;
+		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()));
 	}
 
 }

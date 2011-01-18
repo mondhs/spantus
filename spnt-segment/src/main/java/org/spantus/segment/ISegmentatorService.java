@@ -18,6 +18,7 @@
 */
 package org.spantus.segment;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.spantus.core.marker.MarkerSetHolder;
@@ -39,7 +40,7 @@ public interface ISegmentatorService {
 	 * @param param
 	 * @return
 	 */
-	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers, SegmentatorParam param);
+	public MarkerSetHolder extractSegments(Collection<IClassifier> classifiers, SegmentatorParam param);
 	/**
 	 * extract segments information using default parameters. It should extract information from 
 	 * classifiers {@link MarkerSetHolder#getMarkerSets()} should return at least {@link MarkerSetHolderEnum#word} level information. 

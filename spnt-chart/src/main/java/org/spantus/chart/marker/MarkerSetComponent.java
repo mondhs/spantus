@@ -238,9 +238,13 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
                             int expand= dragBound.x - previous.getEndX() + 10  ;
                             dragBound.x -= expand;
                             dragBound.width +=expand;
+                        }else{
+                        	dragBound.x -=100;
                         }
                         if(next != null){
                             dragBound.width = next.getStartX()-10 - dragBound.x;
+                        }else{
+                        	dragBound.width +=200;
                         }
                         if(!dragBound.contains(e.getPoint())){
                             log.debug("[mouseDragged] [{2}] {0} in comp:{1};", e.getPoint(),
@@ -253,6 +257,7 @@ public class MarkerSetComponent extends JComponent implements MouseListener,
 				lastMouseX = e.getPoint().x;
 			}
 			int delta = (e.getPoint().x - lastMouseX);
+			
 			lastMouseX = e.getPoint().x;
 			switch (dragStatus) {
 			case move:

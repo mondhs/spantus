@@ -82,7 +82,10 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
             result.put(key, fvv);
         }
         for (IExtractor extractor : reader.getExtractorRegister()) {
-            //extractors can have prefixes, jus check if ends with
+        	if(extractor.getName().endsWith(ExtractorEnum.SIGNAL_EXTRACTOR.name())){
+        		continue;
+        	}
+            //extractors can have prefixes, just check if ends with
             FrameValues values = extractor.getOutputValues();
             int endIndex = values.size()-1;
             Float fromIndex = (marker.getStart().floatValue() * values.getSampleRate()) / 1000;

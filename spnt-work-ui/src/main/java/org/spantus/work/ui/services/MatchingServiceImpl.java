@@ -113,7 +113,7 @@ public class MatchingServiceImpl {
     		return null;
     	}
     	Float mfccScore = result.getScores().get("MFCC_EXTRACTOR");
-    	if(mfccScore != null && mfccScore >100){
+    	if(mfccScore != null && mfccScore >60){
     		return null;
     	}
     	return result;

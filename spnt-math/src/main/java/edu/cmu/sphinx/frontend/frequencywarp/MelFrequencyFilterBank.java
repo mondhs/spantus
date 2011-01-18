@@ -249,15 +249,16 @@ public class MelFrequencyFilterBank  {
             throws IllegalArgumentException {
         double[] in = input;
 
-        if (filter == null || filter[0] == null || sampleRate != newSampleRate) {
+        if (filter == null || filter[0] == null || sampleRate != newSampleRate || 
+        		in.length != ((numberFftPoints >> 1) + 1)) {
             numberFftPoints = (in.length - 1) << 1;
             sampleRate = newSampleRate;
             buildFilterbank(numberFftPoints, numberFilters, minFreq, maxFreq);
-        } else if (in.length != ((numberFftPoints >> 1) + 1)) {
-            throw new IllegalArgumentException(
-                    "Window size is incorrect: in.length == " + in.length
-                            + ", numberFftPoints == "
-                            + ((numberFftPoints >> 1) + 1));
+//        } else if () {
+//            throw new IllegalArgumentException(
+//                    "Window size is incorrect: in.length == " + in.length
+//                            + ", numberFftPoints == "
+//                            + ((numberFftPoints >> 1) + 1));
         }
         double[] output = new double[numberFilters];
         /**

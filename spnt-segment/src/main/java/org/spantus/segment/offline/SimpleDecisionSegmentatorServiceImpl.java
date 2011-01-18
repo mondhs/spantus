@@ -18,6 +18,7 @@
 */
 package org.spantus.segment.offline;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -55,7 +56,7 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 	/**
 	 * process with some decision logic segments that are extracted by {@link #getSegmentator()}
 	 */
-	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers,
+	public MarkerSetHolder extractSegments(Collection<IClassifier> classifiers,
 			SegmentatorParam param) {
 		//merge segments with segmentator
 		MarkerSetHolder markerSetHolder = getSegmentator().extractSegments(classifiers,

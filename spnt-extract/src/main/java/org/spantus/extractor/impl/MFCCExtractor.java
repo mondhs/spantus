@@ -22,13 +22,9 @@ package org.spantus.extractor.impl;
 
 import java.util.List;
 
-import edu.cmu.sphinx.frontend.transform.DiscreteCosineTransform;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
-import org.spantus.extractor.AbstractExtractorVector;
 import org.spantus.logger.Logger;
-import org.spantus.math.VectorUtils;
-import org.spantus.math.services.FFTService;
 import org.spantus.math.services.MFCCService;
 import org.spantus.math.services.MathServicesFactory;
 
@@ -59,9 +55,14 @@ public class MFCCExtractor extends AbstractSpectralVectorExtractor {
         FrameVectorValues spectrum = calculateFFT(window);
         FrameVectorValues calculatedValues = super.calculateWindow(window);
         for (List<Float> spectra : spectrum) {
+        	try{
             List<Float> mfcc = getMfccService().calculateMfccFromSpectrum(spectra,
                     getConfig().getSampleRate());
             calculatedValues.add(mfcc);
+        	}catch (IllegalArgumentException e) {
+        		getAbstractExtractorVector().flush();
+        		throw e;
+        	}
         }
 
 

@@ -165,7 +165,8 @@ public class DefaultAudioReader extends AbstractAudioReader {
 		parameters.put("channels", audioFileFormat.getFormat().getChannels());
 		parameters.put("bigEdian", audioFileFormat.getFormat().isBigEndian());
 		parameters.put("bytes", audioFileFormat.getByteLength());
-		
+		Float totalTime = (audioFileFormat.getFrameLength() / audioFileFormat.getFormat().getFrameRate());
+		parameters.put("lengthInTime", totalTime);
 		
 		return parameters;
 	}

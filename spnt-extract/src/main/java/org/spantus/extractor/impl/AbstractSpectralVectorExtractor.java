@@ -20,7 +20,6 @@ package org.spantus.extractor.impl;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
-import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.AbstractExtractorVector;
 import org.spantus.extractor.ExtractorsFactory;
 
