@@ -62,6 +62,7 @@ public abstract class AbstractSegmentDirTest {
 
         ExtractorEnum[] extractors = new ExtractorEnum[]{
             ExtractorEnum.MFCC_EXTRACTOR,
+            ExtractorEnum.PLP_EXTRACTOR,
             ExtractorEnum.LPC_EXTRACTOR,
             ExtractorEnum.FFT_EXTRACTOR,
             ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,

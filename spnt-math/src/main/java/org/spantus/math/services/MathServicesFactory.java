@@ -20,10 +20,10 @@
  */
 package org.spantus.math.services;
 
-import org.spantus.math.dtw.DtwService;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 import org.spantus.math.cluster.ClusterService;
 import org.spantus.math.cluster.KNNServiceImpl;
+import org.spantus.math.dtw.DtwService;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 
 /**
  * 
@@ -49,12 +49,20 @@ public abstract class MathServicesFactory {
 		return fftService;
 	}
 	public static MFCCService createMFCCService(){
-		if(mfccService == null){
-//			mfccService = new MFCCKlautauServiceImpl();
-            mfccService = new MFCCServiceSphinxImpl();
-//			return new MFCCServiceImpl();
-		}
-		return mfccService;
+//		if(mfccService == null){
+////			mfccService = new MFCCKlautauServiceImpl();
+//            mfccService = new MFCCServiceSphinxImpl();
+////			return new MFCCServiceImpl();
+//		}
+		return new MFCCServiceSphinxImpl();
+	}
+	public static PLPService createPLPService(){
+//		if(mfccService == null){
+////			mfccService = new MFCCKlautauServiceImpl();
+//            mfccService = new MFCCServiceSphinxImpl();
+////			return new MFCCServiceImpl();
+//		}
+		return new PLPServiceSphinxImpl();
 	}
 
 	public static DtwService createDtwService(){

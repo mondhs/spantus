@@ -42,6 +42,7 @@ public enum ExtractorEnum {
 	WAVFORM_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector,"Wavform"),
 	LPC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector, "LPC"),
 	MFCC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector,"MFCC"),
+	PLP_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector,"PLP"),
 	AUTOCORRELATION_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Autocorrelation"),
 	ENVELOPE_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar,"Envelope"),
 	SPECTRAL_CENTROID_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Speactral Centroid"),

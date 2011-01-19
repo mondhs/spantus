@@ -32,6 +32,8 @@ import javax.swing.UIManager;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.logger.Logger;
+
+import com.google.common.primitives.Ints;
 /**
  * 
  * @author Mindaugas Greibus
@@ -82,6 +84,7 @@ public class MarkerComponent extends JComponent{
 		Point textLocation = new Point();
 		Rectangle2D textRectangle = g.getFontMetrics().getStringBounds(getName(), g); 
 		textLocation.x = ((getSize().width-(int)textRectangle.getWidth())/2);;
+		textLocation.x = Ints.max(5, textLocation.x);
 		textLocation.y = (getSize().height + (int)textRectangle.getHeight())/2;
 		
 		if(isFocusOwner()){

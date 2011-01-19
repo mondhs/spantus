@@ -71,6 +71,7 @@ public class MatchingServiceImpl {
             corpusService.setCorpus(getCorpusRepository());
             corpusService.setIncludeFeatures(new HashSet<String>());
             corpusService.getIncludeFeatures().add(ExtractorEnum.MFCC_EXTRACTOR.name());
+            corpusService.getIncludeFeatures().add(ExtractorEnum.PLP_EXTRACTOR.name());
             corpusService.getIncludeFeatures().add(ExtractorEnum.LPC_EXTRACTOR.name());
 //            corpusService.getIncludeFeatures().add(ExtractorEnum.FFT_EXTRACTOR.name());
 //            corpusServiceimpl.getIncludeFeatures().add(ExtrasSctorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
@@ -113,7 +114,7 @@ public class MatchingServiceImpl {
     		return null;
     	}
     	Float mfccScore = result.getScores().get("MFCC_EXTRACTOR");
-    	if(mfccScore != null && mfccScore >60){
+    	if(mfccScore != null && mfccScore >100){
     		return null;
     	}
     	return result;

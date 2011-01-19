@@ -20,6 +20,8 @@ package org.spantus.core.marker;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import com.google.common.base.Objects;
 /**
  * Reperesent collection of different layers of segmentations as phones, words etc.
  * 
@@ -48,6 +50,11 @@ public class MarkerSetHolder {
 			markerSets = new LinkedHashMap<String, MarkerSet>();
 		}
 		return markerSets;
+	}
+	
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(getClass()).add("markerSets", getMarkerSets().size()).toString();
 	}
 
 }

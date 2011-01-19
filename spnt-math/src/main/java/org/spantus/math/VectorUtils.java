@@ -21,9 +21,12 @@
 package org.spantus.math;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.google.common.primitives.Doubles;
 
 /**
  * 
@@ -44,7 +47,7 @@ public class VectorUtils {
      * @return
      */
     public static Float sum(List<Float> vector) {
-        float sum = 0f;
+        Float sum = 0f;
         for (Float float1 : vector) {
             sum += float1;
         }
@@ -79,11 +82,11 @@ public class VectorUtils {
     }
 
     public static double[] toDoubleArray(List<Float> values) {
-        double[] doubles = new double[values.size()];
-        int i = 0;
-        for (Float float1 : values) {
-            doubles[i++] = float1.doubleValue();
-        }
+    	double[] doubles = Doubles.toArray(Collections2.transform(values, new Function<Float, Double>() {
+			public Double apply(Float input) {
+				return input.doubleValue();
+			}
+		}));
         return doubles;
     }
 
@@ -98,7 +101,6 @@ public class VectorUtils {
 
     public static List<Float> toFloatList(double[] values) {
         List<Float> floatList = new ArrayList<Float>(values.length);
-        int i = 0;
         for (Double d1 : values) {
             floatList.add(d1.floatValue());
         }

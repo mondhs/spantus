@@ -20,15 +20,16 @@
 package org.spantus.math.services;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.spantus.math.VectorUtils;
+
 import edu.cmu.sphinx.frontend.feature.BatchCMN;
 import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
 import edu.cmu.sphinx.frontend.transform.DiscreteCosineTransform;
 import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
-import org.spantus.math.VectorUtils;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 
 /**
@@ -44,7 +45,7 @@ public class MFCCServiceSphinxImpl implements MFCCService {
     private int numberMelFilters = 20;
      private int cepstrumSize = 13;
     private DiscreteCosineTransform dct;
-    private FFTServiceSphinxImpl fftService;
+//    private FFTServiceSphinxImpl fftService;
     private MelFrequencyFilterBank melFrequencyFilterBank;
     private BatchCMN batchCMN;
 

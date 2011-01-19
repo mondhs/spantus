@@ -106,6 +106,7 @@ public abstract class ExtractorUtils {
 		extractor3DMap.put(ExtractorEnum.FFT_EXTRACTOR, FFTExtractorCached.class);
 		extractor3DMap.put(ExtractorEnum.LPC_EXTRACTOR, LPCExtractor.class);
 		extractor3DMap.put(ExtractorEnum.MFCC_EXTRACTOR, MFCCExtractor.class);
+		extractor3DMap.put(ExtractorEnum.PLP_EXTRACTOR, PLPExtractor.class);
 		extractor3DMap.put(ExtractorEnum.SPECTRAL_GAIN_FACTOR,
 				SpectralGainFactorExtractor.class);
 

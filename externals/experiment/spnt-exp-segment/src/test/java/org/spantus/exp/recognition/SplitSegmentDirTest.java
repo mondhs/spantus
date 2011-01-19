@@ -5,6 +5,7 @@
 package org.spantus.exp.recognition;
 
 import java.io.File;
+
 import org.junit.Test;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
@@ -36,7 +37,7 @@ public class SplitSegmentDirTest extends AbstractSegmentDirTest {
                     new File(markerDir, markersPath));
             
             MarkerSet markerSet = getSegementedMarkers(markerSetHolder);
-            int count = getSegementedMarkers(markerSetHolder).getMarkers().size();
+            int count = markerSet.getMarkers().size();
 
             getExtractor().extractAndLearn(
                     filePath.getAbsoluteFile(), markerSetHolder, null);
