@@ -102,9 +102,6 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 						.getMarkerSets().put(markerSet.getMarkerSetType(),
 								markerSet);
 				classifiers.add((IClassifier)extractor);
-//				markerSet = ((IClassifier)extractor).getMarkSet();
-//				markerSet.setMarkerSetType(MarkerSetHolderEnum.word.name());
-//				ctx.getProject().getCurrentSample().getMarkerSetHolder().getMarkerSets().put(markerSet.getMarkerSetType(), markerSet);
 			}
 		}
 

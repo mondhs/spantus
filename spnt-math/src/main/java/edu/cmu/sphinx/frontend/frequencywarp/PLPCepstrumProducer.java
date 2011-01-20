@@ -44,7 +44,7 @@ public class PLPCepstrumProducer  {
 
     private int cepstrumSize = 13;       // size of a Cepstrum
     private int LPCOrder = 14;           // LPC Order to compute cepstrum
-    private int numberPLPFilters = 32;   // number of PLP filters
+    private int numberPLPFilters = 16;   // number of PLP filters
     private double[][] cosine;
 
     public PLPCepstrumProducer(int numberPLPFilters,int cepstrumSize,int LPCOrder) {

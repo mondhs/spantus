@@ -43,7 +43,7 @@ import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
  * 
  */
 public class PLPServiceSphinxImpl implements PLPService {
-	private int numberPLPFilters = 32;
+	private int numberPLPFilters = 16;
 	private int cepstrumSize = 13;
 	private int LPCOrder = 14;
 	private double[][] cosine;
