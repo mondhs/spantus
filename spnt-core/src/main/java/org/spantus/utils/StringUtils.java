@@ -17,6 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 package org.spantus.utils;
+
+
 /**
  * 
  * @author Mindaugas Greibus
@@ -29,4 +31,5 @@ public abstract class StringUtils {
 	public static boolean hasText(String str){
 		return str != null && !"".equals(str);
 	}
+
 }

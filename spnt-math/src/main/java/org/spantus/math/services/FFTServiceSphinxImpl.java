@@ -18,11 +18,13 @@
  */
 package org.spantus.math.services;
 
-import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
-import klautau.FFT;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.spantus.math.VectorUtils;
 
-import java.util.*;
+import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
 
 /**
  * 
@@ -46,7 +48,7 @@ public class FFTServiceSphinxImpl implements FFTService{
 		}
 		int missingSamples = n - x.size();
 		fftInput.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
-		Float[] fftArr = fftInput.toArray(new Float[fftInput.size()]);
+//		Float[] fftArr = fftInput.toArray(new Float[fftInput.size()]);
         if(numberFftPoints!=n){
             numberFftPoints = n;
             sFft = new DiscreteFourierTransform(n, false);

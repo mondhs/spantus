@@ -24,10 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.google.common.primitives.Doubles;
-
 /**
  * 
  * @author Mindaugas Greibus
@@ -81,12 +77,20 @@ public class VectorUtils {
         return minIndex;
     }
 
+    public static List<Double> toDoubleList(List<Float> values) {
+        List<Double> doubles = new ArrayList<Double>(values.size());
+        for (Float float1 : values) {
+            doubles.add( float1.doubleValue());
+        }
+        return doubles;
+    }
+    
     public static double[] toDoubleArray(List<Float> values) {
-    	double[] doubles = Doubles.toArray(Collections2.transform(values, new Function<Float, Double>() {
-			public Double apply(Float input) {
-				return input.doubleValue();
-			}
-		}));
+        double[] doubles = new double[values.size()];
+        int i = 0;
+        for (Float float1 : values) {
+            doubles[i++] = float1.doubleValue();
+        }
         return doubles;
     }
 

@@ -37,6 +37,8 @@ public interface ILogger {
 	public abstract void error(String str);
 
 	public abstract void error(Exception e);
+	
+	public abstract void error(String str, Throwable e);
 
 	public abstract void fatal(String str);
 

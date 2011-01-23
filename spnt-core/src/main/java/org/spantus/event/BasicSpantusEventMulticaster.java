@@ -3,8 +3,6 @@ package org.spantus.event;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.JOptionPane;
-
 import org.spantus.exception.ProcessingException;
 
 public class BasicSpantusEventMulticaster implements SpantusEventMulticaster {
@@ -25,10 +23,6 @@ public class BasicSpantusEventMulticaster implements SpantusEventMulticaster {
 			try{
 				listener.onEvent(event);
 			}catch (Throwable throwable) {
-				JOptionPane.showMessageDialog(null,
-						throwable.getLocalizedMessage(),
-					    "Warning",
-					    JOptionPane.WARNING_MESSAGE);
 				throw new ProcessingException(throwable);
 			}
 		} 

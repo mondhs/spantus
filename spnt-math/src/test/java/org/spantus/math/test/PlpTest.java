@@ -31,7 +31,6 @@ import org.spantus.math.MatrixUtils;
 import org.spantus.math.VectorUtils;
 import org.spantus.math.services.PLPServiceSphinxImpl;
 
-import edu.cmu.sphinx.frontend.frequencywarp.PLPFrequencyFilterBank;
 import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
 
 public class PlpTest {

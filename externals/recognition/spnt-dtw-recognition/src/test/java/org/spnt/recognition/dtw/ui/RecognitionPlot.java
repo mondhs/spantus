@@ -85,7 +85,7 @@ public class RecognitionPlot extends JFrame {
 		
 		URL urlFile = wavFile.toURI().toURL();
 		DefaultAudioReader audioReader = (DefaultAudioReader)AudioReaderFactory.createAudioReader();
-		ExtractorInputReader bufferedReader = (ExtractorInputReader)ExtractorsFactory.createReader(audioReader.getAudioFormat(urlFile));
+		ExtractorInputReader bufferedReader = (ExtractorInputReader)ExtractorsFactory.createReader(audioReader.getAudioFormat(urlFile), 33, 66);
 
 		WraperExtractorReader wraperExtractorReader =  new WraperExtractorReader(bufferedReader,1);
 		wraperExtractorReader.setFormat(audioReader.getAudioFormat(urlFile).getFormat());

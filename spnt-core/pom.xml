@@ -12,12 +12,12 @@
 	<version>0.3-SNAPSHOT</version>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.spantus</groupId>
+			<artifactId>spnt-math</artifactId>
+			<version>0.3-SNAPSHOT</version>
+		</dependency>
 	
-	   <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
 	</dependencies>
 
 </project>

@@ -1,10 +1,8 @@
 package org.spantus.exp.segment.test;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
@@ -12,7 +10,6 @@ import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.services.MakerComparison;
 import org.spantus.exp.segment.services.impl.MakerComparisonTIAImpl;
-import org.junit.Assert;
 
 public class MarkerComparisionTiaTest{
 	MakerComparison makerComparison;

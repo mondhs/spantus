@@ -9,5 +9,6 @@ public interface CommandExecutionFacade extends SampleChangeListener,
 	public void fireEvent(Enum<?> enumCmdName, Object object);
 	public void fireEvent(String cmdName);
 	public void fireEvent(String cmdName, Object object);
+	public void showError(Throwable throwable, String message);
 	public void newProject();
 }

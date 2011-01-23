@@ -185,18 +185,19 @@ public class MarkerPopupMenu extends JPopupMenu {
 		return I18nFactory.createI18n().getMessage(str);
 	}
 
-        protected Marker findMarker(JComponent source){
-            Component invoker = getInvoker(source);
-            if (invoker instanceof MarkerSetComponent) {
-			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
+	protected Marker findMarker(JComponent source) {
+		Component invoker = getInvoker(source);
+		if (invoker instanceof MarkerSetComponent) {
+			// MarkerSetComponent _markerSetComponent = ((MarkerSetComponent)
+			// invoker);
 			MarkerComponentEventHandler ml = getShower(source);
-                        if(ml.getCurrentMarker()!=null){
-                            Marker _marker = ml.getCurrentMarker().getMarker();
-                            return _marker;
-                        }
-            }
-            return null;
-        }
+			if (ml.getCurrentMarker() != null) {
+				Marker _marker = ml.getCurrentMarker().getMarker();
+				return _marker;
+			}
+		}
+		return null;
+	}
 
 	public class MenuListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {

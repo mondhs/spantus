@@ -26,6 +26,7 @@ import org.spantus.chart.util.ChartUtils;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.logger.Logger;
+import org.spantus.ui.SwingUtils;
 import org.spantus.utils.Assert;
 import org.spantus.work.ui.container.SpantusWorkFrame;
 /**
@@ -68,8 +69,11 @@ public class CommandExecutionFacadeImpl implements CommandExecutionFacade {
 		SpantusWorkUIEvent event = new SpantusWorkUIEvent(this,frame.getInfo(), 
 				cmdName, object);
 		log.debug("[fireEvent] cmdName: {0}", cmdName);
-		frame.getEventMulticaster().multicastEvent(event);
-		
+		try{
+			frame.getEventMulticaster().multicastEvent(event);
+		}catch (Throwable e) {
+			SwingUtils.showError(frame, e,"");
+		}
 	}
 
 	
@@ -151,6 +155,10 @@ public class CommandExecutionFacadeImpl implements CommandExecutionFacade {
 
 	public void newProject() {
 		frame.newProject();
+	}
+
+	public void showError(Throwable throwable, String message) {
+		SwingUtils.showError(frame, throwable, message);
 	}
 
 

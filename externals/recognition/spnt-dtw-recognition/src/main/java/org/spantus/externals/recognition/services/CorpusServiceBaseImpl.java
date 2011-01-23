@@ -23,13 +23,10 @@ import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.externals.recognition.corpus.CorpusRepository;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
+import org.spantus.math.NumberUtils;
 import org.spantus.math.dtw.DtwResult;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.services.MathServicesFactory;
-
-import com.google.common.collect.Maps;
-import com.google.common.primitives.Floats;
-import com.google.common.primitives.Ints;
 /**
  * 
  * @author Mindaugas Greibus
@@ -66,6 +63,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
          * @return
          */
 	public List<RecognitionResultDetails> findMultipleMatch(Map<String, IValues> target) {
+			Long begin = System.currentTimeMillis();
+			log.debug("[findMultipleMatch]+++ ");
                 List<RecognitionResultDetails> results = new ArrayList<RecognitionResultDetails>();
 		if(target == null || target.isEmpty()){
                     return results;
@@ -89,8 +88,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
                             	continue;
                             }
                             	
-                            log.debug("[findMultipleMatch] target [{0}]: {1} ", featureName, targetEntry.getValue());
-                            log.debug("[findMultipleMatch] sample [{0}]: {1} ", featureName,sampleFeatureData.getValues());
+//                            log.debug("[findMultipleMatch] target [{0}]: {1} ", featureName, targetEntry.getValue());
+//                            log.debug("[findMultipleMatch] sample [{0}]: {1} ", featureName,sampleFeatureData.getValues());
                             result.getSampleLegths().put(featureName, 
                                    (float)Math.round( sampleFeatureData.getValues().getTime()*1000));
                             result.getTargetLegths().put(featureName, 
@@ -126,6 +125,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
                         results.add(result);
 		}
                 results = postProcessResult(results, minimum, maximum);
+                log.debug("[findMultipleMatch]--- in {0} ms ", System.currentTimeMillis() - begin);
 		return results;
         }
         /**
@@ -175,10 +175,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
          */
         private <T extends RecognitionResult> List<T> postProcessResult(List<T> results,
                 Map<String, Float> minimum, Map<String, Float> maximum) {
-            log.debug("[postProcessResult]+++");
+//            log.debug("[postProcessResult]+++");
             
             for (RecognitionResult result : results) {
-                Map<String,Float> normalizedScores = Maps.newHashMap();
+                Map<String,Float> normalizedScores = new HashMap<String, Float>();
                 Float normalizedSum = 0F;
                 
                 for (Entry<String,Float> score : result.getScores().entrySet()) {
@@ -199,16 +199,16 @@ public class CorpusServiceBaseImpl implements CorpusService {
                 result.setDistance(normalizedSum);
                 result.setScores(normalizedScores);
             }
-            log.debug("[postProcessResult] results before sort: {0}", results);
+//            log.debug("[postProcessResult] results before sort: {0}", results);
             Collections.sort(results, new Comparator<RecognitionResult>(){
                 public int compare(RecognitionResult o1, RecognitionResult o2) {
-                    return Floats.compare(o1.getDistance(), o2.getDistance());
+                    return NumberUtils.compare(o1.getDistance(), o2.getDistance());
                 }
             });
-            int maxElementSize = Ints.min(20, results.size()); 
+            int maxElementSize = NumberUtils.min(20, results.size()); 
             
             log.debug("[postProcessResult] results after sort: {0}", results);
-            log.debug("[postProcessResult]---");
+//            log.debug("[postProcessResult]---");
             return results.subList(0, maxElementSize);
         }
         

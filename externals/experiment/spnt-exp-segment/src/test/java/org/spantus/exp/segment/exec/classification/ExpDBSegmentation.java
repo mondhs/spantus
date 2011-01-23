@@ -42,7 +42,7 @@ public class ExpDBSegmentation extends ExpSegmentation {
     public void generateExpName(ComparisionResult result, List<String> signals) {
         super.generateExpName(result, signals);
         result.setClassifier(getComarisionFacade().getClassifier().name());
-        String experimentName = result.getName();
+//        String experimentName = result.getName();
         StringBuilder features = new StringBuilder();
         String iseperator = "";
         for (ExtractorEnum enum1 : getExtractors()) {

@@ -32,13 +32,13 @@ public class PlayCmd extends AbsrtactCmd {
 			this.dto = new SelectionDto();
 		}
 		try{
-		AudioManagerFactory.createAudioManager().play(
+			AudioManagerFactory.createAudioManager().play(
                         ctx.getProject().getSample().getCurrentFile(),
 				dto.getFrom(),
 				dto.getLength()
 				);	
 		}catch (ProcessingException e) {
-			error(e.getLocalizedMessage(), ctx);
+			error(e.getLocalizedMessage(), ctx, e);
 		}
 		return null;
 	}

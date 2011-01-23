@@ -38,9 +38,9 @@ import org.spantus.extractor.ExtractorsFactory;
  */
 public abstract class AbstractSpectralExtractor extends AbstractExtractor {
 	
-	AbstractExtractorVector abstractExtractorVector;
-	float signalSampleRate;
+	private AbstractExtractorVector abstractExtractorVector;
 	
+
 	protected FrameVectorValues calculateFFT(FrameValues window){
 		syncFFTParams();
 		
@@ -67,6 +67,10 @@ public abstract class AbstractSpectralExtractor extends AbstractExtractor {
 //		return (getConfig().getSampleRate()/(getWinowSize()*.85f));
 		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()));
 
+	}
+	public void setAbstractExtractorVector(
+			AbstractExtractorVector abstractExtractorVector) {
+		this.abstractExtractorVector = abstractExtractorVector;
 	}
 
 	public AbstractExtractorVector getAbstractExtractorVector() {

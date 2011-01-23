@@ -19,7 +19,6 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import org.spantus.chart.bean.VectorSeriesColorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.ui.SwingUtils;
-import org.spantus.work.ui.container.SpantusWorkSwingUtils;
 import org.spantus.work.ui.dto.EnviromentRepresentation;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 

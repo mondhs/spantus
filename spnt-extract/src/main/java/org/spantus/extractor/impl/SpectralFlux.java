@@ -35,7 +35,9 @@ import org.spantus.core.FrameVectorValues;
  *
  */
 public class SpectralFlux extends AbstractSpectralExtractor {
-
+	public SpectralFlux() {
+		setAbstractExtractorVector(new SpectralGainFactorExtractor());
+	}
 	
 	
 	public FrameValues calculateWindow(FrameValues window) {

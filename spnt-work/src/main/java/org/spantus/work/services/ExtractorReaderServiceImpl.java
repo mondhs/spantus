@@ -46,6 +46,9 @@ import org.spantus.logger.Logger;
 public class ExtractorReaderServiceImpl implements ExtractorReaderService {
 
     private static Logger log = Logger.getLogger(ExtractorReaderServiceImpl.class);
+    
+    private int windowLengthInMilSec = ExtractorsFactory.DEFAULT_WINDOW_LENGHT;
+    private int overlapInPerc = ExtractorsFactory.DEFAULT_WINDOW_OVERLAP;
 
     public FrameVectorValues findFeatureVectorValuesForMarker(IExtractorInputReader reader,
             Marker marker, String featureName) {
@@ -115,7 +118,7 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
         }
         AudioReader audioReader = AudioReaderFactory.createAudioReader();
         IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
-                audioReader.getAudioFormat(inputUrl));
+                audioReader.getAudioFormat(inputUrl), getWindowLengthInMilSec(), getOverlapInPerc());
         log.debug("[createReaderWithClassifier] reader config{0}", extractorReader.getConfig() );
         ExtractorUtils.
                 registerThreshold(extractorReader, extractors, null, ClassifierEnum.rules);
@@ -146,7 +149,7 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
         }
         AudioReader audioReader = AudioReaderFactory.createAudioReader();
         IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
-                audioReader.getAudioFormat(inputUrl));
+                audioReader.getAudioFormat(inputUrl), getWindowLengthInMilSec(), getOverlapInPerc());
         ExtractorUtils.register(extractorReader, extractors, null);
         audioReader.readSignal(inputUrl, extractorReader);
 
@@ -194,4 +197,20 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
         File newFile = new File(wavFile.getAbsoluteFile().toString() + ".sspnt.xml");
         return newFile;
     }
+
+	public int getWindowLengthInMilSec() {
+		return windowLengthInMilSec;
+	}
+
+	public void setWindowLengthInMilSec(int windowLengthInMilSec) {
+		this.windowLengthInMilSec = windowLengthInMilSec;
+	}
+
+	public int getOverlapInPerc() {
+		return overlapInPerc;
+	}
+
+	public void setOverlapInPerc(int overlapInPerc) {
+		this.overlapInPerc = overlapInPerc;
+	}
 }

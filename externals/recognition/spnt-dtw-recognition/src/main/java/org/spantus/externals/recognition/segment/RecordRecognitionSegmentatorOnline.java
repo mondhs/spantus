@@ -4,10 +4,10 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-import java.util.logging.Level;
-import javax.sound.sampled.AudioInputStream;
-import org.spantus.core.IValues;
 
+import javax.sound.sampled.AudioInputStream;
+
+import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.CorpusFileEntry;

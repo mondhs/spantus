@@ -31,7 +31,7 @@ public class ExtractSegmentDirTest extends AbstractSegmentDirTest{
            int count = getSegementedMarkers(markerSetHolder).getMarkers().size();
            String markersPath = FileUtils.stripExtention(filePath);
            markersPath += ".mspnt.xml";
-           WorkServiceFactory.createMarkerDao().write(markerSetHolder, new File(DIR_LEARN, markersPath));
+           WorkServiceFactory.createMarkerDao().write(markerSetHolder, new File(DIR_LEARN_OUT, markersPath));
            log.debug("accept: {0}:{1}",filePath, markerSetHolder);
            sum += count;
         }

@@ -19,12 +19,10 @@
 
 package org.spantus.extractor.impl;
 
+import java.util.LinkedHashMap;
+
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * User: mondhs

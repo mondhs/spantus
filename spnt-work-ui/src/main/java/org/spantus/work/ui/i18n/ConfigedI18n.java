@@ -21,8 +21,6 @@
 package org.spantus.work.ui.i18n;
 
 import java.util.Locale;
-
-import org.spantus.work.ui.dto.SpantusWorkInfo;
 /**
  * 
  * 

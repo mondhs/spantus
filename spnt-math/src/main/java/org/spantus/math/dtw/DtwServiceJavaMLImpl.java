@@ -2,11 +2,8 @@ package org.spantus.math.dtw;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import net.sf.javaml.core.DenseInstance;
-import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.fastdtw.dtw.DTW;
 import net.sf.javaml.distance.fastdtw.dtw.FullWindow;
 import net.sf.javaml.distance.fastdtw.dtw.LinearWindow;
@@ -18,10 +15,8 @@ import net.sf.javaml.distance.fastdtw.dtw.WarpPathWindow;
 import net.sf.javaml.distance.fastdtw.matrix.ColMajorCell;
 import net.sf.javaml.distance.fastdtw.timeseries.PAA;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
-import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
+import org.spantus.math.services.javaml.JavaMLSupport;
 
 /**
  * 
@@ -43,8 +38,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
     public Float calculateDistance(List<Float> targetVector,
             List<Float> sampleVector) {
 
-        TimeSeries tsTarget = toTimeSeries(targetVector);
-        TimeSeries tsSample = toTimeSeries(sampleVector);
+        TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetVector);
+        TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleVector);
 
         Double info = null;
         if(getSearchWindow()==null){
@@ -58,10 +53,16 @@ public class DtwServiceJavaMLImpl implements DtwService {
     }
 
 
-    public Float calculateDistanceVector(List<List<Float>> targetMatrix,
+    protected SearchWindow createSearchWindow(TimeSeries tsTarget,
+			TimeSeries tsSample) {
+		return createSearchWindow(tsTarget, tsSample, getSearchRadius() , getSearchWindow());
+	}
+
+
+	public Float calculateDistanceVector(List<List<Float>> targetMatrix,
             List<List<Float>> sampleMatrix) {
-        TimeSeries tsSample = toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
-        TimeSeries tsTarget = toTimeSeries(targetMatrix, targetMatrix.get(0).size());
+        TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
+        TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetMatrix, targetMatrix.get(0).size());
 
         Double info = null;
         if(getSearchWindow()==null){
@@ -80,8 +81,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
      * @return results
      */
     public DtwResult calculateInfo(List<Float> targetVector, List<Float> sampleVector) {
-        TimeSeries tsTarget = toTimeSeries(targetVector);
-        TimeSeries tsSample = toTimeSeries(sampleVector);
+        TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetVector);
+        TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleVector);
 
         TimeWarpInfo info = null;
         if(getSearchWindow()==null){
@@ -110,8 +111,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
      */
     public DtwResult calculateInfoVector(List<List<Float>> targetMatrix,
             List<List<Float>> sampleMatrix) {
-        TimeSeries tsSample = toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
-        TimeSeries tsTarget = toTimeSeries(targetMatrix, targetMatrix.get(0).size());
+        TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
+        TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetMatrix, targetMatrix.get(0).size());
         
         TimeWarpInfo info = null;
         if(getSearchWindow()==null){
@@ -134,47 +135,22 @@ public class DtwServiceJavaMLImpl implements DtwService {
 
     }
 
-    public TimeSeries toTimeSeries(List<Float> values) {
-    	Instance instance = new DenseInstance(values.size());
-    	int i = 0;
-    	for (Float f1 : values) {
-			instance.put(i++, f1.doubleValue());
-		}
-    	TimeSeries ts = new TimeSeries(instance);
-        return ts;
-    }
-
-    protected TimeSeries toTimeSeries(List<List<Float>> matrix, int numOfDimensions) {
-        TimeSeries ts = new TimeSeries(numOfDimensions);
-        double i = 0;
-        for (List<Float> list : matrix) {
-        	Collection<Double> doubles = Collections2.transform(list, new Function<Float, Double>() {
-				public Double apply(Float f1) {
-					return f1.doubleValue();
-				}
-			});
-            TimeSeriesPoint tsp = new TimeSeriesPoint(doubles);
-            ts.addLast(i++, tsp);
-        }
-        return ts;
-    }
     
-    protected SearchWindow createSearchWindow(TimeSeries tsTarget, TimeSeries tsSample) {
-        Integer radius = getSearchRadius();
-        if(JavaMLSearchWindow.FullWindow.equals(getSearchWindow())){
+    public static SearchWindow createSearchWindow(TimeSeries tsTarget, TimeSeries tsSample, Integer radius, JavaMLSearchWindow searchWindow ) {
+        if(JavaMLSearchWindow.FullWindow.equals(searchWindow)){
             return new FullWindow(tsTarget, tsSample);
-        }else if(JavaMLSearchWindow.LinearWindow.equals(getSearchWindow())){
+        }else if(JavaMLSearchWindow.LinearWindow.equals(searchWindow)){
             if(radius == null){
                 return new LinearWindow(tsTarget, tsSample);
             }else{
                 return new LinearWindow(tsTarget, tsSample, radius);
             }
-        }else if(JavaMLSearchWindow.ParallelogramWindow.equals(getSearchWindow())){
+        }else if(JavaMLSearchWindow.ParallelogramWindow.equals(searchWindow)){
             if(radius == null){
                 throw new IllegalArgumentException("please set setSearchRadius()");
             }
             return new ParallelogramWindow(tsTarget, tsSample,  radius);
-        }else if(JavaMLSearchWindow.ExpandedResWindow.equals(getSearchWindow())){
+        }else if(JavaMLSearchWindow.ExpandedResWindow.equals(searchWindow)){
             if(radius == null){
                 throw new IllegalArgumentException("please set setSearchRadius()");
             }

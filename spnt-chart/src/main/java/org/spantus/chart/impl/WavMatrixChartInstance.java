@@ -179,7 +179,13 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	Float max = Float.MIN_VALUE;
 	private void minmax(FrameVectorValues values){
 		for (List<Float> fv : values) {
+			boolean first = true;
 			for (Float f1 : fv) {
+				//skip first
+				if(first){
+					first = false;
+					continue;
+				}
 				min = Math.min(min, f1);
 				max = Math.max(max, f1);
 			}

@@ -25,6 +25,8 @@ import org.spantus.math.cluster.KNNServiceImpl;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 
+import edu.cmu.sphinx.frontend.frequencywarp.PLPCepstrumProducer;
+
 /**
  * 
  * @author Mindaugas Greibus
@@ -62,6 +64,10 @@ public abstract class MathServicesFactory {
 //            mfccService = new MFCCServiceSphinxImpl();
 ////			return new MFCCServiceImpl();
 //		}
+		int numbersOfFilters = 32;
+		PLPServiceSphinxImpl plpServiceSphinxImpl = new PLPServiceSphinxImpl(numbersOfFilters);
+		plpServiceSphinxImpl.setPlpCepstrumProducer(
+				new PLPCepstrumProducer(numbersOfFilters,13,14));
 		return new PLPServiceSphinxImpl();
 	}
 

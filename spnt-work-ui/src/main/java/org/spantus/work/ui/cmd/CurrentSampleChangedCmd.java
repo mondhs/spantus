@@ -27,7 +27,6 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
-import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.services.WorkInfoManager;
@@ -76,8 +75,8 @@ public class CurrentSampleChangedCmd extends AbsrtactCmd {
 			try{
 				//read changed sample
 				reader = WorkUIServiceFactory.read(ctx, getExecutionFacade());
-			}catch (ProcessingException e) {
-				error(e.getLocalizedMessage(), ctx);
+			}catch (Throwable e) {
+				error("", ctx, e);
 				return;
 			}
 			if(reader.getExtractorRegister().isEmpty() &&

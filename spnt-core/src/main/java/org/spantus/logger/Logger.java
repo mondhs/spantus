@@ -104,6 +104,13 @@ public class Logger implements ILogger {
 	public void error(String str) {
 		logger.error(str);
 	}
+	/*
+	 * (non-Javadoc)
+	 * @see org.spantus.logger.ILogger#error(java.lang.String, java.lang.Throwable)
+	 */
+	public void error(String str, Throwable t) {
+		logger.error(str, t);
+	}
 
 	/*
 	 * (non-Javadoc)

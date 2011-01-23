@@ -79,7 +79,7 @@ public class MelFilter {
         if ((Math.round(rightEdge - leftEdge) == 0)
                 || (Math.round(centerFreq - leftEdge) == 0)
                 || (Math.round(rightEdge - centerFreq) == 0)) {
-            throw new IllegalArgumentException("Filter boundaries too close");
+            throw new IllegalArgumentException("Filter boundaries too close. Expand frame size.");
         }
         /**
          * Let's compute the number of elements we need in the

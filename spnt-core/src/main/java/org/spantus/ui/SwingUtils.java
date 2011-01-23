@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -48,6 +49,13 @@ public abstract class SwingUtils {
 
         // Move the window
         frame.setLocation(0, 0);
-
+    }
+    
+    public static void showError(Frame frame, Throwable throwable, String message){
+    	JOptionPane.showMessageDialog(frame,
+    			message + throwable.getLocalizedMessage(),
+			    "Error",
+			    JOptionPane.WARNING_MESSAGE);
+    	
     }
 }

@@ -31,10 +31,13 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
  */
 public abstract class AbstractSegmentDirTest {
 
-    public final static String DIR_LEARN_WAV =
-            "/mnt/audio/MG" //            "/home/mondhs/src/garsynai/skaiciai/learn"
+    public static final int WINDOW_OVERLAP = 66;
+	public static final int WINDOW_LENGTH = 20;
+	public final static String DIR_LEARN_WAV =
+        "/mnt/audio/VDU_ISO4"    
+    	//"/mnt/audio/MG" //            "/home/mondhs/src/garsynai/skaiciai/learn"
             ;
-    public final static String DIR_LEARN =
+    public final static String DIR_LEARN_OUT =
             "/mnt/audio/MG/OUTPUT/"
 //            "./target/learn-corpus/"
             ;
@@ -50,10 +53,12 @@ public abstract class AbstractSegmentDirTest {
         extractor = new CorpusEntryExtractorFileImpl();
         corpusService = new CorpusServiceBaseImpl();
         corpusRepository = new CorpusRepositoryFileImpl();
-        corpusRepository.setRepositoryPath(DIR_LEARN);
+        corpusRepository.setRepositoryPath(DIR_LEARN_OUT);
         corpusService.setCorpus(corpusRepository);
         extractor.setCorpusService(corpusService);
-
+        extractor.setWindowLengthInMilSec(WINDOW_LENGTH);
+        extractor.setOverlapInPerc(WINDOW_OVERLAP);
+        
         OnlineDecisionSegmentatorParam segmentionParam = new OnlineDecisionSegmentatorParam();
         segmentionParam.setMinLength(91L);
         segmentionParam.setMinSpace(261L);

@@ -25,6 +25,8 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.spantus.exception.ProcessingException;
+
 
 /**
  * 
@@ -115,6 +117,13 @@ public class SimpleLogger implements ILogger {
     	e.printStackTrace(pw);
         log(ERROR,sw.toString());
     }
+    
+
+	public void error(String str, Throwable e) {
+		error(str);
+		error(new ProcessingException(e));
+	}
+    
     public void fatal(String str){
         log(FATAL,str);
     }

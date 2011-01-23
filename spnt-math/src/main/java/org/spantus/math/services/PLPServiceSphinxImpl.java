@@ -26,7 +26,6 @@ import java.util.List;
 import org.spantus.math.VectorUtils;
 
 import edu.cmu.sphinx.frontend.feature.BatchCMN;
-import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
 import edu.cmu.sphinx.frontend.frequencywarp.PLPCepstrumProducer;
 import edu.cmu.sphinx.frontend.frequencywarp.PLPFrequencyFilterBank;
 import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
@@ -43,14 +42,20 @@ import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
  * 
  */
 public class PLPServiceSphinxImpl implements PLPService {
-	private int numberPLPFilters = 16;
-	private int cepstrumSize = 13;
-	private int LPCOrder = 14;
-	private double[][] cosine;
+	private int numberPLPFilters = 32;
+//	private int cepstrumSize = 13;
+//	private int LPCOrder = 14;
+//	private double[][] cosine;
 	private PLPFrequencyFilterBank plpFrequencyFilterBank;
 	private PLPCepstrumProducer plpCepstrumProducer;
 	private BatchCMN batchCMN;
 
+	public PLPServiceSphinxImpl() {
+	}
+	public PLPServiceSphinxImpl(int numberPLPFilters){
+		this.numberPLPFilters = numberPLPFilters;
+	}
+	
 	public List<Float> calculate(List<Float> x, float sampleRate) {
 		int logm = (int) (Math.log(x.size()) / Math.log(2));
 		int n = 1 << logm;

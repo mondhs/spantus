@@ -12,9 +12,8 @@
 
 package edu.cmu.sphinx.frontend.feature;
 
-import edu.cmu.sphinx.frontend.*;
-
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -69,11 +68,11 @@ public class BatchCMN  {
 
 
     /** Initializes the sums array and clears the cepstra list. */
-    private void reset() {
-        sums = null; // clears the sums array
-        cepstraList.clear();
-        numberDataCepstra = 0;
-    }
+//    private void reset() {
+//        sums = null; // clears the sums array
+//        cepstraList.clear();
+//        numberDataCepstra = 0;
+//    }
 
 
     /**

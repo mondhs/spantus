@@ -5,8 +5,7 @@
 package org.spantus.math.cluster;
 
 import java.util.List;
-import net.sf.javaml.clustering.Clusterer;
-import net.sf.javaml.clustering.KMeans;
+
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.core.Instance;
@@ -29,9 +28,9 @@ public class ClusterServiceJavaMLImpl implements ClusterService {
             data.add(tmpInstance);
         }
 
-        Clusterer km = new KMeans(clusterSize);
-        Dataset[] clusters = km.cluster(data);
-        ClusterCollection cc = new ClusterCollection();
+//        Clusterer km = new KMeans(clusterSize);
+//        Dataset[] clusters = km.cluster(data);
+//        ClusterCollection cc = new ClusterCollection();
         return null;
     }
 }

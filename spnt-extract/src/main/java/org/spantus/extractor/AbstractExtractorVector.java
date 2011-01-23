@@ -22,14 +22,8 @@ package org.spantus.extractor;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
-import org.spantus.core.IValues;
-import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorVector;
-import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.logger.Logger;
-import org.spantus.math.windowing.Windowing;
-import org.spantus.math.windowing.WindowingEnum;
-import org.spantus.math.windowing.WindowingFactory;
 
 
 /**

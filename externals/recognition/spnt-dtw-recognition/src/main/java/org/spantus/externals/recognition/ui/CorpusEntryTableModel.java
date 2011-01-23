@@ -1,9 +1,8 @@
 package org.spantus.externals.recognition.ui;
 
-import java.util.Collection;
-
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.corpus.CorpusRepository;
 

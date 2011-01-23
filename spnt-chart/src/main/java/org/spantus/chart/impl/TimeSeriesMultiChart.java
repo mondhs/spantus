@@ -22,8 +22,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import net.quies.math.plot.ChartStyle;
 import net.quies.math.plot.Graph;
@@ -110,8 +113,22 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
             interactiveChart.setBackground(Color.WHITE);
             graph.getXAxis().setZigZaginess(BigDecimal.valueOf(51L, 2));
             graph.getYAxis().setZigZaginess(BigDecimal.valueOf(51L, 2));
+            
+            SortedSet<IExtractor> ordered = new TreeSet<IExtractor>(new Comparator<IExtractor>() {
+				public int compare(IExtractor o1, IExtractor o2) {
+					if(o1.getName().contains(":SIGNAL_EXTRACTOR")){
+						return 0;
+					}
+					if(o2.getName().contains(":SIGNAL_EXTRACTOR")){
+						return 0;
+					}
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
+            ordered.addAll(reader.getExtractorRegister());
+            
             int i = 0;
-            for (IExtractor buff : reader.getExtractorRegister()) {
+            for (IExtractor buff : ordered) {
                 ChartDescriptionResolver resolver = null;
                 if (buff instanceof IClassifier) {
                     resolver = addFunction(interactiveChart, (IClassifier) buff, i++);

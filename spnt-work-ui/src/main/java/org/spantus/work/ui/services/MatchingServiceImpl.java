@@ -9,7 +9,9 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
 import javax.sound.sampled.AudioInputStream;
+
 import org.spantus.core.IValues;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.RecognitionResult;
@@ -114,7 +116,11 @@ public class MatchingServiceImpl {
     		return null;
     	}
     	Float mfccScore = result.getScores().get("MFCC_EXTRACTOR");
-    	if(mfccScore != null && mfccScore >100){
+    	Float plpScore = result.getScores().get("PLP_EXTRACTOR");
+    	if(mfccScore != null && mfccScore >50){
+    		return null;
+    	}
+    	if(plpScore != null && plpScore >15){
     		return null;
     	}
     	return result;

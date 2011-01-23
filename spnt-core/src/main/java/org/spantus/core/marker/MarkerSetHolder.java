@@ -18,10 +18,10 @@
 */
 package org.spantus.core.marker;
 
+import java.text.MessageFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.google.common.base.Objects;
 /**
  * Reperesent collection of different layers of segmentations as phones, words etc.
  * 
@@ -54,7 +54,8 @@ public class MarkerSetHolder {
 	
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(getClass()).add("markerSets", getMarkerSets().size()).toString();
+		return MessageFormat.format("{0} [layers:{1}]", getClass().getName()
+				, getMarkerSets().size());
 	}
 
 }

@@ -24,7 +24,7 @@ import org.spantus.segment.online.OnlineSegmentaitonService;
 
 public class OnlineSegmentationExp extends DecisionSegmentationExp {
 
-	private ISegmentatorService simpleSegmentator;
+//	private ISegmentatorService simpleSegmentator;
         private ISegmentatorService onlineSegmentator;
 
         

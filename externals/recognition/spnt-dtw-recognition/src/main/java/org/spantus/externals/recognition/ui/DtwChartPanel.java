@@ -35,7 +35,11 @@ import org.spantus.externals.recognition.bean.RecognitionResultDetails;
  */
 public class DtwChartPanel extends JPanel {
 
-    private RecognitionResultDetails recognitionResult;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private RecognitionResultDetails recognitionResult;
     private String selctedFeatureId;
 
     public DtwChartPanel() {
@@ -80,7 +84,6 @@ public class DtwChartPanel extends JPanel {
                 g2d.drawString(targetLength, -fm.stringWidth(targetLength), -lastPoint.x );
                 g2d.drawString(sampleLength, lastPoint.y, -firstPoint.x );
                 g2d.rotate(Math.toRadians(-90));
-                int height = getHeight();
                 g2d.translate(lastPoint.x+40, .1);
 
             }

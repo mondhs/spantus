@@ -64,7 +64,7 @@ public class FFTExtractor extends AbstractExtractorVector {
 		FrameValues calculatedTempValues = window;
 		FrameVectorValues calculatedValues = new FrameVectorValues();
 		
-		float sampleRate = getConfig().getSampleRate();
+//		float sampleRate = getConfig().getSampleRate();
 		
 		
 		List<Float> fftOutput = getFftService().calculateFFTMagnitude(

@@ -1,6 +1,7 @@
 package org.spantus.externals.recognition.segment;
 
 import java.util.Map;
+
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
@@ -11,7 +12,6 @@ import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.work.services.ExtractorReaderService;
-import org.spantus.work.services.ExtractorReaderServiceImpl;
 import org.spantus.work.services.WorkServiceFactory;
 
 public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
