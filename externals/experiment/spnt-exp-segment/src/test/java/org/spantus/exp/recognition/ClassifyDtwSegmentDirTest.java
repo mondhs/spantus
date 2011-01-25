@@ -27,10 +27,10 @@ import org.spantus.math.services.javaml.VectorInstnace;
  * 
  * @author mondhs
  */
-public class ClassifySegmentDirTest extends AbstractSegmentDirTest {
+public class ClassifyDtwSegmentDirTest extends AbstractSegmentDirTest {
 
 	private static final Logger log = Logger
-			.getLogger(ClassifySegmentDirTest.class);
+			.getLogger(ClassifyDtwSegmentDirTest.class);
 
 	
 	@Test
