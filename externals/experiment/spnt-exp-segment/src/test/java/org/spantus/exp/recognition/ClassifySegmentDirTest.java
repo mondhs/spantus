@@ -4,11 +4,13 @@
  */
 package org.spantus.exp.recognition;
 
+import java.util.Map;
+
 import net.sf.javaml.classification.KNearestNeighbors;
 import net.sf.javaml.classification.evaluation.CrossValidation;
+import net.sf.javaml.classification.evaluation.PerformanceMeasure;
 import net.sf.javaml.core.Dataset;
 import net.sf.javaml.core.DefaultDataset;
-import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 
 import org.junit.Test;
@@ -51,14 +53,14 @@ public class ClassifySegmentDirTest extends AbstractSegmentDirTest {
 		KNearestNeighbors knn = new KNearestNeighbors(2, new SpantusSimilarity());
 		knn.buildClassifier(data);
 		CrossValidation cv = new CrossValidation(knn);
-//		Map<Object, PerformanceMeasure> p = cv.crossValidation(data);
-//		log.debug(p.toString());
+		Map<Object, PerformanceMeasure> p = cv.crossValidation(data);
+		log.debug(p.toString());
 		
-		int correct = 0, wrong = 0;
-		for (Instance instance : data) {
-			 Object predictedClassValue = knn.classify(instance);
-			log.debug("[testClassify] {0} == {1}" , instance.classValue(), predictedClassValue);
-		}
+//		int correct = 0, wrong = 0;
+//		for (Instance instance : data) {
+//			 Object predictedClassValue = knn.classify(instance);
+//			log.debug("[testClassify] {0} == {1}" , instance.classValue(), predictedClassValue);
+//		}
 
 	}
 
