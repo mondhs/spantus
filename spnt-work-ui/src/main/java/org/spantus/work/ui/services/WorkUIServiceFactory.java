@@ -15,6 +15,8 @@ import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.dto.WorkSample;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
+import org.spantus.work.ui.services.impl.DefaultReaderService;
+import org.spantus.work.ui.services.impl.XmlWorkInfoManager;
 
 /**
  * 

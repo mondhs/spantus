@@ -10,7 +10,7 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
-import org.spantus.work.ui.services.XmlWorkInfoManager;
+import org.spantus.work.ui.services.impl.XmlWorkInfoManager;
 
 public class XmlWorkInfoManagerTest extends TestCase {
 

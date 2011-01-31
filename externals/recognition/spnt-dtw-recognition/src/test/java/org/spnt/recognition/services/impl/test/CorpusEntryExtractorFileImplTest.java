@@ -59,5 +59,5 @@ public class CorpusEntryExtractorFileImplTest {
        Assert.assertNotNull(words);
        Assert.assertEquals("entries: " , 2, words.getMarkers().size());
      }
-    
+     
 }

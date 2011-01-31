@@ -19,7 +19,7 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.work.ui.services;
+package org.spantus.work.ui.services.impl;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -40,6 +40,7 @@ import org.spantus.core.beans.I18n;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 import org.spantus.work.ui.dto.RecognitionConfig;
 import org.spantus.work.ui.i18n.I18nFactory;
+import org.spantus.work.ui.services.WorkInfoManager;
 /**
  * 
  * 

@@ -32,10 +32,11 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 public abstract class AbstractSegmentDirTest {
 
     public static final int WINDOW_OVERLAP = 66;
-	public static final int WINDOW_LENGTH = 20;
+	public static final int WINDOW_LENGTH = 33;
 	public final static String DIR_LEARN_WAV =
-        "/mnt/audio/VDU_ISO4"    
-    	//"/mnt/audio/MG" //            "/home/mondhs/src/garsynai/skaiciai/learn"
+//        "/mnt/audio/VDU_ISO4"    
+    	"/mnt/audio/MG" 
+		//            "/home/mondhs/src/garsynai/skaiciai/learn"
             ;
     public final static String DIR_LEARN_OUT =
             "/mnt/audio/MG/OUTPUT/"
@@ -50,7 +51,9 @@ public abstract class AbstractSegmentDirTest {
     @Before
     public void onSetup() {
         learnDir = new File(DIR_LEARN_WAV);
-        extractor = new CorpusEntryExtractorFileImpl();
+        if(extractor == null){
+        	extractor = new CorpusEntryExtractorFileImpl();
+        }
         corpusService = new CorpusServiceBaseImpl();
         corpusRepository = new CorpusRepositoryFileImpl();
         corpusRepository.setRepositoryPath(DIR_LEARN_OUT);
@@ -77,22 +80,23 @@ public abstract class AbstractSegmentDirTest {
         extractor.setExtractors(extractors);
     }
 
-    protected MarkerSet getSegementedMarkers(MarkerSetHolder markerSetHolder) {
-        MarkerSet segments = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
-        if (segments == null) {
-            segments = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
-        }else{
-            
-            Collections2.filter(segments.getMarkers(), new Predicate<Marker>(){
-                public boolean apply(Marker filterMarker) {
-                    return "...".equals(filterMarker.getLabel().trim());
-                }
-                
-            }).clear();
-            
-        }
-        return segments;
-    }
+	protected MarkerSet getSegementedMarkers(MarkerSetHolder markerSetHolder) {
+		MarkerSet segments = markerSetHolder.getMarkerSets().get(
+				MarkerSetHolderEnum.word.name());
+		if (segments == null) {
+			segments = markerSetHolder.getMarkerSets().get(
+					MarkerSetHolderEnum.phone.name());
+		}
+
+		Collections2.filter(segments.getMarkers(), new Predicate<Marker>() {
+			public boolean apply(Marker filterMarker) {
+				return "...".equals(filterMarker.getLabel().trim());
+			}
+
+		}).clear();
+
+		return segments;
+	}
 
     protected void clearCorpus() {
         for (CorpusEntry corpusEntry : corpusRepository.findAllEntries()) {

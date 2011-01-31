@@ -15,7 +15,7 @@ import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
-import org.spantus.work.ui.services.MatchingServiceImpl;
+import org.spantus.work.ui.services.impl.MatchingServiceImpl;
 
 /**
  *
@@ -30,7 +30,7 @@ public class LearnCmd extends AbsrtactCmd {
 
     @Override
     public String execute(SpantusWorkInfo ctx) {
-        getMatchingService().update(ctx);
+        getMatchingService().update(ctx.getProject().getRecognitionConfig());
         ExtractorReaderService extractorReaderService = WorkServiceFactory.createExtractorReaderService();
 
         Marker marker = ((Marker) getCurrentEvent().getValue());

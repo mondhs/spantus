@@ -31,7 +31,7 @@ import org.spantus.work.services.ExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
-import org.spantus.work.ui.services.MatchingServiceImpl;
+import org.spantus.work.ui.services.impl.MatchingServiceImpl;
 
 /**
  *
@@ -53,8 +53,7 @@ public class RecognizeCmd extends AbsrtactCmd {
     @Override
     public String execute(SpantusWorkInfo ctx) {
         
-       
-        getMatchingService().update(ctx); 
+        getMatchingService().update(ctx.getProject().getRecognitionConfig()); 
         
         Marker marker = ((Marker) getCurrentEvent().getValue());
 

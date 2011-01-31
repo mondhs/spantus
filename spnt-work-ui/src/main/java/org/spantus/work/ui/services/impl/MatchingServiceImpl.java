@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.spantus.work.ui.services;
+package org.spantus.work.ui.services.impl;
 
 import java.io.File;
 import java.util.HashSet;
@@ -21,7 +21,7 @@ import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
-import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.dto.RecognitionConfig;
 
 /**
  *
@@ -45,11 +45,11 @@ public class MatchingServiceImpl {
      * Update configuration
      * @param ctx
      */
-    public void update(SpantusWorkInfo ctx) {
-        String corpusPath = ctx.getProject().getRecognitionConfig().getRepositoryPath();
-        String searchWindowStr = ctx.getProject().getRecognitionConfig().getDtwWindow();
+    public void update(RecognitionConfig recognitionConfig ) {
+        String corpusPath = recognitionConfig.getRepositoryPath();
+        String searchWindowStr = recognitionConfig.getDtwWindow();
         JavaMLSearchWindow searchWindow = JavaMLSearchWindow.valueOf(searchWindowStr);
-        int radius = ctx.getProject().getRecognitionConfig().getRadius();
+        int radius = recognitionConfig.getRadius();
 
         File corpusDir = new File(corpusPath);
         if (!corpusDir.equals(getCorpusRepository().getRepoDir())) {

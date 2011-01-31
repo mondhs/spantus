@@ -14,7 +14,7 @@ import org.spantus.utils.FileUtils;
 import org.spantus.work.services.WorkServiceFactory;
 
 /**
- *
+ * read labeled info and learn samples
  * @author mondhs
  */
 public class SplitSegmentDirTest extends AbstractSegmentDirTest {

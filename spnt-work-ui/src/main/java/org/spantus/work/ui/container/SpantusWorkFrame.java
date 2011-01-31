@@ -43,9 +43,9 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.work.ui.i18n.I18nFactory;
 import org.spantus.work.ui.i18n.ImageResourcesEnum;
-import org.spantus.work.ui.services.SpantusUIServiceImpl;
 import org.spantus.work.ui.services.WorkInfoManager;
 import org.spantus.work.ui.services.WorkUIServiceFactory;
+import org.spantus.work.ui.services.impl.SpantusUIServiceImpl;
 
 /**
  * 

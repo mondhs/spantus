@@ -110,7 +110,6 @@ public class MarkerTextGridDao implements MarkerDao {
 			log.error(e);
 		}
 		return readListener.getMarkerSetHolder();
-
 	}
 
 	public MarkerSetHolder read(InputStream inputStream) {

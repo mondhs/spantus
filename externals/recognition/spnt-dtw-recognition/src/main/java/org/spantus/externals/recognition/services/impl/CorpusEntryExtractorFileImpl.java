@@ -56,7 +56,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
     private OnlineDecisionSegmentatorParam segmentionParam;
     private int windowLengthInMilSec = ExtractorsFactory.DEFAULT_WINDOW_LENGHT;
     private int overlapInPerc =  ExtractorsFactory.DEFAULT_WINDOW_OVERLAP;
-
+    
     /**
      * Find segments(markers), then put them to corpus
      * @param filePath
@@ -120,8 +120,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
         Assert.isTrue(segments != null);
         for (Marker marker : segments.getMarkers()) {
             marker.setLabel(
-            		MessageFormat.format("{0}-{1}-{2}", marker.getLabel().trim(), 
-                    filePath.getName(), (result+1)).toString()
+            		createLabel(filePath, marker, result)
                     );
             
             if(marker.getLength()>10){
@@ -131,6 +130,17 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
         }
         return markerSetHolder;
 
+     }
+     /**
+      * 
+      * @param filePath
+      * @param marker
+      * @param result
+      * @return
+      */
+     protected String createLabel(File filePath, Marker marker, int result){
+    	 return MessageFormat.format("{0}-{1}-{2}", marker.getLabel().trim(), 
+                 filePath.getName(), (result+1)).toString();
      }
     
     /**
@@ -231,7 +241,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
     public ISegmentatorService getSegmentator() {
         if (segmentator == null) {
             segmentator = SegmentFactory.createSegmentator(
-                    SegmentatorServiceEnum.basic.name());
+                    SegmentatorServiceEnum.offline.name());
         }
         return segmentator;
     }

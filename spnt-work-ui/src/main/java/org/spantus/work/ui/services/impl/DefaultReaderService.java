@@ -18,7 +18,7 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.work.ui.services;
+package org.spantus.work.ui.services.impl;
 
 import java.net.URL;
 import java.util.List;
@@ -33,6 +33,7 @@ import org.spantus.work.WorkReadersEnum;
 import org.spantus.work.io.WorkAudioFactory;
 import org.spantus.work.reader.MultiFeatureExtractorInputReader;
 import org.spantus.work.ui.dto.FeatureReader;
+import org.spantus.work.ui.services.ReaderService;
 import org.spantus.work.ui.util.WorkUIExtractorConfigUtil;
 
 /**

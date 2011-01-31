@@ -1,4 +1,4 @@
-package org.spantus.work.ui.services;
+package org.spantus.work.ui.services.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
