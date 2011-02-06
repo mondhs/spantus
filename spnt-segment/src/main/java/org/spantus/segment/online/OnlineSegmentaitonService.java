@@ -28,14 +28,14 @@ import org.spantus.core.threshold.IClassifier;
 import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
 import org.spantus.segment.SegmentatorParam;
-import org.spantus.segment.offline.MergeSegmentatorServiceImpl;
+import org.spantus.segment.offline.BasicSegmentatorServiceImpl;
 /**
  * Online segmentation algorithm
  * 
  * @author Mindaugas Greibus
  *
  */
-public class OnlineSegmentaitonService extends MergeSegmentatorServiceImpl {
+public class OnlineSegmentaitonService extends BasicSegmentatorServiceImpl {
 	private Logger log = Logger.getLogger(getClass());
 	
 	public OnlineSegmentaitonService() {

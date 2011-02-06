@@ -42,6 +42,7 @@ public abstract class AbstractSegmentDirTest {
             "/mnt/audio/MG/OUTPUT/"
 //            "./target/learn-corpus/"
             ;
+
     private File learnDir;
     private CorpusEntryExtractorFileImpl extractor;
     private CorpusServiceBaseImpl corpusService;
@@ -67,7 +68,9 @@ public abstract class AbstractSegmentDirTest {
         segmentionParam.setMinSpace(261L);
         segmentionParam.setExpandStart(260L);
         segmentionParam.setExpandEnd(360L);
+        extractor.setSegmentionParam(segmentionParam);
 
+        
         ExtractorEnum[] extractors = new ExtractorEnum[]{
             ExtractorEnum.MFCC_EXTRACTOR,
             ExtractorEnum.PLP_EXTRACTOR,
@@ -76,7 +79,6 @@ public abstract class AbstractSegmentDirTest {
             ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
             ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR};
 
-        extractor.setSegmentionParam(segmentionParam);
         extractor.setExtractors(extractors);
     }
 
@@ -90,7 +92,9 @@ public abstract class AbstractSegmentDirTest {
 
 		Collections2.filter(segments.getMarkers(), new Predicate<Marker>() {
 			public boolean apply(Marker filterMarker) {
-				return "...".equals(filterMarker.getLabel().trim());
+				return "...".equals(filterMarker.getLabel().trim()) ||
+				"-".equals(filterMarker.getLabel().trim())
+				;
 			}
 
 		}).clear();

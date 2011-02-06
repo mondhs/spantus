@@ -45,10 +45,10 @@ import org.spantus.utils.Assert;
  * @since 0.0.1
  * Created Feb 1, 2010
  * 
- * @see MergeSegmentatorServiceImpl
+ * @see BasicSegmentatorServiceImpl
  *
  */
-public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorService {
+public class OfflineSegmentatorServiceImpl extends AbstractSegmentatorService {
 
 	protected Logger log = Logger.getLogger(getClass());
 
@@ -66,13 +66,13 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		MarkerSet markerSet = phoneMarkerSet.clone();
 		markerSet.setMarkerSetType(MarkerSetHolderEnum.word.name());
 
-		//if word level no info but exists phone level, clone phone level
-		if(markerSet == null && markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name())!= null){
-			markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
-			markerSet = markerSet.clone();
-			markerSet.setMarkerSetType(MarkerSetHolderEnum.word.name());
-			markerSetHolder.getMarkerSets().put(markerSet.getMarkerSetType(), markerSet);
-		}
+//		//if word level no info but exists phone level, clone phone level
+//		if(markerSet == null && markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name())!= null){
+//			markerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
+//			markerSet = markerSet.clone();
+//			markerSet.setMarkerSetType(MarkerSetHolderEnum.word.name());
+//			markerSetHolder.getMarkerSets().put(markerSet.getMarkerSetType(), markerSet);
+//		}
 		BaseDecisionSegmentatorParam safe_param = createSafeParam(param);
 		//if there is no segments just return empty segmentaion results
 		if (markerSet.getMarkers().size()==0) {
@@ -266,7 +266,7 @@ public class SimpleDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		return sampleRate;
 	}
 	/**
-	 * Some segmentation service to do the general extraction logic. {@link MergeSegmentatorServiceImpl}
+	 * Some segmentation service to do the general extraction logic. {@link BasicSegmentatorServiceImpl}
 	 * @return
 	 */
 	public ISegmentatorService getSegmentator() {

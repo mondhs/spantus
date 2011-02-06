@@ -8,10 +8,11 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.threshold.AbstractThreshold;
+import org.spantus.logger.Logger;
 
 public class ExtremeOfflineClassifier extends AbstractThreshold {
 
-//	 private Logger log = Logger.getLogger(ExtremeOfflineClassifier.class);
+	 private static Logger log = Logger.getLogger(ExtremeOfflineClassifier.class);
 
 	private ExtremeClassifierServiceImpl extremeThresholdService = new ExtremeClassifierServiceImpl();
 
@@ -42,11 +43,17 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 		threasholds.setSampleRate(values.getSampleRate());
 		
 
-		for (Marker marker : markerSet.getMarkers()) {
-			int start = marker.getExtractionData().getStartSampleNum()
+		for (Iterator<Marker> markerIterator = markerSet.getMarkers().iterator(); markerIterator.hasNext();) {
+			Marker iMarker = markerIterator.next();
+			if(iMarker.getLength()<30){
+				log.error("[refreshThreasholdInfo]Removing not valid marker" + iMarker.getLabel());
+				markerIterator.remove();
+				continue;
+			}
+			int start = iMarker.getExtractionData().getStartSampleNum()
 					.intValue();
 			int end = start
-					+ marker.getExtractionData().getLengthSampleNum()
+					+ iMarker.getExtractionData().getLengthSampleNum()
 							.intValue();
 			changePoints.put(start,1000F);
 			changePoints.put(end,1000F);

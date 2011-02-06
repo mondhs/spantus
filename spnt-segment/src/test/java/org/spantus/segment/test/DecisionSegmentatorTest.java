@@ -28,8 +28,8 @@ import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.segment.offline.BaseDecisionSegmentatorParam;
-import org.spantus.segment.offline.MergeSegmentatorServiceImpl;
-import org.spantus.segment.offline.SimpleDecisionSegmentatorServiceImpl;
+import org.spantus.segment.offline.BasicSegmentatorServiceImpl;
+import org.spantus.segment.offline.OfflineSegmentatorServiceImpl;
 import org.spantus.segment.offline.WaheedDecisionSegmentatorServiceImpl;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.segment.online.OnlineSegmentaitonService;
@@ -48,11 +48,11 @@ public class DecisionSegmentatorTest extends AbstractSegmentatorTest {
 	 * 
 	 */
 	public void testSimpleDecisionSegmentator(){
-		SimpleDecisionSegmentatorServiceImpl segmentator = new SimpleDecisionSegmentatorServiceImpl();
+		OfflineSegmentatorServiceImpl segmentator = new OfflineSegmentatorServiceImpl();
 		BaseDecisionSegmentatorParam param = new BaseDecisionSegmentatorParam();
 		param.setMinSpace(20L);
 		param.setMinLength(40L);
-		segmentator.setSegmentator(new MergeSegmentatorServiceImpl());
+		segmentator.setSegmentator(new BasicSegmentatorServiceImpl());
 
 		Integer[][] markersDataExpexted = new Integer[][]{{100, 200}, {400, 540}, {700, 840}, {940, 1040}};
 
@@ -72,7 +72,7 @@ public class DecisionSegmentatorTest extends AbstractSegmentatorTest {
 		BaseDecisionSegmentatorParam param = new BaseDecisionSegmentatorParam();
 		param.setMinSpace(20L);
 		param.setMinLength(40L);
-		segmentator.setSegmentator(new MergeSegmentatorServiceImpl());
+		segmentator.setSegmentator(new BasicSegmentatorServiceImpl());
 
 		Integer[][] markersDataExpected = new Integer[][]{{100, 200}, {400, 540}, {700, 840}, {940, 1040}};
 

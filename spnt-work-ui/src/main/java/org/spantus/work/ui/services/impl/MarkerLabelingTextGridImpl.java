@@ -39,7 +39,7 @@ public class MarkerLabelingTextGridImpl implements MarkerLabeling{
 		for (MarkerSet markerSet : markerSetHolder.getMarkerSets().values()) {
 			for (Marker marker : markerSet.getMarkers()) {
 				String label = getCorpusEntryExtractorTextGridMapImpl()
-				.createLabelFromTextGrid(textFilePath, marker);
+					.createLabelFromTextGrid(textFilePath, marker);
 				if(StringUtils.hasText(label)){
 					marker.setLabel(label);
 				}

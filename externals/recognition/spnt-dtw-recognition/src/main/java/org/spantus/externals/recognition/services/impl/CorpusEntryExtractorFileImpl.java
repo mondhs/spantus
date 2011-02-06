@@ -56,6 +56,8 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
     private OnlineDecisionSegmentatorParam segmentionParam;
     private int windowLengthInMilSec = ExtractorsFactory.DEFAULT_WINDOW_LENGHT;
     private int overlapInPerc =  ExtractorsFactory.DEFAULT_WINDOW_OVERLAP;
+    private String segmentatorServiceType = SegmentatorServiceEnum.basic.name();
+
     
     /**
      * Find segments(markers), then put them to corpus
@@ -90,11 +92,17 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
      */
     public MarkerSetHolder extractAndLearn(File filePath) {
          Assert.isTrue(filePath.exists(), "file not exists" + filePath);
-        
-        
-        //find markers
+
+         log.debug("[extractAndLearn]\nWindow size: {0};\nOverlap: {1};\nSegmenator: {2};\nExtractors: {3}", 
+      			getWindowLengthInMilSec(), 
+      			getOverlapInPerc(),
+      			getSegmentatorServiceType(),
+      			toString(getExtractors()));
+
+         //find markers
         IExtractorInputReader reader = getReaderService().createReaderWithClassifier(
                 getExtractors(), filePath);
+
         MarkerSetHolder markerSetHorlder = findMarkers(reader);
 
         MarkerSet segments = getSegementedMarkers(markerSetHorlder);
@@ -105,7 +113,20 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
         return markerSetHorlder;
     }
     
-     public MarkerSetHolder extractAndLearn(File filePath, MarkerSetHolder markerSetHolder, IExtractorInputReader reader) {
+     private String toString(ExtractorEnum[] extractors2) {
+    	 StringBuilder sb= new StringBuilder();
+    	 sb.append("{");
+    	 String seperator = "";
+    	 for (ExtractorEnum extractorEnum : extractors2) {
+    		 sb.append(seperator).append(extractorEnum.name());
+    		 seperator = ", ";
+    	 }
+    	 sb.append("]");
+    	return sb.toString();
+	}
+
+	public MarkerSetHolder extractAndLearn(File filePath, MarkerSetHolder markerSetHolder, IExtractorInputReader reader) {
+    	 
         IExtractorInputReader localReader = null;
         if(reader == null){
             localReader = getReaderService().createReaderWithClassifier(
@@ -209,6 +230,18 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
      */
     public CorpusEntry learn(URL fileUrl, Marker marker, IExtractorInputReader reader) {
 
+    	Float signalLength = AudioManagerFactory.createAudioManager().findLength(fileUrl);
+    	Long markerEnd = marker.getEnd();
+    	
+    	if(marker.getStart()>(signalLength*1000)){
+    		log.error("[learn] incorect length " + marker);
+    		return null;
+    	} 
+    	if((signalLength*1000)<markerEnd){
+    		log.error("[learn] exceed length " + marker);
+    		marker.setEnd((long) (1000*signalLength));
+    	}
+    	
         AudioInputStream ais =
                 AudioManagerFactory.createAudioManager().findInputStreamInMils(
                 fileUrl,
@@ -235,13 +268,10 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
         this.segmentionParam = segmentionParam;
     }
     
-    
-    
-
     public ISegmentatorService getSegmentator() {
         if (segmentator == null) {
-            segmentator = SegmentFactory.createSegmentator(
-                    SegmentatorServiceEnum.offline.name());
+            segmentator = SegmentFactory.createSegmentator(getSegmentatorServiceType()
+                    );
         }
         return segmentator;
     }
@@ -316,5 +346,13 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	public void setOverlapInPerc(int overlapInPerc) {
 		this.overlapInPerc = overlapInPerc;
 		setReaderService(null);
+	}
+
+	public String getSegmentatorServiceType() {
+		return segmentatorServiceType;
+	}
+
+	public void setSegmentatorServiceType(String segmentatorService) {
+		this.segmentatorServiceType = segmentatorService;
 	}
 }

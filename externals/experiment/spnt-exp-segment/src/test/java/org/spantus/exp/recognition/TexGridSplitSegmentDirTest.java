@@ -17,9 +17,9 @@ import org.spantus.work.services.WorkServiceFactory;
  * read labeled info and learn samples
  * @author mondhs
  */
-public class SplitSegmentDirTest extends AbstractSegmentDirTest {
+public class TexGridSplitSegmentDirTest extends AbstractSegmentDirTest {
 
-    private static final Logger log = Logger.getLogger(SplitSegmentDirTest.class);
+    private static final Logger log = Logger.getLogger(TexGridSplitSegmentDirTest.class);
 
     @Test
     public void testExtract() {

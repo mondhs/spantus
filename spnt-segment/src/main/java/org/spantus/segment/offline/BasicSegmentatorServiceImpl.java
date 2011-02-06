@@ -20,7 +20,10 @@ package org.spantus.segment.offline;
 
 import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -30,8 +33,14 @@ import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.logger.Logger;
+import org.spantus.math.MatrixUtils;
+import org.spantus.math.windowing.Windowing;
+import org.spantus.math.windowing.WindowingEnum;
+import org.spantus.math.windowing.WindowingFactory;
 import org.spantus.segment.AbstractSegmentatorService;
 import org.spantus.segment.SegmentatorParam;
+import org.spantus.utils.Assert;
+
 
 /**
  * Simple implementation of segmentation off-line algorithm. 
@@ -40,10 +49,12 @@ import org.spantus.segment.SegmentatorParam;
  * @author mondhs
  * 
  */
-public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
+public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 
-	Logger log = Logger.getLogger(getClass());
-
+	private Logger log = Logger.getLogger(getClass());
+	private Windowing windowing;
+	
+	
 	/**
 	 * 
 	 */
@@ -67,10 +78,16 @@ public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 		ctx.setMarkerSet(markerSet);
 
 		int count = classifiers.size();
+//		Float previous = 0F;
+//		Float preprevious = 0F;
 		for (Entry<Long, Float> stateSum : statesSums.entrySet()) {
-			ctx.setCurrentState(stateSum.getValue() / count > .5 ? 1f : 0f);
+//			Float currValue =  stateSum.getValue() +preprevious + previous;
+			ctx.setCurrentState(stateSum.getValue() / (count) > .3 ? 1f : 0f);
 			ctx.setCurrentMoment(stateSum.getKey());
 			processState(ctx);
+//			preprevious = previous;
+//			previous = stateSum.getValue();
+//			log.error("[extractSegments]" + currValue + " " + previous + " " + preprevious);
 		}
 		ctx.setCurrentState(0f);
 		processState(ctx);
@@ -95,24 +112,58 @@ public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 	protected LinkedHashMap<Long, Float> caclculateStatesSums(Collection<IClassifier> classifiers, SegmentatorParam param){
 		LinkedHashMap<Long, Float> statesSums = new LinkedHashMap<Long, Float>();
 
+		Map<String, Iterator<Marker>> markerIterators = new HashMap<String, Iterator<Marker>>();
+		
 		for (IClassifier classifier : classifiers) {
-			float resolution = 1;//classifier.getExtractorSampleRate();
-			// last sample rate will be used as main
-			MarkerSet classifierlMarkerSet = classifier.getMarkSet();
-			if (classifierlMarkerSet == null) {
-				continue;
-			}
-			long index = 0;
-			for (Marker marker : classifierlMarkerSet.getMarkers()) {
-				for (; index < marker.getStart(); index += resolution) {
-					safeSum(statesSums, index, 0F, param, classifier);
+			markerIterators.put(classifier.getName(), classifier.getMarkSet().getMarkers().iterator());
+		}
+		boolean hasNext = true;
+		Map<String, Marker> lastMarkers = new HashMap<String, Marker>();
+		while(hasNext){
+			hasNext = false;
+			for (Entry<String, Iterator<Marker>> markerIterator : markerIterators.entrySet()) {
+				if(!markerIterator.getValue().hasNext()){
+					continue;
 				}
-				for (; index <= marker.getEnd(); index += resolution) {
-					safeSum(statesSums, index, 1F, param, classifier);
+				hasNext = true;
+				Marker marker = markerIterator.getValue().next();
+				Marker lastMarker = lastMarkers.get(markerIterator.getKey());
+				lastMarkers.put(markerIterator.getKey(), marker);
+				
+				long startIndex = lastMarker == null?0:lastMarker.getEnd();
+				
+				for (long index= startIndex; index < marker.getStart(); index++) {
+					safeSum(statesSums, index, 0F, param, markerIterator.getKey());
 				}
-//				log.debug("marker:{0}; stateSum{1}",marker,statesSums);
+				List<Float> window = MatrixUtils.fill(marker.getLength().intValue(), 1F);
+				getWindowing().apply(window);
+				long index = marker.getStart();
+				for (Float value : window) {
+					safeSum(statesSums, index++, value, param, markerIterator.getKey());
+				}
+				
+//				log.error("[caclculateStatesSums]" + markerIterator.getKey() + marker);
 			}
 		}
+		
+//		for (IClassifier classifier : classifiers) {
+//			float resolution = 1;//classifier.getExtractorSampleRate();
+//			// last sample rate will be used as main
+//			MarkerSet classifierlMarkerSet = classifier.getMarkSet();
+//			if (classifierlMarkerSet == null) {
+//				continue;
+//			}
+//			long index = 0;
+//			for (Marker marker : classifierlMarkerSet.getMarkers()) {
+//				for (; index < marker.getStart(); index += resolution) {
+//					safeSum(statesSums, index, 0F, param, classifier);
+//				}
+//				for (; index <= marker.getEnd(); index += resolution) {
+//					safeSum(statesSums, index, 1F, param, classifier);
+//				}
+////				log.debug("marker:{0}; stateSum{1}",marker,statesSums);
+//			}
+//		}
 		return statesSums;
 	}
 	
@@ -122,7 +173,7 @@ public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 * @param threshold
 	 * @return
 	 */
-	protected Float getWeight(SegmentatorParam param, IClassifier threshold) {
+	protected Float getWeight(SegmentatorParam param, String threshold) {
 		if (param == null || param.getJoinWeights() == null
 				|| !param.getJoinWeights().containsKey(threshold)) {
 			return 1f;
@@ -138,7 +189,7 @@ public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 * @param value
 	 */
 	protected void safeSum(Map<Long, Float> statesSums, Long time, Float value,
-			SegmentatorParam param, IClassifier classifier) {
+			SegmentatorParam param, String classifier) {
 		Float weight =  getWeight(param, classifier);
 		Float existValue = statesSums.get(time);
 		if (existValue == null) {
@@ -185,6 +236,11 @@ public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 */
 	protected void segmentFinished(SegmentationCtx ctx) {
 		Long end = ctx.getPrevMoment();
+		if(end - ctx.getCurrentMarker().getStart()==0){
+			log.error("[segmentFinished] too short for segment" + ctx.getCurrentMarker());
+			ctx.setCurrentMarker(null);
+			return;
+		}
 		ctx.getCurrentMarker().setEnd(end);
 		ctx.getCurrentMarker().setLabel(
 				"" + ctx.getMarkerSet().getMarkers().size());
@@ -197,6 +253,17 @@ public class MergeSegmentatorServiceImpl extends AbstractSegmentatorService {
 		}
 		ctx.getMarkerSet().getMarkers().add(ctx.getCurrentMarker());
 		ctx.setCurrentMarker(null);
+	}
+
+	public Windowing getWindowing() {
+//		if(windowing == null){
+			windowing = WindowingFactory.createWindowing(WindowingEnum.Welch);
+//		}
+		return windowing;
+	}
+
+	public void setWindowing(Windowing windowing) {
+		this.windowing = windowing;
 	}
 
 	/**

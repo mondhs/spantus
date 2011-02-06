@@ -19,6 +19,9 @@
  * 
  */
 package org.spantus.extractor.impl;
+
+import java.text.MessageFormat;
+
 /**
  * 
  * @author Mindaugas Greibus
@@ -65,5 +68,9 @@ public enum ExtractorEnum {
 	}
 	public String getDisplayName() {
 		return displayName;
+	}
+	@Override
+	public String toString() {
+		return MessageFormat.format("{0}[{1}]", getClass().getSimpleName(), name());
 	}
 }

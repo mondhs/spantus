@@ -46,13 +46,13 @@ import org.spantus.core.threshold.IClassifier;
 
 public class SegmentatorParam {
 	
-	Map<IClassifier, Float> joinWeights;
+	Map<String, Float> joinWeights;
 
-	public Map<IClassifier, Float> getJoinWeights() {
+	public Map<String, Float> getJoinWeights() {
 		return joinWeights;
 	}
 
-	public void setJoinWeights(Map<IClassifier, Float> joinWeights) {
+	public void setJoinWeights(Map<String, Float> joinWeights) {
 		this.joinWeights = joinWeights;
 	}
 	

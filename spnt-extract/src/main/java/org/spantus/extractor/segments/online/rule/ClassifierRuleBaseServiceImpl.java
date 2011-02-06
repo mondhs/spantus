@@ -134,9 +134,9 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 //        } else if (ctx.isFeatureInMax() && isSimilar) {
 //            log.debug("Found max. join as similar");
 //            return ClassifierRuleBaseEnum.action.join;      
-//        } else if (ctx.isFeatureInMax() && lastLength < 20) {
-//            log.debug("too small last", lastLength);
-//            return ClassifierRuleBaseEnum.action.delete;
+        } else if (ctx.isFeatureInMax() && lastLength < 20) {
+            log.debug("too small last", lastLength);
+            return ClassifierRuleBaseEnum.action.join;
         } else if (ctx.isFeatureInMax() && "0".equals(className)) {
             log.debug("Found max. delete segment as noise");
             return ClassifierRuleBaseEnum.action.delete;

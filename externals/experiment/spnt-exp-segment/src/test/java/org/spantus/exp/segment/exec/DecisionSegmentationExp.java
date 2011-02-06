@@ -39,14 +39,14 @@ import org.spantus.exp.segment.draw.AbstractGraphGenerator;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.offline.BaseDecisionSegmentatorParam;
-import org.spantus.segment.offline.MergeSegmentatorServiceImpl;
-import org.spantus.segment.offline.SimpleDecisionSegmentatorServiceImpl;
+import org.spantus.segment.offline.BasicSegmentatorServiceImpl;
+import org.spantus.segment.offline.OfflineSegmentatorServiceImpl;
 
 public class DecisionSegmentationExp extends AbstractGraphGenerator {
 
 	private ISegmentatorService simpleSegmentator;
 
-	private SimpleDecisionSegmentatorServiceImpl decisionSegmentator;
+	private OfflineSegmentatorServiceImpl decisionSegmentator;
 
 	protected String getGeneratePath() {
 		return super.getGeneratePath() + "decision/";
@@ -226,9 +226,9 @@ public class DecisionSegmentationExp extends AbstractGraphGenerator {
 
 	}
 	
-	public SimpleDecisionSegmentatorServiceImpl getDecisionSegmentator() {
+	public OfflineSegmentatorServiceImpl getDecisionSegmentator() {
 		if (decisionSegmentator == null) {
-			decisionSegmentator = new SimpleDecisionSegmentatorServiceImpl();
+			decisionSegmentator = new OfflineSegmentatorServiceImpl();
 			decisionSegmentator.setSegmentator(getSimpleSegmentator());
 		}
 		return decisionSegmentator;
@@ -236,7 +236,7 @@ public class DecisionSegmentationExp extends AbstractGraphGenerator {
 
 	public ISegmentatorService getSimpleSegmentator() {
 		if (simpleSegmentator == null) {
-			simpleSegmentator = new MergeSegmentatorServiceImpl();
+			simpleSegmentator = new BasicSegmentatorServiceImpl();
 		}
 		return simpleSegmentator;
 	}

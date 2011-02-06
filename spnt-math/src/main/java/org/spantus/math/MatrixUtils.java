@@ -42,12 +42,21 @@ public class MatrixUtils {
 	 * @return
 	 */
 	public static List<Float> zeros(int order){
-		List<Float> zeros = new ArrayList<Float>();
+		List<Float> zeros = new ArrayList<Float>(order);
 		for (int i = 0; i < order; i++) {
 			zeros.add(0F);
 		}
 		return zeros;
 	}
+	
+	public static List<Float> fill(int order, Float f){
+		List<Float> filled = new ArrayList<Float>(order);
+		for (int i = 0; i < order; i++) {
+			filled.add(f);
+		}
+		return filled;
+	}
+	
 	public static List<Float> generareVector(Float value, int order){
 		List<Float> zeros = new ArrayList<Float>();
 		for (int i = 0; i < order; i++) {

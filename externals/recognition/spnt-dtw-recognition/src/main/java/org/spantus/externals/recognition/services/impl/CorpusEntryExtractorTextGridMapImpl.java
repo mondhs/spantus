@@ -1,6 +1,7 @@
 package org.spantus.externals.recognition.services.impl;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -70,31 +71,57 @@ public class CorpusEntryExtractorTextGridMapImpl extends
 	public Collection<Marker> findMappedMarkers(MarkerSet markerSet, Marker matchMarker){
 		List<Marker> rtnMarkers = new ArrayList<Marker>();
 		for (Marker iMarker : markerSet.getMarkers()) {
-			//i ...xxx...
-			//t ..xxx....
-			if(iMarker.getStart().compareTo(matchMarker.getStart())<0 
-					&& iMarker.getEnd().compareTo(matchMarker.getStart())>0
-					&& iMarker.getEnd().compareTo(matchMarker.getEnd())<0){
+			long deltaStartStart = iMarker.getStart()- matchMarker.getStart();
+			long deltaEndEnd = iMarker.getEnd()- matchMarker.getEnd();
+			long deltaStartEnd = iMarker.getStart()- matchMarker.getEnd();
+			long deltaEndStart = iMarker.getEnd()- matchMarker.getStart();
+			long matchLength =  matchMarker.getLength();
+			long iLength =  iMarker.getLength();
+			long deltaLendth = Math.abs(matchLength-iLength);
+			
+//			log.debug("[findMappedMarkers]??\n" +
+//					" {0}:{1}; \n " +
+//					"[deltaLendth:{6}];\n" +
+//					"[ss:{2};ee:{3};se:{4};es:{5}]",
+//					matchMarker, iMarker, deltaStartStart, deltaEndEnd , deltaStartEnd, deltaEndStart,
+//					deltaLendth);
+
+//			if(false){
+//			}else 
+			if((deltaStartStart>-deltaLendth && deltaStartStart<0) && (deltaEndEnd>=0 && deltaEndEnd<deltaLendth)){
+					//i ...xxxx...
+					//t ....xx....
+//					log.debug("[findMappedMarkers]ss>ee> {0}:{1}. add", matchMarker, iMarker );
+					rtnMarkers.add(iMarker);
+			}else if(deltaStartStart<0 && deltaEndStart>10 && deltaEndEnd<0){
+				//i ...xxx...
+				//t ..xxx....
 //				log.debug("[findMappedMarkers]<>< {0}:{1}", matchMarker, iMarker );
 				rtnMarkers.add(iMarker);
-			}else
-			//i ...xxx...
-			//t ..xxx....
-			if(iMarker.getStart().compareTo(matchMarker.getStart())>0 
-					&& iMarker.getEnd().compareTo(matchMarker.getEnd())<0){
+			}else if(deltaStartStart>0 && deltaEndEnd<0){
+				//i ...xxx...
+				//t ..xxx....
 //				log.debug("[findMappedMarkers]>< {0}:{1}", matchMarker, iMarker );
 				rtnMarkers.add(iMarker);
-			}else if(iMarker.getStart().compareTo(matchMarker.getStart())>0 
-						&& iMarker.getStart().compareTo(matchMarker.getEnd())<0
-						&& iMarker.getEnd().compareTo(matchMarker.getEnd())>0){
+			}else if(deltaStartStart>10 && (deltaStartEnd<-deltaLendth) && deltaEndEnd>0){
 //					log.debug("[findMappedMarkers]<<> {0}:{1}", matchMarker, iMarker );
 					rtnMarkers.add(iMarker);
+			}else if(deltaStartStart>500 ){
+//				log.debug("[findMappedMarkers]--- {0}:{1}", matchMarker, iMarker );
+				break;
+			}else if(deltaStartEnd>-41 && deltaStartEnd <0){
+//					log.debug("[findMappedMarkers]^^^ {0}:{1}. too much overlap. skip", matchMarker, iMarker );
+					break;
 			}else{
 //				log.debug("[findMappedMarkers]!! {0}:{1}", matchMarker, iMarker );
 			}
 
 		}
 		return rtnMarkers;
+	}
+	
+	public static String markerToString(Marker m){
+		return MessageFormat.format("{0}[{1}:{2}]", m.getLabel(),m.getStart(), m.getEnd());
 	}
 	
 	protected MarkerSet getSegementedMarkers(MarkerSetHolder markerSetHolder) {

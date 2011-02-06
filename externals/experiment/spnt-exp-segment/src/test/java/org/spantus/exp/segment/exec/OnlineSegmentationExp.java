@@ -18,7 +18,7 @@ import org.spantus.exp.segment.beans.ComparisionResult;
 import org.spantus.exp.segment.beans.ProcessReaderInfo;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.segment.ISegmentatorService;
-import org.spantus.segment.offline.SimpleDecisionSegmentatorServiceImpl;
+import org.spantus.segment.offline.OfflineSegmentatorServiceImpl;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.segment.online.OnlineSegmentaitonService;
 
@@ -28,7 +28,7 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
         private ISegmentatorService onlineSegmentator;
 
         
-	private SimpleDecisionSegmentatorServiceImpl decisionSegmentator;
+	private OfflineSegmentatorServiceImpl decisionSegmentator;
 
 	protected String getGeneratePath() {
 		return super.getGeneratePath() + "online/";
@@ -254,9 +254,9 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 
 	}
 
-	public SimpleDecisionSegmentatorServiceImpl getDecisionSegmentator() {
+	public OfflineSegmentatorServiceImpl getDecisionSegmentator() {
 		if (decisionSegmentator == null) {
-			decisionSegmentator = new SimpleDecisionSegmentatorServiceImpl();
+			decisionSegmentator = new OfflineSegmentatorServiceImpl();
 			decisionSegmentator.setSegmentator(getSimpleSegmentator());
 		}
 		return decisionSegmentator;

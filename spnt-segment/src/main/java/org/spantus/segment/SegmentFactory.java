@@ -18,8 +18,8 @@
 */
 package org.spantus.segment;
 
-import org.spantus.segment.offline.SimpleDecisionSegmentatorServiceImpl;
-import org.spantus.segment.offline.MergeSegmentatorServiceImpl;
+import org.spantus.segment.offline.OfflineSegmentatorServiceImpl;
+import org.spantus.segment.offline.BasicSegmentatorServiceImpl;
 import org.spantus.segment.offline.WaheedDecisionSegmentatorServiceImpl;
 import org.spantus.segment.online.OnlineSegmentaitonService;
 /**
@@ -54,19 +54,19 @@ public abstract class SegmentFactory {
 		SegmentatorServiceEnum segmentatorServiceEnum = SegmentatorServiceEnum.valueOf(segmentatorService);
 		switch (segmentatorServiceEnum) {
 		case basic:
-			segmentator = new MergeSegmentatorServiceImpl();
+			segmentator = new BasicSegmentatorServiceImpl();
 			break;
 		case online:
 			segmentator = new OnlineSegmentaitonService();
 			break;
 		case offline:
-			SimpleDecisionSegmentatorServiceImpl offlineSegmentator = new SimpleDecisionSegmentatorServiceImpl();
-			offlineSegmentator.setSegmentator(new MergeSegmentatorServiceImpl());
+			OfflineSegmentatorServiceImpl offlineSegmentator = new OfflineSegmentatorServiceImpl();
+			offlineSegmentator.setSegmentator(new BasicSegmentatorServiceImpl());
 			segmentator = offlineSegmentator;
 			break;
 		case waheed:
 			WaheedDecisionSegmentatorServiceImpl waheed = new WaheedDecisionSegmentatorServiceImpl();
-			waheed.setSegmentator(new MergeSegmentatorServiceImpl());
+			waheed.setSegmentator(new BasicSegmentatorServiceImpl());
 			segmentator = waheed;
 			break;
 		default:
