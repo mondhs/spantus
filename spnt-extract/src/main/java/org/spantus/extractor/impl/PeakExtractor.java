@@ -141,7 +141,7 @@ public class PeakExtractor extends AbstractExtractor {
 
 	
 	public String getName() {
-		return ExtractorEnum.PEAK_EXTRACTOR.toString();
+		return ExtractorEnum.PEAK_EXTRACTOR.name();
 	}
 
 }

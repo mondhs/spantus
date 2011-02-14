@@ -76,7 +76,7 @@ public class EnergyExtractor extends AbstractExtractor {
 		return calculatedValues;
 	}	
 	public String getName() {
-		return ExtractorEnum.ENERGY_EXTRACTOR.toString();
+		return ExtractorEnum.ENERGY_EXTRACTOR.name();
 	}
 
 	public Boolean getLogaritmic() {

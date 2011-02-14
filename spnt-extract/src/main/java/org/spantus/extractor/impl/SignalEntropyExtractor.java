@@ -58,7 +58,7 @@ public class SignalEntropyExtractor extends AbstractExtractor{
 
 	
 	public String getName() {
-		return ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.toString();
+		return ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name();
 	}
 
 }

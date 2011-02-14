@@ -111,7 +111,7 @@ public class WavformExtractor extends AbstractExtractorVector {
 		return calculatedValues;
 	}	
 	public String getName() {
-		return ExtractorEnum.WAVFORM_EXTRACTOR.toString();
+		return ExtractorEnum.WAVFORM_EXTRACTOR.name();
 	}
 	
 	@Override

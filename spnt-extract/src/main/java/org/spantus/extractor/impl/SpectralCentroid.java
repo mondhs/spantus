@@ -60,7 +60,7 @@ public class SpectralCentroid extends AbstractSpectralExtractor {
 	
 	
 	public String getName() {
-		return ExtractorEnum.SPECTRAL_CENTROID_EXTRACTOR.toString();
+		return ExtractorEnum.SPECTRAL_CENTROID_EXTRACTOR.name();
 	}
 	
 }

@@ -7,13 +7,12 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.AbstractClassifier;
 import org.spantus.extractor.segments.offline.ExtremeEntry;
+import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.extractor.segments.offline.ExtremeOfflineClassifier;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
-import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
-import org.spantus.extractor.segments.online.cluster.ExtremeOnlineClusterService;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;
-import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.state;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
 import org.spantus.logger.Logger;
 import org.spantus.utils.StringUtils;
 
@@ -23,7 +22,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 	private ExtremeSegmentsOnlineCtx onlineCtx;
 
 	private ClassifierRuleBaseService ruleBaseService;
-	private ExtremeOnlineClusterService clusterService;
+//	private ExtremeOnlineClusterService clusterService;
 	
 	public ExtremeOnlineRuleClassifier() {
 		onlineCtx = new ExtremeSegmentsOnlineCtx();
@@ -230,7 +229,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 			currentSegment.setApproved(true);
 			ctx.getExtremeSegments().add(currentSegment);
 			//learn and get class
-			getClusterService().learn(currentSegment, ctx);
+			getRuleBaseService().learn(currentSegment, ctx);
 			String className = "";//getClusterService().getClassName(currentSegment, ctx);
 			//clreate marker info
 			if(currentMarker == null){
@@ -280,7 +279,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 				return;
 			}
 			lastSegment.setApproved(true);
-			getClusterService().learn(lastSegment, ctx);
+			getRuleBaseService().learn(lastSegment, ctx);
 //			String className = getClusterService().getClassName(lastSegment, ctx);
 			syncMarker(currentMarker, lastSegment, "");
 //			if(!"0".equals(className)){
@@ -292,7 +291,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 			setMarker(newMarker);
 		}else if(lastSegment != null && lastSegment.getApproved() && getMarkSet().getMarkers().size()>0){
 			Marker lastMarker = getMarkSet().getMarkers().get(getMarkSet().getMarkers().size()-1); 
-			getClusterService().learn(lastSegment, ctx);
+			getRuleBaseService().learn(lastSegment, ctx);
 //			String className = getClusterService().getClassName(lastSegment, ctx);
 			syncMarker(lastMarker, lastSegment, "");
 		}else{
@@ -402,7 +401,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 	 * @return
 	 */
 	protected Marker createMarker(ExtremeSegment segment, String className){
-		Marker newMarker = new Marker();
+		Marker newMarker = segment;
 		syncMarker(newMarker, segment, className);
 		return newMarker;
 	}
@@ -434,7 +433,6 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 		descyncedMarker.getExtractionData().setStartSampleNum(startSample.longValue());
 
 		if(segment.getEndEntry() !=null){
-		
 			Integer endSample = segment.getEndEntry().getIndex()-1;
 			Long endTime = getOutputValues().indextoMils(endSample);
 			descyncedMarker.setEnd(endTime);
@@ -450,7 +448,6 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 		for (Marker iMarker : getMarkSet().getMarkers()) {
 			if(iMarker.getStart().equals(valitateMarker.getStart())){
 				log.error("[approveMarker]conflicts " + iMarker + " with " + valitateMarker);
-//				log.error("[approveMarker]join conflicted " + iMarker + " with " + marker);
 				return false;
 			}else if(iMarker.getEnd()>valitateMarker.getStart()){
 				log.error("[approveMarker]conflicts " + iMarker + " with " + valitateMarker);
@@ -513,17 +510,17 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 		return onlineCtx;
 	}
 
-	public ExtremeOnlineClusterService getClusterService() {
-		if(clusterService == null){
-			clusterService = 
-				ExtremeOnClassifierServiceFactory.createClusterService();
-		}
-		return clusterService;
-	}
+//	public ExtremeOnlineClusterService getClusterService() {
+//		if(clusterService == null){
+//			clusterService = 
+//				ExtremeOnClassifierServiceFactory.createClusterService();
+//		}
+//		return clusterService;
+//	}
 
-	public void setClusterService(ExtremeOnlineClusterService clusterService) {
-		this.clusterService = clusterService;
-	}
+//	public void setClusterService(ExtremeOnlineClusterService clusterService) {
+//		this.clusterService = clusterService;
+//	}
 
 
 

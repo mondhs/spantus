@@ -65,7 +65,7 @@ public class CrossingZeroExtractor extends AbstractExtractor {
 	
 
 	public String getName() {
-		return ExtractorEnum.CROSSING_ZERO_EXTRACTOR.toString();
+		return ExtractorEnum.CROSSING_ZERO_EXTRACTOR.name();
 	}
 	
 

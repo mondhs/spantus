@@ -60,7 +60,7 @@ public class Loudness extends AbstractExtractor {
 
 	
 	public String getName() {
-		return ExtractorEnum.LOUDNESS_EXTRACTOR.toString();
+		return ExtractorEnum.LOUDNESS_EXTRACTOR.name();
 	}
 
 }

@@ -12,7 +12,8 @@ import org.spantus.logger.Logger;
 
 public class ExtremeOfflineClassifier extends AbstractThreshold {
 
-	 private static Logger log = Logger.getLogger(ExtremeOfflineClassifier.class);
+	 @SuppressWarnings("unused")
+	private static Logger log = Logger.getLogger(ExtremeOfflineClassifier.class);
 
 	private ExtremeClassifierServiceImpl extremeThresholdService = new ExtremeClassifierServiceImpl();
 
@@ -45,11 +46,6 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 
 		for (Iterator<Marker> markerIterator = markerSet.getMarkers().iterator(); markerIterator.hasNext();) {
 			Marker iMarker = markerIterator.next();
-			if(iMarker.getLength()<30){
-				log.error("[refreshThreasholdInfo]Removing not valid marker" + iMarker.getLabel());
-				markerIterator.remove();
-				continue;
-			}
 			int start = iMarker.getExtractionData().getStartSampleNum()
 					.intValue();
 			int end = start
@@ -61,17 +57,15 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 
 		}
 
-		Iterator<Float> valIter = values.iterator();
-//		Float minValue= null;
+//		Iterator<Float> valIter = values.iterator();
 		for (int index = 0; index < values.size(); index++) {
-			Float val = valIter.next();
-//			minValue = minValue == null?val:minValue;
-//			minValue = Math.min(minValue, val);
-			if (changePoints.containsKey(index)) {
-				threasholds.add(val);
-			} else {
-				threasholds.add(values.getMinValue());
-			}
+//			Float val = valIter.next();
+//			Float setVal = val * .1F;
+//			if (!changePoints.containsKey(index)) {
+//				setVal = values.getMinValue();
+//				setVal = val * .1F;
+//			}
+			threasholds.add(values.getMinValue());
 		}
 		return threasholds;
 	}

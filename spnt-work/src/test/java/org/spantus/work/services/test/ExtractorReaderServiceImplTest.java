@@ -6,10 +6,10 @@
 package org.spantus.work.services.test;
 
 import java.util.Map;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorInputReader;

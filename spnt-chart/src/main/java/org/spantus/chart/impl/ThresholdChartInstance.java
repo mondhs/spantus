@@ -125,6 +125,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 //		log.debug("[paintFunction] threshold time: {0} ", ( System.currentTimeMillis()-time) );
 //		time = System.currentTimeMillis();
 		if(statePoligon != null){
+			g2.drawPolygon(statePoligon);
 			g2.setPaint(currentColorTransparent);
 			g2.fillPolygon(statePoligon);
 		}
@@ -229,7 +230,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 //		Integer prevX = null; 
 //		Float delta = max - min; 
 		Float maxvalueF = (1+getOrder())/yScalar;
-		int maxvalue = maxvalueF.intValue(); 
+		int maxvalue = maxvalueF.intValue()+3; 
 		Float minvalueF = (getOrder())/yScalar;
 		int minvalue = minvalueF.intValue();
 		Float sampledXScalar = xScalar * getCtx().getValues().getSampleRate();

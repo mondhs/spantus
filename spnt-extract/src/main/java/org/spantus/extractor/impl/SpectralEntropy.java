@@ -60,7 +60,7 @@ public class SpectralEntropy extends AbstractSpectralExtractor {
 
 	
 	public String getName() {
-		return ExtractorEnum.SPECTRAL_ENTROPY_EXTRACTOR.toString();
+		return ExtractorEnum.SPECTRAL_ENTROPY_EXTRACTOR.name();
 	}
 
 

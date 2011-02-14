@@ -97,7 +97,7 @@ public class RecognitionPlot extends JFrame {
 		
 		AbstractThreshold segmentator = null;
 		ExtractorParam param = new ExtractorParam();
-		ExtractorParamUtils.setBoolean(param, 
+		ExtractorParamUtils.setValue(param, 
 				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
 		segmentator = (AbstractThreshold)ExtractorUtils.registerThreshold(bufferedReader, ExtractorEnum.ENERGY_EXTRACTOR, param);
 		segmentator.addClassificationListener(multipleSegmentator);

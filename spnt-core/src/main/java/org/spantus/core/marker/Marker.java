@@ -110,5 +110,6 @@ public class Marker implements Serializable, Cloneable{
 	public void setExtractionData(MarkerExtractionData extractionData) {
 		this.extractionData = extractionData;
 	}
+
 	
 }

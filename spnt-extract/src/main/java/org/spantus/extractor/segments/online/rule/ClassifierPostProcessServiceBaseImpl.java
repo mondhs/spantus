@@ -1,5 +1,6 @@
 package org.spantus.extractor.segments.online.rule;
 
+import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.logger.Logger;
 
@@ -19,6 +20,11 @@ public class ClassifierPostProcessServiceBaseImpl implements
 			return ClassifierRuleBaseEnum.action.changePointCurrentApproved.name();	
 		}
 		return ClassifierRuleBaseEnum.action.processSignal.name();
+	}
+
+	public void learn(ExtremeSegment currentSegment,
+			ExtremeSegmentsOnlineCtx ctx) {
+		log.debug("No learning needed");
 	}
 
 }

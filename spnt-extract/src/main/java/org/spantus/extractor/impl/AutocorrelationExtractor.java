@@ -46,7 +46,7 @@ public class AutocorrelationExtractor extends AbstractExtractor{
 
 	
 	public String getName() {
-		return ExtractorEnum.AUTOCORRELATION_EXTRACTOR.toString();
+		return ExtractorEnum.AUTOCORRELATION_EXTRACTOR.name();
 	}
 
 }

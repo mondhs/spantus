@@ -82,6 +82,6 @@ public class LogAttackTimeExtractor extends AbstractExtractor {
 		return fv;
 	}	
 	public String getName() {
-		return ExtractorEnum.LOG_ATTACK_TIME.toString();
+		return ExtractorEnum.LOG_ATTACK_TIME.name();
 	}
 }

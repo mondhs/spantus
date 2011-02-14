@@ -39,7 +39,6 @@ import org.spantus.math.windowing.WindowingEnum;
 import org.spantus.math.windowing.WindowingFactory;
 import org.spantus.segment.AbstractSegmentatorService;
 import org.spantus.segment.SegmentatorParam;
-import org.spantus.utils.Assert;
 
 
 /**
@@ -82,7 +81,7 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 //		Float preprevious = 0F;
 		for (Entry<Long, Float> stateSum : statesSums.entrySet()) {
 //			Float currValue =  stateSum.getValue() +preprevious + previous;
-			ctx.setCurrentState(stateSum.getValue() / (count) > .3 ? 1f : 0f);
+			ctx.setCurrentState(stateSum.getValue() / (count) > .4 ? 1f : 0f);
 			ctx.setCurrentMoment(stateSum.getKey());
 			processState(ctx);
 //			preprevious = previous;
@@ -226,7 +225,7 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 	protected void segmentStarted(SegmentationCtx ctx) {
 		ctx.setCurrentMarker(new Marker());
 		Long started = ctx.getCurrentMoment();
-		ctx.getCurrentMarker().setStart(started);
+		ctx.getCurrentMarker().setStart(started-10);
 		log.debug("marker started: " + started);
 	}
 
@@ -241,7 +240,7 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 			ctx.setCurrentMarker(null);
 			return;
 		}
-		ctx.getCurrentMarker().setEnd(end);
+		ctx.getCurrentMarker().setEnd(end+10);
 		ctx.getCurrentMarker().setLabel(
 				"" + ctx.getMarkerSet().getMarkers().size());
 		if (log.isDebugMode()) {

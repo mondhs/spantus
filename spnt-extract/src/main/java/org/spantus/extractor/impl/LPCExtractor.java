@@ -55,7 +55,7 @@ public class LPCExtractor extends AbstractExtractorVector {
 
 
 	public String getName() {
-		return ExtractorEnum.LPC_EXTRACTOR.toString();
+		return ExtractorEnum.LPC_EXTRACTOR.name();
 	}
 	protected FrameVectorValues calculateWindow(FrameValues windowedWindow, FrameValues realValues){
 		return calculateWindow(realValues);

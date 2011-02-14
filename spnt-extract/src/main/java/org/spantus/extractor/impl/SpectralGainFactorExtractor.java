@@ -247,7 +247,7 @@ public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 
 
 	public String getName() {
-		return ExtractorEnum.SPECTRAL_GAIN_FACTOR.toString();
+		return ExtractorEnum.SPECTRAL_GAIN_FACTOR.name();
 	}
 	
 	public AbstractExtractorVector getAbstractExtractorVector() {

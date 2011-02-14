@@ -140,9 +140,14 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 		return marker;
 	}
 	protected Marker finazlizeSegment(Marker marker, SegmentEvent event) {
-		if (marker == null)
+		if (marker == null){
 			return marker;
-		marker.setEnd(event.getTime());
+		}
+		Long endTime = event.getTime();
+		if(marker.getStart() == endTime){
+			endTime++;
+		}
+		marker.setEnd(endTime);
 //		log.debug("[finazlizeSegment] marker({0}ms): {1}", time, marker.toString());
 		return marker;
 	}

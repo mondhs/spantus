@@ -47,7 +47,7 @@ public class PLPExtractor extends AbstractSpectralVectorExtractor {
     }
 
     public String getName() {
-        return ExtractorEnum.PLP_EXTRACTOR.toString();
+        return ExtractorEnum.PLP_EXTRACTOR.name();
     }
 
 

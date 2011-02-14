@@ -58,7 +58,7 @@ public class SpectrumPower extends AbstractSpectralExtractor {
 
 	
 	public String getName() {
-		return ExtractorEnum.SPECTRUM_POWER_EXTRACTOR.toString();
+		return ExtractorEnum.SPECTRUM_POWER_EXTRACTOR.name();
 	}
 
 

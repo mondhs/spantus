@@ -132,7 +132,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 //		segmentator.setLearningPeriod(threshold_leaningPeriod);
 
 		ExtractorParam paramEnergy = new ExtractorParam();
-		ExtractorParamUtils.setBoolean(paramEnergy, 
+		ExtractorParamUtils.setValue(paramEnergy, 
 				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
 
 //		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy);

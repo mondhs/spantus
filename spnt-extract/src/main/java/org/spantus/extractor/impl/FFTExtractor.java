@@ -55,7 +55,7 @@ public class FFTExtractor extends AbstractExtractorVector {
     }
 
     public String getName() {
-		return ExtractorEnum.FFT_EXTRACTOR.toString();
+		return ExtractorEnum.FFT_EXTRACTOR.name();
 
 	}
 	

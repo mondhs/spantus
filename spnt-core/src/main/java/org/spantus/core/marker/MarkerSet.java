@@ -20,6 +20,7 @@ package org.spantus.core.marker;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
  * @author mondhs
  *
  */
-public class MarkerSet implements Serializable,Cloneable {
+public class MarkerSet implements Serializable,Cloneable, Iterable<Marker> {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -88,6 +89,10 @@ public class MarkerSet implements Serializable,Cloneable {
 		String str = MessageFormat.format("{0}: {1} markers: {2};", 
 				getClass().getSimpleName(), getMarkerSetType(), size);
 		return str;
+	}
+	@Override
+	public Iterator<Marker> iterator() {
+		return getMarkers().iterator();
 	}
 
 }

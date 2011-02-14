@@ -129,31 +129,31 @@ public abstract class ExtractorUtils {
 			if (extractorMap.get(extractor) != null) {
 				IExtractor extractorInstance = extractorMap.get(extractor)
 						.newInstance();
-				if(ExtractorParamUtils.getBoolean(param, 
+				if(ExtractorParamUtils.getValue(param, 
 						ExtractorModifiersEnum.delta.name(), false)){
 					DeltaExtractor delta = new DeltaExtractor();
 					delta.setExtractor(extractorInstance);
 					extractorInstance = delta;
 				}
-				if(ExtractorParamUtils.getBoolean(param, 
+				if(ExtractorParamUtils.getValue(param, 
 						ExtractorModifiersEnum.mean.name(), false)){
 					MeanExtractor mean = new MeanExtractor();
 					mean.setExtractor(extractorInstance);
 					extractorInstance = mean;
 				}
-				if(ExtractorParamUtils.getBoolean(param, 
+				if(ExtractorParamUtils.getValue(param, 
 						ExtractorModifiersEnum.stdev.name(), false)){
 					StdevExtractor stdev = new StdevExtractor();
 					stdev.setExtractor(extractorInstance);
 					extractorInstance = stdev;
 				}
-				if(ExtractorParamUtils.getBoolean(param, 
+				if(ExtractorParamUtils.getValue(param, 
 						ExtractorModifiersEnum.smooth.name(), false)){
 					SmoothedExtractor smooted = new SmoothedExtractor();
 					smooted.setExtractor(extractorInstance);
 					extractorInstance = smooted;
 				}
-				if(ExtractorParamUtils.getBoolean(param, 
+				if(ExtractorParamUtils.getValue(param, 
 						ExtractorModifiersEnum.log.name(), false)){
 					LogExtractor logExtactor = new LogExtractor();
 					logExtactor.setExtractor(extractorInstance);

@@ -145,13 +145,13 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 	public void testOnlineRuleJoin(){
 		MarkerSet markSet = 
 			segmentRuleBase(
-					new Float[]{.5f, 0f, 0f, 1f, 0f, 1f, 1f, 0f, 1f, 0f, 0f });
+					new Float[]{.5f, 0f, 0f, 1f, 1f, 1f, 0f, 1f, 1f, 0f, 1f, 0f, 0f });
 		assertNotNull(markSet);
 		log.debug("Markers: " + markSet.getMarkers());
 		assertEquals(1, markSet.getMarkers().size());
 		Marker m = markSet.getMarkers().get(0);
 		assertEquals(3000, m.getStart().intValue());
-		assertEquals(6000, m.getLength().intValue());
+		assertEquals(8000, m.getLength().intValue());
 	
 	}
 	

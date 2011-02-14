@@ -1,8 +1,6 @@
 
 package org.spantus.extractor.segments.online.rule;
 
-import java.util.LinkedList;
-import org.spantus.extractor.segments.offline.ExtremeEntry;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
@@ -87,9 +85,9 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
                 isDecrease = currentSegment.isDecrease(lastSegment);
                 isSimilar = currentSegment.isSimilar(lastSegment);
                 className = getClusterService().getClassName(lastSegment, ctx);
-                if(currentPeak==1){
-                    Integer first = ((LinkedList<ExtremeEntry>)lastSegment.getPeakEntries()).getLast().getIndex();
-                    Integer last = ((LinkedList<ExtremeEntry>)currentSegment.getPeakEntries()).getFirst().getIndex();
+                if(currentPeak>=1){
+                    Integer first = lastSegment.getPeakEntries().getLast().getIndex();
+                    Integer last = currentSegment.getPeakEntries().getFirst().getIndex();
                     distanceBetweenPaeks = last.longValue() - first;
                     distanceBetweenPaeks = currentSegment.getValues().indextoMils(distanceBetweenPaeks.intValue());
                     
@@ -116,7 +114,7 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
         } else if (ctx.isFeatureInMin()) {
             log.debug("Found min. Possible change point");
             return ClassifierRuleBaseEnum.action.changePoint;
-        }else if(ctx.isFeatureInMax() && distanceBetweenPaeks<66 && (lastLength+currentLength)  < 280){
+        }else if(ctx.isFeatureInMax() && distanceBetweenPaeks<180 && (lastLength+currentLength)  < 280){
               log.debug("Found max. join as between peaks not enough space");
             return ClassifierRuleBaseEnum.action.join;
         } else if (ctx.isFeatureInMax() && isIncrease  ) {
@@ -150,7 +148,14 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 
         return ClassifierRuleBaseEnum.action.processSignal;
     }
-
+    /**
+     * learn delegate to cluster service
+     */
+	public void learn(ExtremeSegment currentSegment,
+			ExtremeSegmentsOnlineCtx ctx) {
+		getClusterService().learn(currentSegment, ctx);
+	}
+    
     /**
      * 
      * @return
@@ -170,4 +175,5 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
     public void setClusterService(ExtremeOnlineClusterService clusterService) {
         this.clusterService = clusterService;
     }
+
 }

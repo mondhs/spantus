@@ -84,7 +84,7 @@ public class LPCResidualExtractor extends AbstractExtractor {
 	}
 	
 	public String getName() {
-		return ExtractorEnum.LPC_RESIDUAL_EXTRACTOR.toString();
+		return ExtractorEnum.LPC_RESIDUAL_EXTRACTOR.name();
 	}
 
 

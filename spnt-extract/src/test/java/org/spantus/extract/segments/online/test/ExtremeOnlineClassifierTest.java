@@ -97,13 +97,13 @@ public class ExtremeOnlineClassifierTest {
 		ClassifierRuleBaseServiceImpl ruleBaseService = new ClassifierRuleBaseServiceImpl();
 		ruleBaseService.setClusterService(clusterService);
 		
-		classifier  = feedData(ExtremeClassifierTest.empty, ruleBaseService, clusterService);
+		classifier  = feedData(ExtremeClassifierTest.empty, ruleBaseService);
 		Assert.assertEquals(0, classifier.getMarkSet().getMarkers().size());
 		
-		classifier = feedData(ExtremeClassifierTest.singleMax, ruleBaseService, clusterService);
+		classifier = feedData(ExtremeClassifierTest.singleMax, ruleBaseService);
 		Assert.assertEquals(1, classifier.getMarkSet().getMarkers().size());
 		
-		classifier = feedData(ExtremeClassifierTest.doubleMax, ruleBaseService, clusterService);
+		classifier = feedData(ExtremeClassifierTest.doubleMax, ruleBaseService);
 		Assert.assertEquals(2, classifier.getMarkSet().getMarkers().size());
 
 
@@ -116,7 +116,7 @@ public class ExtremeOnlineClassifierTest {
 		ClassifierRuleBaseServiceImpl ruleBaseService = new ClassifierRuleBaseServiceImpl();
 		ruleBaseService.setClusterService(clusterService);
 		
-		classifier = feedData(ExtremeClassifierTest.complexMinMax, ruleBaseService, clusterService);
+		classifier = feedData(ExtremeClassifierTest.complexMinMax, ruleBaseService);
 		log.debug("[testOnlineMarkersExtractionRule] markers {0}",classifier.getMarkSet().getMarkers());
 
 		Assert.assertEquals(3, classifier.getExtremeSegments().size());
@@ -140,22 +140,16 @@ public class ExtremeOnlineClassifierTest {
 		
 	}
 	protected ExtremeOnlineRuleClassifier feedData(Float[] data) {
-		return feedData(data, null, createClusterService());
+		return feedData(data, null );
 	}
 	protected ExtremeOnlineRuleClassifier feedData(Float[] data, 
 			ClassifierRuleBaseService ruleBase) {
-		return feedData(data, ruleBase, createClusterService());
-	}
-		
-	protected ExtremeOnlineRuleClassifier feedData(Float[] data, 
-			ClassifierRuleBaseService ruleBase, 
-			ExtremeOnlineClusterService clusterService) {
 		logData(data);
 		ExtremeOnlineRuleClassifier classifier = new ExtremeOnlineRuleClassifier();
 		classifier.setExtractor(new MockOnlineExtractor());
 		classifier.getExtractor().getOutputValues().setSampleRate(100);//10ms
 		classifier.setRuleBaseService(ruleBase);
-		classifier.setClusterService(clusterService);
+//		classifier.setClusterService(clusterService);
 		FrameValues values = new FrameValues();
 		for (Float windowValue : data) {
 			values.add(windowValue);

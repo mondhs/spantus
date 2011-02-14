@@ -108,7 +108,7 @@ public class NoiseLevelExtractor extends AbstractSpectralExtractor {
 	}
 	
 	public String getName() {
-		return ExtractorEnum.NOISE_LEVEL_EXTRACTOR.toString();
+		return ExtractorEnum.NOISE_LEVEL_EXTRACTOR.name();
 	}
 	
 

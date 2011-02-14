@@ -18,11 +18,13 @@ import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorTypeEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
+import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
 import org.spantus.mpeg7.Mpeg7ExtractorEnum;
 import org.spantus.mpeg7.Mpeg7ExtractorUtils;
 import org.spantus.mpeg7.extractors.Mpeg7ExtractorInputReader;
 import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.utils.StringUtils;
+import org.spantus.work.services.WorkServiceFactory;
 
 public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 	
@@ -153,7 +155,7 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 			ExtractorParam param = ExtractorParamUtils.getSafeParam(params, 
 					key);
 			
-			String tresholdType = ExtractorParamUtils.getString(param, 
+			String tresholdType = ExtractorParamUtils.getValue(param, 
 					ExtractorParamUtils.commonParam.thresholdType.name(), 
 					"");
 			ClassifierEnum thresholdEnum = getThresholdEnum(tresholdType);
@@ -163,8 +165,12 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 						extractorType,
 						params.get(key),
 						thresholdEnum);
+				if(threshold instanceof ExtremeOnlineRuleClassifier){
+					((ExtremeOnlineRuleClassifier)threshold).setRuleBaseService(WorkServiceFactory.createClassifierRuleBaseService());
+				}
+					
 				param = ExtractorParamUtils.getSafeParam(params, key);
-				Float threasholdCoef = ExtractorParamUtils.<Float>getValue(param, 
+				Float threasholdCoef = ExtractorParamUtils.getValue(param, 
 						ExtractorParamUtils.commonParam.threasholdCoef.name(), Float.valueOf(1.1f));
 				if(threshold instanceof AbstractThreshold){
 					((AbstractThreshold)threshold).setCoef(threasholdCoef);	

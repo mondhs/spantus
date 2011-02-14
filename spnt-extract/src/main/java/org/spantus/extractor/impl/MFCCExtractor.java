@@ -47,7 +47,7 @@ public class MFCCExtractor extends AbstractSpectralVectorExtractor {
     }
 
     public String getName() {
-        return ExtractorEnum.MFCC_EXTRACTOR.toString();
+        return ExtractorEnum.MFCC_EXTRACTOR.name();
     }
 
 

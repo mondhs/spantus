@@ -1,4 +1,10 @@
 package org.spantus.work.services;
+
+import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
+import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceFileMvelImpl;
+import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceMvelImpl;
+
 /**
  * 
  * @author Mindaugas Greibus
@@ -8,36 +14,46 @@ package org.spantus.work.services;
 public abstract class WorkServiceFactory {
 	private static MarkerDao markerDao;
 	private static ReaderDao readerDao;
-	private static  BundleDao bundleDao;
-        private static ExtractorReaderService extractorReaderService;
+	private static BundleDao bundleDao;
+	private static ExtractorReaderService extractorReaderService;
 
-	public static MarkerDao createMarkerDao(){
-		if(markerDao == null){
+	public static MarkerDao createMarkerDao() {
+		if (markerDao == null) {
 			markerDao = new MarkerProxyDao();
 		}
-		return markerDao; 
+		return markerDao;
 	}
-	public static ReaderDao createReaderDao(){
-		if(readerDao == null){
+
+	public static ReaderDao createReaderDao() {
+		if (readerDao == null) {
 			readerDao = new ReaderXmlDaoImpl();
 		}
-		return readerDao; 
+		return readerDao;
 	}
-	public static BundleDao createBundleDao(){
-		if(bundleDao == null){
+
+	public static BundleDao createBundleDao() {
+		if (bundleDao == null) {
 			BundleZipDaoImpl _bundleDao = new BundleZipDaoImpl();
 			_bundleDao.setMarkerDao(createMarkerDao());
 			_bundleDao.setReaderDao(createReaderDao());
 			bundleDao = _bundleDao;
 		}
-		return bundleDao; 
+		return bundleDao;
 	}
-        public static ExtractorReaderService createExtractorReaderService() {
-            if(extractorReaderService == null){
-                extractorReaderService = new ExtractorReaderServiceImpl();
-            }
-            return extractorReaderService;
-        }
 
-	
+	public static ExtractorReaderService createExtractorReaderService() {
+		if (extractorReaderService == null) {
+			extractorReaderService = new ExtractorReaderServiceImpl();
+		}
+		return extractorReaderService;
+	}
+	public static ClassifierRuleBaseService createClassifierRuleBaseService() {
+		ClassifierRuleBaseServiceMvelImpl ruleBase = new ClassifierRuleBaseServiceFileMvelImpl();
+		ruleBase.setClusterService(ExtremeOnClassifierServiceFactory.createClusterService());
+		
+//		ClassifierPostProcessServiceBaseImpl ruleBase = new ClassifierPostProcessServiceBaseImpl();
+		return ruleBase;
+	}
+
+
 }

@@ -5,9 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.marker.Marker;
 
 
-public class ExtremeSegment implements Serializable, Cloneable{
+public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 	/**
 	 * 
 	 */
@@ -17,7 +18,7 @@ public class ExtremeSegment implements Serializable, Cloneable{
 	private ExtremeEntry endEntry;
 	private boolean approved = false;
 	
-	private List<ExtremeEntry> peakEntries;
+	private LinkedList<ExtremeEntry> peakEntries;
 
 	private FrameValues values;
 	
@@ -155,27 +156,23 @@ public class ExtremeSegment implements Serializable, Cloneable{
 		this.values = values;
 	}
 	
-	public List<ExtremeEntry> getPeakEntries() {
+	public LinkedList<ExtremeEntry> getPeakEntries() {
 		if(peakEntries == null){
 			peakEntries = new LinkedList<ExtremeEntry>();
 		}
 		return peakEntries;
 	}
-	public void setPeakEntries(List<ExtremeEntry> peakEntries) {
+	public void setPeakEntries(LinkedList<ExtremeEntry> peakEntries) {
 		this.peakEntries = peakEntries;
 	}
 	
-	public ExtremeSegment clone(){
-		try {
-			ExtremeSegment esCloned =  (ExtremeSegment)super.clone();
-			esCloned.setPeakEntries(new LinkedList<ExtremeEntry>());
-			for (ExtremeEntry ee : this.getPeakEntries()) {
-				esCloned.getPeakEntries().add(ee.clone());
-			}
-			return esCloned;
-		} catch (CloneNotSupportedException e) {
-			throw new IllegalArgumentException(e);
+	public ExtremeSegment clone() {
+		ExtremeSegment esCloned = (ExtremeSegment) super.clone();
+		esCloned.setPeakEntries(new LinkedList<ExtremeEntry>());
+		for (ExtremeEntry ee : this.getPeakEntries()) {
+			esCloned.getPeakEntries().add(ee.clone());
 		}
+		return esCloned;
 	}
 	public boolean getApproved() {
 		return approved;

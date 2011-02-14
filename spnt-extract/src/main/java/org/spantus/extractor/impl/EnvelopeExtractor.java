@@ -48,7 +48,7 @@ public class EnvelopeExtractor extends AbstractExtractor {
 
 	
 	public String getName() {
-		return ExtractorEnum.ENVELOPE_EXTRACTOR.toString();
+		return ExtractorEnum.ENVELOPE_EXTRACTOR.name();
 	}
 
 }

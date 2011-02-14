@@ -1,5 +1,8 @@
 package org.spantus.extractor.segments.online;
 
+import java.util.Iterator;
+
+import org.spantus.core.marker.Marker;
 import org.spantus.extractor.segments.offline.ExtremeOfflineClassifier;
 import org.spantus.logger.Logger;
 
@@ -33,6 +36,16 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 			processValue(value);
 		}
 		endupPendingSegments(getOnlineCtx());
+		for (Iterator<Marker> iterator = getMarkSet().iterator(); iterator.hasNext();) {
+			Marker marker = (Marker) iterator.next();
+			if(marker.getLength()<30){
+				log.error("[refreshThreasholdInfo]Removing not valid marker" + 
+						marker.getLabel() + ": " + marker.getLength());
+				iterator.remove();
+				continue;
+			}
+			
+		}
 		getThresholdValues().addAll(ExtremeOfflineClassifier.refreshThreasholdInfo(getMarkSet(), getOutputValues()));
 
 	}
