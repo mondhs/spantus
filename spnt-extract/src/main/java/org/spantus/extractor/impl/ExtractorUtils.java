@@ -98,8 +98,6 @@ public abstract class ExtractorUtils {
 		extractorMap.put(ExtractorEnum.LOUDNESS_EXTRACTOR, Loudness.class);
 		extractorMap.put(ExtractorEnum.LOG_ATTACK_TIME,
 				LogAttackTimeExtractor.class);
-//		extractorMap.put(ExtractorEnum.SMOOTHED_LOG_ATTACK_TIME,
-//				LogAttackTimeExtractor.class);
 		
 		extractor3DMap.put(ExtractorEnum.WAVFORM_EXTRACTOR,
 				WavformExtractor.class);

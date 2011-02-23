@@ -19,12 +19,20 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 		ClassifierRuleBaseServiceMvelImpl {
 
 	private String path = "ClassifierRuleBase.csv";
+	
 	private static Logger log = Logger
 			.getLogger(ClassifierRuleBaseServiceFileMvelImpl.class);
 
 	public ClassifierRuleBaseServiceFileMvelImpl() {
+		updateRules(getPath());
+	}
+	/**
+	 * update rules from file
+	 * @param currentPath
+	 */
+	protected void updateRules(String currentPath){
 		List<Rule> rules = new ArrayList<Rule>();
-		URL file = getClass().getClassLoader().getResource(path);
+		URL file = getClass().getClassLoader().getResource(currentPath);
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(file.toURI())));
 			String line; 
@@ -56,9 +64,11 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 	
 	protected Rule processLine(List<Rule> rules, String line){
 		String[] lineArr = line.split(";");
+		//commented out rule
 		if(lineArr[0].startsWith("#")){
 			return null;
 		}
+		//first line
 		if("id".equals(lineArr[0])){
 			return null;
 		}
@@ -67,6 +77,14 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 		action actionName = action.valueOf(lineArr[2]);
 		String description = lineArr[3];
 		return putRule(rules, name, rule, actionName, description);
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 }

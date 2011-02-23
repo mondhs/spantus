@@ -30,6 +30,7 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 	 * @param ctx
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	protected Map<String, Object> prepare(ExtremeSegmentsOnlineCtx ctx) {
 		Map<String, Object> params = new HashMap<String, Object>();
 
