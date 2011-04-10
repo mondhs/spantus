@@ -28,7 +28,7 @@ public class QSegmentPhonomeMappingDirTest extends AbstractSegmentDirTest {
 	@Before
 	public void onSetup() {
 		CorpusEntryExtractorTextGridMapImpl impl = new CorpusEntryExtractorTextGridMapImpl();
-		impl.setMarkerDir(markerDir);
+		impl.setMarkerDir(getMarkerDir());
 
 		super.onSetup();
 		ExtractorEnum[] extractors = new ExtractorEnum[] {

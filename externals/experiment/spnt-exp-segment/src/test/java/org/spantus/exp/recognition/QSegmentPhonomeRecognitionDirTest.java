@@ -33,9 +33,11 @@ public class QSegmentPhonomeRecognitionDirTest extends
 			.getLogger(QSegmentPhonomeRecognitionDirTest.class);
 	
 	private QSegmentExpDao qSegmentExpDao;
+	private File markerDir = new File(DIR_LEARN_WAV, "GRID/TEST/");
 	
 	@Before
 	public void onSetup() {
+		setMarkerDir(markerDir);
 		super.onSetup();
 		QSegmentExpHsqlDao qSegmentExpDaoImpl = new QSegmentExpHsqlDao();
 		qSegmentExpDaoImpl.setRecreate(true);
@@ -59,9 +61,6 @@ public class QSegmentPhonomeRecognitionDirTest extends
 			// FileUtils.replaceExtention(filePath,".mspnt.xml");
 			File wavFilePath = new File(getWavDir(), FileUtils.replaceExtention(
 					texGridFile, ".wav"));
-			if (!wavFilePath.getName().contains("far13")) {
-				continue;
-			}
 			log.debug("[testClassify]reading: {0}", wavFilePath);
 			MarkerSetHolder markerSetHolder = getExtractor().extract(wavFilePath);
 			log.debug("[testClassify]extracted: {0}", markerSetHolder);
