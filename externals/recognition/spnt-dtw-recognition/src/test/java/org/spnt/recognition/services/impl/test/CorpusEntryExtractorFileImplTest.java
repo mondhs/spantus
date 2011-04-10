@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.externals.recognition.bean.CorpusEntry;
+import org.spantus.externals.recognition.services.CorpusEntryExtractor;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorFileImpl;
 
 /**
@@ -28,7 +29,7 @@ public class CorpusEntryExtractorFileImplTest {
     public final static String FILE_TEST = "t_1_2.wav";
     
     private File path;
-    CorpusEntryExtractorFileImpl extractor;
+    CorpusEntryExtractor extractor;
     
     @Before
     public void onSetup(){

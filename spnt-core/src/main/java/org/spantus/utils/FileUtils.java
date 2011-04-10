@@ -37,8 +37,14 @@ public abstract class FileUtils {
 		String fileName = file.getName();
 		return stripExtention(fileName);
 	}
+	
+	public static String replaceExtention(File file,String newExtention){
+		String fileName = file.getName();
+		return stripExtention(fileName)+newExtention;
+	}
+	
 	public static String stripExtention(String file){
-		file = file.replaceAll("\\.\\w{2,5}$","");
+		file = file.replaceAll("\\.\\w{2,8}$","");
 		return file;
 	}
 	/**

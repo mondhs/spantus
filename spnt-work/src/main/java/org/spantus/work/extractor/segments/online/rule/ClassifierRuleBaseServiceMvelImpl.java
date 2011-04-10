@@ -7,12 +7,14 @@ import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.join;
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.processSignal;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.mvel2.MVEL;
+import org.mvel2.integration.GlobalListenerFactory;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;
@@ -25,6 +27,10 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 	private static Logger log = Logger
 			.getLogger(ClassifierRuleBaseServiceMvelImpl.class);
 	private List<Rule> rules;
+	
+	public ClassifierRuleBaseServiceMvelImpl() {
+	}
+	
 	/**
 	 * 
 	 * @param ctx
@@ -105,6 +111,8 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		return params;
 	}
 
+	
+	
 	@Override
 	public String testOnRuleBase(ExtremeSegmentsOnlineCtx ctx) {
 		Map<String, Object> param = prepare(ctx);
@@ -114,11 +122,9 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		// log.debug(""+MVEL.eval("lastSegment", param));
 		String command = null;
 		for (Rule ruleEntry : rules) {
-			log.error("exec " + ruleEntry.getBody() + ": " 
-					+ MVEL.executeExpression(
-							ruleEntry.getCompiledRule(), param));
-			Boolean commandInd = MVEL.executeExpression(
-					ruleEntry.getCompiledRule(), param, Boolean.class);
+			log.error("exec [" + ruleEntry.getBody() + "]: ");
+			Boolean commandInd = execute(ruleEntry.getCompiledRule(), param);
+			log.error("" + commandInd);			
 			if (commandInd) {
 				command = ruleEntry.getResult();
 				ruleEntry.incCounter();
@@ -129,6 +135,36 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		}
 		return command;
 	}
+	/**
+	 * 
+	 * @param compiledRule
+	 * @param param
+	 * @return
+	 */
+	private Boolean execute(Serializable compiledRule, Map<String, Object> param) {
+		try{
+			return  MVEL.executeExpression(compiledRule, param, Boolean.class);
+		}catch (Exception e) {
+			log.error(e);
+			return Boolean.FALSE;
+		}
+	}
+	/**
+	 * 
+	 * @param compiledRule
+	 * @param param
+	 * @return
+	 */
+	public Boolean execute(String strRule, Map<String, Object> param) {
+		try{
+			return  MVEL.evalToBoolean(strRule, param);
+		}catch (Exception e) {
+			log.error(e);
+			return Boolean.FALSE;
+		}
+	}
+
+
 
 	protected List<Rule> getRules() {
 		if (rules == null) {

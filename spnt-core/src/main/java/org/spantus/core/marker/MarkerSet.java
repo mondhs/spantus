@@ -90,7 +90,7 @@ public class MarkerSet implements Serializable,Cloneable, Iterable<Marker> {
 				getClass().getSimpleName(), getMarkerSetType(), size);
 		return str;
 	}
-	@Override
+
 	public Iterator<Marker> iterator() {
 		return getMarkers().iterator();
 	}

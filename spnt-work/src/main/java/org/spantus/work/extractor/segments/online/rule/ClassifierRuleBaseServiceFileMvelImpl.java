@@ -19,20 +19,13 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 		ClassifierRuleBaseServiceMvelImpl {
 
 	private String path = "ClassifierRuleBase.csv";
-	
 	private static Logger log = Logger
 			.getLogger(ClassifierRuleBaseServiceFileMvelImpl.class);
 
 	public ClassifierRuleBaseServiceFileMvelImpl() {
-		updateRules(getPath());
-	}
-	/**
-	 * update rules from file
-	 * @param currentPath
-	 */
-	protected void updateRules(String currentPath){
+		super();
 		List<Rule> rules = new ArrayList<Rule>();
-		URL file = getClass().getClassLoader().getResource(currentPath);
+		URL file = getClass().getClassLoader().getResource(path);
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(file.toURI())));
 			String line; 
@@ -63,28 +56,32 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 	}
 	
 	protected Rule processLine(List<Rule> rules, String line){
-		String[] lineArr = line.split(";");
-		//commented out rule
-		if(lineArr[0].startsWith("#")){
+		String[] lineArr = line.split("[,;]");
+		if(lineArr.length == 0){
 			return null;
 		}
-		//first line
-		if("id".equals(lineArr[0])){
+		String key = preprocess(lineArr[0]);
+		if(key.startsWith("#")){
 			return null;
 		}
-		String name = lineArr[0];
-		String rule = lineArr[1];
-		action actionName = action.valueOf(lineArr[2]);
-		String description = lineArr[3];
+		if("id".equals(key)){
+			return null;
+		}
+		String name = key;
+		String rule = preprocess(lineArr[1]);
+		action actionName = action.valueOf(preprocess(lineArr[2]));
+		String description = preprocess(lineArr[3]);
 		return putRule(rules, name, rule, actionName, description);
 	}
 
-	public String getPath() {
-		return path;
+	private String preprocess(String str) {
+		str = str.trim();
+		//trim from start and end
+		str = str.replaceAll("(^\")|(\"$)", "");
+		//trim double quotes
+		str = str.replaceAll("\"\"", "\"");
+		return str;
 	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
+	
 	
 }

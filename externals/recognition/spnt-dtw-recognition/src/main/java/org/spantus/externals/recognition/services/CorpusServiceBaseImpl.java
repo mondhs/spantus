@@ -35,7 +35,6 @@ import org.spantus.math.services.MathServicesFactory;
 public class CorpusServiceBaseImpl implements CorpusService {
 
 	private Logger log = Logger.getLogger(getClass());
-
 	
 	private DtwService dtwService;
 
@@ -270,7 +269,13 @@ public class CorpusServiceBaseImpl implements CorpusService {
                         updateMinMax(featureName, result1.getDistance(), minimum, maximum);
                     }
                     results.add(result);
-                    log.debug("[findBestMatch] iteration in {0} ms", (System.currentTimeMillis()-start));
+                    log.debug("[findBestMatch] iteration for [{0}] in {1} ms. score: {2} ", 
+                    		corpusSample.getName(),
+                    		(System.currentTimeMillis()-start),
+                    		result.getScores().get("MFCC_EXTRACTOR"));
+                    if(results.size()>100){
+                    	results = postProcessResult(results, minimum, maximum);
+                    }
 				}
 				results = postProcessResult(results, minimum, maximum);
 				log.info(MessageFormat.format("[findBestMatch] sample: {0}",  results));

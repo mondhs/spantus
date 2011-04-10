@@ -17,32 +17,35 @@ import org.spantus.work.services.WorkServiceFactory;
  * read labeled info and learn samples
  * @author mondhs
  */
-public class TexGridSplitSegmentDirTest extends AbstractSegmentDirTest {
+public class TexGridSplitSegmentAndLearnDirTest extends AbstractSegmentDirTest {
 
-    private static final Logger log = Logger.getLogger(TexGridSplitSegmentDirTest.class);
+    private static final Logger log = Logger.getLogger(TexGridSplitSegmentAndLearnDirTest.class);
 
     @Test
     public void testExtract() {
         clearCorpus();
 
         File wavDir = new File(DIR_LEARN_WAV, "WAV/AK1/");
-        File markerDir = new File(DIR_LEARN_WAV, "GRID/AK1/");
+        File markerDir = new File(DIR_LEARN_WAV, "GRID/TRAIN/");
         
         int sum = 0;
         for (File filePath : wavDir.listFiles(new WavFileNameFilter())) {
             log.debug("reading", filePath);
-            String markersPath = FileUtils.stripExtention(filePath);
-            markersPath += ".TextGrid";
+            String markersPath = FileUtils.replaceExtention(filePath, ".TextGrid");
+            File textGridFile = new File(markerDir, markersPath); 
+            if(!textGridFile.exists()){
+            	continue;
+            }
             MarkerSetHolder markerSetHolder = WorkServiceFactory.createMarkerDao().read(
-                    new File(markerDir, markersPath));
+            		textGridFile);
             
-            MarkerSet markerSet = getSegementedMarkers(markerSetHolder);
+            MarkerSet markerSet = findSegementedMarkers(markerSetHolder);
             int count = markerSet.getMarkers().size();
 
             getExtractor().extractAndLearn(
-                    filePath.getAbsoluteFile(), markerSetHolder, null);
+                    filePath.getAbsoluteFile(), markerSet, null);
             
-            log.debug("accept: {0}:{1}", filePath, markerSetHolder);
+            log.debug("accept: {0}:{1}", filePath, markerSet);
             sum += count;
         }
 //        Assert.assertEquals(70, sum);

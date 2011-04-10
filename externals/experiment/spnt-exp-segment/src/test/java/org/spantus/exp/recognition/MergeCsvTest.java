@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.common.io.LineProcessor;
@@ -47,7 +46,6 @@ public class MergeCsvTest {
 			LineProcessor<Map<String, String>> {
 		Map<String, String> stats = new HashMap<String, String>();
 
-		@Override
 		public boolean processLine(String line) throws IOException {
 			String[] strs = line.split(";");
 			String key = strs[0];
@@ -59,7 +57,6 @@ public class MergeCsvTest {
 			return true;
 		}
 
-		@Override
 		public Map<String, String> getResult() {
 			return stats;
 		}

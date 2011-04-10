@@ -9,7 +9,6 @@ import java.util.List;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
 import org.spantus.utils.FileUtils;
@@ -24,12 +23,11 @@ public class CorpusEntryExtractorTextGridMapImpl extends
 	private MarkerDao markerDao;
 	private Logger log = Logger.getLogger(CorpusEntryExtractorTextGridMapImpl.class);
 	
+	
 
 	@Override
 	public String createLabel(File filePath, Marker marker, int result) {
-		String markersPath = FileUtils.stripExtention(filePath);
-		markersPath += ".TextGrid";
-//		MarkerSetHolder markerSetHolder = getMarkerDao().read();
+		String markersPath = FileUtils.replaceExtention(filePath,".TextGrid");
 		String text = createLabelFromTextGrid(new File(markerDir, markersPath), marker);
 		if(!StringUtils.hasText(text)){
 			return super.createLabel(filePath, marker, result);
@@ -46,7 +44,7 @@ public class CorpusEntryExtractorTextGridMapImpl extends
 		MarkerSetHolder markerSetHolder = getMarkerDao().read(markerPath);
 		Assert.isTrue(markerSetHolder != null, "Not initialized");
 		Assert.isTrue(markerSetHolder.getMarkerSets() != null, "Not initialized");
-		MarkerSet markerSet = getSegementedMarkers(markerSetHolder);
+		MarkerSet markerSet = findSegementedLowestMarkers(markerSetHolder);
 		Collection<Marker>  markers = findMappedMarkers(markerSet, marker);
 		StringBuilder buf = new StringBuilder();
 		for (Marker iMarker : markers) {
@@ -124,17 +122,6 @@ public class CorpusEntryExtractorTextGridMapImpl extends
 		return MessageFormat.format("{0}[{1}:{2}]", m.getLabel(),m.getStart(), m.getEnd());
 	}
 	
-	protected MarkerSet getSegementedMarkers(MarkerSetHolder markerSetHolder) {
-		MarkerSet segments = markerSetHolder.getMarkerSets().get(
-				MarkerSetHolderEnum.word.name());
-		if (segments == null) {
-			segments = markerSetHolder.getMarkerSets().get(
-					MarkerSetHolderEnum.phone.name());
-		}
-
-		return segments;
-	}
-
 	
 	public File getMarkerDir() {
 		return markerDir;

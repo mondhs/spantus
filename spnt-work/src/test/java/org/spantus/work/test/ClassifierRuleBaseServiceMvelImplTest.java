@@ -1,6 +1,8 @@
 package org.spantus.work.test;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -88,6 +90,18 @@ public class ClassifierRuleBaseServiceMvelImplTest {
 		//then
 		Assert.assertEquals(ClassifierRuleBaseEnum.action.join.name(), decision);
 	}
+	
+	@Test
+	public void testNPEHandling(){
+		//given
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("test", null);
+		//when
+		Boolean decision = impl.execute("test.test",params);
+		//then
+		Assert.assertEquals(Boolean.FALSE, decision);
+	}
+	
 	
 	private ExtremeSegment createExtremeSegment() {
 		ExtremeSegment extremeSegment = new ExtremeSegment();

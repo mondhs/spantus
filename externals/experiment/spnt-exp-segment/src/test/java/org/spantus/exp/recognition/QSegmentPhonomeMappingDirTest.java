@@ -13,7 +13,6 @@ import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextG
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.utils.FileUtils;
-import org.spantus.work.services.WorkServiceFactory;
 
 /**
  * 
@@ -24,46 +23,67 @@ public class QSegmentPhonomeMappingDirTest extends AbstractSegmentDirTest {
 	private static final Logger log = Logger
 			.getLogger(QSegmentPhonomeMappingDirTest.class);
 	private File wavDir = new File(DIR_LEARN_WAV, "WAV/AK1/");
-	private File markerDir = new File(DIR_LEARN_WAV, "GRID/AK1/");
+	private File markerDir = new File(DIR_LEARN_WAV, "GRID/TRAIN/");
 
-	  @Before
+	@Before
 	public void onSetup() {
-		  CorpusEntryExtractorTextGridMapImpl impl = new CorpusEntryExtractorTextGridMapImpl();
-		  impl.setMarkerDir(markerDir);
-		  setExtractor(impl);
-		  
-		  super.onSetup();
-	        ExtractorEnum[] extractors = new ExtractorEnum[]{
-//	                ExtractorEnum.MFCC_EXTRACTOR,
-//	                ExtractorEnum.PLP_EXTRACTOR,
-//	                ExtractorEnum.LPC_EXTRACTOR,
-//	                ExtractorEnum.FFT_EXTRACTOR,
-	        		ExtractorEnum.LOUDNESS_EXTRACTOR,
-	                ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
-	                ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR};
+		CorpusEntryExtractorTextGridMapImpl impl = new CorpusEntryExtractorTextGridMapImpl();
+		impl.setMarkerDir(markerDir);
 
-	        getExtractor().setExtractors(extractors);
+		super.onSetup();
+		ExtractorEnum[] extractors = new ExtractorEnum[] {
+				ExtractorEnum.MFCC_EXTRACTOR,
+				ExtractorEnum.PLP_EXTRACTOR,
+				ExtractorEnum.LPC_EXTRACTOR,
+				// ExtractorEnum.FFT_EXTRACTOR,
+				ExtractorEnum.LOUDNESS_EXTRACTOR,
+				ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR, 
+				ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR };
 
-		  
+		impl.setExtractors(extractors);
+		
+		setExtractor(impl);
+
 	}
-	
+
 	@Test
 	public void testClassify() {
 		clearCorpus();
 
-		for (File filePath : wavDir.listFiles(new WavFileNameFilter())) {
-			String markersPath = FileUtils.stripExtention(filePath);
-//	        if(!markersPath.contains("far1")){
-//	        	continue;
-//	        }
-	        markersPath += ".mspnt.xml";
+		for (File filePath : getMarkerDir().listFiles(new TextGridNameFilter())) {
+
+//			String markersPath = FileUtils.replaceExtention(filePath,
+//					".TextGrid");
+			// FileUtils.replaceExtention(filePath,".mspnt.xml");
+			File wavFile = new File(getWavDir(), FileUtils.replaceExtention(
+					filePath, ".wav"));
+			// if(!markersPath.contains("far1")){
+			// continue;
+			// }
 			log.debug("[testClassify]reading: {0}", filePath);
-	        MarkerSetHolder markerSetHolder = getExtractor().extractAndLearn(filePath.getAbsoluteFile());
-	        WorkServiceFactory.createMarkerDao().write(markerSetHolder, new File(markerDir, markersPath));
+			MarkerSetHolder markerSetHolder = getExtractor().extractAndLearn(
+					wavFile.getAbsoluteFile());
+			getMarkerDao().write(markerSetHolder, wavFile);
 
 			log.debug("accept: {0}:{1}", filePath, markerSetHolder);
 		}
 
+	}
+
+	public File getWavDir() {
+		return wavDir;
+	}
+
+	public void setWavDir(File wavDir) {
+		this.wavDir = wavDir;
+	}
+
+	public File getMarkerDir() {
+		return markerDir;
+	}
+
+	public void setMarkerDir(File markerDir) {
+		this.markerDir = markerDir;
 	}
 
 }

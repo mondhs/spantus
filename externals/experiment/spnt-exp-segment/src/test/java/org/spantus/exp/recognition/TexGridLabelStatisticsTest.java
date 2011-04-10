@@ -55,14 +55,11 @@ public class TexGridLabelStatisticsTest extends AbstractSegmentDirTest {
 				log.error("[testCalculateStatistics]File not exists" + markerFile);
 				continue;
 			}
-			MarkerSet markerSet = getSegementedMarkers(markerSetHolder);
+			MarkerSet markerSet = findSegementedMarkers(markerSetHolder);
 			
 			int i=0;
 			for (Marker marker : markerSet.getMarkers()) {
-				String label = marker.getLabel().trim().replaceAll("[\\.\\d-\\^\\:]", ""); 
-				markerMultimap.put(label, marker);
-				multimap.put(label
-						, Joiner.on("-").join(label , markersPath,""+(i++)));
+				processMarker(markersPath, marker, markerMultimap, multimap, i++);
 			}
 		}
 		
@@ -111,5 +108,15 @@ public class TexGridLabelStatisticsTest extends AbstractSegmentDirTest {
 				Joiner.on("\n").join(sortedMultimap.asMap().entrySet())
 				);
 
+	}
+
+	private void processMarker(String markersPath, Marker marker, 
+			HashMultimap<String, Marker>  markerMultimap, 
+			TreeMultimap<String, String> multimap, int i) {
+		String label = marker.getLabel().trim().replaceAll("[\\.\\d-\\^\\:]", ""); 
+		markerMultimap.put(label, marker);
+		multimap.put(label
+				, Joiner.on("-").join(label , markersPath,""+i));
+		
 	}
 }

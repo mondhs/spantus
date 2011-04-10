@@ -43,7 +43,7 @@ public class SpantusWorkMain {
 //			} catch (InterruptedException e) {
 //			}
 //		}
-//		splash.close();
+//		splash.close(); 
 //	}
 	
 	/**
