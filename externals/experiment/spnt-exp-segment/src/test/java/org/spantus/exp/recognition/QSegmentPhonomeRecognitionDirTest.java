@@ -56,9 +56,6 @@ public class QSegmentPhonomeRecognitionDirTest extends
 		int counter = 0;
 		for (File texGridFile : getMarkerDir().listFiles(new TextGridNameFilter())) {
 
-//			String markersPath = FileUtils.replaceExtention(filePath,
-//					".TextGrid");
-			// FileUtils.replaceExtention(filePath,".mspnt.xml");
 			File wavFilePath = new File(getWavDir(), FileUtils.replaceExtention(
 					texGridFile, ".wav"));
 			log.debug("[testClassify]reading: {0}", wavFilePath);
@@ -70,39 +67,48 @@ public class QSegmentPhonomeRecognitionDirTest extends
 			for (Marker marker : ms) {
 				Long start = System.currentTimeMillis();
 				RecognitionResult recogniton= getExtractor().match(marker, reader);
-				String label = getExtractor().createLabel(wavFilePath, marker);
+				
 				if(recogniton == null){
 					log.debug("[testClassify]No matches: {0} ", wavFilePath);
 					continue;
 				}
-				log.debug("[testClassify]matching: {0} => {1} === {2} === {3}", wavFilePath, 
+				log.debug("[testClassify]matching: {0} => {1} === {2}", wavFilePath, 
 						marker.getLabel(), 
-						recogniton.getInfo().getName(),
-						label);
-				Map<String, Float> score = recogniton.getScores();
+						recogniton.getInfo().getName()
+						);
+				
 				Long processingTime = System.currentTimeMillis()-start;
-				qSegmentExpDao.save(new QSegmentExp(wavFilePath.getName(),
-						marker.getLength(),
-						marker.getLabel(),
-						recogniton.getInfo().getName(), 
-						label, 
-						processingTime,
-						score.get(ExtractorEnum.LOUDNESS_EXTRACTOR.name()),
-						score.get(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()), 
-						score.get(ExtractorEnum.PLP_EXTRACTOR.name()),
-						score.get(ExtractorEnum.LPC_EXTRACTOR.name()),
-						score.get(ExtractorEnum.MFCC_EXTRACTOR.name()),
-						score.get(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name())));
+				//save result
+				saveResult(marker, wavFilePath, recogniton, processingTime);
 			}
 			
 			log.debug("[testClassify]read markers: {0}=>{1}", wavFilePath, ms.getMarkers().size());
-//			WorkServiceFactory.createMarkerDao()
-//					.write(markerSetHolder, wavFile);
-
-//			log.debug("accept: {0}:{1}", filePath, markerSetHolder);
 			counter++;
 		}
 		log.debug("[testClassify]read files: {0}", counter);
+	}
+	/**
+	 * 
+	 * @param marker
+	 * @param wavFilePath
+	 * @param recogniton
+	 * @param processingTime
+	 */
+	private void saveResult(Marker marker, File wavFilePath, RecognitionResult recogniton, Long processingTime) {
+		Map<String, Float> score = recogniton.getScores();
+		String label = getExtractor().createLabel(wavFilePath, marker);
+		qSegmentExpDao.save(new QSegmentExp(wavFilePath.getName(),
+				marker.getLength(),
+				marker.getLabel(),
+				recogniton.getInfo().getName(), 
+				label, 
+				processingTime,
+				score.get(ExtractorEnum.LOUDNESS_EXTRACTOR.name()),
+				score.get(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()), 
+				score.get(ExtractorEnum.PLP_EXTRACTOR.name()),
+				score.get(ExtractorEnum.LPC_EXTRACTOR.name()),
+				score.get(ExtractorEnum.MFCC_EXTRACTOR.name()),
+				score.get(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name())));		
 	}
 
 	public QSegmentExpDao getqSegmentExpDao() {

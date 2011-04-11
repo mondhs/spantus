@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.mvel2.MVEL;
-import org.mvel2.integration.GlobalListenerFactory;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;

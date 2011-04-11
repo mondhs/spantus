@@ -18,8 +18,10 @@
 */
 package org.spantus.extractor.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -296,19 +298,22 @@ public abstract class ExtractorUtils {
 	 * @param params
 	 * @param thresholdType
 	 */
-	public static void registerThreshold(IExtractorInputReader bufferedReader,
+	public static List<IClassifier> registerThreshold(IExtractorInputReader bufferedReader,
 			ExtractorEnum[] extractors,
 			Map<String, ExtractorParam> params,
 			ClassifierEnum thresholdType) {
+		List<IClassifier> classifiers = new ArrayList<IClassifier>();
 		for (ExtractorEnum extractor : extractors) {
 			ExtractorParam extractorParam = null;
 			if(params!=null){
 				extractorParam = params.get(extractor.name());
 			}
-			ExtractorUtils.registerThreshold(bufferedReader, extractor, 
+			IClassifier classifier = ExtractorUtils.registerThreshold(bufferedReader, extractor, 
 					extractorParam
 					, thresholdType);
+			classifiers.add(classifier);
 		}
+		return classifiers;
 	}
 	/**
 	 * 

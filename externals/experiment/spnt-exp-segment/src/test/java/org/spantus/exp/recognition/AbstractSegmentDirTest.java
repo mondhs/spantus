@@ -6,17 +6,12 @@ package org.spantus.exp.recognition;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.junit.Before;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.externals.recognition.bean.CorpusEntry;
-import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusEntryExtractor;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
@@ -47,23 +42,33 @@ public abstract class AbstractSegmentDirTest {
             "/home/mgreibus/src/garsynai/VDU/MG/OUTPUT/"
 //            "./target/learn-corpus/"
             ;
+    public final static String RULES_PATH =
+        "/home/mgreibus/src/spantus-svn/trunk/spnt-work-ui/src/main/resources";
+    private static final Logger log = Logger.getLogger(AbstractSegmentDirTest.class);
+
+    public String dirLearn = DIR_LEARN_OUT;
 
     private File learnDir;
     private CorpusEntryExtractorFileImpl extractor;
     private CorpusServiceBaseImpl corpusService;
     private CorpusRepositoryFileImpl corpusRepository;
 	private MarkerDao markerDao;
-    private static final Logger log = Logger.getLogger(AbstractSegmentDirTest.class);
+	private String rulePath = RULES_PATH;
+
 
     @Before
     public void onSetup() {
-        learnDir = new File(DIR_LEARN_WAV);
+        learnDir = new File(getDirLearn());
         if(extractor == null){
-        	extractor = new CorpusEntryExtractorFileImpl();
+        	CorpusEntryExtractorFileImpl extractorImpl = new CorpusEntryExtractorFileImpl();
+        	extractorImpl.setRulesTurnedOn(true);
+        	extractorImpl.setRulePath(getRulePath());
+        	log.debug("CorpusEntryExtractorFileImpl created. rulePath: {0}; RulesTurnedOn: {1}", extractorImpl.getRulePath(), extractorImpl.isRulesTurnedOn());
+        	this.extractor = extractorImpl;
         }
         corpusService = new CorpusServiceBaseImpl();
         corpusRepository = new CorpusRepositoryFileImpl();
-        corpusRepository.setRepositoryPath(DIR_LEARN_OUT);
+        corpusRepository.setRepositoryPath(getDirLearn());
         corpusService.setCorpus(corpusRepository);
         extractor.setCorpusService(corpusService);
         extractor.setWindowLengthInMilSec(WINDOW_LENGTH);
@@ -181,5 +186,21 @@ public abstract class AbstractSegmentDirTest {
 
 	public void setMarkerDao(MarkerDao markerDao) {
 		this.markerDao = markerDao;
+	}
+
+	public String getDirLearn() {
+		return dirLearn;
+	}
+
+	public void setDirLearn(String dirLearn) {
+		this.dirLearn = dirLearn;
+	}
+
+	public String getRulePath() {
+		return rulePath;
+	}
+
+	public void setRulePath(String rulePath) {
+		this.rulePath = rulePath;
 	}
 }

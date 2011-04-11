@@ -1,7 +1,9 @@
 package org.spantus.work.services;
 
 import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
+import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
+import org.spantus.utils.StringUtils;
 import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceFileMvelImpl;
 import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceMvelImpl;
 
@@ -53,6 +55,28 @@ public abstract class WorkServiceFactory {
 		
 //		ClassifierPostProcessServiceBaseImpl ruleBase = new ClassifierPostProcessServiceBaseImpl();
 		return ruleBase;
+	}
+	/**
+	 * 
+	 * @param rulePath
+	 * @return
+	 */
+	public static ClassifierRuleBaseService createClassifierRuleBaseService(String rulePath) {
+		ClassifierRuleBaseServiceFileMvelImpl ruleBase = new ClassifierRuleBaseServiceFileMvelImpl();
+		ruleBase.setPath(rulePath);
+		ruleBase.setClusterService(ExtremeOnClassifierServiceFactory.createClusterService());
+		
+//		ClassifierPostProcessServiceBaseImpl ruleBase = new ClassifierPostProcessServiceBaseImpl();
+		return ruleBase;
+	}
+	
+	public static void udpateClassifierRuleBaseService(
+			ExtremeOnlineRuleClassifier classifier, String path) {
+		if(StringUtils.hasText(path)){
+			classifier.setRuleBaseService(WorkServiceFactory.createClassifierRuleBaseService(path));
+		}else{
+			classifier.setRuleBaseService(WorkServiceFactory.createClassifierRuleBaseService(path));
+		}
 	}
 
 

@@ -165,8 +165,10 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 						extractorType,
 						params.get(key),
 						thresholdEnum);
+				
 				if(threshold instanceof ExtremeOnlineRuleClassifier){
-					((ExtremeOnlineRuleClassifier)threshold).setRuleBaseService(WorkServiceFactory.createClassifierRuleBaseService());
+					WorkServiceFactory.udpateClassifierRuleBaseService(
+							(ExtremeOnlineRuleClassifier)threshold, null);
 				}
 					
 				param = ExtractorParamUtils.getSafeParam(params, key);

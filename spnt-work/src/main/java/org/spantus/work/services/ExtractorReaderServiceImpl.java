@@ -22,7 +22,9 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
@@ -34,9 +36,11 @@ import org.spantus.core.io.AudioReader;
 import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.ClassifierEnum;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
+import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
 import org.spantus.logger.Logger;
 
 /**
@@ -49,6 +53,10 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
     
     private int windowLengthInMilSec = ExtractorsFactory.DEFAULT_WINDOW_LENGHT;
     private int overlapInPerc = ExtractorsFactory.DEFAULT_WINDOW_OVERLAP;
+
+	private String rulePath;
+
+	private boolean rulesTurnedOn;
 
     public FrameVectorValues findFeatureVectorValuesForMarker(IExtractorInputReader reader,
             Marker marker, String featureName) {
@@ -120,10 +128,20 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
         IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
                 audioReader.getAudioFormat(inputUrl), getWindowLengthInMilSec(), getOverlapInPerc());
         log.debug("[createReaderWithClassifier] reader config{0}", extractorReader.getConfig() );
-        ExtractorUtils.
+        List<IClassifier> classifiers = ExtractorUtils.
                 registerThreshold(extractorReader, extractors, null, ClassifierEnum.rules);
 //                registerThreshold(extractorReader, extractors, null);
-
+		if (isRulesTurnedOn()) {
+	        log.error("registering rules repo");
+			for (IClassifier iClassifier : classifiers) {
+				if (iClassifier instanceof ExtremeOnlineRuleClassifier) {
+					WorkServiceFactory.udpateClassifierRuleBaseService(
+							(ExtremeOnlineRuleClassifier) iClassifier,
+							getRulePath());
+				}
+			}
+		}
+        
         log.debug("[createReaderWithClassifier] reader features{0}", extractorReader.getGeneralExtractor() );
 
         audioReader.readSignal(inputUrl, extractorReader);
@@ -212,5 +230,21 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
 
 	public void setOverlapInPerc(int overlapInPerc) {
 		this.overlapInPerc = overlapInPerc;
+	}
+
+	public String getRulePath() {
+		return rulePath;
+	}
+
+	public void setRulePath(String rulePath) {
+		this.rulePath = rulePath;
+	}
+
+	public boolean isRulesTurnedOn() {
+		return rulesTurnedOn;
+	}
+
+	public void setRulesTurnedOn(boolean rulesTurnedOn) {
+		this.rulesTurnedOn = rulesTurnedOn;
 	}
 }

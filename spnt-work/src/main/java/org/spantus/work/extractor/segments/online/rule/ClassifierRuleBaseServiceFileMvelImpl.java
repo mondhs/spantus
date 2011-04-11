@@ -24,6 +24,14 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 
 	public ClassifierRuleBaseServiceFileMvelImpl() {
 		super();
+	}
+	/**
+	 * 
+	 */
+	protected void lazyInit(){
+		if(getRules() != null){
+			return;
+		}
 		List<Rule> rules = new ArrayList<Rule>();
 		URL file = getClass().getClassLoader().getResource(path);
 		try {
@@ -46,6 +54,7 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 	
 	@Override
 	public String testOnRuleBase(ExtremeSegmentsOnlineCtx ctx) {
+		lazyInit();
 		String testOnRuleBase = super.testOnRuleBase(ctx);
 		if(log.isDebugMode()){
 			for (Rule rule : getRules()) {
@@ -81,6 +90,14 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 		//trim double quotes
 		str = str.replaceAll("\"\"", "\"");
 		return str;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 	

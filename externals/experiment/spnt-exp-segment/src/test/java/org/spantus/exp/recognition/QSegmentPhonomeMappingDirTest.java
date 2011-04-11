@@ -30,7 +30,6 @@ public class QSegmentPhonomeMappingDirTest extends AbstractSegmentDirTest {
 		CorpusEntryExtractorTextGridMapImpl impl = new CorpusEntryExtractorTextGridMapImpl();
 		impl.setMarkerDir(getMarkerDir());
 
-		super.onSetup();
 		ExtractorEnum[] extractors = new ExtractorEnum[] {
 				ExtractorEnum.MFCC_EXTRACTOR,
 				ExtractorEnum.PLP_EXTRACTOR,
@@ -43,7 +42,8 @@ public class QSegmentPhonomeMappingDirTest extends AbstractSegmentDirTest {
 		impl.setExtractors(extractors);
 		
 		setExtractor(impl);
-
+		
+		super.onSetup();
 	}
 
 	@Test

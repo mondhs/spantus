@@ -29,23 +29,23 @@ public class TexGridSplitSegmentAndLearnDirTest extends AbstractSegmentDirTest {
         File markerDir = new File(DIR_LEARN_WAV, "GRID/TRAIN/");
         
         int sum = 0;
-        for (File filePath : wavDir.listFiles(new WavFileNameFilter())) {
-            log.debug("reading", filePath);
-            String markersPath = FileUtils.replaceExtention(filePath, ".TextGrid");
-            File textGridFile = new File(markerDir, markersPath); 
-            if(!textGridFile.exists()){
+        for (File markerFile : markerDir.listFiles(new TextGridNameFilter())) {
+            log.debug("reading: {0}", markerFile);
+            String markersPath = FileUtils.replaceExtention(markerFile, ".wav");
+            File wavFile = new File(wavDir, markersPath); 
+            if(!wavFile.exists()){
             	continue;
             }
             MarkerSetHolder markerSetHolder = WorkServiceFactory.createMarkerDao().read(
-            		textGridFile);
+            		markerFile);
             
             MarkerSet markerSet = findSegementedMarkers(markerSetHolder);
             int count = markerSet.getMarkers().size();
 
             getExtractor().extractAndLearn(
-                    filePath.getAbsoluteFile(), markerSet, null);
+            		wavFile.getAbsoluteFile(), markerSet, null);
             
-            log.debug("accept: {0}:{1}", filePath, markerSet);
+            log.debug("accept: {0}:{1}", wavFile, markerSet);
             sum += count;
         }
 //        Assert.assertEquals(70, sum);

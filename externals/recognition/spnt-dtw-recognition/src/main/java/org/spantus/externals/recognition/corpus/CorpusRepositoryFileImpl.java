@@ -32,7 +32,7 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 
 	private XStream xstream;
 	
-        private static Logger log = Logger.getLogger(CorpusRepositoryFileImpl.class);
+	private static Logger log = Logger.getLogger(CorpusRepositoryFileImpl.class);
 
 	private File repoDir = null;
 	
@@ -43,7 +43,7 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 	public static final String DEFAULT_REPO_PATH = "./target/corpus";
 	
 	Map<Long, CorpusFileEntry> repository;
-
+	
 	public Collection<CorpusEntry> findAllEntries() {
 		return getCastedRepository();
 	}
@@ -257,6 +257,9 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
                             repository.put(entry.getId(), entry);
                         }
                     }
+                }
+                if(repository.size()>200){
+                	throw new ProcessingException("Big repositories support not implemented");
                 }
             }
             return repository;

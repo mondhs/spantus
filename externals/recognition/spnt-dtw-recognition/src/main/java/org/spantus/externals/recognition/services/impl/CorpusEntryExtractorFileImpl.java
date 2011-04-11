@@ -59,6 +59,8 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	private int windowLengthInMilSec = ExtractorsFactory.DEFAULT_WINDOW_LENGHT;
 	private int overlapInPerc = ExtractorsFactory.DEFAULT_WINDOW_OVERLAP;
 	private String segmentatorServiceType = SegmentatorServiceEnum.basic.name();
+	private String rulePath;
+	private boolean rulesTurnedOn;
 
 	/**
 	 * Find segments(markers), then put them to corpus
@@ -347,6 +349,8 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 			readerServiceImpl
 					.setWindowLengthInMilSec(getWindowLengthInMilSec());
 			readerServiceImpl.setOverlapInPerc(getOverlapInPerc());
+			readerServiceImpl.setRulesTurnedOn(isRulesTurnedOn());
+			readerServiceImpl.setRulePath(getRulePath());
 			readerService = readerServiceImpl;
 		}
 		return readerService;
@@ -414,5 +418,17 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 
 	public void setSegmentatorServiceType(String segmentatorService) {
 		this.segmentatorServiceType = segmentatorService;
+	}
+	public String getRulePath() {
+		return rulePath;
+	}
+	public void setRulePath(String rulePath) {
+		this.rulePath = rulePath;
+	}
+	public boolean isRulesTurnedOn() {
+		return rulesTurnedOn;
+	}
+	public void setRulesTurnedOn(boolean rulesTurnedOn) {
+		this.rulesTurnedOn = rulesTurnedOn;
 	}
 }
