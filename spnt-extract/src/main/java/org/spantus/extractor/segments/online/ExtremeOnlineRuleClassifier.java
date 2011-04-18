@@ -86,42 +86,48 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 	protected void processValue(Float value) {
 		Integer index = onlineCtx.getIndex();
 		Float previous = onlineCtx.getPreviousValue();
-		log.debug("[processValue] {0} value {1}->{2}",
-				index , onlineCtx.getPreviousValue(), value);
-		//starting point, previous not found
+		log.debug("[processValue] {0} value {1}->{2}", index,
+				onlineCtx.getPreviousValue(), value);
+		// starting point, previous not found
 		if (onlineCtx.getPreviousValue() == null) {
-			//first value
+			// first value
 			onlineCtx.setPreviousValue(value);
-			log.debug("[processFirstValue]first: {0} on {1}",onlineCtx.getPreviousValue(), index);
+			log.debug("[processFirstValue]first: {0} on {1}",
+					onlineCtx.getPreviousValue(), index);
 			index = onlineCtx.increase();
 			return;
 		}
-		//regualar porcessing
-			if (value >= onlineCtx.getPreviousValue() && onlineCtx.isFeatureDecrease()) {
-				log.debug("[processValue]found min");
-				ExtremeEntry entry = new ExtremeEntry(index, previous, FeatureStates.min);
-				onlineCtx.setSegmentEntry(entry);
-			}else if(value < onlineCtx.getPreviousValue() &&  onlineCtx.isFeatureIncrease()){
-				log.debug("[processValue]found max");
-				ExtremeEntry entry = new ExtremeEntry(index, previous, FeatureStates.max);
-				onlineCtx.setSegmentEntry(entry);
-				onMaxFound(index, onlineCtx.getPreviousValue(), value);
-			}else {
-				onlineCtx.setSegmentEntry(null);
+		// regualar porcessing
+		if (value >= onlineCtx.getPreviousValue()
+				&& onlineCtx.isFeatureDecrease()) {
+			log.debug("[processValue]found min");
+			ExtremeEntry entry = new ExtremeEntry(index, previous,
+					FeatureStates.min);
+			onlineCtx.setSegmentEntry(entry);
+		} else if (value < onlineCtx.getPreviousValue()
+				&& onlineCtx.isFeatureIncrease()) {
+			log.debug("[processValue]found max");
+			ExtremeEntry entry = new ExtremeEntry(index, previous,
+					FeatureStates.max);
+			onlineCtx.setSegmentEntry(entry);
+			onMaxFound(index, onlineCtx.getPreviousValue(), value);
+		} else {
+			onlineCtx.setSegmentEntry(null);
 
-			}
-			log.debug("[processValue]found prev: {0}; now: {1}", onlineCtx.prevSegmentEntry, onlineCtx.getSegmentEntry());
-		if(onlineCtx.getCurrentSegment() != null){
+		}
+		log.debug("[processValue]found prev: {0}; now: {1}",
+				onlineCtx.prevSegmentEntry, onlineCtx.getSegmentEntry());
+		if (onlineCtx.getCurrentSegment() != null) {
 			onlineCtx.getCurrentSegment().getValues().add(value);
 		}
-		
+
 		onlineCtx.setPreviousValue(value);
-		//process data. This is the place where rules engine starts control
-		///////////////////////////////////////
-		processResult(onlineCtx.getCurrentSegment());		
-		///////////////////////////////////////
-		//updated iterative data
-		 onlineCtx.increase();
+		// process data. This is the place where rules engine starts control
+		// /////////////////////////////////////
+		processResult(onlineCtx.getCurrentSegment());
+		// /////////////////////////////////////
+		// updated iterative data
+		onlineCtx.increase();
 
 	}
 	/**

@@ -97,10 +97,15 @@ public class QSegmentPhonomeRecognitionDirTest extends
 	private void saveResult(Marker marker, File wavFilePath, RecognitionResult recogniton, Long processingTime) {
 		Map<String, Float> score = recogniton.getScores();
 		String label = getExtractor().createLabel(wavFilePath, marker);
+		String recognitionName = recogniton.getInfo().getName();
+		String[] recognitionNames = recognitionName.split("-");
+		recognitionName = recognitionNames[0].replace("'", "2");
+		recognitionName = recognitionName.replace("^", "3");
+		recognitionName = recognitionName.replace(":", "1");
 		qSegmentExpDao.save(new QSegmentExp(wavFilePath.getName(),
 				marker.getLength(),
 				marker.getLabel(),
-				recogniton.getInfo().getName(), 
+				recognitionName, 
 				label, 
 				processingTime,
 				score.get(ExtractorEnum.LOUDNESS_EXTRACTOR.name()),

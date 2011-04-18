@@ -38,7 +38,8 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 						+ "manualName VARCHAR(255) NOT NULL,"
 						+ "proceessTime BIGINT," + "loudness FLOAT,"
 						+ "spectralFlux FLOAT," + "plp FLOAT," + "lpc FLOAT,"
-						+ "mfcc FLOAT," + "signalEntropy FLOAT," + ");"
+						+ "mfcc FLOAT," + "signalEntropy FLOAT," 
+						+ "timeStamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP"+ ");"
 				// + "CREATE INDEX feature_idx on QSegmentExp(TOTALRESULT)"
 				;
 				statement.executeUpdate(query);
@@ -63,18 +64,19 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 	protected String getInsertExperimentResulQuery() {
 		String insertQuery = "INSERT INTO QSegmentExp"
 				+ "(wavFilePath, length, markerLabel, corpusEntryName, manualName ,proceessTime,loudness,spectralFlux,plp, lpc, mfcc, signalEntropy) VALUES"
-				+ "(''{0}'', {4,number,#},''{1}'', ''{2}'', ''{3}'', {4,number,#}, {5,number,#.#}, {6,number,#.#}, {7,number,#.#}, {8,number,#.#}, {9,number,#.#}, {10,number,#.#});";
+				+ "(''{0}'', {1,number,#},''{2}'', ''{3}'', ''{4}'', {5,number,#}, {6,number,#.#}, {7,number,#.#}, {8,number,#.#}, {9,number,#.#}, {10,number,#.#}, {11,number,#.#}" +
+						");";
 		return insertQuery;
 	}
 
 	public QSegmentExp save(QSegmentExp exp) {
 		String query = MessageFormat.format(
 				getInsertExperimentResulQuery(),
-				exp.getWavFilePath(),
+				exp.getWavFilePath(),exp.getLength(),
 				exp.getMarkerLabel(), exp.getCorpusEntryName(),
 				exp.getManualName(), exp.getProceessTime(),
 				exp.getLoudness(), exp.getSpectralFlux(),
-				exp.getPlp(), exp.getLpc(), exp.getMfcc(), exp.getSignalEntropy());
+				exp.getPlp(), exp.getLpc(), exp.getMfcc(), exp.getSignalEntropy(), exp.getTimeStamp());
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(query);

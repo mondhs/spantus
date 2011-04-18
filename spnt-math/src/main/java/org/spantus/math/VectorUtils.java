@@ -76,6 +76,19 @@ public class VectorUtils {
         }
         return minIndex;
     }
+    
+    public static IndexValue minArg(List<Float> args) {
+    	IndexValue minIndex = new IndexValue(0, Float.MAX_VALUE);
+    	int i = 0;
+    	for (Float float1 : args) {
+			if (minIndex.getValue() > float1) {
+            	minIndex.setValue(float1);
+            	minIndex.setIndex(i);
+            }
+            i++;
+        }
+        return minIndex;
+    }
 
     public static List<Double> toDoubleList(List<Float> values) {
         List<Double> doubles = new ArrayList<Double>(values.size());

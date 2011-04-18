@@ -58,7 +58,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	private OnlineDecisionSegmentatorParam segmentionParam;
 	private int windowLengthInMilSec = ExtractorsFactory.DEFAULT_WINDOW_LENGHT;
 	private int overlapInPerc = ExtractorsFactory.DEFAULT_WINDOW_OVERLAP;
-	private String segmentatorServiceType = SegmentatorServiceEnum.basic.name();
+	private String segmentatorServiceType = SegmentatorServiceEnum.offline.name();
 	private String rulePath;
 	private boolean rulesTurnedOn;
 

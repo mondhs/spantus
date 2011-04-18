@@ -89,11 +89,15 @@ public class MarkerTextGridDao implements MarkerDao {
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			String strLine;
+			String size="";
 			// Read File Line By Line
 			while ((strLine = br.readLine()) != null) {
 				// log.debug("read "+ strLine);
-				if (strLine.matches(patternItem)) {
-					readListener.readItem(strLine);
+				if(strLine.matches("size = (\\d)\\s*")){
+					String str = regexp("size = (\\d)\\s*", strLine);
+					size =str;
+				}else if (strLine.matches(patternItem)) {
+					readListener.readItem(strLine,size);
 				} else if (strLine.matches(patternIntervals)) {
 					readListener.readIneterval(strLine);
 				} else if (strLine.matches(patternXmin)) {
@@ -130,7 +134,7 @@ public class MarkerTextGridDao implements MarkerDao {
 		MarkerSet markerSet;
 		Marker marker;
 
-		public void readItem(String index) {
+		public void readItem(String index, String size) {
 			markerSet = new MarkerSet();
 			String str = regexp(patternItem, index);
 			if ("1".equals(str)) {
@@ -138,7 +142,8 @@ public class MarkerTextGridDao implements MarkerDao {
 				markerSetHolder.getMarkerSets().put(
 						MarkerSetHolderEnum.phone.name(), markerSet);
 				marker = null;
-			} else if ("2".equals(str)) {
+//			} else if ("2".equals(str)) {
+			} else if (size.equals(str)) {
 				markerSet = new MarkerSet();
 				markerSetHolder.getMarkerSets().put(
 						MarkerSetHolderEnum.word.name(), markerSet);

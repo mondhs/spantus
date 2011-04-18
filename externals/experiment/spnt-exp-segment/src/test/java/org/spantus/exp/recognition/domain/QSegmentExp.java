@@ -1,5 +1,8 @@
 package org.spantus.exp.recognition.domain;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.spantus.core.domain.Entity;
 
 public class QSegmentExp extends Entity {
@@ -27,7 +30,10 @@ public class QSegmentExp extends Entity {
 		this.mfcc = mfcc;
 		this.signalEntropy = signalEntropy;
 		this.length = length;
+		this.timeStamp = Calendar.getInstance().getTime();
 	}
+	private Date timeStamp;
+	
 	private String wavFilePath;
 
 	private String markerLabel;
@@ -116,6 +122,12 @@ public class QSegmentExp extends Entity {
 	}
 	public void setLength(Long length) {
 		this.length = length;
+	}
+	public Date getTimeStamp() {
+		return timeStamp;
+	}
+	public void setTimeStamp(Date timeStamp) {
+		this.timeStamp = timeStamp;
 	}
 
 }

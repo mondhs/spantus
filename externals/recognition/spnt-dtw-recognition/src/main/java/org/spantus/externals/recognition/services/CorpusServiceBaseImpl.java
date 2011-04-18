@@ -253,6 +253,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
                 List<RecognitionResult> results = new ArrayList<RecognitionResult>();
                 Map<String, Float> minimum = new HashMap<String, Float> ();
                 Map<String, Float> maximum = new HashMap<String, Float> ();
+                int i = 1;
                 for (CorpusEntry corpusSample : getCorpus().findAllEntries()) {
                 	long start = System.currentTimeMillis();
                     RecognitionResult result = new RecognitionResult();
@@ -269,7 +270,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
                         updateMinMax(featureName, result1.getDistance(), minimum, maximum);
                     }
                     results.add(result);
-                    log.debug("[findBestMatch] iteration for [{0}] in {1} ms. score: {2} ", 
+                    log.debug("[findBestMatch] {0}. iteration for [{1}] in {2} ms. score: {3} ", 
+                    		i++,
                     		corpusSample.getName(),
                     		(System.currentTimeMillis()-start),
                     		result.getScores().get("MFCC_EXTRACTOR"));
