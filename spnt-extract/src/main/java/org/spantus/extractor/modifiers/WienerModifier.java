@@ -107,6 +107,9 @@ public class WienerModifier implements Serializable{
                     - noise.get(i), 0);
             float s = gamma * prevSignal.get(i) + (1 - gamma) * max;
             float eta = Math.max(s / noise.get(i), etaMin);
+            if(Float.isNaN(eta)){
+            	eta = etaMin;
+            }
             signal.set(i, (eta / (1 + eta) * input.get(i)));
             ;
         }

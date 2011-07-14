@@ -43,6 +43,31 @@ public class NumberUtils {
 	    }
 	    return min;
 	  }
+	  /**
+	   * 
+	   * @param array
+	   * @return
+	   */
+		public static Double max(Double... array) {
+//		    checkArgument(array.length > 0);
+		    Double max = array[0];
+		    for (int i = 1; i < array.length; i++) {
+		      if (array[i] > max) {
+		        max = array[i];
+		      }
+		    }
+		    return max;
+		}
+		  public static Double min(Double... array) {
+//			    checkArgument(array.length > 0);
+			  Double min = array[0];
+			    for (int i = 1; i < array.length; i++) {
+			      if (array[i] < min) {
+			        min = array[i];
+			      }
+			    }
+			    return min;
+			  }
 	  
 	  /**
 	   * 
@@ -53,4 +78,5 @@ public class NumberUtils {
 	  public static int compare(float a, float b) {
 		    return Float.compare(a, b);
 	  }
+
 }

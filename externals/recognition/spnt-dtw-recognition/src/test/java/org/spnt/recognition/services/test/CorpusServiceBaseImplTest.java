@@ -137,6 +137,28 @@ public class CorpusServiceBaseImplTest {
         Assert.assertEquals("second target length", 40f, second.getTargetLegths().get(Feature2));
 
     }
+    
+    @Test
+    public void testbestMatchesForFeatures() {
+    	//given
+        Mockito.when(corpusRepository.findAllEntries()).thenReturn(corpusEntries);
+        Mockito.when(corpusRepository.findAudioFileById(1L)).thenReturn("1.wav");
+        Mockito.when(corpusRepository.findAudioFileById(2L)).thenReturn("2.wav");
+        Mockito.when(corpusRepository.findAudioFileById(3L)).thenReturn("3.wav");
+
+        //when
+        Map<String, IValues> target = new HashMap<String, IValues>();
+        target.put(Feature1, createFrameValues(1F, 2F, 3F, 4F));
+        target.put(Feature2, createFrameValues(4F, 5F, 6F, 7F));
+        Map<String, RecognitionResult> results = corpusServiceBaseImpl.bestMatchesForFeatures(target);
+        
+      //then
+        Assert.assertEquals("All 3 entries ", 2, results.size());
+        Assert.assertEquals("All 3 entries ", TRYS, results.get(Feature1).getInfo().getName());
+        Assert.assertEquals("All 3 entries ", TRYS, results.get(Feature2).getInfo().getName());
+        
+    }
+    
 
     protected FrameVectorValues createFrameValues(Float... args) {
         FrameVectorValues vectors = new FrameVectorValues();

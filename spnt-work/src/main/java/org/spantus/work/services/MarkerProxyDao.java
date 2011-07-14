@@ -8,10 +8,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.exception.ProcessingException;
+import org.spantus.logger.Logger;
 
 public class MarkerProxyDao implements MarkerDao {
 
 	Map<String, MarkerDao> markerDaoRegister;
+	private Logger log = Logger.getLogger(MarkerProxyDao.class);
 
 	public MarkerProxyDao() {
 		markerDaoRegister = new HashMap<String, MarkerDao>();
@@ -42,6 +45,9 @@ public class MarkerProxyDao implements MarkerDao {
 		MarkerDao markerDao = resolveMarkerDao(file.getName());
 		if (markerDao != null) {
 			markerDao.write(holder, file);
+		}else{
+			log.error("dao not saved for file: " + file);
+			throw new ProcessingException("dao not saved for file: " + file);
 		}
 	}
 

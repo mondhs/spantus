@@ -18,8 +18,11 @@
 */
 package org.spantus.core.io;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+
+import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.SignalFormat;
@@ -37,6 +40,7 @@ import org.spantus.exception.ProcessingException;
 public interface SignalReader {
 	public void readSignal(List<URL> url, IExtractorInputReader reader) throws ProcessingException;
 	public void readSignal(URL url, IExtractorInputReader reader) throws ProcessingException;
+//	public void readSignal(InputStream stream, IExtractorInputReader reader) throws ProcessingException;
 	public boolean isFormatSupported(URL url);
 	public SignalFormat getFormat(URL url);
 	

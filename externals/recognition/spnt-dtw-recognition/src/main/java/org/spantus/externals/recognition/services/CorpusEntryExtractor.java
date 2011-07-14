@@ -8,6 +8,7 @@ package org.spantus.externals.recognition.services;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
@@ -49,6 +50,9 @@ public interface CorpusEntryExtractor {
      * @return
      */
 	public RecognitionResult match(Marker marker, IExtractorInputReader reader);
+	public Map<String, RecognitionResult> bestMatchesForFeatures(URL url, Marker marker,
+			IExtractorInputReader reader);
+			
 	public  MarkerSet extractAndLearn(File filePath, MarkerSet segments,
 			IExtractorInputReader reader);
 	public MarkerSetHolder extract(File wavFilePath);

@@ -9,7 +9,7 @@ import org.spantus.math.LPCResult;
 public class LPCServiceImpl implements LPCService {
 
 	public LPCResult calculateLPC(List<Float> x, int order) {
-		List<Float> autocorr = Autocorrelation.calc(x, order);
+		List<Float> autocorr = Autocorrelation.calc(x, order+1);
 		LPCResult lpc = LPC.calcForAutocorr(autocorr);
 		return lpc;
 	}

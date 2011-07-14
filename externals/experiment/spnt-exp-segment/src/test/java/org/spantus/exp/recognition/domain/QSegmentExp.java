@@ -13,10 +13,41 @@ public class QSegmentExp extends Entity {
 	private static final long serialVersionUID = 1L;
 
 	
-	public QSegmentExp(String wavFilePath, Long length, String markerLabel,
+	private Date timeStamp;
+	
+	private String wavFilePath;
+
+	private String markerLabel;
+
+	private String corpusEntryName;
+
+	private String manualName;
+
+	private Long proceessTime;
+	private Long length;
+	private Long start;
+	private Float loudness;
+	private Float spectralFlux;
+	private Float plp;
+	private Float lpc;
+	private Float mfcc;
+	private Float signalEntropy;
+	
+	private String loudnessLabel;
+	private String spectralFluxLabel;
+	private String plpLabel;
+	private String lpcLabel;
+	private String mfccLabel;
+	private String signalEntropyLabel;
+
+	public QSegmentExp(String wavFilePath, Long start, Long length, String markerLabel,
 			String corpusEntryName, String manualName, Long proceessTime,
-			Float loudness, Float spectralFlux, Float plp, Float lpc,
-			Float mfcc, Float signalEntropy) {
+			String loudnessLabel, Float loudness, 
+			String spectralFluxLabel, Float spectralFlux,
+			String plpLabel, Float plp,
+			String lpcLabel, Float lpc,
+			String mfccLabel, Float mfcc,
+			String signalEntropyLabel, Float signalEntropy) {
 		super();
 		this.wavFilePath = wavFilePath;
 		this.markerLabel = markerLabel;
@@ -30,27 +61,16 @@ public class QSegmentExp extends Entity {
 		this.mfcc = mfcc;
 		this.signalEntropy = signalEntropy;
 		this.length = length;
+		this.start = start;
 		this.timeStamp = Calendar.getInstance().getTime();
+		this.loudnessLabel=loudnessLabel;
+		this.spectralFluxLabel=spectralFluxLabel;
+		this.plpLabel=plpLabel;
+		this.lpcLabel=lpcLabel;
+		this.mfccLabel=mfccLabel;
+		this.signalEntropyLabel=signalEntropyLabel;
 	}
-	private Date timeStamp;
 	
-	private String wavFilePath;
-
-	private String markerLabel;
-
-	private String corpusEntryName;
-
-	private String manualName;
-
-	private Long proceessTime;
-	private Long length;
-	private Float loudness;
-	private Float spectralFlux;
-	private Float plp;
-	private Float lpc;
-	private Float mfcc;
-	private Float signalEntropy;
-
 	public String getWavFilePath() {
 		return wavFilePath;
 	}
@@ -128,6 +148,60 @@ public class QSegmentExp extends Entity {
 	}
 	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+	public Long getStart() {
+		return start;
+	}
+	public void setStart(Long start) {
+		this.start = start;
+	}
+
+	public String getLoudnessLabel() {
+		return loudnessLabel;
+	}
+
+	public void setLoudnessLabel(String loudnessLabel) {
+		this.loudnessLabel = loudnessLabel;
+	}
+
+	public String getSpectralFluxLabel() {
+		return spectralFluxLabel;
+	}
+
+	public void setSpectralFluxLabel(String spectralFluxLabel) {
+		this.spectralFluxLabel = spectralFluxLabel;
+	}
+
+	public String getPlpLabel() {
+		return plpLabel;
+	}
+
+	public void setPlpLabel(String plpLabel) {
+		this.plpLabel = plpLabel;
+	}
+
+	public String getLpcLabel() {
+		return lpcLabel;
+	}
+
+	public void setLpcLabel(String lpcLabel) {
+		this.lpcLabel = lpcLabel;
+	}
+
+	public String getMfccLabel() {
+		return mfccLabel;
+	}
+
+	public void setMfccLabel(String mfccLabel) {
+		this.mfccLabel = mfccLabel;
+	}
+
+	public String getSignalEntropyLabel() {
+		return signalEntropyLabel;
+	}
+
+	public void setSignalEntropyLabel(String signalEntropyLabel) {
+		this.signalEntropyLabel = signalEntropyLabel;
 	}
 
 }

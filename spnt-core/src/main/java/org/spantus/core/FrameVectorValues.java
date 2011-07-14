@@ -134,7 +134,7 @@ public class FrameVectorValues extends LinkedList<List<Float>> implements IValue
 		return (int)(f * sampleRate);
 	}
 
-        public int getDmention() {
+        public int getDimention() {
             if(size()==0){
                 return 0;
             }else{

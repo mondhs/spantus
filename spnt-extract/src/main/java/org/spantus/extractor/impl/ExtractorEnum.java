@@ -53,7 +53,8 @@ public enum ExtractorEnum {
 	SPECTRAL_ENTROPY_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Spectral Entoropy"),
 	SPECTRUM_POWER_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Spectrum Power"),
 //	HarmonicProductSpectrum(ExtractorTypeEnum.SequenceOfScalar),
-	SPECTRAL_GAIN_FACTOR(ExtractorTypeEnum.SequenceOfVector, "Spegtral Gain Factor")
+	SPECTRAL_GAIN_FACTOR(ExtractorTypeEnum.SequenceOfVector, "Spegtral Gain Factor"), 
+	LPC_ERROR_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "LPC Error Extractor"), SPECTRAL_VARIATION_FUNCTION_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "SpectralVariationFunction"),
 	;
 	
 	ExtractorEnum(ExtractorTypeEnum type, String displayName) {

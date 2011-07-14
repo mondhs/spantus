@@ -19,11 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 package org.spantus.work.services;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
@@ -37,6 +42,7 @@ import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.threshold.IClassifier;
+import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
@@ -89,7 +95,7 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
             Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
             toIndex = endIndex < toIndex?endIndex:toIndex;
             FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
-            String key = extractor.getName().replace("BUFFERED_", "");
+            String key = preprocess(extractor.getName());
             result.put(key, fvv);
         }
         for (IExtractor extractor : reader.getExtractorRegister()) {
@@ -104,12 +110,40 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
             Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
             toIndex = endIndex < toIndex?endIndex:toIndex;
             FrameValues fv = values.subList(fromIndex.intValue(), toIndex.intValue());
-            String key = extractor.getName().replace("BUFFERED_", "");
+            String key = preprocess(extractor.getName());
             result.put(key, fv);
         }
 
         return result;
     }
+    
+    /**
+     * 
+     */
+	public Map<String, IValues> findAllVectorValuesForMarker(IExtractorInputReader reader) {
+    	  Map<String, IValues> result = new HashMap<String, IValues>();
+          for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
+        	  String key = preprocess(extractor.getName());
+        	  result.put(key, extractor.getOutputValues());
+          }
+          for (IExtractor extractor : reader.getExtractorRegister()) {
+        	  if(extractor.getName().endsWith(ExtractorEnum.SIGNAL_EXTRACTOR.name())){
+          		continue;
+          	}
+        	  String key = preprocess(extractor.getName());
+        	  result.put(key, extractor.getOutputValues());
+          }
+          return result;
+    }
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	 private String preprocess(String name) {
+			return name.replace("BUFFERED_", "");
+		}
+    
     /**
      * 
      * @param extractors
@@ -170,6 +204,32 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
                 audioReader.getAudioFormat(inputUrl), getWindowLengthInMilSec(), getOverlapInPerc());
         ExtractorUtils.register(extractorReader, extractors, null);
         audioReader.readSignal(inputUrl, extractorReader);
+
+        return extractorReader;
+    }
+    
+    /**
+     * 
+     * @param extractors
+     * @param inputFile
+     * @return
+     */
+    public IExtractorInputReader createReader(ExtractorEnum[] extractors,
+            AudioInputStream ais) {
+    	
+    	AudioReader audioReader = AudioReaderFactory.createAudioReader();
+        IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
+        		ais.getFormat(), getWindowLengthInMilSec(), getOverlapInPerc());
+        ExtractorUtils.register(extractorReader, extractors, null);
+        File tmpFile;
+		try {
+			tmpFile = File.createTempFile("test", ".wav");
+			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, tmpFile);
+	        audioReader.readSignalSmoothed(tmpFile.toURI().toURL(), extractorReader);
+		} catch (IOException e) {
+			throw new ProcessingException(e);
+		}
+	
 
         return extractorReader;
     }

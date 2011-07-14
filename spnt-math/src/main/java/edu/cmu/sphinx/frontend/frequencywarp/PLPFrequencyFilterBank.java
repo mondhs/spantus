@@ -220,6 +220,14 @@ public class PLPFrequencyFilterBank  {
         return outputPLPSpectralArray;
     }
 
+	public double getMaxFreq() {
+		return maxFreq;
+	}
+
+	public void setMaxFreq(double maxFreq) {
+		this.maxFreq = maxFreq;
+	}
+
 
 //    /**
 //     * Reads the next Data object, which is the power spectrum of an audio input frame. However, it can also be other

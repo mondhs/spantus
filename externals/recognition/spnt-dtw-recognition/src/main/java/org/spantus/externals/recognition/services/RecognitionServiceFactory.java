@@ -7,6 +7,8 @@ package org.spantus.externals.recognition.services;
 
 import java.util.HashSet;
 
+import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
+
 /**
  *
  * @author mondhs
@@ -26,5 +28,5 @@ public abstract class RecognitionServiceFactory {
         }
         return corpusService;
      }
-     
+  
 }

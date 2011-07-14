@@ -1,4 +1,4 @@
-package org.spantus.core.extractors.impl.test;
+package org.spantus.extractor.impl.test;
 
 import junit.framework.Assert;
 

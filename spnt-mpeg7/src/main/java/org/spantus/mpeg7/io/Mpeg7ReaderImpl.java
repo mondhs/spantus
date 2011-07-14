@@ -342,4 +342,9 @@ public class Mpeg7ReaderImpl implements AudioReader {
 		return false;
 	}
 
+	public void readSignalSmoothed(URL url,
+			IExtractorInputReader extractorReader) {
+		throw new IllegalArgumentException("Not impl");
+	}
+
 }

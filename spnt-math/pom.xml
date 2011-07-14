@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>spnt-root-pom</artifactId>
-        <groupId>org.spantus</groupId>
-        <version>0.3-SNAPSHOT</version>
-    </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>spnt-root-pom</artifactId>
+		<groupId>org.spantus</groupId>
+		<version>0.3-SNAPSHOT</version>
+	</parent>
 
-    <artifactId>spnt-math</artifactId>
-    <name>Spantus - Common Math Module</name>
-    <version>0.3-SNAPSHOT</version>
-    <dependencies>
-        <dependency>
-            <groupId>net.sourceforge</groupId>
-            <artifactId>javaml</artifactId>
-        </dependency>
-    </dependencies>
-	
+	<artifactId>spnt-math</artifactId>
+	<name>Spantus - Common Math Module</name>
+	<version>0.3-SNAPSHOT</version>
+	<dependencies>
+		<dependency>
+			<groupId>net.sourceforge</groupId>
+			<artifactId>javaml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.mail</groupId>
+					<artifactId>mail</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.jms</groupId>
+					<artifactId>jms</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+
+			</exclusions>
+		</dependency>
+	</dependencies>
+
 </project>

@@ -22,6 +22,7 @@ package org.spantus.math;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -56,11 +57,36 @@ public class VectorUtils {
      * @return
      */
     public static Float avg(List<Float> vector) {
-        return sum(vector) / vector.size();
+    	float xbar = sum(vector) / vector.size();
+    	float correction = 0;
+    	for (Float float1 : vector) {
+    		 correction += float1 - xbar;
+		}
+    	return xbar + (correction/vector.size());
     }
 
+    public static Float std(List<Float> vector, Float avg) {
+    	Float accum = 0.0F;
+    	Float dev = 0.0F;
+    	Float accum2 = 0.0F;
+    	Float len = (float) vector.size();
+
+    	for (Float float1 : vector) {
+    		 dev = float1 - avg;
+    		 accum += dev * dev;
+    		 accum2 += dev;
+    	}
+    	Float var = (accum - (accum2 * accum2 / len)) / len;
+    	return (float) Math.sqrt(var);
+    }
+
+    
     public static Float min(List<Float> vector) {
         return Collections.min(vector);
+    }
+    
+    public static Float max(List<Float> vector) {
+        return Collections.max(vector);
     }
 
     public static Integer minArg(Float... args) {

@@ -27,6 +27,7 @@ import javax.sound.sampled.AudioFormat;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.preemphasis.Preemphasis;
 import org.spantus.core.extractor.preemphasis.PreemphasisFactory;
+import org.spantus.math.windowing.HammingWindowing;
 /**
  * 
  * @author Mindaugas Greibus
@@ -35,12 +36,15 @@ import org.spantus.core.extractor.preemphasis.PreemphasisFactory;
  *
  */
 public class WraperExtractorReader {
-	AudioFormat format;
-	IExtractorInputReader reader;
-	List<List<Byte>> shortBuffers;
-	Preemphasis preemphasisFilter;
-	Long sample;
-	Float lastValue;
+	private AudioFormat format;
+	private IExtractorInputReader reader;
+	private List<List<Byte>> shortBuffers;
+	private Preemphasis preemphasisFilter;
+	private Long sample;
+	private Float lastValue;
+	private boolean smooth = false;
+	private Integer smoothingSize = null; 
+	private HammingWindowing hammingWindowing;
 	
 	public WraperExtractorReader(IExtractorInputReader reader, int size) {
 		this.reader = reader;
@@ -67,6 +71,9 @@ public class WraperExtractorReader {
 				float f = AudioUtil.read16(shortBuffer.get(0), 
 						shortBuffer.get(1), 
 						getFormat());
+				if(smooth  == true && smoothingSize != null){
+						f *=  getHammingWindowing().calculate(smoothingSize, sample.intValue());
+				}
 				reader.put(sample++, preemphasis(f));
 				shortBuffer.clear();
 			}
@@ -107,6 +114,9 @@ public class WraperExtractorReader {
 						
 					shortBuffer.clear();
 				}
+				if(smooth  == true && smoothingSize != null){
+					sum *=  getHammingWindowing().calculate(smoothingSize, sample.intValue());
+			}
 				reader.put(sample++, preemphasis(sum));
 			}
 			break;
@@ -123,8 +133,9 @@ public class WraperExtractorReader {
 	 * @return
 	 */
 	protected Float preemphasis(Float currentValue){
-		setLastValue(currentValue);
-		return preemphasisFilter.process(currentValue);
+		Float processedValue = preemphasisFilter.process(currentValue);
+		setLastValue(processedValue);
+		return processedValue;
 	}
 
 	
@@ -153,6 +164,29 @@ public class WraperExtractorReader {
 
 	protected void setLastValue(Float lastValue) {
 		this.lastValue = lastValue;
+	}
+
+	public HammingWindowing getHammingWindowing() {
+		if(hammingWindowing == null){
+			hammingWindowing = new HammingWindowing();
+		}
+		return hammingWindowing;
+	}
+
+	public boolean isSmooth() {
+		return smooth;
+	}
+
+	public void setSmooth(boolean smooth) {
+		this.smooth = smooth;
+	}
+
+	public Integer getSmoothingSize() {
+		return smoothingSize;
+	}
+
+	public void setSmoothingSize(Integer smoothingSize) {
+		this.smoothingSize = smoothingSize;
 	}
 
 	

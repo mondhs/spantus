@@ -41,7 +41,7 @@ public class ClassifyDtwSegmentDirTest extends AbstractSegmentDirTest {
 			IValues values = entry.getFeatureMap().get(
 					ExtractorEnum.PLP_EXTRACTOR.name()).getValues();
 			FrameVectorValues vectors = (FrameVectorValues) values;
-	        TimeSeries tsSample = JavaMLSupport.toTimeSeries(vectors, vectors.getDmention());
+	        TimeSeries tsSample = JavaMLSupport.toTimeSeries(vectors, vectors.getDimention());
 
 	        VectorInstnace instance = new VectorInstnace();
 	        instance.setTimeSeries(tsSample);

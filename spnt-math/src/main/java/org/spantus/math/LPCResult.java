@@ -10,8 +10,9 @@ import java.util.List;
  *
  */
 public class LPCResult {
-	List<Float> result;
-	Float error;
+	private List<Float> result;
+	private Float error;
+	private List<Float> reflection;
 	public List<Float> getResult() {
 		return result;
 	}
@@ -23,5 +24,11 @@ public class LPCResult {
 	}
 	public void setError(Float error) {
 		this.error = error;
+	}
+	public List<Float> getReflection() {
+		return reflection;
+	}
+	public void setReflection(List<Float> reflection) {
+		this.reflection = reflection;
 	}
 }

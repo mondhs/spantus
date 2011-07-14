@@ -159,7 +159,7 @@ public class FrameValues extends LinkedList<Float> implements IValues, List<Floa
 			maxValue = Math.max(maxValue, value);
 		}
 	}
-        public int getDmention() {
+        public int getDimention() {
             return 1;
         }
 

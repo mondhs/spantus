@@ -109,7 +109,10 @@ public abstract class ExtractorUtils {
 		extractor3DMap.put(ExtractorEnum.PLP_EXTRACTOR, PLPExtractor.class);
 		extractor3DMap.put(ExtractorEnum.SPECTRAL_GAIN_FACTOR,
 				SpectralGainFactorExtractor.class);
-
+		extractorMap.put(ExtractorEnum.LPC_ERROR_EXTRACTOR,
+				LPCErrorExtractor.class);
+		extractorMap.put(ExtractorEnum.SPECTRAL_VARIATION_FUNCTION_EXTRACTOR,
+				SpectralVariationFuntionExtractor.class);
 
 	}
 

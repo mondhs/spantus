@@ -24,17 +24,18 @@ import org.spantus.math.cluster.ClusterService;
 import org.spantus.math.cluster.KNNServiceImpl;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 
 import edu.cmu.sphinx.frontend.frequencywarp.PLPCepstrumProducer;
 
 /**
  * 
  * @author Mindaugas Greibus
- *
+ * 
  * @since 0.0.1
  * 
- * Created 2008.09.28
- *  
+ *        Created 2008.09.28
+ * 
  */
 public abstract class MathServicesFactory {
 	static FFTService fftService;
@@ -42,54 +43,64 @@ public abstract class MathServicesFactory {
 	static LPCService lpcService;
 	static DtwService dtwService;
 	static ClusterService knnService;
-	
-	public static FFTService createFFTService(){
-		if(fftService == null){
-//			fftService = new FFTServiceImpl();
-            fftService = new FFTServiceSphinxImpl();
+
+	public static FFTService createFFTService() {
+		if (fftService == null) {
+			// fftService = new FFTServiceImpl();
+			fftService = new FFTServiceSphinxImpl();
 		}
 		return fftService;
 	}
-	public static MFCCService createMFCCService(){
-//		if(mfccService == null){
-////			mfccService = new MFCCKlautauServiceImpl();
-//            mfccService = new MFCCServiceSphinxImpl();
-////			return new MFCCServiceImpl();
-//		}
+
+	public static MFCCService createMFCCService() {
+		// if(mfccService == null){
+		// // mfccService = new MFCCKlautauServiceImpl();
+		// mfccService = new MFCCServiceSphinxImpl();
+		// // return new MFCCServiceImpl();
+		// }
 		return new MFCCServiceSphinxImpl();
 	}
-	public static PLPService createPLPService(){
-//		if(mfccService == null){
-////			mfccService = new MFCCKlautauServiceImpl();
-//            mfccService = new MFCCServiceSphinxImpl();
-////			return new MFCCServiceImpl();
-//		}
+
+	public static PLPService createPLPService() {
+		// if(mfccService == null){
+		// // mfccService = new MFCCKlautauServiceImpl();
+		// mfccService = new MFCCServiceSphinxImpl();
+		// // return new MFCCServiceImpl();
+		// }
 		int numbersOfFilters = 32;
-		PLPServiceSphinxImpl plpServiceSphinxImpl = new PLPServiceSphinxImpl(numbersOfFilters);
-		plpServiceSphinxImpl.setPlpCepstrumProducer(
-				new PLPCepstrumProducer(numbersOfFilters,13,14));
+		PLPServiceSphinxImpl plpServiceSphinxImpl = new PLPServiceSphinxImpl(
+				numbersOfFilters);
+		plpServiceSphinxImpl.setPlpCepstrumProducer(new PLPCepstrumProducer(
+				numbersOfFilters, 13, 14));
 		return new PLPServiceSphinxImpl();
 	}
 
-	public static DtwService createDtwService(){
-		if(dtwService == null){
-                        DtwServiceJavaMLImpl dtwServiceImpl = new DtwServiceJavaMLImpl();
+	public static DtwService createDtwService() {
+		if (dtwService == null) {
+			DtwServiceJavaMLImpl dtwServiceImpl = new DtwServiceJavaMLImpl();
 
 			dtwService = dtwServiceImpl;
-//			return new DtwServiceImpl();
+			// return new DtwServiceImpl();
 		}
 		return dtwService;
 	}
-	
-	public static LPCService createLPCService(){
-		if(lpcService == null){
+
+	public static DtwService createDtwService(Integer searchRadius, JavaMLSearchWindow javaMLSearchWindow) {
+		DtwServiceJavaMLImpl dtwServiceImpl = new DtwServiceJavaMLImpl();
+		dtwServiceImpl.setSearchRadius(searchRadius);
+		dtwServiceImpl.setSearchWindow(javaMLSearchWindow);
+		return dtwServiceImpl;
+	}
+
+	public static LPCService createLPCService() {
+		if (lpcService == null) {
 			lpcService = new LPCServiceImpl();
 		}
 		return lpcService;
 	}
-	
+
 	public static ClusterService createKnnService() {
-		if(knnService == null){
+		if (knnService == null) {
 			knnService = new KNNServiceImpl();
 		}
 		return knnService;

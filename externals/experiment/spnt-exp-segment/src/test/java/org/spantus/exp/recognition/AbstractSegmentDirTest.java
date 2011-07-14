@@ -97,7 +97,7 @@ public abstract class AbstractSegmentDirTest {
     }
 
 	protected MarkerSet findSegementedMarkers(MarkerSetHolder markerSetHolder) {
-		MarkerSet segments = getExtractor().findSegementedHighestMarkers(markerSetHolder);
+		MarkerSet segments = getExtractor().findSegementedLowestMarkers(markerSetHolder);
 
 		Collections2.filter(segments.getMarkers(), new Predicate<Marker>() {
 			public boolean apply(Marker filterMarker) {

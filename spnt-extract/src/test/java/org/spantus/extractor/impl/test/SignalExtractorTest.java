@@ -18,7 +18,7 @@
  * 675 Mass Ave, Cambridge, MA 02139, USA.
  * 
  */
-package org.spantus.core.extractors.impl.test;
+package org.spantus.extractor.impl.test;
 
 import junit.framework.Assert;
 

@@ -1,4 +1,4 @@
-package org.spantus.exp.recognition;
+package org.spantus.exp.recognition.statistics;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.exp.recognition.AbstractSegmentDirTest;
+import org.spantus.exp.recognition.AbstractSegmentDirTest.WavFileNameFilter;
 import org.spantus.logger.Logger;
 import org.spantus.utils.FileUtils;
 import org.spantus.work.services.WorkServiceFactory;

@@ -21,6 +21,8 @@ package org.spantus.core.io;
 import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
+
+import org.spantus.core.extractor.IExtractorInputReader;
 /**
  * 
  * 
@@ -39,4 +41,7 @@ public interface AudioReader extends SignalReader {
 	 * @return
 	 */
 	public AudioFileFormat getAudioFormat(URL url);
+
+	public void readSignalSmoothed(URL url,
+			IExtractorInputReader extractorReader);
 }

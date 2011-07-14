@@ -147,5 +147,20 @@ public class WorkAudioReader extends AbstractAudioReader{
 		return workReader.isFormatSupported(url);
 	}
 
+	public void readSignalSmoothed(URL url,
+			IExtractorInputReader extractorReader) {
+		List<URL> urls = new ArrayList<URL>(1);
+		urls.add(url);
+		if(extractorReader instanceof MultiFeatureExtractorInputReader){
+			MultiFeatureExtractorInputReader mf = (MultiFeatureExtractorInputReader)extractorReader;
+			mf.getMpeg7Reader().getConfig().setSampleRate(getFormat(urls.get(0)).getSampleRate());
+			mpeg7Reader.readSignal(urls, mf.getMpeg7Reader());
+			workReader.readSignalSmoothed(url, mf.getDefaultReader());
+		}else{
+			workReader.readSignalSmoothed(url, extractorReader);	
+		}
+		postProcess(extractorReader);		
+	}
+
 
 }

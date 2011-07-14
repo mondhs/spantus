@@ -12,5 +12,5 @@ import org.spantus.core.extractor.ProcessingFilter;
  *
  */
 public interface Preemphasis extends ProcessingFilter{
-	public enum PreemphasisEnum {high, middle, full};
+	public enum PreemphasisEnum {high, middle, full, highAvg};
 }

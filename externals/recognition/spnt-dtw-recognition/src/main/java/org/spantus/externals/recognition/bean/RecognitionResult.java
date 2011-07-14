@@ -2,8 +2,8 @@ package org.spantus.externals.recognition.bean;
 
 import java.util.Map;
 
-public class RecognitionResult {
 
+public class RecognitionResult {
     private CorpusEntry info;
     private Float distance;
     private Map<String, Float> scores;

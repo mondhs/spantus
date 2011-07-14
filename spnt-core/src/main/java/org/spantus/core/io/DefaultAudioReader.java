@@ -52,14 +52,25 @@ public class DefaultAudioReader extends AbstractAudioReader {
 
 	WraperExtractorReader wraperExtractorReader;
 	
-	public void readSignal(URL url, IExtractorInputReader reader) {
-		wraperExtractorReader = createWraperExtractorReader(reader, 1);
+	public void readSignal(URL url, IExtractorInputReader extractorReader) {
+		wraperExtractorReader = createWraperExtractorReader(extractorReader, 1);
 		wraperExtractorReader.setFormat(getCurrentAudioFormat(url));
 		List<URL> urls = new ArrayList<URL>(1);
 		urls.add(url);
 		readAudio(urls, wraperExtractorReader);
 	}
 
+	public void readSignalSmoothed(URL url,
+			IExtractorInputReader extractorReader){
+		wraperExtractorReader = createWraperExtractorReader(extractorReader, 1);
+		wraperExtractorReader.setFormat(getCurrentAudioFormat(url));
+		wraperExtractorReader.setSmooth(false);
+		List<URL> urls = new ArrayList<URL>(1);
+		urls.add(url);
+		readAudio(urls, wraperExtractorReader);
+		
+	}
+	
 	public void readSignal(List<URL> urls, IExtractorInputReader reader)
 			throws ProcessingException {
 		wraperExtractorReader = createWraperExtractorReader(reader, urls.size());
@@ -102,6 +113,7 @@ public class DefaultAudioReader extends AbstractAudioReader {
 		}
 		
 		Long size = Long.valueOf(audioFileFormat.getFrameLength()*audioFileFormat.getFormat().getFrameSize()); 
+		wraperExtractorReader.setSmoothingSize(audioFileFormat.getFrameLength());
 		started(size);
 		for (long index = 0; index < size; index++) {
 			List<Byte> array = new ArrayList<Byte>(diss.size());

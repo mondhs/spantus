@@ -22,6 +22,7 @@ package org.spantus.math;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -69,5 +70,38 @@ public class MatrixUtils {
 		Collections.reverse(vector);
 		return vector;
 	}
+	/**
+	 * 
+	 * @param values
+	 * @return
+	 */
+    public static StringBuilder toString(List<List<Float>> values){
+    	StringBuilder sb = new StringBuilder();
+    	for (List<Float> list : values) {
+			for (Float float1 : list) {
+				sb.append(float1).append(";");
+			}
+			sb.append("\n");
+		}
+        return sb;
+    }
+
+	public static StringBuilder toStringTranform(
+			List<LinkedList<Float>> values) {
+		StringBuilder sb = new StringBuilder();
+		int size  =values.get(0).size();
+		List<List<Float>> newList = new ArrayList<List<Float>>(size);
+		for (int i = 0; i < size; i++) {
+			newList.add(new ArrayList<Float>());
+		}
+    	for (List<Float> list : values) {
+    		int index = 0;
+			for (Float float1 : list) {
+				newList.get(index++).add(float1);
+			}
+		}
+        return toString(newList);
+	}
+
 
 }

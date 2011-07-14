@@ -22,7 +22,9 @@ public abstract class PreemphasisFactory {
 		case high:
 			return new HighPreemphasis();			
 		case middle:
-			return new MiddlePreemphasis();			
+			return new MiddlePreemphasis();	
+		case highAvg:
+				return new HighAvgPreemphasis();	
 		default:
 			return new FullPreemphasis();			
 		}

@@ -6,6 +6,9 @@ package org.spantus.work.services;
 
 import java.io.File;
 import java.util.Map;
+
+import javax.sound.sampled.AudioInputStream;
+
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
@@ -22,6 +25,8 @@ public interface ExtractorReaderService {
     public IValues findFeatureVectorValuesForMarker(IExtractorInputReader reader, Marker marker, String featureName);
 
     public Map<String, IValues> findAllVectorValuesForMarker(IExtractorInputReader reader, Marker marker);
+    
+    public Map<String, IValues> findAllVectorValuesForMarker(IExtractorInputReader reader);
 
     /**
      * Read given signal file extracts feature data
@@ -30,6 +35,8 @@ public interface ExtractorReaderService {
      * @return
      */
     public IExtractorInputReader createReader(ExtractorEnum[] extractors, File file);
+    
+    public IExtractorInputReader createReader(ExtractorEnum[] extractors, AudioInputStream ais);
     /**
      * Read given signal file extracts feature with clasifiers{@link IClassifier} data
      * @param extractors

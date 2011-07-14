@@ -122,9 +122,6 @@ public class DrawSignalMpeg7 extends JFrame {
 		reader.setConfig(config);
 		Mpeg7Factory.createAudioReader().readSignal(audioFile.toURI().toURL(),
 				reader);
-		if (reader == null) {
-			throw new RuntimeException();
-		}
 		return reader;
 	}
 	public class FrameShowedAdapter extends ComponentAdapter {

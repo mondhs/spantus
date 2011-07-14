@@ -70,19 +70,26 @@ public class HammingWindowing extends Windowing {
 	 * @return
 	 */
 	public List<Float> calculate(int size){
-		int nSamples = size;			
 		int j;
 		List<Float> result = new ArrayList<Float>();
-		for (j = 0-nSamples/2 ; j < nSamples/2; j++){
-				float d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / nSamples));
+		for (j = 0-size/2 ; j < size/2; j++){
+				float d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / size));
 				result.add(d);
-//			}	
 		}
 		if(size>result.size()){
-			float d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / nSamples));
+			float d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / size));
 			result.add(d);
 		}
 		return result;
+	}
+	
+	public Float calculate(int size, int index){
+		int j = index-(size/2);
+		float d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / size));
+		if(index==size){
+			d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * size / size));
+		}
+		return d;
 	}
 	
 }

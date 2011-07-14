@@ -1,12 +1,12 @@
-package org.spantus.extract.segments.online.test;
+package org.spantus.extractor.segments.online.test;
 
 import junit.framework.Assert;
-import org.junit.Ignore;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
-import org.spantus.core.threshold.test.ExtremeClassifierTest;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
+import org.spantus.extractor.segments.offline.test.ExtremeClassifierTest;
 import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
 import org.spantus.extractor.segments.online.cluster.ExtremeOnlineClusterService;
 import org.spantus.extractor.segments.online.cluster.ExtremeOnlineClusterServiceSimpleImpl;

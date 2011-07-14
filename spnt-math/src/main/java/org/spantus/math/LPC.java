@@ -48,35 +48,36 @@ public class LPC {
 		List<Float> backwardPredictor = MatrixUtils.zeros(order+1);
 
 		float error = autocorr.get(0);
-		reflection.set(1, -autocorr.get(1).floatValue()/autocorr.get(0).floatValue());
+		reflection.set(1, -autocorr.get(1)/autocorr.get(0));
 		lpc.set(0, new Float(1.0));//fist coef should be 1
-		lpc.set(1, reflection.get(1).floatValue());
-		error *= (1 - reflection.get(1).floatValue() * reflection.get(1).floatValue()); 
+		lpc.set(1, reflection.get(1));
+		error *= (1 - reflection.get(1) * reflection.get(1)); 
 		
 		for (int i = 2; i <= order; i++) {
 			for (int j = 1; j < i; j++) {
-				backwardPredictor.set(j, lpc.get(i - j).floatValue());
+				backwardPredictor.set(j, lpc.get(i - j));
 			}
 			reflection.set(i, 0.0f);
 			for (int j = 0; j < i; j++) {
-				reflection.set(i, reflection.get(i).floatValue() 
-						- lpc.get(j).floatValue() * autocorr.get(i - j).floatValue());
+				reflection.set(i, reflection.get(i) 
+						- lpc.get(j) * autocorr.get(i - j));
 			}
-			reflection.set(i, reflection.get(i).floatValue()/error);
+			reflection.set(i, reflection.get(i)/error);
 			for (int j = 1; j < i; j++) {
-                lpc.set(j, lpc.get(j).floatValue() 
-                		+ reflection.get(i).floatValue()  * backwardPredictor.get(j).floatValue());
+                lpc.set(j, lpc.get(j) 
+                		+ reflection.get(i)  * backwardPredictor.get(j));
             }
-			lpc.set(i, reflection.get(i).floatValue());
-			error *= (1 - reflection.get(i).floatValue() * reflection.get(i).floatValue());
+			lpc.set(i, reflection.get(i));
+			error *= (1 - reflection.get(i) * reflection.get(i));
 			if(error<=0.0){
 				throw new ArithmeticException("no power left in signal! Error is less than 0: " + error);
 			}
 		}
-//		List<Float> trimmed = lpc;//.subList(1, lpc.size()-1);
-//		List<Float> reversed = MatrixUtils.reverseVector(trimmed);
-		result.setResult(lpc);
+		List<Float> trimmed = lpc.subList(1, order+1);
+//		trimmed = MatrixUtils.reverseVector(trimmed);
+		result.setResult(trimmed);
 		result.setError(error);
+		result.setReflection(reflection.subList(1,order+1));
 		return result;
 		
 	}

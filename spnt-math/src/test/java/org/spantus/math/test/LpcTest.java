@@ -31,7 +31,7 @@ public class LpcTest extends TestCase {
 			  -0.923538f,
 	};
 	Float[] lpcData = new Float[]{
-	1.0f, -1.290723230620402f, 0.2011109322227299f, 
+	-1.290723230620402f, 0.2011109322227299f, 
 	0.12346162699398927f, 0.0757128454910762f, 0.04630056082569299f, 
 	0.028101566080985026f, 0.016708342196380798f, 0.009361624051918024f,
 	0.004282148523291314f, 2.397440795367852E-4f, 0.00937779814279676f};
@@ -57,7 +57,7 @@ public class LpcTest extends TestCase {
 	
 		List<Float> lpc = LPC.calcForAutocorr(autocorr).getResult();
 		log.log(Level.SEVERE, "lpc: " + lpc);
-		assertEquals(autocorr.size(), lpc.size());
+		assertEquals(autocorr.size()-1, lpc.size());
 		assertCollectionEqual(lpc, lpcData);
 	}
 	

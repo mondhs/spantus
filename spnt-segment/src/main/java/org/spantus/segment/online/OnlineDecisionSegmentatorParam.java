@@ -18,6 +18,8 @@
 */
 package org.spantus.segment.online;
 
+import java.text.MessageFormat;
+
 import org.spantus.segment.offline.BaseDecisionSegmentatorParam;
 /**
  * 
@@ -55,4 +57,10 @@ public class OnlineDecisionSegmentatorParam extends BaseDecisionSegmentatorParam
 	public void setExpandEnd(Long expandEnd) {
 		this.expandEnd = expandEnd;
 	}
+	
+	@Override
+	public String toString() {
+		return MessageFormat.format("{0}[minLength: {1}; minSpace: {2}; expandStart: {3}; expandEnd{4}]", OnlineDecisionSegmentatorParam.class.getSimpleName(),getMinLength(),getMinSpace(), getExpandStart(), getExpandEnd());
+	}
+
 }

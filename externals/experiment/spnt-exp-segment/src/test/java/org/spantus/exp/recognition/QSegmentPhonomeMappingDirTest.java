@@ -9,6 +9,7 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.exp.recognition.AbstractSegmentDirTest.TextGridNameFilter;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
@@ -47,23 +48,24 @@ public class QSegmentPhonomeMappingDirTest extends AbstractSegmentDirTest {
 	}
 
 	@Test
-	public void testClassify() {
+	public void testClassify() throws Exception {
 		clearCorpus();
-
+		int counter = 0;
+		int size = getMarkerDir().listFiles(new TextGridNameFilter()).length;
 		for (File filePath : getMarkerDir().listFiles(new TextGridNameFilter())) {
-
+			counter++;
+			log.error("[testClassify]Processing "+ counter + " from " + size);
 //			String markersPath = FileUtils.replaceExtention(filePath,
 //					".TextGrid");
 			// FileUtils.replaceExtention(filePath,".mspnt.xml");
 			File wavFile = new File(getWavDir(), FileUtils.replaceExtention(
 					filePath, ".wav"));
-			// if(!markersPath.contains("far1")){
-			// continue;
-			// }
+//			 if(!filePath.getName().contains("far1")){
+//			 continue;
+//			 }
 			log.debug("[testClassify]reading: {0}", filePath);
 			MarkerSetHolder markerSetHolder = getExtractor().extractAndLearn(
 					wavFile.getAbsoluteFile());
-			getMarkerDao().write(markerSetHolder, wavFile);
 
 			log.debug("accept: {0}:{1}", filePath, markerSetHolder);
 		}

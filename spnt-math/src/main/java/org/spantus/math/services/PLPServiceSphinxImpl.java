@@ -87,6 +87,7 @@ public class PLPServiceSphinxImpl implements PLPService {
 	public List<Float> calculateFromSpectrum(List<Float> fft, float sampleRate) {
 
 		int intSampleRate = (int) sampleRate;
+		getPlpFrequencyFilterBank().setMaxFreq(Math.min(sampleRate/2, 6800));
 		double[] plps = getPlpFrequencyFilterBank().process(
 				VectorUtils.toDoubleArray(fft), intSampleRate);
 		double[] lfcc = getPlpCepstrumProducer().process(plps, intSampleRate);

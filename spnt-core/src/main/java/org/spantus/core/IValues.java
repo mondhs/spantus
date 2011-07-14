@@ -15,5 +15,5 @@ public interface IValues {
     public void setSampleRate(float sampleRate);
     public float toTime(int i);
     public int toIndex(float f);
-    public int getDmention();
+    public int getDimention();
 }

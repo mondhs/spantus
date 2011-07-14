@@ -1,4 +1,4 @@
-package org.spantus.extract.segments.online.test;
+package org.spantus.extractor.segments.online.test;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;

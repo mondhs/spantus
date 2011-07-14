@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-package org.spantus.core.extractors.impl.test;
+package org.spantus.extractor.impl.test;
 
 import junit.framework.Assert;
 import org.junit.Before;

@@ -46,6 +46,8 @@ public class ExportCmd extends AbsrtactCmd {
 	
 	public ExportCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
+		//FIXME: hack cast
+		this.execFacade = (CommandExecutionFacadeImpl) executionFacade;
 	}
 	public Set<String> getExpectedActions() {
 		return createExpectedActions(GlobalCommands.file.exportFile);

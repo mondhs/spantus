@@ -18,8 +18,11 @@ import org.spantus.exp.recognition.dao.QSegmentExpDao;
 import org.spantus.exp.recognition.dao.QSegmentExpHsqlDao;
 import org.spantus.exp.recognition.domain.QSegmentExp;
 import org.spantus.externals.recognition.bean.RecognitionResult;
+import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
+import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorFileImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.utils.FileUtils;
 
 /**
@@ -43,6 +46,12 @@ public class QSegmentPhonomeRecognitionDirTest extends
 		qSegmentExpDaoImpl.setRecreate(true);
 		qSegmentExpDaoImpl.init();
 		setqSegmentExpDao(qSegmentExpDaoImpl);
+		
+		CorpusServiceBaseImpl corpusServiceBaseImpl = 
+		((CorpusServiceBaseImpl)((CorpusEntryExtractorFileImpl)getExtractor()).getCorpusService());
+		corpusServiceBaseImpl.setJavaMLSearchWindow(JavaMLSearchWindow.LinearWindow);
+		corpusServiceBaseImpl.setSearchRadius(5);
+		
 	}
 	
 	@After
@@ -52,10 +61,12 @@ public class QSegmentPhonomeRecognitionDirTest extends
 	
 
 	@Test
-	public void testClassify() {
+	public void testClassify() throws Exception {
 		int counter = 0;
+		int size = getMarkerDir().listFiles(new TextGridNameFilter()).length;
 		for (File texGridFile : getMarkerDir().listFiles(new TextGridNameFilter())) {
-
+			counter++;
+			log.error("[testClassify]Processing "+ counter + " from " + size);
 			File wavFilePath = new File(getWavDir(), FileUtils.replaceExtention(
 					texGridFile, ".wav"));
 			log.debug("[testClassify]reading: {0}", wavFilePath);
@@ -66,7 +77,7 @@ public class QSegmentPhonomeRecognitionDirTest extends
 
 			for (Marker marker : ms) {
 				Long start = System.currentTimeMillis();
-				RecognitionResult recogniton= getExtractor().match(marker, reader);
+				Map<String, RecognitionResult> recogniton= getExtractor().bestMatchesForFeatures(wavFilePath.toURI().toURL(), marker, reader);
 				
 				if(recogniton == null){
 					log.debug("[testClassify]No matches: {0} ", wavFilePath);
@@ -74,7 +85,7 @@ public class QSegmentPhonomeRecognitionDirTest extends
 				}
 				log.debug("[testClassify]matching: {0} => {1} === {2}", wavFilePath, 
 						marker.getLabel(), 
-						recogniton.getInfo().getName()
+						recogniton
 						);
 				
 				Long processingTime = System.currentTimeMillis()-start;
@@ -83,9 +94,30 @@ public class QSegmentPhonomeRecognitionDirTest extends
 			}
 			
 			log.debug("[testClassify]read markers: {0}=>{1}", wavFilePath, ms.getMarkers().size());
-			counter++;
 		}
 		log.debug("[testClassify]read files: {0}", counter);
+	}
+	/**
+	 * 
+	 * @param recognitionName
+	 * @return
+	 */
+	public String fixRecognitionName(final String recognitionName){
+		String fixedRecognitionName = recognitionName;
+		String[] recognitionNames = recognitionName.split("-");
+		if(recognitionNames.length >= 1){
+			fixedRecognitionName = recognitionNames[0].replace("'", "2");
+			fixedRecognitionName = recognitionName.replace("^", "3");
+			fixedRecognitionName = recognitionName.replace(":", "1");
+		}
+		return fixedRecognitionName;
+	}
+	
+	private String getLablel(ExtractorEnum extractorEnum, Map<String, RecognitionResult> recogniton){
+		return fixRecognitionName(recogniton.get(extractorEnum.name()).getInfo().getName());
+	}
+	private Float getScore(ExtractorEnum extractorEnum, Map<String, RecognitionResult> recogniton){
+		return recogniton.get(extractorEnum.name()).getDistance();
 	}
 	/**
 	 * 
@@ -94,26 +126,24 @@ public class QSegmentPhonomeRecognitionDirTest extends
 	 * @param recogniton
 	 * @param processingTime
 	 */
-	private void saveResult(Marker marker, File wavFilePath, RecognitionResult recogniton, Long processingTime) {
-		Map<String, Float> score = recogniton.getScores();
+	private void saveResult(Marker marker, File wavFilePath, Map<String, RecognitionResult> recogniton, Long processingTime) {
 		String label = getExtractor().createLabel(wavFilePath, marker);
-		String recognitionName = recogniton.getInfo().getName();
-		String[] recognitionNames = recognitionName.split("-");
-		recognitionName = recognitionNames[0].replace("'", "2");
-		recognitionName = recognitionName.replace("^", "3");
-		recognitionName = recognitionName.replace(":", "1");
+		
+		
 		qSegmentExpDao.save(new QSegmentExp(wavFilePath.getName(),
+				marker.getStart(),
 				marker.getLength(),
 				marker.getLabel(),
-				recognitionName, 
+				"", 
 				label, 
 				processingTime,
-				score.get(ExtractorEnum.LOUDNESS_EXTRACTOR.name()),
-				score.get(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()), 
-				score.get(ExtractorEnum.PLP_EXTRACTOR.name()),
-				score.get(ExtractorEnum.LPC_EXTRACTOR.name()),
-				score.get(ExtractorEnum.MFCC_EXTRACTOR.name()),
-				score.get(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name())));		
+				getLablel(ExtractorEnum.LOUDNESS_EXTRACTOR, recogniton),  getScore(ExtractorEnum.LOUDNESS_EXTRACTOR, recogniton), 
+				getLablel(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR, recogniton), getScore(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR, recogniton), 
+				getLablel(ExtractorEnum.PLP_EXTRACTOR, recogniton), getScore(ExtractorEnum.PLP_EXTRACTOR, recogniton), 
+				getLablel(ExtractorEnum.LPC_EXTRACTOR, recogniton), getScore(ExtractorEnum.LPC_EXTRACTOR, recogniton), 
+				getLablel(ExtractorEnum.MFCC_EXTRACTOR, recogniton), getScore(ExtractorEnum.MFCC_EXTRACTOR, recogniton), 
+				getLablel(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR, recogniton), getScore(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR, recogniton)
+				));		
 	}
 
 	public QSegmentExpDao getqSegmentExpDao() {

@@ -44,11 +44,20 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>be.ac.ulg.montefiore.run.jahmm</groupId>
 			<artifactId>jahmm</artifactId>
 			<version>0.6.2</version>
 		</dependency>
+		
+				
+	<dependency>
+    	<groupId>org.apache.commons</groupId>
+    	<artifactId>commons-math</artifactId>
+    	<version>2.2</version>
+	</dependency>
+		
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>

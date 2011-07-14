@@ -15,11 +15,13 @@ import org.spantus.work.services.converter.FrameValuesConverter;
 import org.spantus.logger.Logger;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -122,6 +124,8 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
                         getXsteam().toXML(entry, outputFile);
                         log.debug("[saveOrUpdateFile] {0} saved to {1}",
                                 entry, outputFile);
+		} catch (NoSuchElementException e) {
+            throw new ProcessingException("outputFile: " + entry.getEntryFile(), e);
 		} catch (IOException e) {
                     throw new ProcessingException(e);
 		}
@@ -152,25 +156,26 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
          * @return
          */
 	public CorpusEntry update(CorpusEntry entry, AudioInputStream ais) {
-                
-                CorpusFileEntry fileEntry = (CorpusFileEntry) entry;
-                if(entry.getId() == null){
+
+		CorpusFileEntry fileEntry = (CorpusFileEntry) entry;
+		if (entry.getId() == null) {
 			entry.setId(System.currentTimeMillis());
 		}
 
-                File wavFile = new File(getRepoDir(),entry.getName() + "-" + entry.getId() + WAV_FILE_EXT);
-                wavFile = wavFile.getAbsoluteFile();
-                try {
-                    AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
-                    log.debug("[update] saved to " + wavFile.getAbsolutePath());
-                    fileEntry.setWavFile(wavFile);
-                } catch (IOException ex) {
-                     throw new ProcessingException(ex);
-                }
-                fileEntry = saveOrUpdateFile(fileEntry);
-       
-                return fileEntry;
-        }
+		File wavFile = new File(getRepoDir(), entry.getName() + "-"
+				+ entry.getId() + WAV_FILE_EXT);
+		wavFile = wavFile.getAbsoluteFile();
+		try {
+			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
+			log.debug("[update] saved to " + wavFile.getAbsolutePath());
+			fileEntry.setWavFile(wavFile);
+		} catch (IOException ex) {
+			throw new ProcessingException(ex);
+		}
+		fileEntry = saveOrUpdateFile(fileEntry);
+
+		return fileEntry;
+	}
         
          /**
          * 
@@ -202,8 +207,10 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 		try {
 			FileReader inFile = new FileReader(entryFile);
 			entry = (CorpusFileEntry)getXsteam().fromXML(inFile);
+		}catch (ConversionException e) {
+			throw new ProcessingException("Error processing file: " + entryFile,e);
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
+			throw new ProcessingException("Erro processing file: " + entryFile, e);
 		}
 		return entry;
 		
@@ -258,7 +265,7 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
                         }
                     }
                 }
-                if(repository.size()>200){
+                if(repository.size()>3000){
                 	throw new ProcessingException("Big repositories support not implemented");
                 }
             }

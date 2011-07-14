@@ -1,4 +1,4 @@
-package org.spantus.exp.recognition;
+package org.spantus.exp.recognition.statistics;
 
 import java.text.MessageFormat;
 
