@@ -45,17 +45,17 @@ import org.spantus.math.MatrixUtils;
  */
 public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 //	List<Float> prior = null;
-	List<Float> pCoefs = null;
-	List<Float> aNoiseCoefs = null;
+	List<Double> pCoefs = null;
+	List<Double> aNoiseCoefs = null;
 	
 	
 	FrameVectorValues bufferVals = new FrameVectorValues();
 	FrameVectorValues smoothedSectrumVals = null;
 	
-	Float aACoef = 0.6F;
-	Float aPCoef = 0.1F;
-	Float betaCoef = .6F;
-	Float Kcoef = 4F;
+	Double aACoef = 0.6D;
+	Double aPCoef = 0.1D;
+	Double betaCoef = .6D;
+	Double Kcoef = 4D;
 	int bufferSmmothingDepth = 3;
 	
 	AbstractExtractorVector abstractExtractorVector;
@@ -77,27 +77,27 @@ public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameVectorValues val3d = calculateFFT(window);
 		FrameVectorValues rtnValues = new FrameVectorValues();
-		for (List<Float> currentSpectrum : val3d) {
+		for (List<Double> currentSpectrum : val3d) {
 			//calculate power spectrum averaged A(k,l)
-			List<Float> avgSpectrum = calculateAvgSpectrum(currentSpectrum);
+			List<Double> avgSpectrum = calculateAvgSpectrum(currentSpectrum);
 			if(smoothedSectrumVals == null){
 				smoothedSectrumVals = new FrameVectorValues();
 				smoothedSectrumVals.add(avgSpectrum);
 			}
 			//E(k,l) - recursive equation of first order
-			List<Float> smoothedSpectrum = calculateSmoothedAvgSpectrum(smoothedSectrumVals, avgSpectrum);
+			List<Double> smoothedSpectrum = calculateSmoothedAvgSpectrum(smoothedSectrumVals, avgSpectrum);
 			smoothedSectrumVals.add(smoothedSpectrum);
 			if(smoothedSectrumVals.size()>bufferSmmothingDepth){
 				smoothedSectrumVals.poll();	
 			}
 			//M(k,l)=min(E(k,l−i)); i=0..bufferSmmothingDepth
-			List<Float> minNoise = calculateMinimumNoiseTracker(smoothedSectrumVals);
+			List<Double> minNoise = calculateMinimumNoiseTracker(smoothedSectrumVals);
 			
 			//noise floor I(k,l)
 			List<Boolean> noiseFloor = calculateNoiseFloor(smoothedSpectrum, minNoise, currentSpectrum);
 			
 			// N(k,l) = aNoise*N(k,l−1)+(1−aNoise)*|X(k,l)|
-			List<Float> noiseEstimations = calculateNoiseEstimation(noiseFloor, currentSpectrum);
+			List<Double> noiseEstimations = calculateNoiseEstimation(noiseFloor, currentSpectrum);
 			rtnValues.add(noiseEstimations);
 			
 		}
@@ -106,18 +106,18 @@ public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 	
 	/**
 	 * 
-	 * @param current
+	 * @param currentSpectrum
 	 * @return
 	 */
-	protected List<Float> calculateAvgSpectrum(List<Float> current){
-		bufferVals.add(current);
+	protected List<Double> calculateAvgSpectrum(List<Double> currentSpectrum){
+		bufferVals.add(currentSpectrum);
 		if(bufferVals.size()>3){
 			bufferVals.poll();
 		}	
-		List<Float> avgs = MatrixUtils.zeros(current.size());
-		for (List<Float> bfVal : bufferVals) {
+		List<Double> avgs = MatrixUtils.zeros(currentSpectrum.size());
+		for (List<Double> bfVal : bufferVals) {
 			int i = 0;
-			for (Float float1 : bfVal) {
+			for (Double float1 : bfVal) {
 				avgs.set(i, avgs.get(i)+float1);
 				i++;
 			}
@@ -130,14 +130,14 @@ public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 	 * @param avgSpectrum
 	 * @return
 	 */
-	protected List<Float> calculateSmoothedAvgSpectrum(FrameVectorValues spectrums, List<Float> avgSpectrum){
+	protected List<Double> calculateSmoothedAvgSpectrum(FrameVectorValues spectrums, List<Double> avgSpectrum){
 		// prior(k,l)=b*prior(k,l-1)+(1-b)*current(k,l)
 		// copy prior data
-		Iterator<Float> priorAvgSpectrumIterator = new LinkedList<Float>(spectrums.getLast()).iterator();
-		List<Float> rtnAvgSpectrum = new LinkedList<Float>();
+		Iterator<Double> priorAvgSpectrumIterator = new LinkedList<Double>(spectrums.getLast()).iterator();
+		List<Double> rtnAvgSpectrum = new LinkedList<Double>();
 		
 		//calculate recursive equation of first order
-		for (Float avgVal : avgSpectrum) {
+		for (Double avgVal : avgSpectrum) {
 			//E(k,l) = betaCoef*E(k,l−1) + (1 − betaCoef)*A(k,l)
 			rtnAvgSpectrum.add(betaCoef * priorAvgSpectrumIterator.next() + (1 - betaCoef)
 					* avgVal);
@@ -149,18 +149,18 @@ public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 	 * @param smoothedSectrums
 	 * @return
 	 */
-	protected List<Float> calculateMinimumNoiseTracker(FrameVectorValues smoothedSectrums){
-		List<Float> rtnMinNoiseTrack = null;
+	protected List<Double> calculateMinimumNoiseTracker(FrameVectorValues smoothedSectrums){
+		List<Double> rtnMinNoiseTrack = null;
 		//init min list
 		if(rtnMinNoiseTrack == null){
-			rtnMinNoiseTrack = new ArrayList<Float>();
+			rtnMinNoiseTrack = new ArrayList<Double>();
 			for (int i = 0; i < smoothedSectrums.getFirst().size(); i++) {
-				rtnMinNoiseTrack.add(Float.MAX_VALUE);
+				rtnMinNoiseTrack.add(Double.MAX_VALUE);
 			}
 		}
-		for (List<Float> list : smoothedSectrums) {
+		for (List<Double> list : smoothedSectrums) {
 			int i = 0;
-			for (Float float1 : list) {
+			for (Double float1 : list) {
 				rtnMinNoiseTrack.set(i, 
 						Math.min(rtnMinNoiseTrack.get(i), float1));
 				i++;
@@ -173,12 +173,12 @@ public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 	 * @param binNum
 	 * @return
 	 */
-	protected List<Float> getGainValues(List<Float> currentSpectrum){
+	protected List<Float> getGainValues(List<Double> currentSpectrum){
 		aNoiseCoefs = aNoiseCoefs == null?MatrixUtils.zeros(currentSpectrum.size()):aNoiseCoefs;
 		List<Float> gains = new LinkedList<Float>();
-		Iterator<Float> aNoiseCoefsIter = new LinkedList<Float>(currentSpectrum).iterator();
-		for (Float power : currentSpectrum) {
-			Float noiseCoef = aNoiseCoefsIter.next();
+		Iterator<Double> aNoiseCoefsIter = new LinkedList<Double>(currentSpectrum).iterator();
+		for (Double power : currentSpectrum) {
+			Double noiseCoef = aNoiseCoefsIter.next();
 			Double gain = 1 - Math.sqrt(noiseCoef/power);
 			gains.add(gain.floatValue());
 		}
@@ -190,17 +190,17 @@ public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 	 * @param smoothedSpectrum
 	 * @return
 	 */
-	protected List<Boolean> calculateNoiseFloor(List<Float> smoothedSpectrum, List<Float> minNoise,
-			List<Float> currentSpectrum){
+	protected List<Boolean> calculateNoiseFloor(List<Double> smoothedSpectrum, List<Double> minNoise,
+			List<Double> currentSpectrum){
 		List<Boolean> rtnNoiseFloor = new LinkedList<Boolean>();
-		Iterator<Float> smoothedIter = smoothedSpectrum.iterator();
+		Iterator<Double> smoothedIter = smoothedSpectrum.iterator();
 		Iterator<Float> gainIter = getGainValues(currentSpectrum).iterator();
-		for (Float noise1 : minNoise) {
+		for (Double noise1 : minNoise) {
 			Float gain = gainIter.next();
 			//[1+K*e^(-G(k,l-1) )]*M(k,l)
 			Double threshold = 1 + Kcoef * Math.exp(-gain);
 			threshold *= noise1; 
-			Float smoothedVal = smoothedIter.next();
+			Double smoothedVal = smoothedIter.next();
 			rtnNoiseFloor.add(smoothedVal>threshold);
 		}
 		return rtnNoiseFloor;
@@ -211,21 +211,21 @@ public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 	 * @param minNoise
 	 * @return
 	 */
-	protected List<Float> calculateNoiseEstimation(List<Boolean> noiseFloor, List<Float>currentSpectrum){
+	protected List<Double> calculateNoiseEstimation(List<Boolean> noiseFloor, List<Double> currentSpectrum){
 		
 //		List<Float> rtnNoiseEstimation = new LinkedList<Float>();
 		pCoefs = pCoefs == null?MatrixUtils.zeros(noiseFloor.size()):pCoefs;
 		aNoiseCoefs = aNoiseCoefs == null?MatrixUtils.zeros(noiseFloor.size()):aNoiseCoefs;
 		
-		Iterator<Float> pCoefIter = new LinkedList<Float>(pCoefs).iterator();
-		Iterator<Float> aNoiseCoefsIter = new LinkedList<Float>(aNoiseCoefs).iterator();
-		Iterator<Float> currentSpectrumIter = new LinkedList<Float>(currentSpectrum).iterator();
+		Iterator<Double> pCoefIter = new LinkedList<Double>(pCoefs).iterator();
+		Iterator<Double> aNoiseCoefsIter = new LinkedList<Double>(aNoiseCoefs).iterator();
+		Iterator<Double> currentSpectrumIter = new LinkedList<Double>(currentSpectrum).iterator();
 		
 		pCoefs.clear();
 		aNoiseCoefs.clear();
 		for (Boolean isSpeech : noiseFloor) {
-			Float pParam = pCoefIter.next();
-			Float aNoiseParam = 1F;
+			Double pParam = pCoefIter.next();
+			Double aNoiseParam = 1D;
 			if(isSpeech){
 //				p(k,l) = aPCoef + (1 − aPCoef ) * p(k,l−1)
 //				aNoiseParam(k,l) = 1
@@ -238,7 +238,7 @@ public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 			}
 			pCoefs.add(pParam);
 			//N(k,l) = aNoiseParam * N(k,l−1) + (1−aNoiseParam)*|X(k,l)|
-			Float noiseEstimation = aNoiseParam * aNoiseCoefsIter.next() 
+			Double noiseEstimation = aNoiseParam * aNoiseCoefsIter.next() 
 				+ (1-aNoiseParam)*currentSpectrumIter.next();
 			aNoiseCoefs.add(noiseEstimation);
 		}

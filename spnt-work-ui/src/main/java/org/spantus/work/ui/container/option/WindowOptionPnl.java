@@ -512,7 +512,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				break;
 			case recordSampleRate:
 				Number recordSampleRate = (Number)(field.getValue());
-				workConfig.setRecordSampleRate(recordSampleRate.floatValue());
+				workConfig.setRecordSampleRate(recordSampleRate.doubleValue());
 				break;
 			case audioPathOutput:
 				File dirExist = new File(workConfig.getAudioPathOutput());

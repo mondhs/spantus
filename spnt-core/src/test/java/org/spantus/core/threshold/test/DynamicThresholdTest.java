@@ -8,8 +8,8 @@ import org.spantus.core.extractor.ExtractorOutputHolder;
 import org.spantus.core.threshold.DynamicThreshold;
 
 public class DynamicThresholdTest extends TestCase {
-	private Float extractorSampleRate = 10F;
-	private static final Float thresholdCoef = 0.1F;
+	private Double extractorSampleRate = 10D;
+	private static final Double thresholdCoef = 0.1D;
 	private Double[][] valss = new Double[][]{
 			new Double[]{1.0, 1.0, 2.0},
 			new Double[]{3.0, 4.0, 4.0},
@@ -26,12 +26,14 @@ public class DynamicThresholdTest extends TestCase {
 	public void testPositiveValuesTest(){
 		
 		DynamicThreshold threshold = createDynamicThreshold(valss);
-		assertEquals("Current Threshold Value", 1.65F, threshold.getCurrentThresholdValue());
+		assertEquals("Current Threshold Value", 1.65, TestUtil.round(threshold.getCurrentThresholdValue(), 2));
 		assertEquals("threshol collection size", 9, threshold.getThresholdValues().size());
 		//values should be higher than #thresholdCoef value
-		assertEquals("Threshold Value from 1 frame", 1.1F,threshold.getThresholdValues().get(1));
-		assertEquals("Threshold Value from 2 frame", 2.2F,threshold.getThresholdValues().get(4));
-		assertEquals("Threshold Value from 3 frame", 1.65F,threshold.getThresholdValues().get(7));
+		assertEquals("Threshold Value from 1 frame", 1.1D,
+				TestUtil.round(threshold.getThresholdValues().get(1),2));
+		assertEquals("Threshold Value from 2 frame", 2.2,
+				TestUtil.round(threshold.getThresholdValues().get(4),2));
+		assertEquals("Threshold Value from 3 frame", 1.65,TestUtil.round(threshold.getThresholdValues().get(7),2));
 		assertEquals(1, threshold.getMarkSet().getMarkers().size());
 	}
 	/**
@@ -40,11 +42,14 @@ public class DynamicThresholdTest extends TestCase {
 	public void testNegativesValuesTest(){
 		DynamicThreshold threshold = createDynamicThreshold(nvalss);
 		//values should be higher then #thresholdCoef value
-		assertEquals(-2.25F, threshold.getCurrentThresholdValue());
+		assertEquals(-2.25, TestUtil.round(threshold.getCurrentThresholdValue(),2));
 		assertEquals("threshol collection size", 9, threshold.getThresholdValues().size());
-		assertEquals("Threshold Value from 1 frame", -4.5F,threshold.getThresholdValues().get(1));
-		assertEquals("Threshold Value from 2 frame", -1.35F,threshold.getThresholdValues().get(4));
-		assertEquals("Threshold Value from 3 frame", -2.25F,threshold.getThresholdValues().get(7));
+		assertEquals("Threshold Value from 1 frame", -4.5,
+				TestUtil.round(threshold.getThresholdValues().get(1),2));
+		assertEquals("Threshold Value from 2 frame", -1.35,
+				TestUtil.round(threshold.getThresholdValues().get(4),2));
+		assertEquals("Threshold Value from 3 frame", -2.25,
+				TestUtil.round(threshold.getThresholdValues().get(7),2));
 		assertEquals(1, threshold.getMarkSet().getMarkers().size());
 	}
 	
@@ -66,9 +71,9 @@ public class DynamicThresholdTest extends TestCase {
 	
 	protected FrameValues  getFrameValues(Double[] vals){
 		FrameValues fv = new FrameValues();
-		fv.setSampleRate(100);
+		fv.setSampleRate(100D);
 		for (Double float1 : vals){
-			fv.add(float1.floatValue());
+			fv.add(float1);
 		}
 		return fv;
 	}

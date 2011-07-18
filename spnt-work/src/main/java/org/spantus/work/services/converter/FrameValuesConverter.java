@@ -27,7 +27,7 @@ public class FrameValuesConverter implements Converter{
 		StringBuffer sb = new StringBuffer();
 		int size = 15;
 		int i = size;
-		for (Float float1 : vals) {
+		for (Double float1 : vals) {
 			sb.append(float1);
 			String separator = " ";
 			if(i<=0){
@@ -51,10 +51,10 @@ public class FrameValuesConverter implements Converter{
 		String values = reader.getValue();
 		String[] strs = values.split("[\\s]+");
 		FrameValues frameValues = new FrameValues();
-		frameValues.setSampleRate(Float.valueOf(sampleRate));
+		frameValues.setSampleRate(Double.valueOf(sampleRate));
 		for (String float1Str : strs) {
 			if("".equals(float1Str)) continue;
-			frameValues.add(Float.valueOf(float1Str));
+			frameValues.add(Double.valueOf(float1Str));
 		}
 		Assert.isTrue(frameValues.size() == Integer.valueOf(totalNumOfSamples));
 		reader.moveUp();

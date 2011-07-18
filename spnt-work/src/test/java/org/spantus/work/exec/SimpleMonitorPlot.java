@@ -57,11 +57,11 @@ public class SimpleMonitorPlot extends JFrame {
 
 	public static void main(String[] args) {
 		FrameValues vals = new FrameValues();
-		vals.add(1f);
-		vals.add(-1f);
+		vals.add(1D);
+		vals.add(-1D);
 		for (int i = 0; i < 1000; i++) {
 //			vals.add(new Float(Math.sin(i * .3 * Math.random())));
-			vals.add(0f);
+			vals.add(0D);
 		}
 		
 		JFrame demo = new SimpleMonitorPlot(vals);
@@ -108,22 +108,22 @@ public class SimpleMonitorPlot extends JFrame {
 						* format.getFrameSize();
 				byte buffer[] = new byte[bufferSize];
 				boolean running = true;
-				Float min=Float.MAX_VALUE, max = Float.MIN_VALUE;
+				Double min=Double.MAX_VALUE, max = -Double.MAX_VALUE;
 				while (running) {
 					FrameValues vals = new FrameValues();
-					float avg = 0;
+					Double avg = 0D;
 					int count = line.read(buffer, 0, buffer.length);
 					if (count > 0) {
 						int i = 0;
 						for (byte b : buffer) {
-							float f = Byte.valueOf(b).floatValue() /amplitude;
+							Double f = Byte.valueOf(b).doubleValue() /amplitude;
 							avg += f;
 							if(i == count/1000){
-								Float f1 = avg/i; 
+								Double f1 = avg/i; 
 								min = Math.min(min, f1);
 								max = Math.max(max, f1);
 								vals.add(f1);
-								i = 0; avg = 0;
+								i = 0; avg = 0D;
 							}
 							i++;
 						}

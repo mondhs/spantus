@@ -34,13 +34,13 @@ import java.util.List;
 public class HanningWindowing extends Windowing {
 
 	
-	public void apply(List<Float> values) {
+	public void apply(List<Double> values) {
 		int nSamples = values.size();
 		int i, j;
 		for (j = 0 - nSamples / 2; j < nSamples / 2; j++) {
 			i = j + nSamples / 2;
 			values.set(i, values.get(i)
-					* (0.5f + 0.5f * (float) Math.cos(2.0f * (float) Math.PI
+					* (0.5 + 0.5 *  Math.cos(2.0 * Math.PI
 							* j / nSamples)));
 		}
 

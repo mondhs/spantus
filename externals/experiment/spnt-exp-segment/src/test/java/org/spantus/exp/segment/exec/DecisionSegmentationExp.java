@@ -138,14 +138,14 @@ public class DecisionSegmentationExp extends AbstractGraphGenerator {
 	protected FrameValues getVals(FrameValues vals) {
 		FrameValues newVals = new FrameValues();
 		newVals.setSampleRate(vals.getSampleRate());
-		Float min = Float.MAX_VALUE, max = -Float.MAX_VALUE;
-		for (Float float1 : vals) {
+		Double min = Double.MAX_VALUE, max = -Double.MAX_VALUE;
+		for (Double float1 : vals) {
 			min = Math.min(min, float1);
 			max = Math.max(max, float1);
 		}
-		Float delta = max - min;
+		Double delta = max - min;
 
-		for (Float float1 : vals) {
+		for (Double float1 : vals) {
 			newVals.add((float1 - min) / delta);
 		}
 		// for (float i = 0f; i < vals.size(); i+=1) {
@@ -159,12 +159,12 @@ public class DecisionSegmentationExp extends AbstractGraphGenerator {
 	XYSeries signalSeries;
 
 	protected XYSeries getSignal(FrameValues values) {
-		float i = 0f;
+		Double i = 0D;
 		if (signalSeries == null) {
 			signalSeries = new XYSeries("Signal");
-			for (Float f1 : values) {
+			for (Double f1 : values) {
 				signalSeries.setDescription("Signal");
-				signalSeries.add(Float.valueOf(i / 4300), f1);
+				signalSeries.add(Double.valueOf(i / 4300), f1);
 				i++;
 			}
 		}
@@ -183,11 +183,7 @@ public class DecisionSegmentationExp extends AbstractGraphGenerator {
 		
 
 		int i = 0;
-		// series[0].setDescription("Signal");
-		// for (Float f1 : result.getSequenceResult()) {
-		// series[0].add(Float.valueOf(i/4200), f1);
-		// i++;
-		// }
+
 		
 		series = new XYSeries("Signal");
 		if(result.getSignal() != null){
@@ -197,28 +193,28 @@ public class DecisionSegmentationExp extends AbstractGraphGenerator {
 
 		i = 0;
 		series = newSeries("Initial", collections[1]);
-		for (Float f1 : result.getOriginal()) {
-			series.add(Float.valueOf(i / 105), f1);
+		for (Double f1 : result.getOriginal()) {
+			series.add(Double.valueOf(i / 105), f1);
 			i++;
 		}
 		i = 0;
 		series = newSeries("Processed", collections[2]);
-		for (Float f1 : result.getTest()) {
-			series.add(Float.valueOf(i / 105), f1);
+		for (Double f1 : result.getTest()) {
+			series.add(Double.valueOf(i / 105), f1);
 			i++;
 		}
 
 		i = 0;
 		series = newSeries("Feture", collections[3]);
-		for (Float f1 : result.getThreshold().getOutputValues()) {
-			series.add(Float.valueOf(i / 105), f1);
+		for (Double f1 : result.getThreshold().getOutputValues()) {
+			series.add(Double.valueOf(i / 105), f1);
 			i++;
 		}
 		
 		i = 0;
 		series = newSeries("Threshold", collections[3]);
-		for (Float f1 : result.getThreshold().getThresholdValues()) {
-			series.add(Float.valueOf(i / 105), f1);
+		for (Double f1 : result.getThreshold().getThresholdValues()) {
+			series.add(Double.valueOf(i / 105), f1);
 			i++;
 		}
 		

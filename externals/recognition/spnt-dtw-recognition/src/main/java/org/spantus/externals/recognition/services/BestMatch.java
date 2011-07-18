@@ -38,11 +38,11 @@ public class BestMatch {
 		"./sviesa_isjunk_viskas/";
 
 	public void findBestMatch(File targetFile){
-		Map<Float, String> result = new TreeMap<Float, String>();
-		Float minDistance = Float.MAX_VALUE;
+		Map<Double, String> result = new TreeMap<Double, String>();
+		Double minDistance = Double.MAX_VALUE;
 		String minDisntanceName = "";
 		for (File sampleFile : getSampleRepo()) {
-			Float distance = getCompareFeatures().compareValues(sampleFile, targetFile);
+			Double distance = getCompareFeatures().compareValues(sampleFile, targetFile);
 			result.put(distance, sampleFile.getName());
 			if(Math.min(minDistance, distance) == distance && distance != 0){
 				minDistance = distance;
@@ -53,11 +53,11 @@ public class BestMatch {
 	}
 	
 	public String findBestMatch(FrameVectorValues targetValues){
-		Map<Float, String> result = new TreeMap<Float, String>();
-		Float minDistance = Float.MAX_VALUE;
+		Map<Double, String> result = new TreeMap<Double, String>();
+		Double minDistance = Double.MAX_VALUE;
 		String minDisntanceName = "";
 		for (File sampleFile : getSampleRepo()) {
-			Float distance = getCompareFeatures().compareValues(targetValues, sampleFile);
+			Double distance = getCompareFeatures().compareValues(targetValues, sampleFile);
 			result.put(distance, sampleFile.getName());
 			if(Math.min(minDistance, distance) == distance && distance != 0){
 				minDistance = distance;

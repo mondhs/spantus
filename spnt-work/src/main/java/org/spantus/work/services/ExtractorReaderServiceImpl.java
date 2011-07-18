@@ -72,8 +72,8 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
                 continue;
             }
             FrameVectorValues values = extractor.getOutputValues();
-            Float fromIndex = (marker.getStart().floatValue() * values.getSampleRate()) / 1000;
-            Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
+            Double fromIndex = (marker.getStart().doubleValue() * values.getSampleRate()) / 1000;
+            Double toIndex = fromIndex + (marker.getLength().doubleValue() * values.getSampleRate()) / 1000;
             FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
             return fvv;
         }
@@ -90,9 +90,9 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
 //            if(values.get(0).size()<=2){
 //                continue;
 //            }
-            Float fromIndex = (marker.getStart().floatValue() * values.getSampleRate()) / 1000;
+            Double fromIndex = (marker.getStart().doubleValue() * values.getSampleRate()) / 1000;
             fromIndex = fromIndex < 0 ? 0 : fromIndex;
-            Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
+            Double toIndex = fromIndex + (marker.getLength().doubleValue() * values.getSampleRate()) / 1000;
             toIndex = endIndex < toIndex?endIndex:toIndex;
             FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
             String key = preprocess(extractor.getName());
@@ -105,9 +105,9 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
             //extractors can have prefixes, just check if ends with
             FrameValues values = extractor.getOutputValues();
             int endIndex = values.size()-1;
-            Float fromIndex = (marker.getStart().floatValue() * values.getSampleRate()) / 1000;
+            Double fromIndex = (marker.getStart().doubleValue() * values.getSampleRate()) / 1000;
             fromIndex = fromIndex < 0 ? 0 : fromIndex;
-            Float toIndex = fromIndex + (marker.getLength().floatValue() * values.getSampleRate()) / 1000;
+            Double toIndex = fromIndex + (marker.getLength().doubleValue() * values.getSampleRate()) / 1000;
             toIndex = endIndex < toIndex?endIndex:toIndex;
             FrameValues fv = values.subList(fromIndex.intValue(), toIndex.intValue());
             String key = preprocess(extractor.getName());

@@ -75,8 +75,8 @@ public class NumberUtils {
 	   * @param b
 	   * @return
 	   */
-	  public static int compare(float a, float b) {
-		    return Float.compare(a, b);
+	  public static int compare(Double a, Double b) {
+		    return Double.compare(a, b);
 	  }
 
 }

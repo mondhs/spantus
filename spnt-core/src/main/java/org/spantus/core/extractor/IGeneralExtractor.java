@@ -39,7 +39,7 @@ public interface IGeneralExtractor {
 	
 	public void flush();
 	
-	public float getExtractorSampleRate();
+	public Double getExtractorSampleRate();
 	
 	public IExtractorConfig getConfig();
 	

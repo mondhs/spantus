@@ -38,7 +38,7 @@ public abstract class AbstractSegmentatorTest extends TestCase {
 		MockClassifier classifier = new MockClassifier();
 //		FrameValues states = new FrameValues(statesF);
 //		states.setSampleRate(100f);
-		classifier.setExtractorSampleRate(20f);
+		classifier.setExtractorSampleRate(20D);
 		classifier.setMarkSet(createMarkerSet(markers));
 		return classifier;
 	}

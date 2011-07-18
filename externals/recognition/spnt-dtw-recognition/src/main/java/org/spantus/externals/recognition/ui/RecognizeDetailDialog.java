@@ -252,7 +252,7 @@ public class RecognizeDetailDialog extends JDialog {
             int rowsSize = 1;
             if (recognitionResult.getInfo().getId().equals(selctedSampleId)) {
                 rowsSize = recognitionResult.getScores().size() + 1;
-                for (Entry<String, Float> scoreEntry : recognitionResult.getScores().entrySet()) {
+                for (Entry<String, Double> scoreEntry : recognitionResult.getScores().entrySet()) {
                     subTable.append("<tr>");
                     subTable.append("<td>").
                             append(html("<a href=\"show={0}\">",  scoreEntry.getKey())).

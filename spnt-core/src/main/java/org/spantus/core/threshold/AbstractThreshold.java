@@ -6,32 +6,32 @@ import org.spantus.utils.Assert;
 
 public abstract class AbstractThreshold extends AbstractClassifier{
 	private FrameValues thereshold;
-	private Float coef =null;
+	private Double coef =null;
 	/**
 	 * 
-	 * @param windowValue
+	 * @param double1
 	 * @return
 	 */
-	public abstract Float calculateThreshold(Float windowValue);
+	public abstract Double calculateThreshold(Double double1);
 	
-	public abstract boolean isSignalState(Float windowValue);
+	public abstract boolean isSignalState(Double double1);
 
 	
 	/**
 	 * 
 	 */
-	protected void processDiscriminator(Long sample, Float float1){
-		Float threshold = calculateThreshold(float1);
+	protected void processDiscriminator(Long sample, Double double1){
+		Double threshold = calculateThreshold(double1);
 		if(threshold != null){
 			getThresholdValues().add(threshold);
-			calculateState(getClassifierSampleNum(), float1);
+			calculateState(getClassifierSampleNum(), double1);
 		}
 		setClassifierSampleNum(getClassifierSampleNum() + 1);
 	}
 
 	public void afterCalculated(Long sample, FrameValues result) {
 		getThresholdValues().setSampleRate(getExtractorSampleRate());
-		for (Float float1 : result) {
+		for (Double float1 : result) {
 			processDiscriminator(sample, float1);
 		}
 		cleanup();
@@ -51,13 +51,13 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 	/**
 	 * calculate State at the sample moment with given value
 	 * 
-	 * @param windowValue
+	 * @param double1
 	 * @param threshold
 	 * @return
 	 */
-	protected void calculateState(Long sample, Float windowValue){
+	protected void calculateState(Long sample, Double double1){
 		Long time = getThresholdValues().indextoMils(sample.intValue());
-		if(isSignalState(windowValue)){
+		if(isSignalState(double1)){
 			//segment
 			if(getMarker()==null){
 				setMarker(new Marker());
@@ -92,11 +92,11 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 	
 	/**
 	 * Apply coef for given value
-	 * @param value
+	 * @param baseThresholdValue
 	 * @return
 	 */
-	public Float applyCoef(Float value){
-		return 	value + Math.abs(value* getCoef());
+	public Double applyCoef(Double baseThresholdValue){
+		return 	baseThresholdValue + Math.abs(baseThresholdValue* getCoef());
 
 	}
 
@@ -109,14 +109,14 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 		return thereshold;
 	}
 
-	public Float getCoef() {
+	public Double getCoef() {
 		if(coef == null){
-			coef = 0.1F;//*10%
+			coef = 0.1D;//*10%
 		}
 		return coef;
 	}
 
-	public void setCoef(Float coef) {
+	public void setCoef(Double coef) {
 		this.coef = coef;
 	}
 

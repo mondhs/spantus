@@ -40,11 +40,11 @@ public abstract class Histogram {
 	 * @param list
 	 * @return
 	 */
-	public static List<List<Float>> calculateHistogram(List<Float> list){
+	public static List<List<Double>> calculateHistogram(List<Double> list){
 		//Sturges' formula, numbers of bin
 		int numberOfBins = log2(list.size())+1;
 		
-		Map<histogramEnum, Float> map = getMinAndMax(list);
+		Map<histogramEnum, Double> map = getMinAndMax(list);
 		
 		return calculateHistogram(list, 
 				map.get(histogramEnum.min), 
@@ -57,13 +57,13 @@ public abstract class Histogram {
 	 * @param list
 	 * @return
 	 */
-	public static Map<histogramEnum, Float> getMinAndMax(List<Float> list){
-		Map<histogramEnum, Float> map = new HashMap<histogramEnum, Float>(2);
+	public static Map<histogramEnum, Double> getMinAndMax(List<Double> list){
+		Map<histogramEnum, Double> map = new HashMap<histogramEnum, Double>(2);
 		
-		Float min = Float.MAX_VALUE;
-		Float max = -Float.MAX_VALUE;
+		Double min = Double.MAX_VALUE;
+		Double max = -Double.MAX_VALUE;
 		
-		for (Float float1 : list) {
+		for (Double float1 : list) {
 			min = Math.min(min, float1);
 			max = Math.max(max, float1);
 		}
@@ -76,8 +76,8 @@ public abstract class Histogram {
 	 * @param list
 	 * @return
 	 */
-	public static Map<histogramEnum, Float> getMinAndMax(List<Float> list, Map<histogramEnum, Float> map){
-		Map<histogramEnum, Float> curr = getMinAndMax(list);
+	public static Map<histogramEnum, Double> getMinAndMax(List<Double> list, Map<histogramEnum, Double> map){
+		Map<histogramEnum, Double> curr = getMinAndMax(list);
 		curr.put(histogramEnum.max, Math.max(map.get(histogramEnum.max), curr.get(histogramEnum.max)));
 		curr.put(histogramEnum.min, Math.min(map.get(histogramEnum.min), curr.get(histogramEnum.min)));
 		return curr;
@@ -89,7 +89,7 @@ public abstract class Histogram {
 	 * @param numberOfBins
 	 * @return
 	 */
-	public static List<List<Float>> calculateHistogram(List<Float> list, Map<histogramEnum, Float> map, int numberOfBins){
+	public static List<List<Double>> calculateHistogram(List<Double> list, Map<histogramEnum, Double> map, int numberOfBins){
 		return calculateHistogram(list, 
 				map.get(histogramEnum.min), 
 				map.get(histogramEnum.max),
@@ -104,15 +104,15 @@ public abstract class Histogram {
 	 * @param numberOfBins
 	 * @return
 	 */
-	public static List<List<Float>> calculateHistogram(List<Float> list, Float min, Float max, int numberOfBins){
-		Float step = (max-min)/numberOfBins;
-		List<List<Float>> histogram = new ArrayList<List<Float>>(numberOfBins+3);
+	public static List<List<Double>> calculateHistogram(List<Double> list, Double min, Double max, int numberOfBins){
+		Double step = (max-min)/numberOfBins;
+		List<List<Double>> histogram = new ArrayList<List<Double>>(numberOfBins+3);
 		for (int i = 0; i < numberOfBins+3; i++) {
-			histogram.add(new LinkedList<Float>());
+			histogram.add(new LinkedList<Double>());
 		}
 		
-		for (Float float1 : list) {
-			Float indexFloat  = (float1-min)/step;
+		for (Double float1 : list) {
+			Double indexFloat  = (float1-min)/step;
 			int index = indexFloat.intValue();
 			safeAdd(histogram, index, float1);
 		}
@@ -123,10 +123,10 @@ public abstract class Histogram {
 	 * @param histogram
 	 * @return
 	 */
-	public static Float calculateAvgForFirstBin(List<List<Float>> histogram){
-		int histogramBin = new Float(histogram.size()*.05f).intValue();
-		Float avg = null;
-		for (Float float1 : histogram.get(histogramBin)) {
+	public static Double calculateAvgForFirstBin(List<List<Double>> histogram){
+		int histogramBin = new Double(histogram.size()*.05f).intValue();
+		Double avg = null;
+		for (Double float1 : histogram.get(histogramBin)) {
 			avg = average(avg, float1);
 		}
 		return avg;
@@ -136,9 +136,9 @@ public abstract class Histogram {
 	 * @param histogram
 	 * @return
 	 */
-	public static Float calculateAvg(List<Float> list){
-		Float avg = null;
-		for (Float float1 : list) {
+	public static Double calculateAvg(LinkedList<Double> linkedList){
+		Double avg = null;
+		for (Double float1 : linkedList) {
 			avg = average(avg, float1);
 		}
 		return avg;
@@ -146,13 +146,13 @@ public abstract class Histogram {
 	/**
 	 * 
 	 * @param avg
-	 * @param f1
+	 * @param float1
 	 * @return
 	 */
-	public static Float average(Float avg, Float f1){
-		Float rtnAvg = avg;
-		if(rtnAvg == null){ rtnAvg = f1;}
-		rtnAvg = (rtnAvg+f1)/2;
+	public static Double average(Double avg, Double float1){
+		Double rtnAvg = avg;
+		if(rtnAvg == null){ rtnAvg = float1;}
+		rtnAvg = (rtnAvg+float1)/2;
 		return rtnAvg;
 	}
 	/**
@@ -161,7 +161,7 @@ public abstract class Histogram {
 	 * @param index
 	 * @param f
 	 */
-	public static void safeAdd(List<List<Float>> list, int index, Float f){
+	public static void safeAdd(List<List<Double>> list, int index, Double f){
 //		if(list.get(index)==null){
 //			list.set(index, new Lin);
 //		}

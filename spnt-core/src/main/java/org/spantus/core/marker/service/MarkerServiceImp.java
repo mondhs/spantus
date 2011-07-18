@@ -44,7 +44,7 @@ public class MarkerServiceImp implements IMarkerService {
 		return true;
 	}
 	
-	public Long getTime(int sampleNum, Float sampleRate) {
+	public Long getTime(int sampleNum, Double sampleRate) {
 		return BigDecimal.valueOf((sampleNum * 1000) / sampleRate).setScale(0,
 				RoundingMode.HALF_UP).longValue();
 	}

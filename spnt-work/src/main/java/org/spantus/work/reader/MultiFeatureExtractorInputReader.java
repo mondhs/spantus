@@ -84,7 +84,7 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 	}
 
 	
-	public void put(Long sample, float value) {
+	public void put(Long sample, Double value) {
 		getDefaultReader().put(sample, value);
 //		getMpeg7Reader().put(sample, value);
 	}
@@ -172,10 +172,10 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 				}
 					
 				param = ExtractorParamUtils.getSafeParam(params, key);
-				Float threasholdCoef = ExtractorParamUtils.getValue(param, 
-						ExtractorParamUtils.commonParam.threasholdCoef.name(), Float.valueOf(1.1f));
+				Number threasholdCoef = ExtractorParamUtils.<Double>getValue(param, 
+						ExtractorParamUtils.commonParam.threasholdCoef.name(), 1.1D);
 				if(threshold instanceof AbstractThreshold){
-					((AbstractThreshold)threshold).setCoef(threasholdCoef);	
+					((AbstractThreshold)threshold).setCoef(threasholdCoef.doubleValue());	
 				}
 				return;
 			}

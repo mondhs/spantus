@@ -20,12 +20,12 @@ public class ExtremeEntry implements Cloneable, Serializable{
 
 	
 	private Integer index;
-	private Float value;
+	private Double value;
 	private FeatureStates signalState;
 	private ExtremeEntry next;
 	private ExtremeEntry previous;
 	
-	public ExtremeEntry(Integer index, Float value,
+	public ExtremeEntry(Integer index, Double value,
 			FeatureStates signalState) {
 		super();
 		this.index = index;
@@ -39,10 +39,10 @@ public class ExtremeEntry implements Cloneable, Serializable{
 		this.index = index;
 	}
 	
-	public Float getValue() {
+	public Double getValue() {
 		return value;
 	}
-	public void setValue(Float value) {
+	public void setValue(Double value) {
 		this.value = value;
 	}
 	public FeatureStates getSignalState() {

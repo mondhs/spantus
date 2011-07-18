@@ -71,7 +71,7 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 		}
 			
 		MarkerSet markerSet = new MarkerSet();
-		LinkedHashMap<Long, Float> statesSums = caclculateStatesSums(classifiers, param);
+		LinkedHashMap<Long, Double> statesSums = caclculateStatesSums(classifiers, param);
 
 		SegmentationCtx ctx = new SegmentationCtx();
 		ctx.setMarkerSet(markerSet);
@@ -79,8 +79,8 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 		int count = classifiers.size();
 //		Float previous = 0F;
 //		Float preprevious = 0F;
-		for (Entry<Long, Float> stateSum : statesSums.entrySet()) {
-//			Float currValue =  stateSum.getValue() +preprevious + previous;
+		for (Entry<Long, Double> stateSum : statesSums.entrySet()) {
+//			Double currValue =  stateSum.getValue() +preprevious + previous;
 			ctx.setCurrentState(stateSum.getValue() / (count) > .4 ? 1f : 0f);
 			ctx.setCurrentMoment(stateSum.getKey());
 			processState(ctx);
@@ -108,8 +108,8 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 * @param param
 	 * @return
 	 */
-	protected LinkedHashMap<Long, Float> caclculateStatesSums(Collection<IClassifier> classifiers, SegmentatorParam param){
-		LinkedHashMap<Long, Float> statesSums = new LinkedHashMap<Long, Float>();
+	protected LinkedHashMap<Long, Double> caclculateStatesSums(Collection<IClassifier> classifiers, SegmentatorParam param){
+		LinkedHashMap<Long, Double> statesSums = new LinkedHashMap<Long, Double>();
 
 		Map<String, Iterator<Marker>> markerIterators = new HashMap<String, Iterator<Marker>>();
 		
@@ -132,12 +132,12 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 				long startIndex = lastMarker == null?0:lastMarker.getEnd();
 				
 				for (long index= startIndex; index < marker.getStart(); index++) {
-					safeSum(statesSums, index, 0F, param, markerIterator.getKey());
+					safeSum(statesSums, index, 0D, param, markerIterator.getKey());
 				}
-				List<Float> window = MatrixUtils.fill(marker.getLength().intValue(), 1F);
+				List<Double> window = MatrixUtils.fill(marker.getLength().intValue(), 1D);
 				getWindowing().apply(window);
 				long index = marker.getStart();
-				for (Float value : window) {
+				for (Double value : window) {
 					safeSum(statesSums, index++, value, param, markerIterator.getKey());
 				}
 				
@@ -145,24 +145,6 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 			}
 		}
 		
-//		for (IClassifier classifier : classifiers) {
-//			float resolution = 1;//classifier.getExtractorSampleRate();
-//			// last sample rate will be used as main
-//			MarkerSet classifierlMarkerSet = classifier.getMarkSet();
-//			if (classifierlMarkerSet == null) {
-//				continue;
-//			}
-//			long index = 0;
-//			for (Marker marker : classifierlMarkerSet.getMarkers()) {
-//				for (; index < marker.getStart(); index += resolution) {
-//					safeSum(statesSums, index, 0F, param, classifier);
-//				}
-//				for (; index <= marker.getEnd(); index += resolution) {
-//					safeSum(statesSums, index, 1F, param, classifier);
-//				}
-////				log.debug("marker:{0}; stateSum{1}",marker,statesSums);
-//			}
-//		}
 		return statesSums;
 	}
 	
@@ -172,10 +154,10 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 * @param threshold
 	 * @return
 	 */
-	protected Float getWeight(SegmentatorParam param, String threshold) {
+	protected Double getWeight(SegmentatorParam param, String threshold) {
 		if (param == null || param.getJoinWeights() == null
 				|| !param.getJoinWeights().containsKey(threshold)) {
-			return 1f;
+			return 1D;
 		}
 
 		return param.getJoinWeights().get(threshold);
@@ -187,12 +169,12 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 * @param time
 	 * @param value
 	 */
-	protected void safeSum(Map<Long, Float> statesSums, Long time, Float value,
+	protected void safeSum(Map<Long, Double> statesSums, Long time, Double value,
 			SegmentatorParam param, String classifier) {
-		Float weight =  getWeight(param, classifier);
-		Float existValue = statesSums.get(time);
+		Double weight =  getWeight(param, classifier);
+		Double existValue = statesSums.get(time);
 		if (existValue == null) {
-			existValue = 0F;
+			existValue = 0D;
 			statesSums.put(time, existValue);
 		}
 		statesSums.put(time, existValue + (value * weight));

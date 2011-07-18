@@ -41,7 +41,7 @@ public class WraperExtractorReader {
 	private List<List<Byte>> shortBuffers;
 	private Preemphasis preemphasisFilter;
 	private Long sample;
-	private Float lastValue;
+	private Double lastValue;
 	private boolean smooth = false;
 	private Integer smoothingSize = null; 
 	private HammingWindowing hammingWindowing;
@@ -68,7 +68,7 @@ public class WraperExtractorReader {
 			List<Byte> shortBuffer = shortBuffers.get(0); 
 			shortBuffer.add(value);
 			if(shortBuffer.size() == 2){
-				float f = AudioUtil.read16(shortBuffer.get(0), 
+				Double f = AudioUtil.read16(shortBuffer.get(0), 
 						shortBuffer.get(1), 
 						getFormat());
 				if(smooth  == true && smoothingSize != null){
@@ -86,7 +86,7 @@ public class WraperExtractorReader {
 	}
 	//colleaction
 	public void put(List<Byte> value){
-		Float sum = 0F;
+		Double sum = 0D;
 		switch (format.getSampleSizeInBits()) {
 		case 8:
 			
@@ -132,8 +132,8 @@ public class WraperExtractorReader {
 	 * @param currentValue
 	 * @return
 	 */
-	protected Float preemphasis(Float currentValue){
-		Float processedValue = preemphasisFilter.process(currentValue);
+	protected Double preemphasis(Double currentValue){
+		Double processedValue = preemphasisFilter.process(currentValue);
 		setLastValue(processedValue);
 		return processedValue;
 	}
@@ -158,11 +158,11 @@ public class WraperExtractorReader {
 		return sample;
 	}
 
-	public Float getLastValue() {
+	public Double getLastValue() {
 		return lastValue;
 	}
 
-	protected void setLastValue(Float lastValue) {
+	protected void setLastValue(Double lastValue) {
 		this.lastValue = lastValue;
 	}
 

@@ -54,9 +54,9 @@ public class PLPExtractor extends AbstractSpectralVectorExtractor {
     public FrameVectorValues calculateWindow(FrameValues window) {
         FrameVectorValues spectrum = calculateFFT(window);
         FrameVectorValues calculatedValues = super.calculateWindow(window);
-        for (List<Float> spectra : spectrum) {
+        for (List<Double> spectra : spectrum) {
         	try{
-            List<Float> mfcc = getPlpService().calculateFromSpectrum(spectra,
+            List<Double> mfcc = getPlpService().calculateFromSpectrum(spectra,
                     getConfig().getSampleRate());
             calculatedValues.add(mfcc);
         	}catch (IllegalArgumentException e) {

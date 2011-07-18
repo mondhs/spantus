@@ -199,7 +199,7 @@ public class SampleChart extends JPanel {
 	private class LocalSignalSelectionListener implements
 			SignalSelectionListener {
 
-		public void selectionChanged(float from, float length) {
+		public void selectionChanged(Double  from, Double length) {
 			SelectionDto selectionDto = new SelectionDto(from, length);
 			SpantusEvent event = SpantusEvent.createEvent(
 					this,

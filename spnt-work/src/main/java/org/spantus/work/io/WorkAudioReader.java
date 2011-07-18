@@ -93,22 +93,22 @@ public class WorkAudioReader extends AbstractAudioReader{
 	}
 	public FrameVectorValues flip(FrameVectorValues values){
 		FrameVectorValues rtnVal = new FrameVectorValues(values);
-		for (List<Float> vals : values) {
+		for (List<Double> vals : values) {
 			Collections.reverse(vals);	
 		}
 		return rtnVal;
 		
 	}	
 	public FrameValues invert(FrameValues values){
-		Float min = Float.MAX_VALUE, max=-Float.MAX_VALUE;
-		for (Float float1 : values) {
+		Double min = Double.MAX_VALUE, max=-Double.MAX_VALUE;
+		for (Double float1 : values) {
 			min = Math.min(float1, min);
 			max = Math.max(float1, max);
 		}
-		Float delta = max - min;
+		Double delta = max - min;
 		FrameValues rtnVal = new FrameValues();
-		for (Float float1 : values) {
-			Float _f = (float1 - min)/delta;
+		for (Double float1 : values) {
+			Double _f = (float1 - min)/delta;
 			rtnVal.add(1-_f);	
 		}
 		return rtnVal;

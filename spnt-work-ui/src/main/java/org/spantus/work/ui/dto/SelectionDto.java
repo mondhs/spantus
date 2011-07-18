@@ -12,40 +12,40 @@ public class SelectionDto implements Serializable{
 	/**
          * In seconds
          */
-        private Float from;
+        private Double from;
         /**
          * In seconds
          */
-	private Float length;
+	private Double length;
 
 	public SelectionDto() {
 	}
 	
 	
-	public SelectionDto(Float from, Float length) {
+	public SelectionDto(Double from, Double length) {
 		super();
 		this.from = from;
 		this.length = length;
 	}
 
         public SelectionDto(Marker marker) {
-		this(marker.getStart().floatValue()/1000,
-                        marker.getLength().floatValue()/1000);
+		this(marker.getStart().doubleValue()/1000,
+                        marker.getLength().doubleValue()/1000);
 	}
 
-	public Float getFrom() {
+	public Double getFrom() {
 		return from;
 	}
 
-	public void setFrom(Float from) {
+	public void setFrom(Double from) {
 		this.from = from;
 	}
 
-	public Float getLength() {
+	public Double getLength() {
 		return length;
 	}
 
-	public void setLength(Float length) {
+	public void setLength(Double length) {
 		this.length = length;
 	}
 	

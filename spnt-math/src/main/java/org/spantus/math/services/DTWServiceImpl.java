@@ -6,7 +6,7 @@ import org.spantus.math.DTW;
 
 public class DTWServiceImpl implements DTWService {
 
-	public Float calculateDTWPath(List<Float> target, List<Float> sample) {
+	public Double calculateDTWPath(List<Double> target, List<Double> sample) {
 		return DTW.estimate(target, sample);
 	}
 

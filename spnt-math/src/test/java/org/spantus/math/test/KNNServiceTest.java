@@ -22,7 +22,7 @@ public class KNNServiceTest extends TestCase {
 	}
 	
 	public void testClusterisation() throws Exception {
-		List<List<Float>> vectors = createVectorList();
+		List<List<Double>> vectors = createVectorList();
 //		new ArrayList<List<Float>>();
 //		vectors.addAll(createVectorList(5, 5));//5
 //		vectors.addAll(createVectorList(5, 20 ));//50
@@ -45,8 +45,8 @@ public class KNNServiceTest extends TestCase {
 		}
 		return vectors;
 	}
-	public List<List<Float>> createVectorList() {
-		List<List<Float>> vectors = new ArrayList<List<Float>>();
+	public List<List<Double>> createVectorList() {
+		List<List<Double>> vectors = new ArrayList<List<Double>>();
 		vectors.add(createVector(5, 5));
 		vectors.add(createVector(5.1, 5));
 		vectors.add(createVector(5, 5.1));
@@ -59,15 +59,15 @@ public class KNNServiceTest extends TestCase {
 		vectors.add(createVector(150, 149));
 		return vectors;
 	}
-	public List<Float> createVector(Number... numbers) {
-		List<Float> floats = new ArrayList<Float>();
+	public List<Double> createVector(Number... numbers) {
+		List<Double> floats = new ArrayList<Double>();
 		for (Number number : numbers) {
-			floats.add(number.floatValue());
+			floats.add(number.doubleValue());
 		}
 		return floats;
 	}
 	
-	public void assertAproxEquals(Double  expected, Float actual, Double precission){
+	public void assertAproxEquals(Double  expected, Double actual, Double precission){
 		Double delta = Math.abs(expected-actual);
 		assertTrue(MessageFormat.format("expected {0} with precission {1}, but got {2}", expected, precission, actual), delta<precission);
 	}

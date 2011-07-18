@@ -53,11 +53,11 @@ public class ClassifyHMMSegmentDirTest extends AbstractSegmentDirTest {
 					ExtractorEnum.PLP_EXTRACTOR.name()).getValues();
 			FrameVectorValues vectors = (FrameVectorValues) values;
 			
-			for (List<Float> vector : vectors) {
+			for (List<Double> vector : vectors) {
 				double[] doubleVector = new double[vector.size()]; 
 				int i = 0;
-				for (Float float1 : vector) {
-					doubleVector[i++]=float1.doubleValue();
+				for (Double float1 : vector) {
+					doubleVector[i++]=float1;
 				}
 				ObservationVector observationVector = new ObservationVector(doubleVector);
 				mapVector.put(entry.getName(), observationVector);

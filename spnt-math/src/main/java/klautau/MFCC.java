@@ -269,19 +269,19 @@ public class MFCC {
 	 * of an output vector x with 3 MFCC's, including the 0-th, would be: 
 	 * x = {MFCC1, MFCC2, MFCC0} 
 	 */ 
-	public Float[] getParameters(Float[] fspeechFrame) { 
+	public Double[] getParameters(Double[] fspeechFrame) { 
  
 		//use mel filter bank 
 		for(int i=0; i < m_nnumberOfFilters; i++) { 
 			m_dfilterOutput[i] = 0.0; 
 			//Notice that the FFT samples at 0 (DC) and fs/2 are not considered on this calculation 
 			if (m_ousePowerInsteadOfMagnitude) { 
-				Float[] fpowerSpectrum = m_fft.calculateFFTPower(fspeechFrame); 
+				Double[] fpowerSpectrum = m_fft.calculateFFTPower(fspeechFrame); 
 				for(int j=m_nboundariesDFTBins[i][0], k=0;j<=m_nboundariesDFTBins[i][1];j++,k++) { 
 					m_dfilterOutput[i] += fpowerSpectrum[j] * m_dweights[i][k]; 
 				} 
 			} else { 
-				Float[] fmagnitudeSpectrum = m_fft.calculateFFTMagnitude(fspeechFrame); 
+				Double[] fmagnitudeSpectrum = m_fft.calculateFFTMagnitude(fspeechFrame); 
 				for(int j=m_nboundariesDFTBins[i][0], k=0;j<=m_nboundariesDFTBins[i][1];j++,k++) { 
 					m_dfilterOutput[i] += fmagnitudeSpectrum[j] * m_dweights[i][k]; 
 				} 
@@ -299,39 +299,39 @@ public class MFCC {
 		//because it allows the user to call this method 
 		//many times, without having to do a deep copy 
 		//of the output vector 
-		Float[] dMFCCParameters = null; 
+		Double[] dMFCCParameters = null; 
 		if (m_oisZeroThCepstralCoefficientCalculated) { 
-			dMFCCParameters = new Float[m_nnumberOfParameters + 1]; 
+			dMFCCParameters = new Double[m_nnumberOfParameters + 1]; 
 			for (int i = 0; i < dMFCCParameters.length; i++) {
-				dMFCCParameters[i] = 0F;
+				dMFCCParameters[i] = 0.0;
 			}
 			//calculates zero'th cepstral coefficient and pack it 
 			//after the MFCC parameters of each frame for the sake 
 			//of compatibility with HTK 
-			Float dzeroThCepstralCoefficient = 0.0F; 
+			Double dzeroThCepstralCoefficient = 0.0; 
 			for(int j=0;j<m_nnumberOfFilters;j++) { 
-				dzeroThCepstralCoefficient += m_dfilterOutput[j].floatValue(); 
+				dzeroThCepstralCoefficient += m_dfilterOutput[j]; 
 			} 
-			dzeroThCepstralCoefficient *= m_dscalingFactor.floatValue(); 
+			dzeroThCepstralCoefficient *= m_dscalingFactor; 
 			dMFCCParameters[dMFCCParameters.length-1] = dzeroThCepstralCoefficient; 
 		} else { 
 			//allocate space 
-			dMFCCParameters = new Float[m_nnumberOfParameters];
+			dMFCCParameters = new Double[m_nnumberOfParameters];
 			for (int i = 0; i < dMFCCParameters.length; i++) {
-				dMFCCParameters[i] = 0F;
+				dMFCCParameters[i] = 0.0;
 			}
 		} 
  
 		//cosine transform 
 		for(int i=0;i<m_nnumberOfParameters;i++) { 
 			for(int j=0;j<m_nnumberOfFilters;j++) {
-				dMFCCParameters[i] += ((Double)(m_dfilterOutput[j]*m_ddCTMatrix[i][j])).floatValue(); 
+				dMFCCParameters[i] += m_dfilterOutput[j]*m_ddCTMatrix[i][j]; 
 				//the original equations have the first index as 1 
 			} 
 			//could potentially incorporate liftering factor and 
 			//factor below to save multiplications, but will not 
 			//do it for the sake of clarity 
-			dMFCCParameters[i] *= m_dscalingFactor.floatValue(); 
+			dMFCCParameters[i] *= m_dscalingFactor; 
 		} 
  
 		//debugging purposes 
@@ -353,7 +353,7 @@ public class MFCC {
 			// [3] ISIP package - Mississipi Univ. Picone's group. 
 			//if 0-th coefficient is included, it is not liftered 
 			for (int i=0; i<m_nnumberOfParameters; i++) { 
-				dMFCCParameters[i] *= m_nlifteringMultiplicationFactor[i].floatValue(); 
+				dMFCCParameters[i] *= m_nlifteringMultiplicationFactor[i]; 
 			} 
 		} 
  
@@ -393,28 +393,28 @@ public class MFCC {
 			"\n" + "MFCC.oisZeroThCepstralCoefficientCalculated = " + m_oisZeroThCepstralCoefficientCalculated; 
 	} 
  
-	public Float[] getFilterBankOutputs(Float[] fspeechFrame) { 
+	public Double[] getFilterBankOutputs(Double[] fspeechFrame) { 
 		//use mel filter bank 
-		Float dfilterOutput[] = new Float[m_nnumberOfFilters]; 
+		Double dfilterOutput[] = new Double[m_nnumberOfFilters]; 
 		for(int i=0; i < m_nnumberOfFilters; i++) { 
 			//Notice that the FFT samples at 0 (DC) and fs/2 are not considered on this calculation 
 			if (m_ousePowerInsteadOfMagnitude) { 
-				Float[] fpowerSpectrum = m_fft.calculateFFTPower(fspeechFrame); 
+				Double[] fpowerSpectrum = m_fft.calculateFFTPower(fspeechFrame); 
 				for(int j=m_nboundariesDFTBins[i][0], k=0;j<=m_nboundariesDFTBins[i][1];j++,k++) { 
-					dfilterOutput[i] += fpowerSpectrum[j] * m_dweights[i][k].floatValue(); 
+					dfilterOutput[i] += fpowerSpectrum[j] * m_dweights[i][k]; 
 				} 
 			} else { 
-				Float[] fmagnitudeSpectrum = m_fft.calculateFFTMagnitude(fspeechFrame); 
+				Double[] fmagnitudeSpectrum = m_fft.calculateFFTMagnitude(fspeechFrame); 
 				for(int j=m_nboundariesDFTBins[i][0], k=0;j<=m_nboundariesDFTBins[i][1];j++,k++) { 
-					dfilterOutput[i] += fmagnitudeSpectrum[j] * m_dweights[i][k].floatValue(); 
+					dfilterOutput[i] += fmagnitudeSpectrum[j] * m_dweights[i][k]; 
 				} 
 			} 
  
 			//ISIP (Mississipi univ.) implementation 
 			if (dfilterOutput[i] > m_dminimumFilterOutput) {//floor power to avoid log(0) 
-				dfilterOutput[i] = (float)Math.log(dfilterOutput[i]); //using ln 
+				dfilterOutput[i] = Math.log(dfilterOutput[i]); //using ln 
 			} else { 
-				dfilterOutput[i] = (float)m_dlogFilterOutputFloor; 
+				dfilterOutput[i] = m_dlogFilterOutputFloor; 
 			} 
 		} 
 		return dfilterOutput; 
@@ -449,9 +449,9 @@ public class MFCC {
           debug(mfcc.toString()); 
  
           //simulate a frame of speech 
-          Float[] x = new Float[160]; 
-          x[2]=10F; x[4]=14F; 
-          Float[] dparameters = mfcc.getParameters(x); 
+          Double[] x = new Double[160]; 
+          x[2]=10D; x[4]=14D; 
+          Double[] dparameters = mfcc.getParameters(x); 
           debug("MFCC parameters:"); 
           for (int i = 0; i < dparameters.length; i++) { 
         	  debug(" " + dparameters[i]); 

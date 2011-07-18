@@ -41,10 +41,10 @@ public class SpectrumPower extends AbstractSpectralExtractor {
 		FrameVectorValues val3d = calculateFFT(window);
 		FrameValues rtnValues = super.calculateWindow(window);
 		int bin = 10;
-		for (List<Float> fv : val3d) {
+		for (List<Double> fv : val3d) {
 			rtnValues.clear();
 			int i = 0;
-			for (Float current : fv) {
+			for (Double current : fv) {
 				i++;
 				rtnValues.add(current);
 				if(i != bin) continue;

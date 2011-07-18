@@ -25,11 +25,11 @@ public class LinearPredictor {
 
     private int order;
     private int cepstrumOrder;
-    private double[] reflectionCoeffs;
-    private double[] ARParameters;
-    private double alpha;
-    private double[] cepstra;
-    private final double[] bilinearCepstra;
+    private Double[] reflectionCoeffs;
+    private Double[] ARParameters;
+    private Double alpha;
+    private Double[] cepstra;
+    private final Double[] bilinearCepstra;
 
 
     /**
@@ -43,7 +43,7 @@ public class LinearPredictor {
         // Set the rest to null values
         reflectionCoeffs = null;
         ARParameters = null;
-        alpha = 0;
+        alpha = 0D;
         cepstra = null;
         bilinearCepstra = null;
     }
@@ -56,14 +56,14 @@ public class LinearPredictor {
      * @param autocor
      * @return the energy of the frame (alpha in the Levinson recursion)
      */
-    public double[] getARFilter(double[] autocor) {
+    public Double[] getARFilter(Double[] autocor) {
         /* No signal */
         if (autocor[0] == 0) {
             return null;
         }
-        reflectionCoeffs = new double[order + 1];
-        ARParameters = new double[order + 1];
-        double[] backwardPredictor = new double[order + 1];
+        reflectionCoeffs = new Double[order + 1];
+        ARParameters = new Double[order + 1];
+        Double[] backwardPredictor = new Double[order + 1];
 
         alpha = autocor[0];
         reflectionCoeffs[1] = -autocor[1] / autocor[0];
@@ -75,7 +75,7 @@ public class LinearPredictor {
             for (int j = 1; j < i; j++) {
                 backwardPredictor[j] = ARParameters[i - j];
             }
-            reflectionCoeffs[i] = 0;
+            reflectionCoeffs[i] = 0D;
             for (int j = 0; j < i; j++) {
                 reflectionCoeffs[i] -= ARParameters[j] * autocor[i - j];
             }
@@ -101,8 +101,8 @@ public class LinearPredictor {
      * @param lpcorder AR order desired
      * @return AR parameters
      */
-    public double[] reflectionCoeffsToARParameters(double[] RC, int lpcorder) {
-        double[][] tmp = new double[lpcorder + 1][lpcorder + 1];
+    public Double[] reflectionCoeffsToARParameters(Double[] RC, int lpcorder) {
+    	Double[][] tmp = new Double[lpcorder + 1][lpcorder + 1];
 
         order = lpcorder;
         reflectionCoeffs = RC.clone();
@@ -113,7 +113,7 @@ public class LinearPredictor {
             }
             tmp[i][i] = RC[i];
         }
-        ARParameters[0] = 1;
+        ARParameters[0] = 1D;
         for (int m = 1; m <= lpcorder; m++) {
             ARParameters[m] = tmp[m][m];
         }
@@ -130,7 +130,7 @@ public class LinearPredictor {
      * @param ceporder is the order of the LPC cepstral vector to be computed.
      * @return LPC cepstra
      */
-    public double[] getData(int ceporder) {
+    public Double[] getData(int ceporder) {
         int i;
         double sum;
 
@@ -139,7 +139,7 @@ public class LinearPredictor {
         }
 
         cepstrumOrder = ceporder;
-        cepstra = new double[cepstrumOrder];
+        cepstra = new Double[cepstrumOrder];
 
         cepstra[0] = Math.log(alpha);
         if (cepstrumOrder == 1) {
@@ -177,17 +177,17 @@ public class LinearPredictor {
      *                      cepstrum.
      * @return a bi-linear frequency warped version of the LPC cepstrum
      */
-    public double[] getBilinearCepstra(double warp, int nbilincepstra) {
-        double[][] g = new double[nbilincepstra][cepstrumOrder];
+    public Double[] getBilinearCepstra(Double warp, int nbilincepstra) {
+    	Double[][] g = new Double[nbilincepstra][cepstrumOrder];
 
         // Make a local copy as this gets destroyed
-        double[] lincep = Arrays.copyOf(cepstra, cepstrumOrder);
+        Double[] lincep = Arrays.copyOf(cepstra, cepstrumOrder);
 
         bilinearCepstra[0] = lincep[0];
-        lincep[0] = 0;
+        lincep[0] = 0D;
         g[0][cepstrumOrder - 1] = lincep[cepstrumOrder - 1];
         for (int i = 1; i < nbilincepstra; i++) {
-            g[i][cepstrumOrder - 1] = 0;
+            g[i][cepstrumOrder - 1] = 0D;
         }
 
         for (int i = cepstrumOrder - 2; i >= 0; i--) {

@@ -2,11 +2,11 @@ package org.spantus.math;
 
 public class IndexValue {
 	private Integer index;
-	private Float value;
+	private Double value;
 	public IndexValue() {
 	}
 	
-	public IndexValue(int index, float value) {
+	public IndexValue(int index, Double value) {
 		this.index = index;
 		this.value = value;
 	}
@@ -16,10 +16,10 @@ public class IndexValue {
 	public void setIndex(Integer index) {
 		this.index = index;
 	}
-	public Float getValue() {
+	public Double getValue() {
 		return value;
 	}
-	public void setValue(Float value) {
+	public void setValue(Double value) {
 		this.value = value;
 	}
 }

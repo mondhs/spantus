@@ -130,28 +130,28 @@ public class ExtremeOnlineClassifierTest {
 	}
 
 	
-	protected void logData(Float[] data){
+	protected void logData(Double[] data){
 		StringBuilder sb = new StringBuilder();
-		for (Float f1 : data) {
+		for (Double f1 : data) {
 			sb.append(";").append(f1);
 //			sb.append(f1).append("\n");
 		}
 		log.debug("[logData] arr: \n" +sb);
 		
 	}
-	protected ExtremeOnlineRuleClassifier feedData(Float[] data) {
+	protected ExtremeOnlineRuleClassifier feedData(Double[] data) {
 		return feedData(data, null );
 	}
-	protected ExtremeOnlineRuleClassifier feedData(Float[] data, 
+	protected ExtremeOnlineRuleClassifier feedData(Double[] data, 
 			ClassifierRuleBaseService ruleBase) {
 		logData(data);
 		ExtremeOnlineRuleClassifier classifier = new ExtremeOnlineRuleClassifier();
 		classifier.setExtractor(new MockOnlineExtractor());
-		classifier.getExtractor().getOutputValues().setSampleRate(100);//10ms
+		classifier.getExtractor().getOutputValues().setSampleRate(100D);//10ms
 		classifier.setRuleBaseService(ruleBase);
 //		classifier.setClusterService(clusterService);
 		FrameValues values = new FrameValues();
-		for (Float windowValue : data) {
+		for (Double windowValue : data) {
 			values.add(windowValue);
 		}
 		classifier.afterCalculated(0L, values);

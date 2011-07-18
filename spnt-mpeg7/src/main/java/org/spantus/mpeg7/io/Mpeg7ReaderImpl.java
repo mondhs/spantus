@@ -162,9 +162,9 @@ public class Mpeg7ReaderImpl implements AudioReader {
 		Element scalar = Mpeg7Utils.getFirstElement(descriptor, Mpeg7nodes.Scalar);
 		if (scalar == null)
 			return null;
-		Float float1 = Float.valueOf(0);
+		Double float1 = Double.valueOf(0);
 		try {
-			float1 = Float.valueOf(Mpeg7Utils.readScalar(scalar));
+			float1 = Double.valueOf(Mpeg7Utils.readScalar(scalar));
 		} catch (NumberFormatException nfe) {
 			log.error("Number format exception: " + nfe.getMessage());
 		}
@@ -254,10 +254,10 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 */
 	protected static FrameVectorValues readMinMax(FrameValues min, FrameValues max) {
 		FrameVectorValues fv3 = new FrameVectorValues();
-		Iterator<Float> maxIter = max.iterator();
-		for (Float floatMin : min) {
+		Iterator<Double> maxIter = max.iterator();
+		for (Double floatMin : min) {
 			FrameValues fv = new FrameValues();
-			Float floatMax = maxIter.next();
+			Double floatMax = maxIter.next();
 			fv.add(floatMin);
 			fv.add(floatMax);
 			fv3.add(fv);
@@ -279,7 +279,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 		int i = 0;
 		for (String float1 : strs) {
 			if("".equals(float1)) continue;
-			fv.add(Float.valueOf(float1));
+			fv.add(Double.valueOf(float1));
 			i++;
 			if (i % vectorSize == 0) {
 				fv3.add(fv);
@@ -304,14 +304,14 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param sampleSize
 	 * @return
 	 */
-	protected float readSampleRate(Element series) {
+	protected Double readSampleRate(Element series) {
 		String type = Mpeg7Utils.getAttr((Element)series.getParentNode(), Mpeg7attrs.xsi_type);
 		String hopSize = Mpeg7Utils.getAttr(series, Mpeg7attrs.hopSize);
 		int mediaDuration = Mpeg7Utils.getMediaDuration(hopSize);
 		if("AudioSpectrumBasisType".equals(type) ){
 			mediaDuration *= 5;
 		}
-		return 1000/mediaDuration;
+		return 1000D/mediaDuration;
 	}
 	/**
 	 * 
@@ -326,7 +326,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 			if("".equals(strs[i])){
 				continue;
 			}
-			vals.add(Float.valueOf(strs[i]));
+			vals.add(Double.valueOf(strs[i]));
 		}
 		return vals;
 	}

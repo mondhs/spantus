@@ -29,10 +29,10 @@ import java.util.List;
  * Created 2008.02.29
  *
  */
-public class FrameVectorValues extends LinkedList<List<Float>> implements IValues{
+public class FrameVectorValues extends LinkedList<List<Double>> implements IValues{
 	
-	public static float max = Float.MIN_VALUE;
-	public static float min = Float.MAX_VALUE;
+	public static Double max = -Double.MAX_VALUE;
+	public static Double min = Double.MAX_VALUE;
 	
 	/**
 	 * 
@@ -40,13 +40,13 @@ public class FrameVectorValues extends LinkedList<List<Float>> implements IValue
 	private static final long serialVersionUID = 1L;
 	public static final int DEFAULT_FRAME_BUFFER_SIZE = 65536;
 	int frameBufferSize;
-	float sampleRate = 1;
+	Double sampleRate = 1D;
 
 	public FrameVectorValues() {
 		setFrameBufferSize(DEFAULT_FRAME_BUFFER_SIZE);
 	}
 	
-	public FrameVectorValues(List<List<Float>> collection){
+	public FrameVectorValues(List<List<Double>> collection){
 		addAll(collection);
 	}
 
@@ -63,7 +63,7 @@ public class FrameVectorValues extends LinkedList<List<Float>> implements IValue
 		super.add(index, element);
 	}
 	
-	public void add(Float[] floats) {
+	public void add(Double[] floats) {
 		for (int i = 0; i < floats.length; i++) {
 			max = Math.max(floats[i], max);
 			min = Math.min(floats[i], min);
@@ -72,7 +72,7 @@ public class FrameVectorValues extends LinkedList<List<Float>> implements IValue
 		super.add(values);
 	}
 	
-	public boolean add(List<Float> floats) {
+	public boolean add(List<Double> floats) {
 //		for (int i = 0; i < floats.length; i++) {
 //			max = Math.max(floats[i], max);
 //			min = Math.min(floats[i], min);
@@ -87,7 +87,7 @@ public class FrameVectorValues extends LinkedList<List<Float>> implements IValue
 	}
 
 	
-	public Float get(int x, int y){
+	public Double get(int x, int y){
 		return this.get(0).get(0);
 	}
 	
@@ -97,7 +97,7 @@ public class FrameVectorValues extends LinkedList<List<Float>> implements IValue
 		for (int i = 0; i < getFirst().size(); i++) {
 			fv3.add(new FrameValues());				
 		}
-		for (List<Float> fv : this) {
+		for (List<Double> fv : this) {
 //			fv.setSampleRate(getSampleRate());
 			for (int i = 0; i < fv.size(); i++) {
 				fv3.get(i).add(fv.get(i));
@@ -109,28 +109,28 @@ public class FrameVectorValues extends LinkedList<List<Float>> implements IValue
 	
 	
 	public FrameVectorValues subList(int fromIndex, int toIndex) {
-		List<List<Float>> lst = super.subList(fromIndex, toIndex);
+		List<List<Double>> lst = super.subList(fromIndex, toIndex);
                 FrameVectorValues fv = new FrameVectorValues(lst);
                 fv.setSampleRate(this.getSampleRate());
 		return fv;
 	}
 
-	public float getTime() {
-		return size()/sampleRate;
+	public Double getTime() {
+		return (double) (size())/sampleRate;
 	}
 
-	public float getSampleRate() {
+	public Double getSampleRate() {
 		return sampleRate;
 	}
 
-	public void setSampleRate(float sampleRate) {
+	public void setSampleRate(Double sampleRate) {
 		this.sampleRate = sampleRate;
 	}
 	
-	public float toTime(int i){
-		return (float)i / (sampleRate);
+	public Double toTime(int i){
+		return (double)i / (sampleRate);
 	}
-	public int toIndex(float f){
+	public int toIndex(Double f){
 		return (int)(f * sampleRate);
 	}
 

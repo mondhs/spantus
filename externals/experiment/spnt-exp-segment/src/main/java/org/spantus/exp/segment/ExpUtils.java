@@ -15,8 +15,8 @@ public abstract class ExpUtils {
 	public static void fillSeries(FrameValues values, XYSeries series, String description){
 		series.setDescription(description);
 		int i = 0;
-		for (Float f1 : values) {
-			series.add(Float.valueOf(i), f1);
+		for (Double f1 : values) {
+			series.add(Double.valueOf(i), f1);
 			i++;
 		}
 	}

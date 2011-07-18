@@ -42,10 +42,10 @@ public class HarmonicProductSpectrum extends AbstractSpectralExtractor {
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameVectorValues val3d = calculateFFT(window);
 		FrameValues rtnValues = super.calculateWindow(window);
-		for (List<Float> fv : val3d) {
+		for (List<Double> fv : val3d) {
 			BigDecimal product = BigDecimal.valueOf(1).setScale(6);
 //			int k = 1;
-			for (Float f1 : fv) {
+			for (Double f1 : fv) {
 				if(f1 == 0) continue;
 				product = product.multiply(BigDecimal.valueOf(f1).abs(), MathContext.DECIMAL32);
 			}

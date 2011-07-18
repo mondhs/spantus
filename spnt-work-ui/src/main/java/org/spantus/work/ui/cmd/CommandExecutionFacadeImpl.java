@@ -85,7 +85,7 @@ public class CommandExecutionFacadeImpl implements CommandExecutionFacade {
 	public void refresh() {
 		frame.getSampleRepresentationPanel().refresh();
 	}
-	public void refreshValue(Float value){
+	public void refreshValue(Double value){
 		if(value!=null){
                         Double sqr_value = value.doubleValue() * value;
                         if(sqr_value != 0){
@@ -129,7 +129,7 @@ public class CommandExecutionFacadeImpl implements CommandExecutionFacade {
 		 ChartUtils.writeAsPNG(frame.getSampleRepresentationPanel().getSampleChart().getChart(), file);
 	}
 
-	public void changedZoom(Float from, Float length) {
+	public void changedZoom(Double from, Double length) {
 		frame.getSampleRepresentationPanel().getSampleChart().getChart().changedZoom(from, length);
 		frame.getSampleRepresentationPanel().getSampleChart().getChart().setSize(frame.getSize());
 //		frame.getSampleRepresentationPanel().getSampleChart().getChart().repaint(30L);

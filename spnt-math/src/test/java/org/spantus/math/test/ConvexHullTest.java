@@ -1,38 +1,94 @@
 package org.spantus.math.test;
 
-import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import org.spantus.math.services.impl.ConvexHullServiceImpl;
+import org.spantus.math.windowing.Windowing;
+import org.spantus.math.windowing.WindowingEnum;
+import org.spantus.math.windowing.WindowingFactory;
 
 public class ConvexHullTest {
 	public static final Logger LOG = Logger.getLogger(ConvexHullTest.class);
-	private List<Point2D.Double> signal;
-
+	private List<Double> signalDouble;
+	private Integer[] idealResult = new Integer[]{
+			0,
+			15,
+			16,
+			48,
+			58,
+			63
+	};
+	ConvexHullServiceImpl convexHullServiceImpl;
+	
 	@Before
 	public void setup() {
-		signal = new ArrayList<Point2D.Double>();
-//		for (double i = 1; i < 16 * Math.PI; i+=.3) {
-//			signal.add(new Point2D.Double(i, (Math.sin(i))));
-//		}
-		signal.add(new Point2D.Double(10.0,10.0));
-		signal.add(new Point2D.Double(10.0,1.0));
-		signal.add(new Point2D.Double(1.0,10.0));
-		signal.add(new Point2D.Double(1.0,1.0));
-		signal.add(new Point2D.Double(5.0,5.0));
+		convexHullServiceImpl = new ConvexHullServiceImpl();
+		signalDouble= new ArrayList<Double>();
+		 List<Double> window =new  ArrayList<Double>();
+		 
+		for (double i = 0; i < 3 * Math.PI; i+=.3) {
+			window.add(Math.abs(Math.sin(i)));
+		}
+		
+		Windowing windowing = WindowingFactory.createWindowing(WindowingEnum.Hamming);
+		windowing.apply(window);
+
+		int j = 0;
+		for (int count = 0; count < 2; count++) {
+
+			for (Double double1 : window) {
+				signalDouble.add(double1);
+			}
+		}
+
+//		signalFloat.add(1F);
+//		signalFloat.add(10F);
+//		signalFloat.add(5F);
+//		signalFloat.add(10F);
+//		signalFloat.add(1F);
 	}
 
 	@Test
 	public void testConvexHull(){
-		Point2D.Double[] resut =  ConvexHull.bruteForceConvexHull(signal.toArray(new Double[signal.size()]) );
-		for (Double double1 : resut) {
-			LOG.debug(double1);
-		}
+		Map<Integer, Double> result = convexHullServiceImpl.calculateConvexHull(signalDouble);
+		assertCollectionEqual(result, idealResult);
 		
+//		for (Entry<Integer, Double> pair : result.entrySet()) {
+//			LOG.debug(pair);
+//		}
+		
+	}
+	@Test
+	public void testConvexHullTreshold(){
+		List<Double> result = convexHullServiceImpl.calculateConvexHullTreshold(signalDouble);
+		
+//		StringBuilder signalsb = new StringBuilder();
+//		for (Double pair : signalDouble) {
+//			signalsb.append(pair).append(",");
+//		}
+//		StringBuilder sb = new StringBuilder();
+//		for (Double pair : result) {
+//			sb.append(pair).append(",");
+//		}
+//		LOG.debug("\n" + signalsb.toString() + "\n" +  sb.toString());		
+		Assert.assertEquals("size",result.size(), signalDouble.size());
+	}
+
+	private void assertCollectionEqual(Map<Integer, Double> result,
+			Integer[] givenIdealResult) {
+		Assert.assertEquals("size",result.size(), givenIdealResult.length);
+		
+		for (int i = 0; i < givenIdealResult.length; i++) {
+			Integer float1 = givenIdealResult[i];
+			Assert.assertNotNull("element not match" + i ,result.get(float1));
+		}		
 	}
 	
 }

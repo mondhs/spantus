@@ -51,19 +51,19 @@ import org.spantus.core.FrameVectorValues;
  */
 public class AreaChartInstance extends TimeSeriesFunctionInstance {
 
-	FrameVectorValues values;
+	private FrameVectorValues values;
 //	CoordinateBoundary coordinateBoundary;
-	GraphDomain domain;
+	private GraphDomain domain;
 
-	float order;
+	private Double order;
 
 	ChartStyle style;
 	List<Point> minPoints = new ArrayList<Point>();
 	LinkedList<Point> maxPoints = new LinkedList<Point>();
 
 	
-	private Float min = Float.MAX_VALUE;
-	private Float max = Float.MIN_VALUE;
+	private Double min = Double.MAX_VALUE;
+	private Double max = -Double.MAX_VALUE;
 	
 	private Polygon polygon; 
 
@@ -72,7 +72,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 		this.description = description;
 		this.values = values;
 		this.style = style;
-		for (List<Float> frameValues : values) {
+		for (List<Double> frameValues : values) {
 			if (frameValues.size() != 2) {
 				throw new IllegalArgumentException(
 						"Area values should be from 2 vectors");
@@ -80,7 +80,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 			min(frameValues.get(0));
 			max(frameValues.get(1));
 		}
-		setOrder(0);
+		setOrder(0D);
 		log
 				.debug("name: " + description + "; order: " + getOrder()
 						+ "; min=" + min + "; max: " + max + "; sampleRate:"
@@ -94,21 +94,21 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 			return;
 		int j = 0;
 
-		Float _min = Float.MAX_VALUE;
-		Float _max = Float.MIN_VALUE;
+		Double _min = Double.MAX_VALUE;
+		Double _max = -Double.MAX_VALUE;
 		FrameVectorValues clonedValues = new FrameVectorValues(values);
 
-		for (List<Float> fv : clonedValues) {
-			int x = toCoordinateTime(j, xScalar.floatValue());
-			Float yMin = fv.get(0);
+		for (List<Double> fv : clonedValues) {
+			int x = toCoordinateTime(j, xScalar);
+			Double yMin = fv.get(0);
 			Point p = new Point(x, 0);
-			p.y = toCoordinateValues(yMin, yScalar.floatValue());
+			p.y = toCoordinateValues(yMin, yScalar);
 			_min = Math.min(_min, yMin);
 			minPoints.add(p);
 
 			p = new Point(x, 0);
-			Float yMax = fv.get(1);
-			p.y = toCoordinateValues(yMax, yScalar.floatValue());
+			Double yMax = fv.get(1);
+			p.y = toCoordinateValues(yMax, yScalar);
 			_max = Math.max(_max, yMax);
 			maxPoints.addFirst(p);
 			j++;
@@ -142,13 +142,13 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 
 	private CoordinateBoundary getCoordinateBoundary(FrameVectorValues values) {
 
-		Float xMin = 0f;
-		Float xMax = Float.valueOf(values.toTime(values.size()));
-		Float yMin = getOrder();
-		Float yMax = getOrder() + 1;
+		Double xMin = 0D;
+		Double xMax = Double.valueOf(values.toTime(values.size()));
+		Double yMin = getOrder();
+		Double yMax = getOrder() + 1;
 		if (domain != null && domain.getUntil() != null) {
-			xMax = domain.getUntil().floatValue();
-			xMin = domain.getFrom().floatValue();
+			xMax = domain.getUntil().doubleValue();
+			xMin = domain.getFrom().doubleValue();
 		}
 
 		return new CoordinateBoundary(new BigDecimal(xMin),
@@ -194,39 +194,39 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 		this.domain = domain;
 	}
 
-	private int toCoordinateTime(int j, float scalar) {
-		int x = (int) (j / (scalar * values.getSampleRate()));
+	private int toCoordinateTime(int j, BigDecimal scalar) {
+		int x = (int) (j / (scalar.doubleValue() * values.getSampleRate()));
 		return x;
 	}
 
-	private int toCoordinateValues(Float floatValue, float scalar) {
+	private int toCoordinateValues(Double value, BigDecimal scalar) {
 		int x = 0;
-		float delta = (max - min);
-		floatValue = (floatValue - min) / delta;
-		floatValue += getOrder();
-		x = (int) (floatValue / scalar);
+		Double delta = (max - min);
+		value = (value - min) / delta;
+		value += getOrder();
+		x = (int) (value / scalar.doubleValue());
 		return x;
 	}
 
 
 
-	private void min(Float f1) {
+	private void min(Double f1) {
 		min = Math.min(min, f1);
 	}
 
-	private void max(Float f1) {
+	private void max(Double f1) {
 		max = Math.max(max, f1);
 	}
 
 
-	public float getOrder() {
+	public Double getOrder() {
 		return order;
 	}
 
-	public void setOrder(float order) {
+	public void setOrder(Double order) {
 		this.order = order;
 
-		for (List<Float> frameValues : values) {
+		for (List<Double> frameValues : values) {
 			if (frameValues.size() != 2) {
 				throw new IllegalArgumentException(
 						"Area values should be from 2 vectors");
@@ -239,11 +239,11 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 	}
 	
 	public String getValueOn(BigDecimal x) {
-		int index = values.toIndex(x.floatValue());
+		int index = values.toIndex(x.doubleValue());
 		if(index> values.size()-1){
 			index = values.size()-1;
 		}
-		List<Float> value = values.get(index);
+		List<Double> value = values.get(index);
 		
 		return value.toString();
 	}

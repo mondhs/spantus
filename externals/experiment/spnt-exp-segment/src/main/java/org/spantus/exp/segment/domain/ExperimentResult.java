@@ -42,7 +42,7 @@ public class ExperimentResult extends Entity {
 	
 	String features;
 	
-	Float totalResult;
+	Double totalResult;
 	
 	String noiseType;
 	
@@ -61,11 +61,11 @@ public class ExperimentResult extends Entity {
 		this.features = features;
 	}
 
-	public Float getTotalResult() {
+	public Double getTotalResult() {
 		return totalResult;
 	}
 
-	public void setTotalResult(Float totalResult) {
+	public void setTotalResult(Double totalResult) {
 		this.totalResult = totalResult;
 	}
 

@@ -86,9 +86,9 @@ public class DiscreteCosineTransform {
      * @return a mel Cepstrum frame
      * @throws IllegalArgumentException
      */
-    public double[] process(double[] input)
+    public Double[] process(Double[] input)
             throws IllegalArgumentException {
-        double[] melspectrum = input;
+    	Double[] melspectrum = input;
 
         if (melcosine == null) {
             numberMelFilters = melspectrum.length;
@@ -112,7 +112,7 @@ public class DiscreteCosineTransform {
             }
         }
 
-        double[] cepstrum;
+        Double[] cepstrum;
 
         // create the cepstrum by apply the melcosine filter
         cepstrum = applyMelCosine(melspectrum);
@@ -143,16 +143,19 @@ public class DiscreteCosineTransform {
      * @param melspectrum the MelSpectrum data
      * @return MelCepstrum data produced by apply the MelCosine filter to the MelSpectrum data
      */
-    protected double[] applyMelCosine(double[] melspectrum) {
+    protected Double[] applyMelCosine(Double[] melspectrum) {
         // create the cepstrum
-        double[] cepstrum = new double[cepstrumSize];
-        double period = (double) numberMelFilters;
-        double beta = 0.5;
+    	Double[] cepstrum = new Double[cepstrumSize];
+    	Double period = (double) numberMelFilters;
+    	Double beta = 0.5;
         // apply the melcosine filter
         for (int i = 0; i < cepstrum.length; i++) {
             if (numberMelFilters > 0) {
                 double[] melcosine_i = melcosine[i];
                 int j = 0;
+                if(cepstrum[i]==null){
+                	cepstrum[i] = 0D;
+                }
                 cepstrum[i] += (beta * melspectrum[j] * melcosine_i[j]);
                 for (j = 1; j < numberMelFilters; j++) {
                     cepstrum[i] += (melspectrum[j] * melcosine_i[j]);

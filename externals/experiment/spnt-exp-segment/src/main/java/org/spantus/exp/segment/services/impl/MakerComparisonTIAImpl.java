@@ -58,14 +58,14 @@ public class MakerComparisonTIAImpl extends MakerComparisonImpl{
 		seq.setSampleRate(result.getOriginal().getSampleRate());
 		TIAComparitionResultCtx ctx = new TIAComparitionResultCtx();
 
-		Iterator<Float> idealIter = result.getOriginal().iterator();
-		Iterator<Float> testIter = result.getTest().iterator();
+		Iterator<Double> idealIter = result.getOriginal().iterator();
+		Iterator<Double> testIter = result.getTest().iterator();
 		boolean hasMore = true;
 		
 		FrameValues segment = null;
 		while(hasMore){
-			Float ideal = 0F;  
-			Float test = 0F;
+			Double ideal = 0D;  
+			Double test = 0D;
 			hasMore = false;
 			if(idealIter.hasNext()){
 				ideal = idealIter.next();
@@ -90,20 +90,20 @@ public class MakerComparisonTIAImpl extends MakerComparisonImpl{
 			seq.add(test-ideal);
 		}
 		//VAF - Voice-Activity Factor
-		Float idealVAF = ctx.idealVoiceFrameCount.floatValue() / result.getOriginal().size();
-		Float testVAF = ctx.testVoiceFrameCount.floatValue() / result.getTest().size();
+		Double idealVAF = ctx.idealVoiceFrameCount.doubleValue() / result.getOriginal().size();
+		Double testVAF = ctx.testVoiceFrameCount.doubleValue() / result.getTest().size();
 		
 		//P clip_{onset}   The probability that speech frames are incorrectly designated as non-speech.
 		//onset - the first 60 ms of the segment
-		Float pc_on = ctx.voiceFrameOnsetFailed.floatValue()/ctx.voiceFrameOnsetTotal;
+		Double pc_on = ctx.voiceFrameOnsetFailed.doubleValue()/ctx.voiceFrameOnsetTotal;
 		//P clip_{steady} The probability that speech frames are incorrectly designated as non-speech 
-		Float pc_ss = ctx.voiceFrameSteadyFailed.floatValue()/ctx.voiceFrameSteadyTotal;
+		Double pc_ss = ctx.voiceFrameSteadyFailed.doubleValue()/ctx.voiceFrameSteadyTotal;
 		//P clip{offset}   The probability that speech frames are incorrectly designated as non-speech.			
 		//offset - the last 60 ms of the segment
-		Float pc_off = ctx.voiceFrameOffsetFailed.floatValue()/ctx.voiceFrameOnsetTotal;
-		Float deltaVAF = Math.abs(testVAF - idealVAF)/idealVAF;
+		Double pc_off = ctx.voiceFrameOffsetFailed.doubleValue()/ctx.voiceFrameOnsetTotal;
+		Double deltaVAF = Math.abs(testVAF - idealVAF)/idealVAF;
 		
-		result.setTotalResult(.1f*pc_on+.1f*pc_ss+.1f*pc_off+.7f*deltaVAF);
+		result.setTotalResult(.1D*pc_on+.1D*pc_ss+.1D*pc_off+.7D*deltaVAF);
 		result.setOnset(pc_on);
 		result.setSteady(pc_ss);
 		result.setOffset(pc_off);
@@ -120,7 +120,7 @@ public class MakerComparisonTIAImpl extends MakerComparisonImpl{
 		Integer offsetIndex =  segment.size()-1-3,
 		onsetIndex =  3,
 		i=0;
-		for (Float f1 : segment) {
+		for (Double f1 : segment) {
 			if(i<onsetIndex){
 				ctx.voiceFrameOnsetFailed += f1==0?1:0;
 				ctx.voiceFrameOnsetTotal++;

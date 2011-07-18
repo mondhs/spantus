@@ -36,9 +36,11 @@ import org.spantus.core.extractor.IExtractorConfig;
 
 public class MockSegmentatorExtractor implements IExtractor {
 
-	IExtractorConfig config;
+	private IExtractorConfig config;
 	
-	String name;
+	private Double extractorSampleRate;
+	
+	private String name;
 	
 	public FrameValues calculate(Long sample, FrameValues values) {
 		return calculateWindow(values);
@@ -46,8 +48,8 @@ public class MockSegmentatorExtractor implements IExtractor {
 
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues rtn = new FrameValues();
-		float avg = 0;
-		for (Float float1 : window) {
+		Double avg = 0D;
+		for (Double float1 : window) {
 			avg += float1;
 		}
 		avg /= window.size();
@@ -66,13 +68,12 @@ public class MockSegmentatorExtractor implements IExtractor {
 	public int getDimension() {
 		return 0;
 	}
-	float extractorSampleRate;
 
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		return extractorSampleRate;
 	}
 
-	public void setExtractorSampleRate(float extractorSampleRate) {
+	public void setExtractorSampleRate(Double extractorSampleRate) {
 		this.extractorSampleRate = extractorSampleRate;
 	}
 

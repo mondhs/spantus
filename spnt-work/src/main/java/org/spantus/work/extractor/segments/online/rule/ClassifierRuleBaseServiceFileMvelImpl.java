@@ -17,6 +17,8 @@ import org.spantus.logger.Logger;
 
 public class ClassifierRuleBaseServiceFileMvelImpl extends
 		ClassifierRuleBaseServiceMvelImpl {
+	
+	List<Rule> rules;
 
 	private String path = "ClassifierRuleBase.csv";
 	private static Logger log = Logger
@@ -66,7 +68,7 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 	
 	protected Rule processLine(List<Rule> rules, String line){
 		String[] lineArr = line.split("[,;]");
-		if(lineArr.length == 0){
+		if(lineArr.length < 4){
 			return null;
 		}
 		String key = preprocess(lineArr[0]);
@@ -98,6 +100,14 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+	@Override
+	public List<Rule> getRules() {
+		return rules;
+	}
+	@Override
+	public void setRules(List<Rule> rules) {
+		this.rules = rules;
 	}
 	
 	

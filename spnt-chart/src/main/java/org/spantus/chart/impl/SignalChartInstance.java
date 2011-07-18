@@ -68,8 +68,8 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 		this.description = description;
 		this.values = values;
 		this.style = style;
-		float min = values.getMinValue();
-		float max = values.getMaxValue();
+		Double min = values.getMinValue();
+		Double max = values.getMaxValue();
 		
 		
 //		for (Float float1 : values) {
@@ -188,7 +188,7 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 //		}
 //		temp[i] = (int)(floatValue/scalar);
 		
-		float delta =  vals.getDeltaValue();
+		Double delta =  vals.getDeltaValue();
 		int i=0; 
 		Integer previousIndex = null;
 
@@ -197,7 +197,7 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 		polygon.addPoint(index, minValue);
 
 		
-		for (Float floatValue : vals) {
+		for (Double floatValue : vals) {
 			
 			index = (int)(i / (xScalar*values.getSampleRate()));
 			
@@ -261,9 +261,9 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 	}
 	
 	public String getValueOn(BigDecimal x) {
-		int index = values.toIndex(x.floatValue());
+		int index = values.toIndex(x.doubleValue());
 		index += 1;
-		Float value = null;
+		Double value = null;
 		if(index > 0 && index<values.size()){
 			value = values.get(index);
 		}

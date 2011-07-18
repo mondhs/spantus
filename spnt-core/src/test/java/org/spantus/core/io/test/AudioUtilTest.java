@@ -14,14 +14,14 @@ public class AudioUtilTest {
 		AudioFormat afSigned = new AudioFormat(1,16,1,true,true);
 //		AudioFormat afNotSigned = new AudioFormat(1,16,1,false,true);
 		
-		assertCaclc(new Byte[]{1,1}, 257, afSigned);
+		assertCaclc(new Byte[]{1,1}, 257D, afSigned);
 
-		assertCaclc(new Byte[]{3,32}, 800, afSigned);
+		assertCaclc(new Byte[]{3,32}, 800D, afSigned);
 
 		
 	}
-	public void assertCaclc(Byte[] bs1, float number, AudioFormat af){
-		Float f1 = AudioUtil.read16(bs1[0], bs1[1], af);
+	public void assertCaclc(Byte[] bs1, Double number, AudioFormat af){
+		Double f1 = AudioUtil.read16(bs1[0], bs1[1], af);
 		Assert.assertEquals("conversion error", number,f1);
 		Byte[] bs = AudioUtil.get16(f1, af);
 		assertEquals(bs1, bs);

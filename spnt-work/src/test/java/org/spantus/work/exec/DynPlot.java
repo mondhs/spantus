@@ -61,7 +61,7 @@ public class DynPlot extends JFrame {
 	public static void main(String[] args) {
 		FrameValues vals = new FrameValues();
 		for (int i = 0; i < 10000; i++) {
-			vals.add(new Float(Math.sin(i * .3 * Math.random())));
+			vals.add(new Double(Math.sin(i * .3 * Math.random())));
 		}
 
 		JFrame demo = new DynPlot(vals);
@@ -89,7 +89,7 @@ public class DynPlot extends JFrame {
 		public void run() {
 			FrameValues vals = new FrameValues();
 			for (int i = 0; i < 1000; i++) {
-				vals.add(new Float(Math.sin(i * .03 * Math.random())));
+				vals.add(new Double(Math.sin(i * .03 * Math.random())));
 			}
 			function.addFrameValues(vals);
 		}

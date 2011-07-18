@@ -28,7 +28,7 @@ public class ClassifierRuleBaseServiceMvelImplTest {
 	public void testCurentNull(){
 		//given
 		ExtremeSegmentsOnlineCtx ctx = new ExtremeSegmentsOnlineCtx(); 
-		ctx.setSegmentEntry(new ExtremeEntry(0,1F,FeatureStates.min));
+		ctx.setSegmentEntry(new ExtremeEntry(0,1D,FeatureStates.min));
 		
 		//when
 		String decision = impl.testOnRuleBase(ctx);
@@ -39,7 +39,7 @@ public class ClassifierRuleBaseServiceMvelImplTest {
 	public void testLastNull(){
 		//given
 		ExtremeSegmentsOnlineCtx ctx = new ExtremeSegmentsOnlineCtx(); 
-		ctx.setSegmentEntry(new ExtremeEntry(0,1F,FeatureStates.min));
+		ctx.setSegmentEntry(new ExtremeEntry(0,1D,FeatureStates.min));
 		ctx.setCurrentSegment(new ExtremeSegment());
 		ctx.getCurrentSegment().setValues(new FrameValues());
 		//when
@@ -51,7 +51,7 @@ public class ClassifierRuleBaseServiceMvelImplTest {
 	public void testLastNotNull(){
 		//given
 		ExtremeSegmentsOnlineCtx ctx = new ExtremeSegmentsOnlineCtx(); 
-		ctx.setSegmentEntry(new ExtremeEntry(0,1F,FeatureStates.max));
+		ctx.setSegmentEntry(new ExtremeEntry(0,1D,FeatureStates.max));
 		ctx.setExtremeSegments(new LinkedList<ExtremeSegment>());
 		ctx.setCurrentSegment(createExtremeSegment());
 		//when
@@ -63,7 +63,7 @@ public class ClassifierRuleBaseServiceMvelImplTest {
 	public void testIsmin(){
 		//given
 		ExtremeSegmentsOnlineCtx ctx = new ExtremeSegmentsOnlineCtx(); 
-		ctx.setSegmentEntry(new ExtremeEntry(0,1F,FeatureStates.min));
+		ctx.setSegmentEntry(new ExtremeEntry(0,1D,FeatureStates.min));
 		ctx.setExtremeSegments(new LinkedList<ExtremeSegment>());
 		ctx.getExtremeSegments().add(createExtremeSegment());
 		ctx.setCurrentSegment(createExtremeSegment());
@@ -77,7 +77,7 @@ public class ClassifierRuleBaseServiceMvelImplTest {
 	public void testDistanceBetweenPeaks(){
 		//given
 		ExtremeSegmentsOnlineCtx ctx = new ExtremeSegmentsOnlineCtx(); 
-		ctx.setSegmentEntry(new ExtremeEntry(0,1F,FeatureStates.max));
+		ctx.setSegmentEntry(new ExtremeEntry(0,1D,FeatureStates.max));
 		
 		ctx.setExtremeSegments(new LinkedList<ExtremeSegment>());
 		ctx.getExtremeSegments().add(createExtremeSegment());
@@ -107,12 +107,12 @@ public class ClassifierRuleBaseServiceMvelImplTest {
 		ExtremeSegment extremeSegment = new ExtremeSegment();
 		extremeSegment.setValues(new FrameValues());
 		extremeSegment.setPeakEntries(new LinkedList<ExtremeEntry>());
-		extremeSegment.getPeakEntries().add(new ExtremeEntry(0,0F,FeatureStates.max));
-		extremeSegment.getPeakEntries().add(new ExtremeEntry(0,1F,FeatureStates.max));
-		extremeSegment.getPeakEntries().add(new ExtremeEntry(0,0F,FeatureStates.max));
-		extremeSegment.setPeakEntry(new ExtremeEntry(0,1F,FeatureStates.max));
-		extremeSegment.setStartEntry(new ExtremeEntry(0,0F,FeatureStates.min));
-		extremeSegment.setEndEntry(new ExtremeEntry(0,0F,FeatureStates.min));
+		extremeSegment.getPeakEntries().add(new ExtremeEntry(0,0D,FeatureStates.max));
+		extremeSegment.getPeakEntries().add(new ExtremeEntry(0,1D,FeatureStates.max));
+		extremeSegment.getPeakEntries().add(new ExtremeEntry(0,0D,FeatureStates.max));
+		extremeSegment.setPeakEntry(new ExtremeEntry(0,1D,FeatureStates.max));
+		extremeSegment.setStartEntry(new ExtremeEntry(0,0D,FeatureStates.min));
+		extremeSegment.setEndEntry(new ExtremeEntry(0,0D,FeatureStates.min));
 
 		return extremeSegment;
 	}

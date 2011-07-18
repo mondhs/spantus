@@ -30,8 +30,8 @@ import java.util.Set;
  *
  */
 public interface IExtractorConfig extends Cloneable, Serializable {
-	public float getSampleRate();
-	public void setSampleRate(float sampleRate);
+	public Double getSampleRate();
+	public void setSampleRate(Double sampleRate);
 	public int getWindowSize();
 	public void setWindowSize(int windowSize);
 //	public int getBitsPerSample();

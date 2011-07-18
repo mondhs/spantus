@@ -35,16 +35,16 @@ import java.util.Map;
  */
 public class HammingWindowing extends Windowing {
 
-	Map<Integer, List<Float>> cache;
+	Map<Integer, List<Double>> cache;
 	
-	public void apply(List<Float> values) {
+	public void apply(List<Double> values) {
 //		int nSamples = values.size();
-		List<Float> result = new ArrayList<Float>();
-		Iterator<Float> windowIterator = getFromCache(values.size()).iterator();
-		Iterator<Float> valuesIterator = values.iterator();
+		List<Double> result = new ArrayList<Double>();
+		Iterator<Double> windowIterator = getFromCache(values.size()).iterator();
+		Iterator<Double> valuesIterator = values.iterator();
 		while (valuesIterator.hasNext()) {
-			Float val = valuesIterator.next();
-			Float win = windowIterator.next();
+			Double val = valuesIterator.next();
+			Double win = windowIterator.next();
 			result.add(val*win);
 		}
 		values.clear();
@@ -55,9 +55,9 @@ public class HammingWindowing extends Windowing {
 	 * @param size
 	 * @return
 	 */
-	protected List<Float> getFromCache(int size){
+	protected List<Double> getFromCache(int size){
 		if(cache == null){
-			cache = new HashMap<Integer, List<Float>>();
+			cache = new HashMap<Integer, List<Double>>();
 		}
 		if(cache.get(size)==null){
 			cache.put(size, calculate(size));	
@@ -69,25 +69,25 @@ public class HammingWindowing extends Windowing {
 	 * @param size
 	 * @return
 	 */
-	public List<Float> calculate(int size){
+	public List<Double> calculate(int size){
 		int j;
-		List<Float> result = new ArrayList<Float>();
+		List<Double> result = new ArrayList<Double>();
 		for (j = 0-size/2 ; j < size/2; j++){
-				float d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / size));
+			Double d =(0.54 + 0.46 *  Math.cos(2.0 *  Math.PI * j / size));
 				result.add(d);
 		}
 		if(size>result.size()){
-			float d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / size));
+			Double d =(0.54 + 0.46 *  Math.cos(2.0 * Math.PI * j / size));
 			result.add(d);
 		}
 		return result;
 	}
 	
-	public Float calculate(int size, int index){
+	public Double calculate(int size, int index){
 		int j = index-(size/2);
-		float d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * j / size));
+		Double d =(0.54 + 0.46 * Math.cos(2.0 *  Math.PI * j / size));
 		if(index==size){
-			d =(0.54f + 0.46f * (float) Math.cos(2.0f * (float) Math.PI * size / size));
+			d =(0.54 + 0.46 *  Math.cos(2.0 * Math.PI * size / size));
 		}
 		return d;
 	}

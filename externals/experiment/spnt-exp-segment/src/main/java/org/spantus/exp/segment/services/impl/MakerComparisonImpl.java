@@ -119,7 +119,7 @@ public class MakerComparisonImpl implements MakerComparison{
 		if(ms == null){
 			ms = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
 		}
-		return createSequence(ms, 1);
+		return createSequence(ms, 1D);
 	}
 	
 	/**
@@ -128,19 +128,19 @@ public class MakerComparisonImpl implements MakerComparison{
 	 * @return
 	 */
 	protected FrameValues createSequence(MarkerSet markerSet1){
-		return createSequence(markerSet1, 1);
+		return createSequence(markerSet1, 1D);
 	}
 	
-	protected FrameValues createSequence(MarkerSet markerSet1, float coef){
+	protected FrameValues createSequence(MarkerSet markerSet1, Double coef){
 		FrameValues seq = new FrameValues();
-		seq.setSampleRate(1000/STEP_IN_MILS.floatValue());
+		seq.setSampleRate(1000/STEP_IN_MILS.doubleValue());
 		long lastEnd = 0;
 		for (Marker m1 : markerSet1.getMarkers()) {
 			m1.getStart();
 			long start = m1.getStart()/STEP_IN_MILS;
 			
 			for (int i = 0; i < start-lastEnd; i++) {
-				seq.add(0f);
+				seq.add(0D);
 			}
 			long length = m1.getLength()/STEP_IN_MILS;
 			for (int i = 0; i < length; i++) {
@@ -148,7 +148,7 @@ public class MakerComparisonImpl implements MakerComparison{
 			}
 			lastEnd = start+length;
 		} 
-		seq.add(0f);
+		seq.add(0D);
 		return seq;
 	}
 	
@@ -156,30 +156,30 @@ public class MakerComparisonImpl implements MakerComparison{
 		FrameValues seq = new FrameValues();
 		int maxSize = Math.max(result.getOriginal().size(), 
 				result.getTest().size());
-		Iterator<Float> i1 = result.getOriginal().iterator();
-		Iterator<Float> i2 = result.getTest().iterator();
+		Iterator<Double> i1 = result.getOriginal().iterator();
+		Iterator<Double> i2 = result.getTest().iterator();
 		Assert.isTrue(result.getOriginal().getSampleRate() == result.getTest().getSampleRate());
 		seq.setSampleRate(result.getOriginal().getSampleRate());
 		int totalCount = 0;
 		int errorCount = 0;
 		for (int i = 0; i < maxSize; i++) {
 			totalCount++;
-			Float v1 = i1.hasNext()?i1.next():0;
-			Float v2 = i2.hasNext()?i2.next():0;
-			Float r = 0f;
+			Double v1 = i1.hasNext()?i1.next():0;
+			Double v2 = i2.hasNext()?i2.next():0;
+			Double r = 0D;
 			if(v1.equals(v2)){
-				r = 0f;
+				r = 0D;
 			}else if(v1 > v2){
 				errorCount++;
-				r = 1f;
+				r = 1D;
 			}else{
 				errorCount++;
-				r = -1f;
+				r = -1D;
 			}
 			seq.add(r);
 		}
 		result.setSequenceResult(seq);
-		result.setTotalResult(((float)errorCount)/totalCount);
+		result.setTotalResult(((double)errorCount)/totalCount);
 		log.debug("Simple comparition result: " + result.getTotalResult());
 		return seq;
 	}

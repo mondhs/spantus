@@ -29,8 +29,8 @@ public class MockExtractorConfig implements IExtractorConfig {
 		return 0;
 	}
 
-	public float getSampleRate() {
-		return 0;
+	public Double getSampleRate() {
+		return 0D;
 	}
 
 	public int getWindowOverlap() {
@@ -50,7 +50,7 @@ public class MockExtractorConfig implements IExtractorConfig {
 
 	}
 
-	public void setSampleRate(float sampleRate) {
+	public void setSampleRate(Double sampleRate) {
 
 	}
 

@@ -40,7 +40,7 @@ public class Mpeg7ExtractorInputReader implements IExtractorInputReader {
 	}
 
 	
-	public void put(Long sample, float value) {
+	public void put(Long sample, Double value) {
 		throw new RuntimeException("Should not be used");
 	}
 

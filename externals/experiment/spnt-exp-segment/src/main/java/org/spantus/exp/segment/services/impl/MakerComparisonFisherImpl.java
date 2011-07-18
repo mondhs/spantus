@@ -44,7 +44,7 @@ public class MakerComparisonFisherImpl extends MakerComparisonImpl{
 		
 		Double fisher = Math.pow((testCriteria.mean - origCriteria.mean),2)
 		 / Math.pow((testCriteria.variance + origCriteria.variance),2);
-		result.setTotalResult(fisher.floatValue());
+		result.setTotalResult(fisher);
 		log.debug("Fisher comparition result: " + fisher);
 		return seq;
 	}
@@ -54,7 +54,7 @@ public class MakerComparisonFisherImpl extends MakerComparisonImpl{
 		c.mean = 0d;
 		Double m2 = 0d;
 		long n = 0;
-		for (Float x : vals) {
+		for (Double x : vals) {
 			n++;
 			Double delta = x - c.mean; 
 			c.mean = (c.mean + delta)/n;

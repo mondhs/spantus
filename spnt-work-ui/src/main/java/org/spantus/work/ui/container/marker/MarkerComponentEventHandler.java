@@ -132,8 +132,8 @@ public class MarkerComponentEventHandler extends MouseAdapter implements MouseMo
          	if(e.getComponent() instanceof MarkerComponent){
          		Marker m = ((MarkerComponent)e.getComponent()).getMarker();
          		SelectionDto selectionDto = new SelectionDto(
-    					m.getStart().floatValue()/1000,
-    					m.getLength().floatValue()/1000);
+    					m.getStart().doubleValue()/1000,
+    					m.getLength().doubleValue()/1000);
          		
          		popup.getEventMulticaster().multicastEvent(SpantusEvent.createEvent(
     					this, GlobalCommands.sample.play.name()

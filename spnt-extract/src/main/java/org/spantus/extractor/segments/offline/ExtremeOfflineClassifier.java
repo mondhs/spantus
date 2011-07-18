@@ -28,7 +28,7 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 	}
 	
 	@Override
-	public boolean isSignalState(Float value) {
+	public boolean isSignalState(Double value) {
 		return false;
 	}
 
@@ -38,7 +38,7 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 	 */
 	public static FrameValues refreshThreasholdInfo(MarkerSet markerSet, FrameValues values) {
 
-		Map<Integer,Float> changePoints = new HashMap<Integer,Float>();
+		Map<Integer,Double> changePoints = new HashMap<Integer,Double>();
 		
 		FrameValues threasholds = new FrameValues();
 		threasholds.setSampleRate(values.getSampleRate());
@@ -51,16 +51,16 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 			int end = start
 					+ iMarker.getExtractionData().getLengthSampleNum()
 							.intValue();
-			changePoints.put(start,1000F);
-			changePoints.put(end,1000F);
+			changePoints.put(start,1000D);
+			changePoints.put(end,1000D);
 //			log.debug("[refreshThreasholdInfo] marker: {0}", marker);
 
 		}
 
-//		Iterator<Float> valIter = values.iterator();
+//		Iterator<Double> valIter = values.iterator();
 		for (int index = 0; index < values.size(); index++) {
-//			Float val = valIter.next();
-//			Float setVal = val * .1F;
+//			Double val = valIter.next();
+//			Double setVal = val * .1F;
 //			if (!changePoints.containsKey(index)) {
 //				setVal = values.getMinValue();
 //				setVal = val * .1F;
@@ -71,7 +71,7 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 	}
 
 	@Override
-	public Float calculateThreshold(Float windowValue) {
+	public Double calculateThreshold(Double windowValue) {
 		return null;
 	}
 

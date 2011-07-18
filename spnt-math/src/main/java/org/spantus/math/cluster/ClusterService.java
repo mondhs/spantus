@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ClusterService {
 
-	public ClusterCollection cluster(List<List<Float>> vectors,
+	public ClusterCollection cluster(List<List<Double>> vectors,
 			int clusterSize);
 
 }

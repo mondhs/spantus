@@ -64,7 +64,7 @@ public class AudioDescriptorExtractor implements IExtractor {
 	}
 
 	
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		return getConfig().getSampleRate();
 	}
 

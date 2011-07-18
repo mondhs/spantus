@@ -34,12 +34,10 @@ import java.util.List;
 public class WelchWindowing extends Windowing {
 
 	
-	public void apply(List<Float> values) {
+	public void apply(List<Double> values) {
 		int nSamples = values.size();
-		for (int i = 0 ; i < nSamples; i++)
-		{
-			float f;
-			f = (i-nSamples/2.0f)/(nSamples/2.0f);
+		for (int i = 0 ; i < nSamples; i++){
+			Double f = (i-nSamples/2.0)/(nSamples/2.0);
 			values.set(i, values.get(i)* (1.0f-f*f));
 		}
 	}

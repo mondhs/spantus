@@ -63,7 +63,9 @@ public abstract class WorkServiceFactory {
 	 */
 	public static ClassifierRuleBaseService createClassifierRuleBaseService(String rulePath) {
 		ClassifierRuleBaseServiceFileMvelImpl ruleBase = new ClassifierRuleBaseServiceFileMvelImpl();
-		ruleBase.setPath(rulePath);
+		if(rulePath != null){
+			ruleBase.setPath(rulePath);
+		}
 		ruleBase.setClusterService(ExtremeOnClassifierServiceFactory.createClusterService());
 		
 //		ClassifierPostProcessServiceBaseImpl ruleBase = new ClassifierPostProcessServiceBaseImpl();

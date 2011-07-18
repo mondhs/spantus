@@ -56,7 +56,7 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	ColorLookup colorLookup = new ColorLookup();
 	GraphDomain domain;
 
-	float order = 0f;
+	Double order = 0D;
 
 	VectorSeriesColorEnum colorType = VectorSeriesColorEnum.blackWhite;
 
@@ -86,9 +86,9 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 
 	public void paintFunction(Graphics g) {
 		
-		int height = (int) (1  / ( yScalar.floatValue()  ));
-		int startY = (int) ((1 + getOrder()) / (  yScalar.floatValue()  ));
-		int width = (int) (values.toTime(values.size()) /  (xScalar.floatValue()));
+		int height = (int) (1  / ( yScalar.doubleValue()  ));
+		int startY = (int) ((1 + getOrder()) / (  yScalar.doubleValue()  ));
+		int width = (int) (values.toTime(values.size()) /  (xScalar.doubleValue()));
 		g.drawImage(getImage(values), 0, startY, width, -height, null);
 	}
 
@@ -97,9 +97,9 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	private BufferedImage getImage(FrameVectorValues vals) {
 		if (image != null){
 			if(domain.getFrom() != null){
-				int from = vals.toIndex(domain.getFrom().floatValue());
-				int to = vals.toIndex(domain.getUntil().floatValue());
-				to = Math.min(to, vals.toIndex(vals.size()));
+				int from = vals.toIndex(domain.getFrom().doubleValue());
+				int to = vals.toIndex(domain.getUntil().doubleValue());
+				to = Math.min(to, vals.toIndex((double)vals.size()));
 				return image.getSubimage(from, 0, to-from, image.getHeight());
 			}else{
 				return image;
@@ -112,12 +112,12 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 				BufferedImage.TYPE_INT_RGB);
 		int[] rgbArray = new int[vals.size() * vals.get(0).size()];
 		int x = 0, y = 0;
-		for (List<Float> fv : vals) {
+		for (List<Double> fv : vals) {
 			int delta = vals.size();
 			y = 0;
-			LinkedList<Float> lf = new LinkedList<Float>(fv);
-			for (ListIterator<Float> iterator2 = lf.listIterator(fv.size()); iterator2.hasPrevious();) {
-				Float f1 = (Float) iterator2.previous();
+			LinkedList<Double> lf = new LinkedList<Double>(fv);
+			for (ListIterator<Double> iterator2 = lf.listIterator(fv.size()); iterator2.hasPrevious();) {
+				Double f1 = (Double) iterator2.previous();
 				rgbArray[x + (y * delta)] = lookupColor(f1);
 				y++;
 			}
@@ -130,11 +130,11 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 
 	private CoordinateBoundary getCoordinateBoundary(FrameVectorValues values) {
 
-		Float xMin = 0f, xMax = new Float(values.toTime(values.size())), yMin = getOrder(), 
-		yMax = new Float(getOrder()+1);
+		Double xMin = 0D, xMax = new Double(values.toTime(values.size())), yMin = getOrder(), 
+		yMax = new Double(getOrder()+1);
 		if(domain != null && domain.getUntil() != null){
-			xMax = domain.getUntil().floatValue();
-			xMin = domain.getFrom().floatValue();
+			xMax = domain.getUntil().doubleValue();
+			xMin = domain.getFrom().doubleValue();
 		}
 
 		return new CoordinateBoundary(new BigDecimal(xMin),
@@ -175,12 +175,12 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 		renderFunction(null, null, xScalar, yScalar);
 	}
 
-	Float min = Float.MAX_VALUE;
-	Float max = Float.MIN_VALUE;
+	Double min = Double.MAX_VALUE;
+	Double max = -Double.MAX_VALUE;
 	private void minmax(FrameVectorValues values){
-		for (List<Float> fv : values) {
+		for (List<Double> fv : values) {
 			boolean first = true;
-			for (Float f1 : fv) {
+			for (Double f1 : fv) {
 				//skip first
 				if(first){
 					first = false;
@@ -193,10 +193,10 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	}
 
 
-	public int lookupColor(float floatValue) {
+	public int lookupColor(Double floatValue) {
 
-		float delta = max - min;
-		float fColor = ((float) (floatValue - min) / (delta));
+		Double delta = max - min;
+		Double fColor = ((Double) (floatValue - min) / (delta));
 		short s = (short)(256*fColor);
 		Color clr = colorLookup.lookup(getColorType(), s);
 		return clr.getRGB();
@@ -210,11 +210,11 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 		this.domain = domain;
 	}
 
-	public float getOrder() {
+	public Double getOrder() {
 		return order;
 	}
 
-	public void setOrder(float order) {
+	public void setOrder(Double order) {
 		this.order = order;
 	}
 
@@ -226,16 +226,16 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 		this.colorType = colorType;
 	}
 	public String getValueOn(BigDecimal x) {
-		int index = values.toIndex(x.floatValue());
+		int index = values.toIndex(x.doubleValue());
 		if(index> values.size()-1){
 			index = values.size()-1;
 		}
-		List<Float> value = values.get(index);
+		List<Double> value = values.get(index);
 		StringBuilder sb = new StringBuilder();
                 sb.append("[");
                 String separator = "";
                 int i=0;
-                for (Float float1 : value) {
+                for (Double float1 : value) {
                     sb.append(separator);
                     sb.append(MessageFormat.format("{0,number,0.000}", float1));
                     separator = ";";

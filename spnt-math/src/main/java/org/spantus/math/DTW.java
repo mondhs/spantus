@@ -14,38 +14,38 @@ public class DTW {
 
 	public static int MAX_DISTANCE_COEF = 4;
 
-	public static Float distance(Float t, Float r) {
-		return (float) Math.sqrt(Math.pow((t - r), 2));
+	public static Double distance(Double t, Double r) {
+		return Math.sqrt(Math.pow((t - r), 2));
 	}
-	public static Float distanceEuclidian(List<Float> ts, List<Float> rs) {
+	public static Double distanceEuclidian(List<Double> ts, List<Double> rs) {
 		double sum = 0.0;
-		Iterator<Float> ti = ts.iterator();
-		Iterator<Float> ri = rs.iterator();
+		Iterator<Double> ti = ts.iterator();
+		Iterator<Double> ri = rs.iterator();
 		while (ri.hasNext()) {
-			Float r = ri.next();
-			Float t = ti.next();
+			Double r = ri.next();
+			Double t = ti.next();
 			sum += Math.pow(t-r,2);
 		}
 		
-		return (float) Math.sqrt(sum);
+		return  Math.sqrt(sum);
 	}
 
 	
-	public static List<List<Float>> distanceVectorMatrix(List<List<Float>> target,
-			List<List<Float>> sample, Integer maxDisanceCoef) {
-		List<List<Float>> matrix = new ArrayList<List<Float>>();
+	public static List<List<Double>> distanceVectorMatrix(List<List<Double>> target,
+			List<List<Double>> sample, Integer maxDisanceCoef) {
+		List<List<Double>> matrix = new ArrayList<List<Double>>();
 		int j = 0, i = 0;
-		List<List<Float>> _target = sample.size() > target.size() ? sample : target;
-		List<List<Float>> _sample = sample.size() > target.size() ? target : sample;
-		for (List<Float> sampleVector : _sample) {
+		List<List<Double>> _target = sample.size() > target.size() ? sample : target;
+		List<List<Double>> _sample = sample.size() > target.size() ? target : sample;
+		for (List<Double> sampleVector : _sample) {
 			j++;
-			List<Float> row = new ArrayList<Float>();
-			for (List<Float> targetVector : _target) {
+			List<Double> row = new ArrayList<Double>();
+			for (List<Double> targetVector : _target) {
 				i++;
 				if (isInLegalRange(i, j, target.size(), sample.size(), maxDisanceCoef)) {
 					row.add(distanceEuclidian(targetVector, sampleVector));
 				} else {
-					row.add(Float.NaN);
+					row.add(Double.NaN);
 				}
 
 			}
@@ -55,21 +55,21 @@ public class DTW {
 		return matrix;
 	}
 	
-	public static List<List<Float>> distanceMatrix(List<Float> target,
-			List<Float> sample, Integer maxDisanceCoef) {
-		List<List<Float>> matrix = new ArrayList<List<Float>>();
+	public static List<List<Double>> distanceMatrix(List<Double> target,
+			List<Double> sample, Integer maxDisanceCoef) {
+		List<List<Double>> matrix = new ArrayList<List<Double>>();
 		int j = 0, i = 0;
-		List<Float> _target = sample.size() > target.size() ? sample : target;
-		List<Float> _sample = sample.size() > target.size() ? target : sample;
-		for (Float float1 : _sample) {
+		List<Double> _target = sample.size() > target.size() ? sample : target;
+		List<Double> _sample = sample.size() > target.size() ? target : sample;
+		for (Double float1 : _sample) {
 			j++;
-			List<Float> row = new ArrayList<Float>();
-			for (Float float2 : _target) {
+			List<Double> row = new ArrayList<Double>();
+			for (Double float2 : _target) {
 				i++;
 				if (isInLegalRange(i, j, target.size(), sample.size(), maxDisanceCoef)) {
 					row.add(distance(float1, float2));
 				} else {
-					row.add(Float.NaN);
+					row.add(Double.NaN);
 				}
 
 			}
@@ -95,20 +95,20 @@ public class DTW {
 		}
 	}
 	
-	public static DtwInfo createDtwVectorInfo(List<List<Float>> target, List<List<Float>> sample){
-		List<List<Float>> distanceMatrix = distanceVectorMatrix(target, sample, null);
+	public static DtwInfo createDtwVectorInfo(List<List<Double>> target, List<List<Double>> sample){
+		List<List<Double>> distanceMatrix = distanceVectorMatrix(target, sample, null);
 		DtwInfo info = new DtwInfo();
 		info.setDistanceMatrix(distanceMatrix);
 		return info;
 	}
 
 
-	public static DtwInfo createDtwInfo(List<Float> target, List<Float> sample){
+	public static DtwInfo createDtwInfo(List<Double> target, List<Double> sample){
 		return createDtwInfo(target, sample, null);
 	}
 	
-	public static DtwInfo createDtwInfo(List<Float> target, List<Float> sample, Integer maxDisanceCoef){
-		List<List<Float>> distanceMatrix = distanceMatrix(target, sample, maxDisanceCoef);
+	public static DtwInfo createDtwInfo(List<Double> target, List<Double> sample, Integer maxDisanceCoef){
+		List<List<Double>> distanceMatrix = distanceMatrix(target, sample, maxDisanceCoef);
 		DtwInfo info = new DtwInfo();
 		info.setDistanceMatrix(distanceMatrix);
 //		debug("\n" + logMatrix(distanceMatrix));
@@ -121,13 +121,13 @@ public class DTW {
 	 * @param sample
 	 * @return
 	 */
-	public static Float estimate(DtwInfo info) {
+	public static Double estimate(DtwInfo info) {
 		DtwResult result = null;
 		result = dtwRecusion(info);
 		return result.getResult();
 	}
 	
-	public static Float estimate(List<Float> target, List<Float> sample) {
+	public static Double estimate(List<Double> target, List<Double> sample) {
 		return estimate(createDtwInfo(target, sample));
 	}
 

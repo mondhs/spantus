@@ -50,11 +50,11 @@ public class LogExtractor extends AbstractExtractorModifier {
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues calculatedValues = new FrameValues();
 		FrameValues fv = getExtractor().calculateWindow(window);
-		for (Float float1 : fv) {
+		for (Double float1 : fv) {
 			if(fv.equals(0F)){
-				calculatedValues.add(0F);
+				calculatedValues.add(0D);
 			}else {
-				calculatedValues.add((float)Math.log(float1));
+				calculatedValues.add(Math.log(float1));
 			}
 		}
 		return calculatedValues;

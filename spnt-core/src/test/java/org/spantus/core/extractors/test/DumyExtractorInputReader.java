@@ -13,7 +13,7 @@ import org.spantus.logger.Logger;
 public class DumyExtractorInputReader implements IExtractorInputReader {
 	
 	private Logger log = Logger.getLogger(getClass());
-	private LinkedList<Float> window = new LinkedList<Float>();
+	private LinkedList<Double> window = new LinkedList<Double>();
 //	private Float lastMin=Float.MAX_VALUE, lastMax=Float.MIN_VALUE;
 //	private int same = 0;
 //	private Long sample = 0L;
@@ -39,7 +39,7 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
 	}
 
 	
-	public void put(Long sample, float value) {
+	public void put(Long sample, Double value) {
 		window.add(value);
 //		if(window.size() > configedWindowSize){
 //			window.poll();	
@@ -83,7 +83,7 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
 	}
 
 
-	public LinkedList<Float> getWindow() {
+	public LinkedList<Double> getWindow() {
 		return window;
 	}
 

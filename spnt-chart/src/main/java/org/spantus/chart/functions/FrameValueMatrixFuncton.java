@@ -71,11 +71,11 @@ public class FrameValueMatrixFuncton extends Function {
 		return charType;
 	}
 
-	public float getOrder() {
+	public Double getOrder() {
 		return charType.getOrder();
 	}
 
-	public void setOrder(float order) {
+	public void setOrder(Double order) {
 		charType.setOrder(order);
 	}
 

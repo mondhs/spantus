@@ -26,15 +26,15 @@ public class StaticThreshold extends AbstractThreshold {
 	private Logger log = Logger.getLogger(StaticThreshold.class);
 	private int windowsLearned;
 	private Long learningPeriod;
-	private Float currentThresholdValue = Float.MIN_VALUE;
-	private Float baseThresholdValue = null;
+	private Double currentThresholdValue = Double.MIN_VALUE;
+	private Double baseThresholdValue = null;
 
-	public Float getCurrentThresholdValue() {
+	public Double getCurrentThresholdValue() {
 		return currentThresholdValue;
 	}
 
-	public void setCurrentThresholdValue(Float currentThresholdValue) {
-		this.currentThresholdValue = currentThresholdValue;
+	public void setCurrentThresholdValue(Double frameThreshold) {
+		this.currentThresholdValue = frameThreshold;
 	}
 
 	public Long getLearningPeriod() {
@@ -61,14 +61,14 @@ public class StaticThreshold extends AbstractThreshold {
 	 * @param windowValue
 	 * @return calculate threshold value
 	 */
-	public Float calculateThreshold(Float value){
+	public Double calculateThreshold(Double value){
 		if (!isTrained()) {
 			baseThresholdValue = train(value, baseThresholdValue);
 		}
 		if(baseThresholdValue == null){
 			baseThresholdValue = value;
 		}
-		Float rtnThreshold = applyCoef(baseThresholdValue);
+		Double rtnThreshold = applyCoef(baseThresholdValue);
 		if(!isTrained() && rtnThreshold<value){
 			currentThresholdValue = value;
 			rtnThreshold = value;
@@ -80,7 +80,7 @@ public class StaticThreshold extends AbstractThreshold {
 	
 	
 	@Override
-	public boolean isSignalState(Float value) {
+	public boolean isSignalState(Double value) {
 		boolean isSignal = isTrained() && (currentThresholdValue<value);
 		return isSignal;
 	}
@@ -89,7 +89,7 @@ public class StaticThreshold extends AbstractThreshold {
 		return windowsLearned > ( getExtractor().getExtractorSampleRate()*getLearningPeriod()/1000);
 	}
 	
-	protected Float train(Float windowValue, Float thresholdValue){
+	protected Double train(Double windowValue, Double thresholdValue){
 		windowsLearned++;
 		if(thresholdValue == null){
 			log.debug("[train]thresholdValue is null for {0}", windowValue);

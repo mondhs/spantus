@@ -41,8 +41,8 @@ import java.util.List;
  */
 public class BatchCMN  {
 
-    private double[] sums;           // array of current sums
-    private List<double[]> cepstraList;
+    private Double[] sums;           // array of current sums
+    private List<Double[]> cepstraList;
     private int numberDataCepstra;
 
     public BatchCMN() {
@@ -63,7 +63,7 @@ public class BatchCMN  {
     public void initialize() {
 //        super.initialize();
         sums = null;
-        cepstraList = new LinkedList<double[]>();
+        cepstraList = new LinkedList<Double[]>();
     }
 
 
@@ -100,8 +100,8 @@ public class BatchCMN  {
 //        return output;
 //    }
 
-    public double[] process(double[] value){
-        double[] output = null;
+    public Double[] process(Double[] value){
+    	Double[] output = null;
         if (!cepstraList.isEmpty()) {
             output = cepstraList.remove(0);
         } else {
@@ -121,11 +121,11 @@ public class BatchCMN  {
      *
      * @return the number cepstra (with Data) read
      */
-    private int readUtterance(double[] input) {
+    private int readUtterance(Double[] input) {
         numberDataCepstra++;
-        double[] cepstrumData = input;
+        Double[] cepstrumData = input;
         if (sums == null) {
-            sums = new double[cepstrumData.length];
+            sums = new Double[cepstrumData.length];
         } else {
             if (sums.length != cepstrumData.length) {
                 throw new Error
@@ -136,6 +136,9 @@ public class BatchCMN  {
         }
         // add the cepstrum data to the sums
         for (int j = 0; j < cepstrumData.length; j++) {
+        	if(sums[j]==null){
+        		sums[j] = 0D; 
+        	}
             sums[j] += cepstrumData[j];
         }
         cepstraList.add(input);
@@ -153,8 +156,8 @@ public class BatchCMN  {
             sums[i] /= numberDataCepstra;
         }
 
-        for (double[] data : cepstraList) {
-                double[] cepstrum = data;
+        for (Double[] data : cepstraList) {
+        	Double[] cepstrum = data;
                 for (int j = 0; j < cepstrum.length; j++) {
                     cepstrum[j] -= sums[j]; // sums[] is now the means[]
                 }

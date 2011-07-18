@@ -42,8 +42,8 @@ public class CorpusSegmentStatisticsTest extends AbstractSegmentDirTest {
 		for (CorpusEntry entry : getCorpusRepository().findAllEntries()) {
 
 			for (FeatureData featureData : entry.getFeatureMap().values()) {
-				Float avg = avg(featureData.getValues());
-				Float std = std(featureData.getValues(), avg);
+				Double avg = avg(featureData.getValues());
+				Double std = std(featureData.getValues(), avg);
 				CorpusEntryStat stat = new CorpusEntryStat(
 						fix(entry.getName()), avg, std);
 				map.put(featureData.getName(), stat);
@@ -91,24 +91,24 @@ public class CorpusSegmentStatisticsTest extends AbstractSegmentDirTest {
 	 * @param values
 	 * @return
 	 */
-	private Float std(IValues values, Float avg) {
+	private Double std(IValues values, Double avg) {
 		if (values.getDimention() == 1) {
 			FrameValues fv = (FrameValues) values;
 			return VectorUtils.std(fv, avg);
 
 		}
-		List<Float> stds = Lists.newArrayList();
+		List<Double> stds = Lists.newArrayList();
 		FrameVectorValues fvv = (FrameVectorValues) values;
-		for (List<Float> fv : fvv) {
-			Float previousAbs = null;
-			float flux = 0;
-			for (Float current : fv) {
+		for (List<Double> fv : fvv) {
+			Double previousAbs = null;
+			Double flux = 0D;
+			for (Double current : fv) {
 				if(previousAbs == null){
-					previousAbs = Float.valueOf(Math.abs(current));
+					previousAbs = Double.valueOf(Math.abs(current));
 					continue;
 				}
 				//x=(|X[k]|-|X[k-1]|)
-				float x = Math.abs(current) - previousAbs;
+				Double x = Math.abs(current) - previousAbs;
 				//H(x)=(x+|x|)/2
 				flux += (x + Math.abs(x))/2;
 				previousAbs = Math.abs(current);
@@ -126,23 +126,23 @@ public class CorpusSegmentStatisticsTest extends AbstractSegmentDirTest {
 	 * @param values
 	 * @return
 	 */
-	private Float avg(IValues values) {
+	private Double avg(IValues values) {
 		if (values.getDimention() == 1) {
 			FrameValues fv = (FrameValues) values;
 			return VectorUtils.avg(fv);
 		}
-		List<Float> avgs = Lists.newArrayList();
+		List<Double> avgs = Lists.newArrayList();
 		FrameVectorValues fvv = (FrameVectorValues) values;
-		for (List<Float> fv : fvv) {
-			Float previousAbs = null;
-			float flux = 0;
-			for (Float current : fv) {
+		for (List<Double> fv : fvv) {
+			Double previousAbs = null;
+			Double flux = 0D;
+			for (Double current : fv) {
 				if(previousAbs == null){
-					previousAbs = Float.valueOf(Math.abs(current));
+					previousAbs = Double.valueOf(Math.abs(current));
 					continue;
 				}
 				//x=(|X[k]|-|X[k-1]|)
-				float x = Math.abs(current) - previousAbs;
+				Double x = Math.abs(current) - previousAbs;
 				//H(x)=(x+|x|)/2
 				flux += (x + Math.abs(x))/2;
 				previousAbs = Math.abs(current);
@@ -157,10 +157,10 @@ public class CorpusSegmentStatisticsTest extends AbstractSegmentDirTest {
 
 	public class CorpusEntryStat {
 		public String name;
-		public Float avg;
-		public Float std;
+		public Double avg;
+		public Double std;
 
-		public CorpusEntryStat(String name, Float avg, Float std) {
+		public CorpusEntryStat(String name, Double avg, Double std) {
 			super();
 			this.name = name;
 			this.avg = avg;

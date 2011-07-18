@@ -101,7 +101,7 @@ public class RecognitionPlot extends JFrame {
 				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
 		segmentator = (AbstractThreshold)ExtractorUtils.registerThreshold(bufferedReader, ExtractorEnum.ENERGY_EXTRACTOR, param);
 		segmentator.addClassificationListener(multipleSegmentator);
-		segmentator.setCoef(4f);
+		segmentator.setCoef(4D);
 		
 //		segmentator = OnlineSegmentationUtils.register(bufferedReader, ExtractorEnum.WAVFORM_EXTRACTOR);
 //		segmentator.setOnlineSegmentator(multipleSegmentator);

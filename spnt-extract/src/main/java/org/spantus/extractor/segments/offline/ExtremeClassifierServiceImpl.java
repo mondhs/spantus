@@ -115,13 +115,13 @@ public class ExtremeClassifierServiceImpl {
 		}
 
 		int index = 0;
-		Float previous = null;
+		Double previous = null;
 		FeatureStates maxState = FeatureStates.stable;
 		FeatureStates minState = FeatureStates.stable;
-		ListIterator<Float> listIter = values.listIterator();
+		ListIterator<Double> listIter = values.listIterator();
 		// search for the first minimum
 		while (listIter.hasNext()) {
-			Float value = (Float) listIter.next();
+			Double value = (Double) listIter.next();
 			if (previous == null) {
 				previous = value;
 				index++;
@@ -148,7 +148,7 @@ public class ExtremeClassifierServiceImpl {
 
 		// process all the signal for min/max extremes
 		while (listIter.hasNext()) {
-			Float value = (Float) listIter.next();
+			Double value = (Double) listIter.next();
 			int entryIndex = index;
 			// track if values is increasing
 			if (value > previous) {
@@ -205,7 +205,7 @@ public class ExtremeClassifierServiceImpl {
 			}
 		}
 		LinkedList<ExtremeSegment> segments = new LinkedList<ExtremeSegment>();
-//		Float prevLengthTime = 0F;
+//		Double prevLengthTime = 0F;
 		ExtremeSegment previous = null;
 		for (ListIterator<ExtremeSegment> iter = ctx.getSegmentsIterator(); iter
 				.hasNext();) {
@@ -218,7 +218,7 @@ public class ExtremeClassifierServiceImpl {
 			}else {
 				
 //				Long length = entry.getPeakLength();
-//				Float lengthTime = ctx.getValues().toTime(length.intValue());
+//				Double lengthTime = ctx.getValues().toTime(length.intValue());
 				// Double area = iter.getArea();
 				if(entry.isIncrease() && previous.isIncrease()){
 					log.debug("[initialCleanup]remove:{0}; exists: {1} ",  previous, segments.size());
@@ -322,25 +322,25 @@ public class ExtremeClassifierServiceImpl {
 	 * @param vectors
 	 * @param centers
 	 */
-	public void writeDebug(List<List<Float>> vectors, ClusterCollection centers) {
+	public void writeDebug(List<List<Double>> vectors, ClusterCollection centers) {
 //		try {
 //			FileOutputStream fos = new FileOutputStream(new File(
 //					"./target/result.csv"));
 //			DataOutputStream oos = new DataOutputStream(fos);
-//			for (List<Float> list : vectors) {
+//			for (List<Double> list : vectors) {
 //				String seperator = "";
 //				StringBuilder sb = new StringBuilder();
-//				for (Float float1 : list) {
-//					sb.append(float1).append(seperator);
+//				for (Double double1 : list) {
+//					sb.append(double1).append(seperator);
 //					seperator = ";";
 //				}
 //				oos.writeBytes(sb.toString());
 //			}
-			for (Entry<Integer, List<Float>> entry : centers.entrySet()) {
-				List<Float> list = entry.getValue();
+			for (Entry<Integer, List<Double>> entry : centers.entrySet()) {
+				List<Double> list = entry.getValue();
 				String seperator = "";
 				StringBuilder sb = new StringBuilder();
-				for (Float float1 : list) {
+				for (Double float1 : list) {
 					sb.append(seperator).append(float1);
 					seperator = ";";
 				}
@@ -366,13 +366,13 @@ public class ExtremeClassifierServiceImpl {
 	protected ClusterCollection calculateCenters(
 			ExtremeSequences allExtriemesSequence) {
 
-		List<List<Float>> vectors = new ArrayList<List<Float>>();
+		List<List<Double>> vectors = new ArrayList<List<Double>>();
 
 		for (ExtremeListIterator iter = allExtriemesSequence
 				.extreamsListIterator(); iter.hasNext();) {
 			iter.next();
 			if (iter.isCurrentMaxExtream()) {
-				List<Float> point = createLearnVector(iter.getPeakLength(),
+				List<Double> point = createLearnVector(iter.getPeakLength(),
 						iter.getArea());
 				vectors.add(point);
 			}
@@ -390,11 +390,11 @@ public class ExtremeClassifierServiceImpl {
 
 	}
 
-	protected List<Float> createLearnVector(Long length, Double area) {
+	protected List<Double> createLearnVector(Long length, Double area) {
 		return createVector(length, area);
 	}
 
-	protected List<Float> createMatchVector(Long length, Double area) {
+	protected List<Double> createMatchVector(Long length, Double area) {
 		return createVector(length, area);
 	}
 
@@ -404,9 +404,9 @@ public class ExtremeClassifierServiceImpl {
 	 * @param area
 	 * @return
 	 */
-	protected List<Float> createVector(Long length, Double area) {
-		List<Float> vector = new ArrayList<Float>();
-		vector.add(area.floatValue());
+	protected List<Double> createVector(Long length, Double area) {
+		List<Double> vector = new ArrayList<Double>();
+		vector.add(area);
 //		vector.add(length.floatValue());
 		return vector;
 	}
@@ -551,7 +551,7 @@ public class ExtremeClassifierServiceImpl {
 			return markerSet;
 		}
 		ClusterCollection clusterCollection = calculateCenters(ctx.getSequence());
-		Float sampleRate = ctx.getSampleRate();
+		Double sampleRate = ctx.getSampleRate();
 
 		for (ExtremeListIterator iter = ctx.getSequence()
 				.extreamsListIterator(); iter.hasNext();) {
@@ -585,7 +585,7 @@ public class ExtremeClassifierServiceImpl {
 	 * @param sampleRate
 	 * @return
 	 */
-	protected Marker createMarker(ExtremeEntry entry, Float sampleRate) {
+	protected Marker createMarker(ExtremeEntry entry, Double sampleRate) {
 		Marker marker = new Marker();
 		Integer startInSample = entry.getPrevious().getIndex();
 		Integer endInSample = entry.getNext().getIndex();
@@ -673,8 +673,8 @@ public class ExtremeClassifierServiceImpl {
 		return 3;
 	}
 
-	protected float getMaxLength() {
-		return .2F;
+	protected Double getMaxLength() {
+		return .2D;
 	}
 
 }

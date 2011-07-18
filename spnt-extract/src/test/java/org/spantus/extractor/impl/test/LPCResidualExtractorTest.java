@@ -54,7 +54,7 @@ public class LPCResidualExtractorTest {
 	public FrameValues convert(Integer[] intArr){
 		FrameValues rtn = new FrameValues();
 		for (Integer i1 : intArr) {
-			rtn.add(i1.floatValue());
+			rtn.add(i1.doubleValue());
 		}
 		return rtn;
 	}

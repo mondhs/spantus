@@ -8,10 +8,6 @@ import org.spantus.externals.recognition.corpus.CorpusRepository;
 
 
 public class CorpusEntryTableModel implements TableModel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	CorpusRepository corpusRepository;
         Object[] corpusEntries;
 

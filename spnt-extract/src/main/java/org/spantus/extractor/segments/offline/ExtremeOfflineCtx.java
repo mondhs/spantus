@@ -54,7 +54,7 @@ public class ExtremeOfflineCtx {
 		this.markerSet = markerSet;
 	}
 	
-	public Float getSampleRate(){
+	public Double getSampleRate(){
 		return getValues().getSampleRate();
 	}
 

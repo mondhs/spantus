@@ -14,7 +14,7 @@ public class ExtremeSegmentsOnlineCtx {
 	private ExtremeSegment currentSegment;
 	private Integer index=0;
 	private ClassifierRuleBaseEnum.state markerState;
-	private Float previousValue;
+	private Double previousValue;
 	protected ExtremeEntry prevSegmentEntry = null;
 	protected ExtremeEntry segmentEntry  = null;
 
@@ -24,7 +24,7 @@ public class ExtremeSegmentsOnlineCtx {
 	public LinkedList<SegmentFeatureData> semgnetFeatures = new LinkedList<SegmentFeatureData>();
 	public List<SegmentFeatureData> segmentStats = new ArrayList<SegmentFeatureData>(3);
 	public List<SegmentFeatureData> segmentCenters = new ArrayList<SegmentFeatureData>(3);
-	public Float maxDistance;
+	public Double maxDistance;
 	
 
 	public SegmentFeatureData normalizeArea(SegmentFeatureData data){
@@ -159,10 +159,10 @@ public class ExtremeSegmentsOnlineCtx {
 	public void setIndex(Integer index) {
 		this.index = index;
 	}
-	public Float getPreviousValue() {
+	public Double getPreviousValue() {
 		return previousValue;
 	}
-	public void setPreviousValue(Float previous) {
+	public void setPreviousValue(Double previous) {
 		this.previousValue = previous;
 	}
 

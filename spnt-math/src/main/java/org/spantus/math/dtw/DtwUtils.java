@@ -29,7 +29,7 @@ public class DtwUtils {
 		DtwCompare res = new DtwCompare();
 		int minIndex = 0;
 		DtwResult min = new DtwResult();
-		min.setResult(Float.MAX_VALUE);
+		min.setResult(Double.MAX_VALUE);
 		for (DtwResult dr : dtwResults) {
 			if(dr == null) continue;
 			if (Math.min(min.getResult(), dr.getResult()) == dr.getResult()) {

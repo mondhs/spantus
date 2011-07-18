@@ -39,8 +39,8 @@ import klautau.MFCC;
 public class MFCCKlautauServiceImpl implements MFCCService {
 
 	
-	public List<Float> calculateMFCC(List<Float> x, float sampleRate) {
-		List<Float> mfccInput= new LinkedList<Float>(x);
+	public List<Double> calculateMFCC(List<Double> x, Double sampleRate) {
+		List<Double> mfccInput= new LinkedList<Double>(x);
 		int logm = (int) (Math.log(x.size()) / Math.log(2));
 		int n = 1 << logm;
 		if(mfccInput.size() > n){
@@ -50,9 +50,9 @@ public class MFCCKlautauServiceImpl implements MFCCService {
 			n = 128;
 		}
 		int missingSamples = n - mfccInput.size();
-		mfccInput.addAll(Collections.nCopies(missingSamples, 0F));
+		mfccInput.addAll(Collections.nCopies(missingSamples, 0D));
 //
-//		List<Float> floats = MFCC.calculateMFCC(x,
+//		List<Double> floats = MFCC.calculateMFCC(x,
 //				sampleRate);
 		 int nnumberofFilters = 24; 
          int nlifteringCoefficient = 22; 
@@ -75,7 +75,7 @@ public class MFCCKlautauServiceImpl implements MFCCService {
                               oisZeroThCepstralCoefficientCalculated); 
 
        
-        Float[] mfccVal = mfcc.getParameters(mfccInput.toArray(new Float[0]));
+        Double[] mfccVal = mfcc.getParameters(mfccInput.toArray(new Double[0]));
         
 //        List<Float> mfccList = new LinkedList<Float>();
 //        for (Float d : mfccVal) {
@@ -84,7 +84,7 @@ public class MFCCKlautauServiceImpl implements MFCCService {
 		return Arrays.asList(mfccVal);
 	}
 
-    public List<Float> calculateMfccFromSpectrum(List<Float> fft, float sampleRate){
+    public List<Double> calculateMfccFromSpectrum(List<Double> fft, Double sampleRate){
         throw new IllegalAccessError("Not impl");
     }
 }

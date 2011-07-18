@@ -7,7 +7,7 @@ public class DtwInfo {
 
 	public enum DtwType{typeI, typeII, typeIII};
 	
-	private List<List<Float>> distanceMatrix;
+	private List<List<Double>> distanceMatrix;
 	
 	private Integer iterationCount;
 
@@ -30,14 +30,14 @@ public class DtwInfo {
 		iterationCount = getIterationCount()+1;
 	}
 
-	public List<List<Float>> getDistanceMatrix() {
+	public List<List<Double>> getDistanceMatrix() {
 		return distanceMatrix;
 	}
 
-	public void setDistanceMatrix(List<List<Float>> distanceMatrix) {
+	public void setDistanceMatrix(List<List<Double>> distanceMatrix) {
 		this.distanceMatrix = distanceMatrix;
 	}
-	public Float get(int x, int y){
+	public Double get(int x, int y){
 		return getDistanceMatrix().get(y).get(x);
 	}
 	public DtwType getType() {

@@ -36,7 +36,7 @@ public class WorkExtractorConfig implements IExtractorConfig {
 		return config.getFrameSize();
 	}
 
-	public float getSampleRate() {
+	public Double getSampleRate() {
 		return config.getSampleRate();
 	}
 
@@ -57,7 +57,7 @@ public class WorkExtractorConfig implements IExtractorConfig {
 		config.setFrameSize(frameSize);
 	}
 
-	public void setSampleRate(float sampleRate) {
+	public void setSampleRate(Double sampleRate) {
 		setWindowInMills(windowInMills);
 		config.setSampleRate(sampleRate);
 	}

@@ -40,12 +40,12 @@ public class SpectralCentroid extends AbstractSpectralExtractor {
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameVectorValues val3d = calculateFFT(window);
 		FrameValues rtnValues = super.calculateWindow(window);
-		for (List<Float> fv : val3d) {
-			float upper = 0;
-			float bottom = 0;
+		for (List<Double> fv : val3d) {
+			Double upper = 0D;
+			Double bottom = 0D;
 			int k = 1;
-			float normalizeCoef = coefFunction(fv.size()-1);
-			for (Float f1 : fv) {
+			Double normalizeCoef = coefFunction(fv.size()-1);
+			for (Double f1 : fv) {
 				upper += (coefFunction(k++)/normalizeCoef) * f1;
 				bottom += f1;
 			}
@@ -54,8 +54,8 @@ public class SpectralCentroid extends AbstractSpectralExtractor {
 		return rtnValues;
 	}
 
-	private float coefFunction(int k){
-		return (getConfig().getSampleRate() * k) / getWinowSize();
+	private Double coefFunction(int k){
+		return (double) ((getConfig().getSampleRate() * k) / getWinowSize());
 	}
 	
 	

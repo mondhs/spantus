@@ -8,21 +8,21 @@ import java.util.List;
  * @author Mindaugas Greibus
  * 
  */
-public class ListComparator implements Comparator<List<Float>> {
+public class ListComparator implements Comparator<List<Double>> {
 	public ListComparator() {
 	}
 
-	public int compare(List<Float> centerVector, List<Float> pointVector) {
+	public int compare(List<Double> centerVector, List<Double> pointVector) {
 		Double center = criteria(centerVector);
 		Double point = criteria(pointVector);
 		return center.compareTo(point);
 	}
-	protected Double criteria(List<Float> vector){
+	protected Double criteria(List<Double> vector){
 		if(vector == null || vector.size() == 0){
 			return Double.MAX_VALUE;
 		}
 		Double criteria = 0D;
-		for (Float float1 : vector) {
+		for (Double float1 : vector) {
 			criteria += float1*float1;
 		}
 		return criteria;

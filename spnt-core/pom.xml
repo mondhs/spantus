@@ -9,7 +9,6 @@
 
 	<artifactId>spnt-core</artifactId>
 	<name>Spantus - Core module</name>
-	<version>0.3-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>

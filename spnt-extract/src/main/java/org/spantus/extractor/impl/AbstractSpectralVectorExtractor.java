@@ -60,7 +60,7 @@ public abstract class AbstractSpectralVectorExtractor extends AbstractExtractorV
 	}
 	
 	
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 //		return (getConfig().getSampleRate()/(getWinowSize()*.85f));
 		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()));
 

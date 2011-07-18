@@ -41,13 +41,13 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  */
 public class DrawLabeledVector {
-	Map<String, Float> categories;
+	Map<String, Double> categories;
 
-	public DrawLabeledVector(Map<String, Float> series) {
+	public DrawLabeledVector(Map<String, Double> series) {
 		this.categories = series;
 	}
 
-	public Map<String, Float> getCategories() {
+	public Map<String, Double> getCategories() {
 		return categories;
 	}
 
@@ -91,12 +91,12 @@ public class DrawLabeledVector {
 		return chart;
 	}
 
-	public static CategoryDataset createCategoryDataset(Map<String, Float> series) {
+	public static CategoryDataset createCategoryDataset(Map<String, Double> series) {
 
 		DefaultCategoryDataset result = new DefaultCategoryDataset();
-		int i = 0;
-		for (Entry<String, Float> entry : series.entrySet()) {
-			i++;
+//		int i = 0;
+		for (Entry<String, Double> entry : series.entrySet()) {
+//			i++;
 			String columnKey = entry.getKey();
 			result.addValue(entry.getValue() , "", columnKey);
 		}

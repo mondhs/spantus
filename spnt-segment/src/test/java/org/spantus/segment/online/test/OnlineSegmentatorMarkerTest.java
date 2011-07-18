@@ -37,7 +37,7 @@ public class OnlineSegmentatorMarkerTest extends AbstractOnlineSegmentTest {
 	
 	Logger log = Logger.getLogger(getClass());
 	public static final int step = 10;
-	public static final float sampleRate = 100F;
+	public static final Double sampleRate = 100D;
 	
 	
 
@@ -48,20 +48,20 @@ public class OnlineSegmentatorMarkerTest extends AbstractOnlineSegmentTest {
 		
 	}
 
-	public Float[] transfor(MarkerSet markerSet){
-		List<Float> floats1 = new ArrayList<Float>();
+	public Double[] transfor(MarkerSet markerSet){
+		List<Double> floats1 = new ArrayList<Double>();
 		long current = 0;
 		for (Marker m : markerSet.getMarkers()) {
 			for (; current < m.getStart(); current+=step) {
-				floats1.add(0F);
+				floats1.add(0D);
 			}
 			Long end = m.getStart() + m.getLength();
 			for (; current < end; current+=step) {
-				floats1.add(1F);
+				floats1.add(1D);
 			}
 			
 		}
-		return floats1.toArray(new Float[0]);
+		return floats1.toArray(new Double[0]);
 	}
 	
 	

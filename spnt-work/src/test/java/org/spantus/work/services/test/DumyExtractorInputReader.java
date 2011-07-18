@@ -20,7 +20,7 @@ import org.spantus.core.extractor.IGeneralExtractor;
 public class DumyExtractorInputReader implements IExtractorInputReader {
     private Set<IExtractorVector> extractorRegister3D;
 
-    public void put(Long sample, float value) {
+    public void put(Long sample, Double value) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

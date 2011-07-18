@@ -42,11 +42,11 @@ public class SegmentFeatureData implements Serializable, Cloneable, Comparable<S
 		this.length = (this.length + length)/2;
 	}
 	
-	public Float distance(SegmentFeatureData d1){
+	public Double distance(SegmentFeatureData d1){
 		return distance(d1, this);
 	}
 	
-	public static Float distance(SegmentFeatureData d1, SegmentFeatureData d2){
+	public static Double distance(SegmentFeatureData d1, SegmentFeatureData d2){
 		Double areaDiff = d1.area-d2.area;
 //		Long lengthDiff = d1.length-d2.length;
 //		Integer peaksDiff = d1.peaks-d2.peaks;
@@ -54,7 +54,7 @@ public class SegmentFeatureData implements Serializable, Cloneable, Comparable<S
 //		distanceSum += lengthDiff*lengthDiff;
 //		distanceSum += peaksDiff*peaksDiff;
 		distanceSum = Math.sqrt(distanceSum);
-		return distanceSum.floatValue();
+		return distanceSum;
 	}
 	
 	@Override

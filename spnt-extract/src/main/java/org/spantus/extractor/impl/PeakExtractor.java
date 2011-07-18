@@ -62,29 +62,29 @@ public class PeakExtractor extends AbstractExtractor {
 		FrameVectorValues extrValues = calculateExtr3D(window);
 		FrameValues calculatedValues = new FrameValues();
 		int order = extrValues.get(0).size();
-		LinkedList<Float> bufferValues = getBuffer(order);
+		LinkedList<Double> bufferValues = getBuffer(order);
 //		LinkedList<Float> predictedValues = new FrameValues();
-		for (Float value : window) {
+		for (Double value : window) {
 			bufferValues.poll();
 			bufferValues.add(value);
-			Float predicted = 0F;
-			Iterator<Float> coefIter = extrValues.get(0).iterator();
-			for (Float bufferedVal : getBuffer(order)) {
+			Double predicted = 0D;
+			Iterator<Double> coefIter = extrValues.get(0).iterator();
+			for (Double bufferedVal : getBuffer(order)) {
 				predicted += bufferedVal * coefIter.next();
 			}
 			calculatedValues.add(predicted);
 		}
 		
-		List<Float> calculatedFFTValues = MathServicesFactory.createFFTService().calculateFFTMagnitude(
+		List<Double> calculatedFFTValues = MathServicesFactory.createFFTService().calculateFFTMagnitude(
                 window.getFrameIndex(),
                 calculatedValues, window.getSampleRate());
 		
-		float peak = -Float.MAX_VALUE;
-		Float sum = 0F;
+		Double peak = -Double.MAX_VALUE;
+		Double sum = 0D;
 		Integer maxIndex = 0;
 		int i = 0;
-		for (Iterator<Float> iterator = calculatedFFTValues.iterator(); iterator.hasNext();) {
-			Float float2 = (Float) iterator.next();
+		for (Iterator<Double> iterator = calculatedFFTValues.iterator(); iterator.hasNext();) {
+			Double float2 = (Double) iterator.next();
 			sum += float2; 
 			if(peak<float2){
 				peak = float2;
@@ -93,19 +93,19 @@ public class PeakExtractor extends AbstractExtractor {
 			}
 			i++;
 		}
-		Float mean = sum/calculatedFFTValues.size();
+		Double mean = sum/calculatedFFTValues.size();
 		if(peak>.5*mean*mean){
 			maxIndex = 0;
 		}
 		calculatedValues = new FrameValues();
-		calculatedValues.add(maxIndex.floatValue());
+		calculatedValues.add(maxIndex.doubleValue());
 		return calculatedValues;
 	}
 	
-	private LinkedList<Float> buffer;
-	LinkedList<Float> getBuffer(int order){
+	private LinkedList<Double> buffer;
+	LinkedList<Double> getBuffer(int order){
 		if(buffer == null){
-			buffer = new LinkedList<Float>();
+			buffer = new LinkedList<Double>();
 			buffer.addAll(MatrixUtils.zeros(order));
 		}
 		return buffer;

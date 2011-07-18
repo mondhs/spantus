@@ -109,8 +109,8 @@ public class Mp3SignalReader extends DefaultAudioReader {
 			Long size = Long.valueOf(in.getFrameLength()
 					* baseFormat.getFrameSize());
 
-			signalFormat.setLength(size);
-			signalFormat.setSampleRate(decodedFormat.getSampleRate());
+			signalFormat.setLength(size.doubleValue());
+			signalFormat.setSampleRate((double) decodedFormat.getSampleRate());
 //			signalFormat.setParameters(extractParameters(audioFileFormat, url));
 
 		} catch (UnsupportedAudioFileException e) {

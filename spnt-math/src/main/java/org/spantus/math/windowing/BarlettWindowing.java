@@ -34,17 +34,17 @@ import java.util.List;
 public class BarlettWindowing extends Windowing {
 
 	
-	public void apply(List<Float> values) {
+	public void apply(List<Double> values) {
 		int nSamples = values.size();
 		int i, j;
 		for (j = 0 - nSamples / 2; j < nSamples / 2; j++) {
 			i = j + nSamples / 2;
 			if (j >= 0 && j <= nSamples / 2) {
-				values.set(i, values.get(i) * (1.0f - 2.0f * j / nSamples));
+				values.set(i, values.get(i) * (1.0D- 2.0D * j / nSamples));
 			} else if (j >= 0 - nSamples / 2 && j < 0) {
-				values.set(i, values.get(i) * (1.0f + 2.0f * j / nSamples));
+				values.set(i, values.get(i) * (1.0D + 2.0D * j / nSamples));
 			} else
-				values.set(i, values.get(i) * 0f);
+				values.set(i, values.get(i) * 0D);
 		}
 
 	}

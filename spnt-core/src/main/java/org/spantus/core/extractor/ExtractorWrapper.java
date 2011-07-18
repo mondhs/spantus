@@ -64,7 +64,7 @@ public class ExtractorWrapper implements IExtractor {
 		return getExtractor().getConfig();
 	}
 
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		return getExtractor().getExtractorSampleRate();
 	}
 

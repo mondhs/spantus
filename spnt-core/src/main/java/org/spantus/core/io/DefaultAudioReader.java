@@ -186,8 +186,8 @@ public class DefaultAudioReader extends AbstractAudioReader {
 	public SignalFormat getFormat(URL url) {
 		SignalFormat signalFormat = new SignalFormat();
 		AudioFileFormat audioFileFormat = getAudioFormat(url);
-		signalFormat.setLength(audioFileFormat.getFrameLength());
-		signalFormat.setSampleRate(audioFileFormat.getFormat().getSampleRate());
+		signalFormat.setLength((double) audioFileFormat.getFrameLength());
+		signalFormat.setSampleRate((double) audioFileFormat.getFormat().getSampleRate());
 		signalFormat.setParameters(extractParameters(audioFileFormat, url));
 		return signalFormat;
 	}

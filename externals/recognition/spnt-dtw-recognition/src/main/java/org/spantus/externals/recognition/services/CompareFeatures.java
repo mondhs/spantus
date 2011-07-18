@@ -43,11 +43,11 @@ public class CompareFeatures {
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(getClass());
 
-	public Float compareValues(FrameVectorValues targetValues, File sampleFile) {
+	public Double compareValues(FrameVectorValues targetValues, File sampleFile) {
 		IExtractorInputReader sampleReader = getExtractorInputReader(sampleFile);
 		IGeneralExtractor sampleExtractor = getExtractorReaderService()
 				.findExtractorByName(getWorkingExtractor(), sampleReader);
-		Float distance = calculateDistance(targetValues, sampleExtractor);
+		Double distance = calculateDistance(targetValues, sampleExtractor);
 		return distance;
 	}
 
@@ -57,7 +57,7 @@ public class CompareFeatures {
 	 * @param sampleFile
 	 * @return
 	 */
-	public Float compareValues(File targetFile, File sampleFile) {
+	public Double compareValues(File targetFile, File sampleFile) {
 		IExtractorInputReader sampleReader = getExtractorInputReader(sampleFile);
 		IExtractorInputReader targetReader = getExtractorInputReader(targetFile);
 		IGeneralExtractor sampleExtractor = getExtractorReaderService()
@@ -66,7 +66,7 @@ public class CompareFeatures {
 				.findExtractorByName(getWorkingExtractor(), targetReader);
 		;
 
-		Float distance = calculateDistance(targetExtractor, sampleExtractor);
+		Double distance = calculateDistance(targetExtractor, sampleExtractor);
 		return distance;
 	}
 
@@ -85,7 +85,7 @@ public class CompareFeatures {
 	 * @param sampleExtractor
 	 * @return
 	 */
-	public Float calculateDistance(IGeneralExtractor targetExtractor,
+	public Double calculateDistance(IGeneralExtractor targetExtractor,
 			IGeneralExtractor sampleExtractor) {
 		if (targetExtractor instanceof IExtractor) {
 			return getDtwService().calculateDistance(
@@ -101,7 +101,7 @@ public class CompareFeatures {
 
 	}
 
-	public Float calculateDistance(FrameVectorValues targetValues,
+	public Double calculateDistance(FrameVectorValues targetValues,
 			IGeneralExtractor sampleExtractor) {
 		return getDtwService().calculateDistanceVector(targetValues,
 				((IExtractorVector) sampleExtractor).getOutputValues());

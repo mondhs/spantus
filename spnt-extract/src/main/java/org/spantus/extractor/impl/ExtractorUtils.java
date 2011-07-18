@@ -33,13 +33,11 @@ import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractClassifier;
 import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.ClassifierEnum;
+import org.spantus.core.threshold.ConvexHullThreshold;
 import org.spantus.core.threshold.DynamicThreshold;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.core.threshold.OfflineThreshold;
 import org.spantus.core.threshold.StaticThreshold;
-import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
-import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
-import org.spantus.extractor.segments.online.ExtremeOfflineRuleClassifier;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.AbstractExtractorVector;
 import org.spantus.extractor.ExtractorResultBuffer;
@@ -49,6 +47,9 @@ import org.spantus.extractor.modifiers.LogExtractor;
 import org.spantus.extractor.modifiers.MeanExtractor;
 import org.spantus.extractor.modifiers.SmoothedExtractor;
 import org.spantus.extractor.modifiers.StdevExtractor;
+import org.spantus.extractor.segments.online.ExtremeOfflineRuleClassifier;
+import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
+import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
 import org.spantus.logger.Logger;
 import org.spantus.utils.ExtractorParamUtils;
 
@@ -248,9 +249,9 @@ public abstract class ExtractorUtils {
 		if(param == null){
 			return abstractThreshold;
 		}
-		Float threasholdCoef = ExtractorParamUtils.<Float>getValue(param, 
-		ExtractorParamUtils.commonParam.threasholdCoef.name(), Float.valueOf(0.1f));
-		abstractThreshold.setCoef(threasholdCoef);	
+		Number threasholdCoef = ExtractorParamUtils.<Double>getValue(param, 
+		ExtractorParamUtils.commonParam.threasholdCoef.name(), 0.1D);
+		abstractThreshold.setCoef(threasholdCoef.doubleValue());	
 		return abstractThreshold;
 	}
 	/**
@@ -276,6 +277,9 @@ public abstract class ExtractorUtils {
 			break;
 		case offline:
 			threshold = applyParams(new OfflineThreshold(), param);
+			break;
+		case convexHullOffline:
+			threshold = applyParams(new ConvexHullThreshold(), param);
 			break;
 		case rules:
 //			threshold = new ExtremeOnlineRuleClassifier();

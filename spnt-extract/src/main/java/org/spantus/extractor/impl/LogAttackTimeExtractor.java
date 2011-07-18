@@ -59,21 +59,21 @@ public class LogAttackTimeExtractor extends AbstractExtractor {
 	}
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues fv = new FrameValues();
-		float lat = 0;
-		float max = -Float.MAX_VALUE;
+		Double lat = 0D;
+		Double max = -Double.MAX_VALUE;
 		int maxIndex =0, i= 0;
-		for (Float fw : window) {
+		for (Double fw : window) {
 			if(fw > max){
 				max = fw;
 				maxIndex = i;	
 			}
 			i++;
 		}
-		Float maxthresholded = max*getThreshold();
+		Double maxthresholded = max*getThreshold();
 		for (int j = maxIndex-1; j > 0; --j) {
-			float fm = window.get(j); 
+			Double fm = window.get(j); 
 			if( fm < maxthresholded){
-				lat = (float)Math.log10(maxIndex-j);
+				lat = Math.log10(maxIndex-j);
 				lat *=10;
 				break;
 			}

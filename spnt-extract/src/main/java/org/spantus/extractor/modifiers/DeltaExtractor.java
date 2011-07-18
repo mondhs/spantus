@@ -41,8 +41,8 @@ public class DeltaExtractor extends AbstractExtractorModifier {
 
 	private IExtractor extractor;
 	
-	private Float previous;
-	private Float previousDelta;
+	private Double previous;
+	private Double previousDelta;
 
 	
 	
@@ -55,9 +55,9 @@ public class DeltaExtractor extends AbstractExtractorModifier {
 		FrameValues fv = getExtractor().calculateWindow(window);
 		
 		if(fv.size()==1){
-			Float val = fv.get(0);
+			Double val = fv.get(0);
 			previous = previous==null?val:previous;
-			Float delta = val-previous;
+			Double delta = val-previous;
 			previousDelta = previousDelta==null?delta:previousDelta;
 //			Float deltaDelta = delta - previousDelta;
 			previous = val;

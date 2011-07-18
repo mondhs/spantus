@@ -14,7 +14,7 @@ public class Mpeg7ExtractorConfig implements IExtractorConfig {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	float sampleRate;
+	Double sampleRate;
 	int windowSize;
 	 Set<String> extractors;
 	
@@ -34,7 +34,7 @@ public class Mpeg7ExtractorConfig implements IExtractorConfig {
 	}
 
 	
-	public float getSampleRate() {
+	public Double getSampleRate() {
 		return sampleRate;
 	}
 
@@ -49,7 +49,7 @@ public class Mpeg7ExtractorConfig implements IExtractorConfig {
 	}
 
 	
-	public void setSampleRate(float sampleRate) {
+	public void setSampleRate(Double sampleRate) {
 		this.sampleRate = sampleRate;
 		
 	}

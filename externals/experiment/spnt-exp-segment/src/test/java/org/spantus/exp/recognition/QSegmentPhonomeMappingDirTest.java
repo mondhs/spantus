@@ -5,11 +5,12 @@
 package org.spantus.exp.recognition;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.exp.recognition.AbstractSegmentDirTest.TextGridNameFilter;
+import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorSpntMapImpl;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
@@ -28,7 +29,7 @@ public class QSegmentPhonomeMappingDirTest extends AbstractSegmentDirTest {
 
 	@Before
 	public void onSetup() {
-		CorpusEntryExtractorTextGridMapImpl impl = new CorpusEntryExtractorTextGridMapImpl();
+		CorpusEntryExtractorTextGridMapImpl impl = new CorpusEntryExtractorSpntMapImpl();
 		impl.setMarkerDir(getMarkerDir());
 
 		ExtractorEnum[] extractors = new ExtractorEnum[] {
@@ -51,8 +52,9 @@ public class QSegmentPhonomeMappingDirTest extends AbstractSegmentDirTest {
 	public void testClassify() throws Exception {
 		clearCorpus();
 		int counter = 0;
-		int size = getMarkerDir().listFiles(new TextGridNameFilter()).length;
-		for (File filePath : getMarkerDir().listFiles(new TextGridNameFilter())) {
+		FilenameFilter fileFilter = new SpantusNameFilter();
+		int size = getMarkerDir().listFiles(fileFilter).length;
+		for (File filePath : getMarkerDir().listFiles(fileFilter)) {
 			counter++;
 			log.error("[testClassify]Processing "+ counter + " from " + size);
 //			String markersPath = FileUtils.replaceExtention(filePath,

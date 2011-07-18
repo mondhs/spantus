@@ -40,10 +40,10 @@ public class SignalExtractorTest{
 	public void setUp() throws Exception {
 		x = new FrameValues();
 		for (float i = 1; i < 6.4 * Math.PI; i+=.3) {
-			x.add(new Float(Math.sin(i)));
+			x.add(Math.sin(i));
 		}
 		config=new ExtractorConfig();
-		config.setSampleRate(8000);
+		config.setSampleRate(8000D);
 	}
 	@Test
 	public void testSignal(){
@@ -60,7 +60,7 @@ public class SignalExtractorTest{
 	public void testMean(){
 		MeanExtractor meanExtractor = new MeanExtractor();
 		for (int i = 1; i < 10; i++) {
-			meanExtractor.calculateMean((float)i);
+			meanExtractor.calculateMean((double)i);
 		}
 		Assert.assertEquals(5F, meanExtractor.getMean()) ;
 		Assert.assertEquals(2.738613F, meanExtractor.getStdev()) ;

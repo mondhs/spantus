@@ -42,7 +42,7 @@ public class CorpusRepositoryFileImplTest {
         corpusEntry.setName("Name1");
         FeatureData fd = new FeatureData();
         fd.setName("Feature1");
-        fd.setValues(new FrameValues(new Float[]{1F, 2F, 3F}));
+        fd.setValues(new FrameValues(new Double[]{1D, 2D, 3D}));
         corpusEntry.getFeatureMap().put(fd.getName(), fd);
         int initialSize = corpusRepository.findAllEntries().size();
         
@@ -88,7 +88,7 @@ public class CorpusRepositoryFileImplTest {
         corpusEntry.setName("Name1");
         FeatureData fd = new FeatureData();
         fd.setName("Feature1");
-        fd.setValues(new FrameValues(new Float[]{1F, 2F, 3F}));
+        fd.setValues(new FrameValues(new Double[]{1D, 2D, 3D}));
         corpusEntry.getFeatureMap().put(fd.getName(), fd);
         
         //when

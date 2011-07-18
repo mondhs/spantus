@@ -134,17 +134,17 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 				}
 
 			}
-			Float sumTotal = 0f;
-			Float sumSqrTotal = 0f;
+			Double sumTotal = 0D;
+			Double sumSqrTotal = 0D;
 
 			for (ComparisionResult r : results) {
 				sumTotal += r.getTotalResult();
 				sumSqrTotal += (r.getTotalResult() * r.getTotalResult());
 			}
 			int n = results.size();
-			Float meanTotal = sumTotal/n;
+			Double meanTotal = sumTotal/n;
 			
-			Float varTotal = (sumSqrTotal - (n*meanTotal*meanTotal))/(n-1);
+			Double varTotal = (sumSqrTotal - (n*meanTotal*meanTotal))/(n-1);
 			
 			
 //			s: : m=0.16849764; var=0.0022765219
@@ -164,14 +164,14 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 	 */
 	protected FrameValues getVals(FrameValues vals) {
 		FrameValues newVals = new FrameValues();
-		Float min = Float.MAX_VALUE, max = -Float.MAX_VALUE;
-		for (Float float1 : vals) {
+		Double min = Double.MAX_VALUE, max = -Double.MAX_VALUE;
+		for (Double float1 : vals) {
 			min = Math.min(min, float1);
 			max = Math.max(max, float1);
 		}
 		newVals.setSampleRate(vals.getSampleRate());
-		Float delta = max - min;
-		for (Float float1 : vals) {
+		Double delta = max - min;
+		for (Double float1 : vals) {
 			newVals.add((float1 - min) / delta);
 		}
 		return newVals;
@@ -180,12 +180,12 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 	XYSeries signalSeries;
 
 	protected XYSeries getSignal(FrameValues values) {
-		float i = 0f;
+		Double i = 0D;
 		if (signalSeries == null) {
 			signalSeries = new XYSeries("Signal");
-			for (Float f1 : values) {
+			for (Double f1 : values) {
 				signalSeries.setDescription("Signal");
-				signalSeries.add(Float.valueOf(i / 4300), f1);
+				signalSeries.add(Double.valueOf(i / 4300), f1);
 				i++;
 			}
 		}
@@ -197,24 +197,24 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 
 		XYSeries series;
 
-		float sr = result.getThreshold().getOutputValues().getSampleRate();
+		Double sr = result.getThreshold().getOutputValues().getSampleRate();
 		sr *= 0.95;
 		XYSeriesCollection[] collections = new XYSeriesCollection[4];
 		for (int i = 0; i < collections.length; i++) {
 			collections[i] = new XYSeriesCollection();
 		}
 
-		float i = 0;
+		Double i = 0D;
 		// series[0].setDescription("Signal");
-		// for (Float f1 : result.getSequenceResult()) {
-		// series[0].add(Float.valueOf(i/4200), f1);
+		// for (Double f1 : result.getSequenceResult()) {
+		// series[0].add(Double.valueOf(i/4200), f1);
 		// i++;
 		// }
 
 		series = new XYSeries("Comparision");
 		series = newSeries("Result" + result.getTotalResult(), collections[0]);
-		for (Float f1 : result.getSequenceResult()) {
-			series.add(Float.valueOf(i / sr), f1);
+		for (Double f1 : result.getSequenceResult()) {
+			series.add(Double.valueOf(i / sr), f1);
 			i++;
 		}
 		// if(result.getSignal() != null){
@@ -222,31 +222,31 @@ public class OnlineSegmentationExp extends DecisionSegmentationExp {
 		// }
 		// `collections[0].addSeries(series);
 
-		i = 0;
+		i = 0D;
 		series = newSeries("Expert", collections[2]);
-		for (Float f1 : result.getOriginal()) {
-			series.add(Float.valueOf(i / sr), f1);
+		for (Double f1 : result.getOriginal()) {
+			series.add(Double.valueOf(i / sr), f1);
 			i++;
 		}
 
-		i = 0;
+		i = 0D;
 		series = newSeries("Online", collections[1]);
-		for (Float f1 : result.getTest()) {
-			series.add(Float.valueOf(i / sr), f1);
+		for (Double f1 : result.getTest()) {
+			series.add(Double.valueOf(i / sr), f1);
 			i++;
 		}
 
-		i = 0;
+		i = 0D;
 		series = newSeries("Feture", collections[3]);
-		for (Float f1 : result.getThreshold().getOutputValues()) {
-			series.add(Float.valueOf(i / sr), f1);
+		for (Double f1 : result.getThreshold().getOutputValues()) {
+			series.add(Double.valueOf(i / sr), f1);
 			i++;
 		}
 
-		i = 0;
+		i = 0D;
 		series = newSeries("Threshold", collections[3]);
-		for (Float f1 : result.getThreshold().getThresholdValues()) {
-			series.add(Float.valueOf(i / sr), f1);
+		for (Double f1 : result.getThreshold().getThresholdValues()) {
+			series.add(Double.valueOf(i / sr), f1);
 			i++;
 		}
 

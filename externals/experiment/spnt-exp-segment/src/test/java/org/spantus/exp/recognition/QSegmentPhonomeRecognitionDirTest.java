@@ -5,11 +5,16 @@
 package org.spantus.exp.recognition;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mvel2.optimizers.impl.refl.nodes.ArrayLength;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
@@ -24,6 +29,8 @@ import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.utils.FileUtils;
+
+import com.google.common.io.Files;
 
 /**
  * 
@@ -63,8 +70,23 @@ public class QSegmentPhonomeRecognitionDirTest extends
 	@Test
 	public void testClassify() throws Exception {
 		int counter = 0;
-		int size = getMarkerDir().listFiles(new TextGridNameFilter()).length;
-		for (File texGridFile : getMarkerDir().listFiles(new TextGridNameFilter())) {
+		FilenameFilter filter = new SpantusNameFilter();
+		int size = getMarkerDir().listFiles(filter).length;
+//		File[] mainList= getMarkerDir().listFiles(filter);
+//		List<File> patched = new ArrayList<File>();
+//		for (File file : mainList) {
+//			patched.add(file);
+//			String fileName = file.getAbsolutePath();
+//			fileName = fileName.replaceAll("__.mspnt.xml", "");
+//			
+//			for (String type : new String[]{"airport","babble","car","exhibition","restaurant","station","street","train"}) {
+//				for (String level : new String[]{"sn0","sn5","sn10","sn15"}) {
+//					Files.copy(file, new File(fileName+"_"+type+"_"+level+".mspnt.xml"));
+//				}
+//			}
+//		}
+		
+		for (File texGridFile : getMarkerDir().listFiles(filter)) {
 			counter++;
 			log.error("[testClassify]Processing "+ counter + " from " + size);
 			File wavFilePath = new File(getWavDir(), FileUtils.replaceExtention(
@@ -116,7 +138,7 @@ public class QSegmentPhonomeRecognitionDirTest extends
 	private String getLablel(ExtractorEnum extractorEnum, Map<String, RecognitionResult> recogniton){
 		return fixRecognitionName(recogniton.get(extractorEnum.name()).getInfo().getName());
 	}
-	private Float getScore(ExtractorEnum extractorEnum, Map<String, RecognitionResult> recogniton){
+	private Double getScore(ExtractorEnum extractorEnum, Map<String, RecognitionResult> recogniton){
 		return recogniton.get(extractorEnum.name()).getDistance();
 	}
 	/**

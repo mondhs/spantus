@@ -55,7 +55,7 @@ public class WorkSample {
 			return;
 		}
 //		this.format = format;
-		getSignalFormat().setLength(format.getFrameLength()/format.getFormat().getFrameRate());
+		getSignalFormat().setLength((double) (format.getFrameLength()/format.getFormat().getFrameRate()));
 	}
 
 	public MarkerSetHolder getMarkerSetHolder() {

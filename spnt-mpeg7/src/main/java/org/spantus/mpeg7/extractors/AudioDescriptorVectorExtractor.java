@@ -57,11 +57,11 @@ public class AudioDescriptorVectorExtractor implements IExtractorVector {
 		return getName() + "; vals: " + values.size();
 	}
 
-	public float getSampleRate() {
+	public Double getSampleRate() {
 		return values.getSampleRate();
 	}
 
-	public void setSampleRate(float sampleRate) {
+	public void setSampleRate(Double sampleRate) {
 		values.setSampleRate(sampleRate);
 	}
 
@@ -71,8 +71,8 @@ public class AudioDescriptorVectorExtractor implements IExtractorVector {
 	}
 
 	
-	public float getExtractorSampleRate() {
-		return 0;
+	public Double getExtractorSampleRate() {
+		return 0D;
 	}
 
 	

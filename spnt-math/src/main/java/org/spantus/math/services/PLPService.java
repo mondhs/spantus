@@ -27,7 +27,7 @@ import java.util.List;
  * 
  */
 public interface PLPService {
-	public List<Float> calculate(List<Float> x, float sampleRate);
-    public List<Float> calculateFromSpectrum(List<Float> fft, float sampleRate);
+	public List<Double> calculate(List<Double> x, Double sampleRate);
+    public List<Double> calculateFromSpectrum(List<Double> spectra, Double sampleRate);
 
 }

@@ -41,7 +41,7 @@ public class CrossingZeroExtractor extends AbstractExtractor {
 
 
 
-	float lastValue;
+	Double lastValue;
 
 	public CrossingZeroExtractor() {
 		getParam().setClassName(EnergyExtractor.class.getSimpleName());
@@ -49,15 +49,12 @@ public class CrossingZeroExtractor extends AbstractExtractor {
 	
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues calculatedValues = new FrameValues();
-		int cross = 0, i = 0;
-		for (Float float1 : window) {
-			i++;
+		int cross = 0;
+		for (Double float1 : window) {
 			cross += Math.abs((float1>0?1:0)-(lastValue>0?1:0));
-//			cross += Math.abs(Math.signum(float1)-Math.signum(lastValue));
 			lastValue = float1;
 		}
-		calculatedValues.add(((float)cross/window.size()));
-//		calculatedValues.add(1-((float)cross/window.size()));
+		calculatedValues.add(((double)cross/window.size()));
 		
 		return calculatedValues;
 	}

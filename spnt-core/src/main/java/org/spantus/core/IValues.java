@@ -10,10 +10,10 @@ package org.spantus.core;
  * @author mondhs
  */
 public interface IValues {
-    public float getTime();
-    public float getSampleRate();
-    public void setSampleRate(float sampleRate);
-    public float toTime(int i);
-    public int toIndex(float f);
+    public Double getTime();
+    public Double getSampleRate();
+    public void setSampleRate(Double sampleRate);
+    public Double toTime(int i);
+    public int toIndex(Double f);
     public int getDimention();
 }

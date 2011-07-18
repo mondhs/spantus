@@ -10,25 +10,25 @@ import java.util.List;
  *
  */
 public class LPCResult {
-	private List<Float> result;
-	private Float error;
-	private List<Float> reflection;
-	public List<Float> getResult() {
+	private List<Double> result;
+	private Double error;
+	private List<Double> reflection;
+	public List<Double> getResult() {
 		return result;
 	}
-	public void setResult(List<Float> result) {
+	public void setResult(List<Double> result) {
 		this.result = result;
 	}
-	public Float getError() {
+	public Double getError() {
 		return error;
 	}
-	public void setError(Float error) {
+	public void setError(Double error) {
 		this.error = error;
 	}
-	public List<Float> getReflection() {
+	public List<Double> getReflection() {
 		return reflection;
 	}
-	public void setReflection(List<Float> reflection) {
+	public void setReflection(List<Double> reflection) {
 		this.reflection = reflection;
 	}
 }

@@ -50,7 +50,7 @@ public class ExtractorVectorOutputHolder implements IExtractorVector {
 		return config;
 	}
 
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		return this.outputValues.getSampleRate();
 	}
 

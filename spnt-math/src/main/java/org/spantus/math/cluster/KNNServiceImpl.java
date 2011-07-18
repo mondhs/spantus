@@ -18,17 +18,17 @@ public class KNNServiceImpl implements ClusterService {
 	 * 
 	 * @see org.spantus.math.knn.ClusterService#cluster(java.util.List, int)
 	 */
-	public ClusterCollection cluster(List<List<Float>> vectors, int clusterSize) {
+	public ClusterCollection cluster(List<List<Double>> vectors, int clusterSize) {
 		if (vectors.size() < clusterSize * 2) {
 			throw new IllegalArgumentException("not enough data vectors: " + vectors.size() + " has to have twice more elements than cluster size " + clusterSize);
 		}
-		Map<Integer, List<List<Float>>> clusters = new HashMap<Integer, List<List<Float>>>();
+		Map<Integer, List<List<Double>>> clusters = new HashMap<Integer, List<List<Double>>>();
 		
 		ClusterCollection centers = calculateInitailCenter(vectors, clusterSize);
 		
 
 		for (int i = 0; i < clusterSize; i++) {
-			clusters.put(i, new ArrayList<List<Float>>());
+			clusters.put(i, new ArrayList<List<Double>>());
 		}
 		int vectorsSize = vectors.size();
 
@@ -36,14 +36,14 @@ public class KNNServiceImpl implements ClusterService {
 		for (int i = 0; i < vectorsSize; i++) {
 			debug("centers {0}; ", centers);
 			debug("assign points to cluster");
-			for (List<Float> point : vectors) {
+			for (List<Double> point : vectors) {
 				Integer clusterID = centers.matchClusterClass(point);
 				clusters.get(clusterID).add(point);
 			}
 			debug("update centers");
-			for (Entry<Integer, List<List<Float>>> clusterEntry : clusters
+			for (Entry<Integer, List<List<Double>>> clusterEntry : clusters
 					.entrySet()) {
-				List<List<Float>> cluster = clusterEntry.getValue();
+				List<List<Double>> cluster = clusterEntry.getValue();
 				centers.put(clusterEntry.getKey(),avg(cluster));
 			}
 		}
@@ -66,24 +66,24 @@ public class KNNServiceImpl implements ClusterService {
 	 * @param vectors
 	 * @return
 	 */
-	protected ClusterCollection calculateNormalization(List<List<Float>> vectors){
+	protected ClusterCollection calculateNormalization(List<List<Double>> vectors){
 		ClusterCollection centers = new ClusterCollection();
 		int vectorLength = vectors.get(0).size();
 
-		List<Float> min = MatrixUtils.generareVector(Float.MAX_VALUE, vectorLength);
-		List<Float> max = MatrixUtils.generareVector(-Float.MAX_VALUE, vectorLength);
-		for (List<Float> vector : vectors) {
+		List<Double> min = MatrixUtils.generareVector(Double.MAX_VALUE, vectorLength);
+		List<Double> max = MatrixUtils.generareVector(-Double.MAX_VALUE, vectorLength);
+		for (List<Double> vector : vectors) {
 			min = minVector(min, vector);
 			max = maxVector(max, vector);
 		}
 		centers.setMaxVector(max);
 		centers.setMinVector(min);
-		List<Float> delta = new ArrayList<Float>();
-		Iterator<Float> minIter = min.iterator();
-		Iterator<Float> maxIter = max.iterator();
+		List<Double> delta = new ArrayList<Double>();
+		Iterator<Double> minIter = min.iterator();
+		Iterator<Double> maxIter = max.iterator();
 		while (minIter.hasNext()) {
-			Float minVal = (Float) minIter.next();
-			Float maxVal = (Float) maxIter.next();
+			Double minVal = (Double) minIter.next();
+			Double maxVal = (Double) maxIter.next();
 			delta.add(maxVal-minVal);
 		}
 		
@@ -97,7 +97,7 @@ public class KNNServiceImpl implements ClusterService {
 	 * @param clusterSize
 	 * @return
 	 */
-	protected ClusterCollection calculateInitailCenter(List<List<Float>> vectors,
+	protected ClusterCollection calculateInitailCenter(List<List<Double>> vectors,
 			int clusterSize) {
 //		Set<Integer> indexes = new HashSet<Integer>(clusterSize);
 		int vectorLength = vectors.get(0).size();
@@ -105,13 +105,13 @@ public class KNNServiceImpl implements ClusterService {
 		ClusterCollection centers = calculateNormalization(vectors);
 		
 		for (int i = 0; i < clusterSize; i++) {
-			Iterator<Float> minIterator = centers.getMinVector().iterator();
-			Iterator<Float> deltaIterator = centers.getDelta().iterator();
-			List<Float> center = new ArrayList<Float>();
+			Iterator<Double> minIterator = centers.getMinVector().iterator();
+			Iterator<Double> deltaIterator = centers.getDelta().iterator();
+			List<Double> center = new ArrayList<Double>();
 			while (minIterator.hasNext()) {
-				Float delta = deltaIterator.next();
-				Float min = minIterator.next();
-				Float segmentMidle = delta/(2*vectorLength);
+				Double delta = deltaIterator.next();
+				Double min = minIterator.next();
+				Double segmentMidle = delta/(2*vectorLength);
 				center.add((segmentMidle*i)+min);
 			}
 			centers.put(i, center);
@@ -145,17 +145,17 @@ public class KNNServiceImpl implements ClusterService {
 	 * @param vals
 	 * @return
 	 */
-	protected List<Float> avg(List<List<Float>> vals) {
-		List<Float> avg = new ArrayList<Float>();
-		for (List<Float> list : vals) {
+	protected List<Double> avg(List<List<Double>> vals) {
+		List<Double> avg = new ArrayList<Double>();
+		for (List<Double> list : vals) {
 			if (avg.size() == 0) {
-				for (Float float1 : list) {
-					avg.add(float1);
+				for (Double Double1 : list) {
+					avg.add(Double1);
 				}
 				continue;
 			}
 			int i = 0;
-			for (Float float1 : list) {
+			for (Double float1 : list) {
 				avg.set(i, avg.get(i) + float1);
 				i++;
 			}
@@ -167,24 +167,24 @@ public class KNNServiceImpl implements ClusterService {
 		return avg;
 	}
 	
-	protected List<Float> minVector(List<Float> minVector, List<Float> point) {
-		List<Float> vector = new ArrayList<Float>();
-		Iterator<Float> minIter = minVector.iterator();
-		Iterator<Float> pointIter = point.iterator();
+	protected List<Double> minVector(List<Double> minVector, List<Double> point) {
+		List<Double> vector = new ArrayList<Double>();
+		Iterator<Double> minIter = minVector.iterator();
+		Iterator<Double> pointIter = point.iterator();
 		while (pointIter.hasNext()) {
-			Float a = (Float) minIter.next();
-			Float b = (Float) pointIter.next();
+			Double a = (Double) minIter.next();
+			Double b = (Double) pointIter.next();
 			vector.add(Math.min(a, b));
 		}
 		return vector;
 	}
-	protected List<Float> maxVector(List<Float> minVector, List<Float> point) {
-		List<Float> vector = new ArrayList<Float>();
-		Iterator<Float> minIter = minVector.iterator();
-		Iterator<Float> pointIter = point.iterator();
+	protected List<Double> maxVector(List<Double> minVector, List<Double> point) {
+		List<Double> vector = new ArrayList<Double>();
+		Iterator<Double> minIter = minVector.iterator();
+		Iterator<Double> pointIter = point.iterator();
 		while (pointIter.hasNext()) {
-			Float a = (Float) minIter.next();
-			Float b = (Float) pointIter.next();
+			Double a = (Double) minIter.next();
+			Double b = (Double) pointIter.next();
 			vector.add(Math.max(a, b));
 		}
 		return vector;

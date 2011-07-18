@@ -245,9 +245,9 @@ public class MelFrequencyFilterBank  {
      * @throws java.lang.IllegalArgumentException
      *
      */
-     public double[] process(double[] input, int newSampleRate)
+     public Double[] process(Double[] input, int newSampleRate)
             throws IllegalArgumentException {
-        double[] in = input;
+    	 Double[] in = input;
 
         if (filter == null || filter[0] == null || sampleRate != newSampleRate || 
         		in.length != ((numberFftPoints >> 1) + 1)) {
@@ -260,7 +260,7 @@ public class MelFrequencyFilterBank  {
 //                            + ", numberFftPoints == "
 //                            + ((numberFftPoints >> 1) + 1));
         }
-        double[] output = new double[numberFilters];
+        Double[] output = new Double[numberFilters];
         /**
          * Filter input power spectrum
          */

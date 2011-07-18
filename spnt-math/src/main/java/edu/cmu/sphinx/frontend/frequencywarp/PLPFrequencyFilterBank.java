@@ -183,10 +183,10 @@ public class PLPFrequencyFilterBank  {
      * @throws java.lang.IllegalArgumentException
      *
      */
-    public double[] process(double[] input, int newSampleRate) throws
+    public Double[] process(Double[] input, int newSampleRate) throws
             IllegalArgumentException {
 
-        double[] in = input;
+    	Double[] in = input;
 
         if (criticalBandFilter == null ||
                 sampleRate != newSampleRate) {
@@ -201,7 +201,7 @@ public class PLPFrequencyFilterBank  {
                             ", numberFftPoints == " + ((numberFftPoints >> 1) + 1));
         }
 
-        double[] outputPLPSpectralArray = new double[numberFilters];
+        Double[] outputPLPSpectralArray = new Double[numberFilters];
 
         /**
          * Filter input power spectrum

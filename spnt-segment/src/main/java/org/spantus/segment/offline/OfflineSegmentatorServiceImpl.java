@@ -252,8 +252,8 @@ public class OfflineSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 * @param thresholds
 	 * @return
 	 */
-	protected float getSampleRate(Set<IClassifier> thresholds) {
-		Float sampleRate = null;
+	protected Double getSampleRate(Set<IClassifier> thresholds) {
+		Double sampleRate = null;
 		for (IClassifier threshold : thresholds) {
 			Assert.isTrue(threshold.getExtractorSampleRate() > 0);
 			if (sampleRate == null) {

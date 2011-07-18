@@ -18,11 +18,8 @@
 */
 package org.spantus.core.io;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-
-import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.SignalFormat;

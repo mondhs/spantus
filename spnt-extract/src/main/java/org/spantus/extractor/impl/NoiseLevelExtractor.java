@@ -36,7 +36,7 @@ public class NoiseLevelExtractor extends AbstractSpectralExtractor {
 	private Double estimate = 0D;
 	private Double noiseEstimate = 0D;
 	private Double noiseThreshold = 0D;
-	private Float previous;
+	private Double previous;
 	
 	public NoiseLevelExtractor() {
 		super.setAbstractExtractorVector(new SpectralGainFactorExtractor());
@@ -48,8 +48,8 @@ public class NoiseLevelExtractor extends AbstractSpectralExtractor {
 	
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues rtnValues = super.calculateWindow(window);
-		Float max = -Float.MAX_VALUE;
-		for (Float value : window) {
+		Double max = -Double.MAX_VALUE;
+		for (Double value : window) {
 			max = Math.max(max, estimate(value));
 		}
 		rtnValues.add(max);
@@ -65,7 +65,7 @@ public class NoiseLevelExtractor extends AbstractSpectralExtractor {
 		return rtnValues;
 	}
 
-	protected Float estimate(Float value){
+	protected Float estimate(Double value){
 		previous = previous == null ? value : previous;
 		Double BEstimateCoef = 
 //			(getConfig().getSampleRate()* .989992)/8000F; 

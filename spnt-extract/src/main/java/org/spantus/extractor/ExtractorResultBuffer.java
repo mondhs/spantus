@@ -96,7 +96,7 @@ public class ExtractorResultBuffer implements IExtractor {
 	}
 
 	
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		return extractor.getExtractorSampleRate();
 		
 	}

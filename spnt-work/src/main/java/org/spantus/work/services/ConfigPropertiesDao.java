@@ -58,7 +58,7 @@ public class ConfigPropertiesDao implements ConfigDao {
 		overlapInPerc = overlapInPerc == null?66:overlapInPerc;
 		
 		DefaultExtractorConfig config = (DefaultExtractorConfig)ExtractorConfigUtil.defaultConfig(
-				format.getSampleRate(), windowLengthInMilsec, overlapInPerc); 
+				(double)format.getSampleRate(), windowLengthInMilsec, overlapInPerc); 
 //		config.setBitsPerSample(format.getSampleSizeInBits());
 		
 		configDefaults(config, properties);
@@ -69,13 +69,13 @@ public class ConfigPropertiesDao implements ConfigDao {
 	protected void configDefaults(IExtractorConfig config, Properties properties){
 		ExtractorParam param = new ExtractorParam();
 		param.setClassName(DefaultExtractorConfig.class.getName());
-		config.setSampleRate(setFloatValue(param, key_format_recordSampleRate, properties,8000F));
+		config.setSampleRate(setFloatValue(param, key_format_recordSampleRate, properties,8000D));
 		setLongValue(param, key_threshold_leaningPeriod, properties,5000L);
 		setLongValue(param, key_segmentation_minLength, properties,191L);
 		setLongValue(param, key_segmentation_minSpace, properties,61L);
 		setLongValue(param, key_segmentation_expandStart, properties,160L);
 		setLongValue(param, key_segmentation_expandEnd, properties,160L);
-		setFloatValue(param, key_threshold_coef, properties,6F);
+		setFloatValue(param, key_threshold_coef, properties,6D);
 		setStringValue(param, key_format_pathOutput, properties);
 		config.getParameters().put(param.getClassName(), param);
 		String extractorStr = properties.getProperty(key_format_extractors);
@@ -103,20 +103,20 @@ public class ConfigPropertiesDao implements ConfigDao {
 		setLongValue(param, key, properties);
 	}
 
-	protected Float setFloatValue(ExtractorParam param, String key, Properties properties){
-		Float f = Float.valueOf(properties.getProperty(key));
-		ExtractorParamUtils.<Float>setValue(param, 
+	protected Double setDoubleValue(ExtractorParam param, String key, Properties properties){
+		Double f = Double.valueOf(properties.getProperty(key));
+		ExtractorParamUtils.<Double>setValue(param, 
 				key, 
 				f);
 		return f;
 	}
-	protected Float setFloatValue(ExtractorParam param, String key, Properties properties, Float defaultValue){
+	protected Double setFloatValue(ExtractorParam param, String key, Properties properties, Double defaultValue){
 		if(properties.getProperty(key) == null){
-			ExtractorParamUtils.<Float>setValue(param, 
+			ExtractorParamUtils.<Double>setValue(param, 
 					key, defaultValue);
 			return defaultValue;
 		}
-		return setFloatValue(param, key, properties);
+		return setDoubleValue(param, key, properties);
 	}
 
 	protected void setStringValue(ExtractorParam param, String key, Properties properties){

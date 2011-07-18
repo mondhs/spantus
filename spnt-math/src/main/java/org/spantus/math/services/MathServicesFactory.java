@@ -25,6 +25,7 @@ import org.spantus.math.cluster.KNNServiceImpl;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
+import org.spantus.math.services.impl.ConvexHullServiceImpl;
 
 import edu.cmu.sphinx.frontend.frequencywarp.PLPCepstrumProducer;
 
@@ -43,6 +44,7 @@ public abstract class MathServicesFactory {
 	static LPCService lpcService;
 	static DtwService dtwService;
 	static ClusterService knnService;
+	static ConvexHullService convexHullService;
 
 	public static FFTService createFFTService() {
 		if (fftService == null) {
@@ -105,4 +107,12 @@ public abstract class MathServicesFactory {
 		}
 		return knnService;
 	}
+	
+	public static ConvexHullService createConvexHullService() {
+		if (convexHullService == null) {
+			convexHullService = new ConvexHullServiceImpl();
+		}
+		return convexHullService;
+	}
+	
 }

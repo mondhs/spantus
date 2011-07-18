@@ -47,7 +47,7 @@ public class ComparisionResult {
 	
 	private FrameValues test;
 	
-	private float totalResult;
+	private Double totalResult;
 	
 	private MarkerSetHolder originalMarkers;
 	
@@ -95,11 +95,11 @@ public class ComparisionResult {
 		this.sequenceResult = sequenceResult;
 	}
 
-	public float getTotalResult() {
+	public Double getTotalResult() {
 		return totalResult;
 	}
 
-	public void setTotalResult(float totalResult) {
+	public void setTotalResult(Double totalResult) {
 		this.totalResult = totalResult;
 	}
 	public String getName() {

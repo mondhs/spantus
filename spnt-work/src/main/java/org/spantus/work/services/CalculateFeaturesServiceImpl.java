@@ -90,7 +90,7 @@ public class CalculateFeaturesServiceImpl{
 		FrameValues mergeValues = merge(urls);
 		List<Byte> mergedBuffer = new ArrayList<Byte>();
 
-		for (Float float1 : mergeValues) {
+		for (Double float1 : mergeValues) {
 			Byte[] bs = null;
 			switch (sizeInBits) {
 			   case 8:

@@ -25,15 +25,15 @@ public class AudioPowerExtractor extends AbstractMpeg7Extractor {
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameVectorValues calculatedValues = createFrameValueVector();
 		double power = 0.0f;
-		for (Float val : window) {
+		for (Double val : window) {
 			power += Math.pow(val , 2);
 		}
 		power /= window.size();
 		if (getLogScale())
-			power = 10.0f / (float) LOG10 * 
-				(float) Math.log(power + Float.MIN_VALUE) ;
+			power = 10.0f /  LOG10 * 
+				 Math.log(power + Double.MIN_VALUE) ;
 		FrameValues fv = new FrameValues();
-		fv.add(new Float(power));
+		fv.add(power);
 		calculatedValues.add(fv);
 		return calculatedValues;
 	}
@@ -58,9 +58,9 @@ public class AudioPowerExtractor extends AbstractMpeg7Extractor {
 	}
 
 	
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 0D;
 	}
 
 	

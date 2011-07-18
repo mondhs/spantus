@@ -43,8 +43,8 @@ public class SignalEntropyExtractor extends AbstractExtractor{
 //			//|X[i]|^2
 //			bottom += Math.pow(Math.abs(current),2);
 //		}
-		float entropy = 0;
-		for (Float current : window) {
+		Double entropy = 0D;
+		for (Double current : window) {
 //			double part = (Math.pow(Math.abs(current),2)/bottom);
 			double part = Math.abs(current);
 			if(part == 0) continue;

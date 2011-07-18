@@ -38,19 +38,19 @@ import klautau.FFT;
 public class FFTServiceImpl implements FFTService{
 
 
-	public List<Float> calculateFFTMagnitude(long index, List<Float> x, Float sampleRate) {
-		List<Float> fftInput= new LinkedList<Float>(x);
+	public List<Double> calculateFFTMagnitude(long index, List<Double> x, Double sampleRate) {
+		List<Double> fftInput= new LinkedList<Double>(x);
 		int logm = (int) (Math.log(fftInput.size()) / Math.log(2));
 		int n = 1 << logm;
 		if(fftInput.size() > n){
 			n = 1 << (logm+1);
 		}
 		int missingSamples = n - x.size();
-		fftInput.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
-		Float[] fftArr = fftInput.toArray(new Float[fftInput.size()]);
+		fftInput.addAll(Collections.nCopies(missingSamples, Double.valueOf(0)));
+		Double[] fftArr = fftInput.toArray(new Double[fftInput.size()]);
 		FFT m_fft = new FFT(n);
 		
-		Float[] fftOutput = m_fft.calculateFFTPower(fftArr);
+		Double[] fftOutput = m_fft.calculateFFTPower(fftArr);
 		return Arrays.asList(fftOutput);
 	}
 }

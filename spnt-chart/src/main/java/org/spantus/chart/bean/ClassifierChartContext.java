@@ -43,7 +43,7 @@ public class ClassifierChartContext {
 	
 	private ChartStyle style;
 	
-	private Float order;
+	private Double order;
 
 	public FrameValues getValues() {
 		return values;
@@ -85,11 +85,11 @@ public class ClassifierChartContext {
 		this.style = style;
 	}
 
-	public Float getOrder() {
+	public Double getOrder() {
 		return order;
 	}
 
-	public void setOrder(Float order) {
+	public void setOrder(Double order) {
 		this.order = order;
 	}
 

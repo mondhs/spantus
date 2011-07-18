@@ -62,13 +62,13 @@ public class EnergyExtractor extends AbstractExtractor {
 	
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameValues calculatedValues = new FrameValues();
-		float windowVal = 0f;
-		for (Float float1 : window) {
-			float1 = (float)Math.pow(float1, 2);
+		double windowVal = 0;
+		for (Double float1 : window) {
+			float1 = Math.pow(float1, 2);
 			Boolean isLog = getLogaritmic(); 
 			if(Boolean.TRUE.equals(isLog) && float1 != 0){
-				 float fE = (float) (10*Math.log10(float1));
-				 float1 = Float.isNaN(fE) ? 0 : fE;
+				double fE =  (10*Math.log10(float1));
+				 float1 = Double.isNaN(fE) ? 0 : fE;
 			}
 			windowVal += float1;
 		}

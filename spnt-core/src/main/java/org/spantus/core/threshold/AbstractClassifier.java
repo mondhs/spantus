@@ -159,7 +159,7 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		return getExtractor().getConfig();
 	}
 
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		return getExtractor().getExtractorSampleRate();
 	}
 

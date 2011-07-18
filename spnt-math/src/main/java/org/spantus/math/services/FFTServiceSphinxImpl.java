@@ -39,15 +39,15 @@ public class FFTServiceSphinxImpl implements FFTService{
     private DiscreteFourierTransform sFft = null;
     private int numberFftPoints = 0;
 
-	public List<Float> calculateFFTMagnitude(long index, List<Float> x, Float sampleRate) {
-		List<Float> fftInput= new ArrayList<Float>(x);
+	public List<Double> calculateFFTMagnitude(long index, List<Double> x, Double sampleRate) {
+		List<Double> fftInput= new ArrayList<Double>(x);
 		int logm = (int) (Math.log(fftInput.size()) / Math.log(2));
 		int n = 1 << logm;
 		if(fftInput.size() > n){
 			n = 1 << (logm+1);
 		}
 		int missingSamples = n - x.size();
-		fftInput.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
+		fftInput.addAll(Collections.nCopies(missingSamples, Double.valueOf(0D)));
 //		Float[] fftArr = fftInput.toArray(new Float[fftInput.size()]);
         if(numberFftPoints!=n){
             numberFftPoints = n;
@@ -55,8 +55,8 @@ public class FFTServiceSphinxImpl implements FFTService{
             sFft.initialize();
         }
 
-        double[] sResult = sFft.process(VectorUtils.toDoubleArray(x),sampleRate.intValue());
-        List<Float> fftOutput = VectorUtils.toFloatList(sResult);
+        Double[] sResult = sFft.process(VectorUtils.toDoubleArray(x),sampleRate.intValue());
+        List<Double> fftOutput = VectorUtils.toFloatList(sResult);
 		return fftOutput;
 	}
 

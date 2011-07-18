@@ -12,22 +12,22 @@ import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
 
 public abstract class JavaMLSupport {
-	public static Instance createInstanceScalars(List<Float> scalars) {
+	public static Instance createInstanceScalars(List<Double> scalars) {
 		Instance instance = new SparseInstance(scalars.size());
 		int i = 0;
-		for (Float f1 : scalars) {
+		for (Double f1 : scalars) {
 			instance.put(i++, f1.doubleValue());
 		}
 		return instance;
 
 	}
 
-	public static Instance createInstanceVectors(List<List<Float>> vectors,
+	public static Instance createInstanceVectors(List<List<Double>> vectors,
 			int depth) {
 		SparseInstance instance = new SparseInstance(vectors.size() * depth);
 		int i = 0;
-		for (List<Float> scalars : vectors) {
-			for (Float f1 : scalars) {
+		for (List<Double> scalars : vectors) {
+			for (Double f1 : scalars) {
 				instance.put(i++, f1.doubleValue());
 			}
 		}
@@ -35,21 +35,21 @@ public abstract class JavaMLSupport {
 		return instance;
 	}
 
-	public static TimeSeries toTimeSeries(List<Float> values) {
+	public static TimeSeries toTimeSeries(List<Double> values) {
 		Instance instance = new DenseInstance(values.size());
 		int i = 0;
-		for (Float f1 : values) {
+		for (Double f1 : values) {
 			instance.put(i++, f1.doubleValue());
 		}
 		TimeSeries ts = new TimeSeries(instance);
 		return ts;
 	}
 
-	public static TimeSeries toTimeSeries(List<List<Float>> matrix,
+	public static TimeSeries toTimeSeries(List<List<Double>> matrix,
 			int numOfDimensions) {
 		TimeSeries ts = new TimeSeries(numOfDimensions);
 		double i = 0;
-		for (List<Float> values : matrix) {
+		for (List<Double> values : matrix) {
 			Collection<Double> doubles = VectorUtils.toDoubleList(values);
 			TimeSeriesPoint tsp = new TimeSeriesPoint(doubles);
 			ts.addLast(i++, tsp);

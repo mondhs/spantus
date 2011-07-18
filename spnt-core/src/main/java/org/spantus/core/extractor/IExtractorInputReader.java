@@ -30,7 +30,7 @@ import java.util.Set;
  *
  */
 public interface IExtractorInputReader extends Cloneable{
-	public void put(Long sample, float value);
+	public void put(Long sample, Double value);
 	public void pushValues(Long sample);
 	public Set<IExtractor> getExtractorRegister();
 	public Set<IExtractorVector> getExtractorRegister3D();

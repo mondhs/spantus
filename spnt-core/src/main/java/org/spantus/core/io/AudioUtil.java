@@ -27,15 +27,15 @@ import javax.sound.sampled.AudioFormat;
  *
  */
 public abstract class AudioUtil {
-	public static Float read8(Byte b1, AudioFormat format){
-		return b1.floatValue();
+	public static Double read8(Byte b1, AudioFormat format){
+		return b1.doubleValue();
 	}
 	
 //	public static Float read16(int b1, int b2, AudioFormat format){
 //		return read16((byte)b1, (byte)b2, format);
 //	}
 	
-	public static Float read16(byte b1, byte b2, AudioFormat format) {
+	public static Double read16(byte b1, byte b2, AudioFormat format) {
 		boolean signed = (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED);
 		boolean bigEndian = (format.isBigEndian());
 		int value = 0;
@@ -49,10 +49,10 @@ public abstract class AudioUtil {
 		} else {
 			value = (hiByte << 8) | loByte;
 		}
-		return (float) value ;// Short.MAX_VALUE;
+		return (double) value ;// Short.MAX_VALUE;
 	}
 	
-	public static Byte[] get16(Float f1, AudioFormat format) {
+	public static Byte[] get16(Double f1, AudioFormat format) {
 //		Byte[] bs = new Byte[2];
 //		boolean signed = (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED);
 		boolean bigEndian = (format.isBigEndian());
@@ -70,7 +70,7 @@ public abstract class AudioUtil {
 
 		return new Byte[]{hiByte, loByte} ;// Short.MAX_VALUE;
 	}
-	public static Byte[] get8(Float f1, AudioFormat format) {
+	public static Byte[] get8(Double f1, AudioFormat format) {
 		return new Byte[]{f1.byteValue()};
 	}
 }

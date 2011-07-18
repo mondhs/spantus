@@ -37,9 +37,9 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 	
 	Logger log = Logger.getLogger(getClass());
 	
-	public static float[] SEGMENT1_VALS = new float[]{.5f, 0f, 0f, 1f, 1f, 0f, 0f, 0f, 0f, 1f, 1f, 1f, 0f};
-	public static float[] SEGMENT2_VALS = new float[]{.5f, 0f, 0f, 0f, 1f, 1f, 0f, 0f, 0f, 1f, 1f, 1f, 0f};
-	public static float[] SEGMENT3_VALS = new float[]{.5f, 0f, 1f, 0f, 1f, 1f, 0f, 0f, 0f, 0f, 1f, 1f, 0f};
+	public static Double[] SEGMENT1_VALS = new Double[]{.5D, 0D, 0D, 1D, 1D, 0D, 0D, 0D, 0D, 1D, 1D, 1D, 0D};
+	public static Double[] SEGMENT2_VALS = new Double[]{.5D, 0D, 0D, 0D, 1D, 1D, 0D, 0D, 0D, 1D, 1D, 1D, 0D};
+	public static Double[] SEGMENT3_VALS = new Double[]{.5D, 0D, 1D, 0D, 1D, 1D, 0D, 0D, 0D, 0D, 1D, 1D, 0D};
 	/**
 	 * 
 	 */
@@ -51,9 +51,9 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 		IClassifier segmentator3 = getSegmentator("extractor3", multipeListener);
 		
 		for (int i = 0; i < SEGMENT1_VALS.length; i++) {
-			float f1 = SEGMENT1_VALS[i];
-			float f2 = SEGMENT2_VALS[i];
-			float f3 = SEGMENT3_VALS[i];
+			Double f1 = SEGMENT1_VALS[i];
+			Double f2 = SEGMENT2_VALS[i];
+			Double f3 = SEGMENT3_VALS[i];
 			Long l = Long.valueOf(i);
 			segmentator1.calculate(l, getWindow(f1));
 			segmentator2.calculate(l, getWindow(f2));
@@ -70,8 +70,8 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 		assertEquals(3000, m.getLength().intValue());
 		
 		for (int i = 0; i < SEGMENT1_VALS.length; i++) {
-			float f2 = SEGMENT2_VALS[i];
-			float f3 = SEGMENT3_VALS[i];
+			Double f2 = SEGMENT2_VALS[i];
+			Double f3 = SEGMENT3_VALS[i];
 			Long l = Long.valueOf(i);
 			segmentator2.calculate(l, getWindow(f2));
 			segmentator3.calculate(l, getWindow(f3));
@@ -87,8 +87,8 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 		IClassifier segmentator3 = getSegmentator("extractor3", multipeListener);
 		
 		for (int i = 0; i < SEGMENT1_VALS.length; i++) {
-			float f2 = SEGMENT2_VALS[i];
-			float f3 = SEGMENT3_VALS[i];
+			Double f2 = SEGMENT2_VALS[i];
+			Double f3 = SEGMENT3_VALS[i];
 			Long l = Long.valueOf(i);
 			segmentator2.calculate(l, getWindow(f2));
 			segmentator3.calculate(l, getWindow(f3));
@@ -104,8 +104,8 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 		assertEquals(2000, m.getLength().intValue());
 		
 		for (int i = 0; i < SEGMENT1_VALS.length; i++) {
-			float f2 = SEGMENT2_VALS[i];
-			float f3 = SEGMENT3_VALS[i];
+			Double f2 = SEGMENT2_VALS[i];
+			Double f3 = SEGMENT3_VALS[i];
 			Long l = Long.valueOf(i);
 			segmentator2.calculate(l, getWindow(f2));
 			segmentator3.calculate(l, getWindow(f3));
@@ -117,7 +117,7 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 	public void testOnlineRuleSimple(){
 		MarkerSet markSet = 
 			segmentRuleBase(
-				new Float[]{.5f, 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 0f, 1f, 1f, 1f, 0f, 0f});
+				new Double[]{.5D, 0D, 0D, 1D, 1D, 1D, 1D, 0D, 0D, 0D, 1D, 1D, 1D, 0D, 0D});
 		assertNotNull(markSet);
 		
 		log.debug("Markers: " + markSet.getMarkers());
@@ -133,7 +133,7 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 	public void testOnlineRuleDelete(){
 		MarkerSet markSet = 
 			segmentRuleBase(
-				new Float[]{.5f, 0f, 0f, 1f, 1f, 1f, 1f, 0f, 0f, 0f, 1f, 0f, 0f, 1f, 0f});
+				new Double[]{.5D, 0D, 0D, 1D, 1D, 1D, 1D, 0D, 0D, 0D, 1D, 0D, 0D, 1D, 0D});
 		assertNotNull(markSet);
 		log.debug("Markers: " + markSet.getMarkers());
 		assertEquals(1, markSet.getMarkers().size());
@@ -145,7 +145,7 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 	public void testOnlineRuleJoin(){
 		MarkerSet markSet = 
 			segmentRuleBase(
-					new Float[]{.5f, 0f, 0f, 1f, 1f, 1f, 0f, 1f, 1f, 0f, 1f, 0f, 0f });
+					new Double[]{.5D, 0D, 0D, 1D, 1D, 1D, 0D, 1D, 1D, 0D, 1D, 0D, 0D });
 		assertNotNull(markSet);
 		log.debug("Markers: " + markSet.getMarkers());
 		assertEquals(1, markSet.getMarkers().size());

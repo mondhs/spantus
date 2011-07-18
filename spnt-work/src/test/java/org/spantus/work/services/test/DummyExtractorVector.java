@@ -49,7 +49,7 @@ public class DummyExtractorVector implements IExtractorVector {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public float getExtractorSampleRate() {
+    public Double getExtractorSampleRate() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

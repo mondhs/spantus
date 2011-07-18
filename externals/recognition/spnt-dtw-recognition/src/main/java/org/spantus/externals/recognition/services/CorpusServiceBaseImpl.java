@@ -76,8 +76,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		if (target == null || target.isEmpty()) {
 			return results;
 		}
-		Map<String, Float> minimum = new HashMap<String, Float>();
-		Map<String, Float> maximum = new HashMap<String, Float>();
+		Map<String, Double> minimum = new HashMap<String, Double>();
+		Map<String, Double> maximum = new HashMap<String, Double>();
 
 		// iterate all entires in corpus
 		for (CorpusEntry sample : getCorpus().findAllEntries()) {
@@ -104,11 +104,11 @@ public class CorpusServiceBaseImpl implements CorpusService {
 				// featureName,sampleFeatureData.getValues());
 				result.getSampleLegths().put(
 						featureName,
-						(float) Math.round(sampleFeatureData.getValues()
+						 (double) Math.round(sampleFeatureData.getValues()
 								.getTime() * 1000));
 				result.getTargetLegths()
 						.put(featureName,
-								(float) Math.round(targetEntry.getValue()
+								 (double) Math.round(targetEntry.getValue()
 										.getTime() * 1000));
 				result.setInfo(sample);
 
@@ -156,9 +156,9 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		RecognitionResultDetails result = new RecognitionResultDetails();
 		result.setPath(new HashMap<String, List<Point>>());
 		result.setPath(new HashMap<String, List<Point>>());
-		result.setScores(new HashMap<String, Float>());
-		result.setTargetLegths(new HashMap<String, Float>());
-		result.setSampleLegths(new HashMap<String, Float>());
+		result.setScores(new HashMap<String, Double>());
+		result.setTargetLegths(new HashMap<String, Double>());
+		result.setSampleLegths(new HashMap<String, Double>());
 		return result;
 	}
 
@@ -170,14 +170,14 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param minimum
 	 * @param maximum
 	 */
-	private void updateMinMax(String feature, Float value,
-			Map<String, Float> minimum, Map<String, Float> maximum) {
+	private void updateMinMax(String feature, Double value,
+			Map<String, Double> minimum, Map<String, Double> maximum) {
 		// log.debug("[updateMinMax] feature [{0}]: {1} ", feature, value);
 		if (minimum.get(feature) == null) {
-			minimum.put(feature, Float.MAX_VALUE);
+			minimum.put(feature, Double.MAX_VALUE);
 		}
 		if (maximum.get(feature) == null) {
-			maximum.put(feature, -Float.MAX_VALUE);
+			maximum.put(feature, -Double.MAX_VALUE);
 		}
 		if (minimum.get(feature).compareTo(value) > 0) {
 			// log.debug("[updateMinMax] [{2}] minimum {0}>{1}",
@@ -199,20 +199,20 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @return
 	 */
 	private <T extends RecognitionResult> List<T> postProcessResult(
-			List<T> results, Map<String, Float> minimum,
-			Map<String, Float> maximum) {
+			List<T> results, Map<String, Double> minimum,
+			Map<String, Double> maximum) {
 		// log.debug("[postProcessResult]+++");
 
 		for (RecognitionResult result : results) {
-			Map<String, Float> normalizedScores = new HashMap<String, Float>();
-			Float normalizedSum = 0F;
+			Map<String, Double> normalizedScores = new HashMap<String, Double>();
+			Double normalizedSum = 0D;
 
-			for (Entry<String, Float> score : result.getScores().entrySet()) {
-				// float min = minimum.get(score.getKey());
-				// float max = maximum.get(score.getKey());
-				// float delta = max-min;
-				// float normalizedScore = (score.getValue() - min)/delta;
-				float normalizedScore = score.getValue();
+			for (Entry<String, Double> score : result.getScores().entrySet()) {
+				// Double min = minimum.get(score.getKey());
+				// Double max = maximum.get(score.getKey());
+				// Double delta = max-min;
+				// Double normalizedScore = (score.getValue() - min)/delta;
+				Double normalizedScore = score.getValue();
 
 				if (getIncludeFeatures() == null
 						|| getIncludeFeatures().isEmpty()) {
@@ -307,7 +307,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 					// feature never seen
 					match.put(featureName, result1);
 				} else {
-					Float prevDistance = match.get(featureName).getDistance();
+					Double prevDistance = match.get(featureName).getDistance();
 					if (NumberUtils
 							.compare(result1.getDistance(), prevDistance) < 0) {
 						match.put(featureName, result1);
@@ -330,13 +330,13 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 */
 	protected RecognitionResult findBestMatch(Map<String, IValues> target) {
 		List<RecognitionResult> results = new ArrayList<RecognitionResult>();
-		Map<String, Float> minimum = new HashMap<String, Float>();
-		Map<String, Float> maximum = new HashMap<String, Float>();
+		Map<String, Double> minimum = new HashMap<String, Double>();
+		Map<String, Double> maximum = new HashMap<String, Double>();
 		int i = 1;
 		for (CorpusEntry corpusSample : getCorpus().findAllEntries()) {
 			long start = System.currentTimeMillis();
 			RecognitionResult result = new RecognitionResult();
-			result.setScores(new HashMap<String, Float>());
+			result.setScores(new HashMap<String, Double>());
 			result.setInfo(corpusSample);
 			for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
 				String featureName = targetEntry.getKey();

@@ -40,14 +40,14 @@ public class SpectralEntropy extends AbstractSpectralExtractor {
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameVectorValues val3d = calculateFFT(window);
 		FrameValues rtnValues = super.calculateWindow(window);
-		for (List<Float> fv : val3d) {
-			float bottom = 0;
-			for (Float current : fv) {
+		for (List<Double> fv : val3d) {
+			Double bottom = 0D;
+			for (Double current : fv) {
 				//|X[i]|^2
 				bottom += Math.pow(current,2);
 			}
-			float entropy = 0;
-			for (Float current : fv) {
+			Double entropy = 0D;
+			for (Double current : fv) {
 				double part = Math.pow(current,2)/bottom;
 				if(part == 0) continue;
 				entropy += (part) * Math.log10(part) ;

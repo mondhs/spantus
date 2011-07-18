@@ -104,8 +104,8 @@ public class PLPCepstrumProducer  {
      * relatively low order AR filters.
      * @param inspectrum
      */
-    private double[] powerLawCompress(double[] inspectrum) {
-        double[] compressedspectrum = new double[inspectrum.length];
+    private Double[] powerLawCompress(Double[] inspectrum) {
+    	Double[] compressedspectrum = new Double[inspectrum.length];
 
         for (int i = 0; i < inspectrum.length; i++) {
             compressedspectrum[i] = Math.pow(inspectrum[i], 1.0 / 3.0);
@@ -148,10 +148,10 @@ public class PLPCepstrumProducer  {
      * @return a PLP Data frame
      * @throws IllegalArgumentException
      */
-    public double[] process(double[] input, int newSampleRate) throws
+    public Double[] process(Double[] input, int newSampleRate) throws
     IllegalArgumentException {
 
-        double[] plpspectrum = input;
+    	Double[] plpspectrum = input;
 
         if (plpspectrum.length != numberPLPFilters) {
             throw new IllegalArgumentException
@@ -161,16 +161,16 @@ public class PLPCepstrumProducer  {
         }
 
         // power law compress spectrum
-        double[] compressedspectrum = powerLawCompress(plpspectrum);
+        Double[] compressedspectrum = powerLawCompress(plpspectrum);
 
         // compute autocorrelation values
-        double[] autocor = applyCosine(compressedspectrum);
+        Double[] autocor = applyCosine(compressedspectrum);
 
         LinearPredictor LPC = new LinearPredictor(LPCOrder);
         // Compute LPC Parameters
         LPC.getARFilter(autocor);
         // Compute LPC Cepstra
-        double[] cepstrumDouble = LPC.getData(cepstrumSize);
+        Double[] cepstrumDouble = LPC.getData(cepstrumSize);
 
 //        DoubleData cepstrum = new DoubleData
 //                (cepstrumDouble, input.getSampleRate(), input.getCollectTime(),
@@ -186,11 +186,11 @@ public class PLPCepstrumProducer  {
      * @param plpspectrum the PLPSpectrum data
      * @return autocorrelation computed from PLP spectral values
      */
-    private double[] applyCosine(double[] plpspectrum) {
+    private Double[] applyCosine(Double[] plpspectrum) {
 
-        double[] autocor = new double[LPCOrder + 1];
-        double period = (double) numberPLPFilters;
-        double beta = 0.5f;
+    	Double[] autocor = new Double[LPCOrder + 1];
+    	Double period = (double) numberPLPFilters;
+    	Double beta = 0.5D;
 
         // apply the idct
         for (int i = 0; i <= LPCOrder; i++) {
@@ -198,6 +198,9 @@ public class PLPCepstrumProducer  {
             if (numberPLPFilters > 0) {
                 double[] cosine_i = cosine[i];
                 int j = 0;
+                if(autocor[i]==null){
+                	autocor[i] = 0D;
+                }
                 autocor[i] += (beta * plpspectrum[j] * cosine_i[j]);
 
                 for (j = 1; j < numberPLPFilters; j++) {

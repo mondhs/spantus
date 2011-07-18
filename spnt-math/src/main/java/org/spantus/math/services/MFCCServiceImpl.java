@@ -39,21 +39,21 @@ import java.util.List;
 public class MFCCServiceImpl implements MFCCService {
 
 	
-	public List<Float> calculateMFCC(List<Float> x, float sampleRate) {
+	public List<Double> calculateMFCC(List<Double> x, Double sampleRate) {
 		int logm = (int) (Math.log(x.size()) / Math.log(2));
 		int n = 1 << logm;
 		if(x.size() > n){
 			n = 1 << (logm+1);
 		}
 		int missingSamples = n - x.size();
-		x.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
+		x.addAll(Collections.nCopies(missingSamples, 0.0));
 
-		List<Float> floats = MFCC.calculateMFCC(x,
+		List<Double> floats = MFCC.calculateMFCC(x,
 				sampleRate);
 
 		return floats;
 	}
-    public List<Float> calculateMfccFromSpectrum(List<Float> fft, float sampleRate){
+    public List<Double> calculateMfccFromSpectrum(List<Double> fft, Double sampleRate){
         throw new IllegalAccessError("Not impl");
     }
 

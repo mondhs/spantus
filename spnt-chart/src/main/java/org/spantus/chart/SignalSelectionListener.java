@@ -30,6 +30,6 @@ package org.spantus.chart;
  *
  */
 public interface SignalSelectionListener {
-	public void selectionChanged(float from, float length);
+	public void selectionChanged(Double from, Double length);
 	public void play();
 }

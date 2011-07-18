@@ -34,11 +34,11 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
  *
  */
 public abstract class AbstractOnlineSegmentTest extends TestCase {
-	protected MarkerSet segmentRuleBase(Float[] vals) {
-		return segmentRuleBase(vals, 1, 1);
+	protected MarkerSet segmentRuleBase(Double[] vals) {
+		return segmentRuleBase(vals, 1, 1D);
 	}
 
-	protected MarkerSet segmentRuleBase(Float[] vals, int step, float sampleRate) {
+	protected MarkerSet segmentRuleBase(Double[] vals, int step, Double sampleRate) {
 		DecisionSegmentatorOnline multipeListener = new DecisionSegmentatorOnline();
 		
 		IClassifier segmentator1 = getSegmentator("segmentator1", multipeListener);
@@ -46,7 +46,7 @@ public abstract class AbstractOnlineSegmentTest extends TestCase {
 		
 		multipeListener.setParam(createParam());
 		for (int i = 0; i < vals.length; i++) {
-			float f = vals[i];
+			Double f = vals[i];
 			Long l = Long.valueOf(i * step);
 			segmentator1.calculate(l, getWindow(f, sampleRate));
 			segmentator2.calculate(l, getWindow(f, sampleRate));
@@ -70,20 +70,20 @@ public abstract class AbstractOnlineSegmentTest extends TestCase {
 		segmentator1.setExtractor(wraper);
 		wraper.getListeners().add(segmentator1);
 		segmentator1.setConfig(new MockSegmentatorExtractorConfig());
-		mockExtractor.setExtractorSampleRate(1);
+		mockExtractor.setExtractorSampleRate(1D);
 		segmentator1.setLearningPeriod(1000L);
 		segmentator1.addClassificationListener(multipeListener);
 		return segmentator1;
 
 	}
 
-	public FrameValues getWindow(float i, float sampleRate) {
-		FrameValues fv = new FrameValues(new Float[] { i });
+	public FrameValues getWindow(Double i, Double sampleRate) {
+		FrameValues fv = new FrameValues(new Double[] {  i });
 		fv.setSampleRate(sampleRate);
 		return fv;
 	}
 	
-	public FrameValues getWindow(float i) {
-		return getWindow(i, 1F);
+	public FrameValues getWindow(Double i) {
+		return getWindow(i, 1D);
 	}
 }

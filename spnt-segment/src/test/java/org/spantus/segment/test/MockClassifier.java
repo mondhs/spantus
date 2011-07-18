@@ -39,7 +39,7 @@ public class MockClassifier implements IClassifier {
 
 	MarkerSet markSet;
 	
-	Float extractorSampleRate;
+	Double extractorSampleRate;
 	
 	public FrameValues getThresholdValues() {
 		return null;
@@ -61,11 +61,11 @@ public class MockClassifier implements IClassifier {
 		return null;
 	}
 
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		return extractorSampleRate;
 	}
 
-	public void setExtractorSampleRate(Float extractorSampleRate) {
+	public void setExtractorSampleRate(Double extractorSampleRate) {
 		this.extractorSampleRate = extractorSampleRate;
 	}
 

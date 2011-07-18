@@ -32,8 +32,8 @@ public class FrameValues3DConverter implements Converter{
 		int size = 15;
 		int i = size;
 		
-		for (List<Float> fv : vals) {
-			for (Float float2 : fv) {
+		for (List<Double> fv : vals) {
+			for (Double float2 : fv) {
 				sb.append(float2);
 				String separator = " ";
 				if(i<=0){
@@ -59,13 +59,13 @@ public class FrameValues3DConverter implements Converter{
 		String values = reader.getValue();
 		String[] strs = values.split("[\\s]+");
 		FrameVectorValues fv3d = new FrameVectorValues();
-		fv3d.setSampleRate(Float.valueOf(sampleRate));
+		fv3d.setSampleRate(Double.valueOf(sampleRate));
 		int i = 0;
 		FrameValues fv = new FrameValues();
 		
 		for (String float1Str : strs) {
 			if("".equals(float1Str)) continue;
-			fv.add(Float.valueOf(float1Str));
+			fv.add(Double.valueOf(float1Str));
 			i++;
 			if(i>=vectorSize){
 				fv3d.add(fv);

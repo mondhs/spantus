@@ -50,7 +50,7 @@ public class MakerComparisonDtwImpl extends MakerComparisonImpl{
 				Math.pow(result.getTest().size(), 2)+ 
 				Math.pow(result.getOriginal().size(), 2));
 		Double totalResult = (resultDtw-shortestPath)/shortestPath; 
-		result.setTotalResult(totalResult.floatValue());
+		result.setTotalResult(totalResult);
 		log.debug("DTW comparition result: " + result.getTotalResult());
 		return seq;
 	}

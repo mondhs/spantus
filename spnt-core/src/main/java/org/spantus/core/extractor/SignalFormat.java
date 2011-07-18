@@ -28,20 +28,20 @@ import java.util.Map;
  *
  */
 public class SignalFormat {
-	private float sampleRate;
-	private float length;
+	private Double sampleRate;
+	private Double length;
 	private Map<String, Object> parameters;
 	
-	public float getSampleRate() {
+	public Double getSampleRate() {
 		return sampleRate;
 	}
-	public void setSampleRate(float sampleRate) {
+	public void setSampleRate(Double sampleRate) {
 		this.sampleRate = sampleRate;
 	}
-	public float getLength() {
+	public Double getLength() {
 		return length;
 	}
-	public void setLength(float length) {
+	public void setLength(Double length) {
 		this.length = length;
 	}
 	public Map<String, Object> getParameters() {

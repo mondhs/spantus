@@ -7,8 +7,8 @@ public class DtwTypeI implements DtwType{
 		result.setP(DtwUtils.point(x, y));
 		info.increaseIterationCount();
 
-		if (Float.isNaN(info.get(x, y))) {
-			result.setResult(Float.MAX_VALUE);
+		if (Double.isNaN(info.get(x, y))) {
+			result.setResult(Double.MAX_VALUE);
 			return result;
 		}
 		if(x == 0 && y == 0){
@@ -27,7 +27,7 @@ public class DtwTypeI implements DtwType{
 		}
 		DtwCompare compared = DtwUtils.getMinValue(ress);
 		DtwUtils.track(result, compared.getMinValue());
-		Float gama = info.get(x, y) + compared.getMinValue().getResult();
+		Double gama = info.get(x, y) + compared.getMinValue().getResult();
 		result.setResult(gama);
 
 		return result;

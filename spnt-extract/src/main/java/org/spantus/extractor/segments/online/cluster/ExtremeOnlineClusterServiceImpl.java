@@ -43,10 +43,10 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		
 		log.debug("[getClassName] data: {0}", data, ctx.semgnetFeatures);
 
-		Float distanceToMin = data.distance(ctx.segmentCenters.get(0));
-		Float avgDistance = data.distance(ctx.segmentCenters.get(1));
-		Float distanceToMax = data.distance(ctx.segmentCenters.get(2));
-//		Float distanceToMax = data.distance(getOnlineCtx().segmentStats.get(2));
+		Double distanceToMin = data.distance(ctx.segmentCenters.get(0));
+		Double avgDistance = data.distance(ctx.segmentCenters.get(1));
+		Double distanceToMax = data.distance(ctx.segmentCenters.get(2));
+//		Double distanceToMax = data.distance(getOnlineCtx().segmentStats.get(2));
 		if(distanceToMin.equals(distanceToMax)){
 			return "1";
 		}
@@ -57,8 +57,8 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 //		}
 //		log.debug(sb.toString());
 		
-		Float toOneClass = avgDistance;
-		Float toTwoClass = distanceToMax;
+		Double toOneClass = avgDistance;
+		Double toTwoClass = distanceToMax;
 		Integer argNum = VectorUtils.minArg(distanceToMin, toOneClass, toTwoClass);
 
 		
@@ -108,16 +108,16 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		SegmentFeatureData min = ctx.normalizeArea(ctx.segmentStats.get(0));
 		SegmentFeatureData max = ctx.normalizeArea(ctx.segmentStats.get(1));
 		SegmentFeatureData avg = ctx.normalizeArea(ctx.segmentStats.get(1));
-//		Float maxDistance = null;
+//		Double maxDistance = null;
 //		SegmentFeatureData minData = null;
-////		Float maxDistance2 = null;
+////		Double maxDistance2 = null;
 //		SegmentFeatureData maxData= null;
 		Double minArea = min.getArea();
 		Double maxArea = max.getArea();
 		
 		for (SegmentFeatureData iData : ctx.semgnetFeatures) {
-			Float distanceToMin = iData.distance(min)*1.8F;
-			Float distanceToMax = iData.distance(max)/2;
+			Double distanceToMin = iData.distance(min)*1.8D;
+			Double distanceToMax = iData.distance(max)/2;
 			if(distanceToMin<distanceToMax){
 				minArea = (minArea+iData.getArea())/2;
 			}else{
@@ -144,7 +144,7 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 //			if(iData.getArea() == 0D || jData.getArea() == 0D){
 //				continue;
 //			}
-//			Float distance = iData.distance(jData);
+//			Double distance = iData.distance(jData);
 ////			if(minDistance == null || minDistance>distance){
 ////				minDistance = distance;
 ////				minData = iData;

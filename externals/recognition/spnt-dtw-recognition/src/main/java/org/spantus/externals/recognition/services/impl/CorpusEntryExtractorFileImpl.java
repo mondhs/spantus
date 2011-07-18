@@ -5,7 +5,6 @@
 package org.spantus.externals.recognition.services.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -14,9 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorInputReader;

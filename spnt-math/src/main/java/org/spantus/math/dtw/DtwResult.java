@@ -6,7 +6,7 @@ import java.util.List;
 
 public class DtwResult {
 	private List<Point> path;
-	private Float result;
+	private Double result;
 	private Point p;
 	
 	public Point getP() {
@@ -17,11 +17,11 @@ public class DtwResult {
 		this.p = p;
 	}
 
-	public Float getResult() {
+	public Double getResult() {
 		return result;
 	}
 
-	public void setResult(Float result) {
+	public void setResult(Double result) {
 		this.result = result;
 	}
 

@@ -63,7 +63,7 @@ public class LPCExtractor extends AbstractExtractorVector {
 
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameVectorValues calculatedValues = new FrameVectorValues();
-		List<Float> lpc = getLpcService().calculateLPC(window, getDimension()).getResult();
+		List<Double> lpc = getLpcService().calculateLPC(window, getDimension()).getResult();
 		calculatedValues.add(lpc);
 		return calculatedValues;
 

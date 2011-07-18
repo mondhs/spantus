@@ -7,7 +7,7 @@ public class SignalSelectionListenerMock implements SignalSelectionListener {
 	Logger log = Logger.getLogger(getClass());
 	
 	
-	public void selectionChanged(float from, float length) {
+	public void selectionChanged(Double from, Double length) {
 		log.debug("Selection changed: from=" + from + "; length= "+length);
 	}
 

@@ -34,32 +34,32 @@ public class ExperimentResultTia extends ExperimentResult {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	Float onset;
-	Float steady;
-	Float offset;
-	Float deltaVAF;
-	public Float getOnset() {
+	Double onset;
+	Double steady;
+	Double offset;
+	Double deltaVAF;
+	public Double getOnset() {
 		return onset;
 	}
-	public void setOnset(Float onset) {
+	public void setOnset(Double onset) {
 		this.onset = onset;
 	}
-	public Float getSteady() {
+	public Double getSteady() {
 		return steady;
 	}
-	public void setSteady(Float steady) {
+	public void setSteady(Double steady) {
 		this.steady = steady;
 	}
-	public Float getOffset() {
+	public Double getOffset() {
 		return offset;
 	}
-	public void setOffset(Float offset) {
+	public void setOffset(Double offset) {
 		this.offset = offset;
 	}
-	public Float getDeltaVAF() {
+	public Double getDeltaVAF() {
 		return deltaVAF;
 	}
-	public void setDeltaVAF(Float deltaVAF) {
+	public void setDeltaVAF(Double deltaVAF) {
 		this.deltaVAF = deltaVAF;
 	}
 }

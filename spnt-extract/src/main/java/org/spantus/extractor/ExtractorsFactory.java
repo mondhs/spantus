@@ -66,7 +66,7 @@ public abstract class ExtractorsFactory {
 	}
 	
 	public static IExtractorConfig createConfig(AudioFormat format, int windowLengthInMilSec, int overlapInPerc){
-		return ExtractorConfigUtil.defaultConfig(format.getSampleRate(), windowLengthInMilSec,  overlapInPerc);
+		return ExtractorConfigUtil.defaultConfig((double) format.getSampleRate(), windowLengthInMilSec,  overlapInPerc);
 	}
 	public static IExtractorConfig createConfig(SignalFormat format){
 		return ExtractorConfigUtil.defaultConfig(format.getSampleRate());

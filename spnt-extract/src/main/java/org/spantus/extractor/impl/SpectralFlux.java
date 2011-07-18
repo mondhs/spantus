@@ -43,16 +43,16 @@ public class SpectralFlux extends AbstractSpectralExtractor {
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameVectorValues val3d = calculateFFT(window);
 		FrameValues rtnValues = super.calculateWindow(window);
-		for (List<Float> fv : val3d) {
-			Float previousAbs = null;
-			float flux = 0;
-			for (Float current : fv) {
+		for (List<Double> fv : val3d) {
+			Double previousAbs = null;
+			Double flux = 0D;
+			for (Double current : fv) {
 				if(previousAbs == null){
-					previousAbs = Float.valueOf(Math.abs(current));
+					previousAbs = Math.abs(current);
 					continue;
 				}
 				//x=(|X[k]|-|X[k-1]|)
-				float x = Math.abs(current) - previousAbs;
+				Double x = Math.abs(current) - previousAbs;
 				//H(x)=(x+|x|)/2
 				flux += (x + Math.abs(x))/2;
 				previousAbs = Math.abs(current);

@@ -9,7 +9,7 @@ import org.spantus.math.windowing.HammingWindowing;
 public class WindowingTest extends TestCase {
 	public void testHamming(){
 		HammingWindowing window = new HammingWindowing();
-		List<Float> windResult = window.calculate(4);
+		List<Double> windResult = window.calculate(4);
 		assertEquals(4, windResult.size());
 		windResult = window.calculate(11);
 		assertEquals(11, window.calculate(11).size());

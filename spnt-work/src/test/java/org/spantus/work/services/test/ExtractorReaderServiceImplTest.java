@@ -48,7 +48,7 @@ public class ExtractorReaderServiceImplTest {
         //then
         Assert.assertNotNull(fvv);
         Assert.assertEquals(3, fvv.size());
-        Assert.assertEquals("", 0.003F, fvv.get(extractorName).getTime(),0);
+        Assert.assertEquals("", 0.003D, fvv.get(extractorName).getTime(),0);
     }
     @Test 
     public void testFindAllVectorValuesForMarker(){
@@ -70,17 +70,17 @@ public class ExtractorReaderServiceImplTest {
         //then
         Assert.assertNotNull(fvv);
         Assert.assertEquals(3, fvv.size());
-        Assert.assertEquals("", 0.003F, fvv.getTime(),0);
+        Assert.assertEquals("", 0.003D, fvv.getTime(),0);
     }
 
 
     protected FrameVectorValues generateOutputValues(int index){
         FrameVectorValues fullFVV = new FrameVectorValues();
-        fullFVV.setSampleRate(1000);
+        fullFVV.setSampleRate(1000D);
 
         for (int i = 0; i < index; i++) {
-            float f = i+.1F;
-            fullFVV.add(new Float[]{f, f, f});
+        	Double f = i+.1D;
+            fullFVV.add(new Double[]{f, f, f});
         }
         return fullFVV;
     }

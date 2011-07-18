@@ -10,20 +10,20 @@ public class HighAvgPreemphasis implements Preemphasis {
 	
 	private Preemphasis preemphasis;
 	
-	private LinkedList<Float> buffer;
+	private LinkedList<Double> buffer;
 	
 	private Integer bufferSize;
 	
 	
 	public HighAvgPreemphasis() {
 		preemphasis = new HighPreemphasis();
-		buffer = new LinkedList<Float>();
+		buffer = new LinkedList<Double>();
 	}
 	
-	public Float process(Float currentValue) {
-		buffer.addLast(currentValue);
-		float avg = VectorUtils.avg(buffer);
-		Float val = preemphasis.process(currentValue - avg);
+	public Double process(Double currentValue) {
+		 buffer.addLast(currentValue);
+		 Double avg = VectorUtils.avg(buffer);
+		 Double val = preemphasis.process(currentValue - avg);
 		if(buffer.size()>getBufferSize()){
 			buffer.removeFirst();
 		}

@@ -31,7 +31,7 @@ import org.spantus.core.FrameValues;
  */
 public class OfflineThreshold extends DynamicThreshold {
 	
-	private Float signalThreshold = null;
+	private Double signalThreshold = null;
 	/**
 	 * recalculate threshold for all the signal
 	 */
@@ -54,7 +54,7 @@ public class OfflineThreshold extends DynamicThreshold {
 	 * Just return calculated value during flush
 	 */
 	@Override
-	protected Float recacluclateCurrentThreashold(FrameValues result){
+	protected Double recacluclateCurrentThreashold(FrameValues result){
 		return signalThreshold;
 	}
 

@@ -42,31 +42,31 @@ public class MatrixUtils {
 	 * @param order
 	 * @return
 	 */
-	public static List<Float> zeros(int order){
-		List<Float> zeros = new ArrayList<Float>(order);
+	public static List<Double> zeros(int order){
+		List<Double> zeros = new ArrayList<Double>(order);
 		for (int i = 0; i < order; i++) {
-			zeros.add(0F);
+			zeros.add(0D);
 		}
 		return zeros;
 	}
 	
-	public static List<Float> fill(int order, Float f){
-		List<Float> filled = new ArrayList<Float>(order);
+	public static List<Double> fill(int order, Double f){
+		List<Double> filled = new ArrayList<Double>(order);
 		for (int i = 0; i < order; i++) {
 			filled.add(f);
 		}
 		return filled;
 	}
 	
-	public static List<Float> generareVector(Float value, int order){
-		List<Float> zeros = new ArrayList<Float>();
+	public static List<Double> generareVector(Double value, int order){
+		List<Double> zeros = new ArrayList<Double>();
 		for (int i = 0; i < order; i++) {
 			zeros.add(value);
 		}
 		return zeros;
 	}
 	
-	public static List<Float> reverseVector(List<Float> vector){
+	public static List<Double> reverseVector(List<Double> vector){
 		Collections.reverse(vector);
 		return vector;
 	}
@@ -75,10 +75,10 @@ public class MatrixUtils {
 	 * @param values
 	 * @return
 	 */
-    public static StringBuilder toString(List<List<Float>> values){
+    public static StringBuilder toString(List<List<Double>> values){
     	StringBuilder sb = new StringBuilder();
-    	for (List<Float> list : values) {
-			for (Float float1 : list) {
+    	for (List<Double> list : values) {
+			for (Double float1 : list) {
 				sb.append(float1).append(";");
 			}
 			sb.append("\n");
@@ -87,16 +87,16 @@ public class MatrixUtils {
     }
 
 	public static StringBuilder toStringTranform(
-			List<LinkedList<Float>> values) {
+			List<LinkedList<Double>> values) {
 		StringBuilder sb = new StringBuilder();
 		int size  =values.get(0).size();
-		List<List<Float>> newList = new ArrayList<List<Float>>(size);
+		List<List<Double>> newList = new ArrayList<List<Double>>(size);
 		for (int i = 0; i < size; i++) {
-			newList.add(new ArrayList<Float>());
+			newList.add(new ArrayList<Double>());
 		}
-    	for (List<Float> list : values) {
+    	for (List<Double> list : values) {
     		int index = 0;
-			for (Float float1 : list) {
+			for (Double float1 : list) {
 				newList.get(index++).add(float1);
 			}
 		}

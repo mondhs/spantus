@@ -96,7 +96,7 @@ public class TimeSeriesChart extends AbstractSwingChart{
 	}
 
 	@Override
-	public void changedZoom(Float from, Float length) {
+	public void changedZoom(Double from, Double length) {
 		log.debug("zoomout from{0} length{1}",from, length);
 	}
 	

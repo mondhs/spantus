@@ -48,7 +48,7 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 	
 	private int windowOverlap;
 	
-	private float sampleRate;
+	private Double sampleRate;
 	
 //	private int bitsPerSample;
 	
@@ -61,7 +61,7 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 	private String preemphasis;
 	
 	public DefaultExtractorConfig() {
-		sampleRate = 44000;
+		sampleRate = 44000D;
 		windowSize = 512;
 		windowOverlap = windowSize - (windowSize / 10); 
 		frameSize = (windowSize * 10)+windowOverlap;
@@ -81,11 +81,11 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 	}
 	
 	
-	public float getSampleRate() {
+	public Double getSampleRate() {
 		return sampleRate;
 	}
 
-	public void setSampleRate(float sampleRate) {
+	public void setSampleRate(Double sampleRate) {
 		this.sampleRate = sampleRate;
 	}
 

@@ -53,7 +53,7 @@ public class FrameValueAreaFunction extends Function {
 		charType.setDomain(domain);
 		return charType;
 	}
-	public void setOrder(float order) {
+	public void setOrder(Double order) {
 		charType.setOrder(order);
 	}
 

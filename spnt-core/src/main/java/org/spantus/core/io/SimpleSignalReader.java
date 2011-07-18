@@ -62,14 +62,14 @@ public class SimpleSignalReader implements SignalReader {
 						log.debug("Format not supported");
 						return null;
 					}
-					config.setSampleRate(Float.valueOf(strLine));
+					config.setSampleRate(Double.valueOf(strLine));
 					break;
 				case 1:
 					if (!strLine.matches("\\d*")) {
 						log.debug("Format not supported");
 						return null;
 					}
-					config.setLength(Integer.valueOf(strLine));
+					config.setLength(Double.valueOf(strLine));
 					// length
 					break;
 
@@ -106,7 +106,7 @@ public class SimpleSignalReader implements SignalReader {
 			long sample = 0;
 			while ((strLine = br.readLine()) != null) {
 				if (sample > 1) {
-					Float value = Float.valueOf(strLine);
+					Double value = Double.valueOf(strLine);
 					reader.put(sample, value);
 				}
 				sample++;
@@ -142,7 +142,7 @@ public class SimpleSignalReader implements SignalReader {
  			long sample = 0;
  			// Read File Line By Line
  			while(!filesEnded){
- 				Float sum = 0F;
+ 				Double sum = 0D;
  				for (BufferedReader bufferedReader : bfreaders) {
  					String strLine = bufferedReader.readLine();
  					if(StringUtils.hasText(strLine)){

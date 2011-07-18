@@ -289,12 +289,12 @@ public class RecordCmd extends AbsrtactCmd {
 	 * @return
 	 */
 	protected AudioFormat getFormat(WorkUIExtractorConfig config) {
-		Float sampleRate = config.getRecordSampleRate();
+		Double sampleRate = config.getRecordSampleRate();
 		int sampleSizeInBits = 16;
 		int channels = 1;
 		boolean signed = true;
 		boolean bigEndian = true;
-		AudioFormat af = new AudioFormat(sampleRate, sampleSizeInBits, channels, signed,
+		AudioFormat af = new AudioFormat(sampleRate.floatValue(), sampleSizeInBits, channels, signed,
 				bigEndian);
 		return af;
 	}

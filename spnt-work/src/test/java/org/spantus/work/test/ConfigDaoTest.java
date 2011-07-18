@@ -24,15 +24,15 @@ public class ConfigDaoTest extends TestCase {
 	
 	public void testRead(){
 		IExtractorConfig config = configDao.read(new File(FILE_NAME));
-		assertEquals(8000F, config.getSampleRate());
+		assertEquals(8000D, config.getSampleRate());
 		ExtractorParam param = config.getParameters().get(DefaultExtractorConfig.class.getName());
 		
-		Float threshold_coef = ExtractorParamUtils.<Float>getValue(param,
+		Double threshold_coef = ExtractorParamUtils.<Double>getValue(param,
 				ConfigPropertiesDao.key_threshold_coef);
 		Long threshold_leaningPeriod = ExtractorParamUtils.<Long>getValue(
 				param,
 				ConfigPropertiesDao.key_threshold_leaningPeriod);
-		assertEquals(6F, threshold_coef);
+		assertEquals(6D, threshold_coef);
 		assertEquals(5000, threshold_leaningPeriod.longValue());
 		assertEquals(461, config.getWindowOverlap());
 		assertEquals(512, config.getWindowSize());

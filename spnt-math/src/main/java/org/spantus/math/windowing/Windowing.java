@@ -32,5 +32,5 @@ import java.util.List;
  *
  */
 public abstract class Windowing {
-	public abstract void apply(List<Float> values);
+	public abstract void apply(List<Double> values);
 }

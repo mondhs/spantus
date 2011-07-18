@@ -125,7 +125,7 @@ public class ExtremeListIterator implements ListIterator<ExtremeEntry> {
 		Double area = 0D;
 		int index = 0;
 		long length = getPeakLength(); 
-		for (Iterator<Float> iterator = allValues.listIterator(getPreviousEntry().getIndex()); iterator.hasNext();) {
+		for (Iterator<Double> iterator = allValues.listIterator(getPreviousEntry().getIndex()); iterator.hasNext();) {
 			if(index++>=length){
 				break;
 			}

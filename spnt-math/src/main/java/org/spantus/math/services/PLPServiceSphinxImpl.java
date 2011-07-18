@@ -56,23 +56,23 @@ public class PLPServiceSphinxImpl implements PLPService {
 		this.numberPLPFilters = numberPLPFilters;
 	}
 	
-	public List<Float> calculate(List<Float> x, float sampleRate) {
+	public List<Double> calculate(List<Double> x, Double sampleRate) {
 		int logm = (int) (Math.log(x.size()) / Math.log(2));
 		int n = 1 << logm;
 		if (x.size() > n) {
 			n = 1 << (logm + 1);
 		}
 		int missingSamples = n - x.size();
-		x.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
+		x.addAll(Collections.nCopies(missingSamples, 0D));
 
 		DiscreteFourierTransform sFft = new DiscreteFourierTransform(n, false);
 		sFft.initialize();
-		double[] fftArr = sFft.process(VectorUtils
-				.toDoubleArray(new ArrayList<Float>(x)), (int) sampleRate);
+		Double[] fftArr = sFft.process(VectorUtils
+				.toDoubleArray(new ArrayList<Double>(x)), sampleRate.intValue());
 
 //		double[] sResult = getPlpFrequencyFilterBank().process(fft,
 //				(int) sampleRate);
-		List<Float> fft = VectorUtils.toFloatList(fftArr);
+		List<Double> fft = VectorUtils.toFloatList(fftArr);
 
 		return calculateFromSpectrum(fft, sampleRate);
 	}
@@ -84,16 +84,16 @@ public class PLPServiceSphinxImpl implements PLPService {
 	 * @param sampleRate
 	 * @return
 	 */
-	public List<Float> calculateFromSpectrum(List<Float> fft, float sampleRate) {
+	public List<Double> calculateFromSpectrum(List<Double> fft, Double sampleRate) {
 
-		int intSampleRate = (int) sampleRate;
+		int intSampleRate = sampleRate.intValue();
 		getPlpFrequencyFilterBank().setMaxFreq(Math.min(sampleRate/2, 6800));
-		double[] plps = getPlpFrequencyFilterBank().process(
+		Double[] plps = getPlpFrequencyFilterBank().process(
 				VectorUtils.toDoubleArray(fft), intSampleRate);
-		double[] lfcc = getPlpCepstrumProducer().process(plps, intSampleRate);
-		double[] normalized = getBatchCMN().process(lfcc);
+		Double[] lfcc = getPlpCepstrumProducer().process(plps, intSampleRate);
+		Double[] normalized = getBatchCMN().process(lfcc);
 
-		List<Float> result = VectorUtils.toFloatList(normalized);
+		List<Double> result = VectorUtils.toFloatList(normalized);
 
 		return result;
 	}

@@ -36,12 +36,12 @@ import org.spantus.core.threshold.Histogram.histogramEnum;
  */
 public class DynamicThreshold extends StaticThreshold {
 	
-	private Float bufferedSampleSize;
+	private Double bufferedSampleSize;
 	private Integer numberOfBins;
-	private LinkedList<Float> firstBin = null;
-	private Map<histogramEnum, Float> map = null;
+	private LinkedList<Double> firstBin = null;
+	private Map<histogramEnum, Double> map = null;
 //	private Float prev = null;
-	private Float frameThreshold;
+	private Double frameThreshold;
 	
 	/**
 	 * recalculate threshold for each frame
@@ -58,7 +58,7 @@ public class DynamicThreshold extends StaticThreshold {
 	 * 
 	 */
 	@Override
-	public Float calculateThreshold(Float value) {
+	public Double calculateThreshold(Double value) {
 		setCurrentThresholdValue(frameThreshold);
 		return frameThreshold;
 	}
@@ -71,10 +71,10 @@ public class DynamicThreshold extends StaticThreshold {
 	}
 
 	
-	protected Float recacluclateCurrentThreashold(FrameValues frameValues){
+	protected Double recacluclateCurrentThreashold(FrameValues frameValues){
 		
 		if(bufferedSampleSize == null){
-			bufferedSampleSize = getExtractorSampleRate()*.3f;
+			bufferedSampleSize = getExtractorSampleRate()*.3D;
 			numberOfBins = log2(bufferedSampleSize.intValue()+1)+10;
 
 		}
@@ -85,12 +85,12 @@ public class DynamicThreshold extends StaticThreshold {
 			map = Histogram.getMinAndMax(frameValues,map);
 		}
 		//calculate histogram of all frame values
-		List<List<Float>> histogram = Histogram.calculateHistogram(frameValues,map,numberOfBins);
+		List<List<Double>> histogram = Histogram.calculateHistogram(frameValues,map,numberOfBins);
 		
 		//extract first not empty bin
 		getFirstBin().addAll(findFirstBin(histogram));
 		//calculate averages
-		Float rtnThreshold = Histogram.calculateAvg(getFirstBin());
+		Double rtnThreshold = Histogram.calculateAvg(getFirstBin());
 
 		int i = getFirstBin().size()-bufferedSampleSize.intValue();
 		while( i > 0 ){
@@ -107,8 +107,8 @@ public class DynamicThreshold extends StaticThreshold {
 	 * @param histogram
 	 * @return
 	 */
-	protected List<Float> findFirstBin(List<List<Float>> histogram){
-		for (List<Float> list : histogram) {
+	protected List<Double> findFirstBin(List<List<Double>> histogram){
+		for (List<Double> list : histogram) {
 			if(list.size()>0){
 				return list;
 			}
@@ -126,17 +126,17 @@ public class DynamicThreshold extends StaticThreshold {
 		return l.intValue();
 	}
 
-	public LinkedList<Float> getFirstBin() {
+	public LinkedList<Double> getFirstBin() {
 		if(firstBin == null){
-			firstBin = new LinkedList<Float>();
+			firstBin = new LinkedList<Double>();
 		}
 		return firstBin;
 	}
-	public Float getFrameThreshold() {
+	public Double getFrameThreshold() {
 		return frameThreshold;
 	}
 
-	public void setFrameThreshold(Float frameThreshold) {
+	public void setFrameThreshold(Double frameThreshold) {
 		this.frameThreshold = frameThreshold;
 	}
 
@@ -148,15 +148,15 @@ public class DynamicThreshold extends StaticThreshold {
 		this.numberOfBins = numberOfBins;
 	}
 
-	public Map<histogramEnum, Float> getMap() {
+	public Map<histogramEnum, Double> getMap() {
 		return map;
 	}
 
-	public void setMap(Map<histogramEnum, Float> map) {
+	public void setMap(Map<histogramEnum, Double> map) {
 		this.map = map;
 	}
 
-	public void setFirstBin(LinkedList<Float> firstBin) {
+	public void setFirstBin(LinkedList<Double> firstBin) {
 		this.firstBin = firstBin;
 	}
 

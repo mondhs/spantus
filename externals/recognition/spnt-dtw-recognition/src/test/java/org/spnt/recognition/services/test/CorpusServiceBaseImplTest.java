@@ -50,23 +50,23 @@ public class CorpusServiceBaseImplTest {
         CorpusEntry corpusEntry = new CorpusEntry();
         corpusEntry.setId(1L);
         corpusEntry.setName(VIENAS);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature1, 0F, 1F, 1F, 1F, 1F);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 0F, 2F, 2F, 2F, 2F);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature1, 0D, 1D, 1D, 1D, 1D);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 0D, 2D, 2D, 2D, 2D);
         corpusEntries.add(corpusEntry);
 
 
         corpusEntry = new CorpusEntry();
         corpusEntry.setId(2L);
         corpusEntry.setName(DU);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature1, 0F, 1F, 1F, 1F, 1F);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 0F, 4F, 5F, 6F, 7F);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature1, 0D, 1D, 1D, 1D, 1D);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 0D, 4D, 5D, 6D, 7D);
         corpusEntries.add(corpusEntry);
 
         corpusEntry = new CorpusEntry();
         corpusEntry.setId(3L);
         corpusEntry.setName(TRYS);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature1, 1F, 2F, 3F, 4F);
-        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 4F, 5F, 6F, 7F, 8F);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature1, 1D, 2D, 3D, 4D);
+        addFeatureData(corpusEntry.getFeatureMap(), Feature2, 4D, 5D, 6D, 7D, 8D);
         corpusEntries.add(corpusEntry);
     }
 
@@ -84,8 +84,8 @@ public class CorpusServiceBaseImplTest {
                  .thenReturn(savedResult);
         //when
         Map<String, IValues> features = new HashMap<String, IValues>();
-        features.put(Feature1, createFrameValues(1F, 2F, 3F, 4F, 5F));
-        features.put(Feature2, createFrameValues(3F, 4F, 5F, 6F));
+        features.put(Feature1, createFrameValues(1D, 2D, 3D, 4D, 5D));
+        features.put(Feature2, createFrameValues(3D, 4D, 5D, 6D));
         CorpusEntry result = corpusServiceBaseImpl.create(VIENAS,features);
         result = corpusServiceBaseImpl.learn(result, ais);
         
@@ -103,8 +103,8 @@ public class CorpusServiceBaseImplTest {
                 corpusEntries);
         //when
         Map<String, IValues> target = new HashMap<String, IValues>();
-        target.put(Feature1, createFrameValues(1F, 2F, 3F, 4F));
-        target.put(Feature2, createFrameValues(4F, 5F, 6F, 7F, 8F));
+        target.put(Feature1, createFrameValues(1D, 2D, 3D, 4D));
+        target.put(Feature2, createFrameValues(4D, 5D, 6D, 7D, 8D));
         RecognitionResult result = corpusServiceBaseImpl.match(target);
          //then
         Assert.assertEquals(3, result.getInfo().getId().intValue());
@@ -121,8 +121,8 @@ public class CorpusServiceBaseImplTest {
 
         //when
         Map<String, IValues> target = new HashMap<String, IValues>();
-        target.put(Feature1, createFrameValues(1F, 2F, 3F, 4F));
-        target.put(Feature2, createFrameValues(4F, 5F, 6F, 7F));
+        target.put(Feature1, createFrameValues(1D, 2D, 3D, 4D));
+        target.put(Feature2, createFrameValues(4D, 5D, 6D, 7D));
         List<RecognitionResultDetails> results = corpusServiceBaseImpl.findMultipleMatch(target);
 
         //then
@@ -131,10 +131,10 @@ public class CorpusServiceBaseImplTest {
         RecognitionResultDetails second = results.get(1);
         Assert.assertEquals("match", 3, first.getInfo().getId().longValue());
         Assert.assertEquals("Audio file is set", first.getAudioFilePath(), "3.wav");
-        Assert.assertEquals("first sample length", 40f, first.getSampleLegths().get(Feature1));
-        Assert.assertEquals("first target length", 40f, first.getTargetLegths().get(Feature1));
-        Assert.assertEquals("second sample length", 50f, second.getSampleLegths().get(Feature2));
-        Assert.assertEquals("second target length", 40f, second.getTargetLegths().get(Feature2));
+        Assert.assertEquals("first sample length", 40D, first.getSampleLegths().get(Feature1));
+        Assert.assertEquals("first target length", 40D, first.getTargetLegths().get(Feature1));
+        Assert.assertEquals("second sample length", 50D, second.getSampleLegths().get(Feature2));
+        Assert.assertEquals("second target length", 40D, second.getTargetLegths().get(Feature2));
 
     }
     
@@ -148,8 +148,8 @@ public class CorpusServiceBaseImplTest {
 
         //when
         Map<String, IValues> target = new HashMap<String, IValues>();
-        target.put(Feature1, createFrameValues(1F, 2F, 3F, 4F));
-        target.put(Feature2, createFrameValues(4F, 5F, 6F, 7F));
+        target.put(Feature1, createFrameValues(1D, 2D, 3D, 4D));
+        target.put(Feature2, createFrameValues(4D, 5D, 6D, 7D));
         Map<String, RecognitionResult> results = corpusServiceBaseImpl.bestMatchesForFeatures(target);
         
       //then
@@ -160,16 +160,16 @@ public class CorpusServiceBaseImplTest {
     }
     
 
-    protected FrameVectorValues createFrameValues(Float... args) {
+    protected FrameVectorValues createFrameValues(Double... args) {
         FrameVectorValues vectors = new FrameVectorValues();
-        vectors.setSampleRate(100f);
-        for (Float f : args) {
-            vectors.add(new FrameValues(new Float[]{f, f}));
+        vectors.setSampleRate(100D);
+        for (Double f : args) {
+            vectors.add(new FrameValues(new Double[]{f, f}));
         }
         return vectors;
     }
 
-    public void addFeatureData(Map<String, FeatureData> data, String featureName, Float... args) {
+    public void addFeatureData(Map<String, FeatureData> data, String featureName, Double... args) {
         FeatureData fd = new FeatureData();
         fd.setName(featureName);
         fd.setValues(createFrameValues(args));

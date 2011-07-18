@@ -40,16 +40,16 @@ public class LPC {
 	/**
 	 * 
 	 */
-	public static LPCResult calcForAutocorr(List<Float> autocorr){
+	public static LPCResult calcForAutocorr(List<Double> autocorr){
 		LPCResult result = new LPCResult();
 		int order = autocorr.size()-1;
-		List<Float> lpc = MatrixUtils.zeros(order+1);//intialize all lpc coef to 0 //LPC coef
-		List<Float> reflection = MatrixUtils.zeros(order+1);//Reflection coef. should be always < 1 to have stable system
-		List<Float> backwardPredictor = MatrixUtils.zeros(order+1);
+		List<Double> lpc = MatrixUtils.zeros(order+1);//intialize all lpc coef to 0 //LPC coef
+		List<Double> reflection = MatrixUtils.zeros(order+1);//Reflection coef. should be always < 1 to have stable system
+		List<Double> backwardPredictor = MatrixUtils.zeros(order+1);
 
-		float error = autocorr.get(0);
+		Double error = autocorr.get(0);
 		reflection.set(1, -autocorr.get(1)/autocorr.get(0));
-		lpc.set(0, new Float(1.0));//fist coef should be 1
+		lpc.set(0, new Double(1.0));//fist coef should be 1
 		lpc.set(1, reflection.get(1));
 		error *= (1 - reflection.get(1) * reflection.get(1)); 
 		
@@ -57,7 +57,7 @@ public class LPC {
 			for (int j = 1; j < i; j++) {
 				backwardPredictor.set(j, lpc.get(i - j));
 			}
-			reflection.set(i, 0.0f);
+			reflection.set(i, 0.0D);
 			for (int j = 0; j < i; j++) {
 				reflection.set(i, reflection.get(i) 
 						- lpc.get(j) * autocorr.get(i - j));
@@ -73,7 +73,7 @@ public class LPC {
 				throw new ArithmeticException("no power left in signal! Error is less than 0: " + error);
 			}
 		}
-		List<Float> trimmed = lpc.subList(1, order+1);
+		List<Double> trimmed = lpc.subList(1, order+1);
 //		trimmed = MatrixUtils.reverseVector(trimmed);
 		result.setResult(trimmed);
 		result.setError(error);

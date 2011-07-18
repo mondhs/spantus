@@ -38,8 +38,8 @@ public class MockOnlineExtractor implements IExtractor{
 		return null;
 	}
 
-	public float getExtractorSampleRate() {
-		return 0;
+	public Double getExtractorSampleRate() {
+		return 0D;
 	}
 
 	public String getName() {

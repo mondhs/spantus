@@ -38,15 +38,15 @@ import org.spantus.core.threshold.StaticThreshold;
  */
 public class ThresholdTest extends TestCase {
 	
-	Float[] values = new Float[]{2f, 4f, 5f, 2f,2f, 4f, 5f, 2f};
-	Float[] expectedThreshold = new Float[]{2f, 3f, 3f, 3f, 3f, 3f, 3f, 3f};
+	Double[] values = new Double[]{2D, 4D, 5D, 2D,2D, 4D, 5D, 2D};
+	Double[] expectedThreshold = new Double[]{2d, 3d, 3d, 3d, 3d, 3d, 3d, 3d};
 	
 	
 	public void testThreshold(){
 		StaticThreshold threshold = new StaticThreshold();
-		threshold.setCoef(0f);
+		threshold.setCoef(0D);
 		MockExtractor mockExtractor= new MockExtractor();
-		mockExtractor.setExtractorSampleRate(1);
+		mockExtractor.setExtractorSampleRate(1D);
 		threshold.setLearningPeriod(1000L);
 		ExtractorWrapper wraper = new ExtractorWrapper(mockExtractor);
 		threshold.setExtractor(wraper);
@@ -54,16 +54,17 @@ public class ThresholdTest extends TestCase {
 		threshold.setConfig(new MockExtractorConfig());
 		
 		for (long i = 0; i < values.length; i++) {
-			Float f1 = values[(int)i];
+			Double f1 = values[(int)i];
 			FrameValues fv = new FrameValues(getWindow(threshold, f1));
 			wraper.calculate(i, fv);			
 		}
 		int j = 0;
-		float avg = 0;
-		for (Float fv1 : threshold.getThresholdValues()) {
+		Double avg = 0D;
+		for (Double fv1 : threshold.getThresholdValues()) {
 			assertEquals(j + " element", fv1,expectedThreshold[j++]);
 			avg += fv1;
 		}
+		assertEquals("Average", 23.0, avg);
 		assertEquals("segments", 2, threshold.getMarkSet().getMarkers().size());
 		Marker marker = threshold.getMarkSet().getMarkers().get(0);
 		assertEquals("start 1 segment", 1000L, marker.getStart().longValue());
@@ -95,8 +96,8 @@ public class ThresholdTest extends TestCase {
 		
 	}
 	
-	public Float[] getWindow(StaticThreshold threshold, float windowIndex){
-		return new Float[]{windowIndex, windowIndex};
+	public Double[] getWindow(StaticThreshold threshold, Double windowIndex){
+		return new Double[]{windowIndex, windowIndex};
 	}
 	
 }

@@ -24,33 +24,33 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 	
 	public boolean isIncrease(){
 		if(getStartEntry() == null || getEndEntry() == null) return false;
-		Float start = getStartEntry().getValue();
-		Float end = getEndEntry().getValue();
+		Double start = getStartEntry().getValue();
+		Double end = getEndEntry().getValue();
 		return end.compareTo(start)<0;
 	}
 	public boolean isDecrease(){
 		if(getStartEntry() == null || getEndEntry() == null) return false;
-		Float start = getStartEntry().getValue();
-		Float end = getEndEntry().getValue();
+		Double start = getStartEntry().getValue();
+		Double end = getEndEntry().getValue();
 		return start.compareTo(end)>0;
 	}
 	public boolean isDecrease(ExtremeSegment segment){
-//		Float thisPeak = this.getPeakEntry().getValue();
-//		Float otherPeak = segment.getPeakEntry().getValue();
+//		Double thisPeak = this.getPeakEntry().getValue();
+//		Double otherPeak = segment.getPeakEntry().getValue();
 //		boolean decrease = isDecrease() && segment.isDecrease() && thisPeak>otherPeak; 
-		Float thisPeak = this.getPeakEntry().getValue();
-		Float otherPeak = segment.getPeakEntry().getValue();
-		Float thisStart = this.getStartEntry().getValue();
-		Float otherStart = segment.getStartEntry().getValue();
+		Double thisPeak = this.getPeakEntry().getValue();
+		Double otherPeak = segment.getPeakEntry().getValue();
+		Double thisStart = this.getStartEntry().getValue();
+		Double otherStart = segment.getStartEntry().getValue();
 		boolean decrease = thisPeak<otherPeak && thisStart < otherStart;
 		return decrease;
 	}
 
 	public boolean isIncrease(ExtremeSegment previousSegment){
-		Float thisPeak = this.getPeakEntry().getValue();
-		Float otherPeak = previousSegment.getPeakEntry().getValue();
-		Float thisStart = this.getStartEntry().getValue();
-		Float otherStart = previousSegment.getStartEntry().getValue();
+		Double thisPeak = this.getPeakEntry().getValue();
+		Double otherPeak = previousSegment.getPeakEntry().getValue();
+		Double thisStart = this.getStartEntry().getValue();
+		Double otherStart = previousSegment.getStartEntry().getValue();
 		boolean increase = thisPeak>otherPeak && thisStart > otherStart;
 		 
 //		boolean increase = isIncrease() && previousSegment.isIncrease() && thisPeak>otherPeak;  
@@ -63,7 +63,7 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 		Integer currentPeak = this.getPeakEntries().size();
 		Long lastLength = segment.getCalculatedLength();
 		Long currentLength = this.getCalculatedLength();
-                float diff = 0;
+                Double diff = 0D;
                 if(this.peakEntry.getValue() < segment.peakEntry.getValue()){
                     diff = this.peakEntry.getValue()/segment.peakEntry.getValue();
                 }else{
@@ -86,7 +86,7 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 	//calculates
 	public Double getCalculatedArea(){
 		Double area = 0D;
-		for (Float f1: getValues()) {
+		for (Double f1: getValues()) {
 			area += f1;
 		}
 		return area;

@@ -50,21 +50,21 @@ public class MFCCServiceSphinxImpl implements MFCCService {
     private BatchCMN batchCMN;
 
 	
-	public List<Float> calculateMFCC(List<Float> x, float sampleRate) {
+	public List<Double> calculateMFCC(List<Double> x, Double sampleRate) {
 		int logm = (int) (Math.log(x.size()) / Math.log(2));
 		int n = 1 << logm;
 		if(x.size() > n){
 			n = 1 << (logm+1);
 		}
 		int missingSamples = n - x.size();
-		x.addAll(Collections.nCopies(missingSamples, Float.valueOf(0f)));
+		x.addAll(Collections.nCopies(missingSamples, 0D));
 
         DiscreteFourierTransform sFft = new DiscreteFourierTransform(n, false);
         sFft.initialize();
-        double[] fft = sFft.process(VectorUtils.toDoubleArray(new ArrayList<Float>(x)),(int)sampleRate);
+        Double[] fft = sFft.process(VectorUtils.toDoubleArray(new ArrayList<Double>(x)),sampleRate.intValue());
 
-		double[] sResult = getMelFrequencyFilterBank().process(fft, (int)sampleRate);
-        List<Float> result = VectorUtils.toFloatList(sResult);
+        Double[] sResult = getMelFrequencyFilterBank().process(fft, sampleRate.intValue());
+        List<Double> result = VectorUtils.toFloatList(sResult);
 
 		return result;
 	}
@@ -75,14 +75,15 @@ public class MFCCServiceSphinxImpl implements MFCCService {
      * @param sampleRate
      * @return
      */
-    public List<Float> calculateMfccFromSpectrum
-            (List<Float> fft, float sampleRate) {
+    public List<Double> calculateMfccFromSpectrum
+            (List<Double> fft, Double sampleRate) {
 
 
-		double[] mels = getMelFrequencyFilterBank().process(VectorUtils.toDoubleArray(fft), (int)sampleRate);
-        double[] mfcc = getDct().process(mels);
-        double[] normalized = getBatchCMN().process(mfcc);
-        List<Float> result = VectorUtils.toFloatList(normalized);
+    	Double[] mels = getMelFrequencyFilterBank().process(VectorUtils.toDoubleArray(fft),
+    			sampleRate.intValue());
+    	Double[] mfcc = getDct().process(mels);
+        Double[] normalized = getBatchCMN().process(mfcc);
+        List<Double> result = VectorUtils.toFloatList(normalized);
 
 		return result;
 	}

@@ -24,7 +24,6 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.extractor.impl.EnergyExtractor;
-import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
 import org.spantus.math.MatrixUtils;
 /**
@@ -43,10 +42,10 @@ public class MeanExtractor extends AbstractExtractorModifier {
 	
 
 	private IExtractor extractor;
-	LinkedList<Float> buffer;
+	LinkedList<Double> buffer;
 	int order = 9;
-	Float mean;
-	Float stdev;
+	Double mean;
+	Double stdev;
 
 	
 	
@@ -61,27 +60,27 @@ public class MeanExtractor extends AbstractExtractorModifier {
 		return calculatedValues;
 	}	
 	
-	public Float calculateMean(FrameValues fv){
-		Float meanCurrent = 0F;
-		for (Float float1 : fv) {
+	public Double calculateMean(FrameValues fv){
+		Double meanCurrent = 0D;
+		for (Double float1 : fv) {
 			meanCurrent = calculateMean(float1);
 		}
 		return meanCurrent;
 		
 	}
 	
-	public Float calculateMean(Float value){
-		LinkedList<Float> bufferValues = getBuffer(getOrder());
+	public Double calculateMean(Double value){
+		LinkedList<Double> bufferValues = getBuffer(getOrder());
 		bufferValues.poll();
 		bufferValues.add(value);
 		int n = 0;
-		Float meanShort = 0F;
-		Float M2 = 0F;
-		for (Float float1 : bufferValues) {
+		Double meanShort = 0D;
+		Double M2 = 0D;
+		for (Double float1 : bufferValues) {
 //			n = n + 1
 			n++;
 //			delta = x - mean
-			Float delta = float1 - meanShort; 
+			Double delta = float1 - meanShort; 
 //			mean = mean + delta/n
 			meanShort = meanShort + delta/n;
 //			M2 = M2 + delta*(x - mean)
@@ -90,7 +89,7 @@ public class MeanExtractor extends AbstractExtractorModifier {
 		mean = meanShort;
 		if(n >0){
 			stdev = M2/(n-1);
-			stdev = (float)Math.sqrt(stdev);
+			stdev = Math.sqrt(stdev);
 		}
 		return mean;
 		
@@ -126,9 +125,9 @@ public class MeanExtractor extends AbstractExtractorModifier {
 //		
 //	}
 	
-	LinkedList<Float> getBuffer(int order){
+	LinkedList<Double> getBuffer(int order){
 		if(buffer == null){
-			buffer = new LinkedList<Float>();
+			buffer = new LinkedList<Double>();
 			buffer.addAll(MatrixUtils.zeros(order));
 		}
 		return buffer;
@@ -162,7 +161,7 @@ public class MeanExtractor extends AbstractExtractorModifier {
 		return mean.floatValue();
 	}
 
-	public Float getStdev() {
+	public Double getStdev() {
 		//variance = M2/(n - 1)
 //		BigDecimal divisor = index.subtract(BigDecimal.ONE);
 //		if(divisor.equals(BigDecimal.ZERO)){

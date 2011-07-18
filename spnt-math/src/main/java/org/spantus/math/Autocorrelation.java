@@ -35,22 +35,22 @@ import java.util.List;
 public class Autocorrelation {
 	/**
 	 * 
-	 * @param x - short time signal values 
+	 * @param window - short time signal values 
 	 * @param order - autocorrelation order, common use = 10
 	 * @return list of autocorrelation values with size 'order' 
 	 */
-	public static List<Float> calc(List<Float> x, int order){
+	public static List<Double> calc(List<Double> window, int order){
 		//autocorrelation coefficients R
-		List<Float> autocorr = MatrixUtils.zeros(order);
+		List<Double> autocorr = MatrixUtils.zeros(order);
 		for (int i = 0; i < order; i++) {
-			float sum = 0;
-			for (int n = 0; n < x.size()-i; n++) {
-				sum += x.get(n) * x.get(n+i);
+			double sum = 0d;
+			for (int n = 0; n < window.size()-i; n++) {
+				sum += window.get(n) * window.get(n+i);
 			}
 			autocorr.set(i, sum);
 		}
 		
-		float maxval = autocorr.get(0);
+		Double maxval = autocorr.get(0);
 		for (int i = 0; i < autocorr.size(); i++) {
 			autocorr.set(i, autocorr.get(i)/maxval);
 		}

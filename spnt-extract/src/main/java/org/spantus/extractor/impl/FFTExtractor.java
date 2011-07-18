@@ -67,7 +67,7 @@ public class FFTExtractor extends AbstractExtractorVector {
 //		float sampleRate = getConfig().getSampleRate();
 		
 		
-		List<Float> fftOutput = getFftService().calculateFFTMagnitude(
+		List<Double> fftOutput = getFftService().calculateFFTMagnitude(
                 window.getFrameIndex(),
                 calculatedTempValues, window.getSampleRate());
 //		int upperLimit = (int)(getUpperFrequency()*fftOutput.size()/sampleRate);
@@ -90,10 +90,10 @@ public class FFTExtractor extends AbstractExtractorVector {
 
 
         
-	private LinkedList<Float> buffer;
-	LinkedList<Float> getBuffer(int order){
+	private LinkedList<Double> buffer;
+	LinkedList<Double> getBuffer(int order){
 		if(buffer == null){
-			buffer = new LinkedList<Float>();
+			buffer = new LinkedList<Double>();
 			buffer.addAll(MatrixUtils.zeros(order));
 		}
 		return buffer;

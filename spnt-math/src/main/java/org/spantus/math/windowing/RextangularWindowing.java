@@ -34,7 +34,7 @@ import java.util.List;
 public class RextangularWindowing extends Windowing {
 
 	
-	public void apply(List<Float> values) {
+	public void apply(List<Double> values) {
 		// do noting
 	}
 

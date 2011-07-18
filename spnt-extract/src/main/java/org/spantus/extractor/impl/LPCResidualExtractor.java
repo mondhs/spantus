@@ -41,7 +41,7 @@ import org.spantus.math.MatrixUtils;
 public class LPCResidualExtractor extends AbstractExtractor {
 	private AbstractExtractorVector extractorVector =
 		new LPCExtractor();
-	private LinkedList<Float> buffer;
+	private LinkedList<Double> buffer;
 
 	protected FrameVectorValues calculateExtr3D(FrameValues window){
 		syncLPCParams();
@@ -57,15 +57,15 @@ public class LPCResidualExtractor extends AbstractExtractor {
 		FrameVectorValues extrValues = calculateExtr3D(window);
 		FrameValues calculatedValues = new FrameValues();
 		int order = extrValues.get(0).size();
-		LinkedList<Float> bufferValues = getBuffer(order); 
-		Float valueSum = 0F;
-		Float predictedSum = 0F;
-		for (Float value : window) {
+		LinkedList<Double> bufferValues = getBuffer(order); 
+		Double valueSum = 0D;
+		Double predictedSum = 0D;
+		for (Double value : window) {
 			bufferValues.poll();
 			bufferValues.add(value);
-			Float predicted = 0F;
-			Iterator<Float> coefIter = extrValues.get(0).iterator();
-			for (Float bufferedVal : getBuffer(order)) {
+			Double predicted = 0D;
+			Iterator<Double> coefIter = extrValues.get(0).iterator();
+			for (Double bufferedVal : getBuffer(order)) {
 				predicted += bufferedVal * coefIter.next();
 			}
 			valueSum += value;
@@ -75,9 +75,9 @@ public class LPCResidualExtractor extends AbstractExtractor {
 		return calculatedValues;
 	}
 	
-	LinkedList<Float> getBuffer(int order){
+	LinkedList<Double> getBuffer(int order){
 		if(buffer == null){
-			buffer = new LinkedList<Float>();
+			buffer = new LinkedList<Double>();
 			buffer.addAll(MatrixUtils.zeros(order));
 		}
 		return buffer;

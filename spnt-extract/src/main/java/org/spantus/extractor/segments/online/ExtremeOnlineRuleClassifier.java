@@ -33,7 +33,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 	 */
 	public void afterCalculated(Long sample, FrameValues result) {
 		//entry class point
-		for (Float value : result) {
+		for (Double value : result) {
 			getThresholdValues().updateMinMax(value);
 			processValue(value);
 		}
@@ -83,9 +83,9 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 	 * @param sample
 	 * @param value
 	 */
-	protected void processValue(Float value) {
+	protected void processValue(Double value) {
 		Integer index = onlineCtx.getIndex();
-		Float previous = onlineCtx.getPreviousValue();
+		Double previous = onlineCtx.getPreviousValue();
 		log.debug("[processValue] {0} value {1}->{2}", index,
 				onlineCtx.getPreviousValue(), value);
 		// starting point, previous not found
@@ -135,8 +135,8 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 	 * @param value
 	 * @param index
 	 */
-	protected void processFirstSegmentValue(Float value, Integer index) {
-		Float previous = onlineCtx.getPreviousValue();
+	protected void processFirstSegmentValue(Double value, Integer index) {
+		Double previous = onlineCtx.getPreviousValue();
 		if (value > onlineCtx.getPreviousValue() && onlineCtx.isFeatureDecrease()) {
 			log.debug("[processFirstSegmentValue]found 1st min");
 			ExtremeEntry entry = new ExtremeEntry(index, previous, FeatureStates.min);
@@ -154,7 +154,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 	 * @param previous
 	 * @param value
 	 */
-	protected void onMaxFound(Integer index, float previous, float value){
+	protected void onMaxFound(Integer index, Double previous, Double value){
 		log.debug("[onMaxFound]found max on {0} value {1}->{2}",
 				index , previous, value);
 //		if extreme segment not created skip it
@@ -370,7 +370,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 			lastSegment.getValues().addAll(currentSegment.getValues());
 			lastSegment.getPeakEntries().add(currentSegment.getPeakEntry());
 			
-			Float maxValue = lastSegment.getPeakEntry().getValue();
+			Double maxValue = lastSegment.getPeakEntry().getValue();
 			for (ExtremeEntry extremeEntry : lastSegment.getPeakEntries()) {
 				if(maxValue<extremeEntry.getValue()){
 					maxValue = extremeEntry.getValue();
@@ -492,7 +492,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier{
 
 	
 	
-	protected ExtremeSegment createExtremeSegment(Float startValue){
+	protected ExtremeSegment createExtremeSegment(Double startValue){
 		ExtremeSegment newExtremeSegment = new ExtremeSegment();
 		newExtremeSegment.setValues(new FrameValues());
 		newExtremeSegment.getValues().setSampleRate(getOutputValues().getSampleRate());

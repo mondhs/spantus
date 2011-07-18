@@ -65,7 +65,7 @@ public class MFCC {
 	 * ISIP implementation assumes m_dlogFilterOutputFloor = 0 and this value is used
 	 * here.
 	 */
-	private static final float m_dlogFilterOutputFloor = 0.0f;
+	private static final Double m_dlogFilterOutputFloor = 0.0;
 	/**Coefficient of filtering performing in cepstral domain 
 	 * (called 'liftering' operation). It is not used if 
 	 * m_oisLifteringEnabled is false. 
@@ -79,31 +79,31 @@ public class MFCC {
 	 * with HTK). The order of an output vector x with 3 MFCC's, including the
 	 * 0-th, would be: x = {MFCC1, MFCC2, MFCC0}
 	 */
-	public static List<Float> calculateMFCC(List<Float> fspeechFrame, double dsamplingFrequency) {
+	public static List<Double> calculateMFCC(List<Double> fspeechFrame, double dsamplingFrequency) {
 
 		
-		List<Float> dfilterOutput = MatrixUtils.zeros(m_nnumberOfFilters);
+		List<Double> dfilterOutput = MatrixUtils.zeros(m_nnumberOfFilters);
 		double[][] dweights = calculateMelBasedFilterBank(dsamplingFrequency, m_nnumberOfFilters, fspeechFrame.size());
-		List<List<Float>> nboundariesDFTBins = new ArrayList<List<Float>>(
+		List<List<Double>> nboundariesDFTBins = new ArrayList<List<Double>>(
 				m_nnumberOfFilters);
 		for (int i = 0; i < m_nnumberOfFilters; i++) {
-			List<Float> lst = new ArrayList<Float>();
-			lst.add(new Float(0f));
-			lst.add(new Float(0f));
+			List<Double> lst = new ArrayList<Double>();
+			lst.add(0D);
+			lst.add(0D);
 			nboundariesDFTBins.add(lst);
 		}
 
 		// use mel filter bank
 		for (int i = 0; i < m_nnumberOfFilters; i++) {
-			dfilterOutput.set(i, 0.0f);
+			dfilterOutput.set(i, 0.0);
 			// Notice that the FFT samples at 0 (DC) and fs/2 are not considered
 			// on this calculation
-			List<Float> fmagnitudeSpectrum = TransformUtil
+			List<Double> fmagnitudeSpectrum = TransformUtil
 					.calculateFFTMagnitude(fspeechFrame);
 			for (int j = nboundariesDFTBins.get(i).get(0).intValue(), k = 0; j <= nboundariesDFTBins
 					.get(i).get(1); j++, k++) {
 				dfilterOutput.set(i, 
-						new Float( dfilterOutput.get(i)
+						Double.valueOf( dfilterOutput.get(i)
 								+ fmagnitudeSpectrum.get(j) * dweights[i][k]
 								 )
 				);
@@ -114,7 +114,7 @@ public class MFCC {
 																	// power to
 																	// avoid
 																	// log(0)
-				dfilterOutput.set(i, new Float(Math.log(dfilterOutput.get(i)))); // using
+				dfilterOutput.set(i, new Double(Math.log(dfilterOutput.get(i)))); // using
 																			// ln
 			} else {
 				dfilterOutput.set(i, m_dlogFilterOutputFloor);
@@ -124,7 +124,7 @@ public class MFCC {
 		// because it allows the user to call this method
 		// many times, without having to do a deep copy
 		// of the output vector
-		List<Float> dMFCCParameters = MatrixUtils.zeros(nnumberOfParameters);
+		List<Double> dMFCCParameters = MatrixUtils.zeros(nnumberOfParameters);
 		// allocate space
 
 		double dscalingFactor = Math.sqrt(2.0 / m_nnumberOfFilters);
@@ -134,7 +134,7 @@ public class MFCC {
 		// cosine transform
 		for (int i = 0; i < nnumberOfParameters; i++) {
 			for (int j = 0; j < m_nnumberOfFilters; j++) {
-				dMFCCParameters.set(i, new Float
+				dMFCCParameters.set(i, new Double
 						( dMFCCParameters.get(i) 
 						+ dfilterOutput.get(j) * m_ddCTMatrix[i][j]
 				        )
@@ -144,7 +144,7 @@ public class MFCC {
 			// could potentially incorporate liftering factor and
 			// factor below to save multiplications, but will not
 			// do it for the sake of clarity
-			dMFCCParameters.set(i, new Float(dMFCCParameters.get(i) * dscalingFactor));
+			dMFCCParameters.set(i, new Double(dMFCCParameters.get(i) * dscalingFactor));
 		}
 
 		// debugging purposes
@@ -167,7 +167,7 @@ public class MFCC {
 //			 [3] ISIP package - Mississipi Univ. Picone's group.
 //			 if 0-th coefficient is included, it is not liftered
 			for (int i = 0; i < nnumberOfParameters; i++) {
-				dMFCCParameters.set(i, new Float(dMFCCParameters.get(i) * calculateLifteringFactor()[i]));
+				dMFCCParameters.set(i, new Double(dMFCCParameters.get(i) * calculateLifteringFactor()[i]));
 			}
 		}
 

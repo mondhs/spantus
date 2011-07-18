@@ -42,9 +42,9 @@ public class WavformExtractorTest {
         @Before
 	public void setUp() throws Exception {
 		x = new FrameValues();
-                x.setSampleRate(8000);
+                x.setSampleRate(8000D);
 		for (float i = 1; i < 6.4 * Math.PI; i+=.3) {
-			x.add(new Float(Math.sin(i)));
+			x.add(Math.sin(i));
 		}
 		config=new ExtractorConfig();
                 config.setWindowOverlap(30);

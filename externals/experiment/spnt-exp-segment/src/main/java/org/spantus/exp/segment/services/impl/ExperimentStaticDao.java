@@ -41,7 +41,7 @@ public class ExperimentStaticDao implements ExperimentDao {
 	
 	protected Logger log = Logger.getLogger(getClass()); 
 	
-	protected Float totalResultThreshold = .20F;
+	protected Double totalResultThreshold = .20D;
 	
 	protected List<ComparisionResult> comparisionResults;
 
@@ -117,11 +117,11 @@ public class ExperimentStaticDao implements ExperimentDao {
 		return comparisionResults;
 	}
 
-	public Float getTotalResultThreshold() {
+	public Double getTotalResultThreshold() {
 		return totalResultThreshold;
 	}
 
-	public void setTotalResultThreshold(Float totalResultThreshold) {
+	public void setTotalResultThreshold(Double totalResultThreshold) {
 		this.totalResultThreshold = totalResultThreshold;
 	}
 

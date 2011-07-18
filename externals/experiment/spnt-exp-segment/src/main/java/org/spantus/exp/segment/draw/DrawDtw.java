@@ -50,10 +50,10 @@ public class DrawDtw {
 	
 	Logger log = Logger.getLogger(getClass());
 	DtwInfo info;
-	Float min;
-	Float max;
+	Double min;
+	Double max;
 	
-	public DrawDtw(DtwInfo info, Float min, Float max) {
+	public DrawDtw(DtwInfo info, Double min, Double max) {
 		this.info = info;
 		this.min = min;
 		this.max = max;
@@ -61,11 +61,11 @@ public class DrawDtw {
 	
 	public DrawDtw(DtwInfo info) {
 		this.info = info;
-		Float[] minMax = new Float[]{Float.MAX_VALUE, -Float.MAX_VALUE};
-		for (List<Float> list : info.getDistanceMatrix()) {
-			for (Float float1 : list) {
-				minMax[0] = Float.isNaN(float1)?minMax[0]:Math.min(minMax[0], float1);
-				minMax[1] = Float.isNaN(float1)?minMax[1]:Math.max(minMax[1], float1);
+		Double[] minMax = new Double[]{Double.MAX_VALUE, -Double.MAX_VALUE};
+		for (List<Double> list : info.getDistanceMatrix()) {
+			for (Double float1 : list) {
+				minMax[0] = Double.isNaN(float1)?minMax[0]:Math.min(minMax[0], float1);
+				minMax[1] = Double.isNaN(float1)?minMax[1]:Math.max(minMax[1], float1);
 			}
 		}
 		this.min = minMax[0];
@@ -89,7 +89,7 @@ public class DrawDtw {
 	protected JFreeChart createXYZChart() {
 		NumberAxis xAxis = new NumberAxis("Sample");
 		NumberAxis yAxis = new NumberAxis("target");
-		List<List<Float>> data = info.getDistanceMatrix();
+		List<List<Double>> data = info.getDistanceMatrix();
 		XYZDataset xyzset = new XYZArrayDataset(data);
 		XYPlot plot = new XYPlot(xyzset, xAxis, yAxis, null);
 		XYBlockRenderer r = new XYBlockRenderer();
@@ -123,11 +123,11 @@ public class DrawDtw {
 
 	private static class XYZArrayDataset extends AbstractXYZDataset {
 		private static final long serialVersionUID = 1L;
-		List<List<Float>> data;
+		List<List<Double>> data;
 		int rowCount = 0;
 		int columnCount = 0;
 
-		XYZArrayDataset(List<List<Float>> data) {
+		XYZArrayDataset(List<List<Double>> data) {
 			this.data = data;
 			rowCount = data.size();
 			columnCount = data.get(0).size();
@@ -175,13 +175,13 @@ public class DrawDtw {
 	}
 
 	public static void main(String[] args) {
-		Float[][] sampleArr = new Float[][]{
-				new Float[]{1f, 2f, 1f, 4f, 4f, 5f,},
-				new Float[]{2f, 3f, 5f, 7f, 8f, 9f},
-				new Float[]{1f, 1f, 2f, 3f, 4f, 5f, 5f}
+		Double[][] sampleArr = new Double[][]{
+				new Double[]{1D, 2D, 1D, 4D, 4D, 5D,},
+				new Double[]{2D, 3D, 5D, 7D, 8D, 9D},
+				new Double[]{1D, 1D, 2D, 3D, 4D, 5D, 5D}
 		};
-		List<Float> target = new ArrayList<Float>(Arrays.asList(sampleArr[1]));
-		List<Float> sample1 = new ArrayList<Float>(Arrays.asList(sampleArr[0]));
+		List<Double> target = new ArrayList<Double>(Arrays.asList(sampleArr[1]));
+		List<Double> sample1 = new ArrayList<Double>(Arrays.asList(sampleArr[0]));
 		DtwInfo info = DTW.createDtwInfo (target, sample1);
 
 		DrawDtw demo = new DrawDtw(info);

@@ -55,7 +55,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 		initValues();
 	}
 
-	public void put(Long sample, float value) {
+	public void put(Long sample, Double value) {
 		values.add(index++, value);
 		if (index >= config.getFrameSize()) {
 			pushValues(sample, values);

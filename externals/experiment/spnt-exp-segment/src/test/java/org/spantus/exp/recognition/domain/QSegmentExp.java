@@ -26,12 +26,12 @@ public class QSegmentExp extends Entity {
 	private Long proceessTime;
 	private Long length;
 	private Long start;
-	private Float loudness;
-	private Float spectralFlux;
-	private Float plp;
-	private Float lpc;
-	private Float mfcc;
-	private Float signalEntropy;
+	private Double loudness;
+	private Double spectralFlux;
+	private Double plp;
+	private Double lpc;
+	private Double mfcc;
+	private Double signalEntropy;
 	
 	private String loudnessLabel;
 	private String spectralFluxLabel;
@@ -42,12 +42,12 @@ public class QSegmentExp extends Entity {
 
 	public QSegmentExp(String wavFilePath, Long start, Long length, String markerLabel,
 			String corpusEntryName, String manualName, Long proceessTime,
-			String loudnessLabel, Float loudness, 
-			String spectralFluxLabel, Float spectralFlux,
-			String plpLabel, Float plp,
-			String lpcLabel, Float lpc,
-			String mfccLabel, Float mfcc,
-			String signalEntropyLabel, Float signalEntropy) {
+			String loudnessLabel, Double loudness, 
+			String spectralFluxLabel, Double spectralFlux,
+			String plpLabel, Double plp,
+			String lpcLabel, Double lpc,
+			String mfccLabel, Double mfcc,
+			String signalEntropyLabel, Double signalEntropy) {
 		super();
 		this.wavFilePath = wavFilePath;
 		this.markerLabel = markerLabel;
@@ -101,40 +101,40 @@ public class QSegmentExp extends Entity {
 	public void setProceessTime(Long proceessTime) {
 		this.proceessTime = proceessTime;
 	}
-	public Float getLoudness() {
+	public Double getLoudness() {
 		return loudness;
 	}
-	public void setLoudness(Float loudness) {
+	public void setLoudness(Double loudness) {
 		this.loudness = loudness;
 	}
-	public Float getSpectralFlux() {
+	public Double getSpectralFlux() {
 		return spectralFlux;
 	}
-	public void setSpectralFlux(Float spectralFlux) {
+	public void setSpectralFlux(Double spectralFlux) {
 		this.spectralFlux = spectralFlux;
 	}
-	public Float getPlp() {
+	public Double getPlp() {
 		return plp;
 	}
-	public void setPlp(Float plp) {
+	public void setPlp(Double plp) {
 		this.plp = plp;
 	}
-	public Float getLpc() {
+	public Double getLpc() {
 		return lpc;
 	}
-	public void setLpc(Float lpc) {
+	public void setLpc(Double lpc) {
 		this.lpc = lpc;
 	}
-	public Float getMfcc() {
+	public Double getMfcc() {
 		return mfcc;
 	}
-	public void setMfcc(Float mfcc) {
+	public void setMfcc(Double mfcc) {
 		this.mfcc = mfcc;
 	}
-	public Float getSignalEntropy() {
+	public Double getSignalEntropy() {
 		return signalEntropy;
 	}
-	public void setSignalEntropy(Float signalEntropy) {
+	public void setSignalEntropy(Double signalEntropy) {
 		this.signalEntropy = signalEntropy;
 	}
 	public Long getLength() {

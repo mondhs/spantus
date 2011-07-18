@@ -46,8 +46,8 @@ public class MockSegmentatorExtractorConfig extends MockExtractorConfig {
 		return 0;
 	}
 
-	public float getSampleRate() {
-		return 1;
+	public Double getSampleRate() {
+		return 1D;
 	}
 
 	public int getWindowOverlap() {

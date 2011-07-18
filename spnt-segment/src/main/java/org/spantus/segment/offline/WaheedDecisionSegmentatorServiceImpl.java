@@ -181,8 +181,8 @@ public class WaheedDecisionSegmentatorServiceImpl extends AbstractSegmentatorSer
 		}
 	}
 	
-	protected float getSampleRate(Set<IClassifier> classifiers) {
-		Float sampleRate = null;
+	protected Double getSampleRate(Set<IClassifier> classifiers) {
+		Double sampleRate = null;
 		for (IClassifier classifier : classifiers) {
 			Assert.isTrue(classifier.getThresholdValues().getSampleRate() > 0);
 			if (sampleRate == null) {

@@ -161,16 +161,16 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 	
 	
 
-	public AudioFormat getFormat(float sampleRate) {
+	public AudioFormat getFormat(Double sampleRate) {
 		int sampleSizeInBits = 16;
 		int channels = 1;
 		boolean signed = true;
 		boolean bigEndian = true;
-		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed,
+		return new AudioFormat(sampleRate.floatValue(), sampleSizeInBits, channels, signed,
 				bigEndian);
 	}
 	public AudioFormat getFormat() {
-		return getFormat(8000);
+		return getFormat(8000D);
 	}
 	
 	

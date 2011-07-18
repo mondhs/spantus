@@ -19,5 +19,5 @@
 package org.spantus.core.threshold;
 
 public enum ClassifierEnum {
-	online, dynamic, offline, rules, rulesOnline
+	online, dynamic, offline, rules, rulesOnline, convexHullOffline
 }

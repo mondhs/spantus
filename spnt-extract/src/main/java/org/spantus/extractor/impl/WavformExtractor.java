@@ -36,8 +36,8 @@ import org.spantus.logger.Logger;
  */
 public class WavformExtractor extends AbstractExtractorVector {
 	private Logger log = Logger.getLogger(getClass());
-	private Float previousMin = null;
-	private Float previousMax = null;
+	private Double previousMin = null;
+	private Double previousMax = null;
 	private int devideInto = 3;
 
 	public WavformExtractor() {
@@ -58,7 +58,7 @@ public class WavformExtractor extends AbstractExtractorVector {
 		return 2;
 	}
 	
-	private FrameValues push(Float float1, Context ctx){
+	private FrameValues push(Double float1, Context ctx){
 		FrameValues fv = null;
 		ctx.max = Math.max(ctx.max, float1);
 		ctx.min = Math.min(ctx.min, float1);
@@ -71,8 +71,8 @@ public class WavformExtractor extends AbstractExtractorVector {
 //			log.debug("min:{0}; ;max:{1}, index:{2}", ctx.min , ctx.max, ctx.index);
 			previousMin = ctx.min;
 			previousMax = ctx.max;
-			ctx.max = -Float.MAX_VALUE;
-			ctx.min = Float.MAX_VALUE;
+			ctx.max = -Double.MAX_VALUE;
+			ctx.min = Double.MAX_VALUE;
 
 		}
 		ctx.index++;
@@ -96,7 +96,7 @@ public class WavformExtractor extends AbstractExtractorVector {
 		int chunkSize  = (window.size()/devideInto)+1;
 		ctx.chunkSize = chunkSize;
 		
-		for (Float float1 : window) {
+		for (Double float1 : window) {
 			FrameValues fv = push(float1, ctx);
 			if(fv!=null){
 				calculatedValues.add(fv);	
@@ -115,15 +115,15 @@ public class WavformExtractor extends AbstractExtractorVector {
 	}
 	
 	@Override
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		return super.getExtractorSampleRate()*devideInto;
 	}
 
 	public class Context{
 		 int index = 0;
 		 int chunkSize = 0;
-		 Float max = -Float.MAX_VALUE;
-		 Float min = Float.MAX_VALUE;
+		 Double max = -Double.MAX_VALUE;
+		 Double min = Double.MAX_VALUE;
 	}
 	
 }

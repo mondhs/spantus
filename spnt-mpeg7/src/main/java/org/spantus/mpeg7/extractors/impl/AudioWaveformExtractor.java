@@ -22,8 +22,8 @@ public class AudioWaveformExtractor extends AbstractMpeg7Extractor {
 	
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameVectorValues calculatedValues = createFrameValueVector();
-		Float min=null, max = null;
-		for (Float val : window) {
+		Double min=null, max = null;
+		for (Double val : window) {
 			min = min(min, val);
 			max = max(max, val);
 		}
@@ -39,7 +39,7 @@ public class AudioWaveformExtractor extends AbstractMpeg7Extractor {
 	 * @param b
 	 * @return
 	 */
-	Float min(Float a, Float b){
+	Double min(Double a, Double b){
 		if(a == null && b == null){
 			return null;
 		}else if(a == null && b != null){
@@ -56,7 +56,7 @@ public class AudioWaveformExtractor extends AbstractMpeg7Extractor {
 	 * @param b
 	 * @return
 	 */
-	Float max(Float a, Float b){
+	Double max(Double a, Double b){
 		if(a == null && b == null){
 			return null;
 		}else if(a == null && b != null){
@@ -78,9 +78,9 @@ public class AudioWaveformExtractor extends AbstractMpeg7Extractor {
 		return null;
 	}
 	
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 0D;
 	}
 	
 	public void setConfig(IExtractorConfig config) {

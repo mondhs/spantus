@@ -193,7 +193,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		ctx.setMarkSet(extr.getMarkSet());
 		
 		FrameValueThearsholdFuncton function = new FrameValueThearsholdFuncton(ctx);
-		function.setOrder(order);
+		function.setOrder((double)order);
 		if(extr.getOutputValues().size() > 1){
 			graphChart.addFunction(function, style1);	
 		}else{
@@ -217,7 +217,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		style1.setPaint(getColorResolver().resolveColor(extr));
 		FrameValueAreaFunction function = new FrameValueAreaFunction(extr.getName()
 				+ AREA_CHART_PREFIX, extr.getOutputValues(), style1);
-		function.setOrder(order);
+		function.setOrder((double)order);
 		graphChart.addFunction(function, style1);
 		return function.getCharType();
 	}
@@ -243,7 +243,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 					+ MATRIX_CHART_PREFIX , extr.getOutputValues());
 			ChartStyle style1 = createChartStyle();
 			style1.setPaint(getColorResolver().resolveColor(extr));
-			function.setOrder(order);
+			function.setOrder((double)order);
 			charType = function.getCharType();
 			function.getCharType().setColorType(getColorType(order));
 			graphChart.addFunction(function, style1);
@@ -307,7 +307,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 	 * @param from
 	 * @param length
 	 */
-	public void notifySignalSelectionListeners(float from, float length) {
+	public void notifySignalSelectionListeners(Double from, Double length) {
 		for (SignalSelectionListener listener : getSignalSelectionListeners()) {
 			listener.selectionChanged(from, length);
 		}
@@ -318,12 +318,12 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		public void zoomChanged(GraphDomain domain) {
 			if (domain == null || domain.getUntil() == null
 					|| domain.getFrom() == null) {
-				notifySignalSelectionListeners(0, 0);
+				notifySignalSelectionListeners(0D, 0D);
 				return;
 			}
-			float length = domain.getUntil().floatValue()
-					- domain.getFrom().floatValue();
-			notifySignalSelectionListeners(domain.getFrom().floatValue(),
+			Double length = domain.getUntil().doubleValue()
+					- domain.getFrom().doubleValue();
+			notifySignalSelectionListeners(domain.getFrom().doubleValue(),
 					length);
 		}
 	}
@@ -364,7 +364,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 	}
 
 	@Override
-	public void changedZoom(Float from, Float length) {
+	public void changedZoom(Double from, Double length) {
 		GraphDomain domain = null;
 		if(from == null || length ==null || from ==0 && length == 0){
 			domain=new GraphDomain();

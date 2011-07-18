@@ -115,8 +115,8 @@ public class MatchingServiceImpl {
     	if(result == null){
     		return null;
     	}
-    	Float mfccScore = result.getScores().get("MFCC_EXTRACTOR");
-    	Float plpScore = result.getScores().get("PLP_EXTRACTOR");
+    	Double mfccScore = result.getScores().get("MFCC_EXTRACTOR");
+    	Double plpScore = result.getScores().get("PLP_EXTRACTOR");
     	if(mfccScore != null && mfccScore >50){
     		return null;
     	}

@@ -35,8 +35,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
 
     public static final Integer DEFAULT_RADIUS = 3;
 
-    public Float calculateDistance(List<Float> targetVector,
-            List<Float> sampleVector) {
+    public Double calculateDistance(List<Double> targetVector,
+            List<Double> sampleVector) {
 
         TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetVector);
         TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleVector);
@@ -49,7 +49,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
            info = DTW.getWarpDistBetween(tsTarget, tsSample,  searchWindowInstance);
         }
         
-        return info.floatValue();
+        return info;
     }
 
 
@@ -59,8 +59,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
 	}
 
 
-	public Float calculateDistanceVector(List<List<Float>> targetMatrix,
-            List<List<Float>> sampleMatrix) {
+	public Double calculateDistanceVector(List<List<Double>> targetMatrix,
+            List<List<Double>> sampleMatrix) {
         TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
         TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetMatrix, targetMatrix.get(0).size());
 
@@ -71,7 +71,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
            SearchWindow searchWindowInstance = createSearchWindow(tsTarget, tsSample);
            info = DTW.getWarpDistBetween(tsTarget, tsSample, searchWindowInstance);
         }
-        return info.floatValue();
+        return info;
 
     }
     /**
@@ -80,7 +80,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
      * @param sampleVector
      * @return results
      */
-    public DtwResult calculateInfo(List<Float> targetVector, List<Float> sampleVector) {
+    public DtwResult calculateInfo(List<Double> targetVector, List<Double> sampleVector) {
         TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetVector);
         TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleVector);
 
@@ -95,7 +95,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
         
         
         DtwResult result =  new DtwResult();
-        result.setResult(Double.valueOf(info.getDistance()).floatValue());
+        result.setResult(Double.valueOf(info.getDistance()));
         for (int i=1; i<info.getPath().size()-1; i++){
             ColMajorCell cell = info.getPath().get(i);
             Point point = new Point(cell.getRow(), cell.getCol());
@@ -109,8 +109,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
      * @param sampleMatrix
      * @return
      */
-    public DtwResult calculateInfoVector(List<List<Float>> targetMatrix,
-            List<List<Float>> sampleMatrix) {
+    public DtwResult calculateInfoVector(List<List<Double>> targetMatrix,
+            List<List<Double>> sampleMatrix) {
         TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
         TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetMatrix, targetMatrix.get(0).size());
         
@@ -124,7 +124,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
         
         
         DtwResult result =  new DtwResult();
-        result.setResult(Double.valueOf(info.getDistance()).floatValue());
+        result.setResult(Double.valueOf(info.getDistance()));
 
         for (int i=1; i<info.getPath().size()-1; i++){
             ColMajorCell cell = info.getPath().get(i);

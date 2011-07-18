@@ -35,26 +35,26 @@ import java.util.List;
  */
 public class TransformUtil {
 	static final int MAXLOGM = 20; /* max FFT length 2^MAXLOGM */
-	static final double SQHALF = 0.707106781186547524401;
-	static final  double TWOPI=6.28318530717958647692;
+	static final Double SQHALF = 0.707106781186547524401;
+	static final  Double TWOPI=6.28318530717958647692;
 
 
 	/** Calculates the power (magnitude squared) spectrum of a real signal.
 	  * The returned vector contains only the positive frequencies.
 	  */
-	  public static List<Float> calculateFFTPower(List<Float> x) {
+	  public static List<Double> calculateFFTPower(List<Double> x) {
 			int i,n;
 			int logm = (int) (Math.log(x.size()) / Math.log(2));
 			n=1<<logm;
 
 			
 
-			rsfft(new ArrayList<Float>(x),logm);
+			rsfft(new ArrayList<Double>(x),logm);
 
 			//System.out.println("FFT before magnitude");
 			//IO.DisplayVector(x);
 
-			List<Float> mag = MatrixUtils.zeros(n/2 + 1);
+			List<Double> mag = MatrixUtils.zeros(n/2 + 1);
 			mag.add( x.get(0)); //DC frequency must be positive always
 
 			if (n==1) {
@@ -64,7 +64,7 @@ public class TransformUtil {
 
 			for (i=1;i<n/2;i++) {
 				//mag[i] = x[i]^2+x[n-i]^2
-				mag.set(i, new Float(Math.pow(x.get(i), 2) +Math.pow(x.get((n-i)), 2)));
+				mag.set(i, new Double(Math.pow(x.get(i), 2) +Math.pow(x.get((n-i)), 2)));
 			}
 
 			//IO.DisplayVector(mag);
@@ -72,7 +72,7 @@ public class TransformUtil {
 	  }
 	
 	
-	public static List<Float> calculateFFTMagnitude(List<Float> x) {
+	public static List<Double> calculateFFTMagnitude(List<Double> x) {
 		int i, n;
 		int logm = (int) (Math.log(x.size()) / Math.log(2));
 		n = 1 << logm;
@@ -84,20 +84,20 @@ public class TransformUtil {
 
 		rsfft(x, logm);
 
-		List<Float> mag = MatrixUtils.zeros(n / 2 + 1);// new float[n / 2 + 1];
+		List<Double> mag = MatrixUtils.zeros(n / 2 + 1);// new float[n / 2 + 1];
 
 		mag.add(0, x.get(0)); // DC frequency must be positive always
 
 		if (n == 1) {
 			return mag;
 		}
-		mag.set(n / 2, (float) Math.abs(x.get(n / 2))); // pi (meaning: fs / 2)
+		mag.set(n / 2, (Double) Math.abs(x.get(n / 2))); // pi (meaning: fs / 2)
 
 		// System.out.println("FFT before magnitude");
 		// IO.DisplayVector(x);
 
 		for (i = 1; i < n / 2; i++) {
-			mag.set(i, (float) Math.sqrt(x.get(i) * x.get(i) + x.get(n - i)
+			mag.set(i, (Double) Math.sqrt(x.get(i) * x.get(i) + x.get(n - i)
 					* x.get(n - i)));
 			// System.out.println(mag[i] + " " + x[i] + " " + x[n-i]);
 		}
@@ -107,9 +107,9 @@ public class TransformUtil {
 
 	}
 
-	private static void rsfft(List<Float> x, int logm) {
+	private static void rsfft(List<Double> x, int logm) {
 
-		float tab[][] = creattab(logm);
+		Double tab[][] = creattab(logm);
 		rsrec(x, tab, logm);
 
 		/* Output array unshuffling using bit-reversed indices */
@@ -119,14 +119,14 @@ public class TransformUtil {
 		}
 	}
 
-	private static void rsrec(List<Float> x, float tab[][], int logm) {
+	private static void rsrec(List<Double> x, Double tab[][], int logm) {
 		int m, m2, m4, m8, nel, n;
 		int x0 = 0;
 		int xr1, xr2, xi1;
 		int cn = 0;
 		int spcn = 0;
 		int smcn = 0;
-		float tmp1, tmp2;
+		Double tmp1, tmp2;
 
 		/* Check range of logm */
 		if ((logm < 0) || (logm > MAXLOGM)) {
@@ -142,7 +142,7 @@ public class TransformUtil {
 			if (logm == 1) { /* length m = 2 */
 				xr2 = x0 + 1;
 				tmp1 = x.get(x0) + x.get(xr2);
-				x.set(xr2, new Float(x.get(x0) - x.get(xr2)));
+				x.set(xr2, Double.valueOf(x.get(x0) - x.get(xr2)));
 				x.set(x0, tmp1);
 				return;
 			} else if (logm == 0)
@@ -179,7 +179,7 @@ public class TransformUtil {
 		xr2 = xr1 + m2;
 		for (n = 0; n < m2; n++) {
 			tmp1 = x.get(xr1) + x.get(xr2);
-			x.set(xr2, new Float(x.get(xr1) - x.get(xr2)));
+			x.set(xr2, (x.get(xr1) - x.get(xr2)));
 			x.set(xr1, tmp1);
 			xr1++;
 			xr2++;
@@ -188,7 +188,7 @@ public class TransformUtil {
 		/* Step 2 */
 		xr1 = x0 + m2 + m4;
 		for (n = 0; n < m4; n++) {
-			x.set(xr1, new Float(-x.get(xr1)));
+			x.set(xr1, (-x.get(xr1)));
 			xr1++;
 		}
 
@@ -206,8 +206,8 @@ public class TransformUtil {
 		xi1++;
 		for (n = 1; n < m4; n++) {
 			if (n == m8) {
-				tmp1 = (float) (SQHALF * (x.get(xr1) + x.get(xi1)));
-				x.set(xi1, (float) (SQHALF * (x.get(xi1) - x.get(xr1))));
+				tmp1 = (SQHALF * (x.get(xr1) + x.get(xi1)));
+				x.set(xi1, (SQHALF * (x.get(xi1) - x.get(xr1))));
 				x.set(xr1, tmp1);
 			} else {// System.out.println ("logm-4="+(logm-4));
 				tmp2 = tab[logm - 4][cn++] * (x.get(xr1) + x.get(xi1));
@@ -262,10 +262,10 @@ public class TransformUtil {
 	 * @param x
 	 * @param logm
 	 */
-	private static void BR_permute(List<Float> x, int logm) {
+	private static void BR_permute(List<Double> x, int logm) {
 		int i, j, lg2, n;
 		int off, fj, gno;
-		float tmp;
+		Double tmp;
 		int xp, xq, brp;
 		int x0 = 0;
 
@@ -330,13 +330,13 @@ public class TransformUtil {
 	 * @param xi
 	 * @param logm
 	 */
-	private static void srrec(List<Float> x, int xr, int xi, float tab[][],
+	private static void srrec(List<Double> x, int xr, int xi, Double tab[][],
 			int logm) {
 		int m, m2, m4, m8, nel, n;
 		// int x0=0;
 		int xr1, xr2, xi1, xi2;
 		int cn, spcn, smcn, c3n, spc3n, smc3n;
-		float tmp1, tmp2;
+		Double tmp1, tmp2;
 		cn = 0;
 		spcn = 0;
 		smcn = 0;
@@ -492,11 +492,11 @@ public class TransformUtil {
 		xi2++;
 		for (n = 1; n < m4; n++) {
 			if (n == m8) {
-				tmp1 = (float) (SQHALF * (x.get(xr1) + x.get(xi1)));
-				x.set(xi1, (float) (SQHALF * (x.get(xi1) - x.get(xr1))));
+				tmp1 =  (SQHALF * (x.get(xr1) + x.get(xi1)));
+				x.set(xi1,(SQHALF * (x.get(xi1) - x.get(xr1))));
 				x.set(xr1, tmp1);
-				tmp2 = (float) (SQHALF * (x.get(xi2) - x.get(xr2)));
-				x.set(xi2, (float) (-SQHALF * (x.get(xr2) + x.get(xi2))));
+				tmp2 = (SQHALF * (x.get(xi2) - x.get(xr2)));
+				x.set(xi2, (-SQHALF * (x.get(xr2) + x.get(xi2))));
 				x.set(xr2, tmp2);
 			} else {
 				tmp2 = tab[logm - 4][cn++] * (x.get(xr1) + x.get(xi1));
@@ -533,11 +533,11 @@ public class TransformUtil {
 	 * 
 	 * @param logm
 	 */
-	private static float[][] creattab(int logm) {
+	private static Double[][] creattab(int logm) {
 		int m, m2, m4, m8, nel, n, rlogm;
 		int cn, spcn, smcn, c3n, spc3n, smc3n;
 		double ang, s, c;
-		float[][] tab = new float[logm - 4 + 1][6 * ((1 << logm) / 4 - 2)];
+		Double[][] tab = new Double[logm - 4 + 1][6 * ((1 << logm) / 4 - 2)];
 		for (rlogm = logm; rlogm >= 4; rlogm--)
 
 		{
@@ -562,16 +562,16 @@ public class TransformUtil {
 				ang = n * TWOPI / m;
 				c = Math.cos(ang);
 				s = Math.sin(ang);
-				tab[rlogm - 4][cn++] = (float) c;
-				tab[rlogm - 4][spcn++] = (float) (-(s + c));
-				tab[rlogm - 4][smcn++] = (float) (s - c);
+				tab[rlogm - 4][cn++] = (Double) c;
+				tab[rlogm - 4][spcn++] = (Double) (-(s + c));
+				tab[rlogm - 4][smcn++] = (Double) (s - c);
 
 				ang = 3 * n * TWOPI / m;
 				c = Math.cos(ang);
 				s = Math.sin(ang);
-				tab[rlogm - 4][c3n++] = (float) c;
-				tab[rlogm - 4][spc3n++] = (float) (-(s + c));
-				tab[rlogm - 4][smc3n++] = (float) (s - c);
+				tab[rlogm - 4][c3n++] = (Double) c;
+				tab[rlogm - 4][spc3n++] = (Double) (-(s + c));
+				tab[rlogm - 4][smc3n++] = (Double) (s - c);
 			}
 		}
 		return tab;

@@ -17,12 +17,12 @@ import net.sf.javaml.core.SparseInstance;
  */
 public class ClusterServiceJavaMLImpl implements ClusterService {
 
-    public ClusterCollection cluster(List<List<Float>> vectors, int clusterSize) {
+    public ClusterCollection cluster(List<List<Double>> vectors, int clusterSize) {
         Dataset data = new DefaultDataset();
-        for (List<Float> floats : vectors) {
+        for (List<Double> floats : vectors) {
             Instance tmpInstance = new SparseInstance(floats.size());
             int i = 0;
-            for (Float f1 : floats) {
+            for (Double f1 : floats) {
                 tmpInstance.put(i++, f1.doubleValue());
             }
             data.add(tmpInstance);

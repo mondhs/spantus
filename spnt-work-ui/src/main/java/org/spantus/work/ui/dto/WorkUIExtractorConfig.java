@@ -46,7 +46,7 @@ public class WorkUIExtractorConfig{
 	private Integer windowOverlap = 66; //66%
 	private Integer bufferSize = 8000; //5s	
 	
-	private Float recordSampleRate=11025F;
+	private Double recordSampleRate=11025D;
 	private String audioPathOutput="./";
 	private Integer thresholdLeaningPeriod=5000;
 	private Float thresholdCoef=2F;
@@ -99,12 +99,12 @@ public class WorkUIExtractorConfig{
 	}
 
 
-	public Float getRecordSampleRate() {
+	public Double getRecordSampleRate() {
 		return recordSampleRate;
 	}
 
 
-	public void setRecordSampleRate(Float sampleRate) {
+	public void setRecordSampleRate(Double sampleRate) {
 		this.recordSampleRate = sampleRate;
 	}
 

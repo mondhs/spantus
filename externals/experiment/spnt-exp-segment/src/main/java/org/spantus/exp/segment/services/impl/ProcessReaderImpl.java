@@ -63,7 +63,7 @@ public class ProcessReaderImpl implements ProcessReader {
 			}
 			DynamicThreshold threshold = new DynamicThreshold();
 			if(processReaderInfo.getThresholdCoef()!=null){
-				threshold.setCoef(processReaderInfo.getThresholdCoef().floatValue());
+				threshold.setCoef(processReaderInfo.getThresholdCoef());
 			}
 			threshold.setExtractor(extractor);
 			threshold.getOutputValues();
@@ -75,12 +75,12 @@ public class ProcessReaderImpl implements ProcessReader {
 			if(!canBeProcessed(extractor3d))continue;
 			
 			int i = 0;
-			for (List<Float> values : vals) {
+			for (List<Double> values : vals) {
 				FrameValues fv = new FrameValues(values);
 				fv.setSampleRate(extractor3d.getConfig().getSampleRate());
 				DynamicThreshold threshold = new DynamicThreshold();
 				if(processReaderInfo.getThresholdCoef()!=null){
-					threshold.setCoef(processReaderInfo.getThresholdCoef().floatValue());
+					threshold.setCoef(processReaderInfo.getThresholdCoef());
 				}
 				ExtractorOutputHolder extractor = new ExtractorOutputHolder();
 				extractor.setConfig(extractor3d.getConfig());

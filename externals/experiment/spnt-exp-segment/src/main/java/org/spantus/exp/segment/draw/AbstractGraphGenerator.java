@@ -113,7 +113,7 @@ public abstract class AbstractGraphGenerator {
 		setTestPath(testPath);
 		List<ComparisionResult> results = compare();
 		Assert.isTrue(results != null, "Result should not be null");
-		Map<String, Float> totals = new LinkedHashMap<String, Float>();
+		Map<String, Double> totals = new LinkedHashMap<String, Double>();
 		for (ComparisionResult comparisionResult : results) {
 			if (isGenerateCharts()) {
 				draw(getChart(comparisionResult), comparisionResult);
@@ -129,28 +129,28 @@ public abstract class AbstractGraphGenerator {
 
 	}
 
-	protected void drawTotals(Map<String, Float> result) {
+	protected void drawTotals(Map<String, Double> result) {
 		sortTotals(result);
 		DrawLabeledVector drawVector = new DrawLabeledVector(result);
-		float heightCoef = result.size() / 12;
+		Double heightCoef = (double) (result.size() / 12);
 		heightCoef = heightCoef < 1 ? 1 : heightCoef;
 		draw(drawVector.createBarChart("Comparison results: "
 				+ getExperimentName(), "Features"), "_totals_"
-				+ getExperimentName(), 1, heightCoef);
+				+ getExperimentName(), 1D, heightCoef);
 		log.info("; Totals: " + result);
 	}
 
-	protected Map<String, Float> sortTotals(Map<String, Float> result) {
+	protected Map<String, Double> sortTotals(Map<String, Double> result) {
 		// Get a list of the entries in the map
-		List<Map.Entry<String, Float>> list = new Vector<Map.Entry<String, Float>>(
+		List<Map.Entry<String, Double>> list = new Vector<Map.Entry<String, Double>>(
 				result.entrySet());
 
 		// Sort the list using an annonymous inner class implementing Comparator
 		// for the compare method
 		java.util.Collections.sort(list,
-				new Comparator<Map.Entry<String, Float>>() {
-					public int compare(Map.Entry<String, Float> entry,
-							Map.Entry<String, Float> entry1) {
+				new Comparator<Map.Entry<String, Double>>() {
+					public int compare(Map.Entry<String, Double> entry,
+							Map.Entry<String, Double> entry1) {
 						// Return 0 for a match, -1 for less than and +1 for
 						// more then
 						return (entry.getValue().equals(entry1.getValue()) ? 0
@@ -163,7 +163,7 @@ public abstract class AbstractGraphGenerator {
 		result.clear();
 
 		// Copy back the entries now in order
-		for (Map.Entry<String, Float> entry : list) {
+		for (Map.Entry<String, Double> entry : list) {
 			result.put(entry.getKey(), entry.getValue());
 		}
 		return result;
@@ -207,13 +207,13 @@ public abstract class AbstractGraphGenerator {
 	}
 
 	protected void draw(JFreeChart chart, ComparisionResult result) {
-		draw(chart, result.getName(), 1, 1);
+		draw(chart, result.getName(), 1D, 1D);
 	}
 
-	protected void draw(JFreeChart chart, String name, float widthCoef,
-			float heightCoef) {
-		Float width = 800 * widthCoef;
-		Float height = 270 * heightCoef;
+	protected void draw(JFreeChart chart, String name, Double widthCoef,
+			Double heightCoef) {
+		Double width = 800 * widthCoef;
+		Double height = 270 * heightCoef;
 
 		try {
 			new File(getGeneratePath()).mkdirs();
@@ -242,25 +242,25 @@ public abstract class AbstractGraphGenerator {
 		}
 
 		int i = 0;
-		float sampleRate = result.getSequenceResult().getSampleRate();
+		Double sampleRate = result.getSequenceResult().getSampleRate();
 		series = newSeries("Result", collections[0]);
-		for (Float f1 : result.getSequenceResult()) {
-			series.add(Float.valueOf(i) / sampleRate, f1);
+		for (Double f1 : result.getSequenceResult()) {
+			series.add(Double.valueOf(i) / sampleRate, f1);
 			i++;
 		}
 		i = 0;
 		sampleRate = result.getOriginal().getSampleRate();
 		series = newSeries("Description", collections[1]);
-		for (Float f1 : result.getOriginal()) {
-			series.add(Float.valueOf(i) / result.getOriginal().getSampleRate(),
+		for (Double f1 : result.getOriginal()) {
+			series.add(Double.valueOf(i) / result.getOriginal().getSampleRate(),
 					f1);
 			i++;
 		}
 		i = 0;
 		sampleRate = result.getTest().getSampleRate();
 		series = newSeries("Test", collections[2]);
-		for (Float f1 : result.getTest()) {
-			series.add(Float.valueOf(i) / sampleRate, f1);
+		for (Double f1 : result.getTest()) {
+			series.add(Double.valueOf(i) / sampleRate, f1);
 			i++;
 		}
 
@@ -269,15 +269,15 @@ public abstract class AbstractGraphGenerator {
 			series = newSeries("Feature", collections[3]);
 			sampleRate = result.getThreshold().getOutputValues()
 					.getSampleRate();
-			for (Float f1 : result.getThreshold().getOutputValues()) {
-				series.add(Float.valueOf(i) / sampleRate, f1);
+			for (Double f1 : result.getThreshold().getOutputValues()) {
+				series.add(Double.valueOf(i) / sampleRate, f1);
 				i++;
 			}
 
 			i = 0;
 			series = newSeries("Threshold", collections[3]);
-			for (Float f1 : result.getThreshold().getThresholdValues()) {
-				series.add(Float.valueOf(i) / sampleRate, f1);
+			for (Double f1 : result.getThreshold().getThresholdValues()) {
+				series.add(Double.valueOf(i) / sampleRate, f1);
 				i++;
 			}
 		}

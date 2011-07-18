@@ -115,7 +115,7 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 
 
 	
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		return getConfig().getSampleRate();
 	}
 	public void flush() {

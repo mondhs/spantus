@@ -7,10 +7,10 @@ package klautau;
 public final class FFT { 
   public int logm; 
   final  int  MAXLOGM=20;     /* max FFT length      2^MAXLOGM */ 
-  final  double TWOPI=6.28318530717958647692; 
-  final  double SQHALF=0.707106781186547524401; 
+  final  Double TWOPI=6.28318530717958647692; 
+  final  Double SQHALF=0.707106781186547524401; 
   int brseed[]= new int[4048]; 
-  float tab[][]; 
+  Double tab[][]; 
  
   public FFT(int nlength ) { 
 		double dtemp = Math.log(nlength) / Math.log(2); 
@@ -27,7 +27,7 @@ public final class FFT {
  /** Calculates the magnitude spectrum of a real signal. 
   * The returned vector contains only the positive frequencies. 
   */ 
-  public Float[] calculateFFTMagnitude(Float x[]) { 
+  public Double[] calculateFFTMagnitude(Double x[]) { 
 		int i,n; 
 	n=1<<this.logm;  
  
@@ -41,9 +41,9 @@ public final class FFT {
  
 		rsfft(x); 
  
-		Float[] mag = new Float[n/2 + 1]; 
+		Double[] mag = new Double[n/2 + 1]; 
 		for (int j = 0; j < mag.length; j++) {
-			mag[j]=0F;
+			mag[j]=0D;
 			
 		}
 		mag[0] = x[0]; //DC frequency must be positive always 
@@ -51,7 +51,7 @@ public final class FFT {
 		if (n==1) { 
 			return mag; 
 		} 
-		mag[n/2] = (float) Math.abs(x[n/2]); //pi (meaning: fs / 2) 
+		mag[n/2] = Math.abs(x[n/2]); //pi (meaning: fs / 2) 
  
 		//System.out.println("FFT before magnitude"); 
 		//IO.DisplayVector(x); 
@@ -59,7 +59,7 @@ public final class FFT {
 		for (i=1;i<n/2;i++) { 
 			Double xi = x[i].doubleValue();
 			Double xni = x[n-i].doubleValue();
-			mag[i] = (float) Math.sqrt(xi*xi+xni*xni); 
+			mag[i] =  Math.sqrt(xi*xi+xni*xni); 
 			//System.out.println(mag[i] + " " + x[i] + " " + x[n-i]); 
 		} 
  
@@ -82,9 +82,9 @@ public final class FFT {
 		//double[] dtest = DSP.DFTMagnitude(inputData); 
 		//IO.DisplayVector(dtest); 
  
-		Float[] x = new Float[n]; 
+		Double[] x = new Double[n]; 
 		for (i=0; i<inputData.length; i++) { 
-			x[i] = (float) inputData[i]; 
+			x[i] =  inputData[i]; 
 		} 
  
 		rsfft(x); 
@@ -114,7 +114,7 @@ public final class FFT {
  /** Calculates the power (magnitude squared) spectrum of a real signal. 
   * The returned vector contains only the positive frequencies. 
   */ 
-  public Float[] calculateFFTPower(Float[] inputData) { 
+  public Double[] calculateFFTPower(Double[] inputData) { 
 		int i,n; 
 		n=1<<this.logm; 
  
@@ -122,9 +122,9 @@ public final class FFT {
 		//double[] dtest = DSP.DFTMagnitude(inputData); 
 		//IO.DisplayVector(dtest); 
  
-		Float[] x = new Float[n]; 
+		Double[] x = new Double[n]; 
 		for (i=0; i<inputData.length; i++) { 
-			x[i] = (float) inputData[i]; 
+			x[i] = (Double) inputData[i]; 
 		} 
  
 		rsfft(x); 
@@ -132,9 +132,9 @@ public final class FFT {
 		//System.out.println("FFT before magnitude"); 
 		//IO.DisplayVector(x); 
  
-		Float[] mag = new Float[n/2 + 1]; 
+		Double[] mag = new Double[n/2 + 1]; 
 		for (int j = 0; j < mag.length; j++) {
-			mag[j] = 0F;
+			mag[j] = 0D;
 			
 		}
 		mag[0] = x[0]; //DC frequency must be positive always 
@@ -148,7 +148,7 @@ public final class FFT {
 //			mag[i] = x[i]*x[i]+x[n-i]*x[n-i]; 
 			Double xi = x[i].doubleValue();
 			Double xni = x[n-i].doubleValue();
-			mag[i] = (float) Math.sqrt(xi*xi+xni*xni); 
+			mag[i] = (Double) Math.sqrt(xi*xi+xni*xni); 
 			//mag[i] = Math.sqrt(x[i]*x[i]+x[n-i]*x[n-i]); 
 			//System.out.println(mag[i] + " " + x[i] + " " + x[n-i]); 
 		} 
@@ -159,20 +159,20 @@ public final class FFT {
  
   /**In place calculation of FFT magnitude. 
    */ 
-public void FFTMagnitude(Float x[]) 
+public void FFTMagnitude(Double x[]) 
 { int i,n; 
   rsfft(x); 
   n=1<<this.logm; 
   if (n==1) return; 
   for (i=1;i<n/2;i++) 
-  {x[i]=(float)Math.sqrt(x[i]*x[i]+x[n-i]*x[n-i]); 
+  {x[i]=(Double)Math.sqrt(x[i]*x[i]+x[n-i]*x[n-i]); 
    x[n-i]=x[i]; 
   } 
   //Aldebaro modification: 
 	x[n/2] = Math.abs(x[n/2]); 
 } 
  
-  void rsfft(Float x[]) 
+  void rsfft(Double x[]) 
   { 
 	  /*creat table*/ 
   //  if(logm>=4) creattab(logm); 
@@ -191,10 +191,10 @@ public void FFTMagnitude(Float x[])
    *   Inverse  transform  for  real  inputs                              * 
    *--------------------------------------------------------------------  */ 
  
-void  rsifft(Float x[]) 
+void  rsifft(Double x[]) 
 { 
    int       i, m; 
-   float     fac; 
+   Double     fac; 
    int  	   xp; 
  
    /* Output array unshuffling using bit-reversed indices */ 
@@ -211,7 +211,7 @@ void  rsifft(Float x[])
  
    /* Normalization */ 
    m = 1 << logm; 
-   fac = (float)2.0 / m; 
+   fac = (Double)2.0 / m; 
    xp = 0; 
  
    for (i = 0; i < m; i++) { 
@@ -227,7 +227,7 @@ void  rsifft(Float x[])
  { int       m, m2, m4, m8, nel, n, rlogm; 
    int       cn, spcn, smcn, c3n, spc3n, smc3n; 
    double    ang, s, c; 
-   tab=new float [logm-4+1][6*((1<<logm)/4-2)]; 
+   tab=new Double [logm-4+1][6*((1<<logm)/4-2)]; 
   for(rlogm=logm; rlogm>=4;rlogm--) 
  
 	{m = 1 << rlogm; m2 = m / 2; m4 = m2 / 2; m8 = m4 / 2; nel=m4-2; 
@@ -241,11 +241,13 @@ void  rsifft(Float x[])
 		   if (n == m8) continue; 
 			 ang = n * TWOPI / m; 
 			 c = Math.cos(ang);  s = Math.sin(ang); 
-			 tab[rlogm-4][cn++] = (float)c;  tab[rlogm-4][spcn++] = (float)(- (s + c)); tab[rlogm-4][smcn++] =(float)( s - c); 
+			 tab[rlogm-4][cn++] = (Double)c;  tab[rlogm-4][spcn++] = (Double)(- (s + c)); tab[rlogm-4][smcn++] =(Double)( s - c); 
  
 			 ang = 3 * n * TWOPI / m; 
 			 c = Math.cos(ang);  s = Math. sin(ang); 
-			 tab[rlogm-4][c3n++] = (float)c; tab[rlogm-4][spc3n++] = (float)(- (s + c)); tab[rlogm-4][smc3n++] = (float)(s - c); 
+			 tab[rlogm-4][c3n++] = c;
+			 tab[rlogm-4][spc3n++] = (- (s + c));
+			 tab[rlogm-4][smc3n++] = (s - c); 
 		} 
 	} 
 } 
@@ -255,7 +257,7 @@ void  rsifft(Float x[])
  *     callable.                                                        * 
  * -------------------------------------------------------------------- */ 
  
-  void  rsrec(Float x[],int logm) 
+  void  rsrec(Double x[],int logm) 
 { 
 	 int       m, m2, m4, m8, nel, n; 
 	 int       x0=0; 
@@ -263,7 +265,7 @@ void  rsifft(Float x[])
 	 int       cn=0; 
 	 int       spcn=0; 
 	 int       smcn=0; 
-	 float     tmp1, tmp2; 
+	 Double     tmp1, tmp2; 
 //	 double    ang, c, s; 
  
  
@@ -346,8 +348,8 @@ if (logm >= 4) {
 xr1++; xi1++; 
 for (n = 1; n < m4; n++) { 
 	if (n == m8) { 
-	   tmp1 = (float)( SQHALF * (x[xr1] + x[xi1])); 
-	   x[xi1]  = (float)(SQHALF * (x[xi1] - x[xr1])); 
+	   tmp1 = ( SQHALF * (x[xr1] + x[xi1])); 
+	   x[xi1]  =(SQHALF * (x[xi1] - x[xr1])); 
 	   x[xr1]  = tmp1; 
 	}  else {//System.out.println ("logm-4="+(logm-4)); 
 	   tmp2 = tab[logm-4][cn++] * (x[xr1] + x[xi1]); 
@@ -392,13 +394,13 @@ for (n = 1; n < m4; n++) {
  *  callable.                                                            * 
  *  -------------------------------------------------------------------- */ 
  
- void  rsirec(Float  x[],  int   logm) 
+ void  rsirec(Double  x[],  int   logm) 
 { 
 	 int       m, m2, m4, m8, nel, n; 
 	 int       xr1, xr2, xi1; 
 	 int       x0=0; 
 	 int       cn, spcn, smcn; 
-	 float     tmp1, tmp2; 
+	 Double     tmp1, tmp2; 
 	 cn=0;smcn=0;spcn=0; 
  
 	 /* Check  range  of logm */ 
@@ -484,8 +486,8 @@ for (n = 1; n < m4; n++) {
  xr1++; xi1++; 
  for (n = 1; n < m4; n++) { 
 	 if (n == m8) { 
-		 tmp1 = (float)(SQHALF * (x[xr1] - x[xi1])); 
-		 x[xi1] = (float)(SQHALF * (x[xi1] + x[xr1])); 
+		 tmp1 = (SQHALF * (x[xr1] - x[xi1])); 
+		 x[xi1] = (SQHALF * (x[xi1] + x[xr1])); 
 		 x[xr1] = tmp1; 
 	 }    else { 
 			tmp2 = tab[logm-4][cn++] * (x[xr1] + x[xi1]); 
@@ -518,13 +520,13 @@ for (n = 1; n < m4; n++) {
  *      Recursive part of the SRFFT algorithm.                          * 
  * -------------------------------------------------------------------- */ 
  
-void srrec(Float x[],int xr, int xi, int logm) 
+void srrec(Double x[],int xr, int xi, int logm) 
 { 
    int        m, m2, m4, m8, nel, n; 
   // int        x0=0; 
    int        xr1, xr2, xi1, xi2; 
    int        cn, spcn, smcn, c3n, spc3n, smc3n; 
-   float      tmp1, tmp2; 
+   Double      tmp1, tmp2; 
   cn=0; spcn=0; smcn=0; c3n=0; spc3n=0; smc3n=0; 
  
  
@@ -665,11 +667,11 @@ if (logm >= 4) {
 xr1++; xr2++; xi1++; xi2++; 
 for (n = 1; n < m4; n++) { 
    if (n == m8) { 
-	   tmp1 = (float)(SQHALF * (x[xr1] + x[xi1])); 
-	   x[xi1] = (float)(SQHALF * (x[xi1] - x[xr1])); 
+	   tmp1 = (SQHALF * (x[xr1] + x[xi1])); 
+	   x[xi1] = (SQHALF * (x[xi1] - x[xr1])); 
 	   x[xr1] = tmp1; 
-	   tmp2 = (float)(SQHALF * (x[xi2] - x[xr2])); 
-	   x[xi2] = (float)(-SQHALF * (x[xr2] + x[xi2])); 
+	   tmp2 =  (SQHALF * (x[xi2] - x[xr2])); 
+	   x[xi2] = (-SQHALF * (x[xr2] + x[xi2])); 
 	   x[xr2] = tmp2; 
 }     else { 
 	   tmp2 = tab[logm-4][cn++] * (x[xr1] + x[xi1]); 
@@ -722,11 +724,11 @@ void creatbrseed( int logm)
 		  } 
 	   } 
 } 
-void BR_permute(Float x[], int logm) 
+void BR_permute(Double x[], int logm) 
 { 
    int       i, j, lg2, n; 
    int       off, fj, gno; 
-   float     tmp; 
+   Double     tmp; 
    int       xp, xq, brp; 
    int       x0=0; 
  

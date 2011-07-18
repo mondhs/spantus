@@ -71,8 +71,8 @@ public class DrawSegmentAnalysis{
 
 	public void draw(){
 		List<ComparisionResult> results = graphGenerator.compare();
-		Map<String, Float> totals = new LinkedHashMap<String, Float>();
-		Float min = Float.MAX_VALUE;
+		Map<String, Double> totals = new LinkedHashMap<String, Double>();
+		Double min = Double.MAX_VALUE;
 		for (ComparisionResult comparisionResult : results) {
 			draw(comparisionResult);
 			totals.put(comparisionResult.getName(), comparisionResult.getTotalResult());

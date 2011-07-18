@@ -150,7 +150,7 @@ public class DiscreteFourierTransform {
      * @throws java.lang.IllegalArgumentException
      *
      */
-    public double[] process(double[] input, int newSampleRate)
+    public Double[] process(Double[] input, int newSampleRate)
             throws IllegalArgumentException {
 
         /**
@@ -160,7 +160,7 @@ public class DiscreteFourierTransform {
          * we incur in aliasing. If it's greater, we pad the input
          * sequence with zeros.
          */
-        double[] in = input;
+    	Double[] in = input;
 
         if (numberFftPoints < in.length) {
             int i = 0;
@@ -185,7 +185,7 @@ public class DiscreteFourierTransform {
         /**
          * Create output sequence.
          */
-        double[] outputSpectrum = new double[(numberFftPoints >> 1) + 1];
+        Double[] outputSpectrum = new Double[(numberFftPoints >> 1) + 1];
 
         /**
          * Start Fast Fourier Transform recursion
@@ -343,7 +343,7 @@ public class DiscreteFourierTransform {
      * @param invert          whether it's direct (false) or inverse (true) FFT
      */
     private void recurseFft(Complex[] input,
-                            double[] output,
+    		Double[] output,
                             int numberFftPoints,
                             boolean invert) {
 

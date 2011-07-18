@@ -41,6 +41,10 @@ public final class GraphDomain {
 		this((BigDecimal)null, (BigDecimal)null);
 	}
 	
+	public GraphDomain(Double a, Double b) {
+		this(BigDecimal.valueOf(a), BigDecimal.valueOf(b));
+	}
+	
 	public GraphDomain(Float a, Float b) {
 		this(BigDecimal.valueOf(a), BigDecimal.valueOf(b));
 	}

@@ -147,8 +147,8 @@ public class MelFilter {
      * @param spectrum the input power spectrum to be filtered
      * @return the filtered value, in fact a weighted average of power in the frequency range of the filter pass band
      */
-    public double filterOutput(double[] spectrum) {
-        double output = 0.0f;
+    public Double filterOutput(Double[] spectrum) {
+    	Double output = 0.0;
         int indexSpectrum;
 
         for (int i = 0; i < this.weight.length; i++) {

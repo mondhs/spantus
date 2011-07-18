@@ -35,11 +35,12 @@ public abstract class AbstractSegmentDirTest {
 	public static final int WINDOW_LENGTH = 33;
 	public final static String DIR_LEARN_WAV =
 //        "/mnt/audio/VDU_ISO4"    
-    	"/home/mgreibus/src/garsynai/VDU/MG/" 
+			"/home/mgreibus/src/garsynai/garsynai/noizeus_exp"
+//    	"/home/mgreibus/src/garsynai/VDU/MG/" 
 		//            "/home/mondhs/src/garsynai/skaiciai/learn"
             ;
     public final static String DIR_LEARN_OUT =
-            "/home/mgreibus/src/garsynai/VDU/MG/OUTPUT/"
+            "/home/mgreibus/src/garsynai/garsynai/noizeus_exp/OUTPUT"
 //            "./target/learn-corpus/"
             ;
     public final static String RULES_PATH =
@@ -178,6 +179,13 @@ public abstract class AbstractSegmentDirTest {
 
         public boolean accept(File file, String fileName) {
             return fileName.endsWith(".TextGrid");
+        }
+    }
+    
+    public class SpantusNameFilter implements FilenameFilter {
+
+        public boolean accept(File file, String fileName) {
+            return fileName.endsWith(".mspnt.xml");
         }
     }
 	public MarkerDao getMarkerDao() {

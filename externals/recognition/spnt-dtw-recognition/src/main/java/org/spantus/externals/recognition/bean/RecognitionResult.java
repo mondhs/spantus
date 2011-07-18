@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class RecognitionResult {
     private CorpusEntry info;
-    private Float distance;
-    private Map<String, Float> scores;
+    private Double distance;
+    private Map<String, Double> scores;
 
     public CorpusEntry getInfo() {
         return info;
@@ -16,20 +16,20 @@ public class RecognitionResult {
         this.info = info;
     }
 
-    public Float getDistance() {
+    public Double getDistance() {
         return distance;
     }
 
-    public void setDistance(Float distance) {
+    public void setDistance(Double distance) {
         this.distance = distance;
     }
 
 
-    public Map<String, Float> getScores() {
+    public Map<String, Double> getScores() {
         return scores;
     }
 
-    public void setScores(Map<String, Float> score) {
+    public void setScores(Map<String, Double> score) {
         this.scores = score;
     }
    

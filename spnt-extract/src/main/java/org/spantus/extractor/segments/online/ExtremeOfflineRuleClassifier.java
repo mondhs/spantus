@@ -5,7 +5,6 @@ import java.util.ListIterator;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
-import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.segments.offline.ExtremeOfflineClassifier;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.logger.Logger;
@@ -37,7 +36,7 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 
 		getOnlineCtx().setPreviousValue(null);
 		getOnlineCtx().setSkipLearn(Boolean.TRUE);
-		for (Float value : getOutputValues()) {
+		for (Double value : getOutputValues()) {
 			processValue(value);
 		}
 		endupPendingSegments(getOnlineCtx());
@@ -125,19 +124,20 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 	}
 
 	private boolean fixShortSegments(ExtremeSegment previous,ExtremeSegment extremeSegment) {
-		float ratio =(previous.getValues().getLast()*extremeSegment.getValues().getFirst())/(previous.getValues().getFirst()*extremeSegment.getValues().getLast());
+		Double ratio =(previous.getValues().getLast()*extremeSegment.getValues().getFirst())
+				/(previous.getValues().getFirst()*extremeSegment.getValues().getLast());
 //		if((previous.getValues().getLast()*extremeSegment.getValues().getFirst())>(previous.getValues().getFirst()*extremeSegment.getValues().getLast())){
 //			previous.getValues().addAll(extremeSegment.getValues());
 //			previous.setLength(previous.getLength()+extremeSegment.getLength());
 //			iterator.remove();
 //			continue;
 //		}
-		int fixUpTo=getOutputValues().toIndex(.3F);
+		int fixUpTo=getOutputValues().toIndex(.3D);
 		int i = 0; 
 		IndexValue minValue =new IndexValue(previous.getEndEntry().getIndex(), previous.getEndEntry().getValue()); 
-//		for (ListIterator<Float> valueIter = getOutputValues().listIterator(previous.getEndEntry().getIndex()); 
+//		for (ListIterator<Double> valueIter = getOutputValues().listIterator(previous.getEndEntry().getIndex()); 
 //		valueIter.hasPrevious();) {
-//			Float value = (Float) valueIter.previous();
+//			Double value = (Double) valueIter.previous();
 //			if(i>fixUpTo){
 //				break;
 //			}
@@ -161,9 +161,9 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 //			throw new ProcessingException("size less than index");
 			return false;
 		}
-		for (ListIterator<Float> valueIter = getOutputValues().listIterator(previous.getEndEntry().getIndex()); 
+		for (ListIterator<Double> valueIter = getOutputValues().listIterator(previous.getEndEntry().getIndex()); 
 		valueIter.hasNext();) {
-			Float value = (Float) valueIter.next();
+			Double value = (Double) valueIter.next();
 			if(i>fixUpTo){
 				break;
 			}
@@ -189,14 +189,14 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 	 * @param extremeSegment
 	 */
 	private void fixFarSegments(ExtremeSegment previous,ExtremeSegment extremeSegment) {
-		int fixUpTo= getOutputValues().toIndex(.3F);
+		int fixUpTo= getOutputValues().toIndex(.3D);
 		int i = 0; 
 		IndexValue minValue = null;
 
 //		minValue =new IndexValue(extremeSegment.getStartEntry().getIndex(), extremeSegment.getStartEntry().getValue()); 
-//		for (ListIterator<Float> valueIter = getOutputValues().listIterator(extremeSegment.getStartEntry().getIndex()); 
+//		for (ListIterator<Double> valueIter = getOutputValues().listIterator(extremeSegment.getStartEntry().getIndex()); 
 //		valueIter.hasPrevious();) {
-//			Float value = (Float) valueIter.previous();
+//			Double value = (Double) valueIter.previous();
 //			if(i>fixUpTo){
 //				break;
 //			}
@@ -217,9 +217,9 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 //			throw new ProcessingException("size less than index");
 			return ;
 		}
-		for (ListIterator<Float> valueIter = getOutputValues().listIterator(previous.getEndEntry().getIndex()); 
+		for (ListIterator<Double> valueIter = getOutputValues().listIterator(previous.getEndEntry().getIndex()); 
 		valueIter.hasNext();) {
-			Float value = (Float) valueIter.next();
+			Double value =valueIter.next();
 			if(i>fixUpTo){
 				break;
 			}

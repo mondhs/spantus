@@ -22,18 +22,18 @@ import org.spantus.math.dtw.DtwServiceJavaMLImpl;
  */
 public class DtwServiceJavaMLImplTest {
 
-    Float[] targetArr = new Float[]{1f, 2f, 3f, 4f, 5f};
-    Float[][] sampleArr = new Float[][]{
-        new Float[]{1f, 2f, 1f, 4f, 4f, 5f},
-        new Float[]{2f, 3f, 5f, 7f, 8f, 9f},
-        new Float[]{1f, 1f, 2f, 3f, 4f, 5f, 5f},
-        new Float[]{10f, 20f, 30f, 40f, 50f }
+    Double[] targetArr = new Double[]{1D, 2D, 3D, 4D, 5D};
+    Double[][] sampleArr = new Double[][]{
+        new Double[]{1D, 2D, 1D, 4D, 4D, 5D},
+        new Double[]{2D, 3D, 5D, 7D, 8D, 9D},
+        new Double[]{1D, 1D, 2D, 3D, 4D, 5D, 5D},
+        new Double[]{10D, 20D, 30D, 40D, 50D}
     };
-    List<Float> target = new ArrayList<Float>(Arrays.asList(targetArr));
-    List<Float> sample1 = new ArrayList<Float>(Arrays.asList(sampleArr[0]));
-    List<Float> sample2 = new ArrayList<Float>(Arrays.asList(sampleArr[1]));
-    List<Float> sample3 = new ArrayList<Float>(Arrays.asList(sampleArr[2]));
-    List<Float> sample4 = new ArrayList<Float>(Arrays.asList(sampleArr[3]));
+    List<Double> target = new ArrayList<Double>(Arrays.asList(targetArr));
+    List<Double> sample1 = new ArrayList<Double>(Arrays.asList(sampleArr[0]));
+    List<Double> sample2 = new ArrayList<Double>(Arrays.asList(sampleArr[1]));
+    List<Double> sample3 = new ArrayList<Double>(Arrays.asList(sampleArr[2]));
+    List<Double> sample4 = new ArrayList<Double>(Arrays.asList(sampleArr[3]));
     private DtwServiceJavaMLImpl dtwService;
 
     @Before
@@ -43,15 +43,15 @@ public class DtwServiceJavaMLImplTest {
 
     @Test
     public void testCalculateDistance() {
-        Assert.assertEquals("dinamic time wraping: ", 2f, dtwService.calculateDistance(target, sample1));
-        Assert.assertEquals("dinamic time wraping: ", 11f, dtwService.calculateDistance(target, sample2));
-        Assert.assertEquals("dinamic time wraping: ", 0f, dtwService.calculateDistance(target, sample3));
+        Assert.assertEquals("dinamic time wraping: ", 2D, dtwService.calculateDistance(target, sample1));
+        Assert.assertEquals("dinamic time wraping: ", 11D, dtwService.calculateDistance(target, sample2));
+        Assert.assertEquals("dinamic time wraping: ", 0D, dtwService.calculateDistance(target, sample3));
     }
     
     @Test
     public void testfdtw(){
-        Instance tsTarget = new DenseInstance(VectorUtils.toDoubleArray(target));
-        Instance tsSample = new DenseInstance(VectorUtils.toDoubleArray(sample4));
+        Instance tsTarget = new DenseInstance(VectorUtils.todoubleArray(target));
+        Instance tsSample = new DenseInstance(VectorUtils.todoubleArray(sample4));
         int radius =5; 
         Abstraction ac=new Abstraction(radius);
         
@@ -74,26 +74,26 @@ public class DtwServiceJavaMLImplTest {
         Assert.assertEquals("dinamic time wraping: ", dtwResult, 
                 dtwService.calculateDistance(target, sample4).doubleValue());
         Assert.assertEquals("DTW: ", 135.0, dtwResult);
-        Assert.assertEquals("dinamic time wraping: ", 11f, dtwService.calculateDistance(target, sample2));
-        Assert.assertEquals("dinamic time wraping: ", 0f, dtwService.calculateDistance(target, sample3));
+        Assert.assertEquals("dinamic time wraping: ", 11D, dtwService.calculateDistance(target, sample2));
+        Assert.assertEquals("dinamic time wraping: ", 0D, dtwService.calculateDistance(target, sample3));
     }
 
     
     @Test
     public void testCalculateDistanceVector() {
-        List<List<Float>> targetMatrix = createMatrix(target);
-        Assert.assertEquals("dinamic time wraping: ", 2f, dtwService.calculateDistanceVector(targetMatrix,
+        List<List<Double>> targetMatrix = createMatrix(target);
+        Assert.assertEquals("dinamic time wraping: ", 2D, dtwService.calculateDistanceVector(targetMatrix,
                 createMatrix(sample1)));
-        Assert.assertEquals("dinamic time wraping: ", 11f, dtwService.calculateDistanceVector(targetMatrix,
+        Assert.assertEquals("dinamic time wraping: ", 11D, dtwService.calculateDistanceVector(targetMatrix,
                 createMatrix(sample2)));
-        Assert.assertEquals("dinamic time wraping: ", 0f, dtwService.calculateDistanceVector(targetMatrix,
+        Assert.assertEquals("dinamic time wraping: ", 0D, dtwService.calculateDistanceVector(targetMatrix,
                 createMatrix(sample3)));
     }
 
-    public static List<List<Float>> createMatrix(List<Float> vector) {
-        List<List<Float>> targetMatrix = new ArrayList<List<Float>>();
-        for (Float float1 : vector) {
-            List<Float> column = new ArrayList<Float>();
+    public static List<List<Double>> createMatrix(List<Double> vector) {
+        List<List<Double>> targetMatrix = new ArrayList<List<Double>>();
+        for (Double float1 : vector) {
+            List<Double> column = new ArrayList<Double>();
             column.add(float1);
             targetMatrix.add(column);
         }
@@ -119,13 +119,13 @@ public class DtwServiceJavaMLImplTest {
 		debug("Dtw calculation size:" + size);
 
 		sb.append(size).append(",");
-		List<Float> sampleP = new ArrayList<Float>();
-		List<Float> targetP = new ArrayList<Float>();
+		List<Double> sampleP = new ArrayList<Double>();
+		List<Double> targetP = new ArrayList<Double>();
 
 		for (int i = 0; i < size; i++) {
-			sampleP.add(Float.valueOf(i));
+			sampleP.add(Double.valueOf(i));
 			if(i >= offset){
-				targetP.add(Float.valueOf(i));
+				targetP.add(Double.valueOf(i));
 			}
 		}
 
@@ -134,10 +134,10 @@ public class DtwServiceJavaMLImplTest {
 
 
 		start = System.currentTimeMillis();
-		Float result = dtwService.calculateDistance(sampleP, targetP);
+		Double result = dtwService.calculateDistance(sampleP, targetP);
 		long time = (System.currentTimeMillis() - start);
 		debug("Dtw calculation time ms :" + time);
-		Assert.assertTrue("dinamic time wraping : " ,!result.equals(Float.MAX_VALUE));
+		Assert.assertTrue("dinamic time wraping : " ,!result.equals(Double.MAX_VALUE));
 		debug("result: " + result );
 		sb.append(time).append(",");
 

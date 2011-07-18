@@ -15,8 +15,8 @@ import java.util.Map;
 public class RecognitionResultDetails extends RecognitionResult {
 
     private Map<String, List<Point>> path;
-    private Map<String, Float> targetLegths;
-    private Map<String, Float> sampleLegths;
+    private Map<String, Double> targetLegths;
+    private Map<String, Double> sampleLegths;
     private String audioFilePath;
 
 
@@ -28,18 +28,18 @@ public class RecognitionResultDetails extends RecognitionResult {
         return path;
     }
 
-    public Map<String, Float> getTargetLegths() {
+    public Map<String, Double> getTargetLegths() {
         return targetLegths;
     }
 
-    public void setTargetLegths(Map<String, Float> targetLegths) {
+    public void setTargetLegths(Map<String, Double> targetLegths) {
         this.targetLegths = targetLegths;
     }
-    public Map<String, Float> getSampleLegths() {
+    public Map<String, Double> getSampleLegths() {
         return sampleLegths;
     }
 
-    public void setSampleLegths(Map<String, Float> sampleLegths) {
+    public void setSampleLegths(Map<String, Double> sampleLegths) {
         this.sampleLegths = sampleLegths;
     }
 

@@ -48,7 +48,7 @@ public abstract class AbstractExtractor extends AbstractGeneralExtractor impleme
         long frameIndex = 0L;
 		int windowsIndex = 0; 
 //		int i = -1;
-		for (Float f1: values) {
+		for (Double f1: values) {
 //			i++;
 			if(getWindowValues().size()<getConfig().getWindowOverlap()){
 				//fill the window while it is empty
@@ -96,7 +96,7 @@ public abstract class AbstractExtractor extends AbstractGeneralExtractor impleme
 		return windowValues;
 	}
 	
-	public float getExtractorSampleRate() {
+	public Double getExtractorSampleRate() {
 		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()));
 	}
 

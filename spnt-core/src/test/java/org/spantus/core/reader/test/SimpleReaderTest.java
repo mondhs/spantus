@@ -25,8 +25,8 @@ public class SimpleReaderTest extends TestCase {
 	public void testGetFormat(){
 		SignalFormat signalFormat =  signalReader.getFormat(inputFile);
 		assertNotNull(signalFormat);
-		assertEquals(1.3F, signalFormat.getSampleRate());
-		assertEquals(414F, signalFormat.getLength());
+		assertEquals(1.3D, signalFormat.getSampleRate());
+		assertEquals(414D, signalFormat.getLength());
 	}
 	public void testIsSuported(){
 		assertTrue(signalReader.isFormatSupported(inputFile));

@@ -98,23 +98,23 @@ public class PLPFilter {
     /**
      * Compute the PLP spectrum at the center frequency of this filter for a given power spectrum.
      *
-     * @param spectrum the input power spectrum to be filtered
+     * @param in the input power spectrum to be filtered
      * @return the PLP spectrum value
      * @throws IllegalArgumentException if the input spectrum is of a different length than the array of filter
      *                                  coefficients
      */
-    public double filterOutput(double[] spectrum)
+    public Double filterOutput(Double[] in)
             throws IllegalArgumentException {
 
-        if (spectrum.length != numDFTPoints) {
+        if (in.length != numDFTPoints) {
             throw new IllegalArgumentException
-                    ("Mismatch in no. of DFT points " + spectrum.length +
+                    ("Mismatch in no. of DFT points " + in.length +
                             " in spectrum and in filter " + numDFTPoints);
         }
 
         double output = 0.0;
         for (int i = 0; i < numDFTPoints; i++) {
-            output += spectrum[i] * filterCoefficients[i];
+            output += in[i] * filterCoefficients[i];
         }
         return output;
     }

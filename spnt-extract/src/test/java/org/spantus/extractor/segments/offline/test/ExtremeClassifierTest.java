@@ -17,9 +17,9 @@ import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
 public class ExtremeClassifierTest{
 	ExtremeClassifierServiceImpl extremeThresholdService;
 	
-	public static final Float[] empty = new Float[]{};
-	public static final Float[] singleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F}; 
-	public static final Float[] doubleMax = new Float[]{0F, 0F, 1F, 2F, 3F, 2F, 1F, 0F, 0F, 1F, 2F, 3.1F, 2F, 1.5F, 1F, 0F, 0F};
+	public static final Double[] empty = new Double[]{};
+	public static final Double[] singleMax = new Double[]{0D, 0D, 1D, 2D, 3D, 2D, 1D, 0D, 0D}; 
+	public static final Double[] doubleMax = new Double[]{0D, 0D, 1D, 2D, 3D, 2D, 1D, 0D, 0D, 1D, 2D, 3.1D, 2D, 1.5D, 1D, 0D, 0D};
 	/**
 	 * 
 	 * 
@@ -33,16 +33,16 @@ public class ExtremeClassifierTest{
 	 * /\/                  \/\/\/\/\/\/\
 	 * </pre>
 	 */
-	public static final Float[] complexMinMax = new Float[]{
-		0F, 1F, 0F,
-		1F, 3F, 2F, 4F, 3F, 6F,
-		4F, 5F, 3F, 4F,
-		0F, 1F, 0F,
-		1F, 0F,
-		1F, 0F,
-		1F, 0F,
-		1F, 0F,
-		1F, 0F};
+	public static final Double[] complexMinMax = new Double[]{
+		0D, 1D, 0D,
+		1D, 3D, 2D, 4D, 3D, 6D,
+		4D, 5D, 3D, 4D,
+		0D, 1D, 0D,
+		1D, 0D,
+		1D, 0D,
+		1D, 0D,
+		1D, 0D,
+		1D, 0D};
 
 	
 	@Before
@@ -101,18 +101,18 @@ public class ExtremeClassifierTest{
 		Assert.assertEquals(11, segments.size());
 	}
 
-	protected ExtremeOfflineCtx createExtremeCtx(Float[] fvArr){
+	protected ExtremeOfflineCtx createExtremeCtx(Double[] fvArr){
 		ExtremeOfflineCtx extremeCtx = new ExtremeOfflineCtx();
 		extremeCtx.setValues(createValues(fvArr));
 		return extremeCtx;
 	}
 	
-	protected FrameValues createValues(Float[] fvArr){
+	protected FrameValues createValues(Double[] fvArr){
 		FrameValues fv = new FrameValues();
-		for (Float float1 : fvArr) {
+		for (Double float1 : fvArr) {
 			fv.add(float1);
 		}
-		fv.setSampleRate(1000);
+		fv.setSampleRate(1000D);
 		return fv;
 	}
 	
