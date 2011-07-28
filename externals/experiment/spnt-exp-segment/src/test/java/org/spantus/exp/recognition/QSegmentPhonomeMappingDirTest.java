@@ -6,88 +6,90 @@ package org.spantus.exp.recognition;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.HashMap;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorSpntMapImpl;
+import org.spantus.core.wav.AudioManager;
+import org.spantus.core.wav.AudioManagerFactory;
+import org.spantus.exp.recognition.multi.MultiMapper;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
+import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.utils.FileUtils;
+
+import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * 
  * @author mondhs
  */
-public class QSegmentPhonomeMappingDirTest extends AbstractSegmentDirTest {
+public class QSegmentPhonomeMappingDirTest  {
 
 	private static final Logger log = Logger
 			.getLogger(QSegmentPhonomeMappingDirTest.class);
-	private File wavDir = new File(DIR_LEARN_WAV, "WAV/AK1/");
-	private File markerDir = new File(DIR_LEARN_WAV, "GRID/TRAIN/");
+
+	public final static String ROOT_DIR = "/home/mgreibus/src/garsynai/VDU/VDU_TRI4";
+
+	private MultiMapper mapper;
+	
+	
 
 	@Before
 	public void onSetup() {
-		CorpusEntryExtractorTextGridMapImpl impl = new CorpusEntryExtractorSpntMapImpl();
-		impl.setMarkerDir(getMarkerDir());
+		mapper = new MultiMapper();
+	}
+	
+	protected void init(MultiMapper mapper, String corpusName) {
+		mapper.init(
+				new File(ROOT_DIR, "TEST/"+ corpusName +"/"), 
+				new File(ROOT_DIR, "TRAIN/"+ corpusName +"/"),
+				new File(ROOT_DIR, "CORPUS/"+ corpusName +"/"), 
+				new File(ROOT_DIR, "WAV/"+ corpusName +"/"), 
+				new TextGridNameFilter(),
+				corpusName);
+	}
+	
 
-		ExtractorEnum[] extractors = new ExtractorEnum[] {
-				ExtractorEnum.MFCC_EXTRACTOR,
-				ExtractorEnum.PLP_EXTRACTOR,
-				ExtractorEnum.LPC_EXTRACTOR,
-				// ExtractorEnum.FFT_EXTRACTOR,
-				ExtractorEnum.LOUDNESS_EXTRACTOR,
-				ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR, 
-				ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR };
-
-		impl.setExtractors(extractors);
+	@Test @Ignore
+	public void testClassifyAK1() throws Exception {
+		//given
+		init(mapper,  "AK1");
 		
-		setExtractor(impl);
+		mapper.clearCorpus();
+		mapper.extractAndLearn();
+	}
+	
+	@Test @Ignore
+	public void testClassifyBJ1() throws Exception {
+		//given
+		init(mapper,  "BJ1");
+		mapper.clearCorpus();
+		mapper.extractAndLearn();
+	}
+
+	@Test @Ignore
+	public void testClassifyLK1() throws Exception {
+		//given
+		init(mapper,  "LK1");
 		
-		super.onSetup();
+		mapper.clearCorpus();
+		mapper.extractAndLearn();
+	}
+	
+	@Test  @Ignore
+	public void testClassifyTK1() throws Exception {
+		//given
+		init(mapper,  "TK1");
+		
+		mapper.clearCorpus();
+		mapper.extractAndLearn();
 	}
 
-	@Test
-	public void testClassify() throws Exception {
-		clearCorpus();
-		int counter = 0;
-		FilenameFilter fileFilter = new SpantusNameFilter();
-		int size = getMarkerDir().listFiles(fileFilter).length;
-		for (File filePath : getMarkerDir().listFiles(fileFilter)) {
-			counter++;
-			log.error("[testClassify]Processing "+ counter + " from " + size);
-//			String markersPath = FileUtils.replaceExtention(filePath,
-//					".TextGrid");
-			// FileUtils.replaceExtention(filePath,".mspnt.xml");
-			File wavFile = new File(getWavDir(), FileUtils.replaceExtention(
-					filePath, ".wav"));
-//			 if(!filePath.getName().contains("far1")){
-//			 continue;
-//			 }
-			log.debug("[testClassify]reading: {0}", filePath);
-			MarkerSetHolder markerSetHolder = getExtractor().extractAndLearn(
-					wavFile.getAbsoluteFile());
-
-			log.debug("accept: {0}:{1}", filePath, markerSetHolder);
-		}
-
-	}
-
-	public File getWavDir() {
-		return wavDir;
-	}
-
-	public void setWavDir(File wavDir) {
-		this.wavDir = wavDir;
-	}
-
-	public File getMarkerDir() {
-		return markerDir;
-	}
-
-	public void setMarkerDir(File markerDir) {
-		this.markerDir = markerDir;
-	}
-
+	
 }

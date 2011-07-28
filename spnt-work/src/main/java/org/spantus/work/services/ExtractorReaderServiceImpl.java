@@ -33,6 +33,7 @@ import javax.sound.sampled.AudioSystem;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
@@ -152,6 +153,12 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
      */
     public IExtractorInputReader createReaderWithClassifier(ExtractorEnum[] extractors, 
             File inputFile) {
+    	return createReaderWithClassifier(extractors, inputFile, null);
+    }
+    /**
+     * 
+     */
+    public IExtractorInputReader createReaderWithClassifier(ExtractorEnum[] extractors, File inputFile, Map<String, ExtractorParam> params){
         URL inputUrl;
         try {
             inputUrl = inputFile.toURI().toURL();
@@ -163,7 +170,7 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
                 audioReader.getAudioFormat(inputUrl), getWindowLengthInMilSec(), getOverlapInPerc());
         log.debug("[createReaderWithClassifier] reader config{0}", extractorReader.getConfig() );
         List<IClassifier> classifiers = ExtractorUtils.
-                registerThreshold(extractorReader, extractors, null, ClassifierEnum.rules);
+                registerThreshold(extractorReader, extractors, params, ClassifierEnum.rules);
 //                registerThreshold(extractorReader, extractors, null);
 		if (isRulesTurnedOn()) {
 	        log.error("registering rules repo");

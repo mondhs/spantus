@@ -42,7 +42,7 @@ import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
  *  
  */
 public class MFCCServiceSphinxImpl implements MFCCService {
-    private int numberMelFilters = 20;
+    private int numberMelFilters = 12;
      private int cepstrumSize = 13;
     private DiscreteCosineTransform dct;
 //    private FFTServiceSphinxImpl fftService;

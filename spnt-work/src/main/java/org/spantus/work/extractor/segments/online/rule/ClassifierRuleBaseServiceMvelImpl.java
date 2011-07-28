@@ -92,9 +92,9 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 
 				}
 
-				log.debug(
-						"[testOnRuleBase] Similar: {0}, Increase: {1}; Decrease: {2}; className:{3}",
-						isSimilar, isIncrease, isDecrease, className);
+//				log.debug(
+//						"[testOnRuleBase] Similar: {0}, Increase: {1}; Decrease: {2}; className:{3}",
+//						isSimilar, isIncrease, isDecrease, className);
 			}
 		}
 		params.put("ctx", ctx);
@@ -121,14 +121,14 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		// log.debug(""+MVEL.eval("lastSegment", param));
 		String command = null;
 		for (Rule ruleEntry : rules) {
-			log.error("exec [" + ruleEntry.getBody() + "]: ");
+//			log.error("exec [" + ruleEntry.getBody() + "]: ");
 			Boolean commandInd = execute(ruleEntry.getCompiledRule(), param);
-			log.error("" + commandInd);			
+//			log.error("" + commandInd);			
 			if (commandInd) {
 				command = ruleEntry.getResult();
 				ruleEntry.incCounter();
-				log.debug("finished {0}:{1}", ruleEntry.getName(),
-						ruleEntry.getDescription());
+//				log.debug("finished {0}:{1}", ruleEntry.getName(),
+//						ruleEntry.getDescription());
 				break;
 			}
 		}

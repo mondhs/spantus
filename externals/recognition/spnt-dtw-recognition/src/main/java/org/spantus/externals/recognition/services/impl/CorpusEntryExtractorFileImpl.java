@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.IValues;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.marker.Marker;
@@ -62,6 +63,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 			.name();
 	private String rulePath;
 	private boolean rulesTurnedOn;
+	private Map<String, ExtractorParam> params;
 
 	/**
 	 * Find segments(markers), then put them to corpus
@@ -116,7 +118,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 				getSegmentatorServiceType(), toString(getExtractors()));
 
 		IExtractorInputReader reader = getReaderService()
-				.createReaderWithClassifier(getExtractors(), wavFilePath);
+				.createReaderWithClassifier(getExtractors(), wavFilePath, getParams());
 		return reader;
 	}
 
@@ -173,7 +175,9 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 		Assert.isTrue(segments != null);
 		for (Marker marker : segments.getMarkers()) {
 			marker.setLabel(createLabel(filePath, marker, result));
-
+			if(marker.getLabel().contains(".wav")){
+				continue;
+			}
 			if (marker.getLength() < 10) {
 				log.error("this should be eliminated by rules" + marker);
 			}
@@ -185,6 +189,11 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	}
 
 	public String createLabel(File filePath, Marker marker) {
+		return createLabel(filePath, marker, 0);
+	}
+	
+
+	public String createLabelByMarkers(File filePath, Marker marker) {
 		return createLabel(filePath, marker, 0);
 	}
 
@@ -474,5 +483,13 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 
 	public void setRulesTurnedOn(boolean rulesTurnedOn) {
 		this.rulesTurnedOn = rulesTurnedOn;
+	}
+
+	public Map<String, ExtractorParam> getParams() {
+		return params;
+	}
+
+	public void setParams(Map<String, ExtractorParam> params) {
+		this.params = params;
 	}
 }

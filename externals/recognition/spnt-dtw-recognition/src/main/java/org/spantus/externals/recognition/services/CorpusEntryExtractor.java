@@ -62,6 +62,10 @@ public interface CorpusEntryExtractor {
 	/**
 	 * Create labels from marker file
 	 */
-	public abstract String createLabel(File filePath, Marker marker);
+	public abstract String createLabel(File wavPath, Marker marker);
+	/**
+	 * Create labels from marker file
+	 */
+	public abstract String createLabelByMarkers(File filePath, Marker marker);
 
 }

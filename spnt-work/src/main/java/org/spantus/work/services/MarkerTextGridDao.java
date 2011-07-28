@@ -33,6 +33,7 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.logger.Logger;
+import org.spantus.utils.Assert;
 
 /**
  * support for TextGrid of praat
@@ -80,6 +81,7 @@ public class MarkerTextGridDao implements MarkerDao {
 	 * 
 	 */
 	public MarkerSetHolder read(File file) {
+		Assert.isTrue(file.exists(),"File not exists" + file.getAbsolutePath());
 		ReadListener readListener = new ReadListener();
 		try {
 			// Open the file that is the first

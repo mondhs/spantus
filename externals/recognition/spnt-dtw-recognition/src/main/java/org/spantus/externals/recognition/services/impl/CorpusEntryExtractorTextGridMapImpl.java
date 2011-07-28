@@ -34,6 +34,16 @@ public class CorpusEntryExtractorTextGridMapImpl extends
 		}
 		return text;
 	}
+	
+	@Override
+	public String createLabelByMarkers(File filePath, Marker marker) {
+		String text = createLabelFromTextGrid(filePath, marker);
+		if(!StringUtils.hasText(text)){
+			return marker.getLabel();//super.createLabel(filePath, marker);
+		}
+		return text;
+	}
+	
 	/**
 	 * 
 	 * @param markerPath
@@ -48,11 +58,7 @@ public class CorpusEntryExtractorTextGridMapImpl extends
 		Collection<Marker>  markers = findMappedMarkers(markerSet, marker);
 		StringBuilder buf = new StringBuilder();
 		for (Marker iMarker : markers) {
-			String lbl =iMarker.getLabel().trim();
-			lbl = lbl.replace("...", "-");
-			lbl = lbl.replace(":", "1");
-			lbl = lbl.replace("'", "2");
-			lbl = lbl.replace("^", "3");
+			String lbl =cleanupLabel(iMarker.getLabel());
 			buf.append(lbl);
 		}
 		String bufStr = buf.toString();
@@ -60,6 +66,15 @@ public class CorpusEntryExtractorTextGridMapImpl extends
 		return bufStr.toString();
 	}
 	
+	
+	public static String cleanupLabel(String label) {
+		String lbl = label.trim();
+		lbl = lbl.replace("...", "");
+		lbl = lbl.replace(":", "");
+		lbl = lbl.replace("'", "");
+		lbl = lbl.replace("^", "");
+		return lbl;
+	}
 	/**
 	 * 
 	 * @param markerSet

@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.IValues;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.marker.Marker;
@@ -44,6 +45,10 @@ public interface ExtractorReaderService {
      * @return
      */
     public IExtractorInputReader createReaderWithClassifier(ExtractorEnum[] extractors, File file);
+    
+    public IExtractorInputReader createReaderWithClassifier(ExtractorEnum[] extractors, File file, Map<String, ExtractorParam> params);
+    
+    
 
     /**
      * Read given signal file extracts feature date and save it to disk

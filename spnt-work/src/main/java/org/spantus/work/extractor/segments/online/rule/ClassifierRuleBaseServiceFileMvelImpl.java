@@ -13,6 +13,7 @@ import java.util.List;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action;
 import org.spantus.logger.Logger;
+import org.spantus.utils.Assert;
 
 
 public class ClassifierRuleBaseServiceFileMvelImpl extends
@@ -37,7 +38,14 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 		List<Rule> rules = new ArrayList<Rule>();
 		URL file = getClass().getClassLoader().getResource(path);
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File(file.toURI())));
+			File rulesPath = null;
+			if(file != null){
+				rulesPath = new File(file.toURI());
+			}else{
+				rulesPath = new File(path);
+			}
+			Assert.isTrue(rulesPath.exists(), "File exists");
+			BufferedReader br = new BufferedReader(new FileReader(rulesPath));
 			String line; 
 			while((line = br.readLine()) != null) { 
 				processLine(rules, line);

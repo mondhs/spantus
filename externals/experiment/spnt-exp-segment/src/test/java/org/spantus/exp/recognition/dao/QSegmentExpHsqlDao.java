@@ -2,16 +2,24 @@ package org.spantus.exp.recognition.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.spantus.exception.ProcessingException;
 import org.spantus.exp.recognition.domain.QSegmentExp;
-import org.spantus.exp.segment.domain.ExperimentResult;
-import org.spantus.exp.segment.domain.ExperimentResultTia;
+import org.spantus.utils.StringUtils;
+
+import com.google.common.collect.Maps;
 
 public class QSegmentExpHsqlDao implements QSegmentExpDao {
+	private static final String LPCLABEL = "LPCLABEL";
+	private static final String MFCCLABEL = "MFCCLABEL";
+	public static final String MANUALNAME = "MANUALNAME";
+	private static final String PLPLABEL = "PLPLABEL";
 	Connection connection = null;
 	Statement statement = null;
 	boolean recreate = false;
@@ -65,6 +73,7 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 			throw new ProcessingException(e);
 		}
 	}
+	
 
 	protected String getInsertExperimentResulQuery() {
 		String insertQuery = "INSERT INTO QSegmentExp"
@@ -79,6 +88,88 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 						");";
 		return insertQuery;
 	}
+	
+	public static final String REPORT_QUERY="select MANUALNAME, count(id) mcount from QSEGMENTEXP where ";
+	public static final String REPORT_QUERY_GROUPING =		"GROUP By MANUALNAME   HAVING count(id) >5 ORDER by COUNT(id) desc";
+
+	/**
+	 * 
+	 */
+	public void  findMatches( String corpusName){
+		
+		StringBuilder criteria =  new StringBuilder();
+		String currentRecognitionFeature= MANUALNAME;
+		String separator = " ";
+		
+		criteria.append(separator).append("  {0} = MANUALNAME ");
+		separator = " AND ";
+		
+//		if (StringUtils.hasText(recognitionFeature)) {
+//			currentRecognitionFeature = recognitionFeature;
+//		}
+		if (StringUtils.hasText(corpusName)) {
+			criteria.append(separator).append("  CORPUSENTRYNAME={1} ");
+			separator = " AND ";
+		}
+		
+		String query = REPORT_QUERY + criteria + REPORT_QUERY_GROUPING;
+		
+		Map<String, Map<String, Integer>> results = Maps.newTreeMap();
+		try {
+			statement = connection.createStatement();
+			 fetchResults(criteria, corpusName, results, MANUALNAME);
+			 fetchResults(criteria, corpusName, results, PLPLABEL);
+			 fetchResults(criteria, corpusName, results, MFCCLABEL);
+			 fetchResults(criteria, corpusName, results, LPCLABEL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("Label;MANUAL;PLPLABEL; MFCCLABEL; LPCLABEL\n");
+		for (Entry<String, Map<String, Integer>> record : results.entrySet()) {
+			sb.append(record.getKey()).append(";");
+			String[] columns = new String[]{ PLPLABEL, MFCCLABEL, LPCLABEL};
+			int manualInt = record.getValue().get(MANUALNAME);
+			sb.append(manualInt).append(";");
+			for (String column : columns) {
+				Integer val = record.getValue().get(column);
+				if(val == null){
+					sb.append(";");
+				}else{
+					sb.append(val.doubleValue()/manualInt).append(";");
+				}
+				
+			}
+			sb.append("\n");
+			
+		}
+		System.out.println(sb);
+	}
+/**
+ * 
+ * @param criteria
+ * @param corpusName
+ * @param results
+ * @param segmentLabel
+ * @throws SQLException
+ */
+	private void fetchResults(StringBuilder criteria, String corpusName, Map<String, Map<String, Integer>> results, String segmentLabel) throws SQLException {
+		String query = REPORT_QUERY + criteria + REPORT_QUERY_GROUPING;
+		query = 
+				 MessageFormat.format(query, segmentLabel, "'"+corpusName + "'");
+		System.out.println(query);
+		ResultSet  rs = statement.executeQuery(query);
+		 while (rs.next()) {
+			 String segmentName = rs.getString(MANUALNAME);
+			 Map<String, Integer> newMap = results.get(segmentName);
+			 if(newMap == null){
+				newMap = Maps.newTreeMap();
+			 }
+			 newMap.put(segmentLabel, rs.getInt("mcount"));
+			 results.put(segmentName, newMap);
+		 }		
+	}
+
 
 	public QSegmentExp save(QSegmentExp exp) {
 		String query = MessageFormat.format(
