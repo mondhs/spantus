@@ -8,8 +8,8 @@ import org.spantus.core.extractor.IExtractorVector;
 
 public class ColorResolver implements IColorResolver{
 	
-	public static Color[] LINE_COLORS = new Color[] { Color.RED, Color.GREEN,
-		Color.BLUE, Color.GRAY, Color.ORANGE, Color.BLACK };
+	public static Color[] LINE_COLORS = new Color[] {Color.BLACK, Color.BLUE,  Color.GREEN, Color.RED, 
+		Color.GRAY, Color.ORANGE };
 	public int i = 0; 
 	
 	public Color resolveColor(IExtractor extr){

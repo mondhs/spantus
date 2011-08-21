@@ -66,11 +66,11 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 	public String testOnRuleBase(ExtremeSegmentsOnlineCtx ctx) {
 		lazyInit();
 		String testOnRuleBase = super.testOnRuleBase(ctx);
-		if(log.isDebugMode()){
-			for (Rule rule : getRules()) {
-				log.debug("rule #{0}: hit {1} <={2}", rule.getName(), rule.getCounter(), rule.getDescription());
-			}
-		}
+//		if(log.isDebugMode()){
+//			for (Rule rule : getRules()) {
+//				log.debug("rule #{0}: hit {1} <={2}", rule.getName(), rule.getCounter(), rule.getDescription());
+//			}
+//		}
 		return testOnRuleBase;
 	}
 	

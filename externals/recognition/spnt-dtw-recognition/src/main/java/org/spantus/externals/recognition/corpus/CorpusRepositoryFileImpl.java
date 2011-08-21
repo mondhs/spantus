@@ -166,9 +166,13 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 				+ entry.getId() + WAV_FILE_EXT);
 		wavFile = wavFile.getAbsoluteFile();
 		try {
-			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
-			log.debug("[update] saved to " + wavFile.getAbsolutePath());
-			fileEntry.setWavFile(wavFile);
+			if(ais != null){
+				AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
+				log.debug("[update] saved to " + wavFile.getAbsolutePath());
+				fileEntry.setWavFile(wavFile);
+			}else{
+				log.debug("[update] not saved to as it is not audio");
+			}
 		} catch (IOException ex) {
 			throw new ProcessingException(ex);
 		}
@@ -196,7 +200,7 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
         }
         
         public String findAudioFileById(Long id) {
-            if(getRepository().get(id) == null){
+            if(getRepository().get(id) == null || getRepository().get(id).getWavFile() == null ){
                 return null;
             }
             return getRepository().get(id).getWavFile().getAbsolutePath();

@@ -63,7 +63,7 @@ public abstract class AbstractExtractorVector extends AbstractGeneralExtractor i
                 frameIndex++;
 				getWindowing().apply(windowedWindow);
                 calculatedValues.addAll(calculateWindow(windowedWindow, getWindowValues()));
-				windowsIndex = getConfig().getWindowOverlap();
+				windowsIndex = getConfig().getWindowSize();
 
 			}
 			getWindowValues().add(f1);
@@ -100,7 +100,7 @@ public abstract class AbstractExtractorVector extends AbstractGeneralExtractor i
 	}
 	
 	public Double getExtractorSampleRate() {
-		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()));
+		return (getConfig().getSampleRate()/(getConfig().getWindowSize()));
 	}
 
 

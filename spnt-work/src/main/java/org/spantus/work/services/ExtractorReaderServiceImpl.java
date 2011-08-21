@@ -35,20 +35,26 @@ import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractor;
+import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
+import org.spantus.core.extractor.SignalFormat;
+import org.spantus.core.extractor.preemphasis.Preemphasis.PreemphasisEnum;
 import org.spantus.core.io.AudioReader;
 import org.spantus.core.io.AudioReaderFactory;
+import org.spantus.core.io.SignalReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.exception.ProcessingException;
+import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
 import org.spantus.logger.Logger;
+import org.spantus.work.io.WorkAudioFactory;
 
 /**
  *
@@ -165,9 +171,17 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-        AudioReader audioReader = AudioReaderFactory.createAudioReader();
-        IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
-                audioReader.getAudioFormat(inputUrl), getWindowLengthInMilSec(), getOverlapInPerc());
+        SignalReader reader = WorkAudioFactory.createAudioReader(inputUrl);
+        SignalFormat format = reader.getFormat(inputUrl);
+        
+        IExtractorConfig config = ExtractorConfigUtil.defaultConfig(format
+				.getSampleRate(), getWindowLengthInMilSec(),getOverlapInPerc());//30 ms and 66 %
+                    config.setPreemphasis(PreemphasisEnum.middle.name());
+		IExtractorInputReader extractorReader = ExtractorsFactory
+				.createReader(config);
+		
+//        IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
+//                audioReader.getFormat(inputUrl), getWindowLengthInMilSec(), );
         log.debug("[createReaderWithClassifier] reader config{0}", extractorReader.getConfig() );
         List<IClassifier> classifiers = ExtractorUtils.
                 registerThreshold(extractorReader, extractors, params, ClassifierEnum.rules);
@@ -185,7 +199,7 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
         
         log.debug("[createReaderWithClassifier] reader features{0}", extractorReader.getGeneralExtractor() );
 
-        audioReader.readSignal(inputUrl, extractorReader);
+        reader.readSignal(inputUrl, extractorReader);
 
         return extractorReader;
     }

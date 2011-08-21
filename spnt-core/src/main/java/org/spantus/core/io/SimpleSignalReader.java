@@ -38,9 +38,11 @@ import org.spantus.utils.StringUtils;
  * Created Feb 22, 2010
  *
  */
-public class SimpleSignalReader implements SignalReader {
+public class SimpleSignalReader extends AbstractSignalReader {
 	Logger log = Logger.getLogger(SimpleSignalReader.class);
 
+	private WraperExtractorReader wraperExtractorReader;
+	
 	public SignalFormat getFormat(URL url) {
 		SignalFormat config = new SignalFormat();
 
@@ -93,6 +95,7 @@ public class SimpleSignalReader implements SignalReader {
 
 	public void readSignal(URL url, IExtractorInputReader reader)
 			throws ProcessingException {
+		wraperExtractorReader = new WraperExtractorReader(reader, 1);
 		log.debug("[readSignal]Reading signal with config: {0}", reader.getConfig() );
 		try {
 			// Open the file that is the first
@@ -107,11 +110,12 @@ public class SimpleSignalReader implements SignalReader {
 			while ((strLine = br.readLine()) != null) {
 				if (sample > 1) {
 					Double value = Double.valueOf(strLine);
-					reader.put(sample, value);
+					wraperExtractorReader.put(value);
+//					reader.put(sample, value);
 				}
 				sample++;
 			}
-			reader.pushValues(sample);
+			wraperExtractorReader.pushValues();
 			// Close the input stream
 			in.close();
 		} catch (Exception e) {// Catch exception if any
@@ -124,6 +128,7 @@ public class SimpleSignalReader implements SignalReader {
 		log.debug("[readSignal]Reading signal with config: {0}", reader.getConfig() );
 		List<BufferedReader> bfreaders = new ArrayList<BufferedReader>();
 		List<DataInputStream> inputs = new ArrayList<DataInputStream>();
+		wraperExtractorReader = new WraperExtractorReader(reader, urls.size());
 		
  		try {
  			for (URL file : urls) {
@@ -139,28 +144,44 @@ public class SimpleSignalReader implements SignalReader {
 				}
 			}
  			boolean filesEnded = false;
- 			long sample = 0;
+ 			Long total = 0L;
+ 			//read sample rate
+				for (BufferedReader bufferedReader : bfreaders) {
+					total = Long.valueOf(bufferedReader.readLine());
+				}
+				//read samples size
+				for (BufferedReader bufferedReader : bfreaders) {
+						bufferedReader.readLine();
+				}
+				//notify listeners
+	 			started(total);
+
+// 			long sample = 0;
  			// Read File Line By Line
  			while(!filesEnded){
  				Double sum = 0D;
+ 				
  				for (BufferedReader bufferedReader : bfreaders) {
  					String strLine = bufferedReader.readLine();
  					if(StringUtils.hasText(strLine)){
- 						sum += Float.valueOf(strLine);
+ 						sum += Double.valueOf(strLine);
  					}else{
  						filesEnded = true;
  					}
  				}	
- 				if (sample > 1) {
- 					reader.put(sample, sum);
- 				}
- 				sample++;
+// 				if (sample > 1) {
+ 					wraperExtractorReader.put(sum);
+ 					processed(wraperExtractorReader.getSample(), total);
+// 					reader.put(sample, sum);
+// 				}
+// 				sample++;
 			}
-			reader.pushValues(sample);
+ 			wraperExtractorReader.pushValues();
 			// Close the input stream
 			for (DataInputStream in : inputs) {
 				in.close();
 			}
+			ended();
  		} catch (NumberFormatException e) {
 			log.error(e);
 			throw new ProcessingException(e);

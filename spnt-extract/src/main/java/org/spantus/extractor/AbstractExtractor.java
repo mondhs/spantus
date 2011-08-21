@@ -62,7 +62,7 @@ public abstract class AbstractExtractor extends AbstractGeneralExtractor impleme
 				getWindowing().apply(windowedWindow);
 				//Calculating features values for the window
 				calculatedValues.addAll(calculateWindow(windowedWindow, getWindowValues()));
-				windowsIndex = getConfig().getWindowOverlap();
+				windowsIndex = getConfig().getWindowSize();
 			}
 			getWindowValues().add(f1);
 			getWindowValues().poll();
@@ -97,7 +97,7 @@ public abstract class AbstractExtractor extends AbstractGeneralExtractor impleme
 	}
 	
 	public Double getExtractorSampleRate() {
-		return (getConfig().getSampleRate()/(getConfig().getWindowOverlap()));
+		return (getConfig().getSampleRate()/(getConfig().getWindowSize()));
 	}
 
 }

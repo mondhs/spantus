@@ -11,6 +11,7 @@ import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;
 
 public class ExtremeSegmentsOnlineCtx {
 	private LinkedList<ExtremeSegment> extremeSegments;
+	private LinkedList<Long> mins = new LinkedList<Long>();
 	private ExtremeSegment currentSegment;
 	private Integer index=0;
 	private ClassifierRuleBaseEnum.state markerState;
@@ -124,6 +125,7 @@ public class ExtremeSegmentsOnlineCtx {
 	
 	public ExtremeSegmentsOnlineCtx() {
 		extremeSegments = new LinkedList<ExtremeSegment>();
+		mins = new LinkedList<Long>();
 	}
 	
 	
@@ -183,6 +185,14 @@ public class ExtremeSegmentsOnlineCtx {
 			prevSegmentEntry= segmentEntry;
 		}
 		this.segmentEntry = segmentEntry;
+	}
+
+	public LinkedList<Long> getMins() {
+		return mins;
+	}
+
+	public void setMins(LinkedList<Long> mins) {
+		this.mins = mins;
 	}
 
 	

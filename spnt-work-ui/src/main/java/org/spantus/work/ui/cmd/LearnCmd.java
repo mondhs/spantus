@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
@@ -38,12 +39,17 @@ public class LearnCmd extends AbsrtactCmd {
         Map<String, IValues> fvv = extractorReaderService.findAllVectorValuesForMarker(
                 getReader(),
                 marker);
-        AudioInputStream ais =
+        
+        AudioInputStream ais = null;
+        try{
+        	ais =
                 AudioManagerFactory.createAudioManager().findInputStreamInMils(
                 ctx.getProject().getSample().getCurrentFile(),
                 marker.getStart(),
                 marker.getLength());
-
+        }catch( Exception e){
+        	//not a audio
+        }
         getMatchingService().learn(marker.getLabel(), fvv, ais);
         return null;
     }

@@ -65,6 +65,7 @@ public class Marker implements Serializable, Cloneable{
 	}
 
 	public void setLength(Long length) {
+		Assert.isTrue(length>0, "Length cannot be negative");
 		this.length = length;
 	}
 	

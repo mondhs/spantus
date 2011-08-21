@@ -68,8 +68,8 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		
 		log.debug("[getClassName]  to0: {0}, to1: {1}; to2: {2}; toMax:{3}; index {4};",  
 				distanceToMin, toOneClass, toTwoClass, distanceToMax, argNum);
-		if(peaks<3 && length > 150){
-			log.debug("index 0, but has peaks {0}. say is 1", peaks);
+		if(argNum == 0 && peaks<3 && length > 150){
+			log.debug("index {1}, but has peaks {0}. say is 1", argNum);
 			return "1";
 		}
 		

@@ -46,8 +46,10 @@ public class SpectrumPower extends AbstractSpectralExtractor {
 			int i = 0;
 			for (Double current : fv) {
 				i++;
+				if(i != bin) {
+					continue;
+				}
 				rtnValues.add(current);
-				if(i != bin) continue;
 			}
 			
 		}

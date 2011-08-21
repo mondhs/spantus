@@ -5,6 +5,8 @@ import java.util.ListIterator;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.extractor.segments.offline.ExtremeEntry;
+import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.extractor.segments.offline.ExtremeOfflineClassifier;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.logger.Logger;
@@ -41,15 +43,20 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 		}
 		endupPendingSegments(getOnlineCtx());
 		processMarkers(getMarkSet());
-//		processMarkers(getMarkSet());
 		getThresholdValues().addAll(ExtremeOfflineClassifier.refreshThreasholdInfo(getMarkSet(), getOutputValues()));
 	}
 
 	protected void processMarkers(MarkerSet markerSet){
 		
-		if(markerSet.getMarkers().size()>0 && markerSet.getMarkers().get(0).getLength()<60){
-			markerSet.getMarkers().remove(0);
+		for (Iterator<Marker> iterator = markerSet.iterator(); iterator.hasNext();) {
+			Marker marker = iterator.next();
+			if(marker.getLength()<60){
+				iterator.remove();
+			}else{
+				break;
+			}
 		}
+		
 		
 		ExtremeSegment previous = null;
 		boolean removed = false;
@@ -100,6 +107,7 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 		previous = null;
 		for (Iterator<Marker> iterator = markerSet.iterator(); iterator.hasNext();) {
 			ExtremeSegment extremeSegment = (ExtremeSegment) iterator.next();
+			removed = false;
 			if(previous == null){
 				previous = extremeSegment;
 				continue;
@@ -132,6 +140,10 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 //			iterator.remove();
 //			continue;
 //		}
+		//too big chunks to be merged
+		if(previous.getCalculatedLength()>150 && extremeSegment.getCalculatedLength()>150){
+			return false;
+		}
 		int fixUpTo=getOutputValues().toIndex(.3D);
 		int i = 0; 
 		IndexValue minValue =new IndexValue(previous.getEndEntry().getIndex(), previous.getEndEntry().getValue()); 
@@ -161,6 +173,7 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 //			throw new ProcessingException("size less than index");
 			return false;
 		}
+		boolean changed = false;
 		for (ListIterator<Double> valueIter = getOutputValues().listIterator(previous.getEndEntry().getIndex()); 
 		valueIter.hasNext();) {
 			Double value = (Double) valueIter.next();
@@ -172,16 +185,26 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 				minValue.setIndex(previous.getEndEntry().getIndex()+i);
 				Long newChangePoint = getOutputValues().indextoMils(minValue.getIndex());
 				Long delta = newChangePoint-previous.getEnd();
+				if(delta>150){
+					return false;
+				}
+				
+				previous.setEnd(newChangePoint);
+				previous.setEndEntry(new ExtremeEntry(minValue.getIndex(), minValue.getValue(), FeatureStates.min));
+//				previous.setStartEntry(new ExtremeEntry(minValue.getIndex(), minValue.getValue(), FeatureStates.min));
+
 				if(extremeSegment.getLength()-delta<20){
 					return true;
 				}
-				previous.setEnd(newChangePoint);
+
 				extremeSegment.setStart(newChangePoint);
-				extremeSegment.setLength(extremeSegment.getLength()-delta);
+				extremeSegment.setEnd(extremeSegment.getEnd()-delta);
+				changed =true;
+//				return true;
 			}
 			i++;
 		}
-		return false;
+		return changed;
 	}
 	/**
 	 * 

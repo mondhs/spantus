@@ -60,21 +60,16 @@ public class WraperExtractorReader {
 	public void put(byte value){
 		switch (format.getSampleSizeInBits()) {
 		case 8:
-				reader.put(sample++, preemphasis( 
-						AudioUtil.read8(value, getFormat()) 
-						));
+				put(AudioUtil.read8(value, getFormat()) );
 				break;
 		case 16:
 			List<Byte> shortBuffer = shortBuffers.get(0); 
 			shortBuffer.add(value);
 			if(shortBuffer.size() == 2){
-				Double f = AudioUtil.read16(shortBuffer.get(0), 
+				Double d = AudioUtil.read16(shortBuffer.get(0), 
 						shortBuffer.get(1), 
 						getFormat());
-				if(smooth  == true && smoothingSize != null){
-						f *=  getHammingWindowing().calculate(smoothingSize, sample.intValue());
-				}
-				reader.put(sample++, preemphasis(f));
+				put(d );
 				shortBuffer.clear();
 			}
 			break;
@@ -84,16 +79,18 @@ public class WraperExtractorReader {
 		}
 		
 	}
-	//colleaction
+	/**
+	 * put byte list
+	 * @param value
+	 */
 	public void put(List<Byte> value){
-		Double sum = 0D;
+		Double sum = null;
 		switch (format.getSampleSizeInBits()) {
 		case 8:
-			
+			sum = 0D;
 			for (Byte byte1 : value) {
 				sum += AudioUtil.read8(byte1, getFormat());
 			}
-				reader.put(sample++, preemphasis(sum));
 				break;
 		case 16:
 			Iterator<Byte> valIterator = value.iterator();
@@ -105,26 +102,31 @@ public class WraperExtractorReader {
 			if(shortBuffers.get(0).size() == 2){
 				for (List<Byte> shortBuffer : shortBuffers) {
 					if(shortBuffer.size()==2){
-						sum += AudioUtil.read16(shortBuffer.get(0), 
+						sum = sum == null?0D:sum;
+						sum += AudioUtil.read16(
+								shortBuffer.get(0), 
 							shortBuffer.get(1), 
 							getFormat());
-					}else{
-						getFormat();
 					}
-						
 					shortBuffer.clear();
 				}
-				if(smooth  == true && smoothingSize != null){
-					sum *=  getHammingWindowing().calculate(smoothingSize, sample.intValue());
-			}
-				reader.put(sample++, preemphasis(sum));
 			}
 			break;
 		default:
 			throw new java.lang.IllegalArgumentException(format.getSampleSizeInBits()
 					+ " bits/sample not supported");
 		}
-		
+		//add value tooo the lis
+		put(sum);
+	}
+	
+	public void put(Double val){
+		if(val!=null){
+			if(smooth  == true && smoothingSize != null){
+				val *=  getHammingWindowing().calculate(smoothingSize, sample.intValue());
+		}
+			reader.put(sample++, preemphasis(val));
+		}
 	}
 	
 	/**

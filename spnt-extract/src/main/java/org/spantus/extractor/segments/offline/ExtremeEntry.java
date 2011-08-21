@@ -2,6 +2,8 @@ package org.spantus.extractor.segments.offline;
 
 import java.io.Serializable;
 
+import org.spantus.utils.Assert;
+
 
 /**
  * 
@@ -70,11 +72,18 @@ public class ExtremeEntry implements Cloneable, Serializable{
 		this.previous = previous;
 	}
 	
-	public boolean gt(ExtremeEntry entry){
+	public boolean gtV(ExtremeEntry entry){
 		return this.getValue()>entry.getValue();
 	}
-	public boolean lt(ExtremeEntry entry){
+	public boolean ltV(ExtremeEntry entry){
 		return this.getValue()<entry.getValue();
+	}
+	
+	public boolean before(ExtremeEntry entry){
+		return this.getIndex()>entry.getIndex();
+	}
+	public boolean after(ExtremeEntry entry){
+		return this.getIndex()<entry.getIndex();
 	}
 	
 	@Override

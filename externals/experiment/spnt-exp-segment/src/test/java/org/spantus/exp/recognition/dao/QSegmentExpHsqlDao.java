@@ -90,7 +90,7 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 	}
 	
 	public static final String REPORT_QUERY="select MANUALNAME, count(id) mcount from QSEGMENTEXP where ";
-	public static final String REPORT_QUERY_GROUPING =		"GROUP By MANUALNAME   HAVING count(id) >5 ORDER by COUNT(id) desc";
+	public static final String REPORT_QUERY_GROUPING =		" GROUP By MANUALNAME   HAVING count(id) >5 ORDER by COUNT(id) desc";
 
 	/**
 	 * 
@@ -108,7 +108,8 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 //			currentRecognitionFeature = recognitionFeature;
 //		}
 		if (StringUtils.hasText(corpusName)) {
-			criteria.append(separator).append("  CORPUSENTRYNAME={1} ");
+			//criteria.append(separator).append("  CORPUSENTRYNAME={1} ");
+			criteria.append(separator).append("  CORPUSENTRYNAME in ({1}) ");
 			separator = " AND ";
 		}
 		

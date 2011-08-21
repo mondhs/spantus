@@ -90,9 +90,9 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 		
 //		polylinesX.add(x);
 //		polylinesY.add(y);
-		if(signalPolygon==null){
+//		if(signalPolygon==null){
 			signalPolygon =toPolygon(values, xScalar.floatValue(), yScalar.floatValue());
-		}
+//		}
 		this.xScalar = xScalar;
 		this.yScalar = yScalar;
 	}

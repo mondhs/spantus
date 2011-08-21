@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
+import org.spantus.utils.Assert;
 
 
 public class ExtremeSegment extends Marker implements Serializable, Cloneable {
@@ -51,7 +52,7 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 		Double otherPeak = previousSegment.getPeakEntry().getValue();
 		Double thisStart = this.getStartEntry().getValue();
 		Double otherStart = previousSegment.getStartEntry().getValue();
-		boolean increase = thisPeak>otherPeak && thisStart > otherStart;
+		boolean increase = thisPeak-otherPeak>(thisPeak+otherPeak)*.1 && thisStart > otherStart;
 		 
 //		boolean increase = isIncrease() && previousSegment.isIncrease() && thisPeak>otherPeak;  
 		return increase;
@@ -146,6 +147,10 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 		return endEntry;
 	}
 	public void setEndEntry(ExtremeEntry endEntry) {
+		if(endEntry != null){
+			Assert.isTrue(getStartEntry()!=null, "start not set");
+			Assert.isTrue(getStartEntry().after(endEntry), "End should be after start");
+		}
 		this.endEntry = endEntry;
 	}
 	

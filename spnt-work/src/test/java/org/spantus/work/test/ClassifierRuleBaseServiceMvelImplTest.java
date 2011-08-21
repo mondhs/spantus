@@ -107,12 +107,13 @@ public class ClassifierRuleBaseServiceMvelImplTest {
 		ExtremeSegment extremeSegment = new ExtremeSegment();
 		extremeSegment.setValues(new FrameValues());
 		extremeSegment.setPeakEntries(new LinkedList<ExtremeEntry>());
-		extremeSegment.getPeakEntries().add(new ExtremeEntry(0,0D,FeatureStates.max));
-		extremeSegment.getPeakEntries().add(new ExtremeEntry(0,1D,FeatureStates.max));
-		extremeSegment.getPeakEntries().add(new ExtremeEntry(0,0D,FeatureStates.max));
-		extremeSegment.setPeakEntry(new ExtremeEntry(0,1D,FeatureStates.max));
-		extremeSegment.setStartEntry(new ExtremeEntry(0,0D,FeatureStates.min));
-		extremeSegment.setEndEntry(new ExtremeEntry(0,0D,FeatureStates.min));
+		
+		extremeSegment.setStartEntry(new ExtremeEntry(1,0D,FeatureStates.min));		
+		extremeSegment.getPeakEntries().add(new ExtremeEntry(2,2D,FeatureStates.max));
+		extremeSegment.getPeakEntries().add(new ExtremeEntry(4,3D,FeatureStates.max));
+		extremeSegment.getPeakEntries().add(new ExtremeEntry(5,2D,FeatureStates.max));
+		extremeSegment.setPeakEntry(new ExtremeEntry(4,3D,FeatureStates.max));
+		extremeSegment.setEndEntry(new ExtremeEntry(7,0D,FeatureStates.min));
 
 		return extremeSegment;
 	}

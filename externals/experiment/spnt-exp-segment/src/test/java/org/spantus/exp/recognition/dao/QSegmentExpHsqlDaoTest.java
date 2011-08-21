@@ -31,7 +31,7 @@ public class QSegmentExpHsqlDaoTest {
 	 */
 	@Test
 	public void testFindMatches() {
-		qSegmentExpDaoImpl.findMatches("TRI4_AK1");
+		qSegmentExpDaoImpl.findMatches("AK1\',\'BJ1\',\'LK1\',\'TK1");
 	}
 	
 	@After

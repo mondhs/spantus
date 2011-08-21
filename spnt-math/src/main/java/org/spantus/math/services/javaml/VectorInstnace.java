@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import net.sf.javaml.core.Instance;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 
 public class VectorInstnace implements Instance{
 	
+	String id;
 	TimeSeries timeSeries;
 
 	public Instance add(Instance max) {
@@ -45,7 +47,10 @@ public class VectorInstnace implements Instance{
 	}
 
 	public SortedSet<Integer> keySet() {
-		throw new IllegalArgumentException("Not Implemented");
+        TreeSet<Integer> keys = new TreeSet<Integer>();
+        for (int i = 0; i < getTimeSeries().size()-2; i++)
+            keys.add(i);
+        return keys;
 	}
 
 	public Instance minus(Instance min) {
@@ -89,7 +94,7 @@ Object value;
 	}
 
 	public double value(int pos) {
-		throw new IllegalArgumentException("Not Implemented");
+		return getTimeSeries().getTimeAtNthPoint(pos);
 	}
 
 	public void clear() {
@@ -142,6 +147,14 @@ Object value;
 
 	public void setTimeSeries(TimeSeries timeSeries) {
 		this.timeSeries = timeSeries;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

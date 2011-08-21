@@ -40,7 +40,7 @@ import com.google.common.collect.Collections2;
 public class MultiMapper {
 
 	public static final int WINDOW_OVERLAP = 66;
-	public static final int WINDOW_LENGTH = 33;
+	public static final int WINDOW_LENGTH = 10;
 	public final static String RULES_PATH = "/home/mgreibus/src/spantus-svn/trunk/spnt-work-ui/src/main/resources/ClassifierRuleBase.csv";
 
 	private static final Logger log = Logger.getLogger(MultiMapper.class);
@@ -227,7 +227,7 @@ public class MultiMapper {
 	 * @param recogniton
 	 * @param processingTime
 	 */
-	private void saveResult(Marker marker, File textGridFile, Map<String, RecognitionResult> recogniton, Long processingTime) {
+	protected void saveResult(Marker marker, File textGridFile, Map<String, RecognitionResult> recogniton, Long processingTime) {
 		String label = getExtractor().createLabelByMarkers(textGridFile, marker);
 		if(!StringUtils.hasText(label)){
 			log.error("NO TEXT. do not save");

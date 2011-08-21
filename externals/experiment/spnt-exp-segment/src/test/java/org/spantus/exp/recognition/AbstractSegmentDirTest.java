@@ -39,8 +39,9 @@ public abstract class AbstractSegmentDirTest {
 		//            "/home/mondhs/src/garsynai/skaiciai/learn"
             ;
     public final static String DIR_LEARN_OUT =
+    		"/home/mgreibus/tmp/garsyno.modelis";
 //            "/home/mgreibus/src/garsynai/garsynai/noizeus_exp/OUTPUT"
-    		"/home/mgreibus/src/garsynai/VDU/MG/OUTPUT" 
+//    		"/home/mgreibus/src/garsynai/VDU/MG/OUTPUT" 
 //            "./target/learn-corpus/"
             ;
     public final static String RULES_PATH =

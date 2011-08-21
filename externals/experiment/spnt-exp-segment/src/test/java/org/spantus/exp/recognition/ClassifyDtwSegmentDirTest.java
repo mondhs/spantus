@@ -39,7 +39,7 @@ public class ClassifyDtwSegmentDirTest extends AbstractSegmentDirTest {
 		for (CorpusFileEntry entry : getCorpusRepository().getRepository()
 				.values()) {
 			IValues values = entry.getFeatureMap().get(
-					ExtractorEnum.PLP_EXTRACTOR.name()).getValues();
+					ExtractorEnum.MFCC_EXTRACTOR.name()).getValues();
 			FrameVectorValues vectors = (FrameVectorValues) values;
 	        TimeSeries tsSample = JavaMLSupport.toTimeSeries(vectors, vectors.getDimention());
 

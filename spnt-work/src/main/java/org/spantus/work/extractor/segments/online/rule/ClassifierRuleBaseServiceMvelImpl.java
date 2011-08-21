@@ -48,10 +48,12 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		boolean noiseClass = true;
 
 		Double currentArea = null;
-		Integer currentPeak = null;
+		Integer currentPeakCount = null;
+		Double currentPeakValue = null;
 		Long currentLength = null;
 		Double lastArea = null;
-		Integer lastPeak = null;
+		Double lastPeakValue = null;
+		Integer lastPeakCount = null;
 		Long lastLength = null;
 		boolean isIncrease = false;
 		boolean isDecrease = false;
@@ -64,7 +66,7 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		if (ctx.getCurrentSegment() != null) {
 			currentSegment = ctx.getCurrentSegment();
 			currentArea = currentSegment.getCalculatedArea();
-			currentPeak = currentSegment.getPeakEntries().size();
+			currentPeakCount = currentSegment.getPeakEntries().size();
 			currentLength = currentSegment.getCalculatedLength();
 			currentSizeValues = currentSegment.getValues().size();
 		}
@@ -72,16 +74,18 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		if (ctx.getExtremeSegments().size() > 0) {
 			lastSegment = ctx.getExtremeSegments().getLast();
 			lastArea = lastSegment.getCalculatedArea();
-			lastPeak = lastSegment.getPeakEntries().size();
+			lastPeakValue = lastSegment.getPeakEntry().getValue();
+			lastPeakCount = lastSegment.getPeakEntries().size();
 			lastLength = lastSegment.getCalculatedLength();
 			lastSizeValues = lastSegment.getValues().size();
 
 			if (currentSegment.getPeakEntry() != null) {
+				currentPeakValue = currentSegment.getPeakEntry().getValue();
 				isIncrease = currentSegment.isIncrease(lastSegment);
 				isDecrease = currentSegment.isDecrease(lastSegment);
 				isSimilar = currentSegment.isSimilar(lastSegment);
 				className = getClusterService().getClassName(lastSegment, ctx);
-				if (currentPeak >= 1) {
+				if (currentPeakCount >= 1) {
 					Integer first = lastSegment.getPeakEntries().getLast()
 							.getIndex();
 					Integer last = currentSegment.getPeakEntries().getFirst()
@@ -106,6 +110,12 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		params.put("isIncrease", isIncrease);
 		params.put("isDecrease", isDecrease);
 		params.put("className", className);
+		params.put("lastPeakCount", lastPeakCount);
+		params.put("currentPeakCount", currentPeakCount);
+		params.put("currentPeakValue", currentPeakCount);
+		params.put("lastPeakValue", lastPeakValue);
+		
+		
 
 		return params;
 	}
@@ -127,8 +137,8 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 			if (commandInd) {
 				command = ruleEntry.getResult();
 				ruleEntry.incCounter();
-//				log.debug("finished {0}:{1}", ruleEntry.getName(),
-//						ruleEntry.getDescription());
+				log.debug("finished {0}:{1}", ruleEntry.getName(),
+						ruleEntry.getDescription());
 				break;
 			}
 		}

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.ExtractorParam;
@@ -355,10 +356,17 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	 */
 	public Map<String, RecognitionResult> bestMatchesForFeatures(URL fileUrl,
 			Marker marker, IExtractorInputReader reader) {
-		AudioInputStream ais = AudioManagerFactory.createAudioManager()
+		CorpusEntry corpusEntry = null; 
+		try{
+			AudioInputStream ais = AudioManagerFactory.createAudioManager()
 				.findInputStreamInMils(fileUrl, marker.getStart(),
 						marker.getLength());
-		CorpusEntry corpusEntry = create(ais, marker);
+			corpusEntry = create(ais, marker);
+		}catch (ProcessingException   e) {
+			//this is not audio file
+			corpusEntry = create(marker, reader);
+		}
+		
 		Map<String, RecognitionResult> result = getCorpusService()
 				.bestMatchesForFeatures(corpusEntry);
 		return result;

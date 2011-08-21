@@ -245,7 +245,12 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
                     }
                     i++;
                 }
+                if(sb.length()>50){
+                	sb.delete(50, sb.length());
+                	sb.append("...");
+                }
                 sb.append("]");
+                
 		return sb.toString();
 	}
 

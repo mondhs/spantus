@@ -63,7 +63,7 @@ public class SignalExtractor extends AbstractExtractor {
 		for (Double float1 : values) {
 			i++;
 			fWork += float1;
-			if(i == getDownScale()){
+			if(i <= getDownScale()){
 				calculatedValues.add(fWork/getDownScale());
 				fWork = 0D; i = 0;
 			}
