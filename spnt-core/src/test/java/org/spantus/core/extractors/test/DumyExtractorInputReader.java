@@ -3,6 +3,7 @@ package org.spantus.core.extractors.test;
 import java.util.LinkedList;
 import java.util.Set;
 
+import org.spantus.core.extractor.DefaultExtractorConfig;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
@@ -78,8 +79,7 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
 
 
 	public IExtractorConfig getConfig() {
-		// TODO Auto-generated method stub
-		return null;
+		return new DefaultExtractorConfig();
 	}
 
 
