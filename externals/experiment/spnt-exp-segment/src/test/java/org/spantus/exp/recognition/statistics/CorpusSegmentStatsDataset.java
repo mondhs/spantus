@@ -115,6 +115,8 @@ public class CorpusSegmentStatsDataset extends AbstractXYDataset implements XYDa
 		return keys.size();
 	}
 
+	@SuppressWarnings("rawtypes")
+	@Override
 	public Comparable getSeriesKey(int i) {
 		String key = keys.get(i) ;
 		if(key != null){

@@ -15,9 +15,14 @@ public class ClassifierPostProcessServiceBaseImpl implements
 	Logger log = Logger.getLogger(getClass());
 
 	public String testOnRuleBase(ExtremeSegmentsOnlineCtx ctx) {
-
-		if(ctx.isFeatureInMin()){
-			return ClassifierRuleBaseEnum.action.changePointCurrentApproved.name();	
+		if(ctx.getCurrentSegment() == null && ctx.getFeatureStable()){
+			return ClassifierRuleBaseEnum.action.processNoise.name();
+		}else if(ctx.getCurrentSegment() == null){
+			return ClassifierRuleBaseEnum.action.initSegment.name();
+		}else if(ctx.getFeatureInMin()){
+			return ClassifierRuleBaseEnum.action.changePoint.name();	
+		}else if(ctx.getFeatureInMax()){
+			return ClassifierRuleBaseEnum.action.changePointLastApproved.name();	
 		}
 		return ClassifierRuleBaseEnum.action.processSignal.name();
 	}

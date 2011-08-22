@@ -7,10 +7,8 @@
       <version>0.3-SNAPSHOT</version>
    </parent>
 
-   <groupId>org.spantus</groupId>
    <artifactId>spnt-work-ui</artifactId>
    <name>Spantus - Work UI module</name>
-   <version>0.3-SNAPSHOT</version>
 
    <dependencies>
       <dependency>
@@ -31,7 +29,6 @@
       <dependency>
          <groupId>log4j</groupId>
          <artifactId>log4j</artifactId>
-         <version>1.2.15</version>
          <exclusions>
             <exclusion>
                <groupId>javax.mail</groupId>

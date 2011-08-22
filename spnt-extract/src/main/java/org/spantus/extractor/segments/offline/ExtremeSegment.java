@@ -52,7 +52,7 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 		Double otherPeak = previousSegment.getPeakEntry().getValue();
 		Double thisStart = this.getStartEntry().getValue();
 		Double otherStart = previousSegment.getStartEntry().getValue();
-		boolean increase = thisPeak-otherPeak>(thisPeak+otherPeak)*.1 && thisStart > otherStart;
+		boolean increase = thisPeak-otherPeak>(thisPeak+otherPeak)*0 && thisStart > otherStart;
 		 
 //		boolean increase = isIncrease() && previousSegment.isIncrease() && thisPeak>otherPeak;  
 		return increase;

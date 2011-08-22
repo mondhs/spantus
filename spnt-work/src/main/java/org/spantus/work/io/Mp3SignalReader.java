@@ -78,7 +78,7 @@ public class Mp3SignalReader extends DefaultAudioReader {
 //				nBytesWritten = line.write(data, 0, nBytesRead);
 				for (byte readByte : data) {
 					getWraperExtractorReader().put((byte) readByte);
-					processed(size, size);
+					processed(index, size);
 					index++;
 				}
 			}

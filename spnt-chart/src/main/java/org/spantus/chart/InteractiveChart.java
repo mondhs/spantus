@@ -33,7 +33,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JToolTip;
 import javax.swing.UIManager;
 
 import net.quies.math.plot.AxisInstance;
@@ -163,13 +162,6 @@ public class InteractiveChart extends InteractiveGraph {
 		repaint(30L);
 	}
 	
-	@Override
-	public JToolTip createToolTip() {
-		GraphToolTip tip = new GraphToolTip();
-        tip.setComponent(this);
-        return tip;
-
-	}
 	
 	/**
 	 * calculate Tooltip text

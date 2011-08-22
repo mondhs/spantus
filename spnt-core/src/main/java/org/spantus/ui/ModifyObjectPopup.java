@@ -102,7 +102,9 @@ public class ModifyObjectPopup implements java.awt.event.ActionListener {
         String rtn = null;
         try {
             Object value = property.getGetter().invoke(o);
-            rtn = value.toString();
+            if(value != null){
+            	rtn = value.toString();
+            }
         } catch (IllegalArgumentException e) {
             log.error(e);
         } catch (IllegalAccessException e) {

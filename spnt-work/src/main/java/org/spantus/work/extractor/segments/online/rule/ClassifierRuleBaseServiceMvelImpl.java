@@ -1,7 +1,7 @@
 package org.spantus.work.extractor.segments.online.rule;
 
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.changePoint;
-import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.changePointCurrentApproved;
+import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.initSegment;
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.changePointLastApproved;
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.delete;
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.join;
@@ -51,6 +51,7 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		Integer currentPeakCount = null;
 		Double currentPeakValue = null;
 		Long currentLength = null;
+		Long stableLength = null;
 		Double lastArea = null;
 		Double lastPeakValue = null;
 		Integer lastPeakCount = null;
@@ -69,6 +70,7 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 			currentPeakCount = currentSegment.getPeakEntries().size();
 			currentLength = currentSegment.getCalculatedLength();
 			currentSizeValues = currentSegment.getValues().size();
+			stableLength = currentSegment.getValues().indextoMils(ctx.getStableCount());
 		}
 
 		if (ctx.getExtremeSegments().size() > 0) {
@@ -114,6 +116,8 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		params.put("currentPeakCount", currentPeakCount);
 		params.put("currentPeakValue", currentPeakCount);
 		params.put("lastPeakValue", lastPeakValue);
+		params.put("stableLength", stableLength);
+		
 		
 		
 
@@ -137,8 +141,9 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 			if (commandInd) {
 				command = ruleEntry.getResult();
 				ruleEntry.incCounter();
-				log.debug("finished {0}:{1}", ruleEntry.getName(),
-						ruleEntry.getDescription());
+				log.debug("[testOnRuleBase]: finished {0}:{1};  param:[{2}]", ruleEntry.getName(),
+						ruleEntry.getDescription(), param);
+				log.debug("[testOnRuleBase]:    param: \n [{0}]",param);
 				break;
 			}
 		}
@@ -179,10 +184,10 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		if (rules == null) {
 			rules = new LinkedList<Rule>();
 			putRule(rules, "1", "currentSegment == null && ctx.featureInMin",
-					changePointCurrentApproved,
+					initSegment,
 					"Current not initialized. This first segment");
 			putRule(rules, "2", "lastSegment == null && ctx.featureInMin",
-					changePointCurrentApproved,
+					initSegment,
 					"Previous not initialized. this is second segment");
 			putRule(rules, "3", "lastSegment == null && ctx.featureInMax",
 					processSignal, "Previous not initialized");

@@ -9,7 +9,6 @@
 
 	<artifactId>spnt-segment</artifactId>
 	<name>Spantus - Segmentation module</name>
-	<version>0.3-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>

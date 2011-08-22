@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>spnt-exp-segment</artifactId>
 	<name>Spantus - External - Segmentation experiment</name>
-	<version>0.3-SNAPSHOT</version>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.spantus</groupId>

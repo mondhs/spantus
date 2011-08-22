@@ -8,6 +8,7 @@ import org.spantus.extractor.segments.offline.ExtremeEntry;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;
+import org.spantus.utils.Assert;
 
 public class ExtremeSegmentsOnlineCtx {
 	private LinkedList<ExtremeSegment> extremeSegments;
@@ -16,9 +17,10 @@ public class ExtremeSegmentsOnlineCtx {
 	private Integer index=0;
 	private ClassifierRuleBaseEnum.state markerState;
 	private Double previousValue;
-	protected ExtremeEntry prevSegmentEntry = null;
-	protected ExtremeEntry segmentEntry  = null;
-
+	private ExtremeEntry prevSegmentEntry = null;
+	private ExtremeEntry segmentEntry  = null;
+    private int stableCount = 0;
+	
 	private Boolean skipLearn = Boolean.FALSE;
 	
 	
@@ -37,6 +39,16 @@ public class ExtremeSegmentsOnlineCtx {
 		Double area = (cloned.getArea()-segmentStats.get(0).getArea())/delta;
 		cloned.setArea(area);
 		return cloned;
+	}
+	
+		public void reset() {
+		
+		getExtremeSegments().clear();
+		setIndex(0);
+		setCurrentSegment(null);
+		setPrevSegmentEntry(null);
+		this.segmentEntry = null;
+		setPreviousValue(null);
 	}
 	
 	public Integer increase(){
@@ -74,14 +86,21 @@ public class ExtremeSegmentsOnlineCtx {
 	 * is Feature Increase
 	 * @return
 	 */
-	public boolean isFeatureIncrease(){
-		return isFeatureState(FeatureStates.min);
+	public Boolean getFeatureStable(){
+		return getFeatureState(FeatureStates.stable);
+	}
+	/**
+	 * is Feature Increase
+	 * @return
+	 */
+	public Boolean getFeatureIncrease(){
+		return getFeatureState(FeatureStates.min);
 	}
 	/**
 	 * 
 	 * @return
 	 */
-	public boolean isFeatureInMin(){
+	public  Boolean getFeatureInMin(){
 		if(getSegmentEntry() == null){
 			return false;
 		}
@@ -91,7 +110,7 @@ public class ExtremeSegmentsOnlineCtx {
 	 * 
 	 * @return
 	 */
-	public boolean isFeatureInMax(){
+	public Boolean getFeatureInMax(){
 		ExtremeEntry lastEntry = getSegmentEntry();
 		if(lastEntry == null){
 			return false;
@@ -103,15 +122,15 @@ public class ExtremeSegmentsOnlineCtx {
 	 * is Feature Decrease
 	 * @return
 	 */
-	public boolean isFeatureDecrease(){
-		return isFeatureState(FeatureStates.max);
+	public Boolean getFeatureDecrease(){
+		return getFeatureState(FeatureStates.max);
 	}
 	/**
 	 * 
 	 * @param givenState
 	 * @return
 	 */
-	public boolean isFeatureState(FeatureStates givenState){
+	public Boolean getFeatureState(FeatureStates givenState){
 		if(segmentEntry == null && prevSegmentEntry == null){
 			return true;
 		}
@@ -181,9 +200,8 @@ public class ExtremeSegmentsOnlineCtx {
 	}
 
 	public void setSegmentEntry(ExtremeEntry segmentEntry) {
-		if(segmentEntry != null){
-			prevSegmentEntry= segmentEntry;
-		}
+		Assert.isTrue(segmentEntry!=null,"Segment entry cannot be null");
+		prevSegmentEntry= this.segmentEntry;
 		this.segmentEntry = segmentEntry;
 	}
 
@@ -193,6 +211,26 @@ public class ExtremeSegmentsOnlineCtx {
 
 	public void setMins(LinkedList<Long> mins) {
 		this.mins = mins;
+	}
+
+	public ExtremeEntry getPrevSegmentEntry() {
+		return prevSegmentEntry;
+	}
+
+	public void setPrevSegmentEntry(ExtremeEntry prevSegmentEntry) {
+		this.prevSegmentEntry = prevSegmentEntry;
+	}
+
+	public int getStableCount() {
+		return stableCount;
+	}
+	
+	public void resetStableCount() {
+		this.stableCount = 0;
+	}
+
+	public int incStableCount() {
+		return this.stableCount++;
 	}
 
 	

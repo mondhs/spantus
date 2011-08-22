@@ -33,7 +33,7 @@ public class ClassifierRuleBaseServiceMvelImplTest {
 		//when
 		String decision = impl.testOnRuleBase(ctx);
 		//then
-		Assert.assertEquals(ClassifierRuleBaseEnum.action.changePointCurrentApproved.name(), decision);
+		Assert.assertEquals(ClassifierRuleBaseEnum.action.initSegment.name(), decision);
 	}
 	@Test
 	public void testLastNull(){
@@ -45,7 +45,7 @@ public class ClassifierRuleBaseServiceMvelImplTest {
 		//when
 		String decision = impl.testOnRuleBase(ctx);
 		//then
-		Assert.assertEquals(ClassifierRuleBaseEnum.action.changePointCurrentApproved.name(), decision);
+		Assert.assertEquals(ClassifierRuleBaseEnum.action.initSegment.name(), decision);
 	}
 	@Test
 	public void testLastNotNull(){

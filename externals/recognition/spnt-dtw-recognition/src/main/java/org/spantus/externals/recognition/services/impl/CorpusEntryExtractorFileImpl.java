@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.ExtractorParam;

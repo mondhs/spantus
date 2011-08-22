@@ -81,7 +81,8 @@ public class MarkerComponent extends JComponent{
 	protected void paintComponent(Graphics g) {
 		g.setColor(MARK_COLOR.darker());
 		Point textLocation = new Point();
-		Rectangle2D textRectangle = g.getFontMetrics().getStringBounds(getName(), g); 
+		Rectangle2D textRectangle = null;
+		textRectangle = g.getFontMetrics().getStringBounds(getName(), g); 
 		textLocation.x = ((getSize().width-(int)textRectangle.getWidth())/2);;
 		textLocation.x = NumberUtils.max(5, textLocation.x);
 		textLocation.y = (getSize().height + (int)textRectangle.getHeight())/2;
@@ -93,7 +94,6 @@ public class MarkerComponent extends JComponent{
 		}
 		g.drawString(getName(), textLocation.x, textLocation.y);
 		
-
 		if(isFocusOwner()){
 			g.setColor(MARK_SELECTED_TRANSPARENT);
 		}else{
@@ -150,7 +150,8 @@ public class MarkerComponent extends JComponent{
 	
 	@Override
 	public String getName() {
-		return getMarker().getLabel();
+		String name = getMarker().getLabel();
+		return name == null?"":name;
 	}
 
 

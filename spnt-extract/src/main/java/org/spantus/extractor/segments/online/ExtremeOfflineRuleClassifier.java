@@ -31,15 +31,12 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 		log.debug("[flush] recalculating ");
 		
 		getThresholdValues().clear();
-		getOnlineCtx().setIndex(0);
 		getMarkSet().getMarkers().clear(); 
-		getOnlineCtx().getExtremeSegments().clear();
-		getOnlineCtx().setCurrentSegment(null);
-
-		getOnlineCtx().setPreviousValue(null);
-		getOnlineCtx().setSkipLearn(Boolean.TRUE);
+		
+		getOnlineCtx().reset();
+		
 		for (Double value : getOutputValues()) {
-			processValue(value);
+			processValue(getOnlineCtx() ,value);
 		}
 		endupPendingSegments(getOnlineCtx());
 		processMarkers(getMarkSet());
@@ -132,41 +129,26 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 	}
 
 	private boolean fixShortSegments(ExtremeSegment previous,ExtremeSegment extremeSegment) {
-		Double ratio =(previous.getValues().getLast()*extremeSegment.getValues().getFirst())
-				/(previous.getValues().getFirst()*extremeSegment.getValues().getLast());
-//		if((previous.getValues().getLast()*extremeSegment.getValues().getFirst())>(previous.getValues().getFirst()*extremeSegment.getValues().getLast())){
-//			previous.getValues().addAll(extremeSegment.getValues());
-//			previous.setLength(previous.getLength()+extremeSegment.getLength());
-//			iterator.remove();
-//			continue;
-//		}
+		Double startEndRatio =(2*previous.getEndEntry().getValue())/(previous.getStartEntry().getValue() + extremeSegment.getEndEntry().getValue());
+		Double areaRatio  = 0D;
+		if(previous.getCalculatedArea()>extremeSegment.getCalculatedArea()){
+			areaRatio = previous.getCalculatedArea()/extremeSegment.getCalculatedArea();
+		}else{
+			areaRatio = extremeSegment.getCalculatedArea()/previous.getCalculatedArea();
+		}
+
+		
 		//too big chunks to be merged
-		if(previous.getCalculatedLength()>150 && extremeSegment.getCalculatedLength()>150){
-			return false;
+		if((previous.getCalculatedLength()>170 && extremeSegment.getCalculatedLength()>170)){
+			if(areaRatio>1.5){
+				return false;
+			}else{
+				extremeSegment.getCalculatedLength();
+			}
 		}
 		int fixUpTo=getOutputValues().toIndex(.3D);
 		int i = 0; 
 		IndexValue minValue =new IndexValue(previous.getEndEntry().getIndex(), previous.getEndEntry().getValue()); 
-//		for (ListIterator<Double> valueIter = getOutputValues().listIterator(previous.getEndEntry().getIndex()); 
-//		valueIter.hasPrevious();) {
-//			Double value = (Double) valueIter.previous();
-//			if(i>fixUpTo){
-//				break;
-//			}
-//			if(minValue.getValue()>value){
-//				minValue.setValue(value);
-//				minValue.setIndex(previous.getEndEntry().getIndex()-i);
-//				Long newChangePoint = getOutputValues().indextoMils(minValue.getIndex());
-//				Long delta = previous.getEnd()-newChangePoint;
-//				if(previous.getLength()-delta<20){
-//					return false;
-//				}
-//				previous.setEnd(newChangePoint);
-//				extremeSegment.setStart(newChangePoint);
-//				extremeSegment.setLength(extremeSegment.getLength()+delta);
-//			}
-//			i++;
-//		}
 		i = 0;
 		minValue =new IndexValue(previous.getEndEntry().getIndex(), previous.getEndEntry().getValue()); 
 		if(getOutputValues().size()<previous.getEndEntry().getIndex()){
@@ -216,24 +198,6 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 		int i = 0; 
 		IndexValue minValue = null;
 
-//		minValue =new IndexValue(extremeSegment.getStartEntry().getIndex(), extremeSegment.getStartEntry().getValue()); 
-//		for (ListIterator<Double> valueIter = getOutputValues().listIterator(extremeSegment.getStartEntry().getIndex()); 
-//		valueIter.hasPrevious();) {
-//			Double value = (Double) valueIter.previous();
-//			if(i>fixUpTo){
-//				break;
-//			}
-//			if(minValue.getValue()>value*3){
-//				minValue.setValue(value);
-//				minValue.setIndex(extremeSegment.getStartEntry().getIndex()-i);
-//				long newStart = getOutputValues().indextoMils(minValue.getIndex());
-//				long delta = extremeSegment.getStart()-newStart;
-//				extremeSegment.setStart(newStart);
-//				extremeSegment.setLength(extremeSegment.getLength()+delta);
-//			}
-//			i++;
-//		}
-//		
 		i = 0;
 		minValue =new IndexValue(previous.getEndEntry().getIndex(), previous.getEndEntry().getValue()); 
 		if(getOutputValues().size()<previous.getEndEntry().getIndex()){

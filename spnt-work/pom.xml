@@ -10,7 +10,6 @@
 
 	<artifactId>spnt-work</artifactId>
 	<name>Spantus - Work module</name>
-	<version>0.3-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>

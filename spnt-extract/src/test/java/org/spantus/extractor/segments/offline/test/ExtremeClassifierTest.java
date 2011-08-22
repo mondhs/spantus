@@ -20,6 +20,7 @@ public class ExtremeClassifierTest{
 	public static final Double[] empty = new Double[]{};
 	public static final Double[] singleMax = new Double[]{0D, 0D, 1D, 2D, 3D, 2D, 1D, 0D, 0D}; 
 	public static final Double[] doubleMax = new Double[]{0D, 0D, 1D, 2D, 3D, 2D, 1D, 0D, 0D, 1D, 2D, 3.1D, 2D, 1.5D, 1D, 0D, 0D};
+	public static final Double[] silentDoubleMax = new Double[]{0D, 0D,0D, 0D,0D, 0D, 1D, 2D, 3D, 2D, 1D,  0D, 0D,0D, 0D, 0D, 0D,  0D, 0D, 1D, 2D, 3.1D, 2D, 1.5D, 1D, 0D, 0D,0D, 0D, 0D, 0D};
 	/**
 	 * 
 	 * 
