@@ -23,7 +23,7 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 //			return "0";
 //		}
 		if(ctx.segmentStats == null || ctx.segmentStats.size() == 0){
-			return "0";
+			return "1";
 		}
 		if(ctx.segmentStats.get(1).getArea() == ctx.segmentStats.get(0).getArea()){
 			return "1";
