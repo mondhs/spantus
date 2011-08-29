@@ -83,7 +83,7 @@ public class ExtremeEntry implements Cloneable, Serializable{
 		return this.getIndex()>entry.getIndex();
 	}
 	public boolean after(ExtremeEntry entry){
-		return this.getIndex()<entry.getIndex();
+		return this.getIndex()<=entry.getIndex();
 	}
 	
 	@Override

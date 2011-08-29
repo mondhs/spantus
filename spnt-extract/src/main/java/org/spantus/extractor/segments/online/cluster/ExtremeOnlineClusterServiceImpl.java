@@ -18,60 +18,34 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		Double area = segment.getCalculatedArea();
 		Long length = segment.getCalculatedLength();
 		Integer peaks =  segment.getPeakEntries().size();
-		log.debug("[getClassName]get class for segment {0}",segment);
-//		if(length<30){
-//			return "0";
-//		}
-		if(ctx.segmentStats == null || ctx.segmentStats.size() == 0){
-			return "1";
+		Integer argNum = 1;
+		ExtremeSegment maxSegment = null;
+		ExtremeSegment minSegment = null;
+		if(ctx.getExtremeSegments().size() <2){
+			return "" + argNum;
 		}
-		if(ctx.segmentStats.get(1).getArea() == ctx.segmentStats.get(0).getArea()){
-			return "1";
+		for (ExtremeSegment iSegment : ctx.getExtremeSegments()) {
+			if(maxSegment == null){
+				maxSegment = iSegment;
+			}else {
+				maxSegment = iSegment.getCalculatedArea()>maxSegment.getCalculatedArea()?iSegment:maxSegment;
+			}
+			if(minSegment == null){
+				minSegment = iSegment;
+			}else {
+				minSegment = iSegment.getCalculatedArea()<minSegment.getCalculatedArea()?iSegment:minSegment;
+			}
+		}
+		if(minSegment.getStart().compareTo(maxSegment.getStart()) != 0 ){
+			double coef = (segment.getCalculatedArea()-minSegment.getCalculatedArea())/(maxSegment.getCalculatedArea()-minSegment.getCalculatedArea());
+			if(coef>0.5){
+				argNum = 2;
+			}else if(coef<0.25){
+				argNum = 0;
+				log.debug("[getClassName] mark for delete: {0} [{1}>{2}];coef: {3} ", segment, segment.getCalculatedArea() ,maxSegment.getCalculatedArea(),coef);
+			}
 		}
 
-		Double delta = ctx.segmentStats.get(1).getArea() - ctx.segmentStats.get(0).getArea();
-		area = (area-ctx.segmentStats.get(0).getArea())/delta;
-		if(area <= 0 ){
-			return "1";
-		}
-//		area = delta == 0?0:area;
-
-//		SegmentFeatureData min = ctx.normalizeArea(ctx.segmentStats.get(0));
-//		SegmentFeatureData max = ctx.normalizeArea(ctx.segmentStats.get(1));
-		
-		SegmentFeatureData data = new SegmentFeatureData(peaks,area,length);
-		
-		log.debug("[getClassName] data: {0}", data, ctx.semgnetFeatures);
-
-		Double distanceToMin = data.distance(ctx.segmentCenters.get(0));
-		Double avgDistance = data.distance(ctx.segmentCenters.get(1));
-		Double distanceToMax = data.distance(ctx.segmentCenters.get(2));
-//		Double distanceToMax = data.distance(getOnlineCtx().segmentStats.get(2));
-		if(distanceToMin.equals(distanceToMax)){
-			return "1";
-		}
-		
-//		StringBuilder sb = new StringBuilder();
-//		for (SegmentFeatureData idat : ctx.semgnetFeatures) {
-//			sb.append(MessageFormat.format("{0}\n", ""+idat.getArea()));
-//		}
-//		log.debug(sb.toString());
-		
-		Double toOneClass = avgDistance;
-		Double toTwoClass = distanceToMax;
-		Integer argNum = VectorUtils.minArg(distanceToMin, toOneClass, toTwoClass);
-
-		
-//		if(0 != argNum){
-//			return argNum + "[" +distanceToMin+":"+distanceToMax+"]";
-//		}
-		
-		log.debug("[getClassName]  to0: {0}, to1: {1}; to2: {2}; toMax:{3}; index {4};",  
-				distanceToMin, toOneClass, toTwoClass, distanceToMax, argNum);
-		if(argNum == 0 && peaks<3 && length > 150){
-			log.debug("index {1}, but has peaks {0}. say is 1", argNum);
-			return "1";
-		}
 		
 		return "" + argNum;
 	}

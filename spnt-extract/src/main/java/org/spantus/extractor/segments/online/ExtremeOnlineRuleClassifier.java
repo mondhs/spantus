@@ -103,7 +103,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 	 * @param value
 	 */
 	protected void processValue(ExtremeSegmentsOnlineCtx ctx, Double value) {
-		Integer index = ctx.getIndex();
+		Integer index = ctx.getIndex()-1;
 		log.debug("[processValue] {0} value {1}->{2}", index,
 				ctx.getPreviousValue(), value);
 		// starting point, previous not found
@@ -412,7 +412,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 
 		String newLabel = MessageFormat.format("{0}:{1}", segment.getStartEntry().getIndex(), segment.getEndEntry().getIndex());
 		if(segment.getLabel()!=null){
-			newLabel = segment.getLabel()+newLabel;
+			newLabel = segment.getLabel()+"+"+newLabel+";";
 		}
 		segment.setLabel(newLabel);
 		
@@ -474,16 +474,16 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 		}
 	}
 
-	public void appendSegment(ExtremeSegmentsOnlineCtx ctx,
-			ExtremeSegment currentSegment, ExtremeEntry entry) {
-
-		log.debug("[changePointCurrentApproved] ending {0} [{1}]", currentSegment, currentSegment.getValues());
-		currentSegment.setApproved(true);
-		ctx.getExtremeSegments().add(currentSegment);
-		// learn and get class
-		getRuleBaseService().learn(currentSegment, ctx);
-		appendMarker(currentSegment);
-	}
+//	public void appendSegment(ExtremeSegmentsOnlineCtx ctx,
+//			ExtremeSegment currentSegment, ExtremeEntry entry) {
+//
+//		log.debug("[changePointCurrentApproved] ending {0} [{1}]", currentSegment, currentSegment.getValues());
+//		currentSegment.setApproved(true);
+//		ctx.getExtremeSegments().add(currentSegment);
+//		// learn and get class
+//		getRuleBaseService().learn(currentSegment, ctx);
+//		appendMarker(currentSegment);
+//	}
 
 	/**
 	 * 
@@ -578,7 +578,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 				getOutputValues().getSampleRate());
 //		newExtremeSegment.getValues().add(extremeEntry.getValue());
 		long start = newExtremeSegment.getValues().indextoMils(
-				extremeEntry.getIndex()-1);
+				extremeEntry.getIndex());
 		newExtremeSegment.setStart(start);
 		return newExtremeSegment;
 	}
