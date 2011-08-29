@@ -229,7 +229,7 @@ public class WorkAudioManager implements AudioManager {
             // link an audio stream to the sampled sound's file
             stream = createAudioInputStream(fileURL);
         } catch (UnsupportedAudioFileException e) {
-            log.error(e);
+//            log.error(e);
             throw new ProcessingException(e);
         } catch (IOException e) {
             log.error(e);

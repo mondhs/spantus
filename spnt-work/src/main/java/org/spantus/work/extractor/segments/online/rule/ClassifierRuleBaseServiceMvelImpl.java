@@ -113,9 +113,9 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		params.put("isDecrease", isDecrease);
 		params.put("className", className);
 		params.put("lastPeakCount", lastPeakCount);
-		params.put("currentPeakCount", currentPeakCount);
-		params.put("currentPeakValue", currentPeakCount);
 		params.put("lastPeakValue", lastPeakValue);
+		params.put("currentPeakCount", currentPeakCount);
+		params.put("currentPeakValue", currentPeakValue);
 		params.put("stableLength", stableLength);
 		
 		
@@ -141,9 +141,9 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 			if (commandInd) {
 				command = ruleEntry.getResult();
 				ruleEntry.incCounter();
-				log.debug("[testOnRuleBase]: finished {0}:{1};  param:[{2}]", ruleEntry.getName(),
-						ruleEntry.getDescription(), param);
-				log.debug("[testOnRuleBase]:    param: \n [{0}]",param);
+				log.debug("[testOnRuleBase]: finished {0}:{1}", ruleEntry.getName(),
+						ruleEntry.getDescription());
+				log.debug("[testOnRuleBase]:  param: \n \n  [{0}]\n",param);
 				break;
 			}
 		}

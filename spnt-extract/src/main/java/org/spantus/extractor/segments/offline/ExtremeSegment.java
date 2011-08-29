@@ -40,7 +40,7 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 //		Double otherPeak = segment.getPeakEntry().getValue();
 //		boolean decrease = isDecrease() && segment.isDecrease() && thisPeak>otherPeak; 
 		Double thisPeak = this.getPeakEntry().getValue();
-		Double otherPeak = segment.getPeakEntry().getValue();
+		Double otherPeak = segment.getPeakEntries().getLast().getValue();
 		Double thisStart = this.getStartEntry().getValue();
 		Double otherStart = segment.getStartEntry().getValue();
 		boolean decrease = thisPeak<otherPeak && thisStart < otherStart;
@@ -49,11 +49,12 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 
 	public boolean isIncrease(ExtremeSegment previousSegment){
 		Double thisPeak = this.getPeakEntry().getValue();
-		Double otherPeak = previousSegment.getPeakEntry().getValue();
+		Double otherPeak = previousSegment.getPeakEntries().getLast().getValue();
 		Double thisStart = this.getStartEntry().getValue();
 		Double otherStart = previousSegment.getStartEntry().getValue();
 		boolean increase = thisPeak-otherPeak>(thisPeak+otherPeak)*0 && thisStart > otherStart;
 		 
+		
 //		boolean increase = isIncrease() && previousSegment.isIncrease() && thisPeak>otherPeak;  
 		return increase;
 	}
@@ -90,9 +91,9 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 		for (Double f1: getValues()) {
 			area += f1;
 		}
-		return area;
+		return area/getPeakEntries().size();
 	}
-
+	
 	public Long getCalculatedLength(){
 		Long time = getValues().indextoMils(getValues().size());
 		return time;

@@ -237,7 +237,7 @@ public class MultiMapper {
 				marker.getStart(),
 				marker.getLength(),
 				marker.getLabel(),
-				"TRI4_"+corpusName, 
+				corpusName, 
 				label, 
 				processingTime,
 				getLablel(ExtractorEnum.LOUDNESS_EXTRACTOR, recogniton),  getScore(ExtractorEnum.LOUDNESS_EXTRACTOR, recogniton), 
@@ -321,6 +321,7 @@ public class MultiMapper {
 	public QSegmentExpDao getqSegmentExpDao() {
 		if(qSegmentExpDao == null){
 			qSegmentExpDao = new QSegmentExpHsqlDao();
+			((QSegmentExpHsqlDao)qSegmentExpDao).setRecreate(true);
 			qSegmentExpDao.init();
 		}
 		return qSegmentExpDao;

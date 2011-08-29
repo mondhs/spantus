@@ -30,8 +30,8 @@ import com.google.common.collect.Collections2;
  */
 public abstract class AbstractSegmentDirTest {
 
-    public static final int WINDOW_OVERLAP = 66;
-	public static final int WINDOW_LENGTH = 33;
+    public static final int WINDOW_OVERLAP = 33;
+	public static final int WINDOW_LENGTH = 10;
 	public final static String DIR_LEARN_WAV =
 //        "/mnt/audio/VDU_ISO4"    
 //			"/home/mgreibus/src/garsynai/garsynai/noizeus_exp"
@@ -39,7 +39,7 @@ public abstract class AbstractSegmentDirTest {
 		//            "/home/mondhs/src/garsynai/skaiciai/learn"
             ;
     public final static String DIR_LEARN_OUT =
-    		"/home/mgreibus/tmp/garsyno.modelis";
+    		"/home/mgreibus/tmp/garsyno.modelis/TRAIN";
 //            "/home/mgreibus/src/garsynai/garsynai/noizeus_exp/OUTPUT"
 //    		"/home/mgreibus/src/garsynai/VDU/MG/OUTPUT" 
 //            "./target/learn-corpus/"

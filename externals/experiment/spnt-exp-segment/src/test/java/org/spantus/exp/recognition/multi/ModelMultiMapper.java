@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Map;
 
+import org.mvel2.conversion.SetCH;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
@@ -22,7 +23,7 @@ public class ModelMultiMapper extends MultiMapper {
 //		((QSegmentExpHsqlDao)getqSegmentExpDao()).setRecreate(true);
 //		((QSegmentExpHsqlDao)getqSegmentExpDao()).init();
 		int counter = 0;
-		File testDir = new File("/home/mgreibus/tmp/garsyno.modelis/test");
+		File testDir = new File("/home/mgreibus/tmp/garsyno.modelis/TEST");
 		int size = testDir.listFiles(new ExtNameFilter("txt")).length;
 
 //		Double totalTime = 0D;
@@ -54,9 +55,8 @@ public class ModelMultiMapper extends MultiMapper {
 				// marker.getLabel(),
 				// recogniton
 				// );
-
+				marker.setLabel(";"+signalFile.getName().split("-")[0]+";"+marker.getLabel());
 				Long processingTime = System.currentTimeMillis() - start;
-
 				// save result
 				saveResult(marker, markerFilePath, recogniton, processingTime);
 			}

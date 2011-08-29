@@ -94,25 +94,6 @@ public class ExtremeOnlineClassifierTest {
 
 	}
 	
-	@Test
-	public void testOnlineMarkersExtractionBase() throws Exception {
-		ExtremeOnlineRuleClassifier classifier = null;
-
-		ClassifierRuleBaseService ruleBaseService = new ClassifierPostProcessServiceBaseImpl();
-		
-//		classifier  = feedData(ExtremeClassifierTest.empty, ruleBaseService);
-//		Assert.assertEquals(0, classifier.getMarkSet().getMarkers().size());
-//
-//		classifier = feedData(ExtremeClassifierTest.singleMax, ruleBaseService);
-//		Assert.assertEquals(1, classifier.getMarkSet().getMarkers().size());
-		
-//		classifier = feedData(ExtremeClassifierTest.doubleMax, ruleBaseService);
-//		Assert.assertEquals(2, classifier.getMarkSet().getMarkers().size());
-
-		classifier = feedData(ExtremeClassifierTest.complexMinMax, ruleBaseService);
-		Assert.assertEquals(12, classifier.getMarkSet().getMarkers().size());
-
-	}
 	/**
 	 * 
 	 * @throws Exception
