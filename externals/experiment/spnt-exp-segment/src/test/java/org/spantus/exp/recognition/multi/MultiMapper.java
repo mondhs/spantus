@@ -3,7 +3,6 @@ package org.spantus.exp.recognition.multi;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.MalformedURLException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.spantus.core.extractor.ExtractorParam;
@@ -21,14 +20,10 @@ import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusEntryExtractor;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
-import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorFileImpl;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
-import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.services.MarkerDao;
@@ -39,7 +34,7 @@ import com.google.common.collect.Collections2;
 
 public class MultiMapper {
 
-	public static final int WINDOW_OVERLAP = 66;
+	public static final int WINDOW_OVERLAP = 33;
 	public static final int WINDOW_LENGTH = 10;
 	public final static String RULES_PATH = "/home/mgreibus/src/spantus-svn/trunk/spnt-work-ui/src/main/resources/ClassifierRuleBase.csv";
 
@@ -213,7 +208,7 @@ public class MultiMapper {
 					Long processingTime = System.currentTimeMillis()-start;
 					
 					//save result
-					saveResult(marker, texGridFile, recogniton, processingTime);
+					saveResult(marker,wavFilePath, texGridFile, recogniton, processingTime);
 				}
 				totalTime += getAudioManager().findLength(wavFilePath.toURI().toURL());
 				log.debug("[recognize]read markers: {0}=>{1}  [totalTime: {2}]", wavFilePath, ms.getMarkers().size(), totalTime);
@@ -227,13 +222,13 @@ public class MultiMapper {
 	 * @param recogniton
 	 * @param processingTime
 	 */
-	protected void saveResult(Marker marker, File textGridFile, Map<String, RecognitionResult> recogniton, Long processingTime) {
+	protected void saveResult(Marker marker, File wavFile, File textGridFile, Map<String, RecognitionResult> recogniton, Long processingTime) {
 		String label = getExtractor().createLabelByMarkers(textGridFile, marker);
 		if(!StringUtils.hasText(label)){
 			log.error("NO TEXT. do not save");
 		}
 		
-		getqSegmentExpDao().save(new QSegmentExp(textGridFile.getName(),
+		getqSegmentExpDao().save(new QSegmentExp(wavFile.getName(),
 				marker.getStart(),
 				marker.getLength(),
 				marker.getLabel(),

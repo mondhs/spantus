@@ -123,7 +123,6 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 			extremeSegment.setStart(extremeSegment.getStart()-10);
 		}
 		
-		
 	}
 
 	private boolean fixShortSegments(ExtremeSegment previous,ExtremeSegment extremeSegment) {

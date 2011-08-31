@@ -63,11 +63,11 @@ public abstract class ExtractorConfigUtil {
 		windowOverlap = Math.max(1, windowOverlap);
 		config.setWindowOverlap(windowOverlap.intValue());
 		
-		
-		Double frameSize = (windowSize * 10)+windowOverlap;
+		//enhancing as buffering is not working corretly
+		Double frameSize = (windowSize * 1000)+windowOverlap;
 		config.setFrameSize(frameSize.intValue());
 //		config.setBitsPerSample(sampleSizeInBits);
-		config.setBufferSize(config.getFrameSize()*10);
+		config.setBufferSize(config.getFrameSize()*1000);
 		return config;
 	}
 	
