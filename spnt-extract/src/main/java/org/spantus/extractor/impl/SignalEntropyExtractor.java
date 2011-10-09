@@ -46,8 +46,7 @@ public class SignalEntropyExtractor extends AbstractExtractor{
 		Double entropy = 0D;
 		for (Double current : window) {
 //			double part = (Math.pow(Math.abs(current),2)/bottom);
-			double part = Math.abs(current);
-			if(part == 0) continue;
+			double part = Math.abs(current)+1;
 			entropy += (part) * Math.log10(part) ;
 		}
 		rtnValues.add(entropy);

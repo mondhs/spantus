@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.spantus.core.FrameValues;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.extractor.ExtractorConfig;
+import org.spantus.extractor.FrameValuesTestUtils;
 import org.spantus.extractor.impl.SpectralCentroid;
 import org.spantus.extractor.impl.SpectralEntropy;
 import org.spantus.extractor.impl.SpectralFlux;
@@ -19,11 +20,11 @@ public class SpectralTest {
 	@Before
 	public void setUp() throws Exception {
 		x = new FrameValues();
+		x.setFrameIndex(1L);
 		for (float i = 1; i < 6.4 * Math.PI; i+=.3) {
 			x.add(Math.sin(i));
 		}
-		config=new ExtractorConfig();
-		config.setSampleRate(8000D);
+		config= FrameValuesTestUtils.createExtractorConfig();
 	}
 	
 	@Test

@@ -496,7 +496,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 		Integer end = appendMarker.getEndEntry().getIndex();
 		Long lentgh = appendMarker.getValues().indextoMils(end-start);
 		Assert.isTrue(appendMarker.getCalculatedLength().equals( lentgh), "some values are lost: " + appendMarker.getCalculatedLength() +"!="+ lentgh);
-		log.error(MessageFormat.format(
+		log.debug(MessageFormat.format(
 				"[appendMarker]append segment  [{0}] ",
 				appendMarker.getValues() ));
 		

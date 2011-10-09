@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
+import org.spantus.extractor.FrameValuesTestUtils;
 import org.spantus.extractor.impl.LogAttackTimeExtractor;
 /**
  * 
@@ -26,15 +27,9 @@ public class LogAttackTimeExtractorTest{
 		Integer[] dArr = new Integer[]{
 				1, 2, 3, 4, 5, 6, 5 ,4 ,3
 		};
-		FrameValues fv = latExtractor.calculateWindow(convert(dArr));
+		FrameValues fv = latExtractor.calculateWindow(FrameValuesTestUtils.convert(dArr));
 		Assert.assertTrue(3F < fv.get(0));
 	}
 	
-	public FrameValues convert(Integer[] intArr){
-		FrameValues rtn = new FrameValues();
-		for (Integer i1 : intArr) {
-			rtn.add(i1.doubleValue());
-		}
-		return rtn;
-	}
+
 }

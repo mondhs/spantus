@@ -22,89 +22,52 @@ package org.spantus.extractor;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
+import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.logger.Logger;
-
 
 /**
  * 
  * @author Mindaugas Greibus
- *
+ * 
  * @since 0.0.1
  * 
- * Created 2008.04.01
- *
+ *        Created 2008.04.01
+ * 
  */
-public abstract class AbstractExtractorVector extends AbstractGeneralExtractor implements IExtractorVector {
+public abstract class AbstractExtractorVector extends AbstractGeneralExtractor
+		implements IExtractorVector {
 	Logger log = Logger.getLogger(AbstractExtractorVector.class);
-	
-
-	private FrameValues windowValues;
-
 
 	public FrameVectorValues calculate(Long sampleNum, FrameValues values) {
-//		log.debug(
-//				"[calculate]+++  name:{0}; sampleRate:{1}; windowSize{2}",
-//				getName(), getConfig().getSampleRate()/1000, getConfig()
-//						.getWindowSize());
-		FrameVectorValues calculatedValues = new FrameVectorValues();
-        long frameIndexStart = sampleNum - getConfig().getFrameSize();
-        long frameIndex = 0L;
-		int windowsIndex = 0; 
-		for (Double f1: values) {
-			if(getWindowValues().size()<getConfig().getWindowOverlap()){
-				//fill the window while it is empty
-				getWindowValues().add(f1);
-				continue;
-			}
-			if(windowsIndex == 0){
-				FrameValues windowedWindow = new FrameValues(getWindowValues());
-                windowedWindow.setFrameIndex(frameIndexStart+1+frameIndex);
-                frameIndex++;
-				getWindowing().apply(windowedWindow);
-                calculatedValues.addAll(calculateWindow(windowedWindow, getWindowValues()));
-				windowsIndex = getConfig().getWindowSize();
+		return (FrameVectorValues) super.calculate(sampleNum, values);
+	}
 
-			}
-			getWindowValues().add(f1);
-			getWindowValues().poll();
-			windowsIndex--;
+	protected IValues calculateAndStoreWindow(FrameValues windowedWindow,
+			IValues storedValues) {
+		FrameVectorValues fv = (FrameVectorValues) storedValues;
+		if (fv == null) {
+			fv = new FrameVectorValues();
+			storedValues = fv;
 		}
-
-        calculatedValues.setSampleRate(getExtractorSampleRate());
-
-		
-//		log.debug("[calculate]---");
-		return calculatedValues;
+		fv.addAll(calculateWindow(windowedWindow));
+		return storedValues;
 	}
 
+//	protected FrameVectorValues calculateWindow(FrameValues windowedWindow,
+//			FrameValues realValues) {
+//		FrameVectorValues fv = calculateWindow(windowedWindow);
+//		fv.setSampleRate(getExtractorSampleRate());
+//		return fv;
+//	}
 
-	protected FrameVectorValues calculateWindow(FrameValues windowedWindow, FrameValues realValues){
-                FrameVectorValues fv = calculateWindow(windowedWindow);
-                fv.setSampleRate(getExtractorSampleRate());
-                return fv;
-	}
-
-	
 	public FrameVectorValues getOutputValues() {
 		throw new RuntimeException("Should be never call");
 	}
-	
 
-	
-	protected FrameValues getWindowValues() {
-		if(windowValues == null){
-			windowValues = new FrameValues();
-		}
-		return windowValues;
-	}
-	
 	public Double getExtractorSampleRate() {
-		return (getConfig().getSampleRate()/(getConfig().getWindowSize()));
+		return getWindowBufferProcessor().calculateExtractorSampleRate(
+				getConfig());// (getConfig().getSampleRate()/(getConfig().getWindowSize()));
 	}
-
-
-
-
 
 }

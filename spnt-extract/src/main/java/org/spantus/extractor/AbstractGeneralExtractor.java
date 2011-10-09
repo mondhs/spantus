@@ -20,6 +20,8 @@
 package org.spantus.extractor;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.FrameVectorValues;
+import org.spantus.core.IValues;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IGeneralExtractor;
@@ -38,7 +40,8 @@ public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
     private Windowing windowing;
 
     private ExtractorParam param = new ExtractorParam();
-
+	private WindowBufferProcessor windowBufferProcessor;
+    
     public void putValues(Long sample, FrameValues values) {
         //do nothing
     }
@@ -47,6 +50,35 @@ public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
 		//do nothing
 	}
 
+	/**
+	 * 
+	 * @param sampleNum
+	 * @param values
+	 * @return
+	 */
+	public IValues calculate(Long sampleNum, FrameValues values) {
+
+		FrameValues windowValues = new FrameValues();
+		IValues storedValues = null;
+
+		boolean finished = false;
+		while(!finished){
+			windowValues = getWindowBufferProcessor().calculate(sampleNum, values, getConfig(), windowValues);
+			finished = windowValues == null;
+			if(finished){
+				break;
+			}
+			getWindowing().apply(windowValues);
+			storedValues = calculateAndStoreWindow(windowValues, storedValues);
+		}
+		storedValues.setSampleRate(getWindowBufferProcessor().calculateExtractorSampleRate(getConfig()));
+		
+		
+//		log.debug("[calculate]---");
+		return storedValues;
+	}
+	
+	protected abstract IValues calculateAndStoreWindow(FrameValues windowedWindow, IValues storedValues);
 
     public void initParam(String key, String defaultValue) {
 		for (String elemKey : getParam().getProperties().keySet()) {
@@ -105,4 +137,10 @@ public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
     public void setParam(ExtractorParam param) {
         this.param = param;
     }
+	public WindowBufferProcessor getWindowBufferProcessor() {
+		if(windowBufferProcessor == null){
+			windowBufferProcessor = new WindowBufferProcessor();
+		}
+		return windowBufferProcessor;
+	}
 }

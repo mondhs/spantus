@@ -51,7 +51,7 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 	
 	public void putValues(Long sample, FrameValues values) {
 		this.frameValues = values;
-		calculate(sample, values);
+		setOutputValues(calculate(sample, values));
 	}
 
 	public FrameValues getFrameValues() {
