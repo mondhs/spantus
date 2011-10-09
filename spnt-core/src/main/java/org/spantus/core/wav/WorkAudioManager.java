@@ -75,17 +75,25 @@ public class WorkAudioManager implements AudioManager {
         play(stream, fromVal, lengthVal);
     }
 
-    private void play(AudioInputStream stream, Float from, Float length) {
+    public void play(AudioInputStream stream, Float from, Float length) {
         log.debug("[play] from:{0}; length= {1} ", from, length);
         double totalTime = getTotalTime(stream);
-        double ends = from + length;
-        double adaptedLength = ends > totalTime ? totalTime - from : length;
-        if (from > totalTime) {
+        float start = 0f;
+        float flength = (float) totalTime;
+        if(from != null){
+        	start = from;
+        }
+        if(length != null){
+        	flength = length;
+        }
+        double ends = start + flength;
+        double adaptedLength = ends > totalTime ? totalTime - start : flength;
+        if (start > totalTime) {
             log.error("[play] Cannot play due start is more than total time"
                     + from + ">" + totalTime);
             return;
         }
-        long startsBytes = (long) ((from * stream.getFormat().getFrameRate()) * stream.getFormat().getFrameSize());
+        long startsBytes = (long) ((start * stream.getFormat().getFrameRate()) * stream.getFormat().getFrameSize());
         long lengthBytes = (long) ((adaptedLength * stream.getFormat().getFrameRate()) * stream.getFormat().getFrameSize());
         Playback pl = new Playback(stream, startsBytes, lengthBytes);
         pl.start();
@@ -94,10 +102,10 @@ public class WorkAudioManager implements AudioManager {
     /**
      *
      */
-    public String save(URL fileURL, Float startsObj, Float lengthObj, String pathToSavePrefered) {
-        log.debug("[save] from:{0}; lenght:{1}; pathToSave:{2}", startsObj,
-                lengthObj, pathToSavePrefered);
-        AudioInputStream ais = findInputStream(fileURL, startsObj, lengthObj);
+    public String save(URL fileURL, Float starts, Float length, String pathToSavePrefered) {
+        log.debug("[save] from:{0}; lenght:{1}; pathToSave:{2}", starts,
+                length, pathToSavePrefered);
+        AudioInputStream ais = findInputStream(fileURL, starts, length);
         File nextAvaible = FileUtils.findNextAvaibleFile(pathToSavePrefered);
         try {
             AudioSystem.write(ais, AudioFileFormat.Type.WAVE, nextAvaible);
@@ -107,8 +115,19 @@ public class WorkAudioManager implements AudioManager {
             throw new ProcessingException(ex);
         }
        
-
     }
+    public String save(AudioInputStream ais, String pathToSavePrefered ) {
+        File nextAvaible = FileUtils.findNextAvaibleFile(pathToSavePrefered);
+        try {
+            AudioSystem.write(ais, AudioFileFormat.Type.WAVE, nextAvaible);
+            return nextAvaible.getAbsolutePath();
+
+        } catch (IOException ex) {
+            throw new ProcessingException(ex);
+        }
+       
+    }
+    
     /**
      * 
      * @param file

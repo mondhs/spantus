@@ -36,6 +36,7 @@ import javax.sound.sampled.AudioInputStream;
  */
 public interface AudioManager {
 	public void play(URL file, Float starts, Float length);
+	public void play(AudioInputStream stream, Float from, Float length) ;
         public void play(URL file);
         /**
          * 
@@ -46,6 +47,7 @@ public interface AudioManager {
          * @return
          */
 	public String save(URL file, Float starts, Float length, String pathToSave);
+	public String save(AudioInputStream ais , String pathToSave);
         public Float findLength(URL file);
         /**
          * Finds stream in seconds

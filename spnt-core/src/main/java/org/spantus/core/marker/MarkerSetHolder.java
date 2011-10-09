@@ -38,7 +38,7 @@ public class MarkerSetHolder {
 	 * @author mondhs
 	 *
 	 */
-	public enum MarkerSetHolderEnum{phone, word, sentence}
+	public enum MarkerSetHolderEnum{phone, syllable, word, sentence}
 	
 	/**
 	 * key should be the same as {@link MarkerSet#getMarkerSetType()}. Recommended use {@link MarkerSetHolderEnum} for key values

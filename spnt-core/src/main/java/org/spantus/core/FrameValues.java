@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.spantus.utils.Assert;
+
 /**
  * 
  * @author Mindaugas Greibus
@@ -43,7 +45,7 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 	private Double milsSamplePeriod = 1D; 
 	private Double minValue = null;
 	private Double maxValue = null;
-    private Long frameIndex = 0L;
+    private Long frameIndex = null;
 
 
 	public FrameValues() {
@@ -143,6 +145,8 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 		return maxValue;
 	}
 	public Double getDeltaValue() {
+		Assert.isTrue(maxValue!= null);
+		Assert.isTrue(minValue!= null);
 		return maxValue-minValue;
 	}
 	
