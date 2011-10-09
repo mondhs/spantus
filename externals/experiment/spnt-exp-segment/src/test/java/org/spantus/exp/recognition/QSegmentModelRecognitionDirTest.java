@@ -28,7 +28,7 @@ public class QSegmentModelRecognitionDirTest  {
 		mapper = new ModelMultiMapper();
 	}
 	
-	public final static String ROOT_DIR = "/home/mgreibus/tmp/garsyno.modelis";
+	public final static String ROOT_DIR = "/home/as/tmp/garsyno.modelis";
 	
 	protected void init(ModelMultiMapper mapper, String corpusName) {
 		mapper.init(

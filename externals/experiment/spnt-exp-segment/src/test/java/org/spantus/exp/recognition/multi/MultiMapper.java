@@ -3,6 +3,7 @@ package org.spantus.exp.recognition.multi;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.spantus.core.extractor.ExtractorParam;
@@ -22,8 +23,10 @@ import org.spantus.externals.recognition.services.CorpusEntryExtractor;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
+import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.services.MarkerDao;
@@ -36,7 +39,7 @@ public class MultiMapper {
 
 	public static final int WINDOW_OVERLAP = 33;
 	public static final int WINDOW_LENGTH = 10;
-	public final static String RULES_PATH = "/home/mgreibus/src/spantus-svn/trunk/spnt-work-ui/src/main/resources/ClassifierRuleBase.csv";
+	public final static String RULES_PATH = "/home/as/src/spnt-code/spnt-work-ui/src/main/resources/ClassifierRuleBase.csv";
 
 	private static final Logger log = Logger.getLogger(MultiMapper.class);
 
@@ -58,7 +61,7 @@ public class MultiMapper {
 		this.testDir = testDir;
 		this.wavDir = wavDir;
 		this.fileFilter = fileFilter;
-		this.corpusName = corpusName;
+		this.setCorpusName(corpusName);
 		
 		corpusRepository = new CorpusRepositoryFileImpl();
 		corpusRepository.setRepositoryPath(corpusDir.getAbsolutePath());
@@ -109,12 +112,12 @@ public class MultiMapper {
 		
 		
 		ExtractorParam smothParam = new ExtractorParam();
-//		ExtractorParamUtils.setValue(smothParam, ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
+//		ExtractorParamUtils.setValue(smothParam, ExtractorModifiersEnum.mean.name(), Boolean.TRUE);
 //		extractor.setParams(new HashMap<String, ExtractorParam>());
 //		extractor.getParams().put(ExtractorEnum.LOUDNESS_EXTRACTOR.name(), smothParam);
 //		extractor.getParams().put(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name(), smothParam);
 //		extractor.getParams().put(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name(), smothParam);
-		
+//		
 
 		markerDao = WorkServiceFactory.createMarkerDao();
 
@@ -208,7 +211,7 @@ public class MultiMapper {
 					Long processingTime = System.currentTimeMillis()-start;
 					
 					//save result
-					saveResult(marker,wavFilePath, texGridFile, recogniton, processingTime);
+					saveResult(marker,wavFilePath, texGridFile, recogniton, processingTime, this.getCorpusName());
 				}
 				totalTime += getAudioManager().findLength(wavFilePath.toURI().toURL());
 				log.debug("[recognize]read markers: {0}=>{1}  [totalTime: {2}]", wavFilePath, ms.getMarkers().size(), totalTime);
@@ -222,17 +225,27 @@ public class MultiMapper {
 	 * @param recogniton
 	 * @param processingTime
 	 */
-	protected void saveResult(Marker marker, File wavFile, File textGridFile, Map<String, RecognitionResult> recogniton, Long processingTime) {
+	protected void saveResult(Marker marker, File wavFile, File textGridFile, Map<String, RecognitionResult> recogniton, Long processingTime, String currentCorpusName) {
+		QSegmentExp exp = createResult(marker, wavFile, textGridFile, recogniton, processingTime, currentCorpusName);
+		saveResult(exp);
+	}
+	
+	protected void saveResult(QSegmentExp exp) {
+		getqSegmentExpDao().save(exp);
+	}
+
+	protected QSegmentExp createResult(Marker marker, File wavFile, File textGridFile, Map<String, RecognitionResult> recogniton, Long processingTime, String currentCorpusName) {
 		String label = getExtractor().createLabelByMarkers(textGridFile, marker);
 		if(!StringUtils.hasText(label)){
 			log.error("NO TEXT. do not save");
 		}
+		label = label.replaceAll("\\d","");
 		
-		getqSegmentExpDao().save(new QSegmentExp(wavFile.getName(),
+		QSegmentExp exp = new QSegmentExp(wavFile.getName(),
 				marker.getStart(),
 				marker.getLength(),
 				marker.getLabel(),
-				corpusName, 
+				currentCorpusName, 
 				label, 
 				processingTime,
 				getLablel(ExtractorEnum.LOUDNESS_EXTRACTOR, recogniton),  getScore(ExtractorEnum.LOUDNESS_EXTRACTOR, recogniton), 
@@ -241,9 +254,10 @@ public class MultiMapper {
 				getLablel(ExtractorEnum.LPC_EXTRACTOR, recogniton), getScore(ExtractorEnum.LPC_EXTRACTOR, recogniton), 
 				getLablel(ExtractorEnum.MFCC_EXTRACTOR, recogniton), getScore(ExtractorEnum.MFCC_EXTRACTOR, recogniton), 
 				getLablel(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR, recogniton), getScore(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR, recogniton)
-				));		
+				);
+		return exp;
 	}
-	
+		
 	
 	/**
 	 * 
@@ -265,7 +279,12 @@ public class MultiMapper {
 	 * @return
 	 */
 	private String getLablel(ExtractorEnum extractorEnum, Map<String, RecognitionResult> recogniton){
-		return fixRecognitionName(recogniton.get(extractorEnum.name()).getInfo().getName());
+		RecognitionResult recognitionResult = recogniton.get(extractorEnum.name());
+		String recognitionLabel = "";
+		if(recognitionResult != null){
+			recognitionLabel = fixRecognitionName(recognitionResult.getInfo().getName());
+		}
+		return recognitionLabel;
 	}
 	/**
 	 * 
@@ -274,7 +293,8 @@ public class MultiMapper {
 	 * @return
 	 */
 	private Double getScore(ExtractorEnum extractorEnum, Map<String, RecognitionResult> recogniton){
-		return recogniton.get(extractorEnum.name()).getDistance();
+		RecognitionResult recognitionResult = recogniton.get(extractorEnum.name());
+		return recognitionResult==null?-Double.MAX_VALUE:recognitionResult.getDistance();
 	}
 	/**
 	 * 
@@ -324,6 +344,22 @@ public class MultiMapper {
 
 	public void setqSegmentExpDao(QSegmentExpDao qSegmentExpDao) {
 		this.qSegmentExpDao = qSegmentExpDao;
+	}
+
+	public String getCorpusName() {
+		return corpusName;
+	}
+
+	public void setCorpusName(String corpusName) {
+		this.corpusName = corpusName;
+	}
+
+	public File getTestDir() {
+		return testDir;
+	}
+
+	public void setTestDir(File testDir) {
+		this.testDir = testDir;
 	}
 
 
