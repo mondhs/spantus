@@ -44,7 +44,7 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>be.ac.ulg.montefiore.run.jahmm</groupId>
 			<artifactId>jahmm</artifactId>
@@ -53,15 +53,30 @@
 		<dependency>
 			<groupId>marytts</groupId>
 			<artifactId>marytts-signalproc</artifactId>
-			 <version>5.0-SNAPSHOT</version>
+			<version>5.0-SNAPSHOT</version>
 		</dependency>
-				
-	<dependency>
-    	<groupId>org.apache.commons</groupId>
-    	<artifactId>commons-math</artifactId>
-    	<version>2.2</version>
-	</dependency>
+
+		<dependency>
+			<groupId>org.odftoolkit</groupId>
+			<artifactId>odfdom-java</artifactId>
+			<version>0.8.7</version>
+			<scope>test</scope>
+		</dependency>
 		
+		<dependency>
+			<groupId>org.odftoolkit</groupId>
+			<artifactId>simple-odf</artifactId>
+			<version>0.6.6</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math</artifactId>
+			<version>2.2</version>
+		</dependency>
+
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
