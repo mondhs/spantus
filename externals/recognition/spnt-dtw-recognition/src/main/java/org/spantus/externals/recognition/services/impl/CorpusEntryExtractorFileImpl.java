@@ -10,6 +10,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,13 +98,22 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	 */
 	public MarkerSetHolder extract(File wavFilePath) {
 		Assert.isTrue(wavFilePath.exists(), "file not exists" + wavFilePath);
-
 		// find markers
 		IExtractorInputReader reader = createReaderWithClassifier(wavFilePath);
-
+		return extract(wavFilePath,reader);
+	}
+	
+	/**
+	 * 
+	 * @param wavFilePath
+	 * @return
+	 */
+	public MarkerSetHolder extract(File wavFilePath, IExtractorInputReader reader) {
+		Assert.isTrue(wavFilePath.exists(), "file not exists" + wavFilePath);
 		MarkerSetHolder markerSetHorlder = findMarkers(reader);
 		return markerSetHorlder;
 	}
+	
 
 	/**
 	 * 
@@ -170,19 +180,20 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 			localReader = reader;
 		}
 		URL fileUrl = toUrl(filePath);
-		int result = 0;
+		int result = -1;
 		// process markers
 		Assert.isTrue(segments != null);
 		for (Marker marker : segments.getMarkers()) {
+			result++;
 			marker.setLabel(createLabel(filePath, marker, result));
-			if(marker.getLabel().contains(".wav")){
-				continue;
-			}
+//			if(marker.getLabel().contains(".wav")){
+//				continue;
+//			}
 			if (marker.getLength() < 10) {
 				log.error("this should be eliminated by rules" + marker);
 			}
 			learn(fileUrl, marker, localReader);
-			result++;
+			
 		}
 		return segments;
 
@@ -493,6 +504,9 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	}
 
 	public Map<String, ExtractorParam> getParams() {
+		if(params == null){
+			params = new HashMap<String, ExtractorParam>();
+		}
 		return params;
 	}
 

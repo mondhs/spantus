@@ -56,6 +56,7 @@ public interface CorpusEntryExtractor {
 	public  MarkerSet extractAndLearn(File filePath, MarkerSet segments,
 			IExtractorInputReader reader);
 	public MarkerSetHolder extract(File wavFilePath);
+	public MarkerSetHolder extract(File wavFilePath, IExtractorInputReader reader);
 	public MarkerSet findSegementedLowestMarkers(MarkerSetHolder markerSetHolder);
 	public MarkerSet findSegementedHighestMarkers(MarkerSetHolder markerSetHolder);
 	public IExtractorInputReader createReaderWithClassifier(File wavFilePath);
