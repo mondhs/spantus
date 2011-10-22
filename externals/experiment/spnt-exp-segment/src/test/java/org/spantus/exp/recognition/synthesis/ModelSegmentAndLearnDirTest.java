@@ -1,38 +1,39 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.spantus.exp.recognition;
+package org.spantus.exp.recognition.synthesis;
 
 import java.io.File;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.exp.ExpConfig;
+import org.spantus.exp.recognition.AbstractSegmentDirTest;
+import org.spantus.exp.recognition.SpantusNameFilter;
 import org.spantus.logger.Logger;
 import org.spantus.utils.FileUtils;
 import org.spantus.work.services.WorkServiceFactory;
 
-/**
- * read labeled info and learn samples
- * @author mondhs
- */
-public class TexGridSplitSegmentAndLearnDirTest extends AbstractSegmentDirTest {
-
-    private static final Logger log = Logger.getLogger(TexGridSplitSegmentAndLearnDirTest.class);
-
-
-    
+public class ModelSegmentAndLearnDirTest  extends AbstractSegmentDirTest{
+	
+	private static final Logger log = Logger
+			.getLogger(ModelSegmentAndLearnDirTest.class);
+	
+	@Override
+	public ExpConfig createExpConfig() {
+		ExpConfig config = super.createExpConfig();
+		config.setDirLearn(config.getTrainDirAsFile().getAbsolutePath());
+		return config;
+	}
+	
     @Test
     public void testExtract() {
         clearCorpus();
+        SpantusNameFilter filter = new SpantusNameFilter();
         
         int sum = 0;
-        for (File markerFile : getExpConfig().getMarkerDir().listFiles(new TextGridNameFilter())) {
+        for (File markerFile : getExpConfig().getTrainDirAsFile().listFiles(filter)) {
             log.debug("reading: {0}", markerFile);
             String markersPath = FileUtils.replaceExtention(markerFile, ".wav");
-            File wavFile = new File(getExpConfig().getWavDir(), markersPath); 
+            File wavFile = new File(getExpConfig().getTrainDirAsFile(), markersPath); 
             if(!wavFile.exists()){
             	continue;
             }
@@ -53,6 +54,4 @@ public class TexGridSplitSegmentAndLearnDirTest extends AbstractSegmentDirTest {
 
 
     }
-
-   
 }

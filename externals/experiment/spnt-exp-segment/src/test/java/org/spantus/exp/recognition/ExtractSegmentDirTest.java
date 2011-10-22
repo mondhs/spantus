@@ -26,11 +26,11 @@ public class ExtractSegmentDirTest extends AbstractSegmentDirTest{
         clearCorpus();
                  
         int sum = 0; 
-        for (File filePath : getLearnDir().listFiles(new WavFileNameFilter())) {
+        for (File filePath : getExpConfig().getDirLearnAsFile().listFiles(new WavFileNameFilter())) {
            MarkerSetHolder markerSetHolder = getExtractor().extractAndLearn(filePath.getAbsoluteFile());
            int count = findSegementedMarkers(markerSetHolder).getMarkers().size();
            String markersPath = FileUtils.replaceExtention(filePath,".mspnt.xml");
-           WorkServiceFactory.createMarkerDao().write(markerSetHolder, new File(DIR_LEARN_OUT, markersPath));
+           WorkServiceFactory.createMarkerDao().write(markerSetHolder, new File(getExpConfig().getDirLearn(), markersPath));
            log.debug("accept: {0}:{1}",filePath, markerSetHolder);
            sum += count;
         }

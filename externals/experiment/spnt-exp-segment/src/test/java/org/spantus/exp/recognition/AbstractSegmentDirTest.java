@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.exp.ExpConfig;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusEntryExtractor;
@@ -30,73 +31,52 @@ import com.google.common.collect.Collections2;
  */
 public abstract class AbstractSegmentDirTest {
 
-    public static final int WINDOW_OVERLAP = 33;
-	public static final int WINDOW_LENGTH = 10;
-	public final static String DIR_LEARN_WAV =
-//        "/mnt/audio/VDU_ISO4"    
-//			"/home/mgreibus/src/garsynai/garsynai/noizeus_exp"
-    	"/home/mgreibus/src/garsynai/VDU/MG/" 
-		//            "/home/mondhs/src/garsynai/skaiciai/learn"
-            ;
-    public final static String DIR_LEARN_OUT =
-    		"/home/mgreibus/tmp/garsyno.modelis/TRAIN";
-//            "/home/mgreibus/src/garsynai/garsynai/noizeus_exp/OUTPUT"
-//    		"/home/mgreibus/src/garsynai/VDU/MG/OUTPUT" 
-//            "./target/learn-corpus/"
-            ;
-    public final static String RULES_PATH =
-        "/home/mgreibus/src/spantus-svn/trunk/spnt-work-ui/src/main/resources/ClassifierRuleBase.csv";
+	private ExpConfig expConfig;
+	
+
+
     private static final Logger log = Logger.getLogger(AbstractSegmentDirTest.class);
 
-    public String dirLearn = DIR_LEARN_OUT;
+//    public String dirLearn = DIR_LEARN_OUT;
 
-    private File learnDir;
+//    private File learnDir;
     private CorpusEntryExtractorFileImpl extractor;
     private CorpusServiceBaseImpl corpusService;
     private CorpusRepositoryFileImpl corpusRepository;
 	private MarkerDao markerDao;
-	private String rulePath = RULES_PATH;
+//	private String rulePath = RULES_PATH;
 
+
+	public ExpConfig createExpConfig() {
+		ExpConfig config = ExpConfig.createConfig();
+				return config;
+	}
 
     @Before
     public void onSetup() {
-        learnDir = new File(getDirLearn());
+//        learnDir = new File(getDirLearn());
+    	expConfig = createExpConfig();
         if(extractor == null){
         	CorpusEntryExtractorFileImpl extractorImpl = new CorpusEntryExtractorFileImpl();
         	extractorImpl.setRulesTurnedOn(true);
-        	extractorImpl.setRulePath(getRulePath());
+        	extractorImpl.setRulePath(getExpConfig().getRulePath());
         	log.debug("CorpusEntryExtractorFileImpl created. rulePath: {0}; RulesTurnedOn: {1}", extractorImpl.getRulePath(), extractorImpl.isRulesTurnedOn());
         	this.extractor = extractorImpl;
         }
         corpusService = new CorpusServiceBaseImpl();
         corpusRepository = new CorpusRepositoryFileImpl();
-        corpusRepository.setRepositoryPath(getDirLearn());
+        corpusRepository.setRepositoryPath(getExpConfig().getCorpusDirAsFile().getAbsolutePath());
         corpusService.setCorpus(corpusRepository);
         extractor.setCorpusService(corpusService);
-        extractor.setWindowLengthInMilSec(WINDOW_LENGTH);
-        extractor.setOverlapInPerc(WINDOW_OVERLAP);
-        
-        OnlineDecisionSegmentatorParam segmentionParam = new OnlineDecisionSegmentatorParam();
-        segmentionParam.setMinLength(91L);
-        segmentionParam.setMinSpace(261L);
-        segmentionParam.setExpandStart(260L);
-        segmentionParam.setExpandEnd(360L);
-        extractor.setSegmentionParam(segmentionParam);
-
-        
-        ExtractorEnum[] extractors = new ExtractorEnum[]{
-            ExtractorEnum.MFCC_EXTRACTOR,
-            ExtractorEnum.PLP_EXTRACTOR,
-            ExtractorEnum.LPC_EXTRACTOR,
-//            ExtractorEnum.FFT_EXTRACTOR,
-            ExtractorEnum.LOUDNESS_EXTRACTOR,
-            ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
-            ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR};
-
-        extractor.setExtractors(extractors);
+        extractor.setWindowLengthInMilSec(expConfig.getWindowLength());
+        extractor.setOverlapInPerc(expConfig.getWindowOverlap());
+        extractor.setSegmentionParam(getExpConfig().getSegmentationParam());
+        extractor.setExtractors(getExpConfig().getExtractors());
         
         markerDao = WorkServiceFactory.createMarkerDao();
     }
+
+
 
 	protected MarkerSet findSegementedMarkers(MarkerSetHolder markerSetHolder) {
 		MarkerSet segments = getExtractor().findSegementedLowestMarkers(markerSetHolder);
@@ -162,13 +142,13 @@ public abstract class AbstractSegmentDirTest {
         this.extractor = extractor;
     }
 
-    public File getLearnDir() {
-        return learnDir;
-    }
-
-    public void setLearnDir(File learnDir) {
-        this.learnDir = learnDir;
-    }
+//    public File getLearnDir() {
+//        return learnDir;
+//    }
+//
+//    public void setLearnDir(File learnDir) {
+//        this.learnDir = learnDir;
+//    }
 
     public MarkerDao getMarkerDao() {
 		return markerDao;
@@ -178,19 +158,27 @@ public abstract class AbstractSegmentDirTest {
 		this.markerDao = markerDao;
 	}
 
-	public String getDirLearn() {
-		return dirLearn;
+//	public String getDirLearn() {
+//		return dirLearn;
+//	}
+//
+//	public void setDirLearn(String dirLearn) {
+//		this.dirLearn = dirLearn;
+//	}
+
+//	public String getRulePath() {
+//		return rulePath;
+//	}
+//
+//	public void setRulePath(String rulePath) {
+//		this.rulePath = rulePath;
+//	}
+
+	public ExpConfig getExpConfig() {
+		return expConfig;
 	}
 
-	public void setDirLearn(String dirLearn) {
-		this.dirLearn = dirLearn;
-	}
-
-	public String getRulePath() {
-		return rulePath;
-	}
-
-	public void setRulePath(String rulePath) {
-		this.rulePath = rulePath;
+	public void setExpConfig(ExpConfig expConfig) {
+		this.expConfig = expConfig;
 	}
 }

@@ -32,8 +32,8 @@ public class CorpusSegmentStatisticsTest extends AbstractSegmentDirTest {
 
 	@Test
 	public void testCalculateStatistics() {
-		File wavDir = new File(DIR_LEARN_WAV, "WAV/AK1/");
-		File markerDir = new File(DIR_LEARN_WAV, "GRID/AK1/");
+		File wavDir = new File(getExpConfig().getDirLearn(), "WAV/AK1/");
+		File markerDir = new File(getExpConfig().getDirLearn(), "GRID/AK1/");
 		TreeMultimap<String, String> multimap = TreeMultimap.create();
 		HashMultimap<String, Marker> markerMultimap = HashMultimap.create();
 		// Map<String, List<CorpusEntryStat>> map = Maps.newLinkedHashMap();

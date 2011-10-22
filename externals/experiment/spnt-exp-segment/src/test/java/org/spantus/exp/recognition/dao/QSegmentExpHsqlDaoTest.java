@@ -29,10 +29,10 @@ public class QSegmentExpHsqlDaoTest {
 	/**
 	 * Test method for {@link org.spantus.exp.recognition.dao.QSegmentExpHsqlDao#findMatches()}.
 	 */
-	@Test
-	public void testFindMatches() {
-		qSegmentExpDaoImpl.findMatches("AK1\',\'BJ1\',\'LK1\',\'TK1");
-	}
+//	@Test
+//	public void testFindMatches() {
+//		qSegmentExpDaoImpl.findMatches("AK1\',\'BJ1\',\'LK1\',\'TK1");
+//	}
 	
 	@After
 	public void teardown() throws Exception {

@@ -1,4 +1,4 @@
-package org.spantus.exp.recognition.generation;
+package org.spantus.exp.recognition.synthesis;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -3,7 +3,6 @@ package org.spantus.exp.recognition.multi;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.MalformedURLException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.spantus.core.extractor.ExtractorParam;
@@ -13,6 +12,7 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.wav.AudioManager;
 import org.spantus.core.wav.AudioManagerFactory;
+import org.spantus.exp.ExpConfig;
 import org.spantus.exp.recognition.dao.QSegmentExpDao;
 import org.spantus.exp.recognition.dao.QSegmentExpHsqlDao;
 import org.spantus.exp.recognition.domain.QSegmentExp;
@@ -23,10 +23,8 @@ import org.spantus.externals.recognition.services.CorpusEntryExtractor;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
-import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.services.MarkerDao;
@@ -48,23 +46,27 @@ public class MultiMapper {
 	private CorpusServiceBaseImpl corpusService;
 	private CorpusRepositoryFileImpl corpusRepository;
 	private MarkerDao markerDao;
-	private File trainDir;
-	private File wavDir;
+//	private File trainDir;
+//	private File wavDir;
 	private FilenameFilter fileFilter;
 	private QSegmentExpDao qSegmentExpDao;
-	private File testDir;
+//	private File testDir;
 	private String corpusName;
+	private ExpConfig expConfig;
+	private Boolean recreate ;
 
-	public void init(File testDir, File trainDir, File corpusDir,  File wavDir,
+	public void init(ExpConfig expConfig,
 			FilenameFilter fileFilter, String corpusName) {
-		this.trainDir = trainDir;
-		this.testDir = testDir;
-		this.wavDir = wavDir;
+//		this.trainDir = trainDir;
+//		this.testDir = testDir;
+//		this.wavDir = wavDir;
+		recreate = true;
+		this.expConfig = expConfig;
 		this.fileFilter = fileFilter;
 		this.setCorpusName(corpusName);
 		
 		corpusRepository = new CorpusRepositoryFileImpl();
-		corpusRepository.setRepositoryPath(corpusDir.getAbsolutePath());
+		corpusRepository.setRepositoryPath(expConfig.getCorpusDirAsFile().getAbsolutePath());
 		
 		corpusService = new CorpusServiceBaseImpl();
 		corpusService.setCorpus(corpusRepository);
@@ -74,9 +76,9 @@ public class MultiMapper {
 		
 		if (extractor == null) {
 			extractor = new CorpusEntryExtractorTextGridMapImpl();
-			extractor.setMarkerDir(trainDir); 
+			extractor.setMarkerDir(expConfig.getTrainDirAsFile().getAbsoluteFile()); 
 			extractor.setRulesTurnedOn(true);
-			extractor.setRulePath(RULES_PATH);
+			extractor.setRulePath(getExpConfig().getRulePath());
 			log.debug(
 					"CorpusEntryExtractorFileImpl created. rulePath: {0}; RulesTurnedOn: {1}",
 					extractor.getRulePath(),
@@ -90,34 +92,11 @@ public class MultiMapper {
 		audioManager = AudioManagerFactory.createAudioManager();
 
 		extractor.setCorpusService(corpusService);
-		extractor.setWindowLengthInMilSec(WINDOW_LENGTH);
-		extractor.setOverlapInPerc(WINDOW_OVERLAP);
-		OnlineDecisionSegmentatorParam segmentionParam = new OnlineDecisionSegmentatorParam();
-		segmentionParam.setMinLength(91L);
-		segmentionParam.setMinSpace(261L);
-		segmentionParam.setExpandStart(260L);
-		segmentionParam.setExpandEnd(360L);
-
-		ExtractorEnum[] extractors = new ExtractorEnum[] {
-				ExtractorEnum.MFCC_EXTRACTOR,
-				ExtractorEnum.PLP_EXTRACTOR,
-				ExtractorEnum.LPC_EXTRACTOR,
-				// ExtractorEnum.FFT_EXTRACTOR,
-				ExtractorEnum.LOUDNESS_EXTRACTOR,
-				ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
-				ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR };
-
-		extractor.setSegmentionParam(segmentionParam);
-		extractor.setExtractors(extractors);
-		
-		
-		ExtractorParam smothParam = new ExtractorParam();
-//		ExtractorParamUtils.setValue(smothParam, ExtractorModifiersEnum.mean.name(), Boolean.TRUE);
-//		extractor.setParams(new HashMap<String, ExtractorParam>());
-//		extractor.getParams().put(ExtractorEnum.LOUDNESS_EXTRACTOR.name(), smothParam);
-//		extractor.getParams().put(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name(), smothParam);
-//		extractor.getParams().put(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name(), smothParam);
-//		
+		extractor.setWindowLengthInMilSec(getExpConfig().getWindowLength());
+		extractor.setOverlapInPerc(getExpConfig().getWindowOverlap());
+		extractor.setSegmentionParam(getExpConfig().getSegmentationParam());
+		extractor.setExtractors(getExpConfig().getExtractors());
+		extractor.getParams().putAll(getExpConfig().getExtractorPramMap());
 
 		markerDao = WorkServiceFactory.createMarkerDao();
 
@@ -140,14 +119,14 @@ public class MultiMapper {
 	public void extractAndLearn() throws MalformedURLException {
 		int counter = 0;
 		// FilenameFilter fileFilter = new TextGridNameFilter();
-		int size = trainDir.listFiles(fileFilter).length;
+		int size = expConfig.getTrainDirAsFile().listFiles(fileFilter).length;
 		Double totalTime = 0D;
-		for (File texGridFile : trainDir.listFiles(fileFilter)) {
+		for (File texGridFile : expConfig.getTrainDirAsFile().listFiles(fileFilter)) {
 			counter++;
 			log.error("[extractAndLearn]Processing " + counter + " from " + size
 					+ ";  totalTime:" + totalTime + "; file: " + texGridFile);
 
-			File wavFilePath = new File(wavDir, FileUtils.replaceExtention(
+			File wavFilePath = new File(expConfig.getWavDir(), FileUtils.replaceExtention(
 					texGridFile, ".wav"));
 			// if(!filePath.getName().contains("far1")){
 			// continue;
@@ -169,7 +148,7 @@ public class MultiMapper {
 	
 	public void recognize() throws MalformedURLException{
 			int counter = 0;
-			int size = testDir.listFiles(fileFilter).length;
+			int size = expConfig.getTestDirAsFile().listFiles(fileFilter).length;
 //			File[] mainList= getMarkerDir().listFiles(filter);
 //			List<File> patched = new ArrayList<File>();
 //			for (File file : mainList) {
@@ -184,10 +163,10 @@ public class MultiMapper {
 //				}
 //			}
 			Double totalTime  = 0D;
-			for (File texGridFile : testDir.listFiles(fileFilter)) {
+			for (File texGridFile : expConfig.getTestDirAsFile().listFiles(fileFilter)) {
 				counter++;
 				log.error("[recognize]Processing "+ counter + " from " + size + "; totalTime:" + totalTime + "; file = " + texGridFile);
-				File wavFilePath = new File(wavDir, FileUtils.replaceExtention(
+				File wavFilePath = new File(expConfig.getWavDir(), FileUtils.replaceExtention(
 						texGridFile, ".wav"));
 				log.debug("[recognize]reading: {0}", wavFilePath);
 				MarkerSetHolder markerSetHolder = getExtractor().extract(wavFilePath);
@@ -336,10 +315,14 @@ public class MultiMapper {
 	public QSegmentExpDao getqSegmentExpDao() {
 		if(qSegmentExpDao == null){
 			qSegmentExpDao = new QSegmentExpHsqlDao();
-			((QSegmentExpHsqlDao)qSegmentExpDao).setRecreate(true);
+			((QSegmentExpHsqlDao)qSegmentExpDao).setRecreate(getRecreate());
 			qSegmentExpDao.init();
 		}
 		return qSegmentExpDao;
+	}
+
+	private Boolean getRecreate() {
+		return recreate;
 	}
 
 	public void setqSegmentExpDao(QSegmentExpDao qSegmentExpDao) {
@@ -354,12 +337,18 @@ public class MultiMapper {
 		this.corpusName = corpusName;
 	}
 
-	public File getTestDir() {
-		return testDir;
+
+
+	public ExpConfig getExpConfig() {
+		return expConfig;
 	}
 
-	public void setTestDir(File testDir) {
-		this.testDir = testDir;
+	public void setExpConfig(ExpConfig expConfig) {
+		this.expConfig = expConfig;
+	}
+
+	public void setRecreate(Boolean recreate) {
+		this.recreate = recreate;
 	}
 
 

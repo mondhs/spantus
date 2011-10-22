@@ -1,4 +1,4 @@
-package org.spantus.exp.recognition.generation;
+package org.spantus.exp.recognition.synthesis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
