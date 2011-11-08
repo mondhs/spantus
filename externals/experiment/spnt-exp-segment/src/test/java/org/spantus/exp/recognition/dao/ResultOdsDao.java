@@ -1,30 +1,35 @@
 package org.spantus.exp.recognition.dao;
 
-import java.awt.Rectangle;
 import java.io.File;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.odftoolkit.odfdom.type.CellRangeAddressList;
 import org.odftoolkit.simple.SpreadsheetDocument;
-import org.odftoolkit.simple.chart.Chart;
-import org.odftoolkit.simple.chart.DataSet;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
+import org.spantus.utils.FileUtils;
 
 public class ResultOdsDao {
-	String[] header = new String[] { "", "0dB", "5dB", "10dB", "15dB", "30dB",
+	public static final String SKIEMENIMIS = "skiemenimis";
+
+	public static final String SEGMENTACIJA = "segmentacija";
+
+	public static final String ATPAZINIMAS = "atpazinimas";
+
+	public static final String LYGINIMAS = "lyginimas";
+
+	String[] header = new String[] { "", "00dB", "05dB", "10dB", "15dB", "30dB",
 			"bendrai" };
 
-	String[] sheets = new String[] { "segmentacija", "atpazinimas" };
+	public static String[] sheets = new String[] { SEGMENTACIJA, ATPAZINIMAS,  SKIEMENIMIS, LYGINIMAS };
 
 	String[] cols = new String[] { "A", "B", "C", "D", "E", "F", "G" };
 
-	public void save(StringBuilder result) {
+	public File save(StringBuilder result, String filePath) {
 
-		File out = new File("./target/test.ods");
+		
+		File out = FileUtils.findNextAvaibleFile(filePath);
 		System.out.print(out.getAbsolutePath());
 		Iterator<String> sheetIter = Arrays.asList(sheets).iterator();
 		try {
@@ -59,17 +64,16 @@ public class ResultOdsDao {
 					index++;
 				}
 			}
-			calcPercent(ods, table);
 			ods.getTableList().get(0).remove();
-
 			ods.save(out);
 
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}
+		return out;
 	}
 
-
+	
 	/**
 	 * 
 	 * @param ods
@@ -109,7 +113,7 @@ public class ResultOdsDao {
 						+ cols[colIndex] + (rowIndex + 1);
 				if (rowIndex == 0 && colIndex == 0) {
 					continue;
-				}else if (rowIndex > 0 && colIndex > 0) {
+				} else if (rowIndex > 0 && colIndex > 0) {
 					formula = formula + "/" + table.getTableName() + "."
 							+ cols[colIndex] + (lastRowIndex + 1);
 					newCell.setFormula(formula);
@@ -117,28 +121,34 @@ public class ResultOdsDao {
 					newCell.setFormatString("0.00%");
 				} else {
 					newCell.setFormula(formula);
+					newCell.getFormatString();
 				}
 			}
 		}
-		
-		drawChart(ods, newTable);
-		
+		// drawChart(ods, newTable);
+
 	}
 
-	private void drawChart(SpreadsheetDocument ods, Table table) {
-		DataSet data = new DataSet();
-		String range = MessageFormat.format("{0}.A1:{0}.G14", table.getTableName());
-		data.setValues(CellRangeAddressList.valueOf(range), ods, true, true, true);
-				//CellRangeAddressList
-				//.valueOf("perc_segmentacija.A1:perc_segmentacija.G14");
-		Rectangle rect = new Rectangle();
-		rect.width = 15000;
-		rect.height = 8000;
-		  Cell positionCell = table.getCellByPosition("I1");
-//		  ods.createChart("Tikslumas", data,rect );		
-		  Chart chart = ods.createChart("Page Visit", ods, CellRangeAddressList.valueOf("segmentacija.A1:segmentacija.G14"), true, true, false, rect, positionCell);
-	}
-
+	// private void drawChart(SpreadsheetDocument ods, Table table) {
+	// DataSet data = new DataSet();
+	// String range = MessageFormat.format("{0}.A1:{0}.G14",
+	// table.getTableName());
+	// data.setValues(CellRangeAddressList.valueOf(range), ods, true, true,
+	// true);
+	// //CellRangeAddressList
+	// //.valueOf("perc_segmentacija.A1:perc_segmentacija.G14");
+	// Rectangle rect = new Rectangle();
+	// rect.width = 15000;
+	// rect.height = 8000;
+	// Cell positionCell = table.getCellByPosition("I1");
+	// // ods.createChart("Tikslumas", data,rect );
+	// Chart chart = ods.createChart(table.getTableName(), ods,
+	// CellRangeAddressList.valueOf(range), true, true, false, rect,
+	// positionCell);
+	// if(chart != null){
+	// chart.setChartType(ChartType.BAR);
+	// }
+	// }
 
 	/**
 	 * 
@@ -151,4 +161,12 @@ public class ResultOdsDao {
 			index++;
 		}
 	}
+
+
+
+	
+
+
+
+	
 }

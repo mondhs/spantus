@@ -7,6 +7,7 @@ import java.util.Map;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorModifiersEnum;
+import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.utils.ExtractorParamUtils;
 
@@ -58,9 +59,11 @@ public class ExpConfig {
 	private OnlineDecisionSegmentatorParam segmentationParam;
 	private Map<String, ExtractorParam> extractorPramMap;
 	private String testDir;
+	private String segmentatorServiceType;
 	
 	public static ExpConfig createConfig() {
 		ExpConfig config = new ExpConfig();
+		config.setSegmentatorServiceType(SegmentatorServiceEnum.basic.name());
 		config.setWindowLength(WINDOW_LENGTH);
 		config.setWindowOverlap(WINDOW_OVERLAP);
 		config.setRulePath(RULES_PATH);
@@ -196,6 +199,14 @@ public class ExpConfig {
 
 	public void setTestDir(String testDir) {
 		this.testDir = testDir;
+	}
+
+	public String getSegmentatorServiceType() {
+		return segmentatorServiceType;
+	}
+
+	public void setSegmentatorServiceType(String segmentatorServiceType) {
+		this.segmentatorServiceType = segmentatorServiceType;
 	}
 
 }

@@ -19,6 +19,7 @@
 package org.spantus.segment.offline;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -71,22 +72,16 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 		}
 			
 		MarkerSet markerSet = new MarkerSet();
-		LinkedHashMap<Long, Double> statesSums = caclculateStatesSums(classifiers, param);
+		LinkedHashMap<Long, Map<String, Double>> statesSums = caclculateStatesSums(classifiers, param);
 
 		SegmentationCtx ctx = new SegmentationCtx();
 		ctx.setMarkerSet(markerSet);
 
-		int count = classifiers.size();
-//		Float previous = 0F;
-//		Float preprevious = 0F;
-		for (Entry<Long, Double> stateSum : statesSums.entrySet()) {
-//			Double currValue =  stateSum.getValue() +preprevious + previous;
-			ctx.setCurrentState(stateSum.getValue() / (count) > .4 ? 1f : 0f);
+		for (Entry<Long, Map<String, Double>> stateSum : statesSums.entrySet()) {
+			Double vote = calculateVoteResult(stateSum.getValue().values());
+			ctx.setCurrentState(vote > .3 ? 1f : 0f);
 			ctx.setCurrentMoment(stateSum.getKey());
 			processState(ctx);
-//			preprevious = previous;
-//			previous = stateSum.getValue();
-//			log.error("[extractSegments]" + currValue + " " + previous + " " + preprevious);
 		}
 		ctx.setCurrentState(0f);
 		processState(ctx);
@@ -108,8 +103,8 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 * @param param
 	 * @return
 	 */
-	protected LinkedHashMap<Long, Double> caclculateStatesSums(Collection<IClassifier> classifiers, SegmentatorParam param){
-		LinkedHashMap<Long, Double> statesSums = new LinkedHashMap<Long, Double>();
+	protected LinkedHashMap<Long, Map<String, Double>> caclculateStatesSums(Collection<IClassifier> classifiers, SegmentatorParam param){
+		LinkedHashMap<Long,Map<String, Double>> statesSums = new LinkedHashMap<Long, Map<String, Double>>();
 
 		Map<String, Iterator<Marker>> markerIterators = new HashMap<String, Iterator<Marker>>();
 		
@@ -169,15 +164,16 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 * @param time
 	 * @param value
 	 */
-	protected void safeSum(Map<Long, Double> statesSums, Long time, Double value,
+	protected void safeSum(Map<Long, Map<String,Double>> statesSums, Long time, Double value,
 			SegmentatorParam param, String classifier) {
 		Double weight =  getWeight(param, classifier);
-		Double existValue = statesSums.get(time);
+		Map<String, Double> existValue = statesSums.get(time);
 		if (existValue == null) {
-			existValue = 0D;
+			existValue = new HashMap<String, Double>();
 			statesSums.put(time, existValue);
 		}
-		statesSums.put(time, existValue + (value * weight));
+		existValue.put(classifier, value);
+//		statesSums.put(time, existValue + (value * weight));
 	}
 
 	/**
@@ -237,9 +233,9 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 	}
 
 	public Windowing getWindowing() {
-//		if(windowing == null){
+		if(windowing == null){
 			windowing = WindowingFactory.createWindowing(WindowingEnum.Welch);
-//		}
+		}
 		return windowing;
 	}
 

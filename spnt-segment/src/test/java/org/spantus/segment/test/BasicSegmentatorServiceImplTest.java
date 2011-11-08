@@ -20,8 +20,11 @@
  */
 package org.spantus.segment.test;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import junit.framework.Assert;
 
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
@@ -50,7 +53,7 @@ public class BasicSegmentatorServiceImplTest extends AbstractSegmentatorTest {
 		
 		Integer[][] markersData1 = new Integer[][]{{100, 205}, {300, 400}, {495, 600}};
 		Integer[][] markersData2 = new Integer[][]{{100, 200}, {295, 405}, {500, 605}};
-		Integer[][] markersDataExpexted = new Integer[][]{{100, 200}, {300, 400}, {500, 600}};
+		Integer[][] markersDataExpexted = new Integer[][]{{99, 206}, {299, 401}, {494, 601}};
 
 		
 		classifiers.add(contsructClassifier(markersData1));
@@ -80,6 +83,23 @@ public class BasicSegmentatorServiceImplTest extends AbstractSegmentatorTest {
 		
 		MarkerSetHolder markerSet = segmentator.extractSegments(classifiers);
 		assertEqualsMarkers("3 datasets", markersDataExpexted, markerSet, MarkerSetHolderEnum.phone);
+	}
+	
+	
+	public void testVote(){
+		//given
+		BasicSegmentatorServiceImpl impl = new BasicSegmentatorServiceImpl();
+		Double[] v1 = new Double[]{0D,0D,0D};
+		Double[] v2 = new Double[]{.4D,.5D,.6D};
+		Double[] v3 = new Double[]{1D,1D,1D};
+		//when
+		Double karimi1 = impl.calculateVoteResult(Arrays.asList(v1));
+		Double karimi2 = impl.calculateVoteResult(Arrays.asList(v2));
+		Double karimi3 = impl.calculateVoteResult(Arrays.asList(v3));
+		//then
+		Assert.assertEquals(0D, karimi1);
+		Assert.assertEquals(0.5D, karimi2);
+		Assert.assertEquals(1D, karimi3);
 	}
 
 }

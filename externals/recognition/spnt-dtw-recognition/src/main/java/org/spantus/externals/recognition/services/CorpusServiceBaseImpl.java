@@ -279,8 +279,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	}
 	/**
 	 * 
-	 * @param corpusEntry
 	 * @return
+	 * @param corpusEntry
 	 */
 	public Map<String, RecognitionResult> bestMatchesForFeatures(
 			CorpusEntry corpusEntry) {
@@ -308,7 +308,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 					match.put(featureName, result1);
 				} else {
 					Double prevDistance = match.get(featureName).getDistance();
-					if (NumberUtils
+					if (result1!= null && NumberUtils
 							.compare(result1.getDistance(), prevDistance) < 0) {
 						match.put(featureName, result1);
 					}
@@ -383,9 +383,15 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		RecognitionResult result = new RecognitionResult();
 		result.setInfo(sample);
 		if (targetValues.getDimention() == 1) {
+			if(((FrameValues) targetValues).size()<2){
+				return null;
+			}
 			result.setDistance(getDtwService().calculateDistance(
 					(FrameValues) targetValues, (FrameValues) fd.getValues()));
 		} else {
+			if(((FrameVectorValues) targetValues).size()<2){
+				return null;
+			}
 			result.setDistance(getDtwService().calculateDistanceVector(
 					(FrameVectorValues) targetValues,
 					(FrameVectorValues) fd.getValues()));

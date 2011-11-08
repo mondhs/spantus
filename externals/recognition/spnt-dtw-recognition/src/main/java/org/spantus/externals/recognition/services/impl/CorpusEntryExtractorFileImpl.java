@@ -29,7 +29,9 @@ import org.spantus.core.wav.AudioManager;
 import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.exception.ProcessingException;
 import org.spantus.externals.recognition.bean.CorpusEntry;
+import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.externals.recognition.bean.RecognitionResult;
+import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.externals.recognition.services.CorpusEntryExtractor;
 import org.spantus.externals.recognition.services.CorpusService;
 import org.spantus.externals.recognition.services.RecognitionServiceFactory;
@@ -100,20 +102,20 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 		Assert.isTrue(wavFilePath.exists(), "file not exists" + wavFilePath);
 		// find markers
 		IExtractorInputReader reader = createReaderWithClassifier(wavFilePath);
-		return extract(wavFilePath,reader);
+		return extract(wavFilePath, reader);
 	}
-	
+
 	/**
 	 * 
 	 * @param wavFilePath
 	 * @return
 	 */
-	public MarkerSetHolder extract(File wavFilePath, IExtractorInputReader reader) {
+	public MarkerSetHolder extract(File wavFilePath,
+			IExtractorInputReader reader) {
 		Assert.isTrue(wavFilePath.exists(), "file not exists" + wavFilePath);
 		MarkerSetHolder markerSetHorlder = findMarkers(reader);
 		return markerSetHorlder;
 	}
-	
 
 	/**
 	 * 
@@ -128,7 +130,8 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 				getSegmentatorServiceType(), toString(getExtractors()));
 
 		IExtractorInputReader reader = getReaderService()
-				.createReaderWithClassifier(getExtractors(), wavFilePath, getParams());
+				.createReaderWithClassifier(getExtractors(), wavFilePath,
+						getParams());
 		return reader;
 	}
 
@@ -186,14 +189,14 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 		for (Marker marker : segments.getMarkers()) {
 			result++;
 			marker.setLabel(createLabel(filePath, marker, result));
-//			if(marker.getLabel().contains(".wav")){
-//				continue;
-//			}
+			// if(marker.getLabel().contains(".wav")){
+			// continue;
+			// }
 			if (marker.getLength() < 10) {
 				log.error("this should be eliminated by rules" + marker);
 			}
 			learn(fileUrl, marker, localReader);
-			
+
 		}
 		return segments;
 
@@ -202,7 +205,6 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	public String createLabel(File filePath, Marker marker) {
 		return createLabel(filePath, marker, 0);
 	}
-	
 
 	public String createLabelByMarkers(File filePath, Marker marker) {
 		return createLabel(filePath, marker, 0);
@@ -366,19 +368,21 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	 */
 	public Map<String, RecognitionResult> bestMatchesForFeatures(URL fileUrl,
 			Marker marker, IExtractorInputReader reader) {
-		CorpusEntry corpusEntry = null; 
-		try{
-			AudioInputStream ais = AudioManagerFactory.createAudioManager()
-				.findInputStreamInMils(fileUrl, marker.getStart(),
-						marker.getLength());
-			corpusEntry = create(ais, marker);
-		}catch (ProcessingException   e) {
-			//this is not audio file
-			corpusEntry = create(marker, reader);
-		}
-		
+		CorpusEntry corpusEntry = null;
+		corpusEntry = create(marker, reader);
+//		try {
+//			AudioInputStream ais = AudioManagerFactory.createAudioManager()
+//					.findInputStreamInMils(fileUrl, marker.getStart(),
+//							marker.getLength());
+//			corpusEntry = create(ais, marker);
+//		} catch (ProcessingException e) {
+//			// this is not audio file
+//			corpusEntry = create(marker, reader);
+//		}
+
 		Map<String, RecognitionResult> result = getCorpusService()
 				.bestMatchesForFeatures(corpusEntry);
+
 		return result;
 	}
 
@@ -504,7 +508,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	}
 
 	public Map<String, ExtractorParam> getParams() {
-		if(params == null){
+		if (params == null) {
 			params = new HashMap<String, ExtractorParam>();
 		}
 		return params;

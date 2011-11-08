@@ -36,13 +36,13 @@ public class SpeechGenerator {
 
 	public SpeechGenerator() {
 		lengths = Maps.newHashMap();
-		lengths.put("a", 195);
-		lengths.put("e", 345);
+		lengths.put("a", 130);
+		lengths.put("e", 130);
 		lengths.put("r", 45);
-		lengths.put("t", 45);
-		lengths.put("g", 45);
-		lengths.put("m", 45);
-		lengths.put("n", 45);
+		lengths.put("t", 65);
+		lengths.put("g", 59);
+		lengths.put("m", 67);
+		lengths.put("n", 57);
 		lengths.put("_", 250);
 	}
 
@@ -120,7 +120,11 @@ public class SpeechGenerator {
 	}
 
 	public float rand() {
-		return (float) (1.0 - (Math.random() - .5f));
+		float speed = 1.5f; 
+		float rand = 
+				 (float) (.95f* (Math.random() - .5f));
+//				0f;
+		return speed -rand;
 	}
 
 	/**
@@ -148,7 +152,7 @@ public class SpeechGenerator {
 		}
 
 		transcribtion.getTransctiption().append(
-				MessageFormat.format(PHONEME_FORMAT, "_", 10));
+				MessageFormat.format(PHONEME_FORMAT, "_", 20));
 		transcribtion.incFinished(10);
 		Marker marker = new Marker();
 		marker.setLabel(syllable);
@@ -177,7 +181,7 @@ public class SpeechGenerator {
 		}
 		try {
 			String command = MessageFormat.format(
-					"mbrola -l 16000 {0} {1} {2}", voice,
+					"mbrola -l 11025 {0} {1} {2}", voice,
 					poFile.getAbsolutePath(), wavFile.getAbsolutePath());
 			System.out.println(command);
 			Process p = Runtime.getRuntime().exec(command);
@@ -313,7 +317,7 @@ public class SpeechGenerator {
 		
 		Integer[] levels = new  Integer[]{30, 15, 10, 5, 0};
 		for (Integer level : levels) {
-			speechGenerator.bulkGeneration("/home/as/tmp/garsyno.modelis/TEST",level, 51);
+			speechGenerator.bulkGeneration("/home/as/tmp/garsyno.modelis/TEST",level, 50);
 		}
 		for (Integer level : levels) {
 			speechGenerator.bulkGeneration("/home/as/tmp/garsyno.modelis/TRAIN",level, 1);

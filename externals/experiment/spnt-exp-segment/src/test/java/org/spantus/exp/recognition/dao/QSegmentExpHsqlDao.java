@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,9 +14,6 @@ import java.util.TreeMap;
 import org.spantus.exception.ProcessingException;
 import org.spantus.exp.recognition.domain.QSegmentExp;
 import org.spantus.utils.StringUtils;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 public class QSegmentExpHsqlDao implements QSegmentExpDao {
 	private static final String LPCLABEL = "LPCLABEL";
@@ -93,6 +89,8 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 	}
 
 	public static final String ALL_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP   {1}";
+
+	
 	public static final String DISTINCT_SEGMENTS_REPORT_QUERY = "select {0}  count(distinct(MANUALNAME)) mcount from QSEGMENTEXP where  not MARKERLABEL like ''D;%''  {1}";
 	public static final String CORRECT_SYLABLE_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where MANUALNAME = ''<SYLLABLE>'' and not MARKERLABEL like ''D;%''  {1}";
 	public static final String ERR_JOINED_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where LENGTH(MANUALNAME) > 2  and not MARKERLABEL like ''D;%''  {1}";
@@ -103,10 +101,27 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 			+ "MANUALNAME = ''<SYLLABLE_WAS>''  and  MFCCLABEL = ''<SYLLABLE_SAID>'' and MFCC <90 and not  MARKERLABEL like ''D;%''  {1}";
 
 	public static final String SUCC_RECONITION_LIKE_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ "MANUALNAME like ''%<SYLLABLE_WAS>''  and  MFCCLABEL like ''%<SYLLABLE_SAID>'' and MFCC <90 and not  MARKERLABEL like ''D;%''  {1}";
+			+ "MANUALNAME like ''%<SYLLABLE_WAS>''  and  MFCCLABEL like ''%<SYLLABLE_SAID>'' and LENGTH(MANUALNAME)<=2 and  LENGTH(MFCCLABEL)<=2 and MFCC <90   and not  MARKERLABEL like ''D;%''  {1}";
 
+	public static final String ERR_RECONITION_LIKE_NOISE_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
+			+ "MANUALNAME like ''''  and  MFCCLABEL like ''%<SYLLABLE_SAID>''  and MFCC <90 and not  MARKERLABEL like ''D;%''  {1}";
+	public static final String ALL_SEGMENTS_FOR_RECOGN_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP  where "+
+			" not (MARKERLABEL like ''D;%'' or " +
+			" (LENGTH(MANUALNAME) > 2  and not MARKERLABEL like ''D;%''))  {1}";
+	
 	public static final String ERR_REJECTED_RECONITION_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ " MFCC >90 and not  MARKERLABEL like ''D;%''  {1}";
+			+ " MFCC >=90 and LENGTH(MANUALNAME)<=2 and not  MARKERLABEL like ''D;%''  {1}";
+
+	public static final String ERR_SEGMENT_TOTAL_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
+			+ "((LENGTH(MANUALNAME) > 2  and not MARKERLABEL like ''D;%'') or (MANUALNAME = '''' and not MARKERLABEL like ''D;%'') or (MARKERLABEL like ''D;%'') )   {1}";
+
+	public static final String ERR_RECONITION_TOTAL_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "+
+			"( (LENGTH(MANUALNAME)=2  and LENGTH(MFCCLABEL)=2  and not SUBSTR(MANUALNAME,2,1) =  SUBSTR(MFCCLABEL,2,1)) or (MANUALNAME ='''' AND  LENGTH(MFCCLABEL)<=2) ) "+
+			" and MFCC <90 and not  MARKERLABEL like''D;%''  {1}";
+	
+	public static final String ERR_RECONITION_TOTAL_SYLLABLE_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
+			+ "( (LENGTH(MANUALNAME)=2  and LENGTH(MFCCLABEL)=2  and not MANUALNAME =  MFCCLABEL) or (MANUALNAME ='''' AND  LENGTH(MFCCLABEL)<=2) ) " +
+			" and MFCC <90 and not  MARKERLABEL like''D;%''  {1}";
 
 	/**
 	 * 
@@ -116,72 +131,23 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 		StringBuilder sb = new StringBuilder();
 		Map<String, String> reports = new LinkedHashMap<String, String>();
 		String[] syllabels = new String[] { "ga", "ma", "me", "na", "ne", "re",
-				"ta" };
-		String[] vovel = new String[] { "a", "e" };
+				"ta" ," "};
+		String[] vovel = new String[] { "a", "e" ," "};
 
-		for (String string : syllabels) {
-			reports.put("Teisingai " + string,
-					CORRECT_SYLABLE_SEGMENTS_REPORT_QUERY.replaceAll(
-							"<SYLLABLE>", string));
-		}
-		reports.put("2 skiemenys apjungti ", ERR_JOINED_SEGMENTS_REPORT_QUERY);
-		reports.put("aptiktas triukšmas ", ERR_NOIZE_SEGMENTS_REPORT_QUERY);
-		reports.put("Skiemenų trūkiai ", ERR_BREAK_SEGMENTS_REPORT_QUERY);
-		reports.put("Viso aptikta", ALL_SEGMENTS_REPORT_QUERY);
-		reports.put("Skirtingų segmentų tipų", DISTINCT_SEGMENTS_REPORT_QUERY);
-		reports.put("turėjo būti", "${shouldBe}");
-
+		segmentationReport(syllabels, reports);
 		reports.put("B2", null);
-		// for (String syllableWas : syllabels) {
-		// reports.put( syllableWas ,
-		// SUCC_RECONITION_SEGMENTS_REPORT_QUERY.replaceAll("<SYLLABLE_WAS>",
-		// syllableWas).replaceAll("<SYLLABLE_SAID>", syllableWas));
-		// }
+		
 
-		// for (String syllableWas : syllabels) {
-		// for (String syllableSaid : syllabels) {
-		// if(!syllableWas.equals(syllableSaid)){
-		// reports.put( syllableWas + " kaip " + syllableSaid ,
-		// SUCC_RECONITION_SEGMENTS_REPORT_QUERY.replaceAll("<SYLLABLE_WAS>",
-		// syllableWas).replaceAll("<SYLLABLE_SAID>", syllableSaid));
-		// }
-		// }
-		// }
-		// for (String syllableWas : syllabels) {
-		// reports.put( "triukšmas kaip " + syllableWas ,
-		// SUCC_RECONITION_SEGMENTS_REPORT_QUERY.replaceAll("<SYLLABLE_WAS>",
-		// "").replaceAll("<SYLLABLE_SAID>", syllableWas));
-		// }
-		for (String vovelWas : vovel) {
-			reports.put(
-					vovelWas,
-					SUCC_RECONITION_LIKE_SEGMENTS_REPORT_QUERY.replaceAll(
-							"<SYLLABLE_WAS>", vovelWas).replaceAll(
-							"<SYLLABLE_SAID>", vovelWas));
-		}
-		for (String vovelWas : vovel) {
-			for (String vovelSaid : vovel) {
-				if (!vovelWas.equals(vovelSaid)) {
-					reports.put(
-							vovelWas + " kaip " + vovelSaid,
-							SUCC_RECONITION_LIKE_SEGMENTS_REPORT_QUERY.replaceAll(
-									"<SYLLABLE_WAS>", "%"+vovelWas).replaceAll(
-									"<SYLLABLE_SAID>", vovelSaid));
-				}
-			}
-		}
-		for (String vovelWas : vovel) {
-			reports.put(
-					"triukšmas kaip " + vovelWas,
-					SUCC_RECONITION_LIKE_SEGMENTS_REPORT_QUERY.replaceAll(
-							" like ''<SYLLABLE_WAS>", " like ''").replaceAll("<SYLLABLE_SAID>",
-									vovelWas));
-		}
+		recognitionByVovel(vovel, reports);
+		reports.put("B3", null);
+		
+		recognitionBySyllabels(syllabels, reports);
+		reports.put("B4", null);
+		
+		reports.put("Segmentavimo klaidos", ERR_SEGMENT_TOTAL_QUERY);
+		reports.put("Atpažinimo klaidos", ERR_RECONITION_TOTAL_QUERY);
+		reports.put("Skiemenų atpažinimo klaidos", ERR_RECONITION_TOTAL_SYLLABLE_QUERY);
 
-		reports.put("Atsisakyta", ERR_REJECTED_RECONITION_SEGMENTS_REPORT_QUERY);
-		reports.put("Apjungti Skiemenys", ERR_JOINED_SEGMENTS_REPORT_QUERY);
-		reports.put("Skiemenų Trūkiai ", ERR_BREAK_SEGMENTS_REPORT_QUERY);
-		reports.put("Viso aptikta segmentavime", ALL_SEGMENTS_REPORT_QUERY);
 
 		boolean header = false;
 		for (Entry<String, String> entry : reports.entrySet()) {
@@ -189,18 +155,21 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 				sb.append("\n");
 				continue;
 			}
-			if(entry.getValue().contains("${shouldBe}")){
-				sb.append(entry.getKey()).append(",").append(shouldBe).append("\n");
+			if (entry.getValue().contains("${shouldBe}")) {
+				sb.append(entry.getKey()).append(",").append(shouldBe)
+						.append("\n");
 				continue;
 
 			}
+			System.out.println(entry.getKey());
 			Map<Integer, Integer> result = fetchResults(entry.getValue());
+			System.out.println();
 			if (!header) {
-				sb.append("\n");
-				sb.append(",");
-//				for (Integer key : result.keySet()) {
-//					sb.append(key).append("dB,");
-//				}
+				// sb.append("\n");
+				// sb.append(",");
+				// for (Integer key : result.keySet()) {
+				// sb.append(key).append("dB,");
+				// }
 				sb.append("\n");
 				header = true;
 			}
@@ -211,6 +180,130 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 			sb.append("\n");
 		}
 		return sb;
+	}
+
+	/**
+	 * 
+	 * @param vovel
+	 * @param reports
+	 */
+	private void recognitionByVovel(String[] vovel, Map<String, String> reports) {
+		for (String vovelWas : vovel) {
+			
+			String vovelWasQuery = SUCC_RECONITION_LIKE_SEGMENTS_REPORT_QUERY;
+			
+//			if(!StringUtils.hasText(vovelWas.trim())){
+//				vovelWasQuery = vovelWasQuery.replaceAll("%<SYLLABLE_WAS>", "<SYLLABLE_WAS>").replaceAll("%<SYLLABLE_SAID>", "<SYLLABLE_SAID>");
+//			}
+			
+			 vovelWasQuery = vovelWasQuery.replaceAll(
+					"<SYLLABLE_WAS>", vovelWas).replaceAll(
+					"<SYLLABLE_SAID>", vovelWas);
+			
+			reports.put(
+					"Teisingai " + vovelWas + " ",vovelWasQuery
+					);
+		}
+		for (String vovelWas : vovel) {
+			for (String vovelSaid : vovel) {
+				if (!vovelWas.equals(vovelSaid)  ) {
+					String vovelWasQuery = SUCC_RECONITION_LIKE_SEGMENTS_REPORT_QUERY;
+					if(!StringUtils.hasText(vovelSaid.trim())){
+						vovelWasQuery = vovelWasQuery.replace("and LENGTH(MANUALNAME) = LENGTH(MFCCLABEL)", "");
+						vovelWasQuery = vovelWasQuery.replaceAll("%<SYLLABLE_SAID>", "<SYLLABLE_SAID>");
+					}
+					if(!StringUtils.hasText(vovelWas.trim())){
+						vovelWasQuery = vovelWasQuery.replace("and LENGTH(MANUALNAME) = LENGTH(MFCCLABEL)", "");
+						vovelWasQuery = vovelWasQuery.replaceAll("%<SYLLABLE_WAS>", "<SYLLABLE_WAS>");
+					}
+					reports.put(
+							"Klaidingai " + vovelWas + " kaip " + vovelSaid + " ",
+							vovelWasQuery
+									.replaceAll("<SYLLABLE_WAS>", vovelWas)
+									.replaceAll("<SYLLABLE_SAID>", vovelSaid));
+				}
+			}
+		}
+//		for (String vovelWas : vovel) {
+//			reports.put("Klaidingai triukšmas kaip " + vovelWas,
+//					ERR_RECONITION_LIKE_NOISE_REPORT_QUERY.replaceAll(
+//							"<SYLLABLE_SAID>", vovelWas));
+//		}
+		reports.put("Atsisakyta" + " ", ERR_REJECTED_RECONITION_SEGMENTS_REPORT_QUERY);
+//		reports.put("Klaidingai apjungti skiemenys ",
+//				ERR_JOINED_SEGMENTS_REPORT_QUERY);
+//		reports.put("Klaidingai skiemenų trūkiai" + " ",
+//				ERR_BREAK_SEGMENTS_REPORT_QUERY);
+		reports.put("Viso aptikta segmentavime" + " ", ALL_SEGMENTS_FOR_RECOGN_REPORT_QUERY);
+	}
+
+	/**
+	 * 
+	 * @param syllabels
+	 * @param reports
+	 */
+	private void recognitionBySyllabels(String[] syllabels,
+			Map<String, String> reports) {
+		for (String syllableWas : syllabels) {
+			reports.put("Teisingai  "+
+					syllableWas,
+					SUCC_RECONITION_SEGMENTS_REPORT_QUERY.replaceAll(
+							"<SYLLABLE_WAS>", syllableWas).replaceAll(
+							"<SYLLABLE_SAID>", syllableWas));
+		}
+
+		for (String syllableWas : syllabels) {
+			for (String syllableSaid : syllabels) {
+				if (!syllableWas.equals(syllableSaid) ||!StringUtils.hasText(syllableSaid.trim() )) {
+					reports.put("Neteisingai "+
+							syllableWas + " kaip " + syllableSaid  + "  ",
+							SUCC_RECONITION_SEGMENTS_REPORT_QUERY.replaceAll(
+									"<SYLLABLE_WAS>", syllableWas).replaceAll(
+									"<SYLLABLE_SAID>", syllableSaid));
+				}
+			}
+		}
+//		for (String syllableWas : syllabels) {
+//			reports.put(
+//					"Neteisingai triukšmas kaip " + syllableWas,
+//					SUCC_RECONITION_SEGMENTS_REPORT_QUERY.replaceAll(
+//							"<SYLLABLE_WAS>", "").replaceAll("<SYLLABLE_SAID>",
+//							syllableWas));
+//		}
+		reports.put("Atsisakyta", ERR_REJECTED_RECONITION_SEGMENTS_REPORT_QUERY);
+//		reports.put("Klaidingai apjungti skiemenys"  + "  ",
+//				ERR_JOINED_SEGMENTS_REPORT_QUERY);
+//		reports.put("Klaidingai skiemenų trūkiai"  + "  ",
+//				ERR_BREAK_SEGMENTS_REPORT_QUERY);
+//		reports.put("Viso aptikta segmentavime"  + "  ", ALL_SEGMENTS_REPORT_QUERY);
+		reports.put("Viso aptikta segmentavime" + "  ", ALL_SEGMENTS_FOR_RECOGN_REPORT_QUERY);
+	}
+
+	/**
+	 * 
+	 * @param syllabels
+	 * @param reports
+	 */
+	private void segmentationReport(String[] syllabels,
+			Map<String, String> reports) {
+		for (String string : syllabels) {
+			if(!StringUtils.hasText(string.trim())){
+				continue;
+			}
+			reports.put("Teisingai " + string + "",
+					CORRECT_SYLABLE_SEGMENTS_REPORT_QUERY.replaceAll(
+							"<SYLLABLE>", string));
+		}
+		reports.put("Klaidingai 2 skiemenys apjungti",
+				ERR_JOINED_SEGMENTS_REPORT_QUERY);
+		reports.put("Klaidingai aptiktas triukšmas",
+				ERR_NOIZE_SEGMENTS_REPORT_QUERY);
+		reports.put("Klaidingai skiemenų trūkiai",
+				ERR_BREAK_SEGMENTS_REPORT_QUERY);
+		// reports.put("Viso aptikta", ALL_SEGMENTS_REPORT_QUERY);
+		// reports.put("Skirtingų segmentų tipų",
+		// DISTINCT_SEGMENTS_REPORT_QUERY);
+		reports.put("turėjo būti", "${shouldBe}");
 	}
 
 	/**
@@ -234,6 +327,7 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 		result.put(10, 0);
 		result.put(15, 0);
 		result.put(30, 0);
+		result.put(99999999, 0);
 		while (rs.next()) {
 			Integer snr = rs.getInt("snr");
 			result.put(snr, rs.getInt("mcount"));

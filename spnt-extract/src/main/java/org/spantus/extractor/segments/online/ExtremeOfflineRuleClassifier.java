@@ -118,13 +118,35 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 //				previous = extremeSegment;
 //			}
 //		}
+		
 		for (Iterator<Marker> iterator = markerSet.iterator(); iterator.hasNext();) {
 			ExtremeSegment extremeSegment = (ExtremeSegment) iterator.next();
-			extremeSegment.setStart(extremeSegment.getStart()-10);
+			extremeSegment.setStart(extremeSegment.getStart()-60);
 		}
+		
+		ExtremeSegment previousSegment  = null;
+		for (Iterator<Marker> iterator = markerSet.iterator(); iterator.hasNext();) {
+			ExtremeSegment extremeSegment = (ExtremeSegment) iterator.next();
+			if(extremeSegment.getStart()<0){
+				iterator.remove();
+				continue;
+			}
+			if(previousSegment == null){
+				previousSegment =extremeSegment;
+				continue;
+			}
+
+			if(extremeSegment.getLength()<70 && previousSegment.getLength()>140){
+				previousSegment.setEnd(extremeSegment.getEnd());
+				iterator.remove();
+			}
+			previousSegment =extremeSegment;
+		}
+
 		
 	}
 
+	
 	private boolean fixShortSegments(ExtremeSegment previous,ExtremeSegment extremeSegment) {
 		Double startEndRatio =(2*previous.getEndEntry().getValue())/(previous.getStartEntry().getValue() + extremeSegment.getEndEntry().getValue());
 		Double areaRatio  = 0D;
@@ -143,7 +165,7 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 				extremeSegment.getCalculatedLength();
 			}
 		}
-		int fixUpTo=getOutputValues().toIndex(.3D);
+		int fixUpTo=getOutputValues().toIndex(1D);
 		int i = 0; 
 		IndexValue minValue =new IndexValue(previous.getEndEntry().getIndex(), previous.getEndEntry().getValue()); 
 		i = 0;

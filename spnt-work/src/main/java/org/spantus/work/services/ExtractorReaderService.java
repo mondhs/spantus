@@ -14,6 +14,7 @@ import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.marker.Marker;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.extractor.impl.ExtractorEnum;
 
@@ -48,6 +49,7 @@ public interface ExtractorReaderService {
     
     public IExtractorInputReader createReaderWithClassifier(ExtractorEnum[] extractors, File file, Map<String, ExtractorParam> params);
     
+    public IExtractorInputReader createReaderWithClassifier(ExtractorEnum[] extractors, File file, Map<String, ExtractorParam> params, ClassifierEnum classifier);
     
 
     /**

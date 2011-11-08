@@ -5,7 +5,6 @@ import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
@@ -24,7 +23,7 @@ import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
-import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.services.MarkerDao;
@@ -35,8 +34,6 @@ import com.google.common.collect.Collections2;
 
 public class MultiMapper {
 
-	public static final int WINDOW_OVERLAP = 33;
-	public static final int WINDOW_LENGTH = 10;
 	public final static String RULES_PATH = "/home/as/src/spnt-code/spnt-work-ui/src/main/resources/ClassifierRuleBase.csv";
 
 	private static final Logger log = Logger.getLogger(MultiMapper.class);
@@ -70,8 +67,8 @@ public class MultiMapper {
 		
 		corpusService = new CorpusServiceBaseImpl();
 		corpusService.setCorpus(corpusRepository);
-//		corpusService.setJavaMLSearchWindow(JavaMLSearchWindow.ExpandedResWindow);
-//		corpusService.setSearchRadius(3);
+		corpusService.setJavaMLSearchWindow(JavaMLSearchWindow.ExpandedResWindow);
+		corpusService.setSearchRadius(3);
 
 		
 		if (extractor == null) {
@@ -79,6 +76,9 @@ public class MultiMapper {
 			extractor.setMarkerDir(expConfig.getTrainDirAsFile().getAbsoluteFile()); 
 			extractor.setRulesTurnedOn(true);
 			extractor.setRulePath(getExpConfig().getRulePath());
+			extractor.setWindowLengthInMilSec(expConfig.getWindowLength());
+			extractor.setOverlapInPerc(expConfig.getWindowOverlap());
+			extractor.setSegmentatorServiceType(expConfig.getSegmentatorServiceType());
 			log.debug(
 					"CorpusEntryExtractorFileImpl created. rulePath: {0}; RulesTurnedOn: {1}",
 					extractor.getRulePath(),
@@ -206,6 +206,9 @@ public class MultiMapper {
 	 */
 	protected void saveResult(Marker marker, File wavFile, File textGridFile, Map<String, RecognitionResult> recogniton, Long processingTime, String currentCorpusName) {
 		QSegmentExp exp = createResult(marker, wavFile, textGridFile, recogniton, processingTime, currentCorpusName);
+		if(exp == null){
+			return;
+		}
 		saveResult(exp);
 	}
 	
@@ -215,10 +218,15 @@ public class MultiMapper {
 
 	protected QSegmentExp createResult(Marker marker, File wavFile, File textGridFile, Map<String, RecognitionResult> recogniton, Long processingTime, String currentCorpusName) {
 		String label = getExtractor().createLabelByMarkers(textGridFile, marker);
-		if(!StringUtils.hasText(label)){
-			log.error("NO TEXT. do not save");
-		}
+		label =label.trim();
 		label = label.replaceAll("\\d","");
+		if(!StringUtils.hasText(label.trim())){
+			log.error("NO TEXT. do not save");
+			if(!StringUtils.hasText(recogniton.get("MFCC_EXTRACTOR").getInfo().getName().trim())){
+				return null;
+			}
+		}
+
 		
 		QSegmentExp exp = new QSegmentExp(wavFile.getName(),
 				marker.getStart(),
@@ -245,10 +253,11 @@ public class MultiMapper {
 	 */
 	private String fixRecognitionName(final String recognitionName){
 		String fixedRecognitionName = recognitionName;
-		String[] recognitionNames = recognitionName.split("-");
-		if(recognitionNames.length >= 1){
-			fixedRecognitionName = CorpusEntryExtractorTextGridMapImpl.cleanupLabel(recognitionNames[0]);
-		}
+		//TODO: turn this on due get labels
+//		String[] recognitionNames = recognitionName.split("-");
+//		if(recognitionNames.length >= 1){
+//			fixedRecognitionName = CorpusEntryExtractorTextGridMapImpl.cleanupLabel(recognitionNames[0]);
+//		}
 		return fixedRecognitionName;
 	}
 	/**

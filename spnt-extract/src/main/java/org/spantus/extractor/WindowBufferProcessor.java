@@ -32,6 +32,9 @@ public class WindowBufferProcessor {
 			return windowedWindow;
 		}
 
+		if(values.size()<frameIndexStartFrom){
+			return null;
+		}
 		
 		for (Iterator<Double> iterator = values.listIterator(frameIndexStartFrom+1); iterator
 				.hasNext();) {

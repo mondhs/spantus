@@ -18,6 +18,10 @@
 */
 package org.spantus.segment;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.spantus.core.marker.MarkerSetHolder;
@@ -49,4 +53,59 @@ public abstract class AbstractSegmentatorService implements ISegmentatorService 
 		return new BaseDecisionSegmentatorParam();
 		
 	}
+	
+	/**
+	 * 
+	 * @param votes
+	 * @return
+	 */
+	private List<Double> calcCoefs(List<Double> votes){
+		List<Double> coefs = new ArrayList<Double>(votes.size());
+		for (int z = 0; z < votes.size(); z++) {
+			coefs.add(calcCoef(votes, z));
+		}
+		return coefs;
+	}
+	/**
+	 * 
+	 * @param votes
+	 * @param z
+	 * @return
+	 */
+	private Double calcCoef(List<Double> votes, int z){
+		Double result = 1D;
+		double ez = votes.get(z);
+		double alpha = Math.pow(.9, 2);
+		int j =-1;
+		for (Double ej : votes) {
+			j++;
+			if(j==z){
+				continue;
+			}
+			double dzj=Math.pow(ez-ej,2);
+			result *= dzj/alpha;
+			
+		}
+		result = 1/(1+result);
+		return result;
+	}
+	/**
+	 * 
+	 * @param collection
+	 * @return
+	 */
+	public Double calculateVoteResult(Collection<Double> collection){
+		List<Double> coefs = calcCoefs(new ArrayList<Double>(collection));
+		Iterator<Double> voteIterator = collection.iterator();
+		Double upSum = 0D;
+		Double downSum = 0D;
+		for (Iterator<Double> coefIterator = coefs.iterator(); coefIterator.hasNext();) {
+			Double coefVal = (Double) coefIterator.next();
+			Double voteVal = (Double) voteIterator.next();
+			upSum += coefVal*voteVal;
+			downSum += coefVal;  
+		}
+		return upSum/downSum;
+	}
+	
 }

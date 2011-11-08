@@ -34,7 +34,9 @@ public class ModelMultiMapper extends MultiMapper {
 		// Double totalTime = 0D;
 		for (File signalFile : getExpConfig().getTestDirAsFile().listFiles(
 				new ExtNameFilter(EXTENSION))) {
-//			if (!signalFile.getName().startsWith("sin_zodis_5")) {
+//			if (!signalFile.getName().endsWith("_24.wav") 
+////					&& !signalFile.getName().endsWith("_1.wav") 
+//					) {
 //				continue;
 //			}
 			counter++;
@@ -69,7 +71,9 @@ public class ModelMultiMapper extends MultiMapper {
 				Long processingTime = System.currentTimeMillis() - start;
 				QSegmentExp exp = createResult(marker, signalFile,
 						markerFilePath, recogniton, processingTime, snr);
-				markerResults.add(exp);
+				if(exp!=null){
+					markerResults.add(exp);
+				}
 			}
 			// finds two segments for same sylable and after saves resultes
 			saveExps(fixDuplicate(markerResults));

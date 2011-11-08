@@ -57,137 +57,169 @@ import org.spantus.logger.Logger;
 import org.spantus.work.io.WorkAudioFactory;
 
 /**
- *
+ * 
  * @author mondhs
  */
 public class ExtractorReaderServiceImpl implements ExtractorReaderService {
 
-    private static Logger log = Logger.getLogger(ExtractorReaderServiceImpl.class);
-    
-    private int windowLengthInMilSec = ExtractorsFactory.DEFAULT_WINDOW_LENGHT;
-    private int overlapInPerc = ExtractorsFactory.DEFAULT_WINDOW_OVERLAP;
+	private static Logger log = Logger
+			.getLogger(ExtractorReaderServiceImpl.class);
+
+	private int windowLengthInMilSec = ExtractorsFactory.DEFAULT_WINDOW_LENGHT;
+	private int overlapInPerc = ExtractorsFactory.DEFAULT_WINDOW_OVERLAP;
 
 	private String rulePath;
 
 	private boolean rulesTurnedOn;
 
-    public FrameVectorValues findFeatureVectorValuesForMarker(IExtractorInputReader reader,
-            Marker marker, String featureName) {
-        for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
-            //extractors can have prefixes, jus check if ends with
-            if (!extractor.getName().endsWith(featureName)) {
-                continue;
-            }
-            FrameVectorValues values = extractor.getOutputValues();
-            Double fromIndex = (marker.getStart().doubleValue() * values.getSampleRate()) / 1000;
-            Double toIndex = fromIndex + (marker.getLength().doubleValue() * values.getSampleRate()) / 1000;
-            FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
-            return fvv;
-        }
-        return null;
-    }
+	public FrameVectorValues findFeatureVectorValuesForMarker(
+			IExtractorInputReader reader, Marker marker, String featureName) {
+		for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
+			// extractors can have prefixes, jus check if ends with
+			if (!extractor.getName().endsWith(featureName)) {
+				continue;
+			}
+			FrameVectorValues values = extractor.getOutputValues();
+			Double fromIndex = (marker.getStart().doubleValue() * values
+					.getSampleRate()) / 1000;
+			Double toIndex = fromIndex
+					+ (marker.getLength().doubleValue() * values
+							.getSampleRate()) / 1000;
+			FrameVectorValues fvv = values.subList(fromIndex.intValue(),
+					toIndex.intValue());
+			return fvv;
+		}
+		return null;
+	}
 
-    public Map<String, IValues> findAllVectorValuesForMarker(IExtractorInputReader reader, Marker marker) {
-        Map<String, IValues> result = new HashMap<String, IValues>();
+	public Map<String, IValues> findAllVectorValuesForMarker(
+			IExtractorInputReader reader, Marker marker) {
+		Map<String, IValues> result = new HashMap<String, IValues>();
 
-        for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
-            //extractors can have prefixes, jus check if ends with
-            FrameVectorValues values = extractor.getOutputValues();
-            int endIndex = values.size()-1;
-//            if(values.get(0).size()<=2){
-//                continue;
-//            }
-            Double fromIndex = (marker.getStart().doubleValue() * values.getSampleRate()) / 1000;
-            fromIndex = fromIndex < 0 ? 0 : fromIndex;
-            Double toIndex = fromIndex + (marker.getLength().doubleValue() * values.getSampleRate()) / 1000;
-            toIndex = endIndex < toIndex?endIndex:toIndex;
-            FrameVectorValues fvv = values.subList(fromIndex.intValue(), toIndex.intValue());
-            String key = preprocess(extractor.getName());
-            result.put(key, fvv);
-        }
-        for (IExtractor extractor : reader.getExtractorRegister()) {
-        	if(extractor.getName().endsWith(ExtractorEnum.SIGNAL_EXTRACTOR.name())){
-        		continue;
-        	}
-            //extractors can have prefixes, just check if ends with
-            FrameValues values = extractor.getOutputValues();
-            int endIndex = values.size()-1;
-            Double fromIndex = (marker.getStart().doubleValue() * values.getSampleRate()) / 1000;
-            fromIndex = fromIndex < 0 ? 0 : fromIndex;
-            Double toIndex = fromIndex + (marker.getLength().doubleValue() * values.getSampleRate()) / 1000;
-            toIndex = endIndex < toIndex?endIndex:toIndex;
-            FrameValues fv = values.subList(fromIndex.intValue(), toIndex.intValue());
-            String key = preprocess(extractor.getName());
-            result.put(key, fv);
-        }
+		for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
+			// extractors can have prefixes, jus check if ends with
+			FrameVectorValues values = extractor.getOutputValues();
+			int endIndex = values.size() - 1;
+			// if(values.get(0).size()<=2){
+			// continue;
+			// }
+			Double fromIndex = (marker.getStart().doubleValue() * values
+					.getSampleRate()) / 1000;
+			fromIndex = fromIndex < 0 ? 0 : fromIndex;
+			Double toIndex = fromIndex
+					+ (marker.getLength().doubleValue() * values
+							.getSampleRate()) / 1000;
+			toIndex = endIndex < toIndex ? endIndex : toIndex;
+			FrameVectorValues fvv = values.subList(fromIndex.intValue(),
+					toIndex.intValue());
+			String key = preprocess(extractor.getName());
+			result.put(key, fvv);
+		}
+		for (IExtractor extractor : reader.getExtractorRegister()) {
+			if (extractor.getName().endsWith(
+					ExtractorEnum.SIGNAL_EXTRACTOR.name())) {
+				continue;
+			}
+			// extractors can have prefixes, just check if ends with
+			FrameValues values = extractor.getOutputValues();
+			int endIndex = values.size() - 1;
+			Double fromIndex = (marker.getStart().doubleValue() * values
+					.getSampleRate()) / 1000;
+			fromIndex = fromIndex < 0 ? 0 : fromIndex;
+			Double toIndex = fromIndex
+					+ (marker.getLength().doubleValue() * values
+							.getSampleRate()) / 1000;
+			toIndex = endIndex < toIndex ? endIndex : toIndex;
+			FrameValues fv = values.subList(fromIndex.intValue(),
+					toIndex.intValue());
+			String key = preprocess(extractor.getName());
+			result.put(key, fv);
+		}
 
-        return result;
-    }
-    
-    /**
+		return result;
+	}
+
+	/**
      * 
      */
-	public Map<String, IValues> findAllVectorValuesForMarker(IExtractorInputReader reader) {
-    	  Map<String, IValues> result = new HashMap<String, IValues>();
-          for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
-        	  String key = preprocess(extractor.getName());
-        	  result.put(key, extractor.getOutputValues());
-          }
-          for (IExtractor extractor : reader.getExtractorRegister()) {
-        	  if(extractor.getName().endsWith(ExtractorEnum.SIGNAL_EXTRACTOR.name())){
-          		continue;
-          	}
-        	  String key = preprocess(extractor.getName());
-        	  result.put(key, extractor.getOutputValues());
-          }
-          return result;
-    }
+	public Map<String, IValues> findAllVectorValuesForMarker(
+			IExtractorInputReader reader) {
+		Map<String, IValues> result = new HashMap<String, IValues>();
+		for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
+			String key = preprocess(extractor.getName());
+			result.put(key, extractor.getOutputValues());
+		}
+		for (IExtractor extractor : reader.getExtractorRegister()) {
+			if (extractor.getName().endsWith(
+					ExtractorEnum.SIGNAL_EXTRACTOR.name())) {
+				continue;
+			}
+			String key = preprocess(extractor.getName());
+			result.put(key, extractor.getOutputValues());
+		}
+		return result;
+	}
+
 	/**
 	 * 
 	 * @param name
 	 * @return
 	 */
-	 private String preprocess(String name) {
-			return name.replace("BUFFERED_", "");
+	private String preprocess(String name) {
+		return name.replace("BUFFERED_", "");
+	}
+
+	/**
+	 * 
+	 * @param extractors
+	 * @param inputFile
+	 * @return
+	 */
+	public IExtractorInputReader createReaderWithClassifier(
+			ExtractorEnum[] extractors, File inputFile) {
+		return createReaderWithClassifier(extractors, inputFile, null);
+	}
+	/**
+	 * 
+	 */
+	public IExtractorInputReader createReaderWithClassifier(
+			ExtractorEnum[] extractors, File inputFile,
+			Map<String, ExtractorParam> params) {
+		return createReaderWithClassifier(extractors, inputFile, params, ClassifierEnum.rules);
+	}
+	
+	/**
+     * 
+     */
+	public IExtractorInputReader createReaderWithClassifier(
+			ExtractorEnum[] extractors, File inputFile,
+			Map<String, ExtractorParam> params, ClassifierEnum classifier) {
+		URL inputUrl;
+		try {
+			inputUrl = inputFile.toURI().toURL();
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
 		}
-    
-    /**
-     * 
-     * @param extractors
-     * @param inputFile
-     * @return
-     */
-    public IExtractorInputReader createReaderWithClassifier(ExtractorEnum[] extractors, 
-            File inputFile) {
-    	return createReaderWithClassifier(extractors, inputFile, null);
-    }
-    /**
-     * 
-     */
-    public IExtractorInputReader createReaderWithClassifier(ExtractorEnum[] extractors, File inputFile, Map<String, ExtractorParam> params){
-        URL inputUrl;
-        try {
-            inputUrl = inputFile.toURI().toURL();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        SignalReader reader = WorkAudioFactory.createAudioReader(inputUrl);
-        SignalFormat format = reader.getFormat(inputUrl);
-        
-        IExtractorConfig config = ExtractorConfigUtil.defaultConfig(format
-				.getSampleRate(), getWindowLengthInMilSec(),getOverlapInPerc());//30 ms and 66 %
-                    config.setPreemphasis(PreemphasisEnum.middle.name());
+		SignalReader reader = WorkAudioFactory.createAudioReader(inputUrl);
+		SignalFormat format = reader.getFormat(inputUrl);
+
+		IExtractorConfig config = ExtractorConfigUtil.defaultConfig(
+				format.getSampleRate(), getWindowLengthInMilSec(),
+				getOverlapInPerc());// 30 ms and 66 %
+		config.setPreemphasis(PreemphasisEnum.middle.name());
 		IExtractorInputReader extractorReader = ExtractorsFactory
 				.createReader(config);
-		
-//        IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
-//                audioReader.getFormat(inputUrl), getWindowLengthInMilSec(), );
-        log.debug("[createReaderWithClassifier] reader config{0}", extractorReader.getConfig() );
-        List<IClassifier> classifiers = ExtractorUtils.
-                registerThreshold(extractorReader, extractors, params, ClassifierEnum.rules);
-//                registerThreshold(extractorReader, extractors, null);
+
+		// IExtractorInputReader extractorReader =
+		// ExtractorsFactory.createReader(
+		// audioReader.getFormat(inputUrl), getWindowLengthInMilSec(), );
+		log.debug("[createReaderWithClassifier] reader config{0}",
+				extractorReader.getConfig());
+		List<IClassifier> classifiers = ExtractorUtils.registerThreshold(
+				extractorReader, extractors, params, classifier);
+		// registerThreshold(extractorReader, extractors, null);
 		if (isRulesTurnedOn()) {
-	        log.error("registering rules repo");
+			log.error("registering rules repo");
 			for (IClassifier iClassifier : classifiers) {
 				if (iClassifier instanceof ExtremeOnlineRuleClassifier) {
 					WorkServiceFactory.udpateClassifierRuleBaseService(
@@ -196,106 +228,108 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
 				}
 			}
 		}
-        
-        log.debug("[createReaderWithClassifier] reader features{0}", extractorReader.getGeneralExtractor() );
 
-        reader.readSignal(inputUrl, extractorReader);
+		log.debug("[createReaderWithClassifier] reader features{0}",
+				extractorReader.getGeneralExtractor());
 
-        return extractorReader;
-    }
-    
-    
-    
-    /**
-     * 
-     * @param extractors
-     * @param inputFile
-     * @return
-     */
-    public IExtractorInputReader createReader(ExtractorEnum[] extractors,
-            File inputFile) {
-        URL inputUrl;
-        try {
-            inputUrl = inputFile.toURI().toURL();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        AudioReader audioReader = AudioReaderFactory.createAudioReader();
-        IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
-                audioReader.getAudioFormat(inputUrl), getWindowLengthInMilSec(), getOverlapInPerc());
-        ExtractorUtils.register(extractorReader, extractors, null);
-        audioReader.readSignal(inputUrl, extractorReader);
+		reader.readSignal(inputUrl, extractorReader);
 
-        return extractorReader;
-    }
-    
-    /**
-     * 
-     * @param extractors
-     * @param inputFile
-     * @return
-     */
-    public IExtractorInputReader createReader(ExtractorEnum[] extractors,
-            AudioInputStream ais) {
-    	
-    	AudioReader audioReader = AudioReaderFactory.createAudioReader();
-        IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
-        		ais.getFormat(), getWindowLengthInMilSec(), getOverlapInPerc());
-        ExtractorUtils.register(extractorReader, extractors, null);
-        File tmpFile;
+		return extractorReader;
+	}
+
+	/**
+	 * 
+	 * @param extractors
+	 * @param inputFile
+	 * @return
+	 */
+	public IExtractorInputReader createReader(ExtractorEnum[] extractors,
+			File inputFile) {
+		URL inputUrl;
+		try {
+			inputUrl = inputFile.toURI().toURL();
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+		AudioReader audioReader = AudioReaderFactory.createAudioReader();
+		IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
+				audioReader.getAudioFormat(inputUrl),
+				getWindowLengthInMilSec(), getOverlapInPerc());
+		ExtractorUtils.register(extractorReader, extractors, null);
+		audioReader.readSignal(inputUrl, extractorReader);
+
+		return extractorReader;
+	}
+
+	/**
+	 * 
+	 * @param extractors
+	 * @param inputFile
+	 * @return
+	 */
+	public IExtractorInputReader createReader(ExtractorEnum[] extractors,
+			AudioInputStream ais) {
+
+		AudioReader audioReader = AudioReaderFactory.createAudioReader();
+		IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
+				ais.getFormat(), getWindowLengthInMilSec(), getOverlapInPerc());
+		ExtractorUtils.register(extractorReader, extractors, null);
+		File tmpFile;
 		try {
 			tmpFile = File.createTempFile("test", ".wav");
 			AudioSystem.write(ais, AudioFileFormat.Type.WAVE, tmpFile);
-	        audioReader.readSignalSmoothed(tmpFile.toURI().toURL(), extractorReader);
+			audioReader.readSignalSmoothed(tmpFile.toURI().toURL(),
+					extractorReader);
 		} catch (IOException e) {
 			throw new ProcessingException(e);
 		}
-	
 
-        return extractorReader;
-    }
+		return extractorReader;
+	}
 
-    
-    
-    /**
-     * 
-     * @param extractors
-     * @param inputFile
-     * @return
-     */
-    public IExtractorInputReader createReaderAndSave(ExtractorEnum[] extractors,
-            File inputFile) {
-        
-        IExtractorInputReader extractorReader = createReader(extractors, inputFile);
-        //save
-        WorkServiceFactory.createReaderDao().write(extractorReader, createExtactorFile(inputFile));
-        return extractorReader;
-    }
+	/**
+	 * 
+	 * @param extractors
+	 * @param inputFile
+	 * @return
+	 */
+	public IExtractorInputReader createReaderAndSave(
+			ExtractorEnum[] extractors, File inputFile) {
 
-    /**
-     * 
-     * @param name
-     * @param reader
-     * @return
-     */
-    public IGeneralExtractor findExtractorByName(String name, IExtractorInputReader reader) {
-        for (IExtractor extractor : reader.getExtractorRegister()) {
-            if (extractor.getName().contains(name)) {
-                return extractor;
-            }
-        }
-        for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
-            if (extractor.getName().contains(name)) {
-                return extractor;
-            }
-        }
-        return null;
-    }
+		IExtractorInputReader extractorReader = createReader(extractors,
+				inputFile);
+		// save
+		WorkServiceFactory.createReaderDao().write(extractorReader,
+				createExtactorFile(inputFile));
+		return extractorReader;
+	}
 
-    protected File createExtactorFile(File wavFile) {
-        File newFile = new File(wavFile.getAbsoluteFile().toString() + ".sspnt.xml");
-        return newFile;
-    }
+	/**
+	 * 
+	 * @param name
+	 * @param reader
+	 * @return
+	 */
+	public IGeneralExtractor findExtractorByName(String name,
+			IExtractorInputReader reader) {
+		for (IExtractor extractor : reader.getExtractorRegister()) {
+			if (extractor.getName().contains(name)) {
+				return extractor;
+			}
+		}
+		for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
+			if (extractor.getName().contains(name)) {
+				return extractor;
+			}
+		}
+		return null;
+	}
+
+	protected File createExtactorFile(File wavFile) {
+		File newFile = new File(wavFile.getAbsoluteFile().toString()
+				+ ".sspnt.xml");
+		return newFile;
+	}
 
 	public int getWindowLengthInMilSec() {
 		return windowLengthInMilSec;
