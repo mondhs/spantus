@@ -221,8 +221,8 @@ public class MultiMapper {
 		label =label.trim();
 		label = label.replaceAll("\\d","");
 		if(!StringUtils.hasText(label.trim())){
-			log.error("NO TEXT. do not save");
 			if(!StringUtils.hasText(recogniton.get("MFCC_EXTRACTOR").getInfo().getName().trim())){
+				log.error("NO TEXT. do not save");
 				return null;
 			}
 		}

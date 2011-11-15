@@ -54,7 +54,7 @@ public class SingleThresholdPlot extends JFrame {
 				.createReader(reader.getAudioFormat(urlFile));
 		ExtractorUtils.registerThreshold(bufferedReader, new ExtractorEnum[] {
 				ExtractorEnum.ENERGY_EXTRACTOR,
-				ExtractorEnum.CROSSING_ZERO_EXTRACTOR,
+//				ExtractorEnum.CROSSING_ZERO_EXTRACTOR,
 				ExtractorEnum.ENVELOPE_EXTRACTOR,
 				ExtractorEnum.LOG_ATTACK_TIME,
 				ExtractorEnum.LOUDNESS_EXTRACTOR,

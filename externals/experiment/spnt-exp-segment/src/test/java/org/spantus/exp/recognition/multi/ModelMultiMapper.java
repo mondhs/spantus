@@ -24,14 +24,10 @@ public class ModelMultiMapper extends MultiMapper {
 
 	@Override
 	public void recognize() throws MalformedURLException {
-		// ((QSegmentExpHsqlDao)getqSegmentExpDao()).setRecreate(true);
-		// ((QSegmentExpHsqlDao)getqSegmentExpDao()).init();
 		int counter = 0;
-		// File testDir = new File(testDir.);
 		int size = getExpConfig().getTestDirAsFile().listFiles(
 				new ExtNameFilter(EXTENSION)).length;
 
-		// Double totalTime = 0D;
 		for (File signalFile : getExpConfig().getTestDirAsFile().listFiles(
 				new ExtNameFilter(EXTENSION))) {
 //			if (!signalFile.getName().endsWith("_24.wav") 
@@ -44,6 +40,11 @@ public class ModelMultiMapper extends MultiMapper {
 					+ "; file = " + signalFile);
 			File markerFilePath = new File(getExpConfig().getTestDirAsFile(),
 					FileUtils.replaceExtention(signalFile, ".mspnt.xml"));
+			if(!markerFilePath.exists()){
+				 markerFilePath = new File(getExpConfig().getTestDirAsFile(),
+							"test.mspnt.xml");
+				
+			}
 			log.debug("[recognize]reading: {0}", signalFile);
 			IExtractorInputReader reader = getExtractor()
 					.createReaderWithClassifier(signalFile);

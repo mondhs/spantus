@@ -14,18 +14,18 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import org.spantus.exp.ExpConfig;
 import org.spantus.exp.recognition.ExtNameFilter;
 import org.spantus.exp.recognition.dao.ChartJFreeDao;
+import org.spantus.exp.recognition.dao.QSegmentExpHsqlDao;
 import org.spantus.exp.recognition.dao.ResultOdsDao;
 import org.spantus.exp.recognition.multi.ModelMultiMapper;
-import org.spantus.logger.Logger;
 
 /**
  * 
  * @author mondhs
  */
-public class QSegmentModelRecognitionDirTest {
+public class SytheticRecognitionDirExp {
 
-	private static final Logger log = Logger
-			.getLogger(QSegmentModelRecognitionDirTest.class);
+//	private static final Logger log = Logger
+//			.getLogger(SytheticRecognitionDirExp.class);
 
 	private ModelMultiMapper mapper;
 
@@ -34,7 +34,7 @@ public class QSegmentModelRecognitionDirTest {
 		mapper = new ModelMultiMapper();
 	}
 
-	public final static String ROOT_DIR = "/home/as/tmp/garsyno.modelis";
+	public final static String ROOT_DIR = "/home/as/tmp/garsyno.modelis1";
 
 	protected void init(ModelMultiMapper mapper, String corpusName) {
 		mapper.init(ExpConfig.createConfig(), new ExtNameFilter("txt"),
@@ -46,24 +46,41 @@ public class QSegmentModelRecognitionDirTest {
 		mapper.destroy();
 	}
 
-	@Test  @Ignore
+	@Test @Ignore
 	public void testRecognize() throws Exception {
 		// given
 		init(mapper, "AK1");
 		mapper.recognize();
 	}
 
-	@Test 
+	@Test  @Ignore
 	public void testGenerateReport() throws Exception {
+
+		// given
+		String[] syllabels = new String[] {"a", "e", " "}
+//				{ "ga", "ma", "me", "na", "ne", "re",				"ta", " " }
+		;
+		init(mapper, "AK1");
+		ChartJFreeDao chartDao = new ChartJFreeDao();
+		mapper.setRecreate(false);
+		((QSegmentExpHsqlDao)mapper.getqSegmentExpDao()).setAcceptThreshold(200);
+		// then
+		StringBuilder result = mapper.getqSegmentExpDao().generateReport(
+				"500,500,500,500,500,2500", syllabels);
+		// System.out.println(result);
+		ResultOdsDao dao = new ResultOdsDao();
+		File ods = new File("./target/data/results.ods");
+		ods = dao.save(result, ods.getAbsolutePath());
+	}
+
+	@Test
+	public void testDrawReport() throws Exception {
 		// given
 		init(mapper, "AK1");
 		ChartJFreeDao chartDao = new ChartJFreeDao();
 		mapper.setRecreate(false);
-		StringBuilder result = mapper.getqSegmentExpDao().generateReport("500,500,500,500,500,2500");
-//		System.out.println(result);
-		ResultOdsDao dao = new ResultOdsDao();
 		File ods = new File("./target/data/results.ods");
-		ods = dao.save(result,ods.getAbsolutePath());
+		// ods = new ResultOdsDao().save(result,ods.getAbsolutePath());
 		chartDao.draw(SpreadsheetDocument.loadDocument(ods));
 	}
 }

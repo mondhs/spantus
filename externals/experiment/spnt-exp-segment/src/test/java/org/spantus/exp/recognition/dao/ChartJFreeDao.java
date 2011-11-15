@@ -42,7 +42,7 @@ public class ChartJFreeDao {
 	public void draw(SpreadsheetDocument ods) {
 
 		Table segmentationTable = ods.getTableByName(ResultOdsDao.SEGMENTACIJA);
-		Table recognitionTable = ods.getTableByName(ResultOdsDao.ATPAZINIMAS);
+		Table recognitionTable = ods.getTableByName(ResultOdsDao.SKIEMENIMIS);
 		Table comparisionTable = ods.getTableByName(ResultOdsDao.LYGINIMAS);
 
 		com.google.common.collect.Table<String, String, Double> segmentationResult = createTable(segmentationTable);
@@ -73,6 +73,26 @@ public class ChartJFreeDao {
 		Map<String, Double> segmentationTotals = segmentationResult
 				.row("turėjo būti");
 
+		//////////////////////////// fix this
+		for (Entry<String, Map<String, Double>> rowEntry : recognitionResult
+				.rowMap().entrySet()) {
+			String rowKey = rowEntry.getKey();
+			if (rowKey.contains("turėjo būti") || rowKey.startsWith("Viso")) {
+				recognitionTotals = rowEntry.getValue();
+				break;
+			}
+		}
+		
+		for (Entry<String, Map<String, Double>> rowEntry : segmentationResult
+				.rowMap().entrySet()) {
+			String rowKey = rowEntry.getKey();
+			if (rowKey.contains("turėjo būti") || rowKey.startsWith("Viso")) {
+				segmentationTotals = rowEntry.getValue();
+				break;
+			}
+		}
+		//////////////////////////// fix this
+		
 
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -202,9 +222,17 @@ public class ChartJFreeDao {
 		// createTable(segmentationResult);
 		Map<String, Double> correct = new HashMap<String, Double>();
 		Map<String, Double> confidence = new HashMap<String, Double>();
-		Map<String, Double> totals = segmentationResult.row("turėjo būti");
-		if (totals.isEmpty()) {
-			totals = segmentationResult.row("Viso aptikta segmentavime ");
+		Map<String, Double> totals = null;
+//		if (totals.isEmpty()) {
+//			totals = segmentationResult.row("Viso aptikta segmentavime ");
+//		}
+		for (Entry<String, Map<String, Double>> rowEntry : segmentationResult
+				.rowMap().entrySet()) {
+			String rowKey = rowEntry.getKey();
+			if (rowKey.contains("turėjo būti") || rowKey.startsWith("Viso")) {
+				totals = rowEntry.getValue();
+				break;
+			}
 		}
 
 		for (String column : segmentationResult.columnKeySet()) {

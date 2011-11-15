@@ -20,7 +20,6 @@
 package org.spantus.extractor;
 
 import org.spantus.core.FrameValues;
-import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
@@ -38,9 +37,10 @@ public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
     private IExtractorConfig config;
 
     private Windowing windowing;
-
+    private WindowBufferProcessorCtx ctx;
+    private WindowBufferProcessor windowBufferProcessor;
+    
     private ExtractorParam param = new ExtractorParam();
-	private WindowBufferProcessor windowBufferProcessor;
     
     public void putValues(Long sample, FrameValues values) {
         //do nothing
@@ -58,21 +58,16 @@ public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
 	 */
 	public IValues calculate(Long sampleNum, FrameValues values) {
 
-		FrameValues windowValues = new FrameValues();
 		IValues storedValues = null;
 
-		boolean finished = false;
-		while(!finished){
-			windowValues = getWindowBufferProcessor().calculate(sampleNum, values, getConfig(), windowValues);
-			finished = windowValues == null;
-			if(finished){
-				break;
+		for (Double value : values) {
+			FrameValues window = getWindowBufferProcessor().calculate(value, getCtx());
+			if(window != null){
+				getWindowing().apply(window);
+				storedValues = calculateAndStoreWindow(window, storedValues);
+				storedValues.setSampleRate(getWindowBufferProcessor().calculateExtractorSampleRate(getConfig()));
 			}
-			getWindowing().apply(windowValues);
-			storedValues = calculateAndStoreWindow(windowValues, storedValues);
 		}
-		storedValues.setSampleRate(getWindowBufferProcessor().calculateExtractorSampleRate(getConfig()));
-		
 		
 //		log.debug("[calculate]---");
 		return storedValues;
@@ -137,10 +132,27 @@ public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
     public void setParam(ExtractorParam param) {
         this.param = param;
     }
+
+
+	public WindowBufferProcessorCtx getCtx() {
+		if(ctx == null){
+			ctx = WindowBufferProcessor.ctreateWindowBufferProcessorCtx(getConfig());
+		}
+		return ctx;
+	}
+
+	public void setCtx(WindowBufferProcessorCtx ctx) {
+		this.ctx = ctx;
+	}
+
 	public WindowBufferProcessor getWindowBufferProcessor() {
 		if(windowBufferProcessor == null){
 			windowBufferProcessor = new WindowBufferProcessor();
 		}
 		return windowBufferProcessor;
+	}
+
+	public void setWindowBufferProcessor(WindowBufferProcessor windowBufferProcessor) {
+		this.windowBufferProcessor = windowBufferProcessor;
 	}
 }

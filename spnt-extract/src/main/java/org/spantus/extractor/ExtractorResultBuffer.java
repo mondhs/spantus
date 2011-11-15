@@ -34,7 +34,7 @@ public class ExtractorResultBuffer implements IExtractor {
 	Logger log = Logger.getLogger(ExtractorResultBuffer.class);
 	IExtractor extractor;
 
-	FrameValues frameValues = new FrameValues();
+//	FrameValues frameValues = new FrameValues();
 	FrameValues outputValues = new FrameValues();
 
 	public ExtractorResultBuffer(IExtractor extractor) {
@@ -42,13 +42,13 @@ public class ExtractorResultBuffer implements IExtractor {
 	}
 	
 	public void putValues(Long sample, FrameValues values) {
-		this.frameValues = values;
-		setOutputValues(calculate(sample, values));
+//		this.frameValues = values;
+		calculate(sample, values);
 	}
 
-	public FrameValues getFrameValues() {
-		return frameValues;
-	}
+//	public FrameValues getFrameValues() {
+//		return frameValues;
+//	}
 	
 	public FrameValues getOutputValues() {
 		outputValues.setSampleRate(extractor.getExtractorSampleRate());
@@ -73,7 +73,10 @@ public class ExtractorResultBuffer implements IExtractor {
 
 
 	public FrameValues calculate(Long sample, FrameValues values) {
-		FrameValues val = extractor.calculate(sample, getFrameValues());
+		FrameValues val = extractor.calculate(sample, values);
+		if(val == null){
+			return null;
+		}
 		getOutputValues().addAll(val);
 		int i = getOutputValues().size() - getConfig().getBufferSize();
 		while( i > 0 ){

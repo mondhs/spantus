@@ -89,6 +89,7 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 	}
 
 	public static final String ALL_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP   {1}";
+	public Integer acceptThreshold = 90;
 
 	
 	public static final String DISTINCT_SEGMENTS_REPORT_QUERY = "select {0}  count(distinct(MANUALNAME)) mcount from QSEGMENTEXP where  not MARKERLABEL like ''D;%''  {1}";
@@ -98,40 +99,39 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 	public static final String ERR_BREAK_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where  MARKERLABEL like ''D;%''  {1}";
 
 	public static final String SUCC_RECONITION_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ "MANUALNAME = ''<SYLLABLE_WAS>''  and  MFCCLABEL = ''<SYLLABLE_SAID>'' and MFCC <90 and not  MARKERLABEL like ''D;%''  {1}";
+			+ "MANUALNAME = ''<SYLLABLE_WAS>''  and  MFCCLABEL = ''<SYLLABLE_SAID>'' and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like ''D;%''  {1}";
 
 	public static final String SUCC_RECONITION_LIKE_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ "MANUALNAME like ''%<SYLLABLE_WAS>''  and  MFCCLABEL like ''%<SYLLABLE_SAID>'' and LENGTH(MANUALNAME)<=2 and  LENGTH(MFCCLABEL)<=2 and MFCC <90   and not  MARKERLABEL like ''D;%''  {1}";
+			+ "MANUALNAME like ''%<SYLLABLE_WAS>''  and  MFCCLABEL like ''%<SYLLABLE_SAID>'' and LENGTH(MANUALNAME)<=2 and  LENGTH(MFCCLABEL)<=2 and MFCC < <ACCEPT_THRESHOLD>   and not  MARKERLABEL like ''D;%''  {1}";
 
 	public static final String ERR_RECONITION_LIKE_NOISE_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ "MANUALNAME like ''''  and  MFCCLABEL like ''%<SYLLABLE_SAID>''  and MFCC <90 and not  MARKERLABEL like ''D;%''  {1}";
+			+ "MANUALNAME like ''''  and  MFCCLABEL like ''%<SYLLABLE_SAID>''  and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like ''D;%''  {1}";
 	public static final String ALL_SEGMENTS_FOR_RECOGN_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP  where "+
 			" not (MARKERLABEL like ''D;%'' or " +
 			" (LENGTH(MANUALNAME) > 2  and not MARKERLABEL like ''D;%''))  {1}";
 	
 	public static final String ERR_REJECTED_RECONITION_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ " MFCC >=90 and LENGTH(MANUALNAME)<=2 and not  MARKERLABEL like ''D;%''  {1}";
+			+ " MFCC >= <ACCEPT_THRESHOLD> and LENGTH(MANUALNAME)<=2 and not  MARKERLABEL like ''D;%''  {1}";
 
 	public static final String ERR_SEGMENT_TOTAL_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
 			+ "((LENGTH(MANUALNAME) > 2  and not MARKERLABEL like ''D;%'') or (MANUALNAME = '''' and not MARKERLABEL like ''D;%'') or (MARKERLABEL like ''D;%'') )   {1}";
 
 	public static final String ERR_RECONITION_TOTAL_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "+
 			"( (LENGTH(MANUALNAME)=2  and LENGTH(MFCCLABEL)=2  and not SUBSTR(MANUALNAME,2,1) =  SUBSTR(MFCCLABEL,2,1)) or (MANUALNAME ='''' AND  LENGTH(MFCCLABEL)<=2) ) "+
-			" and MFCC <90 and not  MARKERLABEL like''D;%''  {1}";
+			" and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like''D;%''  {1}";
 	
 	public static final String ERR_RECONITION_TOTAL_SYLLABLE_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
 			+ "( (LENGTH(MANUALNAME)=2  and LENGTH(MFCCLABEL)=2  and not MANUALNAME =  MFCCLABEL) or (MANUALNAME ='''' AND  LENGTH(MFCCLABEL)<=2) ) " +
-			" and MFCC <90 and not  MARKERLABEL like''D;%''  {1}";
+			" and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like''D;%''  {1}";
 
 	/**
 	 * 
 	 */
 	@Override
-	public StringBuilder generateReport(String shouldBe) throws SQLException {
+	public StringBuilder generateReport(String shouldBe, String[] syllabels) throws SQLException {
 		StringBuilder sb = new StringBuilder();
 		Map<String, String> reports = new LinkedHashMap<String, String>();
-		String[] syllabels = new String[] { "ga", "ma", "me", "na", "ne", "re",
-				"ta" ," "};
+		
 		String[] vovel = new String[] { "a", "e" ," "};
 
 		segmentationReport(syllabels, reports);
@@ -317,7 +317,10 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 	private Map<Integer, Integer> fetchResults(String query)
 			throws SQLException {
 		// String query = REPORT_QUERY + criteria + REPORT_QUERY_GROUPING;
-		String pimpedQuery = MessageFormat.format(query,
+		
+		String thresholdQuery = query.replaceAll("<ACCEPT_THRESHOLD>", ""+getAcceptThreshold());
+		
+		String pimpedQuery = MessageFormat.format(thresholdQuery,
 				"CORPUSENTRYNAME snr,", "GROUP BY CORPUSENTRYNAME");
 		Map<Integer, Integer> result = new TreeMap<Integer, Integer>();
 		System.out.println(pimpedQuery);
@@ -333,7 +336,7 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 			result.put(snr, rs.getInt("mcount"));
 		}
 
-		pimpedQuery = MessageFormat.format(query, "", "");
+		pimpedQuery = MessageFormat.format(thresholdQuery, "", "");
 		System.out.println(pimpedQuery);
 		rs = statement.executeQuery(pimpedQuery);
 		while (rs.next()) {
@@ -343,65 +346,7 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 		return result;
 	}
 
-	// public static final String
-	// REPORT_QUERY="select MANUALNAME, count(id) mcount from QSEGMENTEXP where ";
-	// public static final String REPORT_QUERY_GROUPING =
-	// " GROUP By MANUALNAME   HAVING count(id) >5 ORDER by COUNT(id) desc";
 
-	/**
-	 * 
-	 */
-	// public void findMatches( String corpusName){
-	//
-	// StringBuilder criteria = new StringBuilder();
-	// String currentRecognitionFeature= MANUALNAME;
-	// String separator = " ";
-	//
-	// criteria.append(separator).append("  {0} = MANUALNAME ");
-	// separator = " AND ";
-	//
-	// // if (StringUtils.hasText(recognitionFeature)) {
-	// // currentRecognitionFeature = recognitionFeature;
-	// // }
-	// if (StringUtils.hasText(corpusName)) {
-	// //criteria.append(separator).append("  CORPUSENTRYNAME={1} ");
-	// criteria.append(separator).append("  CORPUSENTRYNAME in ({1}) ");
-	// separator = " AND ";
-	// }
-	//
-	// String query = REPORT_QUERY + criteria + REPORT_QUERY_GROUPING;
-	//
-	// Map<String, Map<String, Integer>> results = Maps.newTreeMap();
-	// try {
-	// statement = connection.createStatement();
-	// fetchResults(criteria, corpusName, results, MANUALNAME);
-	// fetchResults(criteria, corpusName, results, PLPLABEL);
-	// fetchResults(criteria, corpusName, results, MFCCLABEL);
-	// fetchResults(criteria, corpusName, results, LPCLABEL);
-	// } catch (SQLException e) {
-	// e.printStackTrace();
-	// }
-	// StringBuilder sb = new StringBuilder();
-	// sb.append("Label;MANUAL;PLPLABEL; MFCCLABEL; LPCLABEL\n");
-	// for (Entry<String, Map<String, Integer>> record : results.entrySet()) {
-	// sb.append(record.getKey()).append(";");
-	// String[] columns = new String[]{ PLPLABEL, MFCCLABEL, LPCLABEL};
-	// int manualInt = record.getValue().get(MANUALNAME);
-	// sb.append(manualInt).append(";");
-	// for (String column : columns) {
-	// Integer val = record.getValue().get(column);
-	// if(val == null){
-	// sb.append(";");
-	// }else{
-	// sb.append(val.doubleValue()/manualInt).append(";");
-	// }
-	//
-	// }
-	// sb.append("\n");
-	//
-	// }
-	// System.out.println(sb);
-	// }
 
 	public QSegmentExp save(QSegmentExp exp) {
 		String query = MessageFormat.format(getInsertExperimentResulQuery(),
@@ -454,6 +399,14 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 
 	public void setRecreate(boolean recreate) {
 		this.recreate = recreate;
+	}
+
+	public Integer getAcceptThreshold() {
+		return acceptThreshold;
+	}
+
+	public void setAcceptThreshold(Integer acceptThreshold) {
+		this.acceptThreshold = acceptThreshold;
 	}
 
 }

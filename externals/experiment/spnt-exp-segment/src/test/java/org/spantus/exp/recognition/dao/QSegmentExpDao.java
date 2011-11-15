@@ -8,5 +8,5 @@ public interface QSegmentExpDao {
 	public void init();
 	public QSegmentExp save(QSegmentExp exp);
 	public void destroy();
-	public StringBuilder generateReport(String shouldBe) throws SQLException;
+	public StringBuilder generateReport(String shouldBe, String[] syllabels) throws SQLException;
 }

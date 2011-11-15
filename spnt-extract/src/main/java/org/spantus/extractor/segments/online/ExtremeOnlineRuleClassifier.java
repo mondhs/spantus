@@ -38,9 +38,12 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 	 * .Long, org.spantus.core.FrameValues)
 	 */
 	public void afterCalculated(Long sample, FrameValues result) {
+		if(result == null){
+			return;
+		}
 		// entry class point
 		for (Double value : result) {
-			getThresholdValues().updateMinMax(value);
+//			getThresholdValues().updateMinMax(value);
 			processValue(onlineCtx, value);
 		}
 	}

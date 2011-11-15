@@ -22,7 +22,7 @@
 package org.spantus.work.ui.util;
 
 import org.spantus.core.extractor.IExtractorConfig;
-import org.spantus.extractor.ExtractorConfig;
+import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 /**
  * 
@@ -36,21 +36,9 @@ import org.spantus.work.ui.dto.WorkUIExtractorConfig;
  */
 public abstract class WorkUIExtractorConfigUtil {
 	public static IExtractorConfig convert(WorkUIExtractorConfig workConfig, Double sampleRate){
-		IExtractorConfig config = new ExtractorConfig();
-		config.setSampleRate(sampleRate);
-		config.setBufferSize(3000);
-		Double windowSize = (((double)sampleRate*workConfig.getWindowSize())/1000);
-		windowSize = Math.max(1, windowSize);
-		config.setWindowSize(windowSize.intValue());
-		Double windowOverlapPercent = (workConfig.getWindowOverlap().doubleValue())/100;
-		Double windowOverlap = windowSize - (windowSize * windowOverlapPercent); 
-
-		windowOverlap = Math.max(1, windowOverlap);
-		config.setWindowOverlap(windowOverlap.intValue());
-
-		config.setFrameSize((config.getWindowSize() * workConfig.getFrameSize())+config.getWindowOverlap());
-		Double bufferSize = (sampleRate * workConfig.getBufferSize())/windowSize;
-		config.setBufferSize(bufferSize.intValue());
+		IExtractorConfig config =ExtractorConfigUtil.defaultConfig(sampleRate, workConfig.getWindowSize(), workConfig.getWindowOverlap());
+		config.setFrameSize(ExtractorConfigUtil.calculateFrameSize(config.getWindowSize(),config.getWindowOverlap(), workConfig.getFrameSize()));
+		config.setBufferSize(ExtractorConfigUtil.calculateBufferSize(config.getFrameSize(), workConfig.getBufferSize()));
 		config.setWindowing(workConfig.getWindowingType());
 		config.setPreemphasis(workConfig.getPreemphasis());
 		return config;

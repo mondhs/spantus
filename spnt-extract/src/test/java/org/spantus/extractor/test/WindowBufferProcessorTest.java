@@ -1,5 +1,8 @@
 package org.spantus.extractor.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -8,6 +11,7 @@ import org.spantus.core.FrameValues;
 import org.spantus.extractor.ExtractorConfig;
 import org.spantus.extractor.FrameValuesTestUtils;
 import org.spantus.extractor.WindowBufferProcessor;
+import org.spantus.extractor.WindowBufferProcessorCtx;
 
 public class WindowBufferProcessorTest {
 
@@ -23,16 +27,30 @@ public class WindowBufferProcessorTest {
 		// given
 		FrameValues values = FrameValuesTestUtils.generateFrameValues(21);
 		ExtractorConfig config = FrameValuesTestUtils.createExtractorConfig();
-		config.setWindowSize(10);
-		config.setWindowOverlap(6);
+		config.setWindowSize(12);
+		config.setWindowOverlap(3);
+		List<FrameValues> fv = new ArrayList<FrameValues>();
 		// when
-		FrameValues windowValues1 = processor.calculate(0L, values, config, new FrameValues() );
-		FrameValues windowValues2 = processor.calculate(0L, values, config, windowValues1);
+		WindowBufferProcessorCtx ctx = WindowBufferProcessor.ctreateWindowBufferProcessorCtx(config);
+		for (Double val : values) {
+			FrameValues windowValues = processor.calculate( val, ctx);
+			if(windowValues != null){
+				fv.add(windowValues);
+			}
+		}
 		// then
-		Assert.assertEquals(10, windowValues1.size());
-		Assert.assertEquals(9, windowValues1.getLast().intValue());
-		Assert.assertEquals(10, windowValues2.size());
-		Assert.assertEquals(15, windowValues2.getLast().intValue());
+		Assert.assertEquals("Windows ", 2,fv.size());
+		FrameValues windowValues1  = fv.get(0);
+		FrameValues windowValues2 =  fv.get(1);
+		Assert.assertEquals(12, windowValues1.size());
+		Assert.assertEquals(11, windowValues1.getLast().intValue());
+		Assert.assertEquals(0, windowValues1.getFrameIndex().intValue());
+		
+		Assert.assertEquals(12, windowValues2.size());
+		Assert.assertEquals(20, windowValues2.getLast().intValue());
+		Assert.assertEquals(1, windowValues2.getFrameIndex().intValue());
+		
+		Assert.assertEquals(1, windowValues2.getTime());
 	}
 	
 	
@@ -43,13 +61,20 @@ public class WindowBufferProcessorTest {
 		ExtractorConfig config = FrameValuesTestUtils.createExtractorConfig();
 		config.setWindowSize(10);
 		config.setWindowOverlap(6);
+		List<FrameValues> fv = new ArrayList<FrameValues>();
 		// when
-		FrameValues windowValues1 = processor.calculate(0L, values, config, new FrameValues() );
-		FrameValues windowValues2 = processor.calculate(0L, values, config, windowValues1);
+		WindowBufferProcessorCtx ctx = WindowBufferProcessor.ctreateWindowBufferProcessorCtx(config);
+		for (Double val : values) {
+			FrameValues windowValues = processor.calculate( val, ctx);
+			if(windowValues != null){
+				fv.add(windowValues);
+			}
+		}
 		// then
+		Assert.assertEquals("Windows ", 1,fv.size());
+		FrameValues windowValues1  = fv.get(0);
 		Assert.assertEquals(10, windowValues1.size());
 		Assert.assertEquals(9, windowValues1.getLast().intValue());
-		Assert.assertNull(windowValues2);
 	}
 
 

@@ -40,7 +40,7 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 	
 	IExtractorVector extractor;
 	
-	FrameValues frameValues = new FrameValues();
+//	FrameValues frameValues = new FrameValues();
 	FrameVectorValues outputValues = new FrameVectorValues();
 	IExtractorConfig config;
 
@@ -50,13 +50,13 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 
 	
 	public void putValues(Long sample, FrameValues values) {
-		this.frameValues = values;
-		setOutputValues(calculate(sample, values));
+//		this.frameValues = values;
+		calculate(sample, values);
 	}
 
-	public FrameValues getFrameValues() {
-		return frameValues;
-	}
+//	public FrameValues getFrameValues() {
+//		return frameValues;
+//	}
 	
 	public FrameVectorValues getOutputValues() {
 		outputValues.setSampleRate(extractor.getExtractorSampleRate());
@@ -83,16 +83,18 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 //	}
 
 	public FrameVectorValues calculate(Long sample, FrameValues values) {
-		FrameVectorValues outputValues = extractor.calculate(sample, getFrameValues());
-		
-		getOutputValues().addAll(outputValues);
+		FrameVectorValues val = extractor.calculate(sample, values);
+		if(val == null){
+			return null;
+		}
+		getOutputValues().addAll(val);
 		int i = getOutputValues().size() - getConfig().getBufferSize();
 		while( i > 0 ){
 			getOutputValues().poll();
 			i--;
 		}
-                outputValues.setSampleRate(getExtractorSampleRate());
-		return outputValues;
+		val.setSampleRate(getExtractorSampleRate());
+		return val;
 	}
 
 

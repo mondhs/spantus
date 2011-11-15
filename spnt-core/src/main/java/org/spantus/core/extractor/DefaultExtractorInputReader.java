@@ -138,6 +138,10 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 		}
 	}
 
+	public long getFullSampleIndex(){
+		return getOffset() + index;
+	}
+	
 	public Long getOffset() {
 		return offset;
 	}

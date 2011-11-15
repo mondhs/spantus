@@ -11,6 +11,7 @@ import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioCapture;
 import org.spantus.core.io.RecordWraperExtractorReader;
+import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
@@ -25,10 +26,25 @@ public class MonitorPlot extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private AbstractSwingChart chart;
 	private Timer timer = new Timer("Sound Monitor Plot");
+	private boolean populated = false;
 	Logger log = Logger.getLogger(getClass());
 	AudioCapture capture;
 
 	private MonitorPlot() {
+
+	}
+
+	private void initGraph(IExtractorInputReader reader) {
+		chart = ChartFactory.createChart(reader);
+		chart.setSize(this.getSize());
+		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
+		getContentPane().add(chart);
+		chart.initialize();
+	}
+	/**
+	 * 
+	 */
+	public void initialize() {
 		IExtractorInputReader reader = ExtractorsFactory
 				.createReader(getFormat());
 		ExtractorUtils.registerThreshold(reader,
@@ -48,25 +64,23 @@ public class MonitorPlot extends JFrame {
 //				chart.setPreferredSize(getSize());
 				repaint();
 			}
-		}, 200L, 1000L);
-
+		}, 2000L, 300L);
+		timer.schedule(new TimerTask() {
+			public void run() {
+				getChart().setSize(getSize());
+				getChart().initialize();
+			}
+		}, 1500L);
 	}
-
-	private void initGraph(IExtractorInputReader reader) {
-		chart = ChartFactory.createChart(reader);
-		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
-		getContentPane().add(chart);
-	}
-
-
 
 	public static void main(String[] args) {
 
-		JFrame monitorPlot = new MonitorPlot();
+		MonitorPlot monitorPlot = new MonitorPlot();
 		monitorPlot.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		monitorPlot.setSize(640, 480);
 		monitorPlot.validate();
 		monitorPlot.setVisible(true);
+		monitorPlot.initialize();
 	}
 
 	public AudioFormat getFormat() {
@@ -80,8 +94,17 @@ public class MonitorPlot extends JFrame {
 	}
 	
 	public void repaint() {
+//		if(!populated){
+//			AbstractThreshold extr = (AbstractThreshold) capture.getReader().getReader().getGeneralExtractor().iterator().next();
+//			if(extr.getOutputValues().size()>100){
+//				getChart().initialize();
+//				populated = true;
+//			}
+//			
+//		}
 		if (getChart() != null) {
 //			getChart().setSize(getSize());
+//			
 			getChart().repaint();
 		}
 		super.repaint();

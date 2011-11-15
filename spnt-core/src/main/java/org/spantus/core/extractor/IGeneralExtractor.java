@@ -44,4 +44,5 @@ public interface IGeneralExtractor {
 	public IExtractorConfig getConfig();
 	
 	public void setConfig(IExtractorConfig config);
+	
 }

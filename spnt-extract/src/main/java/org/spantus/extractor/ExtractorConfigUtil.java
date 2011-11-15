@@ -53,22 +53,34 @@ public abstract class ExtractorConfigUtil {
 			 int windowLengthInMilSec, int overlapInPerc ){
 		ExtractorConfig config = new ExtractorConfig();
 		config.setSampleRate(sampleRate);
-		config.setBufferSize(3000);
-		Double windowSize = sampleRate * windowLengthInMilSec / 1000;
-		windowSize = Math.max(1, windowSize);
-		config.setWindowSize(windowSize.intValue());
-		float windowOverlapPercent = ((float)overlapInPerc)/100;
+		Double windowSizeDouble = sampleRate * windowLengthInMilSec / 1000;
+		windowSizeDouble = Math.max(1, windowSizeDouble);
+		Integer windowSize = windowSizeDouble.intValue();
+		config.setWindowSize(windowSize);
 		
-		Double windowOverlap = windowSize - (windowSize * windowOverlapPercent);
+		
+		float windowOverlapPercent = ((float)overlapInPerc)/100;
+		Double windowOverlapDouble = windowSizeDouble - (windowSizeDouble * windowOverlapPercent);
+		Integer windowOverlap = windowOverlapDouble.intValue();
 		windowOverlap = Math.max(1, windowOverlap);
 		config.setWindowOverlap(windowOverlap.intValue());
 		
+		
 		//enhancing as buffering is not working corretly
-		Double frameSize = (windowSize * 1000)+windowOverlap;
-		config.setFrameSize(frameSize.intValue());
+		config.setFrameSize(calculateFrameSize( windowSize, windowOverlap, 10));
 //		config.setBitsPerSample(sampleSizeInBits);
-		config.setBufferSize(config.getFrameSize()*1000);
+		config.setBufferSize(calculateBufferSize(config.getFrameSize(), 800));
 		return config;
+	}
+	
+	public static int  calculateFrameSize(int windowSize, int windowOverlap, int sizeInWindows){
+		int frameSize = windowOverlap*sizeInWindows+(windowSize-windowOverlap);
+		return frameSize;
+	}
+	
+	public static int  calculateBufferSize(int frameLength,  int sizeInFrames){
+		int frameSize = frameLength * sizeInFrames ;
+		return frameSize;
 	}
 	
 	public static IExtractorConfig clone(IExtractorConfig config) {
