@@ -83,6 +83,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 	
 	@Override
 	public void startRecognition(){
+		initialize();
 		startRecord();
 		super.startRecognition();
 	}
@@ -132,8 +133,10 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 //		segmentator.setLearningPeriod(threshold_leaningPeriod);
 
 		ExtractorParam paramEnergy = new ExtractorParam();
-		ExtractorParamUtils.setValue(paramEnergy, 
-				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
+		
+		
+//		ExtractorParamUtils.setValue(paramEnergy, 
+//				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
 
 //		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy);
 		segmentator =ExtractorUtils.registerThreshold(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy); 
@@ -177,6 +180,7 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 	protected DecisionSegmentatorOnline createSegmentatorRecordable(ExtractorParam param){
 		String path = ExtractorParamUtils.<String>getValue(param,
 				ConfigPropertiesDao.key_format_pathOutput);
+		
 		RecordSegmentatorOnline segmentator = 
 			(RecordSegmentatorOnline)createSegmentatorRecordable();
 		segmentator.setPath(path);

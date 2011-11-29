@@ -155,4 +155,9 @@ public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
 	public void setWindowBufferProcessor(WindowBufferProcessor windowBufferProcessor) {
 		this.windowBufferProcessor = windowBufferProcessor;
 	}
+	
+	public long getOffset() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

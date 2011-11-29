@@ -30,6 +30,9 @@ public class ConfigPropertiesDao implements ConfigDao {
 	public static final String key_segmentation_minSpace= "segmentation.minSpace";
 	public static final String key_segmentation_expandStart = "segmentation.expandStart";
 	public static final String key_segmentation_expandEnd = "segmentation.expandEnd";
+	public static final String key_segmentation_classifier = "segmentation.classifier";
+	public static final String key_segmentation_modifier_smooth = "segmentation.modifier.smooth";
+	public static final String key_segmentation_modifier_mean= "segmentation.modifier.mean";
 
 	public IExtractorConfig read(File file) {
 		Properties properties = new Properties();
@@ -51,16 +54,7 @@ public class ConfigPropertiesDao implements ConfigDao {
 		} catch (IOException e) {
 			new ProcessingException(e);
 		}
-		
-		Integer windowLengthInMilsec = Integer.valueOf(properties.getProperty(key_format_window_InMilsec));
-		Integer overlapInPerc = Integer.valueOf(properties.getProperty(key_format_window_OverlapInPercent));
-		windowLengthInMilsec = windowLengthInMilsec == null?30:windowLengthInMilsec;
-		overlapInPerc = overlapInPerc == null?66:overlapInPerc;
-		
-		DefaultExtractorConfig config = (DefaultExtractorConfig)ExtractorConfigUtil.defaultConfig(
-				(double)format.getSampleRate(), windowLengthInMilsec, overlapInPerc); 
-//		config.setBitsPerSample(format.getSampleSizeInBits());
-		
+		DefaultExtractorConfig config = (DefaultExtractorConfig)ExtractorConfigUtil.defaultConfig(format); 
 		configDefaults(config, properties);
 		
 		return config;
@@ -70,6 +64,18 @@ public class ConfigPropertiesDao implements ConfigDao {
 		ExtractorParam param = new ExtractorParam();
 		param.setClassName(DefaultExtractorConfig.class.getName());
 		config.setSampleRate(setFloatValue(param, key_format_recordSampleRate, properties,8000D));
+		Integer windowLengthInMilsec = Integer.valueOf(properties.getProperty(key_format_window_InMilsec));
+		Integer overlapInPerc = Integer.valueOf(properties.getProperty(key_format_window_OverlapInPercent));
+		
+		windowLengthInMilsec = windowLengthInMilsec == null?33:windowLengthInMilsec;
+		overlapInPerc = overlapInPerc == null?66:overlapInPerc;
+		
+
+		DefaultExtractorConfig sizedConfig = (DefaultExtractorConfig)ExtractorConfigUtil.defaultConfig(
+				config.getSampleRate(), windowLengthInMilsec, overlapInPerc); 
+		config.setWindowSize(sizedConfig.getWindowSize());
+		config.setWindowOverlap(sizedConfig.getWindowOverlap());
+		
 		setLongValue(param, key_threshold_leaningPeriod, properties,5000L);
 		setLongValue(param, key_segmentation_minLength, properties,191L);
 		setLongValue(param, key_segmentation_minSpace, properties,61L);
@@ -77,6 +83,12 @@ public class ConfigPropertiesDao implements ConfigDao {
 		setLongValue(param, key_segmentation_expandEnd, properties,160L);
 		setFloatValue(param, key_threshold_coef, properties,6D);
 		setStringValue(param, key_format_pathOutput, properties);
+		setStringValue(param, key_segmentation_classifier, properties);
+		setBooleanValue(param, key_segmentation_modifier_smooth, properties);
+		setBooleanValue(param, key_segmentation_modifier_mean, properties);
+		
+		
+		
 		config.getParameters().put(param.getClassName(), param);
 		String extractorStr = properties.getProperty(key_format_extractors);
 		if(StringUtils.hasText(extractorStr)){
@@ -86,6 +98,7 @@ public class ConfigPropertiesDao implements ConfigDao {
 		}
 		
 	}
+	
 
 	
 	protected void setLongValue(ExtractorParam param, String key, Properties properties){
@@ -118,11 +131,34 @@ public class ConfigPropertiesDao implements ConfigDao {
 		}
 		return setDoubleValue(param, key, properties);
 	}
+	
+	protected Integer setIntValue(ExtractorParam param, String key, Properties properties, Integer defaultValue){
+		if(properties.getProperty(key) == null){
+			ExtractorParamUtils.<Integer>setValue(param, 
+					key, defaultValue);
+			return defaultValue;
+		}
+		return setIntValue(param, key, properties);
+	}
+	
+	protected Integer setIntValue(ExtractorParam param, String key, Properties properties){
+		Integer f = Integer.valueOf(properties.getProperty(key));
+		ExtractorParamUtils.<Integer>setValue(param, 
+				key, 
+				f);
+		return f;
+	}
 
 	protected void setStringValue(ExtractorParam param, String key, Properties properties){
 		ExtractorParamUtils.<String>setValue(param, 
 				key, 
 				String.valueOf(properties.getProperty(key)));
+	}
+	
+	protected void setBooleanValue(ExtractorParam param, String key, Properties properties){
+		ExtractorParamUtils.<Boolean>setValue(param, 
+				key, 
+				Boolean.valueOf(properties.getProperty(key)));
 	}
 
 	

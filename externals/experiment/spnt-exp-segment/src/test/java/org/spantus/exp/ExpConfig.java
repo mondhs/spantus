@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.spantus.core.extractor.ExtractorParam;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
@@ -60,6 +61,9 @@ public class ExpConfig {
 	private Map<String, ExtractorParam> extractorPramMap;
 	private String testDir;
 	private String segmentatorServiceType;
+	private ClassifierEnum classifier;
+	private double threasholdCoef = 5.0;
+	private ExtractorModifiersEnum modifier = ExtractorModifiersEnum.mean;
 	
 	public static ExpConfig createConfig() {
 		ExpConfig config = new ExpConfig();
@@ -73,6 +77,7 @@ public class ExpConfig {
 		config.setCorpusDir(EXP_CORPUS_DIR);
 		config.setTestDir(EXP_TEST_DIR);
 		config.setExtractors(EXP_EXTRACTORS);
+		config.setClassifier(ClassifierEnum.online);
 		OnlineDecisionSegmentatorParam segmentationParam = new OnlineDecisionSegmentatorParam();
 		segmentationParam.setMinLength(91L);
 		segmentationParam.setMinSpace(261L);
@@ -80,11 +85,31 @@ public class ExpConfig {
 		segmentationParam.setExpandEnd(360L);
         config.setSegmentationParam(segmentationParam);
         config.setExtractorPramMap( new HashMap<String, ExtractorParam>());
+
+        config = updateCoefAndModifier(config, config.getThreasholdCoef(), config.getModifier());
+		
+		
+		return config;
+	}
+	/**
+	 * 
+	 * @param Double
+	 * @return
+	 */
+	public static ExpConfig updateCoefAndModifier(ExpConfig config,  Double aCoef, ExtractorModifiersEnum  aModifer) {
+		config.setThreasholdCoef(aCoef);
+		config.setModifier(aModifer);
+		
 		ExtractorParam smothParam = new ExtractorParam();
-		ExtractorParamUtils.setValue(smothParam, ExtractorModifiersEnum.mean.name(), Boolean.TRUE);
-		 config.getExtractorPramMap().put(ExtractorEnum.LOUDNESS_EXTRACTOR.name(), smothParam);
-		 config.getExtractorPramMap().put(ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name(), smothParam);
-		 config.getExtractorPramMap().put(ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name(), smothParam);
+		ExtractorParam thresholdCoefParam = new ExtractorParam();
+		ExtractorParamUtils.setValue(smothParam, aModifer.name(), Boolean.TRUE);
+		ExtractorParamUtils.setValue(thresholdCoefParam, ExtractorParamUtils.commonParam.threasholdCoef.name(), aCoef);
+
+		ExtractorEnum[] enumInuse = new ExtractorEnum[]{ExtractorEnum.LOUDNESS_EXTRACTOR,ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR };
+		for (ExtractorEnum extractorEnum : enumInuse) {
+			config.getExtractorPramMap().put(extractorEnum.name(), smothParam);
+			config.getExtractorPramMap().put(extractorEnum.name(), thresholdCoefParam);
+		}
 		return config;
 	}
 
@@ -207,6 +232,28 @@ public class ExpConfig {
 
 	public void setSegmentatorServiceType(String segmentatorServiceType) {
 		this.segmentatorServiceType = segmentatorServiceType;
+	}
+
+	public ClassifierEnum getClassifier() {
+		return classifier;
+	}
+
+	public void setClassifier(ClassifierEnum classifier) {
+		this.classifier = classifier;
+	}
+
+	public double getThreasholdCoef() {
+		return threasholdCoef;
+	}
+
+	public void setThreasholdCoef(double threasholdCoef) {
+		this.threasholdCoef = threasholdCoef;
+	}
+	public ExtractorModifiersEnum getModifier() {
+		return modifier;
+	}
+	public void setModifier(ExtractorModifiersEnum modifier) {
+		this.modifier = modifier;
 	}
 
 }

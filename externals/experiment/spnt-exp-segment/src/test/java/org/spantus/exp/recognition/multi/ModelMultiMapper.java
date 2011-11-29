@@ -9,6 +9,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.exp.ExpConfig;
 import org.spantus.exp.recognition.ExtNameFilter;
 import org.spantus.exp.recognition.domain.QSegmentExp;
 import org.spantus.externals.recognition.bean.RecognitionResult;
@@ -30,11 +31,18 @@ public class ModelMultiMapper extends MultiMapper {
 
 		for (File signalFile : getExpConfig().getTestDirAsFile().listFiles(
 				new ExtNameFilter(EXTENSION))) {
-//			if (!signalFile.getName().endsWith("_24.wav") 
+//			if (!signalFile.getName().endsWith("10_44.wav") 
 ////					&& !signalFile.getName().endsWith("_1.wav") 
 //					) {
 //				continue;
 //			}
+			Double coef = 7.D;
+			if(signalFile.getName().contains("s_30_")){
+				coef =9.D;
+			}
+			
+			ExpConfig.updateCoefAndModifier(getExpConfig(),coef , getExpConfig().getModifier());
+			
 			counter++;
 			log.error("[recognize]Processing " + counter + " from " + size
 					+ "; file = " + signalFile);

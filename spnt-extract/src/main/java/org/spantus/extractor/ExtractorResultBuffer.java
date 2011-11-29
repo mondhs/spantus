@@ -31,11 +31,11 @@ import org.spantus.logger.Logger;
  *
  */
 public class ExtractorResultBuffer implements IExtractor {
-	Logger log = Logger.getLogger(ExtractorResultBuffer.class);
-	IExtractor extractor;
+	private Logger log = Logger.getLogger(ExtractorResultBuffer.class);
+	private IExtractor extractor;
 
-//	FrameValues frameValues = new FrameValues();
-	FrameValues outputValues = new FrameValues();
+	private FrameValues outputValues = new FrameValues();
+	private long offset = 0;
 
 	public ExtractorResultBuffer(IExtractor extractor) {
 		this.extractor = extractor;
@@ -81,6 +81,7 @@ public class ExtractorResultBuffer implements IExtractor {
 		int i = getOutputValues().size() - getConfig().getBufferSize();
 		while( i > 0 ){
 			getOutputValues().poll();
+			offset++;
 			i--;
 		}
                 val.setSampleRate(getExtractorSampleRate());
@@ -110,5 +111,10 @@ public class ExtractorResultBuffer implements IExtractor {
 	
 	public void flush() {
 		extractor.flush();		
+	}
+	
+	@Override
+	public long getOffset() {
+		return offset;
 	}
 }

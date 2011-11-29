@@ -18,11 +18,21 @@
 */
 package org.spantus.externals.recognition.ui;
 
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.io.RecordWraperExtractorReader;
+import org.spantus.core.threshold.ClassifierEnum;
+import org.spantus.core.threshold.IClassifier;
 import org.spantus.externals.recognition.segment.RecordRecognitionSegmentatorOnline;
+import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.extractor.impl.ExtractorModifiersEnum;
+import org.spantus.extractor.impl.ExtractorUtils;
+import org.spantus.segment.online.ISegmentatorListener;
 import org.spantus.segment.online.MultipleSegmentatorListenerOnline;
+import org.spantus.utils.ExtractorParamUtils;
+import org.spantus.work.services.ConfigPropertiesDao;
 import org.spantus.work.ui.AbstractSegmentPlot;
 import org.spantus.work.ui.SegmentMonitorPlot;
+import org.spnt.recognition.dtw.ui.WritableCorpusMatchListener;
 
 public class RecognitionMonitorPlot extends SegmentMonitorPlot {
 	
@@ -34,10 +44,31 @@ public class RecognitionMonitorPlot extends SegmentMonitorPlot {
 	@Override
 	protected MultipleSegmentatorListenerOnline createSegmentatorRecordable(){
 		RecordRecognitionSegmentatorOnline multipleSegmentator = new RecordRecognitionSegmentatorOnline();
-//		multipleSegmentator.setCorpusMatchListener(new WritableCorpusMatchListener());
+		multipleSegmentator.setCorpusMatchListener(new WritableCorpusMatchListener());
 		multipleSegmentator.setParam(createParam());
 		multipleSegmentator.setReader((RecordWraperExtractorReader)getWraperExtractorReader());
 		return multipleSegmentator;
+	}
+	
+	@Override
+	public void registerExtractors(ExtractorParam param, ISegmentatorListener multipleSegmentator){
+		IClassifier segmentator = null;
+
+		ExtractorParam paramEnergy = new ExtractorParam();
+		Boolean smooth = (Boolean) param.getProperties().get(ConfigPropertiesDao.key_segmentation_modifier_smooth);
+		Boolean mean = (Boolean) param.getProperties().get(ConfigPropertiesDao.key_segmentation_modifier_mean);
+		String classifierStr = (String) param.getProperties().get(ConfigPropertiesDao.key_segmentation_classifier);
+		ClassifierEnum classifier = ClassifierEnum.valueOf(classifierStr);
+		
+		ExtractorParamUtils.setValue(paramEnergy, 
+				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE.equals(smooth));
+		ExtractorParamUtils.setValue(paramEnergy, 
+				ExtractorModifiersEnum.mean.name(), Boolean.TRUE.equals(mean));
+
+		segmentator =ExtractorUtils.registerThreshold(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy ,classifier); 
+		segmentator.addClassificationListener(multipleSegmentator);
+		segmentator  = ExtractorUtils.registerThreshold(getReader(), ExtractorEnum.MFCC_EXTRACTOR);
+
 	}
 
 	public static void main(String[] args) {

@@ -28,7 +28,7 @@ import org.spantus.logger.Logger;
 
 public class WritableCorpusMatchListener implements CorpusMatchListener {
 
-	public enum ControledLabels{sviesa, isjunk};
+	public enum ControledLabels{sviesa1,sviesa2,sviesa, isjunk, tamsa1, tamsa2};
 	
 	protected Logger log = Logger.getLogger(getClass());
 	BufferedWriter out;
@@ -39,15 +39,19 @@ public class WritableCorpusMatchListener implements CorpusMatchListener {
 		try{
 			controledLabel = ControledLabels.valueOf(result.getInfo().getName());
 		}catch (Exception e) {
-			log.error(e);
+			log.error("command not found for: " + controledLabel);
 			return;
 		}
 		switch (controledLabel) {
+		case sviesa1:
+		case sviesa2:	
 		case sviesa:
-			write("H");
+			write("M");
 			break;
+		case tamsa1:
+		case tamsa2:
 		case isjunk:
-			write("L");
+			write("I");
 			break;
 
 		default:
@@ -57,8 +61,11 @@ public class WritableCorpusMatchListener implements CorpusMatchListener {
 	}
 	public void write(String str){
 		try {
-			getOutput().write(str);
-			getOutput().flush();
+			BufferedWriter currentOutput = getOutput();
+			if(currentOutput != null){
+				currentOutput.write(str);
+				currentOutput.flush();
+			}
 		} catch (IOException e) {
 			log.error(e);
 		}
@@ -69,7 +76,7 @@ public class WritableCorpusMatchListener implements CorpusMatchListener {
 			try {
 				out = new BufferedWriter(new FileWriter("/dev/ttyUSB0"));
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.error("Not possible open "+"/dev/ttyUSB0");
 			}
 		}
 		return out;

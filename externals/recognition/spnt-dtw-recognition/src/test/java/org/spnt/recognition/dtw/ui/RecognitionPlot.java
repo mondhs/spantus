@@ -81,7 +81,7 @@ public class RecognitionPlot extends JFrame {
 			throws UnsupportedAudioFileException, IOException {
 		File wavFile = new File("../../../data/t_1_2.wav");
 //		File wavFile = new File("../data/test/1_2_l.wav");
-//		File wavFile = new File("/home/mindas/src/spnt-code/spnt-work-ui/ijunk_ishjunk/ijunk_isjunk.wav");
+//		File wavFile = new File("/home/as/src/spnt-code/spnt-work-ui/ijunk_ishjunk/ijunk_isjunk.wav");
 		
 		URL urlFile = wavFile.toURI().toURL();
 		DefaultAudioReader audioReader = (DefaultAudioReader)AudioReaderFactory.createAudioReader();

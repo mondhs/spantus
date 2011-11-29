@@ -100,6 +100,12 @@ public class MockSegmentatorExtractor implements IExtractor {
 	public void flush() {
 	}
 
+	@Override
+	public long getOffset() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 
 }

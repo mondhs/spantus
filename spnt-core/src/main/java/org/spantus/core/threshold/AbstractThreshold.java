@@ -42,7 +42,6 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 		int i = getThresholdValues().size() - getConfig().getBufferSize();
 		while( i > 0 ){
 			getThresholdValues().poll();
-//			getState().poll();
 			i--;
 		}
 	}

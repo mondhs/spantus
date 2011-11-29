@@ -44,6 +44,10 @@ public class ExtractorWrapper implements IExtractor {
 			lstn1.beforeCalculated(sample, values);
 		}
 		FrameValues result = getExtractor().calculate(sample, values);
+		if(result == null){
+			//nothing to calculate
+			return result;
+		}
 	
 		for (IExtractorListener lstn1: getListeners()) {
 			lstn1.afterCalculated(sample, result);
@@ -92,6 +96,11 @@ public class ExtractorWrapper implements IExtractor {
 
 	public void flush() {
 		getExtractor().flush();
+	}
+
+	@Override
+	public long getOffset() {
+		return getExtractor().getOffset();
 	}
 
 

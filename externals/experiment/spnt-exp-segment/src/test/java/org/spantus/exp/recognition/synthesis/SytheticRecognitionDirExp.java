@@ -11,12 +11,15 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.odftoolkit.simple.SpreadsheetDocument;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.exp.ExpConfig;
 import org.spantus.exp.recognition.ExtNameFilter;
 import org.spantus.exp.recognition.dao.ChartJFreeDao;
 import org.spantus.exp.recognition.dao.QSegmentExpHsqlDao;
 import org.spantus.exp.recognition.dao.ResultOdsDao;
 import org.spantus.exp.recognition.multi.ModelMultiMapper;
+import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
+import org.spantus.utils.ExtractorParamUtils;
 
 /**
  * 
@@ -34,10 +37,16 @@ public class SytheticRecognitionDirExp {
 		mapper = new ModelMultiMapper();
 	}
 
-	public final static String ROOT_DIR = "/home/as/tmp/garsyno.modelis1";
+	public final static String ROOT_DIR = 
+			"/home/as/tmp/garsyno.modelis4"//sintesied
+//			"/home/as/tmp/garsyno.modelis1"//generated
+			;
 
 	protected void init(ModelMultiMapper mapper, String corpusName) {
-		mapper.init(ExpConfig.createConfig(), new ExtNameFilter("txt"),
+		ExpConfig config = ExpConfig.createConfig();
+		config.setSegmentatorServiceType(SegmentatorServiceEnum.online.name());
+		config.setClassifier(ClassifierEnum.offline);
+		mapper.init(config, new ExtNameFilter("wav"),
 				corpusName);
 	}
 
@@ -46,22 +55,22 @@ public class SytheticRecognitionDirExp {
 		mapper.destroy();
 	}
 
-	@Test @Ignore
+	@Test  @Ignore
 	public void testRecognize() throws Exception {
 		// given
 		init(mapper, "AK1");
 		mapper.recognize();
 	}
 
-	@Test  @Ignore
+	@Test 
 	public void testGenerateReport() throws Exception {
 
 		// given
-		String[] syllabels = new String[] {"a", "e", " "}
-//				{ "ga", "ma", "me", "na", "ne", "re",				"ta", " " }
+		String[] syllabels = new String[]
+//				{"a", "e", ""}
+				{ "ga", "ma", "me", "na", "ne", "re",	"ta", "" }
 		;
 		init(mapper, "AK1");
-		ChartJFreeDao chartDao = new ChartJFreeDao();
 		mapper.setRecreate(false);
 		((QSegmentExpHsqlDao)mapper.getqSegmentExpDao()).setAcceptThreshold(200);
 		// then
@@ -73,7 +82,7 @@ public class SytheticRecognitionDirExp {
 		ods = dao.save(result, ods.getAbsolutePath());
 	}
 
-	@Test
+	@Test  
 	public void testDrawReport() throws Exception {
 		// given
 		init(mapper, "AK1");

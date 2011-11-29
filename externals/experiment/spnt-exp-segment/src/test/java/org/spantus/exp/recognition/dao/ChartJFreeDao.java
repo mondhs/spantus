@@ -1,8 +1,7 @@
 package org.spantus.exp.recognition.dao;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,26 +14,58 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.Plot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.category.StackedBarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.renderer.category.StatisticalBarRenderer;
-import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.RangeType;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.statistics.DefaultStatisticalCategoryDataset;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
+import org.spantus.exp.recognition.dao.chart.AsymmetricStatisticalBarRenderer;
+import org.spantus.exp.recognition.dao.chart.AsymmetricStatisticalCategoryDataset;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.TreeBasedTable;
 
 public class ChartJFreeDao {
-	private static final String ATPAZINIMAS = "Atpažinimas";
-	private static final String SEGMENTACIJA = "Segmentacija";
+	private static final String ATPAZINIMAS = "recognition";
+	private static final String SEGMENTACIJA = "segmentation";
+	private static final String SEGMENTATION_ERRORS = "segmentationErrors";
+	private static final String RECOGNITION_ERRORS = "recognitionErrors";
+	
+	private static final Map<String,String> translate= Maps.newHashMap();
+	private static final String ERROR_RATIOS = "errorRatios";
+	private static final String RECOGNITION_SEGMENTATION_ERROR_RATIOS = "RECOGNITION_SEGMENTATION_ERROR_RATIOS";
+	private static final String NOISE_LEVEL = "NOISE_LEVEL";
+	private static final String COMPARE_WITH_FOUND = "COMPARE_WITH_FOUND";
+	private static final String BY_NOISE = "BY_NOISE";
+	private static final String RECOGNITION_TYPE = "RECOGNITION_TYPE";
+	private static final String BY_RECOGNION_TYPE = "BY_RECOGNION_TYPE";
 
+	static{
+		translate.put(ATPAZINIMAS, "Atpažinimas");
+		translate.put(SEGMENTACIJA, "Segmentacija");
+		translate.put(SEGMENTATION_ERRORS, "Segmentavimo klaidos");
+		translate.put(RECOGNITION_ERRORS, "Skiemenų atpažinimo klaidos");
+		translate.put(RECOGNITION_SEGMENTATION_ERROR_RATIOS, "Segmentų aptikimo ir atpažinimo santykiai");
+		translate.put(ERROR_RATIOS,"Klaidų santykis");
+		translate.put(NOISE_LEVEL,"Tiukšmo Lygis");
+		translate.put(COMPARE_WITH_FOUND,"% lyginant su aptinktai segmetntais");
+		translate.put(BY_NOISE,": pagal triukšmus");
+		translate.put(RECOGNITION_TYPE,"Atpažinimas arba klaidos");
+		translate.put(BY_RECOGNION_TYPE,": pagal atpažinimo tipus");
+		
+		
+			}
+	
+	
 	/**
 	 * 
 	 * @param testData
@@ -49,8 +80,8 @@ public class ChartJFreeDao {
 		com.google.common.collect.Table<String, String, Double> recognitionResult = createTable(recognitionTable);
 		com.google.common.collect.Table<String, String, Double> comparisionResult = createTable(comparisionTable);
 
-		DefaultStatisticalCategoryDataset segmentationDataset = createStatisticalDataSet(segmentationResult);
-		DefaultStatisticalCategoryDataset atpazinimasDataset = createStatisticalDataSet(recognitionResult);
+		AsymmetricStatisticalCategoryDataset segmentationDataset = createStatisticalDataSet(segmentationResult);
+		AsymmetricStatisticalCategoryDataset atpazinimasDataset = createStatisticalDataSet(recognitionResult);
 		try {
 			drawStatisical(segmentationDataset, SEGMENTACIJA);
 			drawStacked(segmentationDataset, SEGMENTACIJA);
@@ -62,74 +93,39 @@ public class ChartJFreeDao {
 		}
 
 	}
-
+	/**
+	 * 
+	 * @param segmentationResult
+	 * @param recognitionResult
+	 * @param comparisionResult
+	 */
 	private void drawErrors(
 			com.google.common.collect.Table<String, String, Double> segmentationResult,
 			com.google.common.collect.Table<String, String, Double> recognitionResult,
 			com.google.common.collect.Table<String, String, Double> comparisionResult) {
 
-		Map<String, Double> recognitionTotals = recognitionResult
-				.row("Viso aptikta segmentavime ");
-		Map<String, Double> segmentationTotals = segmentationResult
-				.row("turėjo būti");
+		Map<String, Double> recognitionTotals =  extractTotals(recognitionResult);
+		Map<String, Double> segmentationTotals = extractTotals(segmentationResult);
 
-		//////////////////////////// fix this
-		for (Entry<String, Map<String, Double>> rowEntry : recognitionResult
-				.rowMap().entrySet()) {
-			String rowKey = rowEntry.getKey();
-			if (rowKey.contains("turėjo būti") || rowKey.startsWith("Viso")) {
-				recognitionTotals = rowEntry.getValue();
-				break;
-			}
-		}
 		
-		for (Entry<String, Map<String, Double>> rowEntry : segmentationResult
-				.rowMap().entrySet()) {
-			String rowKey = rowEntry.getKey();
-			if (rowKey.contains("turėjo būti") || rowKey.startsWith("Viso")) {
-				segmentationTotals = rowEntry.getValue();
-				break;
-			}
-		}
-		//////////////////////////// fix this
 		
 
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-		String rowEntry = "Segmentavimo klaidos";
-		for (Entry<String, Double> entry : comparisionResult.row(rowEntry)
-				.entrySet()) {
-			double total = (entry
-					.getValue()) / segmentationTotals.get(entry.getKey());
-			dataset.addValue(total,
-					rowEntry,
-					entry.getKey());
-		}
-		rowEntry = "Atpažinimo klaidos";
-		for (Entry<String, Double> entry : comparisionResult.row(rowEntry)
-				.entrySet()) {
-			double total = ( entry
-					.getValue()) / recognitionTotals.get(entry.getKey());
-			dataset.addValue(total,
-					rowEntry,
-					entry.getKey());
-		}
+		String rowEntry = translate.get(SEGMENTATION_ERRORS);
+		caclErrorDataset(comparisionResult, segmentationTotals, dataset,
+				rowEntry);
+
 		
-		rowEntry = "Skiemenų atpažinimo klaidos";
-		for (Entry<String, Double> entry : comparisionResult.row(rowEntry)
-				.entrySet()) {
-			double total = (entry
-					.getValue()) / recognitionTotals.get(entry.getKey());
-			dataset.addValue(total,
-					rowEntry,
-					entry.getKey());
-		}
+		rowEntry  = translate.get(RECOGNITION_ERRORS);
+		caclErrorDataset(comparisionResult, recognitionTotals, dataset,
+				rowEntry);
 
 		JFreeChart chart = ChartFactory.createLineChart(
-				"Segmentų aptikimo ir atpažinimo santykiai", // chart
+				 translate.get(RECOGNITION_SEGMENTATION_ERROR_RATIOS), // chart
 				// title
-				"Klaidų santykis", // domain axis label
-				"Tiukšmo Lygis", // range axis label
+				 translate.get(ERROR_RATIOS), // domain axis label
+				translate.get(NOISE_LEVEL), // range axis label
 				dataset, // data
 				PlotOrientation.VERTICAL, // orientation
 				true, // include legend
@@ -139,7 +135,7 @@ public class ChartJFreeDao {
 		chart.setBackgroundPaint(Color.white);
 
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
-		plot.setBackgroundPaint(Color.lightGray);
+//		plot.setBackgroundPaint(Color.lightGray);
 		plot.setRangeGridlinePaint(Color.white);
 		NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 		rangeAxis.setStandardTickUnits(NumberAxis.createStandardTickUnits());
@@ -149,8 +145,50 @@ public class ChartJFreeDao {
 		renderer.setSeriesShapesVisible(0, true);
 		renderer.setSeriesShapesVisible(1, true);
 		renderer.setSeriesShapesVisible(2, true);
-		saveChart("Segmentavimas ir atpažinimas", "errors", chart);
+		saveChart("compare", "errors", chart);
 
+	}
+	/**
+	 * 
+	 * @param comparisionResult
+	 * @param segmentationTotals
+	 * @param dataset
+	 * @param rowEntry
+	 */
+	private void caclErrorDataset(
+			com.google.common.collect.Table<String, String, Double> results,
+			Map<String, Double> totals,
+			DefaultCategoryDataset dataset, String rowEntry) {
+		
+		for (Entry<String, Double> entry : results.row(rowEntry)
+				.entrySet()) {
+			double errorCount = entry.getValue();
+			double totalCount = totals.get(entry.getKey());
+			double total = errorCount / totalCount;
+			dataset.addValue(total,
+					rowEntry,
+					entry.getKey());
+		}
+	}
+	
+	/**
+	 * 
+	 * @param segmentationResult
+	 * @param segmentationTotals
+	 * @return
+	 */
+	private Map<String, Double> extractTotals(
+			com.google.common.collect.Table<String, String, Double> result) {
+		Map<String, Double> result1 = null;
+		for (Entry<String, Map<String, Double>> rowEntry : result
+				.rowMap().entrySet()) {
+			String rowKey = rowEntry.getKey();
+			if (rowKey.contains("turėjo būti") || rowKey.startsWith("Viso")) {
+				result1 = rowEntry.getValue();
+				break;
+			}
+		}
+		return result1;
 	}
 
 	/**
@@ -159,26 +197,27 @@ public class ChartJFreeDao {
 	 * @param table
 	 * @throws IOException
 	 */
-	private void drawStacked(DefaultStatisticalCategoryDataset dataset,
+	private void drawStacked(AsymmetricStatisticalCategoryDataset dataset,
 			String tableName) throws IOException {
-		JFreeChart chart2 = ChartFactory.createStackedBarChart(tableName
-				+ ": pagal triukšmus", "Atpažinimas arba klaidos", // domain
+		JFreeChart chart2 = ChartFactory.createStackedBarChart(translate.get(tableName)
+				+ translate.get(translate) , translate.get(ERROR_RATIOS), // domain
 																	// axis
 																	// label
-				"% lyginant su aptinktai segmetntais", // range axis label
+				translate.get(COMPARE_WITH_FOUND), // range axis label
 				dataset, // data
 				PlotOrientation.HORIZONTAL, // the plot orientation
 				true, // include legend
 				true, // tooltips
 				false // urls
 				);
-		chart2.setBackgroundPaint(Color.white);
 
 		final CategoryPlot plot2 = (CategoryPlot) chart2.getPlot();
 		final StackedBarRenderer renderer2 = (StackedBarRenderer) plot2
 				.getRenderer();
-		renderer2.setBaseItemLabelsVisible(true);
-		renderer2.setRenderAsPercentages(true);
+
+//		renderer2.setBaseItemLabelsVisible(true);
+//		renderer2.setRenderAsPercentages(true);
+		renderer2.setBarPainter(new StandardBarPainter());//remove gradient
 		saveChart(tableName, "stacked", chart2);
 	}
 
@@ -187,23 +226,30 @@ public class ChartJFreeDao {
 	 * @param dataset
 	 * @param table
 	 */
-	private void drawStatisical(DefaultStatisticalCategoryDataset dataset,
+	private void drawStatisical(AsymmetricStatisticalCategoryDataset dataset,
 			String tableName) throws IOException {
-		CategoryAxis xAxis = new CategoryAxis("Atpažinimas arba klaidos");
-		// xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
-		xAxis.setLowerMargin(0.01d); // percentage of space before first bar
-		xAxis.setUpperMargin(0.01d); // percentage of space after last bar
-		xAxis.setCategoryMargin(0.3d); // percentage of space between categories
-		ValueAxis yAxis = new NumberAxis("% lyginant su aptinktai segmetntais");
+		
 
+		CategoryAxis xAxis = new CategoryAxis(translate.get(RECOGNITION_TYPE));
+		// xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+//		xAxis.setLowerMargin(0.01d); // percentage of space before first bar
+//		xAxis.setUpperMargin(0.01d); // percentage of space after last bar
+//		xAxis.setCategoryMargin(0.3d); // percentage of space between categories
+		NumberAxis yAxis = new NumberAxis(translate.get(COMPARE_WITH_FOUND));
+
+		yAxis.setRangeType(RangeType.POSITIVE);
+		
+		
 		// define the plot
-		StatisticalBarRenderer renderer = new StatisticalBarRenderer();
+		StatisticalBarRenderer renderer = new AsymmetricStatisticalBarRenderer();
 		CategoryPlot plot = new CategoryPlot(tranform(dataset), xAxis, yAxis,
 				renderer);
 		plot.setOrientation(PlotOrientation.HORIZONTAL);
-		JFreeChart chart = new JFreeChart(tableName
-				+ ": pagal atpažinimo tipus", new Font("Helvetica", Font.BOLD,
-				14), plot, true);
+		renderer.setSeriesPaint(0, Color.white);
+		
+		
+		JFreeChart chart = new JFreeChart(translate.get(tableName)
+				+ translate.get(BY_RECOGNION_TYPE), null, plot, true);
 		chart.setBackgroundPaint(Color.white);
 		saveChart(tableName, "statistical", chart);
 	}
@@ -214,26 +260,16 @@ public class ChartJFreeDao {
 	 * @param table
 	 * @return
 	 */
-	private DefaultStatisticalCategoryDataset createStatisticalDataSet(
+	private AsymmetricStatisticalCategoryDataset createStatisticalDataSet(
 			com.google.common.collect.Table<String, String, Double> segmentationResult) {
-		DefaultStatisticalCategoryDataset result = new DefaultStatisticalCategoryDataset();
+		AsymmetricStatisticalCategoryDataset result = new AsymmetricStatisticalCategoryDataset();
 
 		// com.google.common.collect.Table<String, String, Double> table =
 		// createTable(segmentationResult);
 		Map<String, Double> correct = new HashMap<String, Double>();
 		Map<String, Double> confidence = new HashMap<String, Double>();
 		Map<String, Double> totals = null;
-//		if (totals.isEmpty()) {
-//			totals = segmentationResult.row("Viso aptikta segmentavime ");
-//		}
-		for (Entry<String, Map<String, Double>> rowEntry : segmentationResult
-				.rowMap().entrySet()) {
-			String rowKey = rowEntry.getKey();
-			if (rowKey.contains("turėjo būti") || rowKey.startsWith("Viso")) {
-				totals = rowEntry.getValue();
-				break;
-			}
-		}
+		totals = extractTotals(segmentationResult);
 
 		for (String column : segmentationResult.columnKeySet()) {
 			correct.put(column, 0.0);
@@ -269,9 +305,15 @@ public class ChartJFreeDao {
 			for (Entry<String, Double> entry : rowEntry.getValue().entrySet()) {
 				double entryVal = entry.getValue().doubleValue();
 				double totalVal = totals.get(entry.getKey());
+				double meanVal = entryVal / totalVal ;
 				double confidenceVal = confidence.get(entry.getKey())
 						.doubleValue();
-				result.add(entryVal / totalVal, confidenceVal, rowKey,
+				double lowerVal = meanVal - confidenceVal;
+				lowerVal = lowerVal<0?0:lowerVal;
+				double upperVal = meanVal + confidenceVal;
+				
+
+				result.add(meanVal* 100, upperVal* 100,lowerVal* 100, rowKey,
 						entry.getKey());
 			}
 		}
@@ -287,13 +329,34 @@ public class ChartJFreeDao {
 	 * @param chart
 	 */
 	private void saveChart(String name, String type, JFreeChart chart) {
-		try {
-			ChartUtilities.saveChartAsPNG(new File("./target/data/" + name
-					+ "_" + type + ".png"), chart, 1000, 700);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		  String writtenFile =  "./target/data/" + name
+					+ "_" + type + ".png";
+		  try
+		   {
+			  chart.setBackgroundPaint( new Color(255,255,255,0) );
+		         final Plot plot = chart.getPlot();
+		         plot.setBackgroundPaint( new Color(255,255,255,0) );
+		         plot.setBackgroundImageAlpha(0.0f);
+
+		      final CategoryItemRenderer renderer = chart.getCategoryPlot().getRenderer();
+		      renderer.setSeriesPaint(0, Color.blue.brighter());
+		      renderer.setSeriesVisible(0, true); // default
+		      renderer.setSeriesVisibleInLegend(0, true);  // default
+
+		      ChartUtilities.writeChartAsPNG( new FileOutputStream(writtenFile),
+		    		  chart,
+		    		  1000, 700,
+		                                      null,
+		                                      true,    // encodeAlpha
+		                                      0 );
+		      System.out.println("Wrote PNG (transparent) file " + writtenFile);
+		   }
+		   catch (IOException ioEx)
+		   {
+		      System.err.println(  "Error writing PNG file " + writtenFile + ": "
+		                  + ioEx.getMessage() );
+		   }
+		  
 	}
 
 	/**
@@ -302,8 +365,8 @@ public class ChartJFreeDao {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private CategoryDataset tranform(DefaultStatisticalCategoryDataset dataset) {
-		DefaultStatisticalCategoryDataset result = new DefaultStatisticalCategoryDataset();
+	private AsymmetricStatisticalCategoryDataset tranform(AsymmetricStatisticalCategoryDataset dataset) {
+		AsymmetricStatisticalCategoryDataset result = new AsymmetricStatisticalCategoryDataset();
 		List<String> columns = dataset.getColumnKeys();
 		List<String> rows = dataset.getRowKeys();
 		for (String columnKey : columns) {
@@ -312,14 +375,18 @@ public class ChartJFreeDao {
 					continue;
 				}
 				result.add(dataset.getMeanValue(rowKey, columnKey),
-						dataset.getStdDevValue(rowKey, columnKey), columnKey,
+						dataset.getUpperValue(rowKey, columnKey), dataset.getLowerValue(rowKey, columnKey), columnKey,
 						rowKey);
 			}
 		}
 
 		return result;
 	}
-
+	/**
+	 * 
+	 * @param odsTable
+	 * @return
+	 */
 	private com.google.common.collect.Table<String, String, Double> createTable(
 			Table odsTable) {
 		com.google.common.collect.Table<String, String, Double> result = TreeBasedTable
@@ -327,6 +394,7 @@ public class ChartJFreeDao {
 		List<String> series = new ArrayList<String>();
 		for (int rowIndex = 0; rowIndex < odsTable.getRowCount(); rowIndex++) {
 			Row row = odsTable.getRowByIndex(rowIndex);
+			//header
 			if (rowIndex == 0) {
 				for (int colIndex = 1; colIndex < row.getCellCount(); colIndex++) {
 					Cell seriesCell = odsTable.getCellByPosition(colIndex,
@@ -335,11 +403,13 @@ public class ChartJFreeDao {
 				}
 				continue;
 			}
+			//body
 			String typeName = row.getCellByIndex(0).getStringValue();
 			for (int colIndex = 1; colIndex < row.getCellCount(); colIndex++) {
 				Cell newCell = odsTable.getCellByPosition(colIndex, rowIndex);
+				Double value  = newCell.getDoubleValue();
 				result.put(typeName, series.get(colIndex - 1),
-						newCell.getDoubleValue());
+						value);
 			}
 		}
 		return result;

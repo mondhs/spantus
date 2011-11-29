@@ -53,4 +53,10 @@ public class MockOnlineExtractor implements IExtractor{
 	public void setConfig(IExtractorConfig config) {
 	}
 
+	@Override
+	public long getOffset() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

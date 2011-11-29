@@ -26,8 +26,6 @@ import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
-import org.spantus.work.services.MarkerDao;
-import org.spantus.work.services.WorkServiceFactory;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -42,7 +40,7 @@ public class MultiMapper {
 	private CorpusEntryExtractorTextGridMapImpl extractor;
 	private CorpusServiceBaseImpl corpusService;
 	private CorpusRepositoryFileImpl corpusRepository;
-	private MarkerDao markerDao;
+//	private MarkerDao markerDao;
 //	private File trainDir;
 //	private File wavDir;
 	private FilenameFilter fileFilter;
@@ -79,6 +77,7 @@ public class MultiMapper {
 			extractor.setWindowLengthInMilSec(expConfig.getWindowLength());
 			extractor.setOverlapInPerc(expConfig.getWindowOverlap());
 			extractor.setSegmentatorServiceType(expConfig.getSegmentatorServiceType());
+			extractor.setClassifier(expConfig.getClassifier());
 			log.debug(
 					"CorpusEntryExtractorFileImpl created. rulePath: {0}; RulesTurnedOn: {1}",
 					extractor.getRulePath(),
@@ -98,7 +97,7 @@ public class MultiMapper {
 		extractor.setExtractors(getExpConfig().getExtractors());
 		extractor.getParams().putAll(getExpConfig().getExtractorPramMap());
 
-		markerDao = WorkServiceFactory.createMarkerDao();
+//		markerDao = WorkServiceFactory.createMarkerDao();
 
 
 	}

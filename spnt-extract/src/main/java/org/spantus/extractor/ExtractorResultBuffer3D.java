@@ -36,9 +36,10 @@ import org.spantus.logger.Logger;
  */
 public class ExtractorResultBuffer3D implements IExtractorVector {
 	
-	Logger log = Logger.getLogger(ExtractorResultBuffer3D.class);
+//	private Logger log = Logger.getLogger(ExtractorResultBuffer3D.class);
 	
-	IExtractorVector extractor;
+	private IExtractorVector extractor;
+	private long offset = 0;
 	
 //	FrameValues frameValues = new FrameValues();
 	FrameVectorValues outputValues = new FrameVectorValues();
@@ -91,6 +92,7 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 		int i = getOutputValues().size() - getConfig().getBufferSize();
 		while( i > 0 ){
 			getOutputValues().poll();
+			offset++;
 			i--;
 		}
 		val.setSampleRate(getExtractorSampleRate());
@@ -122,5 +124,9 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 	}
 	public void flush() {
 		extractor.flush();		
+	}
+	@Override
+	public long getOffset() {
+		return offset;
 	}
 }

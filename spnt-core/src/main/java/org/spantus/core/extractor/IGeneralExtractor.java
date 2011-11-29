@@ -45,4 +45,5 @@ public interface IGeneralExtractor {
 	
 	public void setConfig(IExtractorConfig config);
 	
+	public long getOffset();
 }

@@ -59,4 +59,9 @@ public class ExtractorOutputHolder implements IExtractor {
 		//do nothing
 	}
 
+	@Override
+	public long getOffset() {
+		return 0;
+	}
+
 }

@@ -94,7 +94,7 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 	
 	public static final String DISTINCT_SEGMENTS_REPORT_QUERY = "select {0}  count(distinct(MANUALNAME)) mcount from QSEGMENTEXP where  not MARKERLABEL like ''D;%''  {1}";
 	public static final String CORRECT_SYLABLE_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where MANUALNAME = ''<SYLLABLE>'' and not MARKERLABEL like ''D;%''  {1}";
-	public static final String ERR_JOINED_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where LENGTH(MANUALNAME) > 2  and not MARKERLABEL like ''D;%''  {1}";
+	public static final String ERR_JOINED_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where LENGTH(MANUALNAME) > LENGTH(MFCCLABEL) and LENGTH(trim(MFCCLABEL)) >0  and not MARKERLABEL like ''D;%''  {1}";
 	public static final String ERR_NOIZE_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where MANUALNAME = '''' and not MARKERLABEL like ''D;%''  {1}";
 	public static final String ERR_BREAK_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where  MARKERLABEL like ''D;%''  {1}";
 
@@ -102,27 +102,35 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 			+ "MANUALNAME = ''<SYLLABLE_WAS>''  and  MFCCLABEL = ''<SYLLABLE_SAID>'' and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like ''D;%''  {1}";
 
 	public static final String SUCC_RECONITION_LIKE_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ "MANUALNAME like ''%<SYLLABLE_WAS>''  and  MFCCLABEL like ''%<SYLLABLE_SAID>'' and LENGTH(MANUALNAME)<=2 and  LENGTH(MFCCLABEL)<=2 and MFCC < <ACCEPT_THRESHOLD>   and not  MARKERLABEL like ''D;%''  {1}";
+			+ "MANUALNAME like ''%<SYLLABLE_WAS>''  and  MFCCLABEL like ''%<SYLLABLE_SAID>'' and LENGTH(MANUALNAME)<=2 and  LENGTH(MFCCLABEL)<=2 " +
+			"and MFCC < <ACCEPT_THRESHOLD>   and not  MARKERLABEL like ''D;%''  {1}";
 
 	public static final String ERR_RECONITION_LIKE_NOISE_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
 			+ "MANUALNAME like ''''  and  MFCCLABEL like ''%<SYLLABLE_SAID>''  and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like ''D;%''  {1}";
-	public static final String ALL_SEGMENTS_FOR_RECOGN_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP  where "+
-			" not (MARKERLABEL like ''D;%'' or " +
-			" (LENGTH(MANUALNAME) > 2  and not MARKERLABEL like ''D;%''))  {1}";
 	
-	public static final String ERR_REJECTED_RECONITION_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ " MFCC >= <ACCEPT_THRESHOLD> and LENGTH(MANUALNAME)<=2 and not  MARKERLABEL like ''D;%''  {1}";
+	/**
+	 * remove duplicates that  length is not match but not noise
+	 */
+	public static final String ALL_SEGMENTS_FOR_RECOGN_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP  where "+
+			"  (length(MANUALNAME) = length(MFCCLABEL)  or trim(MFCCLABEL)='''' or trim(MANUALNAME)='''') and not MARKERLABEL like ''D;%'' " +
+			"  {1}";
+	
+	public static final String ERR_REJECTED_RECONITION_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where " 
+			+" (length(MANUALNAME) = length(MFCCLABEL) or trim(MANUALNAME)='''' or trim(MFCCLABEL)='''') and "
+			+ " MFCC >= <ACCEPT_THRESHOLD> and not MARKERLABEL like ''D;%'' {1}";
 
 	public static final String ERR_SEGMENT_TOTAL_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ "((LENGTH(MANUALNAME) > 2  and not MARKERLABEL like ''D;%'') or (MANUALNAME = '''' and not MARKERLABEL like ''D;%'') or (MARKERLABEL like ''D;%'') )   {1}";
+			+ "((not LENGTH(MANUALNAME) = LENGTH(MFCCLABEL)  and not MARKERLABEL like ''D;%'') or (MANUALNAME = '''' and not MARKERLABEL like ''D;%'') or (MARKERLABEL like ''D;%'') )  "
+			+" {1}";
 
-	public static final String ERR_RECONITION_TOTAL_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "+
-			"( (LENGTH(MANUALNAME)=2  and LENGTH(MFCCLABEL)=2  and not SUBSTR(MANUALNAME,2,1) =  SUBSTR(MFCCLABEL,2,1)) or (MANUALNAME ='''' AND  LENGTH(MFCCLABEL)<=2) ) "+
-			" and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like''D;%''  {1}";
+//	public static final String ERR_RECONITION_TOTAL_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "+
+//			"( (LENGTH(MANUALNAME)=2  and LENGTH(MFCCLABEL)=2  and not SUBSTR(MANUALNAME,2,1) =  SUBSTR(MFCCLABEL,2,1)) or (MANUALNAME ='''' AND  LENGTH(MFCCLABEL)<=2) ) "+
+//			" and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like''D;%''  {1}";
 	
 	public static final String ERR_RECONITION_TOTAL_SYLLABLE_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ "( (LENGTH(MANUALNAME)=2  and LENGTH(MFCCLABEL)=2  and not MANUALNAME =  MFCCLABEL) or (MANUALNAME ='''' AND  LENGTH(MFCCLABEL)<=2) ) " +
-			" and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like''D;%''  {1}";
+			+ "(LENGTH(MANUALNAME)=LENGTH(MFCCLABEL) and not MANUALNAME =  MFCCLABEL)"
+//			+ "( (LENGTH(MANUALNAME)=2  and LENGTH(MFCCLABEL)=2  and not MANUALNAME =  MFCCLABEL) or (MANUALNAME ='''' AND  LENGTH(MFCCLABEL)<=2) ) " +
+			+" and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like''D;%''  {1}";
 
 	/**
 	 * 
@@ -132,20 +140,20 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 		StringBuilder sb = new StringBuilder();
 		Map<String, String> reports = new LinkedHashMap<String, String>();
 		
-		String[] vovel = new String[] { "a", "e" ," "};
+//		String[] vovel = new String[] { "a", "e" ," "};
 
 		segmentationReport(syllabels, reports);
 		reports.put("B2", null);
 		
 
-		recognitionByVovel(vovel, reports);
-		reports.put("B3", null);
+//		recognitionByVovel(vovel, reports);
+//		reports.put("B3", null);
 		
 		recognitionBySyllabels(syllabels, reports);
 		reports.put("B4", null);
 		
 		reports.put("Segmentavimo klaidos", ERR_SEGMENT_TOTAL_QUERY);
-		reports.put("Atpažinimo klaidos", ERR_RECONITION_TOTAL_QUERY);
+//		reports.put("Atpažinimo klaidos", ERR_RECONITION_TOTAL_QUERY);
 		reports.put("Skiemenų atpažinimo klaidos", ERR_RECONITION_TOTAL_SYLLABLE_QUERY);
 
 
@@ -234,7 +242,7 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 //				ERR_JOINED_SEGMENTS_REPORT_QUERY);
 //		reports.put("Klaidingai skiemenų trūkiai" + " ",
 //				ERR_BREAK_SEGMENTS_REPORT_QUERY);
-		reports.put("Viso aptikta segmentavime" + " ", ALL_SEGMENTS_FOR_RECOGN_REPORT_QUERY);
+		reports.put("Viso aptikta segmentavime. test" + " ", ALL_SEGMENTS_REPORT_QUERY);
 	}
 
 	/**
@@ -254,7 +262,7 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 
 		for (String syllableWas : syllabels) {
 			for (String syllableSaid : syllabels) {
-				if (!syllableWas.equals(syllableSaid) ||!StringUtils.hasText(syllableSaid.trim() )) {
+				if (!syllableWas.equals(syllableSaid)) {
 					reports.put("Neteisingai "+
 							syllableWas + " kaip " + syllableSaid  + "  ",
 							SUCC_RECONITION_SEGMENTS_REPORT_QUERY.replaceAll(
@@ -263,19 +271,8 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 				}
 			}
 		}
-//		for (String syllableWas : syllabels) {
-//			reports.put(
-//					"Neteisingai triukšmas kaip " + syllableWas,
-//					SUCC_RECONITION_SEGMENTS_REPORT_QUERY.replaceAll(
-//							"<SYLLABLE_WAS>", "").replaceAll("<SYLLABLE_SAID>",
-//							syllableWas));
-//		}
+
 		reports.put("Atsisakyta", ERR_REJECTED_RECONITION_SEGMENTS_REPORT_QUERY);
-//		reports.put("Klaidingai apjungti skiemenys"  + "  ",
-//				ERR_JOINED_SEGMENTS_REPORT_QUERY);
-//		reports.put("Klaidingai skiemenų trūkiai"  + "  ",
-//				ERR_BREAK_SEGMENTS_REPORT_QUERY);
-//		reports.put("Viso aptikta segmentavime"  + "  ", ALL_SEGMENTS_REPORT_QUERY);
 		reports.put("Viso aptikta segmentavime" + "  ", ALL_SEGMENTS_FOR_RECOGN_REPORT_QUERY);
 	}
 
@@ -300,10 +297,10 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 				ERR_NOIZE_SEGMENTS_REPORT_QUERY);
 		reports.put("Klaidingai skiemenų trūkiai",
 				ERR_BREAK_SEGMENTS_REPORT_QUERY);
-		// reports.put("Viso aptikta", ALL_SEGMENTS_REPORT_QUERY);
+		 reports.put("Viso aptikta", ALL_SEGMENTS_REPORT_QUERY);
 		// reports.put("Skirtingų segmentų tipų",
 		// DISTINCT_SEGMENTS_REPORT_QUERY);
-		reports.put("turėjo būti", "${shouldBe}");
+//		reports.put("turėjo būti", "${shouldBe}");
 	}
 
 	/**

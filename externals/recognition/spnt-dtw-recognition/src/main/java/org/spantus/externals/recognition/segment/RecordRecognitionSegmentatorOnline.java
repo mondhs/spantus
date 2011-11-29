@@ -69,11 +69,12 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
                 RecognitionResult result = getCorpusService().match(featureData);
                 if (result != null) {
                     marker.setLabel(result.getInfo().getName());
+                    notifyCorpusMatchListener(result, marker);
                 } else {
                     log.info("[findBestMatach] there is no match");
                 }
             }
-
+         
             log.info("[findBestMatach]" + marker);
             return url;
 

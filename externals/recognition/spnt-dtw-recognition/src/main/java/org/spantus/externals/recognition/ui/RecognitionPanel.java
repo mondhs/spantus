@@ -68,7 +68,7 @@ public class RecognitionPanel extends JPanel implements SpantusEventListener {
 		if (recognitionPlot == null) {
 			recognitionPlot = new RecognitionMonitorPlot();
                         recognitionPlot.setPreferredSize(new Dimension(200, 200));
-                        recognitionPlot.initialize();
+//                        recognitionPlot.initialize();
 //			recognitionPlot.setLearnMode(isLearnMode());
 		}
 		return recognitionPlot;

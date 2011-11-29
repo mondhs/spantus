@@ -109,6 +109,10 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 		getExtractor().setConfig(config);		
 	}
 
+	@Override
+	public long getOffset() {
+		return getExtractor().getOffset();
+	}
 	
 	/**
 	 * 

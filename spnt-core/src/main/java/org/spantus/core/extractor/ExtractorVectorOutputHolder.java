@@ -86,4 +86,9 @@ public class ExtractorVectorOutputHolder implements IExtractorVector {
 		throw new IllegalAccessError("Should not be called");
 	}
 
+	@Override
+	public long getOffset() {
+		return 0;
+	}
+
 }

@@ -99,17 +99,27 @@ public class ExtractorReaderServiceImpl implements ExtractorReaderService {
 		for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
 			// extractors can have prefixes, jus check if ends with
 			FrameVectorValues values = extractor.getOutputValues();
-			int endIndex = values.size() - 1;
+			int endIndex = values.size() - 1 ;
 			// if(values.get(0).size()<=2){
 			// continue;
 			// }
 			Double fromIndex = (marker.getStart().doubleValue() * values
 					.getSampleRate()) / 1000;
+			fromIndex -=  extractor.getOffset();
 			fromIndex = fromIndex < 0 ? 0 : fromIndex;
+			
 			Double toIndex = fromIndex
 					+ (marker.getLength().doubleValue() * values
 							.getSampleRate()) / 1000;
+			toIndex -= extractor.getOffset();
+
+			
 			toIndex = endIndex < toIndex ? endIndex : toIndex;
+			if(fromIndex>toIndex){
+				 throw new IllegalArgumentException(extractor.getName() + " fromIndex(" + fromIndex +
+                         ") > toIndex(" + toIndex + "); offset: " + extractor.getOffset() );
+			}
+			
 			FrameVectorValues fvv = values.subList(fromIndex.intValue(),
 					toIndex.intValue());
 			String key = preprocess(extractor.getName());

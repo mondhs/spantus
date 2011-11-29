@@ -24,6 +24,7 @@ import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.core.wav.AudioManager;
 import org.spantus.core.wav.AudioManagerFactory;
@@ -65,6 +66,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	private String rulePath;
 	private boolean rulesTurnedOn;
 	private Map<String, ExtractorParam> params;
+	private ClassifierEnum classifier = ClassifierEnum.rules;
 
 	/**
 	 * Find segments(markers), then put them to corpus
@@ -129,7 +131,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 
 		IExtractorInputReader reader = getReaderService()
 				.createReaderWithClassifier(getExtractors(), wavFilePath,
-						getParams());
+						getParams(), getClassifier() );
 		return reader;
 	}
 
@@ -514,5 +516,13 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 
 	public void setParams(Map<String, ExtractorParam> params) {
 		this.params = params;
+	}
+
+	public ClassifierEnum getClassifier() {
+		return classifier;
+	}
+
+	public void setClassifier(ClassifierEnum classifier) {
+		this.classifier = classifier;
 	}
 }

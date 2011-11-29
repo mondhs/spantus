@@ -101,5 +101,11 @@ public class MockClassifier implements IClassifier {
 		return false;
 	}
 
+	@Override
+	public long getOffset() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 }

@@ -22,7 +22,7 @@ public class ResultOdsDao {
 	String[] header = new String[] { "", "00dB", "05dB", "10dB", "15dB", "30dB",
 			"bendrai" };
 
-	public static String[] sheets = new String[] { SEGMENTACIJA, ATPAZINIMAS,  SKIEMENIMIS, LYGINIMAS };
+	public static String[] sheets = new String[] { SEGMENTACIJA,   SKIEMENIMIS, LYGINIMAS };
 
 	String[] cols = new String[] { "A", "B", "C", "D", "E", "F", "G" };
 

@@ -39,7 +39,8 @@ public abstract class AbstractExtractor extends AbstractGeneralExtractor impleme
 
 
 	public FrameValues calculate(Long sampleNum, FrameValues values) {
-		return (FrameValues) super.calculate(sampleNum, values);
+		FrameValues fv = (FrameValues) super.calculate(sampleNum, values);
+		return fv;
 	}
 
 	protected  IValues calculateAndStoreWindow(FrameValues windowedWindow, IValues storedValues){

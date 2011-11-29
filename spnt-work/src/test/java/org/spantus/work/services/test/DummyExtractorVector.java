@@ -60,5 +60,10 @@ public class DummyExtractorVector implements IExtractorVector {
     public void setConfig(IExtractorConfig config) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+	@Override
+	public long getOffset() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }
