@@ -68,5 +68,8 @@ public class AudioPowerExtractor extends AbstractMpeg7Extractor {
 		// TODO Auto-generated method stub
 		
 	}
+	public long getOffset() {
+		return 0;
+	}
 
 }

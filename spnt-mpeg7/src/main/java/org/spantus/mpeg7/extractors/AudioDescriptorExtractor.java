@@ -81,4 +81,9 @@ public class AudioDescriptorExtractor implements IExtractor {
 	}
 
 
+	public long getOffset() {
+		return 0;
+	}
+
+
 }

@@ -44,9 +44,9 @@ public class SytheticRecognitionDirExp {
 
 	protected void init(ModelMultiMapper mapper, String corpusName) {
 		ExpConfig config = ExpConfig.createConfig();
-		config.setSegmentatorServiceType(SegmentatorServiceEnum.online.name());
-		config.setClassifier(ClassifierEnum.offline);
-		mapper.init(config, new ExtNameFilter("wav"),
+		config.setSegmentatorServiceType(SegmentatorServiceEnum.basic.name());
+		config.setClassifier(ClassifierEnum.rulesOnline);
+		mapper.init(config, new ExtNameFilter("txt"),
 				corpusName);
 	}
 
@@ -55,20 +55,20 @@ public class SytheticRecognitionDirExp {
 		mapper.destroy();
 	}
 
-	@Test  @Ignore
+	@Test @Ignore
 	public void testRecognize() throws Exception {
 		// given
 		init(mapper, "AK1");
 		mapper.recognize();
 	}
 
-	@Test 
+	@Test  @Ignore
 	public void testGenerateReport() throws Exception {
 
 		// given
 		String[] syllabels = new String[]
-//				{"a", "e", ""}
-				{ "ga", "ma", "me", "na", "ne", "re",	"ta", "" }
+				{"a", "e", ""}
+//				{ "ga", "ma", "me", "na", "ne", "re",	"ta", "" }
 		;
 		init(mapper, "AK1");
 		mapper.setRecreate(false);
@@ -82,7 +82,7 @@ public class SytheticRecognitionDirExp {
 		ods = dao.save(result, ods.getAbsolutePath());
 	}
 
-	@Test  
+	@Test 
 	public void testDrawReport() throws Exception {
 		// given
 		init(mapper, "AK1");

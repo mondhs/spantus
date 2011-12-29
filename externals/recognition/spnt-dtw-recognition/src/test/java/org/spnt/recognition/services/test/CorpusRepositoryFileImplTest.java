@@ -88,7 +88,9 @@ public class CorpusRepositoryFileImplTest {
         corpusEntry.setName("Name1");
         FeatureData fd = new FeatureData();
         fd.setName("Feature1");
-        fd.setValues(new FrameValues(new Double[]{1D, 2D, 3D}));
+        FrameValues fv = new FrameValues(new Double[]{1D, 2D, 3D});
+        fv.setSampleRate(1.0);
+        fd.setValues(fv);
         corpusEntry.getFeatureMap().put(fd.getName(), fd);
         
         //when

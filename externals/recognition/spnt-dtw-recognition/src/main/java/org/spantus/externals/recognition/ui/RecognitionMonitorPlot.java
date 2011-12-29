@@ -32,7 +32,6 @@ import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.services.ConfigPropertiesDao;
 import org.spantus.work.ui.AbstractSegmentPlot;
 import org.spantus.work.ui.SegmentMonitorPlot;
-import org.spnt.recognition.dtw.ui.WritableCorpusMatchListener;
 
 public class RecognitionMonitorPlot extends SegmentMonitorPlot {
 	

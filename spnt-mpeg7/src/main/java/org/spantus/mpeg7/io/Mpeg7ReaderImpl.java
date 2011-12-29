@@ -160,6 +160,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 */
 	protected FrameValues readScalar(Element descriptor) {
 		Element scalar = Mpeg7Utils.getFirstElement(descriptor, Mpeg7nodes.Scalar);
+		Double sampleRate = readSampleRate(descriptor);
 		if (scalar == null)
 			return null;
 		Double float1 = Double.valueOf(0);
@@ -169,6 +170,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 			log.error("Number format exception: " + nfe.getMessage());
 		}
 		FrameValues vals = new FrameValues();
+		vals.setSampleRate(sampleRate);
 		vals.add(float1);
 		return vals;
 	}
@@ -257,6 +259,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 		Iterator<Double> maxIter = max.iterator();
 		for (Double floatMin : min) {
 			FrameValues fv = new FrameValues();
+			fv.setSampleRate(min.getSampleRate());
 			Double floatMax = maxIter.next();
 			fv.add(floatMin);
 			fv.add(floatMax);
@@ -275,7 +278,9 @@ public class Mpeg7ReaderImpl implements AudioReader {
 			Mpeg7nodes node, int vectorSize) {
 		String[] strs = Mpeg7Utils.readRaw(seriesOfValues, node);
 		FrameVectorValues fv3 = new FrameVectorValues();
+		Double sampleRate = readSampleRate(seriesOfValues);
 		FrameValues fv = new FrameValues();
+		fv.setSampleRate(sampleRate);
 		int i = 0;
 		for (String float1 : strs) {
 			if("".equals(float1)) continue;
@@ -284,9 +289,10 @@ public class Mpeg7ReaderImpl implements AudioReader {
 			if (i % vectorSize == 0) {
 				fv3.add(fv);
 				fv = new FrameValues();
+				fv.setSampleRate(sampleRate);
 			}
 		}
-		fv3.setSampleRate(readSampleRate(seriesOfValues));
+		fv3.setSampleRate(sampleRate);
 		return fv3;
 	}
 	/**
@@ -296,7 +302,11 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @return
 	 */
 	protected FrameValues readRaw(Element seriesOfValues, Mpeg7nodes node) {
-		return transformToFrameValue(Mpeg7Utils.readRaw(seriesOfValues, node));
+		FrameValues fv = transformToFrameValue(Mpeg7Utils.readRaw(seriesOfValues, node));
+		if(fv != null){
+			fv.setSampleRate(readSampleRate(seriesOfValues));
+		}
+		return fv;
 	}
 	/**
 	 * 

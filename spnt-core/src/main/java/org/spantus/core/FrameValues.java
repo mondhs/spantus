@@ -41,7 +41,7 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Double sampleRate = 1D;
+	private Double sampleRate = null;
 	private Double milsSamplePeriod = 1D; 
 	private Double minValue = null;
 	private Double maxValue = null;

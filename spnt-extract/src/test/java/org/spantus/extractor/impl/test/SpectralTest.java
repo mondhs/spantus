@@ -25,6 +25,7 @@ public class SpectralTest {
 			x.add(Math.sin(i));
 		}
 		config= FrameValuesTestUtils.createExtractorConfig();
+		x.setSampleRate(1.0);
 	}
 	
 	@Test

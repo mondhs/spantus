@@ -27,8 +27,11 @@ public class WindowBufferProcessorTest {
 		// given
 		FrameValues values = FrameValuesTestUtils.generateFrameValues(21);
 		ExtractorConfig config = FrameValuesTestUtils.createExtractorConfig();
-		config.setWindowSize(12);
-		config.setWindowOverlap(3);
+		Double size=12.0;
+		Double overlap=3.0;
+		config.setWindowSize(size.intValue());
+		config.setWindowOverlap(overlap.intValue());
+		config.setSampleRate(size*(size-overlap));
 		List<FrameValues> fv = new ArrayList<FrameValues>();
 		// when
 		WindowBufferProcessorCtx ctx = WindowBufferProcessor.ctreateWindowBufferProcessorCtx(config);
@@ -50,7 +53,7 @@ public class WindowBufferProcessorTest {
 		Assert.assertEquals(20, windowValues2.getLast().intValue());
 		Assert.assertEquals(1, windowValues2.getFrameIndex().intValue());
 		
-		Assert.assertEquals(1, windowValues2.getTime());
+		Assert.assertEquals(1.0D, windowValues2.getTime());
 	}
 	
 	

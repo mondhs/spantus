@@ -84,5 +84,8 @@ public class AudioDescriptorVectorExtractor implements IExtractorVector {
 		// TODO Auto-generated method stub
 		
 	}
+	public long getOffset() {
+		return 0;
+	}
 
 }

@@ -157,7 +157,6 @@ public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
 	}
 	
 	public long getOffset() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 }

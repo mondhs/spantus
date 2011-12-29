@@ -55,7 +55,7 @@ public class ChartJFreeDao {
 		translate.put(SEGMENTATION_ERRORS, "Segmentavimo klaidos");
 		translate.put(RECOGNITION_ERRORS, "Skiemenų atpažinimo klaidos");
 		translate.put(RECOGNITION_SEGMENTATION_ERROR_RATIOS, "Segmentų aptikimo ir atpažinimo santykiai");
-		translate.put(ERROR_RATIOS,"Klaidų santykis");
+		translate.put(ERROR_RATIOS,"Klaidų santykis %");
 		translate.put(NOISE_LEVEL,"Tiukšmo Lygis");
 		translate.put(COMPARE_WITH_FOUND,"% lyginant su aptinktai segmetntais");
 		translate.put(BY_NOISE,": pagal triukšmus");
@@ -124,8 +124,8 @@ public class ChartJFreeDao {
 		JFreeChart chart = ChartFactory.createLineChart(
 				 translate.get(RECOGNITION_SEGMENTATION_ERROR_RATIOS), // chart
 				// title
-				 translate.get(ERROR_RATIOS), // domain axis label
-				translate.get(NOISE_LEVEL), // range axis label
+				 translate.get(NOISE_LEVEL), // domain axis label
+				translate.get(ERROR_RATIOS), // range axis label
 				dataset, // data
 				PlotOrientation.VERTICAL, // orientation
 				true, // include legend
@@ -165,7 +165,7 @@ public class ChartJFreeDao {
 			double errorCount = entry.getValue();
 			double totalCount = totals.get(entry.getKey());
 			double total = errorCount / totalCount;
-			dataset.addValue(total,
+			dataset.addValue(total*100,
 					rowEntry,
 					entry.getKey());
 		}
@@ -200,7 +200,7 @@ public class ChartJFreeDao {
 	private void drawStacked(AsymmetricStatisticalCategoryDataset dataset,
 			String tableName) throws IOException {
 		JFreeChart chart2 = ChartFactory.createStackedBarChart(translate.get(tableName)
-				+ translate.get(translate) , translate.get(ERROR_RATIOS), // domain
+				+ translate.get(BY_NOISE) , translate.get(ERROR_RATIOS), // domain
 																	// axis
 																	// label
 				translate.get(COMPARE_WITH_FOUND), // range axis label

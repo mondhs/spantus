@@ -164,7 +164,9 @@ public class CorpusServiceBaseImplTest {
         FrameVectorValues vectors = new FrameVectorValues();
         vectors.setSampleRate(100D);
         for (Double f : args) {
-            vectors.add(new FrameValues(new Double[]{f, f}));
+        	FrameValues fv = new FrameValues(new Double[]{f, f});
+        	fv.setSampleRate(1.0);
+            vectors.add(fv);
         }
         return vectors;
     }

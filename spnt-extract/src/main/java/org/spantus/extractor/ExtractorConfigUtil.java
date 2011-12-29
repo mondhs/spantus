@@ -67,9 +67,9 @@ public abstract class ExtractorConfigUtil {
 		
 		
 		//enhancing as buffering is not working corretly
-		config.setFrameSize(calculateFrameSize( windowSize, windowOverlap, 10));
+		config.setFrameSize(calculateFrameSize( windowSize, windowOverlap, 100));
 //		config.setBitsPerSample(sampleSizeInBits);
-		config.setBufferSize(calculateBufferSize(config.getFrameSize(), 800));
+		config.setBufferSize(calculateBufferSize(config.getFrameSize(), 80));
 		return config;
 	}
 	

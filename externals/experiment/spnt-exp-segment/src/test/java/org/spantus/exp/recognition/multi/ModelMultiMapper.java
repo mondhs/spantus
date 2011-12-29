@@ -36,10 +36,10 @@ public class ModelMultiMapper extends MultiMapper {
 //					) {
 //				continue;
 //			}
-			Double coef = 7.D;
-			if(signalFile.getName().contains("s_30_")){
-				coef =9.D;
-			}
+			Double coef = 2.D;
+//			if(signalFile.getName().contains("s_30_")){
+//				coef =9.D;
+//			}
 			
 			ExpConfig.updateCoefAndModifier(getExpConfig(),coef , getExpConfig().getModifier());
 			
