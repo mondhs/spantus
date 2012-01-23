@@ -64,6 +64,7 @@ public class WavformExtractor extends AbstractExtractorVector {
 		ctx.min = Math.min(ctx.min, float1);
 		if(ctx.index == ctx.chunkSize){
 			fv = new FrameValues();
+			fv.setSampleRate((double) 1);
 			previousMin = previousMin == null?ctx.min:previousMin;
 			previousMax = previousMax == null?ctx.max:previousMax;
 			fv.add((ctx.min+previousMin)*.5F);

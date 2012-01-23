@@ -48,7 +48,7 @@ public class CrossingZeroExtractor extends AbstractExtractor {
 	}
 	
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues calculatedValues = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		int cross = 0;
 		for (Double float1 : window) {
 			cross += Math.abs((float1>0?1:0)-(lastValue>0?1:0));

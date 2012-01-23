@@ -37,7 +37,7 @@ public class AutocorrelationExtractor extends AbstractExtractor{
 
 	
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues calculatedValues = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		Double ac= Autocorrelation.calc(window, 2).get(1);
 		calculatedValues.add(1+ac);//ac is negative and more than -1
 		return calculatedValues;

@@ -55,7 +55,7 @@ public class LPCResidualExtractor extends AbstractExtractor {
 	
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameVectorValues extrValues = calculateExtr3D(window);
-		FrameValues calculatedValues = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		int order = extrValues.get(0).size();
 		LinkedList<Double> bufferValues = getBuffer(order); 
 		Double valueSum = 0D;

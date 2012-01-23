@@ -52,12 +52,14 @@ public class StdevExtractor extends AbstractExtractorModifier {
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues calculatedValues = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		meanExtractor.calculateWindow(window);
 		calculatedValues.add(meanExtractor.getStdev());
 		return calculatedValues;
 	}	
 	
+
+
 	public String getName() {
 		return ExtractorModifiersEnum.stdev.name()+"_" + getExtractor().getName();
 	}

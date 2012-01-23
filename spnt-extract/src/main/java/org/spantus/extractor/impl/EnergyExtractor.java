@@ -61,7 +61,7 @@ public class EnergyExtractor extends AbstractExtractor {
 	}
 	
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues calculatedValues = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		double windowVal = 0;
 		for (Double float1 : window) {
 			float1 = Math.pow(float1, 2);

@@ -45,17 +45,17 @@ public class Loudness extends AbstractExtractor {
 	
 	
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues fv = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		for (Double fvi : energy.calculateWindow(window)) {
 			Double val =Math.pow(k * fvi, alfa);
 			if(!Double.isNaN(val)){
-				fv.add(val);
+				calculatedValues.add(val);
 			}else{
-				fv.add(0D);
+				calculatedValues.add(0D);
 			}
 			
 		}
-		return fv;
+		return calculatedValues;
 	}
 
 	

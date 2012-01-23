@@ -36,9 +36,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -49,8 +49,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import org.spantus.core.beans.I18n;
 
+import org.spantus.core.beans.I18n;
 import org.spantus.core.marker.Marker;
 import org.spantus.logger.Logger;
 

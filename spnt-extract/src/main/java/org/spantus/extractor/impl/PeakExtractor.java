@@ -60,7 +60,7 @@ public class PeakExtractor extends AbstractExtractor {
 	
 	public FrameValues calculateWindow(FrameValues window) {
 		FrameVectorValues extrValues = calculateExtr3D(window);
-		FrameValues calculatedValues = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		int order = extrValues.get(0).size();
 		LinkedList<Double> bufferValues = getBuffer(order);
 //		LinkedList<Float> predictedValues = new FrameValues();
@@ -97,7 +97,7 @@ public class PeakExtractor extends AbstractExtractor {
 		if(peak>.5*mean*mean){
 			maxIndex = 0;
 		}
-		calculatedValues = new FrameValues();
+		calculatedValues = newFrameValues(window);
 		calculatedValues.add(maxIndex.doubleValue());
 		return calculatedValues;
 	}

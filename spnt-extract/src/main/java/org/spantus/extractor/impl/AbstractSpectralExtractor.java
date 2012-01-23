@@ -53,9 +53,10 @@ public abstract class AbstractSpectralExtractor extends AbstractExtractor {
 	
 	
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues rtnValues = new FrameValues();
+		FrameValues rtnValues = newFrameValues(window);
 		return rtnValues;
 	}
+	
 	
 	
 	public int getDimension() {

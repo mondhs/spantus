@@ -77,7 +77,9 @@ public class FrameVectorValues extends LinkedList<List<Double>> implements IValu
 //			max = Math.max(floats[i], max);
 //			min = Math.min(floats[i], min);
 //		}
-		FrameValues values = new FrameValues(floats);
+		FrameValues values = new FrameValues();
+		values.addAll(floats);
+		values.setSampleRate(1D);
 		return super.add(values);
 	}
 

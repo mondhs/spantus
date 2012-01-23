@@ -22,6 +22,7 @@ package org.spantus.core.wav;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 /**

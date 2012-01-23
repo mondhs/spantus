@@ -23,9 +23,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.spantus.core.extractor.ExtractorParam;
-import org.spantus.core.extractor.IExtractorConfig;
 /**
  * 
  * @author Mindaugas Greibus

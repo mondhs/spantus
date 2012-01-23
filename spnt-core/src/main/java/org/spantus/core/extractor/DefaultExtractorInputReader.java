@@ -22,11 +22,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.spantus.core.FrameValues;
-import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorVector;
-import org.spantus.core.extractor.IExtractorConfig;
-import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.logger.Logger;
 /**
  * 

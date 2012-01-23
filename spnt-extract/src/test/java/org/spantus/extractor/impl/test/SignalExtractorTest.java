@@ -40,6 +40,7 @@ public class SignalExtractorTest{
 	@Before
 	public void setUp() throws Exception {
 		x = new FrameValues();
+		x.setSampleRate(1D);
 		for (float i = 1; i < 6.4 * Math.PI; i+=.3) {
 			x.add(Math.sin(i));
 		}

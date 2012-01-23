@@ -56,7 +56,7 @@ public class SignalExtractor extends AbstractExtractor {
 //				getName(), getConfig().getSampleRate()/1000, getConfig()
 //						.getWindowSize()));
 
-		FrameValues calculatedValues = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(values);
 		int i=0 ;
 		Double fWork = 0D;
 		

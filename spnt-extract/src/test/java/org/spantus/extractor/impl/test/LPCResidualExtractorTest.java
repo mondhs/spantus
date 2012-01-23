@@ -25,6 +25,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
+import org.spantus.extractor.FrameValuesTestUtils;
 import org.spantus.extractor.impl.LPCResidualExtractor;
 /**
  * 
@@ -47,15 +48,8 @@ public class LPCResidualExtractorTest {
 		for (int i = 0; i < dArr.length; i++) {
 			dArr[i]=i;
 		}
-		FrameValues fv = lpcResidualExtractor.calculateWindow(convert(dArr));
+		FrameValues fv = lpcResidualExtractor.calculateWindow(FrameValuesTestUtils.convert(dArr));
 		Assert.assertTrue( fv.get(0)>0F);
 	}
 	
-	public FrameValues convert(Integer[] intArr){
-		FrameValues rtn = new FrameValues();
-		for (Integer i1 : intArr) {
-			rtn.add(i1.doubleValue());
-		}
-		return rtn;
-	}
 }

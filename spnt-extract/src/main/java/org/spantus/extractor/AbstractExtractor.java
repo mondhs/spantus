@@ -22,6 +22,7 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.logger.Logger;
+import org.spantus.utils.Assert;
 
 /**
  * 
@@ -49,7 +50,9 @@ public abstract class AbstractExtractor extends AbstractGeneralExtractor impleme
 			fv = new FrameValues();
 			storedValues = fv;
 		}
-		fv.addAll(calculateWindow(windowedWindow));
+		FrameValues aFv = calculateWindow(windowedWindow);
+		Assert.isTrue(aFv.getSampleRate() != null, "Sample rate not set ");
+		fv.addAll(aFv);
 		return storedValues;
 	}
 	protected FrameValues calculateWindow(FrameValues windowedWindow, IValues storedValues){
@@ -69,6 +72,12 @@ public abstract class AbstractExtractor extends AbstractGeneralExtractor impleme
 	
 	public Double getExtractorSampleRate() {
 		return getWindowBufferProcessor().calculateExtractorSampleRate(getConfig());//(getConfig().getSampleRate()/(getConfig().getWindowSize()));
+	}
+	
+	protected FrameValues newFrameValues(FrameValues window) {
+		FrameValues frameValues = new FrameValues();
+		frameValues.setSampleRate(window.getSampleRate());
+		return frameValues;
 	}
 
 

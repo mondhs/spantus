@@ -66,9 +66,12 @@ public class WorkAudioManager implements AudioManager {
         if(stream == null){
             throw new ProcessingException("file not found" + fileURL);
         }
-               
-        float fromVal = from == null ? 0 : from.floatValue();
-        float lengthVal = length == null ? getTotalTime(stream) : length.floatValue();
+        
+        float totalTime = getTotalTime(stream);
+        
+        float fromVal = from == null ? 0 : from;
+        float lengthVal = length == null ? totalTime : length;
+        lengthVal = lengthVal == fromVal?totalTime:lengthVal;
 //		if (from == null && length == null) {
 //			length = getTotalTime(stream);
 //		}

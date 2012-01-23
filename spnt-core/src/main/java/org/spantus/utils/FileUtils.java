@@ -129,6 +129,7 @@ public final class FileUtils {
 		File newestFile = null;
 		if (rootDir.isDirectory()) {
 			for (String file : rootDir.list()) {
+				
 				if (!file.endsWith(sufix)) {
 					continue;
 				}
@@ -157,7 +158,7 @@ public final class FileUtils {
 		if (rootDir.isDirectory()) {
 			for (String file : rootDir.list()) {
 				if (file.endsWith(sufix)) {
-					results.add(root + file);
+					results.add(root + "/" + file);
 				}
 
 			}

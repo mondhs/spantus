@@ -54,7 +54,7 @@ public class MeanExtractor extends AbstractExtractorModifier {
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues calculatedValues = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		FrameValues fv = getExtractor().calculateWindow(window);
 		calculatedValues.add(calculateMean(fv));
 		return calculatedValues;

@@ -18,6 +18,7 @@
 */
 package org.spantus.extractor.modifiers;
 
+import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.extractor.AbstractExtractor;
 /**
@@ -30,6 +31,12 @@ import org.spantus.extractor.AbstractExtractor;
 public abstract class AbstractExtractorModifier extends AbstractExtractor {
 	public abstract IExtractor getExtractor();
 
+	protected FrameValues newFrameValues(FrameValues window) {
+		FrameValues calculatedValues = new FrameValues();
+		calculatedValues.setSampleRate(window.getSampleRate());
+		return calculatedValues;
+	}
+	
     @Override
     public void flush() {
         super.flush();

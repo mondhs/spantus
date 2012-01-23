@@ -62,7 +62,8 @@ public class FrameValues3DConverter implements Converter{
 		FrameVectorValues fv3d = new FrameVectorValues();
 		fv3d.setSampleRate(Double.valueOf(sampleRate));
 		int i = 0;
-		FrameValues fv = new FrameValues();
+		FrameValues fv = newFrameValues();
+		fv.setSampleRate(1d);
 		
 		for (String float1Str : strs) {
 			if("".equals(float1Str)) continue;
@@ -70,7 +71,7 @@ public class FrameValues3DConverter implements Converter{
 			i++;
 			if(i>=vectorSize){
 				fv3d.add(fv);
-				fv = new FrameValues();
+				fv = newFrameValues();
 				i=0;
 			}
 		}
@@ -79,6 +80,13 @@ public class FrameValues3DConverter implements Converter{
 		reader.moveUp();
 
 		return fv3d;
+	}
+
+
+	private FrameValues newFrameValues() {
+		FrameValues frameValues = new FrameValues();
+		frameValues.setSampleRate(1d);
+		return frameValues;
 	}
 
 	

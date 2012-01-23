@@ -51,7 +51,7 @@ public class DeltaExtractor extends AbstractExtractorModifier {
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues calculatedValues = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		FrameValues fv = getExtractor().calculateWindow(window);
 		
 		if(fv.size()==1){

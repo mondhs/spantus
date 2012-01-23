@@ -52,8 +52,7 @@ public class SmoothedExtractor extends AbstractExtractorModifier {
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues calculatedValues = new FrameValues();
-		
+		FrameValues calculatedValues = newFrameValues(window);
 		smooth.add(VectorUtils.avg(getExtractor().calculateWindow(window)));
 		if(smooth.size()>smothingSize){
 			smooth.removeFirst();

@@ -67,6 +67,7 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 //			}
 			threasholds.add(values.getMinValue());
 		}
+		threasholds.setSampleRate(values.getSampleRate());
 		return threasholds;
 	}
 

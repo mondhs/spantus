@@ -44,7 +44,7 @@ public class LPCErrorExtractor extends AbstractExtractor {
 	}	
 	
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues calculatedValues = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		LPCResult lpcResult = getLpcService().calculateLPC(window, getDimension());
 		calculatedValues.add(1-lpcResult.getError());
 		return calculatedValues;

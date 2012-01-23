@@ -36,7 +36,7 @@ public class SignalEntropyExtractor extends AbstractExtractor{
 
 	
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues rtnValues = new FrameValues();
+		FrameValues rtnValues = newFrameValues(window);
 
 //		float bottom = 0;
 //		for (Float current : window) {
@@ -56,6 +56,9 @@ public class SignalEntropyExtractor extends AbstractExtractor{
 	}
 
 	
+
+
+
 	public String getName() {
 		return ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR.name();
 	}

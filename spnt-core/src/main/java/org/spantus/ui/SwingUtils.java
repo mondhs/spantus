@@ -7,6 +7,7 @@ package org.spantus.ui;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
+
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 

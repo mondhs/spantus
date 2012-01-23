@@ -5,6 +5,7 @@ import org.spantus.core.FrameValues;
 public class FrameValuesTestUtils {
 	public static  FrameValues convert(Integer[] intArr){
 		FrameValues rtn = new FrameValues();
+		rtn.setSampleRate(1D);
 		for (Integer i1 : intArr) {
 			rtn.add(i1.doubleValue());
 		}

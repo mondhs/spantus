@@ -9,35 +9,37 @@ import org.spantus.core.wav.AudioManagerFactory;
 
 public class PlayCmd extends AbsrtactCmd {
 	private SelectionDto dto;
-	
+
 	public PlayCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
 		this.dto = new SelectionDto();
 	}
 
 	public Set<String> getExpectedActions() {
-		return createExpectedActions(
-				GlobalCommands.sample.play.name(),
-				GlobalCommands.sample.selectionChanged.name()
-				);
+		return createExpectedActions(GlobalCommands.sample.play.name(),
+				GlobalCommands.sample.selectionChanged.name());
 	}
 
 	public String execute(SpantusWorkInfo ctx) {
-		if(GlobalCommands.sample.selectionChanged.name().equals(getCurrentEvent().getCmd())){
-			this.dto = ((SelectionDto)getCurrentEvent().getValue());
+		if (GlobalCommands.sample.selectionChanged.name().equals(
+				getCurrentEvent().getCmd())) {
+			this.dto = ((SelectionDto) getCurrentEvent().getValue());
 			return null;
 		}
-		
-		if(dto == null){
+
+		if (dto == null) {
 			this.dto = new SelectionDto();
 		}
-		try{
-			AudioManagerFactory.createAudioManager().play(
-                        ctx.getProject().getSample().getCurrentFile(),
-				dto.getFrom().floatValue(),
-				dto.getLength().floatValue()
-				);	
-		}catch (ProcessingException e) {
+		try {
+			Float from = null;
+			Float length = null;
+			from = dto.getFrom() != null ? dto.getFrom().floatValue() : null;
+			length = dto.getFrom() != null ? dto.getLength().floatValue()
+					: null;
+			AudioManagerFactory.createAudioManager()
+					.play(ctx.getProject().getSample().getCurrentFile(), from,
+							length);
+		} catch (ProcessingException e) {
 			error(e.getLocalizedMessage(), ctx, e);
 		}
 		return null;

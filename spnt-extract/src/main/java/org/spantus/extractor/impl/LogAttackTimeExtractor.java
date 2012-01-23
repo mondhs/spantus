@@ -58,7 +58,7 @@ public class LogAttackTimeExtractor extends AbstractExtractor {
 		return 1;
 	}
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues fv = new FrameValues();
+		FrameValues calculatedValues = newFrameValues(window);
 		Double lat = 0D;
 		Double max = -Double.MAX_VALUE;
 		int maxIndex =0, i= 0;
@@ -78,8 +78,8 @@ public class LogAttackTimeExtractor extends AbstractExtractor {
 				break;
 			}
 		}
-		fv.add(lat);
-		return fv;
+		calculatedValues.add(lat);
+		return calculatedValues;
 	}	
 	public String getName() {
 		return ExtractorEnum.LOG_ATTACK_TIME.name();
