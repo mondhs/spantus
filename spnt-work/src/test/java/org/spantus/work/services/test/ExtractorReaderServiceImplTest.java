@@ -14,7 +14,9 @@ import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
-import org.spantus.work.services.ExtractorReaderServiceImpl;
+import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
+
+import static org.spantus.work.services.test.DumyExtractorInputReader.createExtractorVector;
 
 /**
  *
@@ -37,9 +39,9 @@ public class ExtractorReaderServiceImplTest {
         marker.setEnd(5L);
 
         String extractorName = "testFeature";
-        reader.getExtractorRegister3D().add(createExtractor(extractorName+"1"));
-        reader.getExtractorRegister3D().add(createExtractor(extractorName));
-        reader.getExtractorRegister3D().add(createExtractor(extractorName+"2"));
+        reader.getExtractorRegister3D().add(createExtractorVector(extractorName+"1"));
+        reader.getExtractorRegister3D().add(createExtractorVector(extractorName));
+        reader.getExtractorRegister3D().add(createExtractorVector(extractorName+"2"));
 
         //When
         Map<String, IValues> fvv = extractorReaderService.findAllVectorValuesForMarker(
@@ -59,9 +61,9 @@ public class ExtractorReaderServiceImplTest {
         marker.setEnd(5L);
 
         String extractorName = "testFeature";
-        reader.getExtractorRegister3D().add(createExtractor(extractorName+"1"));
-        reader.getExtractorRegister3D().add(createExtractor(extractorName));
-        reader.getExtractorRegister3D().add(createExtractor(extractorName+"2"));
+        reader.getExtractorRegister3D().add(createExtractorVector(extractorName+"1"));
+        reader.getExtractorRegister3D().add(createExtractorVector(extractorName));
+        reader.getExtractorRegister3D().add(createExtractorVector(extractorName+"2"));
 
         //When
         FrameVectorValues fvv = extractorReaderService.findFeatureVectorValuesForMarker(
@@ -74,22 +76,5 @@ public class ExtractorReaderServiceImplTest {
     }
 
 
-    protected FrameVectorValues generateOutputValues(int index){
-        FrameVectorValues fullFVV = new FrameVectorValues();
-        fullFVV.setSampleRate(1000D);
 
-        for (int i = 0; i < index; i++) {
-        	Double f = i+.1D;
-            fullFVV.add(new Double[]{f, f, f});
-        }
-        return fullFVV;
-    }
-
-    private DummyExtractorVector createExtractor(String extractorName) {
-        DummyExtractorVector extractor = new DummyExtractorVector();
-        extractor.setName("BUFFERED_" +extractorName);
-        FrameVectorValues fullFVV = generateOutputValues(10);
-        extractor.setOutputValues(fullFVV);
-        return extractor;
-    }
 }

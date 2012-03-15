@@ -97,6 +97,7 @@ public class CommandBuilderServiceImpl implements CommandBuilderService {
 	private static void createSampleCmd(Map<String, Set<SpantusWorkCommand>> cmds, CommandExecutionFacade executionFacade) {
 		safePut(cmds, new RecordCmd(executionFacade));
 		safePut(cmds, new PlayCmd(executionFacade));
+		safePut(cmds, new CalculateSnrCmd(executionFacade));
 		safePut(cmds, new StopCmd(executionFacade));
 		safePut(cmds, new ZoomInCmd(executionFacade));
 		safePut(cmds, new ZoomOutCmd(executionFacade));

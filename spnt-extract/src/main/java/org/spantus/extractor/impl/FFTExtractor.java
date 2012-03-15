@@ -51,7 +51,7 @@ public class FFTExtractor extends AbstractExtractorVector {
     private WienerModifier wienerFilter;
 
    public  FFTExtractor(){
-            wienerFilter = new WienerModifier();
+//            wienerFilter = new WienerModifier();
     }
 
     public String getName() {
@@ -70,7 +70,7 @@ public class FFTExtractor extends AbstractExtractorVector {
 		List<Double> fftOutput = getFftService().calculateFFTMagnitude(
                 window.getFrameIndex(),
                 calculatedTempValues, window.getSampleRate());
-//		int upperLimit = (int)(getUpperFrequency()*fftOutput.size()/sampleRate);
+//		int upperLimit = (int)(getUpperFrequency()*fftOutput.size()/getConfig().getSampleRate());
 //		upperLimit = Math.min(upperLimit, fftOutput.size());
 //		fftOutput = fftOutput.subList(0, upperLimit);
         if(getWienerFilter()!=null){

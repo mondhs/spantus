@@ -59,7 +59,7 @@ public class PlpTest {
 
         DiscreteFourierTransform sFft = new DiscreteFourierTransform(n, false);
         sFft.initialize();
-        Double[] fft = sFft.process(VectorUtils.toDoubleArray(new ArrayList<Double>(x)),16000);
+        Double[] fft = sFft.process(VectorUtils.toArray(new ArrayList<Double>(x)),16000);
 
         int bandSize = 13;
         PLPServiceSphinxImpl plpService = new PLPServiceSphinxImpl();
@@ -67,7 +67,7 @@ public class PlpTest {
 //        PLPFrequencyFilterBank lfccBanck = new PLPFrequencyFilterBank(130,6800, bandSize);
 //		double[] sResult = lfccBanck.process(fft, 16000);
         List<Double> result = plpService.calculateFromSpectrum(
-        		VectorUtils.toFloatList(fft), 16000D);
+        		VectorUtils.toList(fft), 16000D);
 		Assert.assertEquals(bandSize, result.size());
 //		assertCollectionEqual(mfcc, mfccData);
 		log.severe("testSphinxLPCC" + result);

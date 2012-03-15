@@ -4,27 +4,12 @@
  */
 package org.spantus.exp.recognition;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.HashMap;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.spantus.core.extractor.ExtractorParam;
-import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.core.wav.AudioManager;
-import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.exp.ExpConfig;
 import org.spantus.exp.recognition.multi.MultiMapper;
-import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
-import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.logger.Logger;
-import org.spantus.utils.ExtractorParamUtils;
-import org.spantus.utils.FileUtils;
-
-import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * 
@@ -47,13 +32,10 @@ public class QSegmentPhonomeMappingDirTest  {
 	}
 	
 	protected void init(MultiMapper mapper, String corpusName) {
+		ExpConfig config = ExpConfig.createConfig();
+		config.setMarkerFilePrefix(".TextGrid");
 		mapper.init(
-//				new File(ROOT_DIR, "TEST/"+ corpusName +"/"), 
-//				new File(ROOT_DIR, "TRAIN/"+ corpusName +"/"),
-//				new File(ROOT_DIR, "CORPUS/"+ corpusName +"/"), 
-//				new File(ROOT_DIR, "WAV/"+ corpusName +"/"), 
-				ExpConfig.createConfig(),
-				new TextGridNameFilter(),
+				config,
 				corpusName);
 	}
 	

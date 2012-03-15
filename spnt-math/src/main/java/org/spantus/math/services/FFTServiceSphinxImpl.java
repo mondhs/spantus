@@ -55,8 +55,8 @@ public class FFTServiceSphinxImpl implements FFTService{
             sFft.initialize();
         }
 
-        Double[] sResult = sFft.process(VectorUtils.toDoubleArray(x),sampleRate.intValue());
-        List<Double> fftOutput = VectorUtils.toFloatList(sResult);
+        Double[] sResult = sFft.process(VectorUtils.toArray(x),sampleRate.intValue());
+        List<Double> fftOutput = VectorUtils.toList(sResult);
 		return fftOutput;
 	}
 

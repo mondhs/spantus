@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.spantus.exp.recognition;
+package org.spantus.sandbox;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import net.sf.javaml.core.DefaultDataset;
 import org.junit.Test;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
+import org.spantus.exp.recognition.AbstractSegmentDirTest;
 import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;

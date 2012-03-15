@@ -61,10 +61,10 @@ public class MFCCServiceSphinxImpl implements MFCCService {
 
         DiscreteFourierTransform sFft = new DiscreteFourierTransform(n, false);
         sFft.initialize();
-        Double[] fft = sFft.process(VectorUtils.toDoubleArray(new ArrayList<Double>(x)),sampleRate.intValue());
+        Double[] fft = sFft.process(VectorUtils.toArray(new ArrayList<Double>(x)),sampleRate.intValue());
 
         Double[] sResult = getMelFrequencyFilterBank().process(fft, sampleRate.intValue());
-        List<Double> result = VectorUtils.toFloatList(sResult);
+        List<Double> result = VectorUtils.toList(sResult);
 
 		return result;
 	}
@@ -76,14 +76,14 @@ public class MFCCServiceSphinxImpl implements MFCCService {
      * @return
      */
     public List<Double> calculateMfccFromSpectrum
-            (List<Double> fft, Double sampleRate) {
+            (List<Double> x, List<Double> fft, Double sampleRate) {
 
 
-    	Double[] mels = getMelFrequencyFilterBank().process(VectorUtils.toDoubleArray(fft),
+    	Double[] mels = getMelFrequencyFilterBank().process(VectorUtils.toArray(fft),
     			sampleRate.intValue());
     	Double[] mfcc = getDct().process(mels);
         Double[] normalized = getBatchCMN().process(mfcc);
-        List<Double> result = VectorUtils.toFloatList(normalized);
+        List<Double> result = VectorUtils.toList(normalized);
 
 		return result;
 	}

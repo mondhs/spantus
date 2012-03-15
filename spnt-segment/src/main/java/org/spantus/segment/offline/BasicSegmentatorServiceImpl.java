@@ -19,7 +19,6 @@
 package org.spantus.segment.offline;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -166,7 +165,6 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 	 */
 	protected void safeSum(Map<Long, Map<String,Double>> statesSums, Long time, Double value,
 			SegmentatorParam param, String classifier) {
-		Double weight =  getWeight(param, classifier);
 		Map<String, Double> existValue = statesSums.get(time);
 		if (existValue == null) {
 			existValue = new HashMap<String, Double>();

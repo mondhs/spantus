@@ -3,6 +3,7 @@ package org.spantus.math.services.javaml;
 import java.util.Collection;
 import java.util.List;
 
+import org.spantus.math.MatrixUtils;
 import org.spantus.math.VectorUtils;
 
 import net.sf.javaml.core.DenseInstance;
@@ -48,12 +49,14 @@ public abstract class JavaMLSupport {
 	public static TimeSeries toTimeSeries(List<List<Double>> matrix,
 			int numOfDimensions) {
 		TimeSeries ts = new TimeSeries(numOfDimensions);
-		double i = 0;
+		double i = 1;
 		for (List<Double> values : matrix) {
 			Collection<Double> doubles = VectorUtils.toDoubleList(values);
 			TimeSeriesPoint tsp = new TimeSeriesPoint(doubles);
 			ts.addLast(i++, tsp);
 		}
+		
+//		System.out.println(ts);
 		return ts;
 	}
 }

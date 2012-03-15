@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
-import org.spantus.work.services.MarkerTextGridDao;
+import org.spantus.work.services.impl.MarkerTextGridDao;
 /**
  * 
  * @author mondhs

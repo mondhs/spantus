@@ -32,6 +32,6 @@ import java.util.List;
  */
 public interface MFCCService {
 	public List<Double> calculateMFCC(List<Double> x, Double sampleRate);
-    public List<Double> calculateMfccFromSpectrum(List<Double> spectra, Double sampleRate);
+    public List<Double> calculateMfccFromSpectrum(List<Double> x, List<Double> spectra, Double sampleRate);
 
 }

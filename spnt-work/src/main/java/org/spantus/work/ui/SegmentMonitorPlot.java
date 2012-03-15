@@ -31,7 +31,6 @@ import org.spantus.core.io.AudioCapture;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.segment.online.DecisionSegmentatorOnline;

@@ -84,7 +84,7 @@ public class MFCCKlautauServiceImpl implements MFCCService {
 		return Arrays.asList(mfccVal);
 	}
 
-    public List<Double> calculateMfccFromSpectrum(List<Double> fft, Double sampleRate){
-        throw new IllegalAccessError("Not impl");
+    public List<Double> calculateMfccFromSpectrum(List<Double> x, List<Double> fft, Double sampleRate){
+        return calculateMFCC(x, sampleRate);
     }
 }

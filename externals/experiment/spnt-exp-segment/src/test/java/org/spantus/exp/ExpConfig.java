@@ -1,6 +1,7 @@
 package org.spantus.exp;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +48,9 @@ public class ExpConfig {
             ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
             ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR};
 
-	public final static String RULES_PATH = "/home/as/src/spantus-svn/trunk/spnt-work-ui/src/main/resources/ClassifierRuleBase.csv";
+	public final static String RULES_PATH = 
+//			"/home/as/src/spantus-svn/trunk/spnt-work-ui/src/main/resources/" +
+			"/ClassifierRuleBase.csv";
 	
 	private int windowLength;
 	private int windowOverlap;
@@ -56,6 +59,8 @@ public class ExpConfig {
 	private String rootPath;
 	private String trainDir;
 	private String corpusDir;
+	private String audioFilePrefix;
+	private String markerFilePrefix;
 	private ExtractorEnum[] extractors;
 	private OnlineDecisionSegmentatorParam segmentationParam;
 	private Map<String, ExtractorParam> extractorPramMap;
@@ -78,6 +83,8 @@ public class ExpConfig {
 		config.setTestDir(EXP_TEST_DIR);
 		config.setExtractors(EXP_EXTRACTORS);
 		config.setClassifier(ClassifierEnum.online);
+		config.setAudioFilePrefix(".wav");
+		config.setMarkerFilePrefix(".mspnt.xml");
 		OnlineDecisionSegmentatorParam segmentationParam = new OnlineDecisionSegmentatorParam();
 		segmentationParam.setMinLength(91L);
 		segmentationParam.setMinSpace(261L);
@@ -96,19 +103,18 @@ public class ExpConfig {
 	 * @param Double
 	 * @return
 	 */
-	public static ExpConfig updateCoefAndModifier(ExpConfig config,  Double aCoef, ExtractorModifiersEnum  aModifer) {
-		config.setThreasholdCoef(aCoef);
-		config.setModifier(aModifer);
+	private static ExpConfig updateCoefAndModifier(ExpConfig config,  Double aCoef, ExtractorModifiersEnum  aModifer) {
+		config.threasholdCoef = aCoef;
+		config.modifier = aModifer;
 		
-		ExtractorParam smothParam = new ExtractorParam();
-		ExtractorParam thresholdCoefParam = new ExtractorParam();
-		ExtractorParamUtils.setValue(smothParam, aModifer.name(), Boolean.TRUE);
-		ExtractorParamUtils.setValue(thresholdCoefParam, ExtractorParamUtils.commonParam.threasholdCoef.name(), aCoef);
+		ExtractorParam theParam = new ExtractorParam();
+//		ExtractorParam thresholdCoefParam = new ExtractorParam();
+		ExtractorParamUtils.setValue(theParam, aModifer.name(), Boolean.TRUE);
+		ExtractorParamUtils.setValue(theParam, ExtractorParamUtils.commonParam.threasholdCoef.name(), aCoef);
 
 		ExtractorEnum[] enumInuse = new ExtractorEnum[]{ExtractorEnum.LOUDNESS_EXTRACTOR,ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR };
 		for (ExtractorEnum extractorEnum : enumInuse) {
-			config.getExtractorPramMap().put(extractorEnum.name(), smothParam);
-			config.getExtractorPramMap().put(extractorEnum.name(), thresholdCoefParam);
+			config.getExtractorPramMap().put(extractorEnum.name(), theParam);
 		}
 		return config;
 	}
@@ -247,13 +253,34 @@ public class ExpConfig {
 	}
 
 	public void setThreasholdCoef(double threasholdCoef) {
+		updateCoefAndModifier(this, threasholdCoef, getModifier());
 		this.threasholdCoef = threasholdCoef;
 	}
 	public ExtractorModifiersEnum getModifier() {
 		return modifier;
 	}
 	public void setModifier(ExtractorModifiersEnum modifier) {
+		updateCoefAndModifier(this, getThreasholdCoef(), modifier);
 		this.modifier = modifier;
+	}
+	public String getAudioFilePrefix() {
+		return audioFilePrefix;
+	}
+	public void setAudioFilePrefix(String audioFilePrefix) {
+		this.audioFilePrefix = audioFilePrefix;
+	}
+	public String getMarkerFilePrefix() {
+		return markerFilePrefix;
+	}
+	public void setMarkerFilePrefix(String markerFilePrefix) {
+		this.markerFilePrefix = markerFilePrefix;
+	}
+	@Override
+	public String toString() {
+		return "ExpConfig [windowLength=" + windowLength + ", windowOverlap="
+				+ windowOverlap + ", modifier=" + modifier + ", extractors="
+				+ Arrays.toString(extractors) + ", extractorPramMap="
+				+ extractorPramMap + ", rootPath=" + rootPath + "]";
 	}
 
 }

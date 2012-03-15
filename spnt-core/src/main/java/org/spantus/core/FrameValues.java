@@ -57,6 +57,12 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 			setSampleRate(((FrameValues)collection).getSampleRate());
 		}
 	}
+	
+	public FrameValues(Collection<Double> collection, Double mySampleRate ){
+		addAll(collection);
+		setSampleRate(mySampleRate);
+	}
+	
 	public FrameValues(Double[] floats) {
 		addAll(Arrays.asList(floats));
 	}

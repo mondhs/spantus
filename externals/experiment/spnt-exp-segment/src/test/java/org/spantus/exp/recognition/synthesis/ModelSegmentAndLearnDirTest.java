@@ -7,7 +7,7 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.exp.ExpConfig;
 import org.spantus.exp.recognition.AbstractSegmentDirTest;
-import org.spantus.exp.recognition.SpantusNameFilter;
+import org.spantus.exp.recognition.filefilter.SpantusNameFilter;
 import org.spantus.logger.Logger;
 import org.spantus.utils.FileUtils;
 import org.spantus.work.services.WorkServiceFactory;

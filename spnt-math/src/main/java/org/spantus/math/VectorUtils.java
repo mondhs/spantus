@@ -20,6 +20,8 @@
  */
 package org.spantus.math;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -49,6 +51,13 @@ public class VectorUtils {
         }
         return sum;
     }
+    public static BigDecimal sumBigDecimal(List<Double> vector) {
+    	BigDecimal sum = BigDecimal.ZERO;
+        for (Double val : vector) {
+            sum = sum.add(BigDecimal.valueOf(val));
+        }
+        return sum;
+    }
 
     /**
      * 
@@ -64,6 +73,17 @@ public class VectorUtils {
     	return xbar + (correction/vector.size());
     }
 
+    public static BigDecimal avgBigDecimal(List<Double> vector) {
+    	BigDecimal size = BigDecimal.valueOf(vector.size());
+    	BigDecimal xbar = sumBigDecimal(vector).divide(size,RoundingMode.HALF_UP);
+    	BigDecimal correction = BigDecimal.ZERO;
+    	for (Double float1 : vector) {
+    		BigDecimal diff = BigDecimal.valueOf(float1).subtract(xbar);
+    		 correction =correction.add(diff);
+		}
+    	return xbar.add(correction.divide(size,RoundingMode.HALF_UP)) ;
+    }
+    
     public static Double std(List<Double> vector, Double avg) {
     	Double accum = 0.0;
     	Double dev = 0.0;
@@ -77,6 +97,23 @@ public class VectorUtils {
     	}
     	Double var = (accum - (accum2 * accum2 / len)) / len;
     	return Math.sqrt(var);
+    }
+    public static BigDecimal stdBigDecimal(List<Double> vector, BigDecimal avg) {
+    	BigDecimal accum = BigDecimal.ZERO;
+//    	BigDecimal dev = BigDecimal.ZERO;
+    	BigDecimal accum2 = BigDecimal.ZERO;
+    	BigDecimal len = BigDecimal.valueOf(vector.size());
+
+    	for (Double float1 : vector) {
+    		 BigDecimal val = BigDecimal.valueOf(float1);
+    		 BigDecimal dev = val.subtract(avg);
+    		 accum = accum.add(dev.pow(2));
+    		 accum2 = accum2.add(dev);
+    	}
+    	BigDecimal accum2Sqr = accum2.pow(2);
+    	BigDecimal accum2SqrNorm = accum2Sqr.divide(len, RoundingMode.HALF_UP); 
+    	BigDecimal var = accum.subtract(accum2SqrNorm).divide(len,RoundingMode.HALF_UP);
+    	return BigDecimal.valueOf(Math.sqrt(var.doubleValue()));
     }
 
     
@@ -132,12 +169,12 @@ public class VectorUtils {
         return doubles;
     }
 
-    public static Double[] toDoubleArray(List<Double> values) {
+    public static Double[] toArray(List<Double> values) {
         return values.toArray(new Double[values.size()]);
     }
 
     
-    public static double[] toDoubleArray(Float[] values) {
+    public static double[] toArray(Float[] values) {
         double[] doubles = new double[values.length];
         int i = 0;
         for (Float float1 : values) {
@@ -146,7 +183,7 @@ public class VectorUtils {
         return doubles;
     }
 
-    public static List<Double> toFloatList(Double[] values) {
+    public static List<Double> toList(Double[] values) {
 //        List<Float> floatList = new ArrayList<Float>(values.length);
 //        for (Double d1 : values) {
 //            floatList.add(d1.floatValue());

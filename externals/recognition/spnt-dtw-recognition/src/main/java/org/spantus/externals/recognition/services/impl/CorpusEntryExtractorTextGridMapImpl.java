@@ -57,9 +57,13 @@ public class CorpusEntryExtractorTextGridMapImpl extends
 		MarkerSet markerSet = findSegementedLowestMarkers(markerSetHolder);
 		Collection<Marker>  markers = findMappedMarkers(markerSet, marker);
 		StringBuilder buf = new StringBuilder();
+		String separator = "";
 		for (Marker iMarker : markers) {
 			String lbl =cleanupLabel(iMarker.getLabel());
-			buf.append(lbl);
+			if(StringUtils.hasText(lbl)){
+				buf.append(separator).append(lbl);
+				separator ="+";
+			}
 		}
 		String bufStr = buf.toString();
 		log.debug("[createLabel]{0}: {1}", bufStr, marker);
@@ -73,6 +77,7 @@ public class CorpusEntryExtractorTextGridMapImpl extends
 		lbl = lbl.replace(":", "");
 		lbl = lbl.replace("'", "");
 		lbl = lbl.replace("^", "");
+		lbl = lbl.replace("_", "");
 		return lbl;
 	}
 	/**

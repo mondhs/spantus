@@ -5,15 +5,14 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
+
 import junit.framework.Assert;
+
 import org.junit.Before;
-
 import org.junit.Test;
-
-import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.extractor.ExtractorResultBuffer;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.SignalExtractor;

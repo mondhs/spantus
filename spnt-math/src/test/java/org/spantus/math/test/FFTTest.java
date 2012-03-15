@@ -72,8 +72,8 @@ public class FFTTest extends TestCase{
 
         DiscreteFourierTransform sFft = new DiscreteFourierTransform(n, false);
         sFft.initialize();
-        Double[] sResult = sFft.process(VectorUtils.toDoubleArray(new ArrayList<Double>(x)),16000);
-        List<Double> result = VectorUtils.toFloatList(sResult);
+        Double[] sResult = sFft.process(VectorUtils.toArray(new ArrayList<Double>(x)),16000);
+        List<Double> result = VectorUtils.toList(sResult);
 
 		assertEquals(33, result.size());
 //		assertCollectionEqual(result, fftData);

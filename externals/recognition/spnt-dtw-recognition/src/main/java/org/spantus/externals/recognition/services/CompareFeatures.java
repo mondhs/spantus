@@ -29,9 +29,9 @@ import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.services.MathServicesFactory;
 import org.spantus.work.services.ExtractorReaderService;
-import org.spantus.work.services.ExtractorReaderServiceImpl;
 import org.spantus.work.services.ReaderDao;
 import org.spantus.work.services.WorkServiceFactory;
+import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
 
 public class CompareFeatures {
 

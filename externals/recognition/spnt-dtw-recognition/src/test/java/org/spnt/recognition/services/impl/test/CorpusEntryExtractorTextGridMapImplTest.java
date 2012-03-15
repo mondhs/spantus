@@ -92,7 +92,7 @@ public class CorpusEntryExtractorTextGridMapImplTest {
 		//when
 		String label = corpusEntryExtractor.createLabel(fileToRead, marker, 0);
 		//then
-		Assert.assertEquals("Label","abc", label);
+		Assert.assertEquals("Label","a+b+c", label);
 	}
 	/**
 	 * ..iiii..<br>
@@ -137,7 +137,7 @@ public class CorpusEntryExtractorTextGridMapImplTest {
 		//when
 		String label = corpusEntryExtractor.createLabel(fileToRead, marker, 0);
 		//then
-		Assert.assertEquals("Label","bcd", label);
+		Assert.assertEquals("Label","b+c+d", label);
 	}
 	
 	private Marker createMarker(String label, int start, int end){

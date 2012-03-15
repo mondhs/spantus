@@ -14,10 +14,10 @@ import org.spantus.core.wav.AudioManagerFactory;
 
 public class SpeechGeneratorTest {
 
-	SpeechGenerator speechGenerator;
+	SpeechGeneratorLt speechGenerator;
 	@Before
 	public void before() {
-		speechGenerator = new SpeechGenerator();
+		speechGenerator = new SpeechGeneratorLt();
 	}
 	
 	@Test

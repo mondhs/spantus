@@ -70,6 +70,10 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 	
 	public static final String RELOAD = "reload";
 //	String[] mode = new String[]{"Simple", "Full"};
+
+
+
+	public static final String calculateSNR = "calculateSNR";
 	
 	SpantusWorkInfo info;
 	

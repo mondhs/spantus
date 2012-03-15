@@ -43,7 +43,7 @@ import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.utils.Assert;
 import org.spantus.work.services.ExtractorReaderService;
-import org.spantus.work.services.ExtractorReaderServiceImpl;
+import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
 
 /**
  * 

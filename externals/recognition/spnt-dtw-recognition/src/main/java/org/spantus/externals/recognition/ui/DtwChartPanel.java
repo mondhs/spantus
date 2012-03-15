@@ -81,8 +81,8 @@ public class DtwChartPanel extends JPanel {
                 String zero = "0 ms";
                 g2d.drawString(zero, -fm.stringWidth(zero), 0 );
                 g2d.drawString(detail.getKey().replace("_EXTRACTOR", ""), firstPoint.x+10, firstPoint.y -10);
-                g2d.drawString(targetLength, -fm.stringWidth(targetLength), -lastPoint.x );
-                g2d.drawString(sampleLength, lastPoint.y, -firstPoint.x );
+                g2d.drawString(sampleLength, -fm.stringWidth(sampleLength), -lastPoint.x );
+                g2d.drawString(targetLength, lastPoint.y, -firstPoint.x );
                 g2d.rotate(Math.toRadians(-90));
                 g2d.translate(lastPoint.x+40, .1);
 

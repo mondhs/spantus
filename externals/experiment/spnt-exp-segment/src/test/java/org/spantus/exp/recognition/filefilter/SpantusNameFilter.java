@@ -1,4 +1,4 @@
-package org.spantus.exp.recognition;
+package org.spantus.exp.recognition.filefilter;
 
 import java.io.File;
 import java.io.FilenameFilter;

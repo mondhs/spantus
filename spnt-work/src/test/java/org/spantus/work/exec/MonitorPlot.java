@@ -11,7 +11,6 @@ import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioCapture;
 import org.spantus.core.io.RecordWraperExtractorReader;
-import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
@@ -26,7 +25,6 @@ public class MonitorPlot extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private AbstractSwingChart chart;
 	private Timer timer = new Timer("Sound Monitor Plot");
-	private boolean populated = false;
 	Logger log = Logger.getLogger(getClass());
 	AudioCapture capture;
 

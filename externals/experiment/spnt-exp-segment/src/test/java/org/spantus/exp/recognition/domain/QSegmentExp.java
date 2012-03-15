@@ -204,4 +204,11 @@ public class QSegmentExp extends Entity {
 		this.signalEntropyLabel = signalEntropyLabel;
 	}
 
+	@Override
+	public String toString() {
+		return "QSegmentExp [manualName=" + manualName + ", proceessTime="
+				+ proceessTime + ", start=" + start + ", mfccLabel="
+				+ mfccLabel + "]";
+	}
+
 }

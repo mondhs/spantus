@@ -66,13 +66,13 @@ public class MFCCTest {
 
         DiscreteFourierTransform sFft = new DiscreteFourierTransform(n, false);
         sFft.initialize();
-        Double[] fft = sFft.process(VectorUtils.toDoubleArray(new ArrayList<Double>(x)),16000);
+        Double[] fft = sFft.process(VectorUtils.toArray(new ArrayList<Double>(x)),16000);
 
         int bandSize = 40;
 
         MelFrequencyFilterBank sMfcc = new MelFrequencyFilterBank(130,6800, bandSize);
         Double[] sResult = sMfcc.process(fft, 16000);
-        List<Double> result = VectorUtils.toFloatList(sResult);
+        List<Double> result = VectorUtils.toList(sResult);
 		Assert.assertEquals(bandSize, result.size());
 //		assertCollectionEqual(mfcc, mfccData);
 		log.severe("testSphinxMFCC" + result);

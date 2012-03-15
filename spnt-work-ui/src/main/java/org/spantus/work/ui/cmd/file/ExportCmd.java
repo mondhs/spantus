@@ -30,6 +30,8 @@ public class ExportCmd extends AbsrtactCmd {
 	public static final String[] IMAGE_FILES = {"png"};
 	public static final String[] MARKER_FILES = {"mspnt.xml", "txt", "laba", "TextGrid"};
 	public static final String[] SAMPLE_FILES = {"sspnt.xml"};
+	public static final String[] WEKA_ARFF_FILES = {"arff"};
+	public static final String[] CSV_FILES = {"csv"};
 	public static final String[] MPEG7_FILES = {"mpeg7.xml"};
 	public static final String[] BUNDLE_FILES = {"spnt.zip"};
 	
@@ -42,7 +44,7 @@ public class ExportCmd extends AbsrtactCmd {
 	
 	
 
-	enum ExportType{image, markers, sample, mpeg7, bundle}; 
+	enum ExportType{image, markers, sample, mpeg7, bundle, weka_arff, csv}; 
 	
 	public ExportCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);
@@ -59,6 +61,8 @@ public class ExportCmd extends AbsrtactCmd {
 			chooser.setFileFilter(new UIFileFilter(IMAGE_FILES, ExportType.image.name()));
 			chooser.addChoosableFileFilter(new UIFileFilter(MARKER_FILES, ExportType.markers.name()));
 			chooser.addChoosableFileFilter(new UIFileFilter(SAMPLE_FILES, ExportType.sample.name()));
+			chooser.addChoosableFileFilter(new UIFileFilter(WEKA_ARFF_FILES, ExportType.weka_arff.name()));
+			chooser.addChoosableFileFilter(new UIFileFilter(CSV_FILES, ExportType.csv.name()));
 			chooser.addChoosableFileFilter(new UIFileFilter(BUNDLE_FILES, ExportType.bundle.name()));
 			chooser.setAcceptAllFileFilterUsed(false);
 		}
@@ -92,7 +96,6 @@ public class ExportCmd extends AbsrtactCmd {
 		
 		int returnValue = fileChooser.showSaveDialog(parent);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			fileChooser.getSelectedFile().getName();
 			File selectedFile = fileChooser.getSelectedFile();
 			selectedFile = addExtention(selectedFile, fileChooser.getFileFilter());
 			ExportType type = ExportType.valueOf(((UIFileFilter)fileChooser.getFileFilter()).getType());
@@ -105,6 +108,10 @@ public class ExportCmd extends AbsrtactCmd {
 				return writeSample(execFacade.getReader(), selectedFile);
 			case bundle:
 				return writeBundle(execFacade.getReader(), ctx.getProject().getSample().getMarkerSetHolder(), selectedFile);
+			case weka_arff:
+				return writeArff(execFacade.getReader(), selectedFile);
+			case csv:
+				return writeCsv(execFacade.getReader(), selectedFile);
 			default:
 				throw new RuntimeException("not impl: " + type.toString());
 			}
@@ -112,6 +119,14 @@ public class ExportCmd extends AbsrtactCmd {
 		return false;
 	}
 
+	private boolean writeCsv(IExtractorInputReader reader, File selectedFile) {
+		WorkServiceFactory.createCsvDao().write(reader, selectedFile);
+		return false;
+	}
+	private boolean writeArff(IExtractorInputReader reader, File selectedFile) {
+		WorkServiceFactory.createWekaArffDao().write(reader, selectedFile);
+		return false;
+	}
 	protected boolean writeMarker(MarkerSetHolder holder, File file){
 		WorkServiceFactory.createMarkerDao().write(holder, file);
 		return true;
@@ -147,7 +162,13 @@ public class ExportCmd extends AbsrtactCmd {
 		String fileName = selectedFile.getName();
 		File rtnFile = selectedFile;
 		String[] extentions = ((UIFileFilter)UIFileFilter).getExtension();
-		if(!fileName.endsWith("."+extentions[0])){
+		boolean match = false;
+		for (String ext : extentions) {
+			if(fileName.endsWith("."+ext)){
+				match = true;
+			}
+		}
+		if(!match){
 			rtnFile = new File(selectedFile.getParent(), fileName+"."+extentions[0]);
 		}
 		return rtnFile;

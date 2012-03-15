@@ -203,7 +203,16 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
             if(getRepository().get(id) == null || getRepository().get(id).getWavFile() == null ){
                 return null;
             }
-            return getRepository().get(id).getWavFile().getAbsolutePath();
+            File file = getRepository().get(id).getWavFile();
+            //if does not exist were it says, check repo as well.
+            if(!file.exists()){
+            	file = new File(getRepoDir(), file.getName());
+            }
+            if(!file.exists()){
+            	return null;
+            }
+            
+            return file.getAbsolutePath();
         }
         
 	protected CorpusFileEntry read(File entryFile) {

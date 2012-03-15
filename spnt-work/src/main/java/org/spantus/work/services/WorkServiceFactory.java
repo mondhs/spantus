@@ -6,6 +6,13 @@ import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceFileMvelImpl;
 import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceMvelImpl;
+import org.spantus.work.services.impl.BundleZipDaoImpl;
+import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
+import org.spantus.work.services.impl.MarkerProxyDao;
+import org.spantus.work.services.impl.ReaderXmlDaoImpl;
+import org.spantus.work.services.reader.ExternalReaderDao;
+import org.spantus.work.services.reader.impl.CsvDaoImpl;
+import org.spantus.work.services.reader.impl.WekaArffDaoImpl;
 
 /**
  * 
@@ -18,6 +25,8 @@ public abstract class WorkServiceFactory {
 	private static ReaderDao readerDao;
 	private static BundleDao bundleDao;
 	private static ExtractorReaderService extractorReaderService;
+	private static ExternalReaderDao wekaArffDao;
+	private static ExternalReaderDao csvDao;
 
 	public static MarkerDao createMarkerDao() {
 		if (markerDao == null) {
@@ -33,6 +42,21 @@ public abstract class WorkServiceFactory {
 		return readerDao;
 	}
 
+	public static ExternalReaderDao createWekaArffDao() {
+		if (wekaArffDao == null) {
+			wekaArffDao = new WekaArffDaoImpl();
+		}
+		return wekaArffDao;
+	}
+
+	public static ExternalReaderDao createCsvDao() {
+		if (csvDao == null) {
+			csvDao = new CsvDaoImpl();
+		}
+		return csvDao;
+	}
+	
+	
 	public static BundleDao createBundleDao() {
 		if (bundleDao == null) {
 			BundleZipDaoImpl _bundleDao = new BundleZipDaoImpl();

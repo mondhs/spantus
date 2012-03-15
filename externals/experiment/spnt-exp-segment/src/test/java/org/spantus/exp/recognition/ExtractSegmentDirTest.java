@@ -9,6 +9,7 @@ import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.exp.recognition.filefilter.WavFileNameFilter;
 import org.spantus.logger.Logger;
 import org.spantus.utils.FileUtils;
 import org.spantus.work.services.WorkServiceFactory;

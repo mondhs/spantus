@@ -48,7 +48,7 @@ public abstract class MathServicesFactory {
 
 	public static FFTService createFFTService() {
 		if (fftService == null) {
-			// fftService = new FFTServiceImpl();
+//			 fftService = new FFTServiceImpl();
 			fftService = new FFTServiceSphinxImpl();
 		}
 		return fftService;
@@ -60,6 +60,8 @@ public abstract class MathServicesFactory {
 		// mfccService = new MFCCServiceSphinxImpl();
 		// // return new MFCCServiceImpl();
 		// }
+//		return new MFCCServiceImpl();
+//		return new MFCCKlautauServiceImpl();
 		return new MFCCServiceSphinxImpl();
 	}
 

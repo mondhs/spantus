@@ -21,6 +21,8 @@
  */
 package org.spantus.work.ui.dto;
 
+import java.io.Serializable;
+
 import org.spantus.core.extractor.preemphasis.Preemphasis.PreemphasisEnum;
 import org.spantus.math.windowing.WindowingEnum;
 import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
@@ -35,7 +37,7 @@ import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
  * Created 2008.08.26
  *
  */
-public class WorkUIExtractorConfig{
+public class WorkUIExtractorConfig implements Serializable{
 	
 	/**
 	 * 

@@ -146,8 +146,8 @@ public final class FFT {
  
 		for (i=1;i<n/2;i++) { 
 //			mag[i] = x[i]*x[i]+x[n-i]*x[n-i]; 
-			Double xi = x[i].doubleValue();
-			Double xni = x[n-i].doubleValue();
+			double xi = x[i].doubleValue();
+			double xni = x[n-i].doubleValue();
 			mag[i] = (Double) Math.sqrt(xi*xi+xni*xni); 
 			//mag[i] = Math.sqrt(x[i]*x[i]+x[n-i]*x[n-i]); 
 			//System.out.println(mag[i] + " " + x[i] + " " + x[n-i]); 

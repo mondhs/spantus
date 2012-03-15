@@ -3,13 +3,12 @@ package org.spantus.work.test;
 import java.io.File;
 
 import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
-
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.work.services.ExtractorReaderServiceImpl;
+import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
 
 public class ExtractorReaderServiceImplTest {
 

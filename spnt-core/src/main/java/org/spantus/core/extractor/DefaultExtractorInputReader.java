@@ -35,7 +35,7 @@ import org.spantus.logger.Logger;
 public class DefaultExtractorInputReader implements IExtractorInputReader{
 	protected Logger log = Logger.getLogger(DefaultExtractorInputReader.class);
 
-	FrameValues values = new FrameValues();
+	FrameValues values;
 
 	private int index;
 	private Long offset = 0L;
@@ -61,6 +61,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 	private void initValues() {
 		offset += index;
 		values = new FrameValues();
+		values.setSampleRate(getConfig().getSampleRate());
 		index = 0;
 	}
 

@@ -4,11 +4,8 @@
  */
 package org.spantus.exp.recognition;
 
-import java.io.File;
-
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.spantus.exp.ExpConfig;
 import org.spantus.exp.recognition.multi.MultiMapper;
@@ -20,7 +17,8 @@ import org.spantus.logger.Logger;
  */
 public class QSegmentPhonomeRecognitionDirTest  {
 
-	private static final Logger log = Logger
+	@SuppressWarnings("unused")
+	private static final Logger LOG = Logger
 			.getLogger(QSegmentPhonomeRecognitionDirTest.class);
 	
 	private MultiMapper mapper;
@@ -32,12 +30,7 @@ public class QSegmentPhonomeRecognitionDirTest  {
 	
 	protected void init(MultiMapper mapper, String corpusName) {
 		mapper.init(
-//				new File(QSegmentPhonomeMappingDirTest.ROOT_DIR, "TEST/"+ corpusName +"/"), 
-//				new File(QSegmentPhonomeMappingDirTest.ROOT_DIR, "TRAIN/"+ corpusName +"/"),
-//				new File(QSegmentPhonomeMappingDirTest.ROOT_DIR, "CORPUS/"+ corpusName +"/"), 
-//				new File(QSegmentPhonomeMappingDirTest.ROOT_DIR, "WAV/"+ corpusName +"/"), 
 				ExpConfig.createConfig(),
-				new TextGridNameFilter(),
 				corpusName);
 	}
 	

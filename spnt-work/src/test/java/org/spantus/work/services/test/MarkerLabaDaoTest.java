@@ -6,7 +6,7 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.work.services.MarkerDao;
-import org.spantus.work.services.MarkerLabaDao;
+import org.spantus.work.services.impl.MarkerLabaDao;
 
 import junit.framework.TestCase;
 

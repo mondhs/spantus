@@ -94,33 +94,32 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 	
 	public static final String DISTINCT_SEGMENTS_REPORT_QUERY = "select {0}  count(distinct(MANUALNAME)) mcount from QSEGMENTEXP where  not MARKERLABEL like ''D;%''  {1}";
 	public static final String CORRECT_SYLABLE_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where MANUALNAME = ''<SYLLABLE>'' and not MARKERLABEL like ''D;%''  {1}";
-	public static final String ERR_JOINED_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where LENGTH(MANUALNAME) > LENGTH(MFCCLABEL) and LENGTH(trim(MFCCLABEL)) >0  and not MARKERLABEL like ''D;%''  {1}";
-	public static final String ERR_NOIZE_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where MANUALNAME = '''' and not MARKERLABEL like ''D;%''  {1}";
+	public static final String ERR_JOINED_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where MANUALNAME like ''%+%'' and not MARKERLABEL like ''D;%''  {1}";
+	public static final String ERR_NOIZE_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where MANUALNAME = ''-'' and not MARKERLABEL like ''D;%''  {1}";
 	public static final String ERR_BREAK_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where  MARKERLABEL like ''D;%''  {1}";
 
 	public static final String SUCC_RECONITION_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ "MANUALNAME = ''<SYLLABLE_WAS>''  and  MFCCLABEL = ''<SYLLABLE_SAID>'' and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like ''D;%''  {1}";
+			+ "MANUALNAME = ''<SYLLABLE_WAS>''  and  MFCCLABEL = ''<SYLLABLE_SAID>'' and MFCC < <ACCEPT_THRESHOLD> and ( not MANUALNAME = ''-'' and not MANUALNAME like ''%+%''  and not MARKERLABEL like ''D;%'')  {1}";
 
 	public static final String SUCC_RECONITION_LIKE_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
 			+ "MANUALNAME like ''%<SYLLABLE_WAS>''  and  MFCCLABEL like ''%<SYLLABLE_SAID>'' and LENGTH(MANUALNAME)<=2 and  LENGTH(MFCCLABEL)<=2 " +
 			"and MFCC < <ACCEPT_THRESHOLD>   and not  MARKERLABEL like ''D;%''  {1}";
 
 	public static final String ERR_RECONITION_LIKE_NOISE_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ "MANUALNAME like ''''  and  MFCCLABEL like ''%<SYLLABLE_SAID>''  and MFCC < <ACCEPT_THRESHOLD> and not  MARKERLABEL like ''D;%''  {1}";
+			+ "MANUALNAME like ''-''  and  MFCCLABEL like ''%<SYLLABLE_SAID>''  and MFCC < <ACCEPT_THRESHOLD> and ( not MANUALNAME = ''-'' and not MANUALNAME like ''%+%''  and not MARKERLABEL like ''D;%'')  {1}";
 	
 	/**
 	 * remove duplicates that  length is not match but not noise
 	 */
 	public static final String ALL_SEGMENTS_FOR_RECOGN_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP  where "+
-			"  (length(MANUALNAME) = length(MFCCLABEL)  or trim(MFCCLABEL)='''' or trim(MANUALNAME)='''') and not MARKERLABEL like ''D;%'' " +
+			"  not MANUALNAME = ''-'' and not MANUALNAME like ''%+%'' and not MARKERLABEL like ''D;%'' " +
 			"  {1}";
 	
 	public static final String ERR_REJECTED_RECONITION_SEGMENTS_REPORT_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where " 
-			+" (length(MANUALNAME) = length(MFCCLABEL) or trim(MANUALNAME)='''' or trim(MFCCLABEL)='''') and "
-			+ " MFCC >= <ACCEPT_THRESHOLD> and not MARKERLABEL like ''D;%'' {1}";
+			+ " MFCC >= <ACCEPT_THRESHOLD> and ( not MANUALNAME = ''-'' and not MANUALNAME like ''%+%''  and not MARKERLABEL like ''D;%'') {1}";
 
 	public static final String ERR_SEGMENT_TOTAL_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "
-			+ "((not LENGTH(MANUALNAME) = LENGTH(MFCCLABEL)  and not MARKERLABEL like ''D;%'') or (MANUALNAME = '''' and not MARKERLABEL like ''D;%'') or (MARKERLABEL like ''D;%'') )  "
+			+ "((not LENGTH(MANUALNAME) = LENGTH(MFCCLABEL)  and not MARKERLABEL like ''D;%'') or (MANUALNAME = ''-'' and not MARKERLABEL like ''D;%'') or (MARKERLABEL like ''D;%'') )  "
 			+" {1}";
 
 //	public static final String ERR_RECONITION_TOTAL_QUERY = "select {0} count(id) mcount from QSEGMENTEXP where "+
@@ -203,6 +202,10 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 //			if(!StringUtils.hasText(vovelWas.trim())){
 //				vovelWasQuery = vovelWasQuery.replaceAll("%<SYLLABLE_WAS>", "<SYLLABLE_WAS>").replaceAll("%<SYLLABLE_SAID>", "<SYLLABLE_SAID>");
 //			}
+			String string = vovelWas.replaceAll("-", "");
+			if(!StringUtils.hasText(string.trim())){
+				continue;
+			}
 			
 			 vovelWasQuery = vovelWasQuery.replaceAll(
 					"<SYLLABLE_WAS>", vovelWas).replaceAll(
@@ -284,6 +287,7 @@ public class QSegmentExpHsqlDao implements QSegmentExpDao {
 	private void segmentationReport(String[] syllabels,
 			Map<String, String> reports) {
 		for (String string : syllabels) {
+			string = string.replaceAll("-", "");
 			if(!StringUtils.hasText(string.trim())){
 				continue;
 			}

@@ -28,80 +28,100 @@ import java.util.List;
 /**
  * 
  * @author Mindaugas Greibus
- *
+ * 
  * @since 0.0.1
  * 
- * Created 2008.02.24
+ *        Created 2008.02.24
  * 
- * Some utils method for matrix and vectors 
+ *        Some utils method for matrix and vectors
  * 
  */
 public class MatrixUtils {
-	/** 
+	/**
 	 * Init List of Doubles. all elements are 0
+	 * 
 	 * @param order
 	 * @return
 	 */
-	public static List<Double> zeros(int order){
+	public static List<Double> zeros(int order) {
 		List<Double> zeros = new ArrayList<Double>(order);
 		for (int i = 0; i < order; i++) {
 			zeros.add(0D);
 		}
 		return zeros;
 	}
-	
-	public static List<Double> fill(int order, Double f){
+
+	public static List<Double> fill(int order, Double f) {
 		List<Double> filled = new ArrayList<Double>(order);
 		for (int i = 0; i < order; i++) {
 			filled.add(f);
 		}
 		return filled;
 	}
-	
-	public static List<Double> generareVector(Double value, int order){
+
+	public static List<Double> generareVector(Double value, int order) {
 		List<Double> zeros = new ArrayList<Double>();
 		for (int i = 0; i < order; i++) {
 			zeros.add(value);
 		}
 		return zeros;
 	}
-	
-	public static List<Double> reverseVector(List<Double> vector){
+
+	public static List<Double> reverseVector(List<Double> vector) {
 		Collections.reverse(vector);
 		return vector;
 	}
+
 	/**
 	 * 
 	 * @param values
 	 * @return
 	 */
-    public static StringBuilder toString(List<List<Double>> values){
-    	StringBuilder sb = new StringBuilder();
-    	for (List<Double> list : values) {
+	public static StringBuilder toString(List<List<Double>> values) {
+		StringBuilder sb = new StringBuilder();
+		for (List<Double> list : values) {
 			for (Double float1 : list) {
 				sb.append(float1).append(";");
 			}
 			sb.append("\n");
 		}
-        return sb;
-    }
+		return sb;
+	}
 
-	public static StringBuilder toStringTranform(
+	public static StringBuilder toStringTranform(List<LinkedList<Double>> values) {
+		List<List<Double>> newList = transformLinked(values);
+		return toString(newList);
+	}
+
+	private static List<List<Double>> transformLinked(
 			List<LinkedList<Double>> values) {
-		StringBuilder sb = new StringBuilder();
-		int size  =values.get(0).size();
+		int size = values.get(0).size();
 		List<List<Double>> newList = new ArrayList<List<Double>>(size);
 		for (int i = 0; i < size; i++) {
 			newList.add(new ArrayList<Double>());
 		}
-    	for (List<Double> list : values) {
-    		int index = 0;
+		for (List<Double> list : values) {
+			int index = 0;
 			for (Double float1 : list) {
 				newList.get(index++).add(float1);
 			}
 		}
-        return toString(newList);
+		return newList;
 	}
 
+	public static List<List<Double>> transform(List<List<Double>> values) {
+		int size = values.get(0).size();
+		List<List<Double>> newList = new ArrayList<List<Double>>(size);
+		for (int i = 0; i < size; i++) {
+			newList.add(new ArrayList<Double>());
+		}
+		for (List<Double> list : values) {
+			int index = 0;
+			for (Double float1 : list) {
+				newList.get(index++).add(float1);
+			}
+		}
+		return newList;
+	}
 
 }

@@ -145,6 +145,11 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 					SpantusWorkToolbar.RELOAD,
 					KeyStroke.getKeyStroke(KeyEvent.VK_R, getCtrlMask())));
 
+			menu.add(createMenuItem(
+					GlobalCommands.sample.calculateSNR,
+					SpantusWorkToolbar.calculateSNR,
+					null));
+			
 			menu.add(
 					createMenuItem(
 							GlobalCommands.tool.appendNoise));

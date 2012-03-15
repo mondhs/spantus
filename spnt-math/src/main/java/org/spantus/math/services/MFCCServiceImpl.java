@@ -53,8 +53,8 @@ public class MFCCServiceImpl implements MFCCService {
 
 		return floats;
 	}
-    public List<Double> calculateMfccFromSpectrum(List<Double> fft, Double sampleRate){
-        throw new IllegalAccessError("Not impl");
+    public List<Double> calculateMfccFromSpectrum(List<Double> x, List<Double> fft, Double sampleRate){
+        return calculateMFCC(x, sampleRate);
     }
 
 }

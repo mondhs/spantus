@@ -15,6 +15,7 @@ import org.spantus.exp.ExpConfig;
 import org.spantus.exp.recognition.dao.QSegmentExpDao;
 import org.spantus.exp.recognition.dao.QSegmentExpHsqlDao;
 import org.spantus.exp.recognition.domain.QSegmentExp;
+import org.spantus.exp.recognition.filefilter.ExtNameFilter;
 import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
@@ -32,7 +33,6 @@ import com.google.common.collect.Collections2;
 
 public class MultiMapper {
 
-	public final static String RULES_PATH = "/home/as/src/spnt-code/spnt-work-ui/src/main/resources/ClassifierRuleBase.csv";
 
 	private static final Logger log = Logger.getLogger(MultiMapper.class);
 
@@ -40,24 +40,14 @@ public class MultiMapper {
 	private CorpusEntryExtractorTextGridMapImpl extractor;
 	private CorpusServiceBaseImpl corpusService;
 	private CorpusRepositoryFileImpl corpusRepository;
-//	private MarkerDao markerDao;
-//	private File trainDir;
-//	private File wavDir;
-	private FilenameFilter fileFilter;
 	private QSegmentExpDao qSegmentExpDao;
-//	private File testDir;
 	private String corpusName;
 	private ExpConfig expConfig;
 	private Boolean recreate ;
 
-	public void init(ExpConfig expConfig,
-			FilenameFilter fileFilter, String corpusName) {
-//		this.trainDir = trainDir;
-//		this.testDir = testDir;
-//		this.wavDir = wavDir;
+	public void init(ExpConfig expConfig, String corpusName) {
 		recreate = true;
 		this.expConfig = expConfig;
-		this.fileFilter = fileFilter;
 		this.setCorpusName(corpusName);
 		
 		corpusRepository = new CorpusRepositoryFileImpl();
@@ -73,7 +63,7 @@ public class MultiMapper {
 			extractor = new CorpusEntryExtractorTextGridMapImpl();
 			extractor.setMarkerDir(expConfig.getTrainDirAsFile().getAbsoluteFile()); 
 			extractor.setRulesTurnedOn(true);
-			extractor.setRulePath(getExpConfig().getRulePath());
+			extractor.setRulePath(getExpConfig().getRootPath()+getExpConfig().getRulePath());
 			extractor.setWindowLengthInMilSec(expConfig.getWindowLength());
 			extractor.setOverlapInPerc(expConfig.getWindowOverlap());
 			extractor.setSegmentatorServiceType(expConfig.getSegmentatorServiceType());
@@ -117,10 +107,11 @@ public class MultiMapper {
      */
 	public void extractAndLearn() throws MalformedURLException {
 		int counter = 0;
-		// FilenameFilter fileFilter = new TextGridNameFilter();
-		int size = expConfig.getTrainDirAsFile().listFiles(fileFilter).length;
+		 FilenameFilter fileFilter = new ExtNameFilter(getExpConfig().getMarkerFilePrefix());
+		 File[] files = expConfig.getTrainDirAsFile().listFiles(fileFilter);
+		int size = files.length;
 		Double totalTime = 0D;
-		for (File texGridFile : expConfig.getTrainDirAsFile().listFiles(fileFilter)) {
+		for (File texGridFile : files) {
 			counter++;
 			log.error("[extractAndLearn]Processing " + counter + " from " + size
 					+ ";  totalTime:" + totalTime + "; file: " + texGridFile);
@@ -147,7 +138,10 @@ public class MultiMapper {
 	
 	public void recognize() throws MalformedURLException{
 			int counter = 0;
-			int size = expConfig.getTestDirAsFile().listFiles(fileFilter).length;
+			 FilenameFilter fileFilter = new ExtNameFilter(getExpConfig().getMarkerFilePrefix());
+			 File[] files = expConfig.getTrainDirAsFile().listFiles(fileFilter);
+
+			int size = files.length;
 //			File[] mainList= getMarkerDir().listFiles(filter);
 //			List<File> patched = new ArrayList<File>();
 //			for (File file : mainList) {
@@ -162,7 +156,7 @@ public class MultiMapper {
 //				}
 //			}
 			Double totalTime  = 0D;
-			for (File texGridFile : expConfig.getTestDirAsFile().listFiles(fileFilter)) {
+			for (File texGridFile : files) {
 				counter++;
 				log.error("[recognize]Processing "+ counter + " from " + size + "; totalTime:" + totalTime + "; file = " + texGridFile);
 				File wavFilePath = new File(expConfig.getWavDir(), FileUtils.replaceExtention(
@@ -219,10 +213,15 @@ public class MultiMapper {
 		String label = getExtractor().createLabelByMarkers(textGridFile, marker);
 		label =label.trim();
 		label = label.replaceAll("\\d","");
-		if(!StringUtils.hasText(label.trim())){
-			if(!StringUtils.hasText(recogniton.get("MFCC_EXTRACTOR").getInfo().getName().trim())){
+		String isEmptyLabel = label.replaceAll("-","");
+		String isEmptyMfccLabel = recogniton.get( ExtractorEnum.MFCC_EXTRACTOR.name()).getInfo().getName();
+		isEmptyMfccLabel = isEmptyMfccLabel.replaceAll("-","").trim();
+		if(!StringUtils.hasText(isEmptyLabel)){
+			if(!StringUtils.hasText(isEmptyMfccLabel)){
 				log.error("NO TEXT. do not save");
 				return null;
+			}else{
+				label="-";
 			}
 		}
 

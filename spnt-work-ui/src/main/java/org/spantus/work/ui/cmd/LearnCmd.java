@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;

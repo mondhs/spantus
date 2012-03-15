@@ -2,15 +2,14 @@ package org.spantus.work.test;
 
 import java.io.File;
 
+import junit.framework.TestCase;
+
 import org.spantus.core.extractor.DefaultExtractorConfig;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
-import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.services.ConfigDao;
 import org.spantus.work.services.ConfigPropertiesDao;
-
-import junit.framework.TestCase;
 
 public class ConfigDaoTest extends TestCase {
 	
@@ -38,8 +37,8 @@ public class ConfigDaoTest extends TestCase {
 
 		Boolean smootheModifier  = ExtractorParamUtils.<Boolean>getValue(param,
 				ConfigPropertiesDao.key_segmentation_modifier_smooth);
-		Boolean meanModifier  = ExtractorParamUtils.<Boolean>getValue(param,
-				ConfigPropertiesDao.key_segmentation_modifier_mean);
+//		Boolean meanModifier  = ExtractorParamUtils.<Boolean>getValue(param,
+//				ConfigPropertiesDao.key_segmentation_modifier_mean);
 		
 		
 		Long threshold_leaningPeriod = ExtractorParamUtils.<Long>getValue(

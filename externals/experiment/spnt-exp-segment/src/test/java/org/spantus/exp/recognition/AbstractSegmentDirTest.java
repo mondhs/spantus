@@ -59,7 +59,7 @@ public abstract class AbstractSegmentDirTest {
         if(extractor == null){
         	CorpusEntryExtractorFileImpl extractorImpl = new CorpusEntryExtractorFileImpl();
         	extractorImpl.setRulesTurnedOn(true);
-        	extractorImpl.setRulePath(getExpConfig().getRulePath());
+        	extractorImpl.setRulePath(getExpConfig().getRootPath()+getExpConfig().getRulePath());
         	log.debug("CorpusEntryExtractorFileImpl created. rulePath: {0}; RulesTurnedOn: {1}", extractorImpl.getRulePath(), extractorImpl.isRulesTurnedOn());
         	this.extractor = extractorImpl;
         }

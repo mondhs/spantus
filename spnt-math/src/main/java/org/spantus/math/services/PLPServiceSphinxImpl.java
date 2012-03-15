@@ -68,11 +68,11 @@ public class PLPServiceSphinxImpl implements PLPService {
 		DiscreteFourierTransform sFft = new DiscreteFourierTransform(n, false);
 		sFft.initialize();
 		Double[] fftArr = sFft.process(VectorUtils
-				.toDoubleArray(new ArrayList<Double>(x)), sampleRate.intValue());
+				.toArray(new ArrayList<Double>(x)), sampleRate.intValue());
 
 //		double[] sResult = getPlpFrequencyFilterBank().process(fft,
 //				(int) sampleRate);
-		List<Double> fft = VectorUtils.toFloatList(fftArr);
+		List<Double> fft = VectorUtils.toList(fftArr);
 
 		return calculateFromSpectrum(fft, sampleRate);
 	}
@@ -89,11 +89,11 @@ public class PLPServiceSphinxImpl implements PLPService {
 		int intSampleRate = sampleRate.intValue();
 		getPlpFrequencyFilterBank().setMaxFreq(Math.min(sampleRate/2, 6800));
 		Double[] plps = getPlpFrequencyFilterBank().process(
-				VectorUtils.toDoubleArray(fft), intSampleRate);
+				VectorUtils.toArray(fft), intSampleRate);
 		Double[] lfcc = getPlpCepstrumProducer().process(plps, intSampleRate);
 		Double[] normalized = getBatchCMN().process(lfcc);
 
-		List<Double> result = VectorUtils.toFloatList(normalized);
+		List<Double> result = VectorUtils.toList(normalized);
 
 		return result;
 	}
