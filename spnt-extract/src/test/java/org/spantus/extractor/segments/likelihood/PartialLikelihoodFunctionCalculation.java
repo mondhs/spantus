@@ -15,8 +15,8 @@ public class PartialLikelihoodFunctionCalculation {
 
 	public void calcaulate(FrameValues samples, FrameVectorValues feature,
 			List<Double> gain) {
-		List<LinkedList<Double>> partialLikelihoodFunctions = Lists
-				.newLinkedList();
+//		List<LinkedList<Double>> partialLikelihoodFunctions = Lists
+//				.newLinkedList();
 
 		List<Double> coef = null;
 		if (gain == null) {
@@ -241,6 +241,7 @@ public class PartialLikelihoodFunctionCalculation {
 	 * @param bellmanFunctions
 	 * @param sampleSize
 	 */
+	@SuppressWarnings("unused")
 	public void processChangePointsDetection(int numberOfCalculationIterations,
 			int numberOfSelectedFrames,
 			List<LinkedList<Double>> bellmanFunctions, int sampleSize) {

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
-import org.spantus.math.services.MathServicesFactory;
 /**
  * inproceedings{sharma1996blind,
  * title={“Blind” speech segmentation: automatic segmentation of speech without linguistic knowledge},

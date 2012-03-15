@@ -17,7 +17,6 @@ import org.spantus.extractor.impl.SpectralEntropy;
 import org.spantus.extractor.impl.SpectralFlux;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
 public class SpectralTest {

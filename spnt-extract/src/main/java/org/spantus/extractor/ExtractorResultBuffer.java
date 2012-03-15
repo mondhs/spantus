@@ -31,7 +31,8 @@ import org.spantus.logger.Logger;
  *
  */
 public class ExtractorResultBuffer implements IExtractor {
-	private Logger log = Logger.getLogger(ExtractorResultBuffer.class);
+	@SuppressWarnings("unused")
+	private static final Logger LOG = Logger.getLogger(ExtractorResultBuffer.class);
 	private IExtractor extractor;
 
 	private FrameValues outputValues = new FrameValues();

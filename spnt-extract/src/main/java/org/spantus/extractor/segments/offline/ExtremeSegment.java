@@ -2,7 +2,6 @@ package org.spantus.extractor.segments.offline;
 
 import java.io.Serializable;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
@@ -59,18 +58,18 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 		return increase;
 	}
 	public boolean isSimilar(ExtremeSegment segment){
-		Double lastArea = segment.getCalculatedArea();
-		Double currentArea = this.getCalculatedArea();
-		Integer lastPeak = segment.getPeakEntries().size();
-		Integer currentPeak = this.getPeakEntries().size();
-		Long lastLength = segment.getCalculatedLength();
-		Long currentLength = this.getCalculatedLength();
-                Double diff = 0D;
-                if(this.peakEntry.getValue() < segment.peakEntry.getValue()){
-                    diff = this.peakEntry.getValue()/segment.peakEntry.getValue();
-                }else{
-                    diff = segment.peakEntry.getValue()/this.peakEntry.getValue();
-                }
+//		Double lastArea = segment.getCalculatedArea();
+//		Double currentArea = this.getCalculatedArea();
+//		Integer lastPeak = segment.getPeakEntries().size();
+//		Integer currentPeak = this.getPeakEntries().size();
+//		Long lastLength = segment.getCalculatedLength();
+//		Long currentLength = this.getCalculatedLength();
+//                Double diff = 0D;
+//                if(this.peakEntry.getValue() < segment.peakEntry.getValue()){
+//                    diff = this.peakEntry.getValue()/segment.peakEntry.getValue();
+//                }else{
+//                    diff = segment.peakEntry.getValue()/this.peakEntry.getValue();
+//                }
                 
                 double similarity = 0;
 //                similarity += diff>.99?.5:0;

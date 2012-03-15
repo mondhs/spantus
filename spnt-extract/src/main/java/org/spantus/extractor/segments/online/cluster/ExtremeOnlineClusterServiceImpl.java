@@ -4,7 +4,6 @@ import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.extractor.segments.online.SegmentFeatureData;
 import org.spantus.logger.Logger;
-import org.spantus.math.VectorUtils;
 
 public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterServiceSimpleImpl{
 
@@ -12,6 +11,7 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public String getClassName(ExtremeSegment segment,
 			ExtremeSegmentsOnlineCtx ctx) {

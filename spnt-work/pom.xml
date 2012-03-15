@@ -15,27 +15,22 @@
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-core</artifactId>
-			<version>0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-extract</artifactId>
-			<version>0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-chart</artifactId>
-			<version>0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-mpeg7</artifactId>
-			<version>0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-segment</artifactId>
-			<version>0.3-SNAPSHOT	</version>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>

@@ -1,6 +1,5 @@
 package org.spantus.extractor.segments.online.test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import junit.framework.Assert;

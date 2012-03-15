@@ -36,7 +36,8 @@ import org.spantus.logger.Logger;
  */
 public class ExtractorResultBuffer3D implements IExtractorVector {
 	
-//	private Logger log = Logger.getLogger(ExtractorResultBuffer3D.class);
+	@SuppressWarnings("unused")
+	private static final Logger LOG = Logger.getLogger(ExtractorResultBuffer3D.class);
 	
 	private IExtractorVector extractor;
 	private long offset = 0;

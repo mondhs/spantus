@@ -44,6 +44,7 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 		getThresholdValues().addAll(ExtremeOfflineClassifier.refreshThreasholdInfo(getMarkSet(), getOutputValues()));
 	}
 
+	@SuppressWarnings("unused")
 	protected void processMarkers(MarkerSet markerSet){
 		
 		for (Iterator<Marker> iterator = markerSet.iterator(); iterator.hasNext();) {
@@ -147,6 +148,7 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 	}
 
 	
+	@SuppressWarnings("unused")
 	private boolean fixShortSegments(ExtremeSegment previous,ExtremeSegment extremeSegment) {
 		Double startEndRatio =(2*previous.getEndEntry().getValue())/(previous.getStartEntry().getValue() + extremeSegment.getEndEntry().getValue());
 		Double areaRatio  = 0D;
