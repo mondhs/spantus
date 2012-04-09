@@ -120,43 +120,11 @@ public class SegmentMonitorPlot extends AbstractSegmentPlot {
 	
 	public void registerExtractors(ExtractorParam param, ISegmentatorListener multipleSegmentator){
 		IClassifier segmentator = null;
-//		Float threshold_coef = ExtractorParamUtils.<Float>getValue(param,
-//				ConfigPropertiesDao.key_threshold_coef);
-//		Long threshold_leaningPeriod = ExtractorParamUtils.<Long>getValue(param,
-//				ConfigPropertiesDao.key_threshold_leaningPeriod);
 
-		
-//		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.ENERGY_EXTRACTOR);
-//		segmentator.setOnlineSegmentator(multipleSegmentator);
-//		segmentator.setCoef(threshold_coef);
-//		segmentator.setLearningPeriod(threshold_leaningPeriod);
 
 		ExtractorParam paramEnergy = new ExtractorParam();
-		
-		
-//		ExtractorParamUtils.setValue(paramEnergy, 
-//				ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
-
-//		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy);
 		segmentator =ExtractorUtils.registerThreshold(getReader(), ExtractorEnum.ENERGY_EXTRACTOR, paramEnergy); 
-
 		segmentator.addClassificationListener(multipleSegmentator);
-//		segmentator.setCoef(threshold_coef);
-//		segmentator.setLearningPeriod(threshold_leaningPeriod);
-
-		
-
-//		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.LOUDNESS_EXTRACTOR);
-//		segmentator.setMultipleSegmentator(multipleSegmentator);
-//		segmentator.setCoef(4f);
-
-//		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.CROSSING_ZERO_EXTRACTOR);
-//		segmentator.setMultipleSegmentator(multipleSegmentator);
-//		segmentator.setCoef(6f);
-
-
-//		segmentator  = OnlineSegmentationUtils.register(reader, ExtractorEnum.WAVFORM_EXTRACTOR);
-//		segmentator  = OnlineSegmentationUtils.register(getReader(), ExtractorEnum.LPC_EXTRACTOR);
 		segmentator  = ExtractorUtils.registerThreshold(getReader(), ExtractorEnum.MFCC_EXTRACTOR);
 
 	}

@@ -14,9 +14,8 @@ import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
-import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
-
-import static org.spantus.work.services.test.DumyExtractorInputReader.createExtractorVector;
+import org.spantus.core.test.DumyExtractorInputReader;
+import org.spantus.work.services.impl.WorkExtractorReaderServiceImpl;
 
 /**
  *
@@ -24,11 +23,11 @@ import static org.spantus.work.services.test.DumyExtractorInputReader.createExtr
  */
 
 public class ExtractorReaderServiceImplTest {
-    private ExtractorReaderServiceImpl extractorReaderService;
+    private WorkExtractorReaderServiceImpl extractorReaderService;
     
     @Before
     public void onSetup(){
-        extractorReaderService = new ExtractorReaderServiceImpl();
+        extractorReaderService = new WorkExtractorReaderServiceImpl();
     }
     @Test
     public void testExtractValuesForMarker(){
@@ -39,9 +38,9 @@ public class ExtractorReaderServiceImplTest {
         marker.setEnd(5L);
 
         String extractorName = "testFeature";
-        reader.getExtractorRegister3D().add(createExtractorVector(extractorName+"1"));
-        reader.getExtractorRegister3D().add(createExtractorVector(extractorName));
-        reader.getExtractorRegister3D().add(createExtractorVector(extractorName+"2"));
+        reader.getExtractorRegister3D().add(DumyExtractorInputReader.createExtractorVector(extractorName+"1"));
+        reader.getExtractorRegister3D().add(DumyExtractorInputReader.createExtractorVector(extractorName));
+        reader.getExtractorRegister3D().add(DumyExtractorInputReader.createExtractorVector(extractorName+"2"));
 
         //When
         Map<String, IValues> fvv = extractorReaderService.findAllVectorValuesForMarker(
@@ -61,9 +60,9 @@ public class ExtractorReaderServiceImplTest {
         marker.setEnd(5L);
 
         String extractorName = "testFeature";
-        reader.getExtractorRegister3D().add(createExtractorVector(extractorName+"1"));
-        reader.getExtractorRegister3D().add(createExtractorVector(extractorName));
-        reader.getExtractorRegister3D().add(createExtractorVector(extractorName+"2"));
+        reader.getExtractorRegister3D().add(DumyExtractorInputReader.createExtractorVector(extractorName+"1"));
+        reader.getExtractorRegister3D().add(DumyExtractorInputReader.createExtractorVector(extractorName));
+        reader.getExtractorRegister3D().add(DumyExtractorInputReader.createExtractorVector(extractorName+"2"));
 
         //When
         FrameVectorValues fvv = extractorReaderService.findFeatureVectorValuesForMarker(

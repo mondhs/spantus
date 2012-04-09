@@ -35,9 +35,7 @@ public abstract class AudioUtil {
 //		return read16((byte)b1, (byte)b2, format);
 //	}
 	
-	public static Double read16(byte b1, byte b2, AudioFormat format) {
-		boolean signed = (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED);
-		boolean bigEndian = (format.isBigEndian());
+	public static Double read16(byte b1, byte b2, boolean signed, boolean bigEndian) {
 		int value = 0;
 		// deal with endianness
 		int hiByte = (bigEndian ? b1 : b2);

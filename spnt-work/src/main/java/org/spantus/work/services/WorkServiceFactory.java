@@ -1,5 +1,6 @@
 package org.spantus.work.services;
 
+import org.spantus.core.extractor.dao.ReaderDao;
 import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
 import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
@@ -7,7 +8,7 @@ import org.spantus.utils.StringUtils;
 import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceFileMvelImpl;
 import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceMvelImpl;
 import org.spantus.work.services.impl.BundleZipDaoImpl;
-import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
+import org.spantus.work.services.impl.WorkExtractorReaderServiceImpl;
 import org.spantus.work.services.impl.MarkerProxyDao;
 import org.spantus.work.services.impl.ReaderXmlDaoImpl;
 import org.spantus.work.services.reader.ExternalReaderDao;
@@ -24,7 +25,7 @@ public abstract class WorkServiceFactory {
 	private static MarkerDao markerDao;
 	private static ReaderDao readerDao;
 	private static BundleDao bundleDao;
-	private static ExtractorReaderService extractorReaderService;
+	private static WorkExtractorReaderService extractorReaderService;
 	private static ExternalReaderDao wekaArffDao;
 	private static ExternalReaderDao csvDao;
 
@@ -67,9 +68,9 @@ public abstract class WorkServiceFactory {
 		return bundleDao;
 	}
 
-	public static ExtractorReaderService createExtractorReaderService() {
+	public static WorkExtractorReaderService createExtractorReaderService() {
 		if (extractorReaderService == null) {
-			extractorReaderService = new ExtractorReaderServiceImpl();
+			extractorReaderService = new WorkExtractorReaderServiceImpl();
 		}
 		return extractorReaderService;
 	}

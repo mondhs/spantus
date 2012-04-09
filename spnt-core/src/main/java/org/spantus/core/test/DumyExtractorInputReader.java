@@ -1,8 +1,11 @@
-package org.spantus.core.extractors.test;
+package org.spantus.core.test;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import org.spantus.core.FrameValues;
+import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.DefaultExtractorConfig;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
@@ -19,15 +22,19 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
 //	private int same = 0;
 //	private Long sample = 0L;
 //	private Integer configedWindowSize =10;
+	Set<IExtractor> extractorRegister = new HashSet<IExtractor>();
+	Set<IExtractorVector> extractorRegisterVector = new HashSet<IExtractorVector>();
+	
 	
 	
 	public Set<IExtractor> getExtractorRegister() {
-		return null;
+		return extractorRegister;
 	}
 
 	
 	public Set<IExtractorVector> getExtractorRegister3D() {
-		return null;
+		
+		return extractorRegisterVector;
 	}
 
         public Set<IGeneralExtractor> getGeneralExtractor() {
@@ -86,5 +93,42 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
 	public LinkedList<Double> getWindow() {
 		return window;
 	}
+	
+    public static DummyExtractorVector createExtractorVector(String extractorName) {
+        DummyExtractorVector extractor = new DummyExtractorVector();
+        extractor.setName("BUFFERED_" +extractorName);
+        FrameVectorValues fullFVV = generateOutputValues(10,3);
+        extractor.setOutputValues(fullFVV);
+        return extractor;
+    }
+    
+    public static DummyExtractor createExtractor(String extractorName) {
+        DummyExtractor extractor = new DummyExtractor();
+        extractor.setName("BUFFERED_" +extractorName);
+        FrameValues fullFVV = generateOutputValues(100);
+        extractor.setOutputValues(fullFVV);
+        return extractor;
+    }
+    
+    public static FrameVectorValues generateOutputValues(int index, int depth){
+        FrameVectorValues fullFVV = new FrameVectorValues();
+        fullFVV.setSampleRate(1000D);
+
+        for (int i = 0; i < index; i++) {
+        	Double f = i+.1D;
+            fullFVV.add(new Double[]{f, f, f});
+        }
+        return fullFVV;
+    }
+    public static FrameValues generateOutputValues(int index){
+    	FrameValues fullF = new FrameValues();
+        fullF.setSampleRate(1000D);
+
+        for (int i = 0; i < index; i++) {
+        	Double f = i+.1D;
+            fullF.add(f);
+        }
+        return fullF;
+    }
 
 }

@@ -8,15 +8,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
+import org.spantus.work.services.impl.WorkExtractorReaderServiceImpl;
 
 public class ExtractorReaderServiceImplTest {
 
-	private ExtractorReaderServiceImpl extractor;
+	private WorkExtractorReaderServiceImpl extractor;
 
 	@Before
 	public void setup() {
-		extractor = new ExtractorReaderServiceImpl();
+		extractor = new WorkExtractorReaderServiceImpl();
 	}
 
 	@Test

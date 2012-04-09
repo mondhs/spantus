@@ -41,6 +41,8 @@ public class SegmentEvent implements Serializable, Cloneable{
 	private Long time;
 	private Long sample;
 	private Marker marker;
+	private Double value;
+	
 	public String getId() {
 		return id;
 	}
@@ -55,12 +57,13 @@ public class SegmentEvent implements Serializable, Cloneable{
 	 * @param sample
 	 * @param marker
 	 */
-	public SegmentEvent(String id, Long time, Marker marker, Long sample) {
+	public SegmentEvent(String id, Long time, Marker marker, Long sample,Double value) {
 		super();
 		this.id = id;
 		this.time = time;
 		this.sample = sample;
 		this.marker = marker;
+		this.value = value;
 	}
 	
 	
@@ -97,5 +100,13 @@ public class SegmentEvent implements Serializable, Cloneable{
 		} catch (CloneNotSupportedException e) {
 			throw new IllegalArgumentException(e);
 		}
+	}
+
+	public Double getValue() {
+		return value;
+	}
+
+	public void setValue(Double value) {
+		this.value = value;
 	}
 }

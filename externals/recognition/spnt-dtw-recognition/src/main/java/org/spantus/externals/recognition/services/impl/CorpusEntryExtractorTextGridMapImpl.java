@@ -54,7 +54,7 @@ public class CorpusEntryExtractorTextGridMapImpl extends
 		MarkerSetHolder markerSetHolder = getMarkerDao().read(markerPath);
 		Assert.isTrue(markerSetHolder != null, "Not initialized");
 		Assert.isTrue(markerSetHolder.getMarkerSets() != null, "Not initialized");
-		MarkerSet markerSet = findSegementedLowestMarkers(markerSetHolder);
+		MarkerSet markerSet = getSegmentationService().findSegementedLowestMarkers(markerSetHolder);
 		Collection<Marker>  markers = findMappedMarkers(markerSet, marker);
 		StringBuilder buf = new StringBuilder();
 		String separator = "";

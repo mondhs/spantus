@@ -7,7 +7,7 @@ import org.spantus.logger.ILogger;
 
 
 public class LoggerLog4j implements ILogger{
-	Logger logger;
+	private Logger logger;
 	
 	public LoggerLog4j(Class<?> logClass){
 	    this.logger = Logger.getLogger(logClass);

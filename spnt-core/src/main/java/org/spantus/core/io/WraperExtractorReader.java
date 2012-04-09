@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
-*/
+ */
 package org.spantus.core.io;
 
 import java.util.ArrayList;
@@ -28,12 +28,13 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.preemphasis.Preemphasis;
 import org.spantus.core.extractor.preemphasis.PreemphasisFactory;
 import org.spantus.math.windowing.HammingWindowing;
+
 /**
  * 
  * @author Mindaugas Greibus
  * 
- * Created Feb 22, 2010
- *
+ *         Created Feb 22, 2010
+ * 
  */
 public class WraperExtractorReader {
 	private AudioFormat format;
@@ -43,9 +44,12 @@ public class WraperExtractorReader {
 	private Long sample;
 	private Double lastValue;
 	private boolean smooth = false;
-	private Integer smoothingSize = null; 
+	private Integer smoothingSize = null;
 	private HammingWindowing hammingWindowing;
-	
+	private int sampleSizeInBits;
+	private boolean signed;
+	private boolean bigEndian;
+
 	public WraperExtractorReader(IExtractorInputReader reader, int size) {
 		this.reader = reader;
 		shortBuffers = new ArrayList<List<Byte>>(size);
@@ -53,37 +57,39 @@ public class WraperExtractorReader {
 			List<Byte> shortBuffer = new ArrayList<Byte>(3);
 			shortBuffers.add(shortBuffer);
 		}
-		preemphasisFilter = PreemphasisFactory.createPreemphasis(reader.getConfig().getPreemphasis());
+		preemphasisFilter = PreemphasisFactory.createPreemphasis(reader
+				.getConfig().getPreemphasis());
 		sample = 0L;
-	}	
-	
-	public void put(byte value){
-		switch (format.getSampleSizeInBits()) {
+	}
+
+	public void put(byte value) {
+		switch (sampleSizeInBits) {
 		case 8:
-				put(AudioUtil.read8(value, getFormat()) );
-				break;
+			put(AudioUtil.read8(value, getFormat()));
+			break;
 		case 16:
-			List<Byte> shortBuffer = shortBuffers.get(0); 
+			List<Byte> shortBuffer = shortBuffers.get(0);
 			shortBuffer.add(value);
-			if(shortBuffer.size() == 2){
-				Double d = AudioUtil.read16(shortBuffer.get(0), 
-						shortBuffer.get(1), 
-						getFormat());
-				put(d );
+			if (shortBuffer.size() == 2) {
+				Double d = AudioUtil.read16(shortBuffer.get(0),
+						shortBuffer.get(1), isSigned(), isBigEndian());
+				put(d);
 				shortBuffer.clear();
 			}
 			break;
 		default:
-			throw new java.lang.IllegalArgumentException(format.getSampleSizeInBits()
-					+ " bits/sample not supported");
+			throw new java.lang.IllegalArgumentException(
+					format.getSampleSizeInBits() + " bits/sample not supported");
 		}
-		
+
 	}
+
 	/**
 	 * put byte list
+	 * 
 	 * @param value
 	 */
-	public void put(List<Byte> value){
+	public void put(List<Byte> value) {
 		Double sum = null;
 		switch (format.getSampleSizeInBits()) {
 		case 8:
@@ -91,60 +97,63 @@ public class WraperExtractorReader {
 			for (Byte byte1 : value) {
 				sum += AudioUtil.read8(byte1, getFormat());
 			}
-				break;
+			break;
 		case 16:
 			Iterator<Byte> valIterator = value.iterator();
 			Iterator<List<Byte>> buffIterator = shortBuffers.iterator();
-			while(valIterator.hasNext()){
+			while (valIterator.hasNext()) {
 				Byte ival = valIterator.next();
 				buffIterator.next().add(ival);
 			}
-			if(shortBuffers.get(0).size() == 2){
+			if (shortBuffers.get(0).size() == 2) {
 				for (List<Byte> shortBuffer : shortBuffers) {
-					if(shortBuffer.size()==2){
-						sum = sum == null?0D:sum;
-						sum += AudioUtil.read16(
-								shortBuffer.get(0), 
-							shortBuffer.get(1), 
-							getFormat());
+					if (shortBuffer.size() == 2) {
+						sum = sum == null ? 0D : sum;
+						sum += AudioUtil.read16(shortBuffer.get(0),
+								shortBuffer.get(1), isSigned(), isBigEndian());
 					}
 					shortBuffer.clear();
 				}
 			}
 			break;
 		default:
-			throw new java.lang.IllegalArgumentException(format.getSampleSizeInBits()
-					+ " bits/sample not supported");
+			throw new java.lang.IllegalArgumentException(
+					format.getSampleSizeInBits() + " bits/sample not supported");
 		}
-		//add value tooo the lis
+		// add value tooo the lis
 		put(sum);
 	}
-	
-	public void put(Double val){
-		if(val!=null){
-			if(smooth  == true && smoothingSize != null){
-				val *=  getHammingWindowing().calculate(smoothingSize, sample.intValue());
-		}
+
+	public void put(Double val) {
+		if (val != null) {
+			if (smooth == true && smoothingSize != null) {
+				val *= getHammingWindowing().calculate(smoothingSize,
+						sample.intValue());
+			}
 			reader.put(sample++, preemphasis(val));
 		}
 	}
-	
+
 	/**
 	 * Calculate post process data
+	 * 
 	 * @param currentValue
 	 * @return
 	 */
-	protected Double preemphasis(Double currentValue){
+	protected Double preemphasis(Double currentValue) {
 		Double processedValue = preemphasisFilter.process(currentValue);
 		setLastValue(processedValue);
 		return processedValue;
 	}
 
-	
-	public void pushValues(){
+	public void pushValues() {
 		reader.pushValues(sample);
 	}
+
 	public void setFormat(AudioFormat format) {
+		this.sampleSizeInBits = format.getSampleSizeInBits();
+		this.signed = (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED);
+		this.bigEndian = (format.isBigEndian());
 		this.format = format;
 	}
 
@@ -169,7 +178,7 @@ public class WraperExtractorReader {
 	}
 
 	public HammingWindowing getHammingWindowing() {
-		if(hammingWindowing == null){
+		if (hammingWindowing == null) {
 			hammingWindowing = new HammingWindowing();
 		}
 		return hammingWindowing;
@@ -191,5 +200,28 @@ public class WraperExtractorReader {
 		this.smoothingSize = smoothingSize;
 	}
 
-	
+	public int getSampleSizeInBits() {
+		return sampleSizeInBits;
+	}
+
+	public void setSampleSizeInBits(int sampleSizeInBits) {
+		this.sampleSizeInBits = sampleSizeInBits;
+	}
+
+	public boolean isSigned() {
+		return signed;
+	}
+
+	public void setSigned(boolean signed) {
+		this.signed = signed;
+	}
+
+	public boolean isBigEndian() {
+		return bigEndian;
+	}
+
+	public void setBigEndian(boolean bigEndian) {
+		this.bigEndian = bigEndian;
+	}
+
 }

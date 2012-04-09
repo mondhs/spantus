@@ -15,5 +15,6 @@
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.spantus.work.ui.SpantusWorkMain"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="spnt-work-ui"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms256m&#13;&#10;-Xmx1024m&#13;&#10;-XX:PermSize=256m"/>
 </launchConfiguration>

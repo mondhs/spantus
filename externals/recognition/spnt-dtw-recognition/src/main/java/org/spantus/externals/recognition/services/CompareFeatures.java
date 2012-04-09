@@ -25,20 +25,20 @@ import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
+import org.spantus.core.extractor.dao.ReaderDao;
 import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.services.MathServicesFactory;
-import org.spantus.work.services.ExtractorReaderService;
-import org.spantus.work.services.ReaderDao;
+import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
-import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
+import org.spantus.work.services.impl.WorkExtractorReaderServiceImpl;
 
 public class CompareFeatures {
 
 	private String workingExtractor = "LPC";
 	private DtwService dtwService;
 	private ReaderDao readerDao;
-	private ExtractorReaderService extractorReaderService;
+	private WorkExtractorReaderService extractorReaderService;
 
 	@SuppressWarnings("unused")
 	private Logger log = Logger.getLogger(getClass());
@@ -108,9 +108,9 @@ public class CompareFeatures {
 	}
 
 
-	public ExtractorReaderService getExtractorReaderService() {
+	public WorkExtractorReaderService getExtractorReaderService() {
 		if (extractorReaderService == null) {
-			extractorReaderService = new ExtractorReaderServiceImpl();
+			extractorReaderService = new WorkExtractorReaderServiceImpl();
 		}
 		return extractorReaderService;
 	}

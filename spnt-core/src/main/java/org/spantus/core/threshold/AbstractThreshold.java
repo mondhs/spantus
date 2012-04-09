@@ -54,9 +54,9 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 	 * @param threshold
 	 * @return
 	 */
-	protected void calculateState(Long sample, Double double1){
+	protected void calculateState(Long sample, Double value){
 		Long time = getThresholdValues().indextoMils(sample.intValue());
-		if(isSignalState(double1)){
+		if(isSignalState(value)){
 			//segment
 			if(getMarker()==null){
 				setMarker(new Marker());
@@ -65,7 +65,7 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 //				getMarker().getExtractionData().setStartSampleNum(sample);
 				for (IClassificationListener listener : getClassificationListeners()) {
 					listener.onSegmentStarted(
-							new SegmentEvent(getName(),time,getMarker(),sample));
+							new SegmentEvent(getName(),time,getMarker(),sample, value));
 				}
 			}
 		}else {
@@ -76,7 +76,7 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 //				getMarker().getExtractionData().setEndSampleNum(sample);
 				for (IClassificationListener listener : getClassificationListeners()) {
 					listener.onSegmentEnded(
-							new SegmentEvent(getName(),time,getMarker(),sample));
+							new SegmentEvent(getName(),time,getMarker(),sample, value));
 				}
 				setMarker(null);
 			}
@@ -84,7 +84,7 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 		//notify that segment processed
 		for (IClassificationListener listener : getClassificationListeners()) {
 			listener.onSegmentProcessed(
-					new SegmentEvent(getName(),time,getMarker(),sample));
+					new SegmentEvent(getName(),time,getMarker(),sample, value));
 		}
 	}
 

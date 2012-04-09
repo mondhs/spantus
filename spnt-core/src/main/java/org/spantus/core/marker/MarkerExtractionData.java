@@ -19,6 +19,8 @@
 package org.spantus.core.marker;
 
 import java.io.Serializable;
+
+import org.spantus.core.IValues;
 /**
  * Additional Marker information for online segmentation and recognition
  * 
@@ -32,6 +34,8 @@ public class MarkerExtractionData implements Serializable, Cloneable{
 	private Long startSampleNum;
 	
 	private Long lengthSampleNum;
+	
+	private IValues featureData;
 	
 	public Long getStartSampleNum() {
 		return startSampleNum;
@@ -51,5 +55,13 @@ public class MarkerExtractionData implements Serializable, Cloneable{
 	
 	public void setEndSampleNum(Long end) {
 		setLengthSampleNum(end - getStartSampleNum());
+	}
+
+	public IValues getFeatureData() {
+		return featureData;
+	}
+
+	public void setFeatureData(IValues featureData) {
+		this.featureData = featureData;
 	}
 }

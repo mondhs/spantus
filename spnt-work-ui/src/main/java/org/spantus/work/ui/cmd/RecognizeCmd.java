@@ -27,7 +27,7 @@ import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
 import org.spantus.logger.Logger;
-import org.spantus.work.services.ExtractorReaderService;
+import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
@@ -42,7 +42,7 @@ public class RecognizeCmd extends AbsrtactCmd {
     private static Logger log = Logger.getLogger(RecognizeCmd.class);
     private RecognizeDetailDialog info;
     private MatchingServiceImpl matchingService;
-    private ExtractorReaderService extractorReaderService;
+    private WorkExtractorReaderService extractorReaderService;
 
     
     
@@ -88,14 +88,14 @@ public class RecognizeCmd extends AbsrtactCmd {
         return info;
     }
 
-    public ExtractorReaderService getExtractorReaderService() {
+    public WorkExtractorReaderService getExtractorReaderService() {
         if (extractorReaderService == null) {
             extractorReaderService = WorkServiceFactory.createExtractorReaderService();
         }
         return extractorReaderService;
     }
 
-    public void setExtractorReaderService(ExtractorReaderService extractorReaderService) {
+    public void setExtractorReaderService(WorkExtractorReaderService extractorReaderService) {
         this.extractorReaderService = extractorReaderService;
     }
 

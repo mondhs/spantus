@@ -122,11 +122,14 @@ public abstract class ExtractorUtils {
 	 * 
 	 * @param bufferedReader
 	 * @param extractorType
+	 * @return 
 	 */
-	public static void register(IExtractorInputReader bufferedReader,
+	public static IGeneralExtractor register(IExtractorInputReader bufferedReader,
 			ExtractorEnum extractorType, ExtractorParam param) {
-		bufferedReader.registerExtractor(ExtractorResultBufferFactory
-				.create(createInstance(extractorType, param)));
+		IGeneralExtractor extractor = ExtractorResultBufferFactory
+		.create(createInstance(extractorType, param));
+		bufferedReader.registerExtractor(extractor);
+		return extractor;
 	}
 
 	public static IGeneralExtractor createInstance(ExtractorEnum extractor, ExtractorParam param) {
@@ -197,10 +200,11 @@ public abstract class ExtractorUtils {
 			threshold.setExtractor(new ExtractorResultBuffer(wraper));
 			wraper.getListeners().add(threshold);
 			bufferedReader.registerExtractor(threshold);
+			return threshold;
 		} else {
 			register(bufferedReader, extractorType, param);
+			return null;
 		}
-		return threshold;
 
 	}
 	/**

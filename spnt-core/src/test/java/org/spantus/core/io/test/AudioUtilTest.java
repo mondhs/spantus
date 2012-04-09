@@ -21,7 +21,7 @@ public class AudioUtilTest {
 		
 	}
 	public void assertCaclc(Byte[] bs1, Double number, AudioFormat af){
-		Double f1 = AudioUtil.read16(bs1[0], bs1[1], af);
+		Double f1 = AudioUtil.read16(bs1[0], bs1[1], true, true);
 		Assert.assertEquals("conversion error", number,f1);
 		Byte[] bs = AudioUtil.get16(f1, af);
 		assertEquals(bs1, bs);

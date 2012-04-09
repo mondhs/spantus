@@ -15,7 +15,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
-*/
+ */
 package org.spantus.logger;
 
 import java.lang.reflect.Constructor;
@@ -30,34 +30,63 @@ import java.lang.reflect.InvocationTargetException;
  *        Created 2008.02.29
  * 
  */
+@SuppressWarnings("unchecked")
 public class Logger implements ILogger {
 	ILogger logger;
 
-	
 	public Logger(ILogger logger) {
 		this.logger = logger;
 	}
 
-	public static Logger getLogger(Class<?> logClass) {
+	private static Class<ILogger> loggerClass;
+
+	static {
+		String[] clazzes = new String[] {
+				"org.spantus.work.ui.logger.LoggerLog4j",
+				"org.spantus.android.SpntAndroidLogger",
+				"org.spantus.logger.SimpleLogger" };
 		ILogger logger1 = null;
+		for (String clazz : clazzes) {
+			try {
+
+				Class<?> loggingClass = Class.forName(clazz);
+				Constructor<?> loggerConstructor = loggingClass
+						.getConstructor(Class.class);
+				logger1 = (ILogger) loggerConstructor.newInstance(loggingClass);
+			} catch (ClassNotFoundException e) {
+			} catch (SecurityException e) {
+			} catch (NoSuchMethodException e) {
+			} catch (IllegalArgumentException e) {
+			} catch (InstantiationException e) {
+			} catch (IllegalAccessException e) {
+			} catch (InvocationTargetException e) {
+			}
+			if (logger1 != null) {
+				loggerClass = (Class<ILogger>) logger1.getClass();
+				break;
+			}
+
+		}
+
+	}
+
+
+	public static Logger getLogger(Class<?> logClass) {
 		try {
-			Class<?> loggingClass = Class.forName("org.spantus.work.ui.logger.LoggerLog4j");
-			Constructor<?> loggerConstructor = loggingClass.getConstructor(Class.class);
-			logger1 = (ILogger)loggerConstructor.newInstance(logClass);
-		} catch (ClassNotFoundException e) {
+			Constructor<?> loggerConstructor = loggerClass
+					.getConstructor(Class.class);
+			ILogger logger1 = (ILogger) loggerConstructor.newInstance(logClass);
+			Logger thisLogger = new Logger(logger1);
+			return thisLogger;
 		} catch (SecurityException e) {
 		} catch (NoSuchMethodException e) {
 		} catch (IllegalArgumentException e) {
 		} catch (InstantiationException e) {
 		} catch (IllegalAccessException e) {
 		} catch (InvocationTargetException e) {
-		}finally{
-			logger1 = logger1 ==null?new SimpleLogger(logClass):logger1;
+		} finally {
 		}
-		
-		Logger thisLogger = new Logger(logger1);
-		return thisLogger;
-
+		return null;
 	}
 
 	/*
@@ -104,9 +133,12 @@ public class Logger implements ILogger {
 	public void error(String str) {
 		logger.error(str);
 	}
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.spantus.logger.ILogger#error(java.lang.String, java.lang.Throwable)
+	 * 
+	 * @see org.spantus.logger.ILogger#error(java.lang.String,
+	 * java.lang.Throwable)
 	 */
 	public void error(String str, Throwable t) {
 		logger.error(str, t);

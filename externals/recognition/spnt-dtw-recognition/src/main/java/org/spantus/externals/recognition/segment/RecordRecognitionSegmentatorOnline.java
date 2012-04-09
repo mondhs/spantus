@@ -17,7 +17,7 @@ import org.spantus.externals.recognition.services.CorpusService;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
-import org.spantus.work.services.ExtractorReaderService;
+import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 
 public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
@@ -25,7 +25,7 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 	private CorpusService corpusService;
 	
 
-        private ExtractorReaderService extractorReaderService;
+        private WorkExtractorReaderService extractorReaderService;
 	
 	private CorpusMatchListener corpusMatchListener ;
 	
@@ -118,7 +118,7 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
 		this.corpusMatchListener = corpusMatchListener;
 	}
 	
-        public ExtractorReaderService getExtractorReaderService() {
+        public WorkExtractorReaderService getExtractorReaderService() {
             if (extractorReaderService == null) {
                 this.extractorReaderService = WorkServiceFactory.createExtractorReaderService();
             }

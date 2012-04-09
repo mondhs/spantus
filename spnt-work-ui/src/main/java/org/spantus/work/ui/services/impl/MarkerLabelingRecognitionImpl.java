@@ -9,14 +9,14 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.externals.recognition.bean.RecognitionResult;
-import org.spantus.work.services.ExtractorReaderService;
+import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.services.MarkerLabeling;
 
 public class MarkerLabelingRecognitionImpl implements MarkerLabeling{
 
-	private ExtractorReaderService extractorReaderService;
+	private WorkExtractorReaderService extractorReaderService;
 	private MatchingServiceImpl matchingService;
 	
 	
@@ -48,7 +48,7 @@ public class MarkerLabelingRecognitionImpl implements MarkerLabeling{
 		return markerSetHolder;
 	}
 	
-	public ExtractorReaderService getExtractorReaderService() {
+	public WorkExtractorReaderService getExtractorReaderService() {
 		if (extractorReaderService == null) {
 			extractorReaderService = WorkServiceFactory
 					.createExtractorReaderService();
@@ -57,7 +57,7 @@ public class MarkerLabelingRecognitionImpl implements MarkerLabeling{
 	}
 
 	public void setExtractorReaderService(
-			ExtractorReaderService extractorReaderService) {
+			WorkExtractorReaderService extractorReaderService) {
 		this.extractorReaderService = extractorReaderService;
 	}
 	

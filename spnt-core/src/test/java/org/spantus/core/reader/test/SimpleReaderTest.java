@@ -6,9 +6,9 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.spantus.core.extractor.SignalFormat;
-import org.spantus.core.extractors.test.DumyExtractorInputReader;
 import org.spantus.core.io.SignalReader;
 import org.spantus.core.io.SimpleSignalReader;
+import org.spantus.core.test.DumyExtractorInputReader;
 
 public class SimpleReaderTest extends TestCase {
 	private URL inputFile; 

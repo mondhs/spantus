@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +18,11 @@ import javax.sound.sampled.AudioInputStream;
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.ClassifierEnum;
-import org.spantus.core.threshold.IClassifier;
 import org.spantus.core.wav.AudioManager;
 import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.exception.ProcessingException;
@@ -39,11 +36,11 @@ import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
-import org.spantus.segment.SegmentFactory.SegmentatorServiceEnum;
+import org.spantus.segment.SegmentationServiceImpl;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.utils.Assert;
-import org.spantus.work.services.ExtractorReaderService;
-import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
+import org.spantus.work.services.WorkExtractorReaderService;
+import org.spantus.work.services.impl.WorkExtractorReaderServiceImpl;
 
 /**
  * 
@@ -51,22 +48,21 @@ import org.spantus.work.services.impl.ExtractorReaderServiceImpl;
  */
 public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 
-	private static final Logger log = Logger
+	private static final Logger LOG = Logger
 			.getLogger(CorpusEntryExtractorFileImpl.class);
-	private ExtractorReaderService readerService;
+	private WorkExtractorReaderService readerService;
 	private ExtractorEnum[] extractors;
 	private ISegmentatorService segmentator;
 	private CorpusService corpusService;
 	private AudioManager audioManager;
-	private OnlineDecisionSegmentatorParam segmentionParam;
 	private int windowLengthInMilSec = ExtractorsFactory.DEFAULT_WINDOW_LENGHT;
 	private int overlapInPerc = ExtractorsFactory.DEFAULT_WINDOW_OVERLAP;
-	private String segmentatorServiceType = SegmentatorServiceEnum.offline
-			.name();
 	private String rulePath;
 	private boolean rulesTurnedOn;
 	private Map<String, ExtractorParam> params;
 	private ClassifierEnum classifier = ClassifierEnum.rules;
+	
+	private SegmentationServiceImpl segmentationService;
 
 	/**
 	 * Find segments(markers), then put them to corpus
@@ -80,8 +76,8 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 		// find markers
 		IExtractorInputReader reader = createReaderWithClassifier(filePath);
 
-		MarkerSetHolder markerSetHorlder = findMarkers(reader);
-		MarkerSet segments = findSegementedLowestMarkers(markerSetHorlder);
+		MarkerSetHolder markerSetHorlder = getSegmentationService().findMarkers(reader);
+		MarkerSet segments = getSegmentationService().findSegementedLowestMarkers(markerSetHorlder);
 
 		// process markers
 		Assert.isTrue(segments != null);
@@ -113,7 +109,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	public MarkerSetHolder extract(File wavFilePath,
 			IExtractorInputReader reader) {
 		Assert.isTrue(wavFilePath.exists(), "file not exists" + wavFilePath);
-		MarkerSetHolder markerSetHorlder = findMarkers(reader);
+		MarkerSetHolder markerSetHorlder = getSegmentationService().findMarkers(reader);
 		return markerSetHorlder;
 	}
 
@@ -124,7 +120,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	 * @return
 	 */
 	public IExtractorInputReader createReaderWithClassifier(File wavFilePath) {
-		log.debug(
+		LOG.debug(
 				"[createReaderWithClassifier]\nWindow size: {0};\nOverlap: {1};\nSegmenator: {2};\nExtractors: {3}",
 				getWindowLengthInMilSec(), getOverlapInPerc(),
 				getSegmentatorServiceType(), toString(getExtractors()));
@@ -143,8 +139,8 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	public MarkerSetHolder extractAndLearn(File wavFilePath) {
 		MarkerSetHolder markerSetHorlder = extract(wavFilePath);
 
-		MarkerSet segments = findSegementedLowestMarkers(markerSetHorlder);
-		log.debug("[extractAndLearn] marker size {0}", segments.getMarkers()
+		MarkerSet segments = getSegmentationService().findSegementedLowestMarkers(markerSetHorlder);
+		LOG.debug("[extractAndLearn] marker size {0}", segments.getMarkers()
 				.size());
 
 		IExtractorInputReader reader = createReaderWithClassifier(wavFilePath);
@@ -193,7 +189,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 			// continue;
 			// }
 			if (marker.getLength() < 10) {
-				log.error("this should be eliminated by rules" + marker);
+				LOG.error("this should be eliminated by rules" + marker);
 			}
 			learn(fileUrl, marker, localReader);
 
@@ -222,20 +218,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 				filePath.getName(), (result + 1)).toString();
 	}
 
-	/**
-	 * 
-	 * @param markerSetHolder
-	 * @return
-	 */
-	public MarkerSet findSegementedLowestMarkers(MarkerSetHolder markerSetHolder) {
-		MarkerSet segments = markerSetHolder.getMarkerSets().get(
-				MarkerSetHolderEnum.phone.name());
-		if (segments == null) {
-			segments = markerSetHolder.getMarkerSets().get(
-					MarkerSetHolderEnum.word.name());
-		}
-		return segments;
-	}
+
 
 	/**
 	 * 
@@ -253,26 +236,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 		return segments;
 	}
 
-	/**
-	 * Find markers
-	 * 
-	 * @param filePath
-	 * @return
-	 */
-	protected MarkerSetHolder findMarkers(IExtractorInputReader reader) {
-		Collection<IClassifier> clasifiers = new ArrayList<IClassifier>();
-		for (IGeneralExtractor extractor : reader.getGeneralExtractor()) {
-			if (extractor instanceof IClassifier) {
-				clasifiers.add((IClassifier) extractor);
-			}
-		}
 
-		log.debug("[findMarkers] clasifiers size {0}", clasifiers.size());
-		MarkerSetHolder markerSetHorlder = getSegmentator().extractSegments(
-				clasifiers, getSegmentionParam());
-
-		return markerSetHorlder;
-	}
 
 	/**
 	 * 
@@ -330,7 +294,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 		Long markerEnd = marker.getEnd();
 
 		if (signalLength < markerEnd) {
-			log.error("[learn] exceed length " + marker);
+			LOG.error("[learn] exceed length " + marker);
 			marker.setEnd(signalLength);
 		}
 
@@ -387,19 +351,12 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	}
 
 	public OnlineDecisionSegmentatorParam getSegmentionParam() {
-		if (segmentionParam == null) {
-			segmentionParam = new OnlineDecisionSegmentatorParam();
-			segmentionParam.setMinLength(91L);
-			segmentionParam.setMinSpace(61L);
-			segmentionParam.setExpandStart(60L);
-			segmentionParam.setExpandEnd(60L);
-		}
-		return segmentionParam;
+		return getSegmentationService().getSegmentionParam();
 	}
 
 	public void setSegmentionParam(
 			OnlineDecisionSegmentatorParam segmentionParam) {
-		this.segmentionParam = segmentionParam;
+		getSegmentationService().setSegmentionParam(segmentionParam);
 	}
 
 	public ISegmentatorService getSegmentator() {
@@ -414,9 +371,9 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 		this.segmentator = segmentator;
 	}
 
-	public ExtractorReaderService getReaderService() {
+	public WorkExtractorReaderService getReaderService() {
 		if (readerService == null) {
-			ExtractorReaderServiceImpl readerServiceImpl = new ExtractorReaderServiceImpl();
+			WorkExtractorReaderServiceImpl readerServiceImpl = new WorkExtractorReaderServiceImpl();
 			readerServiceImpl
 					.setWindowLengthInMilSec(getWindowLengthInMilSec());
 			readerServiceImpl.setOverlapInPerc(getOverlapInPerc());
@@ -427,7 +384,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 		return readerService;
 	}
 
-	public void setReaderService(ExtractorReaderService readerService) {
+	public void setReaderService(WorkExtractorReaderService readerService) {
 		this.readerService = readerService;
 	}
 
@@ -484,11 +441,11 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	}
 
 	public String getSegmentatorServiceType() {
-		return segmentatorServiceType;
+		return getSegmentationService().getSegmentatorServiceType();
 	}
 
-	public void setSegmentatorServiceType(String segmentatorService) {
-		this.segmentatorServiceType = segmentatorService;
+	public void setSegmentatorServiceType(String segmentatorServiceType) {
+		getSegmentationService().setSegmentatorServiceType(segmentatorServiceType);
 	}
 
 	public String getRulePath() {
@@ -524,5 +481,16 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 
 	public void setClassifier(ClassifierEnum classifier) {
 		this.classifier = classifier;
+	}
+
+	public SegmentationServiceImpl getSegmentationService() {
+		if(segmentationService == null){
+			segmentationService = new SegmentationServiceImpl();
+		}
+		return segmentationService;
+	}
+
+	public void setSegmentationService(SegmentationServiceImpl segmentationService) {
+		this.segmentationService = segmentationService;
 	}
 }

@@ -3,34 +3,33 @@
  * and open the template in the editor.
  */
 
-package org.spantus.work.services.test;
+package org.spantus.core.test;
 
 import org.spantus.core.FrameValues;
-import org.spantus.core.FrameVectorValues;
+import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
-import org.spantus.core.extractor.IExtractorVector;
 
 /**
  *
  * @author mondhs
  */
-public class DummyExtractorVector implements IExtractorVector {
+public class DummyExtractor implements IExtractor{
     private String name;
-    private FrameVectorValues outputValues;
+    private FrameValues outputValues;
 
 
-    public FrameVectorValues getOutputValues() {
+    public FrameValues getOutputValues() {
         return outputValues;
     }
-    public void setOutputValues(FrameVectorValues outputValues) {
+    public void setOutputValues(FrameValues outputValues) {
         this.outputValues = outputValues;
     }
 
-    public FrameVectorValues calculate(Long sample, FrameValues frame) {
+    public FrameValues calculate(Long sample, FrameValues frame) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public FrameVectorValues calculateWindow(FrameValues window) {
+    public FrameValues calculateWindow(FrameValues window) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
