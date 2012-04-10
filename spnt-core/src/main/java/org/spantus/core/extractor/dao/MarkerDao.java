@@ -1,4 +1,4 @@
-package org.spantus.work.services;
+package org.spantus.core.extractor.dao;
 
 import java.io.File;
 import java.io.InputStream;

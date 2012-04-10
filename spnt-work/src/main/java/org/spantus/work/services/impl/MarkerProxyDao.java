@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
-import org.spantus.work.services.MarkerDao;
 
 public class MarkerProxyDao implements MarkerDao {
 

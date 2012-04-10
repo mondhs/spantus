@@ -28,13 +28,13 @@ import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
-import org.spantus.work.services.MarkerDao;
 
 /**
  * support for TextGrid of praat

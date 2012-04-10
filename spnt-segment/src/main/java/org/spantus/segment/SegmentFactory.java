@@ -31,7 +31,11 @@ import org.spantus.segment.online.OnlineSegmentaitonService;
  * Created Jan 25, 2010
  *
  */
-public abstract class SegmentFactory {
+public final class SegmentFactory {
+	
+	private SegmentFactory() {
+		// TODO Auto-generated constructor stub
+	}
 	
 	public enum SegmentatorServiceEnum{basic, offline, online, waheed};
 	

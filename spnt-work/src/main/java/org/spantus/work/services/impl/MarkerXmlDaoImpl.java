@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.logger.Logger;
-import org.spantus.work.services.MarkerDao;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;

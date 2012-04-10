@@ -28,12 +28,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.logger.Logger;
-import org.spantus.work.services.MarkerDao;
 /**
  * Htc laba format support
  * 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
@@ -13,7 +14,6 @@ import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
-import org.spantus.work.services.MarkerDao;
 import org.spantus.work.services.WorkServiceFactory;
 
 public class CorpusEntryExtractorTextGridMapImpl extends

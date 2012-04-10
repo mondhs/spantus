@@ -10,12 +10,12 @@ import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
-import org.spantus.work.services.MarkerDao;
 
 public class CorpusEntryExtractorTextGridMapImplTest {
 

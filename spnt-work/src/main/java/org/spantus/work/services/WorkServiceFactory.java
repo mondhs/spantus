@@ -1,5 +1,6 @@
 package org.spantus.work.services;
 
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.extractor.dao.ReaderDao;
 import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
 import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;

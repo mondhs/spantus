@@ -38,7 +38,7 @@ import org.spantus.logger.Logger;
  */
 
 public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
-	private Logger log = Logger
+	private static final Logger LOG = Logger
 			.getLogger(MultipleSegmentatorListenerOnline.class);
 
 	private LinkedHashMap<Long, Integer> sequenceSignal;  
@@ -166,7 +166,7 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 		
 		marker.setLength(marker.getLength());
 		getMarkSet().getMarkers().add(marker);
-		log.debug("[onSegmentEnded] {0}", marker);
+//		log.debug("[onSegmentEnded] {0}", marker);
 		setCurrentMarker(null);
 		return true;
 	}

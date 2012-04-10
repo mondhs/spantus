@@ -11,11 +11,11 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.extractor.dao.ReaderDao;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.work.SpantusBundle;
 import org.spantus.work.services.BundleDao;
-import org.spantus.work.services.MarkerDao;
 import org.spantus.work.services.WorkServiceFactory;
 
 public class BundleZipDaoImpl implements BundleDao {

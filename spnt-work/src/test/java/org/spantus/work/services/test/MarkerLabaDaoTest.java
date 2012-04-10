@@ -2,10 +2,10 @@ package org.spantus.work.services.test;
 
 import java.io.File;
 
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
-import org.spantus.work.services.MarkerDao;
 import org.spantus.work.services.impl.MarkerLabaDao;
 
 import junit.framework.TestCase;
