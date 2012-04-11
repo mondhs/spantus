@@ -82,6 +82,9 @@ public class ExtractorInputReaderServiceImpl implements
 					+ (marker.getLength().doubleValue() * values
 							.getSampleRate()) / 1000;
 			toIndex = endIndex < toIndex ? endIndex : toIndex;
+			if(fromIndex>toIndex){
+				throw new IllegalArgumentException("Nonsence");
+			}
 			FrameValues fv = values.subList(fromIndex.intValue(),
 					toIndex.intValue());
 			String key = preprocess(extractor.getName());
