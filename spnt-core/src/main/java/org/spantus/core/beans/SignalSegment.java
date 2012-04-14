@@ -5,16 +5,14 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.spantus.core.FrameValues;
-import org.spantus.core.FrameVectorValues;
 import org.spantus.core.marker.Marker;
 
 @XmlRootElement(name = "SignalSegment")
 public class SignalSegment {
 
 	private Marker marker;
-	private Map<String, FrameValues> featureFrameValuesMap = new HashMap<String, FrameValues>();
-	private Map<String, FrameVectorValues> featureFrameVectorValuesMap = new HashMap<String, FrameVectorValues>();
+	private Map<String, FrameValuesHolder> featureFrameValuesMap = new HashMap<String, FrameValuesHolder>();
+	private Map<String, FrameVectorValuesHolder> featureFrameVectorValuesMap = new HashMap<String, FrameVectorValuesHolder>();
 
 	public Marker getMarker() {
 		return marker;
@@ -24,21 +22,21 @@ public class SignalSegment {
 		this.marker = marker;
 	}
 
-	public Map<String, FrameValues> getFeatureFrameValuesMap() {
+	public Map<String, FrameValuesHolder> getFeatureFrameValuesMap() {
 		return featureFrameValuesMap;
 	}
 
 	public void setFeatureFrameValuesMap(
-			Map<String, FrameValues> featureFrameValuesMap) {
+			Map<String, FrameValuesHolder> featureFrameValuesMap) {
 		this.featureFrameValuesMap = featureFrameValuesMap;
 	}
 
-	public Map<String, FrameVectorValues> getFeatureFrameVectorValuesMap() {
+	public Map<String, FrameVectorValuesHolder> getFeatureFrameVectorValuesMap() {
 		return featureFrameVectorValuesMap;
 	}
 
 	public void setFeatureFrameVectorValuesMap(
-			Map<String, FrameVectorValues> featureFrameVectorValuesMap) {
+			Map<String, FrameVectorValuesHolder> featureFrameVectorValuesMap) {
 		this.featureFrameVectorValuesMap = featureFrameVectorValuesMap;
 	}
 
