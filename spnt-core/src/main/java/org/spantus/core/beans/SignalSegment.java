@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
@@ -47,19 +48,20 @@ public class SignalSegment {
 		this.featureFrameVectorValuesMap = featureFrameVectorValuesMap;
 	}
 
-	public void putAll(SignalSegment segment){
-		this.getFeatureFrameValuesMap().putAll(segment.getFeatureFrameValuesMap());
-		this.getFeatureFrameVectorValuesMap().putAll(segment.getFeatureFrameVectorValuesMap());
+	public void putAll(SignalSegment segment) {
+		this.getFeatureFrameValuesMap().putAll(
+				segment.getFeatureFrameValuesMap());
+		this.getFeatureFrameVectorValuesMap().putAll(
+				segment.getFeatureFrameVectorValuesMap());
 	}
-	
-	public void putAll(Map<String, IValues> features){
+
+	public void putAll(Map<String, IValues> features) {
 		for (Map.Entry<String, IValues> entry1 : features.entrySet()) {
 			if (entry1.getValue() instanceof FrameVectorValues) {
 				FrameVectorValuesHolder fd = new FrameVectorValuesHolder();
 				fd.setValues((FrameVectorValues) entry1.getValue());
-				this.getFeatureFrameVectorValuesMap().put(
-						entry1.getKey(), fd);
-			} else if (entry1.getValue() instanceof FrameVectorValues) {
+				this.getFeatureFrameVectorValuesMap().put(entry1.getKey(), fd);
+			} else if (entry1.getValue() instanceof FrameValues) {
 				FrameValuesHolder fd = new FrameValuesHolder();
 				fd.setValues((FrameValues) entry1.getValue());
 				this.getFeatureFrameValuesMap().put(entry1.getKey(), fd);
@@ -69,27 +71,32 @@ public class SignalSegment {
 
 		}
 	}
-	
-	public Map<String, IValues> getAllFeatures(){
+
+	public Map<String, IValues> findAllFeatures() {
 		Map<String, IValues> features = new HashMap<String, IValues>();
-		for (Entry<String, FrameVectorValuesHolder> holder : featureFrameVectorValuesMap.entrySet()) {
-			features.put(holder.getKey(), holder.getValue().getValues());
+		if (featureFrameVectorValuesMap != null) {
+			for (Entry<String, FrameVectorValuesHolder> holder : featureFrameVectorValuesMap
+					.entrySet()) {
+				features.put(holder.getKey(), holder.getValue().getValues());
+			}
 		}
-		for (Entry<String, FrameValuesHolder> holder : featureFrameValuesMap.entrySet()) {
-			features.put(holder.getKey(), holder.getValue().getValues());
+		if (featureFrameValuesMap != null) {
+			for (Entry<String, FrameValuesHolder> holder : featureFrameValuesMap
+					.entrySet()) {
+				features.put(holder.getKey(), holder.getValue().getValues());
+			}
 		}
 		return features;
 	}
-	
 
-	public IValueHolder<?> findValueHolder(String key){
+	public IValueHolder<?> findValueHolder(String key) {
 		IValueHolder<?> holder = getFeatureFrameValuesMap().get(key);
-		if( holder== null){
+		if (holder == null) {
 			holder = getFeatureFrameVectorValuesMap().get(key);
 		}
 		return holder;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -105,7 +112,5 @@ public class SignalSegment {
 	public void setId(String id) {
 		this.id = id;
 	}
-
-
 
 }

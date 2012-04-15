@@ -1,7 +1,10 @@
 package org.spantus.work.services;
 
+import org.spantus.core.dao.SignalSegmentDao;
 import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.extractor.dao.ReaderDao;
+import org.spantus.core.service.ExtractorInputReaderService;
+import org.spantus.core.service.impl.ExtractorInputReaderServiceImpl;
 import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
 import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
@@ -9,6 +12,7 @@ import org.spantus.utils.StringUtils;
 import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceFileMvelImpl;
 import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceMvelImpl;
 import org.spantus.work.services.impl.BundleZipDaoImpl;
+import org.spantus.work.services.impl.SignalSegmentSimpleJsonDao;
 import org.spantus.work.services.impl.WorkExtractorReaderServiceImpl;
 import org.spantus.work.services.impl.MarkerProxyDao;
 import org.spantus.work.services.impl.ReaderXmlDaoImpl;
@@ -29,6 +33,8 @@ public abstract class WorkServiceFactory {
 	private static WorkExtractorReaderService extractorReaderService;
 	private static ExternalReaderDao wekaArffDao;
 	private static ExternalReaderDao csvDao;
+	private static SignalSegmentDao signalSegmentDao;
+	private static ExtractorInputReaderService extractorInputReaderService;
 
 	public static MarkerDao createMarkerDao() {
 		if (markerDao == null) {
@@ -57,17 +63,34 @@ public abstract class WorkServiceFactory {
 		}
 		return csvDao;
 	}
-	
+	public static SignalSegmentDao createSignalSegmentDao() {
+		if (signalSegmentDao == null) {
+			signalSegmentDao = new SignalSegmentSimpleJsonDao();
+		}
+		return signalSegmentDao;
+	}
+
+	public static ExtractorInputReaderService createExtractorInputReaderService() {
+		if (extractorInputReaderService == null) {
+			extractorInputReaderService = new ExtractorInputReaderServiceImpl();
+		}
+		return extractorInputReaderService;
+	}
 	
 	public static BundleDao createBundleDao() {
 		if (bundleDao == null) {
 			BundleZipDaoImpl _bundleDao = new BundleZipDaoImpl();
 			_bundleDao.setMarkerDao(createMarkerDao());
 			_bundleDao.setReaderDao(createReaderDao());
+			_bundleDao.setSignalSegmentDao(createSignalSegmentDao());
+			_bundleDao.setExtractorInputReaderService(createExtractorInputReaderService());
 			bundleDao = _bundleDao;
 		}
 		return bundleDao;
 	}
+
+
+
 
 	public static WorkExtractorReaderService createExtractorReaderService() {
 		if (extractorReaderService == null) {
