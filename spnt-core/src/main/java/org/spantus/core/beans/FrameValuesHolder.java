@@ -2,9 +2,9 @@ package org.spantus.core.beans;
 
 import org.spantus.core.FrameValues;
 
-public class FrameValuesHolder {
+public class FrameValuesHolder implements IValueHolder<FrameValues>{
 
-	private FrameValues frameValues;
+	private FrameValues values;
 	
 	private Double sampleRate;
 	
@@ -13,16 +13,7 @@ public class FrameValuesHolder {
 	
 	public FrameValuesHolder(FrameValues frameValues) {
 		this.sampleRate = frameValues.getSampleRate();
-		this.frameValues = frameValues;
-	}
-
-	public FrameValues getFrameValues() {
-		return frameValues;
-	}
-
-	public void setFrameValues(FrameValues frameValues) {
-		this.sampleRate = frameValues.getSampleRate();
-		this.frameValues = frameValues;
+		this.values = frameValues;
 	}
 
 	public Double getSampleRate() {
@@ -30,7 +21,18 @@ public class FrameValuesHolder {
 	}
 
 	public void setSampleRate(Double sampleRate) {
-		getFrameValues().setSampleRate(sampleRate);
+		getValues().setSampleRate(sampleRate);
 		this.sampleRate = sampleRate;
+	}
+
+	@Override
+	public FrameValues getValues() {
+		return values;
+	}
+
+	@Override
+	public void setValues(FrameValues values) {
+		this.sampleRate = values.getSampleRate();
+		this.values = values;
 	}
 }

@@ -1,30 +1,32 @@
 package org.spantus.externals.recognition.ui;
 
+import java.util.Collection;
+
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import org.spantus.externals.recognition.bean.CorpusEntry;
-import org.spantus.externals.recognition.corpus.CorpusRepository;
-
+import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.service.CorpusRepository;
 
 public class CorpusEntryTableModel implements TableModel {
 	CorpusRepository corpusRepository;
-        Object[] corpusEntries;
+	SignalSegment[] corpusEntries;
 
-	Class<?>[] columnClasses = new Class<?>[]{Long.class,String.class};
-	String[] columnNames = new String[]{"id", "Name"};
-	
-	
+	Class<?>[] columnClasses = new Class<?>[] { Long.class, String.class };
+	String[] columnNames = new String[] { "id", "Name" };
+
 	public CorpusEntryTableModel(CorpusRepository corpusRepository) {
 		this.corpusRepository = corpusRepository;
-                corpusEntries = corpusRepository.findAllEntries().toArray();
+		Collection<SignalSegment> entries = corpusRepository.findAllEntries();
+		corpusEntries = corpusRepository.findAllEntries().toArray(
+				new SignalSegment[entries.size()]);
 	}
-        
-        public void refresh(){
-            corpusRepository.flush();
-            corpusEntries = corpusRepository.findAllEntries().toArray();
-        }
 
+	public void refresh() {
+		corpusRepository.flush();
+		Collection<SignalSegment> entries = corpusRepository.findAllEntries();
+		corpusEntries = entries.toArray(new SignalSegment[entries.size()]);
+	}
 
 	public Class<?> getColumnClass(int i) {
 		return columnClasses[i];
@@ -41,20 +43,19 @@ public class CorpusEntryTableModel implements TableModel {
 	public int getRowCount() {
 		return corpusEntries.length;
 	}
-        
-        public CorpusEntry getCorpusEntry(int selectedRow) {
-            CorpusEntry entry = (CorpusEntry)corpusEntries[selectedRow];
-            return entry;
-        }
 
+	public SignalSegment getCorpusEntry(int selectedRow) {
+		SignalSegment entry = (SignalSegment) corpusEntries[selectedRow];
+		return entry;
+	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Object obj = null;
-                
-		CorpusEntry entry = getCorpusEntry(rowIndex);
+
+		SignalSegment entry = getCorpusEntry(rowIndex);
 		switch (columnIndex) {
 		case 0:
-			obj = (rowIndex+1);
+			obj = (rowIndex + 1);
 			break;
 		case 1:
 			obj = entry.getName();
@@ -69,9 +70,8 @@ public class CorpusEntryTableModel implements TableModel {
 		return columnIndex > 0;
 	}
 
-
 	public void setValueAt(Object obj, int rowIndex, int columnIndex) {
-		CorpusEntry entry = getCorpusEntry(rowIndex);
+		SignalSegment entry = getCorpusEntry(rowIndex);
 		switch (columnIndex) {
 		case 0:
 			throw new IllegalArgumentException();
@@ -83,24 +83,23 @@ public class CorpusEntryTableModel implements TableModel {
 		}
 	}
 
-
 	public void addTableModelListener(TableModelListener l) {
 	}
 
-
 	public void removeTableModelListener(TableModelListener l) {
 	}
-        
-        public void delete(int rowIndex){
-            corpusRepository.delete(getCorpusEntry(rowIndex));
-            corpusEntries = corpusRepository.findAllEntries().toArray();
-        }
 
-        public void saveAll() {
-            for (Object entry : corpusEntries) {
-                corpusRepository.update((CorpusEntry)entry);
-            }
+	public void delete(int rowIndex) {
+		corpusRepository.delete(getCorpusEntry(rowIndex).getId());
+		Collection<SignalSegment> entries = corpusRepository.findAllEntries();
+		corpusEntries = entries.toArray(new SignalSegment[entries.size()]);
+	}
 
-        }
+	public void saveAll() {
+		for (SignalSegment entry : corpusEntries) {
+			corpusRepository.update( entry);
+		}
+
+	}
 
 }

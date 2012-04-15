@@ -4,10 +4,10 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CorpusEntry {
+public class _CorpusEntry {
 	Long id;
 	String name;
-	Map<String, FeatureData> featureMap;
+	Map<String, _FeatureData> featureMap;
 
 	public String getName() {
 		return name;
@@ -26,9 +26,9 @@ public class CorpusEntry {
 		this.id = id;
 	}
 
-	public Map<String, FeatureData> getFeatureMap() {
+	public Map<String, _FeatureData> getFeatureMap() {
 		if(featureMap == null){
-			featureMap = new HashMap<String, FeatureData>();
+			featureMap = new HashMap<String, _FeatureData>();
 		}
 		return featureMap;
 	}

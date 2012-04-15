@@ -6,6 +6,12 @@
 package org.spantus.externals.recognition.services;
 
 import java.util.HashSet;
+import java.util.Map;
+
+import org.spantus.core.IValues;
+import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.service.CorpusService;
+import org.spantus.externals.recognition.bean.CorpusFileEntry;
 
 /**
  *
@@ -25,6 +31,14 @@ public abstract class RecognitionServiceFactory {
             corpusService = corpusServiceimpl;
         }
         return corpusService;
+     }
+     
+     public static SignalSegment createSignalSegment(String label,
+ 			Map<String, IValues> featureDataMap){
+ 		CorpusFileEntry corpusEntry = new CorpusFileEntry();
+ 		corpusEntry.setName(label);
+ 		corpusEntry.putAll(featureDataMap);
+ 		return corpusEntry;
      }
   
 }

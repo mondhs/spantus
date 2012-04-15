@@ -13,9 +13,9 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.services.CorpusEntryExtractor;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorFileImpl;
 
@@ -43,7 +43,7 @@ public class CorpusEntryExtractorFileImplTest {
        //given
        File filePath = new File(path, FILE_TEST);
       
-       List<CorpusEntry> entries = extractor.extractInMemory(filePath);
+       List<SignalSegment> entries = extractor.extractInMemory(filePath);
        //then
        Assert.assertEquals("entries: " , 2, entries.size());
     }

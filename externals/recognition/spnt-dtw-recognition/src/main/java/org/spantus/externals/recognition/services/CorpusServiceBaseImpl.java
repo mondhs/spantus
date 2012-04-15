@@ -16,11 +16,14 @@ import javax.sound.sampled.AudioInputStream;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
-import org.spantus.externals.recognition.bean.CorpusEntry;
-import org.spantus.externals.recognition.bean.FeatureData;
-import org.spantus.externals.recognition.bean.RecognitionResult;
-import org.spantus.externals.recognition.bean.RecognitionResultDetails;
-import org.spantus.externals.recognition.corpus.CorpusRepository;
+import org.spantus.core.beans.FrameValuesHolder;
+import org.spantus.core.beans.FrameVectorValuesHolder;
+import org.spantus.core.beans.IValueHolder;
+import org.spantus.core.beans.RecognitionResult;
+import org.spantus.core.beans.RecognitionResultDetails;
+import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.service.CorpusRepository;
+import org.spantus.core.service.CorpusService;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
 import org.spantus.math.NumberUtils;
@@ -36,7 +39,7 @@ import org.spantus.math.services.MathServicesFactory;
  */
 public class CorpusServiceBaseImpl implements CorpusService {
 
-	private Logger log = Logger.getLogger(getClass());
+	private final static Logger LOG = Logger.getLogger(CorpusServiceBaseImpl.class);
 
 	private DtwService dtwService;
 
@@ -53,10 +56,13 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		return match;
 	}
 
-	public RecognitionResult matchByCorpusEntry(CorpusEntry corpusEntry) {
+	public RecognitionResult matchByCorpusEntry(SignalSegment corpusEntry) {
 		Map<String, IValues> target = new HashMap<String, IValues>();
-		for (FeatureData featureData : corpusEntry.getFeatureMap().values()) {
-			target.put(featureData.getName(), featureData.getValues());
+		for (Entry<String, FrameVectorValuesHolder> featureData : corpusEntry.getFeatureFrameVectorValuesMap().entrySet()) {
+			target.put(featureData.getKey(), featureData.getValue().getValues());
+		}
+		for (Entry<String, FrameValuesHolder> featureData : corpusEntry.getFeatureFrameValuesMap().entrySet()) {
+			target.put(featureData.getKey(), featureData.getValue().getValues());
 		}
 		RecognitionResult match = findBestMatch(target);
 		return match;
@@ -71,7 +77,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	public List<RecognitionResultDetails> findMultipleMatch(
 			Map<String, IValues> target) {
 		Long begin = System.currentTimeMillis();
-		log.debug("[findMultipleMatch]+++ ");
+		LOG.debug("[findMultipleMatch]+++ ");
 		List<RecognitionResultDetails> results = new ArrayList<RecognitionResultDetails>();
 		if (target == null || target.isEmpty()) {
 			return results;
@@ -80,19 +86,19 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		Map<String, Double> maximum = new HashMap<String, Double>();
 
 		// iterate all entires in corpus
-		for (CorpusEntry sample : getCorpus().findAllEntries()) {
-			log.debug("[findMultipleMatch] sample [{0}]: {1} ", sample.getId(),
+		for (SignalSegment sample : getCorpus().findAllEntries()) {
+			LOG.debug("[findMultipleMatch] sample: {0} ", 
 					sample.getName());
 			RecognitionResultDetails result = createRecognitionResultDetail();
 
 			for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
-				if (sample.getFeatureMap().get(targetEntry.getKey()) == null
-						|| sample.getFeatureMap().get(targetEntry.getKey())
+				if (sample.getFeatureFrameVectorValuesMap().get(targetEntry.getKey()) == null
+						|| sample.getFeatureFrameVectorValuesMap().get(targetEntry.getKey())
 								.getValues() == null) {
 
 				}
 				String featureName = targetEntry.getKey();
-				FeatureData sampleFeatureData = sample.getFeatureMap().get(
+				IValueHolder<?> sampleFeatureData = sample.getFeatureFrameVectorValuesMap().get(
 						targetEntry.getKey());
 				if (sampleFeatureData == null) {
 					continue;
@@ -122,7 +128,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 				} else {
 					if (targetDimention  != sampleFeatureData
 							.getValues().getDimention()) {
-						log.error("[findMultipleMatch] Sample size not same "
+						LOG.error("[findMultipleMatch] Sample size not same "
 								+ targetEntry.getKey()
 								+ targetDimention + "!="
 								+ sampleFeatureData.getValues().getDimention());
@@ -143,7 +149,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 			results.add(result);
 		}
 		results = postProcessResult(results, minimum, maximum);
-		log.debug("[findMultipleMatch]--- in {0} ms ",
+		LOG.debug("[findMultipleMatch]--- in {0} ms ",
 				System.currentTimeMillis() - begin);
 		return results;
 	}
@@ -234,7 +240,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		});
 		int maxElementSize = NumberUtils.min(20, results.size());
 
-		log.debug("[postProcessResult] results after sort: {0}", results);
+		LOG.debug("[postProcessResult] results after sort: {0}", results);
 		// log.debug("[postProcessResult]---");
 		return results.subList(0, maxElementSize);
 	}
@@ -248,10 +254,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param audioStream
 	 * @return
 	 */
-	public CorpusEntry learn(CorpusEntry corpusEntry,
+	public SignalSegment learn(SignalSegment corpusEntry,
 			AudioInputStream audioStream) {
 		// CorpusEntry corpusEntry = create(label, featureDataMap);
-		CorpusEntry learnedCorpusEntry = getCorpus().update(corpusEntry,
+		SignalSegment learnedCorpusEntry = getCorpus().update(corpusEntry,
 				audioStream);
 		return learnedCorpusEntry;
 	}
@@ -262,7 +268,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param featureDataMap
 	 * @return
 	 */
-	public CorpusEntry create(String label, Map<String, IValues> featureDataMap) {
+	public SignalSegment create(String label, Map<String, IValues> featureDataMap) {
 		return getCorpus().create(label, featureDataMap);
 	}
 
@@ -273,8 +279,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param featureDataMap
 	 * @return
 	 */
-	public CorpusEntry learn(String label, Map<String, IValues> featureDataMap) {
-		CorpusEntry corpusEntry = create(label, featureDataMap);
+	public SignalSegment learn(String label, Map<String, IValues> featureDataMap) {
+		SignalSegment corpusEntry = create(label, featureDataMap);
 		return getCorpus().save(corpusEntry);
 	}
 	/**
@@ -283,10 +289,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param corpusEntry
 	 */
 	public Map<String, RecognitionResult> bestMatchesForFeatures(
-			CorpusEntry corpusEntry) {
+			SignalSegment corpusEntry) {
 		Map<String, IValues> target = new HashMap<String, IValues>();
-		for (FeatureData featureData : corpusEntry.getFeatureMap().values()) {
-			target.put(featureData.getName(), featureData.getValues());
+		for (Entry<String, FrameVectorValuesHolder> featureData : corpusEntry.getFeatureFrameVectorValuesMap().entrySet()) {
+			target.put(featureData.getKey(), featureData.getValue().getValues());
 		}
 		return bestMatchesForFeatures(target);
 	}
@@ -296,7 +302,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	public Map<String, RecognitionResult> bestMatchesForFeatures(
 			Map<String, IValues> target) {
 		Map<String, RecognitionResult> match = new HashMap<String, RecognitionResult>();
-		for (CorpusEntry corpusSample : getCorpus().findAllEntries()) {
+		for (SignalSegment corpusSample : getCorpus().findAllEntries()) {
 			long start = System.currentTimeMillis();
 			for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
 				String featureName = targetEntry.getKey();
@@ -313,7 +319,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 						match.put(featureName, result1);
 					}
 				}
-				log.debug(
+				LOG.debug(
 						"[bestMatchesForFeatures] iteration for [{1}] in {2} ms. score: {3} ",
 						 corpusSample.getName(),
 						(System.currentTimeMillis() - start), match);
@@ -333,7 +339,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		Map<String, Double> minimum = new HashMap<String, Double>();
 		Map<String, Double> maximum = new HashMap<String, Double>();
 		int i = 1;
-		for (CorpusEntry corpusSample : getCorpus().findAllEntries()) {
+		for (SignalSegment corpusSample : getCorpus().findAllEntries()) {
 			long start = System.currentTimeMillis();
 			RecognitionResult result = new RecognitionResult();
 			result.setScores(new HashMap<String, Double>());
@@ -343,7 +349,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 				RecognitionResult result1 = compare(featureName,
 						targetEntry.getValue(), corpusSample);
 				if (result1 == null) {
-					log.debug("[findBestMatch]result not found");
+					LOG.debug("[findBestMatch]result not found");
 					continue;
 				}
 				result.getScores().put(featureName, result1.getDistance());
@@ -351,7 +357,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 						maximum);
 			}
 			results.add(result);
-			log.debug(
+			LOG.debug(
 					"[findBestMatch] {0}. iteration for [{1}] in {2} ms. score: {3} ",
 					i++, corpusSample.getName(),
 					(System.currentTimeMillis() - start), result.getScores()
@@ -361,7 +367,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 			}
 		}
 		results = postProcessResult(results, minimum, maximum);
-		log.info(MessageFormat.format("[findBestMatch] sample: {0}", results));
+		LOG.info(MessageFormat.format("[findBestMatch] sample: {0}", results));
 		if (results.isEmpty()) {
 			return null;
 		}
@@ -375,8 +381,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @return
 	 */
 	protected RecognitionResult compare(String featureName,
-			IValues targetValues, CorpusEntry sample) {
-		FeatureData fd = sample.getFeatureMap().get(featureName);
+			IValues targetValues, SignalSegment sample) {
+		IValueHolder<?> fd = sample.findValueHolder(featureName);
 		if (fd == null) {
 			return null;
 		}

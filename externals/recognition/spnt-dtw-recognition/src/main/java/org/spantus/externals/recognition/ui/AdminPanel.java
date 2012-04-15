@@ -30,13 +30,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
-import org.spantus.externals.recognition.bean.CorpusEntry;
 
+import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.service.CorpusRepository;
+import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.externals.recognition.bean.CorpusFileEntry;
-import org.spantus.externals.recognition.corpus.CorpusRepository;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
-import org.spantus.core.wav.AudioManagerFactory;
 
 public class AdminPanel extends JPanel {
 	/**
@@ -124,7 +124,7 @@ public class AdminPanel extends JPanel {
 	public void play(){
 		if(getTable().getSelectedRow()>=0){
                         
-			CorpusEntry entry = model.getCorpusEntry(getTable().getSelectedRow());
+			SignalSegment entry = model.getCorpusEntry(getTable().getSelectedRow());
                         if(entry instanceof CorpusFileEntry){
                             CorpusFileEntry fileEntry = (CorpusFileEntry)entry;
                             if(fileEntry != null && fileEntry.getWavFile().exists()){

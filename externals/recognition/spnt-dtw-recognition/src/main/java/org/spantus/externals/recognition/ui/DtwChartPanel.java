@@ -27,7 +27,8 @@ import java.awt.Point;
 import java.util.List;
 import java.util.Map.Entry;
 import javax.swing.JPanel;
-import org.spantus.externals.recognition.bean.RecognitionResultDetails;
+
+import org.spantus.core.beans.RecognitionResultDetails;
 
 /**
  *

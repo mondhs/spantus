@@ -3,12 +3,12 @@ package org.spantus.work.ui.services.impl;
 import java.util.Map;
 
 import org.spantus.core.IValues;
+import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
-import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;

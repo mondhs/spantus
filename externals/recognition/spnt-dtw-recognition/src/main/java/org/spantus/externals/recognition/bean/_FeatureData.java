@@ -2,7 +2,7 @@ package org.spantus.externals.recognition.bean;
 
 import org.spantus.core.IValues;
 
-public class FeatureData {
+public class _FeatureData {
 	String name;
 	IValues values;
 

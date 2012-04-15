@@ -2,7 +2,9 @@ package org.spantus.externals.recognition.bean;
 
 import java.io.File;
 
-public class CorpusFileEntry extends CorpusEntry{
+import org.spantus.core.beans.SignalSegment;
+
+public class CorpusFileEntry extends SignalSegment{
 	File entryFile;
 	File wavFile;
 
@@ -21,5 +23,7 @@ public class CorpusFileEntry extends CorpusEntry{
 	public void setWavFile(File wavFile) {
 		this.wavFile = wavFile;
 	}
+
+
 
 }

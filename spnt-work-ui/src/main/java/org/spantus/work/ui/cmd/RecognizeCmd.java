@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.spantus.core.IValues;
+import org.spantus.core.beans.RecognitionResultDetails;
 import org.spantus.core.marker.Marker;
-import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
 import org.spantus.logger.Logger;
 import org.spantus.work.services.WorkExtractorReaderService;

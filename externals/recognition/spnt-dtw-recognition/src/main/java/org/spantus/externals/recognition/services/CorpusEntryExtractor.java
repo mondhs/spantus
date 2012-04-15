@@ -10,12 +10,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+import org.spantus.core.beans.RecognitionResult;
+import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.externals.recognition.bean.CorpusEntry;
-import org.spantus.externals.recognition.bean.RecognitionResult;
 
 /**
  *
@@ -28,7 +28,7 @@ public interface CorpusEntryExtractor {
      * @param filePath
      * @return
      */
-    public List<CorpusEntry> extractInMemory(File filePath);
+    public List<SignalSegment> extractInMemory(File filePath);
     /**
      * Extract sements and saves in dir. This will not hold markers in memory
      * @param filePath
@@ -42,7 +42,7 @@ public interface CorpusEntryExtractor {
      * @param reader
      * @return
      */
-    public CorpusEntry learn(URL fileUrl, Marker marker, IExtractorInputReader reader);
+    public SignalSegment learn(URL fileUrl, Marker marker, IExtractorInputReader reader);
     /**
      * 
      * @param marker

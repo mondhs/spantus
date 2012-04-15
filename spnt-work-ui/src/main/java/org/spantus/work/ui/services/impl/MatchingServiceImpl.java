@@ -13,9 +13,9 @@ import java.util.Map;
 import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.IValues;
-import org.spantus.externals.recognition.bean.CorpusEntry;
-import org.spantus.externals.recognition.bean.RecognitionResult;
-import org.spantus.externals.recognition.bean.RecognitionResultDetails;
+import org.spantus.core.beans.RecognitionResult;
+import org.spantus.core.beans.RecognitionResultDetails;
+import org.spantus.core.beans.SignalSegment;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -102,7 +102,7 @@ public class MatchingServiceImpl {
     }
 
     public void learn(String label, Map<String, IValues> fvv, AudioInputStream ais) {
-        CorpusEntry corpusEntry = getCorpusService().create(label, fvv);
+        SignalSegment corpusEntry = getCorpusService().create(label, fvv);
         getCorpusService().learn(corpusEntry, ais);
     }
 

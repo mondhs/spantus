@@ -1,15 +1,17 @@
-package org.spantus.externals.recognition.services;
+package org.spantus.core.service;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.sound.sampled.AudioInputStream;
+
 import org.spantus.core.IValues;
-import org.spantus.externals.recognition.bean.CorpusEntry;
-import org.spantus.externals.recognition.bean.RecognitionResult;
-import org.spantus.externals.recognition.bean.RecognitionResultDetails;
+import org.spantus.core.beans.RecognitionResult;
+import org.spantus.core.beans.RecognitionResultDetails;
+import org.spantus.core.beans.SignalSegment;
 
 public interface CorpusService {
-	public RecognitionResult matchByCorpusEntry(CorpusEntry corpusEntry);
+	public RecognitionResult matchByCorpusEntry(SignalSegment corpusEntry);
 
 	public RecognitionResult match(Map<String, IValues> featureDataMap);
 	/**
@@ -19,6 +21,7 @@ public interface CorpusService {
 	 */
 	public List<RecognitionResultDetails> findMultipleMatch(
 			Map<String, IValues> featureDataMap);
+	
 	/**
 	 * Learn
 	 * 
@@ -26,7 +29,7 @@ public interface CorpusService {
 	 * @param featureDataMap
 	 * @return
 	 */
-	public CorpusEntry learn(String label, Map<String, IValues> featureDataMap);
+	public SignalSegment learn(String label, Map<String, IValues> featureDataMap);
 
 	/**
 	 * Best matches for each feature
@@ -44,7 +47,7 @@ public interface CorpusService {
 	 * @return
 	 */
 	public Map<String, RecognitionResult> bestMatchesForFeatures(
-			CorpusEntry corpusEntry);
+			SignalSegment signalSegment);
 
 /**
          * Same as learn {@link #learn(java.lang.String, java.util.Map)] only with
@@ -54,7 +57,7 @@ public interface CorpusService {
          * @param audioStream
          * @return
          */
-	public CorpusEntry learn(CorpusEntry corpusEntry,
+	public SignalSegment learn(SignalSegment corpusEntry,
 			AudioInputStream audioStream);
 
 	/**
@@ -64,6 +67,6 @@ public interface CorpusService {
 	 * @param featureDataMap
 	 * @return
 	 */
-	public CorpusEntry create(String label, Map<String, IValues> featureDataMap);
+//	public SignalSegment create(String label, Map<String, IValues> featureDataMap);
 
 }

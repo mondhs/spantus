@@ -1,18 +1,19 @@
-package org.spantus.externals.recognition.bean;
+package org.spantus.core.beans;
 
 import java.util.Map;
 
 
+
 public class RecognitionResult {
-    private CorpusEntry info;
+    private SignalSegment info;
     private Double distance;
     private Map<String, Double> scores;
 
-    public CorpusEntry getInfo() {
+    public SignalSegment getInfo() {
         return info;
     }
 
-    public void setInfo(CorpusEntry info) {
+    public void setInfo(SignalSegment info) {
         this.info = info;
     }
 
@@ -36,7 +37,7 @@ public class RecognitionResult {
 
     @Override
     public String toString() {
-        return getInfo().getName() + ":" + getInfo().getId() + "[" + getDistance() + "]";
+        return getInfo().getName() +  "[" + getDistance() + "]";
     }
 
 }

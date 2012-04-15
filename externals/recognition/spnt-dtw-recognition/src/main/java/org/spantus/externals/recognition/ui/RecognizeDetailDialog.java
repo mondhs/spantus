@@ -47,9 +47,9 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
 import org.spantus.core.beans.I18n;
+import org.spantus.core.beans.RecognitionResultDetails;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.wav.AudioManagerFactory;
-import org.spantus.externals.recognition.bean.RecognitionResultDetails;
 import org.spantus.logger.Logger;
 import org.spantus.ui.SwingUtils;
 import org.spantus.work.ui.ImageResourcesEnum;

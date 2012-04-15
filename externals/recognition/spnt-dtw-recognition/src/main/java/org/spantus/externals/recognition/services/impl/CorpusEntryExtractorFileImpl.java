@@ -16,20 +16,20 @@ import java.util.Map;
 import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.IValues;
+import org.spantus.core.beans.RecognitionResult;
+import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
+import org.spantus.core.service.CorpusService;
 import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.wav.AudioManager;
 import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.exception.ProcessingException;
-import org.spantus.externals.recognition.bean.CorpusEntry;
-import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.services.CorpusEntryExtractor;
-import org.spantus.externals.recognition.services.CorpusService;
 import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -70,9 +70,9 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	 * @param filePath
 	 * @return
 	 */
-	public List<CorpusEntry> extractInMemory(File filePath) {
+	public List<SignalSegment> extractInMemory(File filePath) {
 		Assert.isTrue(filePath.exists(), "file not exists" + filePath);
-		List<CorpusEntry> result = new ArrayList<CorpusEntry>();
+		List<SignalSegment> result = new ArrayList<SignalSegment>();
 		// find markers
 		IExtractorInputReader reader = createReaderWithClassifier(filePath);
 
@@ -82,7 +82,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 		// process markers
 		Assert.isTrue(segments != null);
 		for (Marker marker : segments.getMarkers()) {
-			CorpusEntry corpusEntry = create(marker, reader);
+			SignalSegment corpusEntry = create(marker, reader);
 			result.add(corpusEntry);
 		}
 
@@ -253,12 +253,11 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 		}
 	}
 
-	protected CorpusEntry create(Marker marker, IExtractorInputReader reader) {
+	protected SignalSegment create(Marker marker, IExtractorInputReader reader) {
 		Map<String, IValues> fvv = getReaderService()
 				.findAllVectorValuesForMarker(reader, marker);
-		CorpusEntry corpusEntry = getCorpusService().create(marker.getLabel(),
+		return  RecognitionServiceFactory.createSignalSegment(marker.getLabel(),
 				fvv);
-		return corpusEntry;
 	}
 
 	/**
@@ -267,13 +266,13 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	 * @param marker
 	 * @return
 	 */
-	protected CorpusEntry create(AudioInputStream ais, Marker marker) {
+	protected SignalSegment create(AudioInputStream ais, Marker marker) {
 		IExtractorInputReader localReader = getReaderService().createReader(
 				getExtractors(), ais);
 		// CorpusEntry corpusEntry = create(marker, reader);
 		Map<String, IValues> fvv = getReaderService()
 				.findAllVectorValuesForMarker(localReader);
-		CorpusEntry corpusEntry = getCorpusService().create(marker.getLabel(),
+		SignalSegment corpusEntry = RecognitionServiceFactory.createSignalSegment(marker.getLabel(),
 				fvv);
 		return corpusEntry;
 	}
@@ -285,9 +284,9 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	 * @param reader
 	 * @return
 	 */
-	public CorpusEntry learn(URL fileUrl, Marker marker,
+	public SignalSegment learn(URL fileUrl, Marker marker,
 			IExtractorInputReader reader) {
-		CorpusEntry corpusEntry = null;
+		SignalSegment corpusEntry = null;
 
 		Long signalLength = (long) (1000L * AudioManagerFactory
 				.createAudioManager().findLength(fileUrl));
@@ -318,7 +317,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	 * @return
 	 */
 	public RecognitionResult match(Marker marker, IExtractorInputReader reader) {
-		CorpusEntry corpusEntry = create(marker, reader);
+		SignalSegment corpusEntry = create(marker, reader);
 		RecognitionResult result = getCorpusService().matchByCorpusEntry(
 				corpusEntry);
 		return result;
@@ -332,7 +331,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	 */
 	public Map<String, RecognitionResult> bestMatchesForFeatures(URL fileUrl,
 			Marker marker, IExtractorInputReader reader) {
-		CorpusEntry corpusEntry = null;
+		SignalSegment corpusEntry = null;
 		corpusEntry = create(marker, reader);
 //		try {
 //			AudioInputStream ais = AudioManagerFactory.createAudioManager()

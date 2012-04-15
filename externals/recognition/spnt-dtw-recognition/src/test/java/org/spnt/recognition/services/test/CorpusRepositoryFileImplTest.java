@@ -17,10 +17,10 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
+import org.spantus.core.beans.FrameValuesHolder;
+import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.wav.AudioManagerFactory;
-import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.bean.CorpusFileEntry;
-import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 
 /**
@@ -38,26 +38,26 @@ public class CorpusRepositoryFileImplTest {
     @Test
     public void testCRUDCorpusEntry(){
         //given 
-        CorpusEntry corpusEntry = new CorpusEntry();
+    	SignalSegment corpusEntry = new SignalSegment();
         corpusEntry.setName("Name1");
-        FeatureData fd = new FeatureData();
-        fd.setName("Feature1");
+        FrameValuesHolder fd = new FrameValuesHolder();
+//        fd.setName("Feature1");
         fd.setValues(new FrameValues(new Double[]{1D, 2D, 3D}));
-        corpusEntry.getFeatureMap().put(fd.getName(), fd);
+        corpusEntry.getFeatureFrameValuesMap().put("Feature1", fd);
         int initialSize = corpusRepository.findAllEntries().size();
         
         //when
-        CorpusEntry savedCorpusEntry =corpusRepository.save(corpusEntry);
-        Long savedId =  savedCorpusEntry.getId();
+        SignalSegment savedCorpusEntry =corpusRepository.save(corpusEntry);
+        String savedId =  savedCorpusEntry.getId();
         int savedSize = corpusRepository.findAllEntries().size();
 
-        CorpusEntry updatedCorpusEntry =corpusRepository.update(savedCorpusEntry);
-        Long updatedId =  updatedCorpusEntry.getId();
+        SignalSegment updatedCorpusEntry =corpusRepository.update(savedCorpusEntry);
+        String updatedId =  updatedCorpusEntry.getId();
         int updatedSize = corpusRepository.findAllEntries().size();
 
-        CorpusEntry deltedCorpusEntry =corpusRepository.delete(updatedCorpusEntry);
+        SignalSegment deltedCorpusEntry =corpusRepository.delete(updatedCorpusEntry.getId());
         int deletedSize = corpusRepository.findAllEntries().size();
-        Long deletedId = deltedCorpusEntry.getId();
+        String deletedId = deltedCorpusEntry.getId();
 
 
         //then
@@ -84,23 +84,22 @@ public class CorpusRepositoryFileImplTest {
         AudioInputStream ais = AudioManagerFactory.createAudioManager().findInputStream(
                 wavUrl,
                 null, null);
-        CorpusEntry corpusEntry = new CorpusEntry();
+        SignalSegment corpusEntry = new SignalSegment();
         corpusEntry.setName("Name1");
-        FeatureData fd = new FeatureData();
-        fd.setName("Feature1");
+        FrameValuesHolder fd = new FrameValuesHolder();
         FrameValues fv = new FrameValues(new Double[]{1D, 2D, 3D});
         fv.setSampleRate(1.0);
         fd.setValues(fv);
-        corpusEntry.getFeatureMap().put(fd.getName(), fd);
+        corpusEntry.getFeatureFrameValuesMap().put("Feature1", fd);
         
         //when
-        CorpusEntry savedCorpusEntry =corpusRepository.save(corpusEntry);
+        SignalSegment savedCorpusEntry =corpusRepository.save(corpusEntry);
         CorpusFileEntry updated = (CorpusFileEntry)corpusRepository.update(savedCorpusEntry, ais);
         boolean updatedWavExist = updated.getWavFile().exists();
         String wavFilePath =updated.getWavFile().getAbsolutePath();
-        CorpusFileEntry deleted = (CorpusFileEntry)corpusRepository.delete(updated);
+        CorpusFileEntry deleted = (CorpusFileEntry)corpusRepository.delete(updated.getId());
         //then
-        String fileName = MessageFormat.format("{0}/{1}-{2,number,#}.wav", 
+        String fileName = MessageFormat.format("{0}/{1}-{2}.wav", 
                 corpusRepository.getRepoDir(),
                 updated.getName(), updated.getId());
        

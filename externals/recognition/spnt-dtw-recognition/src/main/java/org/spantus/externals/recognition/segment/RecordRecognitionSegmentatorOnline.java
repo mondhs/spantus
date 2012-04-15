@@ -8,13 +8,14 @@ import java.util.Map;
 import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.IValues;
+import org.spantus.core.beans.RecognitionResult;
+import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.Marker;
-import org.spantus.externals.recognition.bean.CorpusEntry;
+import org.spantus.core.service.CorpusService;
 import org.spantus.externals.recognition.bean.CorpusFileEntry;
-import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.corpus.CorpusMatchListener;
-import org.spantus.externals.recognition.services.CorpusService;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
+import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.logger.Logger;
 import org.spantus.segment.io.RecordSegmentatorOnline;
 import org.spantus.work.services.WorkExtractorReaderService;
@@ -55,7 +56,7 @@ public class RecordRecognitionSegmentatorOnline extends RecordSegmentatorOnline{
             URL url = null;
             if (getLearnMode()) {
                 
-                CorpusEntry corpusEntry = getCorpusService().create(marker.getLabel(), featureData);
+                SignalSegment corpusEntry = RecognitionServiceFactory.createSignalSegment(marker.getLabel(), featureData);
                 getCorpusService().learn(corpusEntry, ais);
                 if (corpusEntry instanceof CorpusFileEntry) {
                     try {

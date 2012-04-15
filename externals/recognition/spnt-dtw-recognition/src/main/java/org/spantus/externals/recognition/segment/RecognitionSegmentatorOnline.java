@@ -3,10 +3,10 @@ package org.spantus.externals.recognition.segment;
 import java.util.Map;
 
 import org.spantus.core.IValues;
+import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
-import org.spantus.externals.recognition.bean.RecognitionResult;
-import org.spantus.externals.recognition.services.CorpusService;
+import org.spantus.core.service.CorpusService;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
