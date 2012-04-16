@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.threshold.IClassifier;
@@ -38,7 +37,7 @@ public abstract class AbstractSegmentatorService implements ISegmentatorService 
 	 * (non-Javadoc)
 	 * @see org.spantus.segment.ISegmentatorService#extractSegments(java.util.Set)
 	 */
-	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers) {
+	public MarkerSetHolder extractSegments(Collection<IClassifier> classifiers) {
 		return extractSegments(classifiers, null);
 	}
 	/**

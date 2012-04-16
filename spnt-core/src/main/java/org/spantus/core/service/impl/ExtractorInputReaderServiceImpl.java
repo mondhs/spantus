@@ -1,7 +1,9 @@
 package org.spantus.core.service.impl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
@@ -11,6 +13,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.service.ExtractorInputReaderService;
+import org.spantus.core.threshold.IClassifier;
 
 public class ExtractorInputReaderServiceImpl implements
 		ExtractorInputReaderService {
@@ -18,7 +21,7 @@ public class ExtractorInputReaderServiceImpl implements
 	public FrameVectorValues findFeatureVectorValuesForMarker(
 			IExtractorInputReader reader, Marker marker, String featureName) {
 		for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
-			// extractors can have prefixes, jus check if ends with
+			// extractors can have prefixes, just check if ends with
 			if (!extractor.getName().endsWith(featureName)) {
 				continue;
 			}
@@ -33,6 +36,20 @@ public class ExtractorInputReaderServiceImpl implements
 			return fvv;
 		}
 		return null;
+	}
+	/**
+	 * 
+	 * @param reader
+	 * @return
+	 */
+	public Set<IClassifier> extractClassifiers(IExtractorInputReader reader) {
+		Set<IClassifier> classifiers = new HashSet<IClassifier>();
+		for (IExtractor extractor : reader.getExtractorRegister()) {
+			if (extractor instanceof IClassifier) {
+				classifiers.add((IClassifier) extractor);
+			}
+		}
+		return classifiers;
 	}
 
 	public Map<String, IValues> findAllVectorValuesForMarker(
@@ -82,7 +99,7 @@ public class ExtractorInputReaderServiceImpl implements
 					+ (marker.getLength().doubleValue() * values
 							.getSampleRate()) / 1000;
 			toIndex = endIndex < toIndex ? endIndex : toIndex;
-			if(fromIndex>toIndex){
+			if (fromIndex > toIndex) {
 				throw new IllegalArgumentException("Nonsence");
 			}
 			FrameValues fv = values.subList(fromIndex.intValue(),

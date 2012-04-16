@@ -15,27 +15,27 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
-*/
+ */
 package org.spantus.core.io;
 
-import javax.sound.sampled.AudioFormat;
 /**
  * 
  * @author Mindaugas Greibus
  * 
- * Created Feb 22, 2010
- *
+ *         Created Feb 22, 2010
+ * 
  */
 public abstract class AudioUtil {
-	public static Double read8(Byte b1, AudioFormat format){
+	public static Double read8(Byte b1) {
 		return b1.doubleValue();
 	}
-	
-//	public static Float read16(int b1, int b2, AudioFormat format){
-//		return read16((byte)b1, (byte)b2, format);
-//	}
-	
-	public static Double read16(byte b1, byte b2, boolean signed, boolean bigEndian) {
+
+	// public static Float read16(int b1, int b2, AudioFormat format){
+	// return read16((byte)b1, (byte)b2, format);
+	// }
+
+	public static Double read16(byte b1, byte b2, boolean signed,
+			boolean bigEndian) {
 		int value = 0;
 		// deal with endianness
 		int hiByte = (bigEndian ? b1 : b2);
@@ -47,28 +47,30 @@ public abstract class AudioUtil {
 		} else {
 			value = (hiByte << 8) | loByte;
 		}
-		return (double) value ;// Short.MAX_VALUE;
+		return (double) value;// Short.MAX_VALUE;
 	}
-	
-	public static Byte[] get16(Double f1, AudioFormat format) {
-//		Byte[] bs = new Byte[2];
-//		boolean signed = (format.getEncoding() == AudioFormat.Encoding.PCM_SIGNED);
-		boolean bigEndian = (format.isBigEndian());
+
+	public static Byte[] get16(Double f1, 
+			boolean bigEndian) {
+		// Byte[] bs = new Byte[2];
+		// boolean signed = (format.getEncoding() ==
+		// AudioFormat.Encoding.PCM_SIGNED);
 		int value = f1.intValue();
-		byte b1 =0, b2=0;
+		byte b1 = 0, b2 = 0;
 		// deal with endianness
-//		if (signed) {
-			b1 = (byte) (value >> 8);
-			b2 = (byte) (value - (b2 << 8));
-//		} else {
-//			b2 = (byte) (value >> 8);
-//		}
+		// if (signed) {
+		b1 = (byte) (value >> 8);
+		b2 = (byte) (value - (b2 << 8));
+		// } else {
+		// b2 = (byte) (value >> 8);
+		// }
 		byte hiByte = (bigEndian ? b1 : b2);
 		byte loByte = (bigEndian ? b2 : b1);
 
-		return new Byte[]{hiByte, loByte} ;// Short.MAX_VALUE;
+		return new Byte[] { hiByte, loByte };// Short.MAX_VALUE;
 	}
-	public static Byte[] get8(Double f1, AudioFormat format) {
-		return new Byte[]{f1.byteValue()};
+
+	public static Byte[] get8(Double f1) {
+		return new Byte[] { f1.byteValue() };
 	}
 }

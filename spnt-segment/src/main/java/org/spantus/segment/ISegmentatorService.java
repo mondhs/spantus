@@ -48,5 +48,5 @@ public interface ISegmentatorService {
 	 * @param classifiers
 	 * @return
 	 */
-	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers);
+	public MarkerSetHolder extractSegments(Collection<IClassifier> classifiers);
 }

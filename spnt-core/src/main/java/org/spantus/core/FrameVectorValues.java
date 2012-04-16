@@ -40,7 +40,7 @@ public class FrameVectorValues extends LinkedList<List<Double>> implements IValu
 	private static final long serialVersionUID = 1L;
 	public static final int DEFAULT_FRAME_BUFFER_SIZE = 65536;
 	int frameBufferSize;
-	Double sampleRate = 1D;
+	Double sampleRate = null;
 
 	public FrameVectorValues() {
 		setFrameBufferSize(DEFAULT_FRAME_BUFFER_SIZE);

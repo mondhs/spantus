@@ -6,6 +6,9 @@ public class FrameVectorValuesHolder implements IValueHolder<FrameVectorValues>{
 
 	FrameVectorValues values;
 	
+	/**
+	 * Sample rate cannot be null
+	 */
 	Double sampleRate;
 	
 	public FrameVectorValuesHolder() {
@@ -21,7 +24,9 @@ public class FrameVectorValuesHolder implements IValueHolder<FrameVectorValues>{
 	}
 
 	public void setSampleRate(Double sampleRate) {
-		getValues().setSampleRate(sampleRate);
+		if(getValues() != null && sampleRate!=null ){
+			getValues().setSampleRate(sampleRate);
+		}
 		this.sampleRate = sampleRate;
 	}
 
@@ -34,5 +39,8 @@ public class FrameVectorValuesHolder implements IValueHolder<FrameVectorValues>{
 	public void setValues(FrameVectorValues values) {
 		this.sampleRate = values.getSampleRate();
 		this.values = values;
+		if(values != null && values.getSampleRate() != null){
+			this.sampleRate = values.getSampleRate();
+		}
 	}
 }

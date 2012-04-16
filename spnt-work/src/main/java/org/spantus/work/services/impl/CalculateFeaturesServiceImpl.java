@@ -96,13 +96,13 @@ public class CalculateFeaturesServiceImpl{
 			Byte[] bs = null;
 			switch (sizeInBits) {
 			   case 8:
-				   bs = AudioUtil.get8(float1, fileFormat.getFormat());
+				   bs = AudioUtil.get8(float1);
 				   for (Byte byte1 : bs) {
 					   mergedBuffer.add(byte1);
 				   }
 				   break;
 			   case 16:
-				   bs = AudioUtil.get16(float1, fileFormat.getFormat());
+				   bs = AudioUtil.get16(float1, fileFormat.getFormat().isBigEndian());
 				   for (Byte byte1 : bs) {
 					   mergedBuffer.add(byte1);
 				   }

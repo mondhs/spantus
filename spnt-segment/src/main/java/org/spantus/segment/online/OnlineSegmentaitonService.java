@@ -18,7 +18,7 @@
 */
 package org.spantus.segment.online;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
@@ -44,7 +44,7 @@ public class OnlineSegmentaitonService extends BasicSegmentatorServiceImpl {
 	/**
 	 * 
 	 */
-	public MarkerSetHolder extractSegments(Set<IClassifier> classifiers,
+	public MarkerSetHolder extractSegments(Collection<IClassifier> classifiers,
 			SegmentatorParam param) {
 
 		DecisionSegmentatorOnline multipleSegmentator = new DecisionSegmentatorOnline();

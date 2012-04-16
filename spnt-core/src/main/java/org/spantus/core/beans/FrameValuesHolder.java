@@ -21,7 +21,9 @@ public class FrameValuesHolder implements IValueHolder<FrameValues>{
 	}
 
 	public void setSampleRate(Double sampleRate) {
-		getValues().setSampleRate(sampleRate);
+		if(getValues() != null && sampleRate!=null ){
+			getValues().setSampleRate(sampleRate);
+		}
 		this.sampleRate = sampleRate;
 	}
 
@@ -34,5 +36,8 @@ public class FrameValuesHolder implements IValueHolder<FrameValues>{
 	public void setValues(FrameValues values) {
 		this.sampleRate = values.getSampleRate();
 		this.values = values;
+		if(values != null && values.getSampleRate() != null){
+			this.sampleRate = values.getSampleRate();
+		}
 	}
 }

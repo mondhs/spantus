@@ -1,10 +1,12 @@
 package org.spantus.core.service;
 
 import java.util.Map;
+import java.util.Set;
 
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
+import org.spantus.core.threshold.IClassifier;
 
 /**
  * 
@@ -22,5 +24,7 @@ public interface ExtractorInputReaderService {
 
 	public Map<String, IValues> findAllVectorValuesForMarker(
 			IExtractorInputReader reader);
+	
+	public Set<IClassifier> extractClassifiers(IExtractorInputReader reader);
 
 }
