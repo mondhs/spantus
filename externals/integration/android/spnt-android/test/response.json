@@ -1,0 +1,121 @@
+{
+  "recognitionResultDetailsList": [
+    {
+      "info": {
+        "marker": {
+          "start": 756,
+          "length": 387,
+          "label": "vienas",
+          "extractionData": {
+            "startSampleNum": null,
+            "lengthSampleNum": null
+          },
+          "end": 1143
+        },
+        "featureFrameValuesMap": null,
+        "featureFrameVectorValuesMap": null,
+        "name": null,
+        "id": null
+      },
+      "distance": 829916.2524257718,
+      "scores": {
+        "WAVFORM_EXTRACTOR": 828866.8932341891,
+        "PLP_EXTRACTOR": 22.817044735881986,
+        "LPC_EXTRACTOR": 52.41760648771808,
+        "MFCC_EXTRACTOR": 974.1245403590419
+      },
+      "path": null,
+      "targetLegths": {
+        "WAVFORM_EXTRACTOR": 171.0,
+        "PLP_EXTRACTOR": 169.0,
+        "MFCC_EXTRACTOR": 169.0,
+        "LPC_EXTRACTOR": 169.0
+      },
+      "sampleLegths": {
+        "WAVFORM_EXTRACTOR": 344000.0,
+        "PLP_EXTRACTOR": 114000.0,
+        "MFCC_EXTRACTOR": 114000.0,
+        "LPC_EXTRACTOR": 114000.0
+      },
+      "audioFilePath": null
+    },
+    {
+      "info": {
+        "marker": {
+          "start": 673,
+          "length": 247,
+          "label": "trys",
+          "extractionData": {
+            "startSampleNum": null,
+            "lengthSampleNum": null
+          },
+          "end": 920
+        },
+        "featureFrameValuesMap": null,
+        "featureFrameVectorValuesMap": null,
+        "name": null,
+        "id": null
+      },
+      "distance": 864861.3974885832,
+      "scores": {
+        "WAVFORM_EXTRACTOR": 862985.011535764,
+        "PLP_EXTRACTOR": 24.39667143278795,
+        "LPC_EXTRACTOR": 38.659100252545535,
+        "MFCC_EXTRACTOR": 1813.3301811338838
+      },
+      "path": null,
+      "targetLegths": {
+        "WAVFORM_EXTRACTOR": 171.0,
+        "PLP_EXTRACTOR": 169.0,
+        "MFCC_EXTRACTOR": 169.0,
+        "LPC_EXTRACTOR": 169.0
+      },
+      "sampleLegths": {
+        "WAVFORM_EXTRACTOR": 219000.0,
+        "PLP_EXTRACTOR": 73000.0,
+        "MFCC_EXTRACTOR": 73000.0,
+        "LPC_EXTRACTOR": 73000.0
+      },
+      "audioFilePath": null
+    },
+    {
+      "info": {
+        "marker": {
+          "start": 1062,
+          "length": 306,
+          "label": "du",
+          "extractionData": {
+            "startSampleNum": null,
+            "lengthSampleNum": null
+          },
+          "end": 1368
+        },
+        "featureFrameValuesMap": null,
+        "featureFrameVectorValuesMap": null,
+        "name": null,
+        "id": null
+      },
+      "distance": 1554332.5313656142,
+      "scores": {
+        "WAVFORM_EXTRACTOR": 1553902.355318936,
+        "PLP_EXTRACTOR": 41.10626052914317,
+        "LPC_EXTRACTOR": 41.25638112203057,
+        "MFCC_EXTRACTOR": 347.8134050268398
+      },
+      "path": null,
+      "targetLegths": {
+        "WAVFORM_EXTRACTOR": 171.0,
+        "PLP_EXTRACTOR": 169.0,
+        "MFCC_EXTRACTOR": 169.0,
+        "LPC_EXTRACTOR": 169.0
+      },
+      "sampleLegths": {
+        "WAVFORM_EXTRACTOR": 272000.0,
+        "PLP_EXTRACTOR": 91000.0,
+        "MFCC_EXTRACTOR": 91000.0,
+        "LPC_EXTRACTOR": 91000.0
+      },
+      "audioFilePath": null
+    }
+  ]
+}

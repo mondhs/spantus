@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="audio_category"
+        android:title="Audio" >
+        <EditTextPreference
+            android:defaultValue="8000"
+            android:key="sampleRate"
+            android:summary="@string/SAMPLE_RATE_DESC"
+            android:title="@string/SAMPLE_RATE_LBL" >
+        </EditTextPreference>
+        <EditTextPreference
+            android:defaultValue="10"
+             android:key="maxLength"
+            android:summary="@string/MAX_LENGTH_SEC_DEC"
+            android:title="@string/MAX_LENGTH_SEC_LBL" >
+        </EditTextPreference>
+
+        <!--
+        <ListPreference
+            android:defaultValue="8000"
+             android:entries="@array/recordingSampleRateArr"
+            android:entryValues="@array/recordingSampleRateValues"
+            android:key="sampleRate"
+            android:summary="@string/SAMPLE_RATE_DESC"
+            android:title="@string/SAMPLE_RATE" />
+        -->
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="server_category"
+        android:title="Server" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="enableSpeechEnviroment"
+            android:summary="Enable or disable speech dialog"
+            android:title="@string/ENABLE_SPEECH_DIALOG_LBL" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="uploadToServer"
+            android:summary="Enable or disable upload to server"
+            android:title="@string/UPLOAD_TO_SERVER_LBL" />
+
+        <ListPreference
+            android:defaultValue="spantus.cloudfoundry.com"
+            android:dependency="uploadToServer"
+            android:entryValues="@array/spantusServerValues"
+            android:key="spantusServer"
+            android:summary="URL to spantus server"
+            android:title="Spantus server" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

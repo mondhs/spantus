@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.spantus.android"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="10" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <application
+        android:name=".SpantusApplication"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name="org.spantus.android.activity.SpantusMainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.spantus.android.activity.AdminActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="org.spantus.android.activity.CorpusItemEditActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <!--
+             Activity for actually editing a particular audio file.
+             Controls viewing the waveform, setting the start and end
+             positions, playback, and triggering saving of the output
+             file.
+        -->
+        <activity
+            android:name="org.spantus.android.activity.ViewAudioFormActivity"
+            android:configChanges="orientation|keyboardHidden" >
+            <intent-filter android:label="@string/app_name" >
+                <action android:name="android.intent.action.EDIT" />
+
+                <data android:mimeType="audio/*" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.spantus.android.activity.ShowSettingsActivity"
+            android:label="@string/app_name" >
+        </activity>
+    </application>
+
+</manifest>

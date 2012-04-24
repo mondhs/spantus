@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Click Start Recording or Menu to start </string>
+    <string name="app_name">Spantus Record</string>
+    <string name="START_UI">Start Spantus</string>
+    <string name="BACK">Back</string>
+    <string name="ADMIN">Admin</string>
+    <string name="STOP_UI">Stop Spantus</string>
+    <string name="STOP_PLAYING">Stop</string>
+    <string name="PLAY">Play</string>
+    <string name="ENTRY_ID">Entry ID</string>
+    <string name="ENTRY_FILENAME">Entry File Name</string>
+    <string name="DELETE">Delete</string>
+    <string name="EDIT_CORPUS_ENTRY">Edit</string>
+    <string name="ENTRY_DATE">Date</string>
+    <string name="RETRIEVE_CORPUS_INFO">Retrieve Corpus Info</string>
+    <string name="ENTRY_FILE_SIZE">File size</string>
+    <string name="ENTRY_DESCRIPTION">Description</string>
+    <string name="UPDATE_ENTRY">Update</string>
+    <string name="START_MARKER">Start marker</string>
+    <string name="END_MARKER">End marker</string>
+    <string name="END_LABEL">End</string>
+    <string name="START_LABEL">Start</string>
+    <string name="FFWD">FFWD</string>
+    <string name="ZOOM_IN">Zoom In</string>
+    <string name="ZOOM_OUT">Zoom Out</string>
+    <string name="REWIND">Rewind</string>
+    <string name="SAVE_BUTTON">Save</string>
+    <string name="EDIT_INTENT">Edit</string>
+    <string name="PROGRESS_LOADING">Loading…</string>
+    <string name="TIME_SECONDS">Time</string>
+    <string name="VIEW_AUDIO">View</string>
+    <string name="MENU_ABOUT">About</string>
+    <string name="MENU_PREFERENCES">Preferences</string>
+    <string name="UPLOAD_TO_SERVER_LBL">Upload speech samples?</string>
+    <string name="ENABLE_SPEECH_DIALOG_LBL">Enable speech dialog?</string>
+    <string name="SAMPLE_RATE_DESC">Sample Rate(Hz)</string>
+    <string name="SAMPLE_RATE_LBL">Sample Rate</string>
+    <string name="MAX_LENGTH_SEC_LBL">Recording time</string>
+    <string name="MAX_LENGTH_SEC_DEC">Max recorded length(s)</string>
+    <string name="STATE_CLICK_TO_TALK">Push to Talk</string>
+    <string name="STATE_RECORDING_CLICK_TO_STOP">Push to stop recording</string>
+    <string name="STATE_PLAYING">Playing, please, wait</string>
+    <string name="STATE_INITIALISING">Booting</string>
+    <string name="STATE_LISTENING_CLICK_TO_STOP">Listening, push to stop</string>
+    <string name="STATE_HOLD_TO_STOP">Hold to speak</string>
+    <string name="STATE_RECORDING">Recording</string>
+    <string name="STATE_PLAYING_CLICK_TO_STOP">Playing, push to stop</string>
+    <string name="STATE_ERR_AUDIO">Error to setup audio</string>
+    <string name="STATE_ERR_NETWORK">Error to setup network</string>
+    
+
+</resources>

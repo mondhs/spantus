@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="recordingSampleRateValues">
+        <item name="8000">8kHz</item>
+        <item name="44100">44.1kHz</item>
+    </string-array>
+
+    <array name="recordingSampleRateArr">Recording Sample Rate</array>
+
+    <string-array name="spantusServerValues">
+        <item name="spantus.cloudfoundry.com">spantus.cloudfoundry.com</item>
+        <item name="localhost">localhost</item>
+    </string-array>
+
+    <array name="spantusServerArr">Spantus Server</array>
+
+</resources>

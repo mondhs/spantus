@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/logTxt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="25dp"
+        android:text="@string/hello" />
+
+    <ToggleButton
+        android:id="@+id/setupRecordingEnvBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:checked="false"
+        android:onClick="onSetupRecordingEnvBtn"
+        android:textOff="@string/START_UI"
+        android:textOn="@string/STOP_UI" />
+
+    <Button
+        android:id="@+id/button1"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/logTxt"
+        android:layout_alignBottom="@+id/logTxt"
+        android:layout_toLeftOf="@+id/adminBtn"
+        android:onClick="onTest"
+        android:text="Test" />
+
+    <org.spantus.android.visualization.BarGraphView
+        android:id="@+id/barGraphView"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_above="@+id/setupRecordingEnvBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="62dp" />
+
+    <Button
+        android:id="@+id/recordBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/barGraphView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="56dp"
+        android:drawableTop="@drawable/record"
+        android:onClick="onRecordBtn" />
+
+</RelativeLayout>

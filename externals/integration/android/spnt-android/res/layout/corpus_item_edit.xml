@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical" >
+
+    <LinearLayout
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <!--
+        <TextView
+            android:id="@+id/entryIdLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ENTRY_ID" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/entryIdOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:enabled="false"
+            android:focusable="false"
+            android:inputType="text" />
+        -->
+
+        <TextView
+            android:id="@+id/fileNameLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ENTRY_FILENAME" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/fileNameOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:enabled="false"
+            android:focusable="false"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/entryCreationDateLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ENTRY_DATE" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/entryCreationDateOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:enabled="false"
+            android:focusable="false"
+            android:inputType="datetime" />
+
+        <TextView
+            android:id="@+id/entryFileSizeLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ENTRY_FILE_SIZE" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/entryFileSizeOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:enabled="false"
+            android:focusable="false" />
+
+        <TextView
+            android:id="@+id/entryDescriptionLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ENTRY_DESCRIPTION" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/entryDescriptionInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/playBtn"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:onClick="onPlayBtn"
+                android:text="@string/PLAY" />
+
+            <Button
+                android:id="@+id/viewBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onViewBtn"
+                android:text="@string/VIEW_AUDIO" />
+
+            <Button
+                android:id="@+id/deleteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onDeleteBtn"
+                android:text="@string/DELETE" >
+            </Button>
+
+            <Button
+                android:id="@+id/updateBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onUpdateBtn"
+                android:text="@string/UPDATE_ENTRY" />
+
+            <Button
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onBackBtn"
+                android:text="@string/BACK" >
+            </Button>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
