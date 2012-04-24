@@ -21,7 +21,6 @@ package org.spantus.extractor.impl;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.extractor.AbstractExtractorVector;
-import org.spantus.extractor.ExtractorsFactory;
 
 /**
  * 
@@ -68,7 +67,7 @@ public abstract class AbstractSpectralVectorExtractor extends AbstractExtractorV
 
 	public AbstractExtractorVector getAbstractExtractorVector() {
 		if(abstractExtractorVector == null){
-			abstractExtractorVector = ExtractorsFactory.createFftExtractor();
+			abstractExtractorVector = ExtractorUtils.createFftExtractor();
 		}
 		return abstractExtractorVector;
 	}

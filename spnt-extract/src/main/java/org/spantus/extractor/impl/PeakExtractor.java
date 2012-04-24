@@ -45,7 +45,7 @@ public class PeakExtractor extends AbstractExtractor {
 
 	
 	AbstractExtractorVector extractorVector =
-		ExtractorsFactory.createFftExtractor();;
+			ExtractorUtils.createFftExtractor();;
 //		new MFCCExtractor();
 //		new LPCExtractor();
 

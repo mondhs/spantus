@@ -28,7 +28,6 @@ import java.util.List;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.extractor.AbstractExtractorVector;
-import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.math.MatrixUtils;
 
 /**
@@ -252,7 +251,7 @@ public class SpectralGainFactorExtractor extends AbstractExtractorVector {
 	
 	public AbstractExtractorVector getAbstractExtractorVector() {
 		if(abstractExtractorVector == null){
-			abstractExtractorVector = ExtractorsFactory.createFftExtractor();;
+			abstractExtractorVector = ExtractorUtils.createFftExtractor();;
 		}
 		return abstractExtractorVector;
 	}

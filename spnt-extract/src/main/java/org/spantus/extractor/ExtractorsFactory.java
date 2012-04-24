@@ -26,8 +26,6 @@ import javax.sound.sampled.AudioFormat;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.SignalFormat;
-import org.spantus.extractor.impl.FFTExtractor;
-import org.spantus.extractor.impl.FFTExtractorCached;
 import org.spantus.utils.Assert;
 /**
  * 
@@ -84,8 +82,6 @@ public abstract class ExtractorsFactory {
 		return new ExtractorInputReader();
 	}
 
-    public static FFTExtractor createFftExtractor(){
-            return new FFTExtractorCached();
-    }
+    
 
 }
