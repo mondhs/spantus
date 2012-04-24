@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.spantus</groupId>
+	<artifactId>spnt-applet</artifactId>
+	<description>Spantus Applet</description>
+	<packaging>jar</packaging>
+	<version>0.3-SNAPSHOT</version>
+	<dependencies>
+		<dependency>
+			<groupId>org.spantus</groupId>
+			<artifactId>spnt-core</artifactId>
+			<version>0.3-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+	<profiles>
+		<profile>
+			<id>sign</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>2.4</version>
+						<executions>
+							<execution>
+								<id>unpack-dependencies</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>unpack-dependencies</goal>
+								</goals>
+								<configuration>
+									<includes>**/*</includes>
+									<excludes>**/junit/**/*.*</excludes>
+									<outputDirectory>${project.build.directory}/classes</outputDirectory>
+									<overWriteReleases>false</overWriteReleases>
+									<overWriteSnapshots>true</overWriteSnapshots>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>sign</id>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+							          <execution>
+            <id>verify</id>
+            <goals>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+						</executions>
+						<configuration>
+							<keystore>./cloud.keystore.jks</keystore>
+							<alias>spantus.cloudfoundry.com</alias>
+							<storepass>spantus</storepass>
+							<keypass>spantus</keypass>
+							<removeExistingSignatures>true</removeExistingSignatures>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>
