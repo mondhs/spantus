@@ -33,7 +33,7 @@ public class CalculateSnrCmd extends AbsrtactCmd {
 			sb.append(iExtractor.getName()).append("=").append(snr).append("\n");
 		}
 		JOptionPane.showMessageDialog(null, sb.toString(),
-				"SNR",
+				"Statistics",
 				JOptionPane.INFORMATION_MESSAGE);
 //		Long current = null;
 //		for (Marker marker : segments.getMarkers()) {

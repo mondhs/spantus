@@ -38,8 +38,7 @@ public class ClassifyDtwSegmentDirTest extends AbstractSegmentDirTest {
 		Dataset data = new DefaultDataset();
 		for (CorpusFileEntry entry : getCorpusRepository().getRepository()
 				.values()) {
-			IValues values = entry.getFeatureMap().get(
-					ExtractorEnum.MFCC_EXTRACTOR.name()).getValues();
+			IValues values = entry.findValueHolder(ExtractorEnum.MFCC_EXTRACTOR.name()).getValues();
 			FrameVectorValues vectors = (FrameVectorValues) values;
 	        TimeSeries tsSample = JavaMLSupport.toTimeSeries(vectors, vectors.getDimention());
 

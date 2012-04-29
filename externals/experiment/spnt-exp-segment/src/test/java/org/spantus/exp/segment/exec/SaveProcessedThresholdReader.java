@@ -4,12 +4,12 @@ import java.io.File;
 
 import org.spantus.core.beans.SampleInfo;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.dao.MarkerDao;
+import org.spantus.core.extractor.dao.ReaderDao;
 import org.spantus.exp.segment.beans.ProcessReaderInfo;
 import org.spantus.exp.segment.services.ExpServiceFactory;
 import org.spantus.exp.segment.services.MakerComparison;
 import org.spantus.exp.segment.services.ProcessReader;
-import org.spantus.work.services.MarkerDao;
-import org.spantus.work.services.ReaderDao;
 import org.spantus.work.services.WorkServiceFactory;
 
 public class SaveProcessedThresholdReader {

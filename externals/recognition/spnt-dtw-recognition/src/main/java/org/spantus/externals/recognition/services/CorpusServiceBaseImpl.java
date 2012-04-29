@@ -120,7 +120,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 
 				DtwResult dtwResult = null;
 				int targetDimention = targetEntry.getValue().getDimention();
-				// yuo know your stuff
+				// you know your stuff
 				if (targetDimention == 1) {
 					dtwResult = (DtwResult) getDtwService().calculateInfo(
 							(FrameValues) targetEntry.getValue(),
@@ -214,11 +214,11 @@ public class CorpusServiceBaseImpl implements CorpusService {
 			Double normalizedSum = 0D;
 
 			for (Entry<String, Double> score : result.getScores().entrySet()) {
-				// Double min = minimum.get(score.getKey());
-				// Double max = maximum.get(score.getKey());
-				// Double delta = max-min;
-				// Double normalizedScore = (score.getValue() - min)/delta;
-				Double normalizedScore = score.getValue();
+				 Double min = minimum.get(score.getKey());
+				 Double max = maximum.get(score.getKey());
+				 Double delta = max-min;
+				 Double normalizedScore = (score.getValue() - min)/delta;
+//				Double normalizedScore = score.getValue();
 
 				if (getIncludeFeatures() == null
 						|| getIncludeFeatures().isEmpty()) {

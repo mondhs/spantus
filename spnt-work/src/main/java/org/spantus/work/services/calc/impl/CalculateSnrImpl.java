@@ -2,9 +2,11 @@ package org.spantus.work.services.calc.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractor;
@@ -90,6 +92,32 @@ public class CalculateSnrImpl implements CalculateSnr {
 			speechNoise.snd().add(iter.next());
 		}
 		return speechNoise;
+	}
+	
+	@Override
+	public Map<segmentStatics, Double> calculateStatistics(
+			IExtractor iExtractor, Long start, Long length) {
+		Map<segmentStatics, Double> result = new HashMap<CalculateSnr.segmentStatics, Double>();
+		FrameValues vals = iExtractor.getOutputValues();
+		int startIndex = vals.toIndex((double) start / 1000);
+		int lengthIndex = vals.toIndex((double) length / 1000);
+		ListIterator<Double> iter = vals.listIterator(startIndex);
+		Double min = Double.MAX_VALUE;
+		Double max = -Double.MAX_VALUE;
+		Double sum = 0D;
+		for (int i = 0; i < lengthIndex; i++) {
+			if(!iter.hasNext()){
+				throw new ProcessingException("No element");
+			}
+			Double val = iter.next();
+			min = Math.min(min, val);
+			max = Math.max(max, val);
+			sum += val;
+		}
+		result.put(segmentStatics.min, min);
+		result.put(segmentStatics.max, max);
+		result.put(segmentStatics.mean, sum/lengthIndex);
+		return result;
 	}
 
 }

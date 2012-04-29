@@ -147,8 +147,9 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 
 			menu.add(createMenuItem(
 					GlobalCommands.sample.calculateSNR,
-					SpantusWorkToolbar.calculateSNR,
+					GlobalCommands.sample.calculateSNR.name(),
 					null));
+			
 			
 			menu.add(
 					createMenuItem(

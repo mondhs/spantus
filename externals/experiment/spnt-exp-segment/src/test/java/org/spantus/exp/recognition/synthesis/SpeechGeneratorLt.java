@@ -13,13 +13,13 @@ import java.util.Map;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.core.wav.WorkAudioManager;
 import org.spantus.utils.Assert;
 import org.spantus.utils.StringUtils;
-import org.spantus.work.services.MarkerDao;
 import org.spantus.work.services.WorkServiceFactory;
 
 import com.google.common.collect.Lists;

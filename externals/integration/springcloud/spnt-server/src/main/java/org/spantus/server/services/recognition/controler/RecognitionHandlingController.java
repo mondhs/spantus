@@ -26,7 +26,7 @@ public class RecognitionHandlingController {
 	CorpusService corpusService;
 	@RequestMapping(method = RequestMethod.GET, value = "/recognition/recognize" )
 	public ModelAndView ping() throws IOException {
-		return newMAV(ResultStatus.success("Use PUT method instead"));
+		return newMAV(ResultStatus.success("Use PUT method instead GET"));
 	}
 
 

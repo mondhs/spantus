@@ -4,22 +4,19 @@
  */
 package org.spantus.exp.recognition;
 
-import java.io.File;
-
 import org.junit.Before;
+import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.exp.ExpConfig;
-import org.spantus.externals.recognition.bean.CorpusEntry;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusEntryExtractor;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorFileImpl;
-import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
-import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
-import org.spantus.work.services.MarkerDao;
+import org.spantus.segment.SegmentationServiceImpl;
 import org.spantus.work.services.WorkServiceFactory;
 
 import com.google.common.base.Predicate;
@@ -44,6 +41,7 @@ public abstract class AbstractSegmentDirTest {
     private CorpusServiceBaseImpl corpusService;
     private CorpusRepositoryFileImpl corpusRepository;
 	private MarkerDao markerDao;
+	private SegmentationServiceImpl segmentationService;
 //	private String rulePath = RULES_PATH;
 
 
@@ -79,7 +77,7 @@ public abstract class AbstractSegmentDirTest {
 
 
 	protected MarkerSet findSegementedMarkers(MarkerSetHolder markerSetHolder) {
-		MarkerSet segments = getExtractor().findSegementedLowestMarkers(markerSetHolder);
+		MarkerSet segments = getSegmentationService().findSegementedLowestMarkers(markerSetHolder);
 
 		Collections2.filter(segments.getMarkers(), new Predicate<Marker>() {
 			public boolean apply(Marker filterMarker) {
@@ -94,8 +92,8 @@ public abstract class AbstractSegmentDirTest {
 	}
 
     protected void clearCorpus() {
-        for (CorpusEntry corpusEntry : corpusRepository.findAllEntries()) {
-            corpusRepository.delete(corpusEntry);
+        for (SignalSegment corpusEntry : corpusRepository.findAllEntries()) {
+            corpusRepository.delete(corpusEntry.getId());
         }
         corpusRepository.flush();
     }
@@ -180,5 +178,16 @@ public abstract class AbstractSegmentDirTest {
 
 	public void setExpConfig(ExpConfig expConfig) {
 		this.expConfig = expConfig;
+	}
+
+	public SegmentationServiceImpl getSegmentationService() {
+		if(segmentationService == null){
+			segmentationService = new SegmentationServiceImpl();
+		}
+		return segmentationService;
+	}
+
+	public void setSegmentationService(SegmentationServiceImpl segmentationService) {
+		this.segmentationService = segmentationService;
 	}
 }

@@ -350,9 +350,11 @@ public class WorkAudioManager implements AudioManager {
                 line.open(format);
 //                ((FloatControl)line.getControl(FloatControl.Type.MASTER_GAIN)).setValue(6);
             } catch (LineUnavailableException lue){
-                 log.error("Line Unavailable Exception",new ProcessingException(lue));
+                 log.error("Line Unavailable Exception",lue);
+                 throw new ProcessingException(lue); 
             } catch (Exception e) {
-            	 log.error("Exception",new ProcessingException(e));
+            	 log.error("Exception",e);
+            	 throw new ProcessingException(e); 
             }
             return line;
         }

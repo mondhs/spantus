@@ -1,6 +1,7 @@
 
 package org.spantus.extractor.segments.online.rule;
 
+import org.spantus.extractor.segments.ExtremeSegmentServiceImpl;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
@@ -16,10 +17,13 @@ import org.spantus.logger.Logger;
  *
  */
 public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService {
+	
+	
 
-    Logger log = Logger.getLogger(getClass());
+	private final static Logger log = Logger.getLogger(ClassifierRuleBaseServiceImpl.class);
     private ExtremeOnlineClusterService clusterService;
-
+    private ExtremeSegmentServiceImpl extremeSegmentService;
+    
     /**
      * test on rule base
      * 
@@ -66,24 +70,24 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 
         if (ctx.getCurrentSegment() != null) {
             currentSegment = ctx.getCurrentSegment();
-            currentArea = currentSegment.getCalculatedArea();
+            currentArea = getExtremeSegmentService().getCalculatedArea(currentSegment);
             currentPeak = currentSegment.getPeakEntries().size();
-            currentLength = currentSegment.getCalculatedLength();
+            currentLength = getExtremeSegmentService().getCalculatedLength(currentSegment);
             currentSizeValues = currentSegment.getValues().size();
         }
 
         if (ctx.getExtremeSegments().size() > 0) {
             lastSegment = ctx.getExtremeSegments().getLast();
-            lastArea = lastSegment.getCalculatedArea();
+            lastArea = getExtremeSegmentService().getCalculatedArea(lastSegment);
             lastPeak = lastSegment.getPeakEntries().size();
-            lastLength = lastSegment.getCalculatedLength();
+            lastLength = getExtremeSegmentService().getCalculatedLength(lastSegment);
             lastSizeValues = lastSegment.getValues().size();
 
 
             if (currentSegment.getPeakEntry() != null) {
-                isIncrease = currentSegment.isIncrease(lastSegment);
-                isDecrease = currentSegment.isDecrease(lastSegment);
-                isSimilar = currentSegment.isSimilar(lastSegment);
+                isIncrease = getExtremeSegmentService().isIncrease(currentSegment,lastSegment);
+                isDecrease = getExtremeSegmentService().isDecrease(currentSegment, lastSegment);
+                isSimilar = getExtremeSegmentService().isSimilar(currentSegment, lastSegment);
                 className = getClusterService().getClassName(lastSegment, ctx);
                 if(currentPeak>=1){
                     Integer first = lastSegment.getPeakEntries().getLast().getIndex();
@@ -175,5 +179,17 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
     public void setClusterService(ExtremeOnlineClusterService clusterService) {
         this.clusterService = clusterService;
     }
+
+	public ExtremeSegmentServiceImpl getExtremeSegmentService() {
+		if(extremeSegmentService == null){
+			extremeSegmentService = new ExtremeSegmentServiceImpl();
+		}
+		return extremeSegmentService;
+	}
+
+	public void setExtremeSegmentService(
+			ExtremeSegmentServiceImpl extremeSegmentService) {
+		this.extremeSegmentService = extremeSegmentService;
+	}
 
 }

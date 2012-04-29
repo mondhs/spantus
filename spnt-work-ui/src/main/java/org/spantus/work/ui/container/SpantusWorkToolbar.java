@@ -73,8 +73,6 @@ public class SpantusWorkToolbar extends JToolBar implements ReloadableComponent{
 
 
 
-	public static final String calculateSNR = "calculateSNR";
-	
 	SpantusWorkInfo info;
 	
 	private JButton openBtn = null;

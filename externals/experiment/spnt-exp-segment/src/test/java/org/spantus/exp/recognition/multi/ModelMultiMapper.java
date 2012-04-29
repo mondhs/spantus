@@ -9,13 +9,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.exp.recognition.domain.QSegmentExp;
 import org.spantus.exp.recognition.filefilter.ExtNameFilter;
-import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.logger.Logger;
 import org.spantus.utils.FileUtils;
 

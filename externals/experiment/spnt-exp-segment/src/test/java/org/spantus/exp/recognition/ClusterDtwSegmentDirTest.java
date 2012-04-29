@@ -10,10 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.sf.javaml.clustering.Clusterer;
-import net.sf.javaml.clustering.KMeans;
-import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DefaultDataset;
 import net.sf.javaml.distance.fastdtw.dtw.DTW;
 import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
 
@@ -24,7 +20,6 @@ import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.math.services.javaml.JavaMLSupport;
-import org.spantus.math.services.javaml.SpantusSimilarity;
 import org.spantus.math.services.javaml.VectorInstnace;
 
 import scikit.util.Pair;
@@ -40,15 +35,14 @@ public class ClusterDtwSegmentDirTest extends AbstractSegmentDirTest {
 
 	@Test
 	public void testClassify() {
-		Dataset data = new DefaultDataset();
+//		Dataset data = new DefaultDataset();
 
 		List<VectorInstnace> aList = new ArrayList<VectorInstnace>();
 		List<VectorInstnace> eList = new ArrayList<VectorInstnace>();
 
 		for (CorpusFileEntry entry : getCorpusRepository().getRepository()
 				.values()) {
-			IValues values = entry.getFeatureMap()
-					.get(ExtractorEnum.LOUDNESS_EXTRACTOR.name()).getValues();
+			IValues values = entry.findValueHolder(ExtractorEnum.LOUDNESS_EXTRACTOR.name()).getValues();
 			FrameVectorValues vectors = (FrameVectorValues) values;
 			TimeSeries tsSample = JavaMLSupport.toTimeSeries(vectors,
 					vectors.getDimention());

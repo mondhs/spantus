@@ -98,6 +98,7 @@ public class CommandBuilderServiceImpl implements CommandBuilderService {
 		safePut(cmds, new RecordCmd(executionFacade));
 		safePut(cmds, new PlayCmd(executionFacade));
 		safePut(cmds, new CalculateSnrCmd(executionFacade));
+		safePut(cmds, new CalculateStatisticsCmd(executionFacade));
 		safePut(cmds, new StopCmd(executionFacade));
 		safePut(cmds, new ZoomInCmd(executionFacade));
 		safePut(cmds, new ZoomOutCmd(executionFacade));

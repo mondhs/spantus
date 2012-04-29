@@ -33,9 +33,19 @@ public class MarkerLabelingRecognitionImpl implements MarkerLabeling{
 	public MarkerSetHolder putLabelsRecognized(IExtractorInputReader reader, MarkerSetHolder markerSetHolder) {
 		MarkerSet markerSet = markerSetHolder
 				.getMarkerSets().get(MarkerSetHolderEnum.word.name());
-		if (markerSet == null) {
-			markerSet = markerSetHolder
+		putLabelsRecognized(reader, markerSet);
+		markerSet = markerSetHolder
 					.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
+		putLabelsRecognized(reader, markerSet);
+		
+		return markerSetHolder;
+	}
+	
+	
+	
+	private void putLabelsRecognized(IExtractorInputReader reader, MarkerSet markerSet) {
+		if(markerSet == null){
+			return;
 		}
 		for (Marker marker : markerSet.getMarkers()) {
 			Map<String, IValues> fvv = getExtractorReaderService()
@@ -45,9 +55,9 @@ public class MarkerLabelingRecognitionImpl implements MarkerLabeling{
 				marker.setLabel(result.getInfo().getName());
 			}
 		}
-		return markerSetHolder;
+		
 	}
-	
+
 	public WorkExtractorReaderService getExtractorReaderService() {
 		if (extractorReaderService == null) {
 			extractorReaderService = WorkServiceFactory

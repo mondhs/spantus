@@ -5,13 +5,9 @@
 package org.spantus.sandbox;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
-
-import net.sf.javaml.core.Dataset;
-import net.sf.javaml.core.DefaultDataset;
 
 import org.junit.Test;
 import org.spantus.core.FrameVectorValues;
@@ -31,7 +27,6 @@ import be.ac.ulg.montefiore.run.jahmm.learn.KMeansLearner;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimaps;
 
 /**
  * 
@@ -45,12 +40,12 @@ public class ClassifyHMMSegmentDirTest extends AbstractSegmentDirTest {
 	
 	@Test
 	public void testClassify() {
-		Dataset data = new DefaultDataset();
+//		Dataset data = new DefaultDataset();
 		List<List<ObservationVector>> seqOfSeq = Lists.newArrayList();
 		ListMultimap<String, ObservationVector> mapVector = ArrayListMultimap.create();
 		for (CorpusFileEntry entry : getCorpusRepository().getRepository()
 				.values()) {
-			IValues values = entry.getFeatureMap().get(
+			IValues values = entry.findValueHolder(
 					ExtractorEnum.PLP_EXTRACTOR.name()).getValues();
 			FrameVectorValues vectors = (FrameVectorValues) values;
 			

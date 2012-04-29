@@ -5,6 +5,8 @@ import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.util.Map;
 
+import org.spantus.core.beans.RecognitionResult;
+import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
@@ -16,8 +18,6 @@ import org.spantus.exp.recognition.dao.QSegmentExpDao;
 import org.spantus.exp.recognition.dao.QSegmentExpHsqlDao;
 import org.spantus.exp.recognition.domain.QSegmentExp;
 import org.spantus.exp.recognition.filefilter.ExtNameFilter;
-import org.spantus.externals.recognition.bean.CorpusEntry;
-import org.spantus.externals.recognition.bean.RecognitionResult;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusEntryExtractor;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
@@ -25,6 +25,7 @@ import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextG
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
+import org.spantus.segment.SegmentationServiceImpl;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
 
@@ -40,6 +41,7 @@ public class MultiMapper {
 	private CorpusEntryExtractorTextGridMapImpl extractor;
 	private CorpusServiceBaseImpl corpusService;
 	private CorpusRepositoryFileImpl corpusRepository;
+	private SegmentationServiceImpl segmentationService;
 	private QSegmentExpDao qSegmentExpDao;
 	private String corpusName;
 	private ExpConfig expConfig;
@@ -96,8 +98,8 @@ public class MultiMapper {
 	 * 
 	 */
     public  void clearCorpus() {
-        for (CorpusEntry corpusEntry : corpusRepository.findAllEntries()) {
-            corpusRepository.delete(corpusEntry);
+        for (SignalSegment corpusEntry : corpusRepository.findAllEntries()) {
+            corpusRepository.delete(corpusEntry.getId());
         }
         corpusRepository.flush();
     }
@@ -288,7 +290,7 @@ public class MultiMapper {
 	 * @return
 	 */
 	protected MarkerSet findSegementedMarkers(MarkerSetHolder markerSetHolder) {
-		MarkerSet segments = getExtractor().findSegementedLowestMarkers(markerSetHolder);
+		MarkerSet segments = getSegmentationService().findSegementedLowestMarkers(markerSetHolder);
 
 		Collections2.filter(segments.getMarkers(), new Predicate<Marker>() {
 			public boolean apply(Marker filterMarker) {
@@ -356,6 +358,17 @@ public class MultiMapper {
 
 	public void setRecreate(Boolean recreate) {
 		this.recreate = recreate;
+	}
+
+	public SegmentationServiceImpl getSegmentationService() {
+		if(segmentationService == null){
+			segmentationService = new SegmentationServiceImpl();
+		}
+		return segmentationService;
+	}
+
+	public void setSegmentationService(SegmentationServiceImpl segmentationService) {
+		this.segmentationService = segmentationService;
 	}
 
 

@@ -15,6 +15,7 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.service.IMarkerService;
 import org.spantus.core.marker.service.MarkerServiceFactory;
+import org.spantus.extractor.segments.ExtremeSegmentServiceImpl;
 import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.logger.Logger;
 import org.spantus.math.cluster.ClusterCollection;
@@ -25,6 +26,8 @@ public class ExtremeClassifierServiceImpl {
 	Logger log = Logger.getLogger(ExtremeClassifierServiceImpl.class);
 
 	IMarkerService markerService;
+
+	private ExtremeSegmentServiceImpl extremeSegmentService;
 
 	public ExtremeClassifierServiceImpl() {
 		markerService = MarkerServiceFactory.createMarkerService();
@@ -220,14 +223,14 @@ public class ExtremeClassifierServiceImpl {
 //				Long length = entry.getPeakLength();
 //				Double lengthTime = ctx.getValues().toTime(length.intValue());
 				// Double area = iter.getArea();
-				if(entry.isIncrease() && previous.isIncrease()){
+				if(getExtremeSegmentService().isIncrease(entry) && getExtremeSegmentService().isIncrease(previous)){
 					log.debug("[initialCleanup]remove:{0}; exists: {1} ",  previous, segments.size());
 					ExtremeSegment eliminated = segments.removeLast();
 					ExtremeSegment joined = join(eliminated, entry);
 					log.debug("[initialCleanup] /// inc:true; inc:true ");
 					segments.add(joined);
 					log.debug("[initialCleanup]joined:{0}; size: {1} ",  joined, segments.size());
-				}else if(entry.isDecrease() && previous.isDecrease()){
+				}else if(getExtremeSegmentService().isDecrease(entry) && getExtremeSegmentService().isDecrease(previous)){
 					log.debug("[initialCleanup]remove:{0}; size: {1} ",  previous, segments.size());
 					ExtremeSegment eliminated = segments.removeLast();
 					ExtremeSegment joined = join(eliminated, entry);
@@ -275,7 +278,7 @@ public class ExtremeClassifierServiceImpl {
 		ctx.setSegments(segments);
 		if (log.isDebugMode()) {
 			for (ExtremeSegment extremeSegment : segments) {
-				log.debug("[initialCleanup]after intial cleanup {0} ", extremeSegment);				
+				log.debug("[initialCleanup]after intial cleanup {0} (anngle: {1})", extremeSegment, getExtremeSegmentService().angle(extremeSegment));	
 			}
 		}
 		return ctx.getSegments();
@@ -675,6 +678,17 @@ public class ExtremeClassifierServiceImpl {
 
 	protected Double getMaxLength() {
 		return .2D;
+	}
+	
+	public ExtremeSegmentServiceImpl getExtremeSegmentService() {
+		if(extremeSegmentService == null){
+			extremeSegmentService = new ExtremeSegmentServiceImpl();
+		}
+		return extremeSegmentService;
+	}
+	public void setExtremeSegmentService(
+			ExtremeSegmentServiceImpl extremeSegmentService) {
+		this.extremeSegmentService = extremeSegmentService;
 	}
 
 }

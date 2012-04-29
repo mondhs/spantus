@@ -14,8 +14,8 @@ public class ExtremeOnlineClusterServiceStaticImpl
 	@SuppressWarnings("unused")
 	public String getClassName(ExtremeSegment segment,
 			ExtremeSegmentsOnlineCtx ctx) {
-		Double area = segment.getCalculatedArea();
-		Long length = segment.getCalculatedLength();
+		Double area = getExtremeSegmentService().getCalculatedArea(segment);
+		Long length = getExtremeSegmentService().getCalculatedLength(segment);
 		Integer peaks = segment.getPeakEntries().size();
 
 		// if (0 <= area && area < 66000) {

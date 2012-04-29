@@ -7,7 +7,8 @@ import org.spantus.logger.Logger;
 
 public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterServiceSimpleImpl{
 
-	Logger log = Logger.getLogger(ExtremeOnlineClusterServiceImpl.class);
+	private static final Logger log = Logger.getLogger(ExtremeOnlineClusterServiceImpl.class);
+
 	/**
 	 * 
 	 */
@@ -15,8 +16,8 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 	@Override
 	public String getClassName(ExtremeSegment segment,
 			ExtremeSegmentsOnlineCtx ctx) {
-		Double area = segment.getCalculatedArea();
-		Long length = segment.getCalculatedLength();
+		Double area = getExtremeSegmentService().getCalculatedArea(segment);
+		Long length = getExtremeSegmentService().getCalculatedLength(segment);
 		Integer peaks =  segment.getPeakEntries().size();
 		Integer argNum = 1;
 		ExtremeSegment maxSegment = null;
@@ -28,21 +29,23 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 			if(maxSegment == null){
 				maxSegment = iSegment;
 			}else {
-				maxSegment = iSegment.getCalculatedArea()>maxSegment.getCalculatedArea()?iSegment:maxSegment;
+				maxSegment = getExtremeSegmentService().getCalculatedArea(iSegment)>getExtremeSegmentService().getCalculatedArea(maxSegment)?iSegment:maxSegment;
 			}
 			if(minSegment == null){
 				minSegment = iSegment;
 			}else {
-				minSegment = iSegment.getCalculatedArea()<minSegment.getCalculatedArea()?iSegment:minSegment;
+				minSegment = getExtremeSegmentService().getCalculatedArea(iSegment)<getExtremeSegmentService().getCalculatedArea(minSegment)?iSegment:minSegment;
 			}
 		}
 		if(minSegment.getStart().compareTo(maxSegment.getStart()) != 0 ){
-			double coef = (segment.getCalculatedArea()-minSegment.getCalculatedArea())/(maxSegment.getCalculatedArea()-minSegment.getCalculatedArea());
+			double coef = (getExtremeSegmentService().getCalculatedArea(segment)-getExtremeSegmentService().getCalculatedArea(minSegment))/
+					(getExtremeSegmentService().getCalculatedArea(maxSegment)-getExtremeSegmentService().getCalculatedArea(minSegment));
 			if(coef>0.5){
 				argNum = 2;
 			}else if(coef<0.25){
 				argNum = 0;
-				log.debug("[getClassName] mark for delete: {0} [{1}>{2}];coef: {3} ", segment, segment.getCalculatedArea() ,maxSegment.getCalculatedArea(),coef);
+				log.debug("[getClassName] mark for delete: {0} [{1}>{2}];coef: {3} ", segment, getExtremeSegmentService().getCalculatedArea(segment) ,
+						getExtremeSegmentService().getCalculatedArea(maxSegment),coef);
 			}
 		}
 
@@ -149,4 +152,5 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 		return innerData;
 		
 	}
+
 }

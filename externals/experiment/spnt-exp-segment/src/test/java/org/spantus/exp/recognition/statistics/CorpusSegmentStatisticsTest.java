@@ -4,15 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
+import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.Marker;
 import org.spantus.exp.recognition.AbstractSegmentDirTest;
-import org.spantus.externals.recognition.bean.CorpusEntry;
-import org.spantus.externals.recognition.bean.FeatureData;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.math.VectorUtils;
@@ -39,14 +39,14 @@ public class CorpusSegmentStatisticsTest extends AbstractSegmentDirTest {
 		// Map<String, List<CorpusEntryStat>> map = Maps.newLinkedHashMap();
 		ListMultimap<String, CorpusEntryStat> map = ArrayListMultimap.create();
 
-		for (CorpusEntry entry : getCorpusRepository().findAllEntries()) {
+		for (SignalSegment entry : getCorpusRepository().findAllEntries()) {
 
-			for (FeatureData featureData : entry.getFeatureMap().values()) {
-				Double avg = avg(featureData.getValues());
-				Double std = std(featureData.getValues(), avg);
+			for (Entry<String, IValues> featureData : entry.findAllFeatures().entrySet()) {
+				Double avg = avg(featureData.getValue());
+				Double std = std(featureData.getValue(), avg);
 				CorpusEntryStat stat = new CorpusEntryStat(
 						fix(entry.getName()), avg, std);
-				map.put(featureData.getName(), stat);
+				map.put(featureData.getKey(), stat);
 			}
 
 		}

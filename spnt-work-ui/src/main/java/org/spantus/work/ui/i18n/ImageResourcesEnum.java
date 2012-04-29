@@ -29,7 +29,7 @@ package org.spantus.work.ui.i18n;
  */
 public enum ImageResourcesEnum {
 	smallLogo("/org/spantus/work/ui/res/img/small_logo.png"),
-	spntIcon("org/spantus/work/ui/res/img/icon.gif"),
+	spntIcon("org/spantus/work/ui/res/img/icon.png"),
 
 	segmentScreenshot("org/spantus/work/ui/res/help/img/spnt-segment-screen.png"),
 	

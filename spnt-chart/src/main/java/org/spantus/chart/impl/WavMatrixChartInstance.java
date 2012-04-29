@@ -51,14 +51,19 @@ import org.spantus.logger.Logger;
  */
 public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 
-	FrameVectorValues values;
-	CoordinateBoundary coordinateBoundary;
-	ColorLookup colorLookup = new ColorLookup();
-	GraphDomain domain;
+	private FrameVectorValues values;
+//	private CoordinateBoundary coordinateBoundary;
+	private ColorLookup colorLookup = new ColorLookup();
+	private GraphDomain domain;
+	private BufferedImage image = null;
+	
+	private Double order = 0D;
+	
+	private Double min = Double.MAX_VALUE;
+	private Double max = -Double.MAX_VALUE;
+	private Double delta = Double.MAX_VALUE;
 
-	Double order = 0D;
-
-	VectorSeriesColorEnum colorType = VectorSeriesColorEnum.blackWhite;
+	private VectorSeriesColorEnum colorType = VectorSeriesColorEnum.blackWhite;
 
 	
 	// private LowerLimitInstance lowerLimit = null;
@@ -73,7 +78,7 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 		this.description = description;
 		this.values = values;
 		// this.style = style;
-		coordinateBoundary = getCoordinateBoundary(values);
+//		coordinateBoundary = getCoordinateBoundary(values);
 		log.debug("name: " + description + "; order: " + getOrder() + "; sampleRate:" + values.getSampleRate()+ "; length: " + values.size());
 
 	}
@@ -92,7 +97,7 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 		g.drawImage(getImage(values), 0, startY, width, -height, null);
 	}
 
-	BufferedImage image = null;
+	
 
 	private BufferedImage getImage(FrameVectorValues vals) {
 		if (image != null){
@@ -175,13 +180,12 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 		renderFunction(null, null, xScalar, yScalar);
 	}
 
-	Double min = Double.MAX_VALUE;
-	Double max = -Double.MAX_VALUE;
+
 	private void minmax(FrameVectorValues values){
 		for (List<Double> fv : values) {
 			boolean first = true;
 			for (Double f1 : fv) {
-				//skip first
+				//skip first index for estimation
 				if(first){
 					first = false;
 					continue;
@@ -190,12 +194,11 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 				max = Math.max(max, f1);
 			}
 		}
+		delta = max - min;
 	}
 
 
 	public int lookupColor(Double floatValue) {
-
-		Double delta = max - min;
 		Double fColor = ((Double) (floatValue - min) / (delta));
 		short s = (short)(256*fColor);
 		Color clr = colorLookup.lookup(getColorType(), s);

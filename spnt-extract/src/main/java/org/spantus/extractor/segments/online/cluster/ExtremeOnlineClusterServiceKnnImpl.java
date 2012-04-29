@@ -35,8 +35,8 @@ public class ExtremeOnlineClusterServiceKnnImpl extends
 	public String getClassName(ExtremeSegment segment,
 			ExtremeSegmentsOnlineCtx ctx) {
 		log.debug("[getClassName]+++");
-		Double area = segment.getCalculatedArea();
-		Long length = segment.getCalculatedLength();
+		Double area = getExtremeSegmentService().getCalculatedArea(segment);
+		Long length = getExtremeSegmentService().getCalculatedLength(segment);
 		Integer peaks = segment.getPeakEntries().size();
 
 		if (getDataSet().size() > 3) {

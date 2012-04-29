@@ -5,6 +5,7 @@ import java.util.ListIterator;
 
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.extractor.segments.ExtremeSegmentServiceImpl;
 import org.spantus.extractor.segments.offline.ExtremeEntry;
 import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.extractor.segments.offline.ExtremeOfflineClassifier;
@@ -15,7 +16,9 @@ import org.spantus.utils.Assert;
 
 public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 
-	private Logger log = Logger.getLogger(ExtremeOfflineRuleClassifier.class);
+	private static final Logger log = Logger.getLogger(ExtremeOfflineRuleClassifier.class);
+	
+	private ExtremeSegmentServiceImpl extremeSegmentService;
 
 	public ExtremeOfflineRuleClassifier() {
 		super();
@@ -152,19 +155,19 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 	private boolean fixShortSegments(ExtremeSegment previous,ExtremeSegment extremeSegment) {
 		Double startEndRatio =(2*previous.getEndEntry().getValue())/(previous.getStartEntry().getValue() + extremeSegment.getEndEntry().getValue());
 		Double areaRatio  = 0D;
-		if(previous.getCalculatedArea()>extremeSegment.getCalculatedArea()){
-			areaRatio = previous.getCalculatedArea()/extremeSegment.getCalculatedArea();
+		if(getExtremeSegmentService().getCalculatedArea(previous)>getExtremeSegmentService().getCalculatedArea(extremeSegment)){
+			areaRatio = getExtremeSegmentService().getCalculatedArea(previous)/getExtremeSegmentService().getCalculatedArea(extremeSegment);
 		}else{
-			areaRatio = extremeSegment.getCalculatedArea()/previous.getCalculatedArea();
+			areaRatio = getExtremeSegmentService().getCalculatedArea(extremeSegment)/getExtremeSegmentService().getCalculatedArea(previous);
 		}
 
 		
 		//too big chunks to be merged
-		if((previous.getCalculatedLength()>170 && extremeSegment.getCalculatedLength()>170)){
+		if((getExtremeSegmentService().getCalculatedLength(previous)>170 && getExtremeSegmentService().getCalculatedLength(extremeSegment)>170)){
 			if(areaRatio>1.5){
 				return false;
 			}else{
-				extremeSegment.getCalculatedLength();
+				getExtremeSegmentService().getCalculatedLength(extremeSegment);
 			}
 		}
 		int fixUpTo=getOutputValues().toIndex(1D);
@@ -251,6 +254,21 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 			}
 			i++;
 		}		
+	}
+
+
+	public ExtremeSegmentServiceImpl getExtremeSegmentService() {
+		if(extremeSegmentService == null){
+			extremeSegmentService = new ExtremeSegmentServiceImpl();
+		}
+		return extremeSegmentService;
+	}
+
+
+
+	public void setExtremeSegmentService(
+			ExtremeSegmentServiceImpl extremeSegmentService) {
+		this.extremeSegmentService = extremeSegmentService;
 	}
 	
 }

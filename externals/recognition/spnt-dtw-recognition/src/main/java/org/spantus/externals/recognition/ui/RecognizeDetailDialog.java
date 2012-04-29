@@ -50,6 +50,7 @@ import org.spantus.core.beans.I18n;
 import org.spantus.core.beans.RecognitionResultDetails;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.wav.AudioManagerFactory;
+import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
 import org.spantus.ui.SwingUtils;
 import org.spantus.work.ui.ImageResourcesEnum;
@@ -67,7 +68,7 @@ public class RecognizeDetailDialog extends JDialog {
 
 	private List<RecognitionResultDetails> results;
     
-    private Long selctedSampleId = null;
+    private String selctedSampleId = null;
     private String selctedFeatureId = null;
 
     Logger log = Logger.getLogger(RecognizeDetailDialog.class);
@@ -272,10 +273,10 @@ public class RecognizeDetailDialog extends JDialog {
 
 
             sb.
-                    append(html("<a href=\"play={0,number,#}\">",recognitionResult.getInfo().getId())).
+                    append(html("<a href=\"play={0}\">",recognitionResult.getInfo().getId())).
                     append(html("<img src=\"{0}\" alt=\"play\" border=\"0\" width=\"24\" height=\"24\" />", playImgSrc)).
                     append("</a>").
-                    append(html("<a href=\"show={0,number,#}\">",  recognitionResult.getInfo().getId()));
+                    append(html("<a href=\"show={0}\">",  recognitionResult.getInfo().getId()));
             if(recognitionResult.getInfo().getId().equals(selctedSampleId)){
                 //collapsed +
                 sb.append("&#8863;");
@@ -347,11 +348,11 @@ public class RecognizeDetailDialog extends JDialog {
     protected void showResult(String id) {
         //check if number that mean sample id
         if (Pattern.matches("^\\d*$", id)) {
-            Long key = Long.valueOf(id);
-            if (key.equals(selctedSampleId)) {
+//            Long key = Long.valueOf(id);
+            if (id.equals(selctedSampleId)) {
                 selctedSampleId = null;
             } else {
-                selctedSampleId = key;
+                selctedSampleId = id;
             }
             selctedFeatureId = null;
         } else {
@@ -381,8 +382,8 @@ public class RecognizeDetailDialog extends JDialog {
     }
 
     protected void playResult(String id){
-        Long lid = Long.valueOf(id);
-        if(lid == -1){
+//        Long lid = Long.valueOf(id);
+        if("-1".equals(id)){
             AudioManagerFactory.createAudioManager().play(
                             getTargetWavURL(),  
                             (getTargetMarker().getStart().floatValue()/1000),
@@ -391,7 +392,7 @@ public class RecognizeDetailDialog extends JDialog {
         }
         for (RecognitionResultDetails recognitionResultDetails : results) {
             if (recognitionResultDetails.getInfo().getId().equals(
-                    lid)) {
+            		id)) {
                 try {
                     AudioManagerFactory.createAudioManager().play(
                             (new File(recognitionResultDetails.getAudioFilePath()
@@ -399,6 +400,7 @@ public class RecognizeDetailDialog extends JDialog {
                     break;
                 } catch (MalformedURLException ex) {
                     log.error(ex);
+                    throw new ProcessingException(ex);
                 }
             }
         } 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.exp.segment.beans.ComparisionResult;
@@ -16,7 +17,6 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.utils.CollectionUtils;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
-import org.spantus.work.services.MarkerDao;
 import org.spantus.work.services.WorkServiceFactory;
 /**
  * 

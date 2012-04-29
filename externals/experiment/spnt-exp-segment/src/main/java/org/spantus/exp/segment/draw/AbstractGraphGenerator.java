@@ -40,6 +40,8 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.dao.MarkerDao;
+import org.spantus.core.extractor.dao.ReaderDao;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
@@ -52,8 +54,6 @@ import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.utils.Assert;
-import org.spantus.work.services.MarkerDao;
-import org.spantus.work.services.ReaderDao;
 import org.spantus.work.services.WorkServiceFactory;
 
 /**

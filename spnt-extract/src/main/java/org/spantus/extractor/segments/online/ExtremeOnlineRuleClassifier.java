@@ -6,6 +6,7 @@ import java.util.List;
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.AbstractClassifier;
+import org.spantus.extractor.segments.ExtremeSegmentServiceImpl;
 import org.spantus.extractor.segments.offline.ExtremeEntry;
 import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
 import org.spantus.extractor.segments.offline.ExtremeOfflineClassifier;
@@ -23,6 +24,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 	private ExtremeSegmentsOnlineCtx onlineCtx;
 
 	private ClassifierRuleBaseService ruleBaseService;
+	private ExtremeSegmentServiceImpl extremeSegmentService;
 
 	// private ExtremeOnlineClusterService clusterService;
 
@@ -409,7 +411,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 		segment.setEndEntry(entry);
 		segment.getExtractionData().setEndSampleNum(
 				entry.getIndex().longValue());
-		segment.setLength(segment.getCalculatedLength());
+		segment.setLength(getExtremeSegmentService().getCalculatedLength(segment));
 		segment.getExtractionData().setEndSampleNum(
 				entry.getIndex().longValue());
 
@@ -498,7 +500,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 		Integer start = appendMarker.getStartEntry().getIndex();
 		Integer end = appendMarker.getEndEntry().getIndex();
 		Long lentgh = appendMarker.getValues().indextoMils(end-start);
-		Assert.isTrue(appendMarker.getCalculatedLength().equals( lentgh), "some values are lost: " + appendMarker.getCalculatedLength() +"!="+ lentgh);
+		Assert.isTrue(getExtremeSegmentService().getCalculatedLength(appendMarker).equals( lentgh), "some values are lost: " + getExtremeSegmentService().getCalculatedLength(appendMarker) +"!="+ lentgh);
 		log.debug(MessageFormat.format(
 				"[appendMarker]append segment  [{0}] ",
 				appendMarker.getValues() ));
@@ -619,4 +621,15 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 		throw new IllegalArgumentException("Do not use this");
 	}
 
+	public ExtremeSegmentServiceImpl getExtremeSegmentService() {
+		if(extremeSegmentService == null){
+			extremeSegmentService = new ExtremeSegmentServiceImpl();
+		}
+		return extremeSegmentService;
+	}
+	public void setExtremeSegmentService(
+			ExtremeSegmentServiceImpl extremeSegmentService) {
+		this.extremeSegmentService = extremeSegmentService;
+	}
+	
 }

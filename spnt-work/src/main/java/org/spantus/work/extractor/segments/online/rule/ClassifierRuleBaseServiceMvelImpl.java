@@ -1,9 +1,9 @@
 package org.spantus.work.extractor.segments.online.rule;
 
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.changePoint;
-import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.initSegment;
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.changePointLastApproved;
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.delete;
+import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.initSegment;
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.join;
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.processSignal;
 
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mvel2.MVEL;
+import org.spantus.extractor.segments.ExtremeSegmentServiceImpl;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;
@@ -23,9 +24,11 @@ import org.spantus.logger.Logger;
 public class ClassifierRuleBaseServiceMvelImpl extends
 		ClassifierRuleBaseServiceImpl {
 	
-	private static Logger log = Logger
+	private static final Logger log = Logger
 			.getLogger(ClassifierRuleBaseServiceMvelImpl.class);
 	private List<Rule> rules;
+	
+	private ExtremeSegmentServiceImpl extremeSegmentService;
 	
 	public ClassifierRuleBaseServiceMvelImpl() {
 	}
@@ -51,10 +54,12 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		Integer currentPeakCount = null;
 		Double currentPeakValue = null;
 		Long currentLength = null;
+		Double currentAngle = null;
 		Long stableLength = null;
 		Double lastArea = null;
 		Double lastPeakValue = null;
 		Integer lastPeakCount = null;
+		Double lastAngle = null;
 		Long lastLength = null;
 		boolean isIncrease = false;
 		boolean isDecrease = false;
@@ -66,26 +71,30 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 
 		if (ctx.getCurrentSegment() != null) {
 			currentSegment = ctx.getCurrentSegment();
-			currentArea = currentSegment.getCalculatedArea();
+			currentArea = getExtremeSegmentService().getCalculatedArea(currentSegment);
 			currentPeakCount = currentSegment.getPeakEntries().size();
-			currentLength = currentSegment.getCalculatedLength();
+			currentLength = getExtremeSegmentService().getCalculatedLength(currentSegment);
 			currentSizeValues = currentSegment.getValues().size();
 			stableLength = currentSegment.getValues().indextoMils(ctx.getStableCount());
 		}
 
 		if (ctx.getExtremeSegments().size() > 0) {
 			lastSegment = ctx.getExtremeSegments().getLast();
-			lastArea = lastSegment.getCalculatedArea();
+			lastArea = getExtremeSegmentService().getCalculatedArea(lastSegment);
 			lastPeakValue = lastSegment.getPeakEntry().getValue();
 			lastPeakCount = lastSegment.getPeakEntries().size();
-			lastLength = lastSegment.getCalculatedLength();
+			lastLength = getExtremeSegmentService().getCalculatedLength(lastSegment);
 			lastSizeValues = lastSegment.getValues().size();
+			
+			currentAngle = getExtremeSegmentService().angle(currentSegment);
+			lastAngle = getExtremeSegmentService().angle(lastSegment);
 
 			if (currentSegment.getPeakEntry() != null) {
 				currentPeakValue = currentSegment.getPeakEntry().getValue();
-				isIncrease = currentSegment.isIncrease(lastSegment);
-				isDecrease = currentSegment.isDecrease(lastSegment);
-				isSimilar = currentSegment.isSimilar(lastSegment);
+				isIncrease = getExtremeSegmentService().isIncrease(currentSegment, lastSegment);
+				isDecrease = getExtremeSegmentService().isDecrease(currentSegment, lastSegment);
+				
+				isSimilar = getExtremeSegmentService().isSimilar(currentSegment, lastSegment);
 				className = getClusterService().getClassName(lastSegment, ctx);
 				if (currentPeakCount >= 1) {
 					Integer first = lastSegment.getPeakEntries().getLast()
@@ -114,9 +123,12 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		params.put("className", className);
 		params.put("lastPeakCount", lastPeakCount);
 		params.put("lastPeakValue", lastPeakValue);
+		params.put("lastAngle", lastAngle);
 		params.put("currentPeakCount", currentPeakCount);
 		params.put("currentPeakValue", currentPeakValue);
+		params.put("currentAngle", currentAngle);
 		params.put("stableLength", stableLength);
+		
 		
 		
 		
@@ -226,6 +238,18 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 
 	public void setRules(List<Rule> rules) {
 		this.rules = rules;
+	}
+
+	public ExtremeSegmentServiceImpl getExtremeSegmentService() {
+		if(extremeSegmentService == null){
+			extremeSegmentService = new ExtremeSegmentServiceImpl();
+		}
+		return extremeSegmentService;
+	}
+
+	public void setExtremeSegmentService(
+			ExtremeSegmentServiceImpl extremeSegmentService) {
+		this.extremeSegmentService = extremeSegmentService;
 	}
 
 }
