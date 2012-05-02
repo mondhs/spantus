@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;

@@ -24,6 +24,7 @@ import org.spantus.math.cluster.ClusterService;
 import org.spantus.math.cluster.KNNServiceImpl;
 import org.spantus.math.dtw.DtwService;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLLocalConstraint;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.math.services.impl.ConvexHullServiceImpl;
 
@@ -42,7 +43,7 @@ public abstract class MathServicesFactory {
 	static FFTService fftService;
 	static MFCCService mfccService;
 	static LPCService lpcService;
-	static DtwService dtwService;
+//	static DtwService dtwService;
 	static ClusterService knnService;
 	static ConvexHullService convexHullService;
 
@@ -79,20 +80,17 @@ public abstract class MathServicesFactory {
 		return new PLPServiceSphinxImpl();
 	}
 
-	public static DtwService createDtwService() {
-		if (dtwService == null) {
-			DtwServiceJavaMLImpl dtwServiceImpl = new DtwServiceJavaMLImpl();
 
-			dtwService = dtwServiceImpl;
-			// return new DtwServiceImpl();
-		}
-		return dtwService;
+	public static DtwService createDtwService() {
+		return createDtwService(0, JavaMLSearchWindow.FullWindow, JavaMLLocalConstraint.Default);
 	}
 
-	public static DtwService createDtwService(Integer searchRadius, JavaMLSearchWindow javaMLSearchWindow) {
+
+	public static DtwService createDtwService(Integer searchRadius, JavaMLSearchWindow javaMLSearchWindow, JavaMLLocalConstraint localConstraint) {
 		DtwServiceJavaMLImpl dtwServiceImpl = new DtwServiceJavaMLImpl();
 		dtwServiceImpl.setSearchRadius(searchRadius);
 		dtwServiceImpl.setSearchWindow(javaMLSearchWindow);
+		dtwServiceImpl.setLocalConstaints(localConstraint);
 		return dtwServiceImpl;
 	}
 

@@ -38,6 +38,7 @@ import org.spantus.logger.Logger;
  */
 
 public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
+	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger
 			.getLogger(MultipleSegmentatorListenerOnline.class);
 

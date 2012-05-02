@@ -126,7 +126,7 @@ public class CorpusServiceBaseImplTest {
         Map<String, IValues> target = new HashMap<String, IValues>();
         target.put(Feature1, createFrameValues(1D, 2D, 3D, 4D));
         target.put(Feature2, createFrameValues(4D, 5D, 6D, 7D));
-        List<RecognitionResultDetails> results = corpusServiceBaseImpl.findMultipleMatch(target);
+        List<RecognitionResultDetails> results = corpusServiceBaseImpl.findMultipleMatchFull(target);
 
         //then
         Assert.assertEquals("All 3 entries ", 3, results.size());

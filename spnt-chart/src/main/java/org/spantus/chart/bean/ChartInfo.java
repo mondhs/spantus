@@ -19,6 +19,9 @@
  * 
  */
 package org.spantus.chart.bean;
+
+import org.spantus.ui.chart.VectorSeriesColorEnum;
+
 /**
  * 
  * 

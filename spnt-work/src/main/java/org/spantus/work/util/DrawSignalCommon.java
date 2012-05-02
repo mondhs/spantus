@@ -14,17 +14,17 @@ import javax.swing.JFrame;
 
 import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
-import org.spantus.chart.util.ChartUtils;
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
-import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
+import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
+import org.spantus.ui.chart.ChartUtils;
 import org.spantus.utils.FileUtils;
 
 public class DrawSignalCommon extends JFrame {

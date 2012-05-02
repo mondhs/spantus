@@ -24,7 +24,7 @@ import org.spantus.work.ui.i18n.I18nFactory;
 public class ExtractorsOptionPanel extends AbstractOptionPanel {
 
 	private static final long serialVersionUID = 1L;
-	private ShuttleSelectionPanel shuttle;
+	private ShuttleSelectionPanel<String,String> shuttle;
 	private ExtractorPropetiesPnl propetiesPnl;
 	
 	
@@ -67,9 +67,9 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 	}
 
 	
-	private ShuttleSelectionPanel getShuttle() {
+	private ShuttleSelectionPanel<String,String> getShuttle() {
 		if(shuttle == null){
-			shuttle = new ShuttleSelectionPanel();
+			shuttle = new ShuttleSelectionPanel<String,String>();
 			shuttle.addListSelectionListener(new SelectionListSelectionListener());
 			shuttle.setBorder(BorderFactory.createTitledBorder(null, 
 					getMessage("feature"),
@@ -77,7 +77,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 					TitledBorder.DEFAULT_POSITION));
 			
 			for (ExtractorEnum extractor : ExtractorEnum.values()) {
-				ModelEntry entry = new ModelEntry(
+				ModelEntry<String,String> entry = new ModelEntry<String,String>(
 					I18nFactory.createI18n()
 					.getMessage(extractor.name()),
 					SupportableReaderEnum.spantus.name()+":"
@@ -86,7 +86,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 				shuttle.addSourceElement(entry);
 			}
 			for (Mpeg7ExtractorEnum extractor : Mpeg7ExtractorEnum.values()) {
-				ModelEntry entry = new ModelEntry(
+				ModelEntry<String,String> entry = new ModelEntry<String,String>(
 						I18nFactory.createI18n()
 						.getMessage(extractor.name()),
 						SupportableReaderEnum.mpeg7.name()+":"
@@ -147,20 +147,20 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 	public void updateShuttle(Set<String> extractors){
 		getShuttle().addSourceElements(getShuttle().getDestListModel());
 		getShuttle().clearDestinationListModel();
-		for (ModelEntry modelEntry : getShuttle().getSourceListModel().iteratable()) {
+		for (ModelEntry<String,String> modelEntry : getShuttle().getSourceListModel().iteratable()) {
 			if(extractors.contains(modelEntry.getValue())){
 				getShuttle().addDestinationElement(modelEntry);
 			}
 			modelEntry.setOrder(0);	
 		}
 		int order = 0;
-		for (ModelEntry modelEntry : getShuttle().getDestListModel().iteratable()) {
+		for (ModelEntry<String,String> modelEntry : getShuttle().getDestListModel().iteratable()) {
 			if(getShuttle().getSourceListModel().removeElement(modelEntry)){
 				modelEntry.getOrder();
 			}
 			modelEntry.setOrder(order++);
 		}
-		getShuttle().getDestListModel().sort(new ModelEntryByOrderComparator());
+		getShuttle().getDestListModel().sort(new ModelEntryByOrderComparator<String,String>());
 	}
 	/**
 	 * 
@@ -168,7 +168,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 	
 	public void save() {
 		getConfig().getProject().getFeatureReader().getExtractors().clear();
-		for (ModelEntry modelEntry : getShuttle().getDestListModel().iteratable()) {
+		for (ModelEntry<String,String> modelEntry : getShuttle().getDestListModel().iteratable()) {
 			getConfig().getProject().getFeatureReader().getExtractors().add(modelEntry.getValue().toString());
 		}
 	}
@@ -180,9 +180,9 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 			ListSelectionListener {
 		public void valueChanged(ListSelectionEvent e) {
 			boolean propertiesInd = false;
-			Object obj = getShuttle().getDestList().getSelectedValue();
+			ModelEntry<String, String> obj = getShuttle().getDestSelectedObject();
 			if (obj instanceof ModelEntry) {
-				String extractorName = ((ModelEntry) obj).getValue().toString();
+				String extractorName = obj.getValue();
 				String[] extractor = extractorName.split(":");
 				if (extractor[0].startsWith(SupportableReaderEnum.spantus
 						.name())) {
@@ -204,7 +204,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 				propetiesPnl.setSelectedExtractorParam(null);
 
 			}
-			getShuttle().getDestListModel().sort(new ModelEntryByOrderComparator());
+			getShuttle().getDestListModel().sort(new ModelEntryByOrderComparator<String,String>());
 		}
 	}
 }

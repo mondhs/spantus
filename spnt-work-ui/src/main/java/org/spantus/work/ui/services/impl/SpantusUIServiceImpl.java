@@ -13,12 +13,12 @@ import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 
-import org.spantus.chart.bean.VectorSeriesColorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.ui.SwingUtils;
+import org.spantus.ui.chart.VectorSeriesColorEnum;
 import org.spantus.work.ui.dto.EnviromentRepresentation;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 

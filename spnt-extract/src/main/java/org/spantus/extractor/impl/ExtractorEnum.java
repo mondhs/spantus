@@ -46,6 +46,7 @@ public enum ExtractorEnum {
 	LPC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector, "LPC"),
 	MFCC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector,"MFCC"),
 	DELTA_MFCC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector,"DELTA_MFCC"),
+	DELTA_DELTA_MFCC_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector,"DELTA_DELTA_MFCC"),
 	PLP_EXTRACTOR(ExtractorTypeEnum.SequenceOfVector,"PLP"),
 	AUTOCORRELATION_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar, "Autocorrelation"),
 	ENVELOPE_EXTRACTOR(ExtractorTypeEnum.SequenceOfScalar,"Envelope"),

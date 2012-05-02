@@ -3,46 +3,17 @@ package org.spantus.math.services.javaml;
 import java.util.Collection;
 import java.util.List;
 
-import org.spantus.math.MatrixUtils;
 import org.spantus.math.VectorUtils;
+import org.spantus.math.dtw.abeel.timeseries.TimeSeries;
+import org.spantus.math.dtw.abeel.timeseries.TimeSeriesPoint;
 
-import net.sf.javaml.core.DenseInstance;
-import net.sf.javaml.core.Instance;
-import net.sf.javaml.core.SparseInstance;
-import net.sf.javaml.distance.fastdtw.timeseries.TimeSeries;
-import net.sf.javaml.distance.fastdtw.timeseries.TimeSeriesPoint;
-
-public abstract class JavaMLSupport {
-	public static Instance createInstanceScalars(List<Double> scalars) {
-		Instance instance = new SparseInstance(scalars.size());
-		int i = 0;
-		for (Double f1 : scalars) {
-			instance.put(i++, f1.doubleValue());
-		}
-		return instance;
-
-	}
-
-	public static Instance createInstanceVectors(List<List<Double>> vectors,
-			int depth) {
-		SparseInstance instance = new SparseInstance(vectors.size() * depth);
-		int i = 0;
-		for (List<Double> scalars : vectors) {
-			for (Double f1 : scalars) {
-				instance.put(i++, f1.doubleValue());
-			}
-		}
-
-		return instance;
+public final class JavaMLSupport {
+	
+	private JavaMLSupport() {
 	}
 
 	public static TimeSeries toTimeSeries(List<Double> values) {
-		Instance instance = new DenseInstance(values.size());
-		int i = 0;
-		for (Double f1 : values) {
-			instance.put(i++, f1.doubleValue());
-		}
-		TimeSeries ts = new TimeSeries(instance);
+		TimeSeries ts = new TimeSeries(values);
 		return ts;
 	}
 
@@ -56,7 +27,6 @@ public abstract class JavaMLSupport {
 			ts.addLast(i++, tsp);
 		}
 		
-//		System.out.println(ts);
 		return ts;
 	}
 }

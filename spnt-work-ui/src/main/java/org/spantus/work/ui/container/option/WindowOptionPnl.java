@@ -88,10 +88,10 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 	private static final long serialVersionUID = 1L;
 	private Map<optionsLabels, LabelControlEntry> jTextFields = null;
 
-	private MapComboBoxModel preemphasisModel;
-	private MapComboBoxModel treasholdType;
-	private MapComboBoxModel windowingType;
-	private MapComboBoxModel segmentationServiceType;
+	private MapComboBoxModel<String, PreemphasisEnum> preemphasisModel;
+	private MapComboBoxModel<String,ClassifierEnum> treasholdType;
+	private MapComboBoxModel<String,WindowingEnum> windowingType;
+	private MapComboBoxModel<String,SegmentatorServiceEnum> segmentationServiceType;
 	
 	/**
 	 * This is the default constructor
@@ -413,7 +413,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 					Object item = evt.getItem(); 
 					if (evt.getStateChange() == ItemEvent.SELECTED) { 
 						// Item was just selected 
-						ClassifierEnum thresholdEnum = (ClassifierEnum)getThresholdModel().get(item.toString());
+						ClassifierEnum thresholdEnum = getThresholdModel().get(item.toString());
 						setLabelControlVisible(optionsLabels.thresholdLearningPeriod, thresholdEnum.name());
 						setLabelControlVisible(optionsLabels.thresholdCoef, thresholdEnum.name());
 					}
@@ -495,7 +495,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				workConfig.setWindowOverlap(overlap.intValue());
 				break;
 			case windowingType:
-				WindowingEnum windowingEnum = (WindowingEnum)getWindowingModel().getSelectedObject();
+				WindowingEnum windowingEnum = getWindowingModel().getSelectedObject();
 				if(windowingEnum!=null){
 					getInfo().getProject().getFeatureReader().getWorkConfig().setWindowingType(windowingEnum.name());
 				}else{
@@ -503,7 +503,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				}
 				break;
 			case preemphasis:
-				PreemphasisEnum preemphasisEnum = (PreemphasisEnum)getPreemphasisModel().getSelectedObject();
+				PreemphasisEnum preemphasisEnum = getPreemphasisModel().getSelectedObject();
 				if(preemphasisEnum!=null){
 					getInfo().getProject().getFeatureReader().getWorkConfig().setPreemphasis(preemphasisEnum.name());
 				}else{
@@ -545,7 +545,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				workConfig.setThresholdCoef(thresholdCoef.floatValue());
 				break;
 			case segmentationServiceType:
-				SegmentatorServiceEnum segmentatorServiceEnum = (SegmentatorServiceEnum)getSegmentationServiceTypeModel().getSelectedObject();
+				SegmentatorServiceEnum segmentatorServiceEnum = getSegmentationServiceTypeModel().getSelectedObject();
 				workConfig.setSegmentationServiceType(segmentatorServiceEnum.name());
 				break;
 			case segmentationMinLength:
@@ -573,7 +573,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 				fieldEntry.getValue().setVisible(isAdvanced());
 				break;
 			case thresholdType:
-				ClassifierEnum thresholdType = (ClassifierEnum)getThresholdModel().getSelectedObject();
+				ClassifierEnum thresholdType = getThresholdModel().getSelectedObject();
 				if(thresholdType!=null){
 					getInfo().getProject().setClassifierType(thresholdType.name());
 				}else{
@@ -635,45 +635,45 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 		return true;
 	}
 	
-	protected MapComboBoxModel getThresholdModel() {
+	protected MapComboBoxModel<String, ClassifierEnum> getThresholdModel() {
 		if (treasholdType == null) {
-			treasholdType = new MapComboBoxModel();
+			treasholdType = new MapComboBoxModel<String, ClassifierEnum>();
 			for (ClassifierEnum classifierTypeEnum : ClassifierEnum.values()) {
 				String label = getMessage(PREFIX_classifier + classifierTypeEnum.name());
-				treasholdType.addElement(new ModelEntry(label, classifierTypeEnum));
+				treasholdType.add(new ModelEntry<String, ClassifierEnum>(label, classifierTypeEnum));
 			}
 		}
 		return treasholdType;
 	}
 	
-	protected MapComboBoxModel getWindowingModel() {
+	protected MapComboBoxModel<String, WindowingEnum> getWindowingModel() {
 		if (windowingType == null) {
-			windowingType = new MapComboBoxModel();
+			windowingType = new MapComboBoxModel<String, WindowingEnum>();
 			for (WindowingEnum windowingTypeEnum : WindowingEnum.values()) {
 				String label = getMessage(PREFIX_windowing + windowingTypeEnum.name());
-				windowingType.addElement(new ModelEntry(label, windowingTypeEnum));
+				windowingType.add(new ModelEntry<String, WindowingEnum>(label, windowingTypeEnum));
 			}
 		}
 		return windowingType;
 	}
 	
-	protected MapComboBoxModel getPreemphasisModel() {
+	protected MapComboBoxModel<String, PreemphasisEnum> getPreemphasisModel() {
 		if (preemphasisModel == null) {
-			preemphasisModel = new MapComboBoxModel();
+			preemphasisModel = new MapComboBoxModel<String, PreemphasisEnum>();
 			for (PreemphasisEnum preemphasisEnum : PreemphasisEnum.values()) {
 				String label = getMessage(PREFIX_preemphasis + preemphasisEnum.name());
-				preemphasisModel.addElement(new ModelEntry(label, preemphasisEnum));
+				preemphasisModel.add(new ModelEntry<String, PreemphasisEnum>(label, preemphasisEnum));
 			}
 		}
 		return preemphasisModel;
 	}
 	
-	protected MapComboBoxModel getSegmentationServiceTypeModel(){
+	protected MapComboBoxModel<String,SegmentatorServiceEnum> getSegmentationServiceTypeModel(){
 		if (segmentationServiceType == null) {
-			segmentationServiceType = new MapComboBoxModel();
+			segmentationServiceType = new MapComboBoxModel<String,SegmentatorServiceEnum>();
 			for (SegmentatorServiceEnum segmentatorServiceEnum : SegmentatorServiceEnum.values()) {
 				String label = getMessage(PREFIX_segmentation + segmentatorServiceEnum.name());
-				segmentationServiceType.addElement(new ModelEntry(label, segmentatorServiceEnum));
+				segmentationServiceType.add(new ModelEntry<String,SegmentatorServiceEnum>(label, segmentatorServiceEnum));
 			}
 		}
 		return segmentationServiceType;

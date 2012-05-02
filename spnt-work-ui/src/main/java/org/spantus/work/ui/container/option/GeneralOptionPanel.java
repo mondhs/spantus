@@ -15,11 +15,11 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import org.spantus.chart.bean.VectorSeriesColorEnum;
+import org.spantus.core.beans.I18n;
 import org.spantus.logger.Logger;
 import org.spantus.ui.MapComboBoxModel;
 import org.spantus.ui.ModelEntry;
-import org.spantus.core.beans.I18n;
+import org.spantus.ui.chart.VectorSeriesColorEnum;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
@@ -30,8 +30,9 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 	Logger log = Logger.getLogger(GeneralOptionPanel.class);
 	private Map<generalLabels, LabelControlEntry> jComponents;
 
-	private MapComboBoxModel laf;
-	private MapComboBoxModel locales;
+	private MapComboBoxModel<String,String> laf;
+	private MapComboBoxModel<String,Locale> locales;
+	private MapComboBoxModel<String,String> chartColorTypes;
 
 	public GeneralOptionPanel() {
 		super();
@@ -53,11 +54,11 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 
 			switch (fieldEntry.getKey()) {
 			case locale:
-				Object locale = getLocaleModel().getSelectedObject();
-				getInfo().setLocale((Locale) locale);
+				Locale locale = getLocaleModel().getSelectedObject();
+				getInfo().setLocale(locale);
 				break;
 			case lookAndFeel:
-				getInfo().getEnv().setLaf((String)getLAFModel().getSelectedObject());
+				getInfo().getEnv().setLaf(getLAFModel().getSelectedObject());
 				break;
 			case advancedMode:
 				getInfo().getEnv().setAdvancedMode(((JCheckBox)cmp).isSelected());
@@ -67,7 +68,7 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 				getInfo().getEnv().setGrid(((JCheckBox)cmp).isSelected());
 				break;
 			case vectorChartColorType:
-				getInfo().getEnv().setVectorChartColorTypes((String)getChartColorTypeModel().getSelectedObject());
+				getInfo().getEnv().setVectorChartColorTypes(getChartColorTypeModel().getSelectedObject());
 				break;
 			case popupNotification:
 				getInfo().getEnv().setPopupNotifications(((JCheckBox)cmp).isSelected());
@@ -210,38 +211,38 @@ public class GeneralOptionPanel extends AbstractOptionPanel {
 	/**
 	 * 
 	 */
-	protected MapComboBoxModel getLAFModel() {
+	protected MapComboBoxModel<String,String> getLAFModel() {
 		if (laf == null) {
-			laf = new MapComboBoxModel();
+			laf = new MapComboBoxModel<String,String>();
 			UIManager.LookAndFeelInfo looks[] = UIManager
 					.getInstalledLookAndFeels();
 			for (LookAndFeelInfo lookAndFeelInfo : looks) {
-				laf.addElement(new ModelEntry(lookAndFeelInfo.getName(),
+				laf.add(new ModelEntry<String,String>(lookAndFeelInfo.getName(),
 						lookAndFeelInfo.getClassName()));
 			}
 		}
 		return laf;
 	}
-	private MapComboBoxModel chartColorTypes;
+	
 
-	protected MapComboBoxModel getChartColorTypeModel() {
+	protected MapComboBoxModel<String,String> getChartColorTypeModel() {
 		if(chartColorTypes == null){
-			chartColorTypes = new MapComboBoxModel();	
+			chartColorTypes = new MapComboBoxModel<String,String>();	
 			for (VectorSeriesColorEnum colorType : VectorSeriesColorEnum.values()) {
 				String label = getMessage("colorType_" + colorType.name());
-				chartColorTypes.addElement(new ModelEntry(label, colorType.name()));
+				chartColorTypes.add(new ModelEntry<String,String>(label, colorType.name()));
 			}
 		}
 		return chartColorTypes;
 		 
 	}
 	
-	protected MapComboBoxModel getLocaleModel() {
+	protected MapComboBoxModel<String,Locale> getLocaleModel() {
 		if (locales == null) {
-			locales = new MapComboBoxModel();
+			locales = new MapComboBoxModel<String,Locale>();
 			for (Locale locale : I18n.LOCALES) {
 				String label = getMessage("locale_" + locale.toString());
-				locales.addElement(new ModelEntry(label, locale));
+				locales.add(new ModelEntry<String,Locale>(label, locale));
 			}
 		}
 		return locales;

@@ -25,9 +25,9 @@ package org.spantus.ui;
  * Created Feb 22, 2010
  *
  */
-public class ModelEntryByOrderComparator extends ModelEntryByNameComparator {
+public class ModelEntryByOrderComparator<K,V>  extends ModelEntryByNameComparator<K,V>{
 
-	public int compare(ModelEntry o1, ModelEntry o2) {
+	public int compare(ModelEntry<K,V> o1, ModelEntry<K,V> o2) {
 		if(o1 == null && o2 == null){
 			return 0;
 		}

@@ -50,6 +50,7 @@ public class ClassifierRuleBaseServiceFileMvelImpl extends
 			while((line = br.readLine()) != null) { 
 				processLine(rules, line);
 			}
+			br.close();
 		} catch (FileNotFoundException e) {
 			log.error("Rule file not opended",e);
 		} catch (IOException e) {

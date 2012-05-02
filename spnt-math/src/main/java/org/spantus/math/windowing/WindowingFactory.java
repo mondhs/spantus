@@ -17,6 +17,8 @@ public abstract class WindowingFactory {
 			return new WelchWindowing();			
 		case Rextangular:
 			return new RextangularWindowing();			
+		case ButterworthWindowing:
+			return new ButterworthWindowing();
 		default:
 			return new HammingWindowing();			
 		}

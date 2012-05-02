@@ -30,6 +30,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.spantus.logger.Logger;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLLocalConstraint;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.ui.MapComboBoxModel;
 import org.spantus.ui.ModelEntry;
@@ -51,9 +52,12 @@ import com.jgoodies.forms.layout.FormLayout;
 public class RecognitionOptionPnl extends AbstractOptionPanel implements ReloadableComponent{
 	
         private enum WindowOptionSeparators {recognition};
+        public static final String PREFIX_dtwWindow = "dtwWindow_";
+        public static final String PREFIX_dtwConstraint = "dtwConstraint_";
+        
 
 	enum optionsLabels{
-		dtwWindow, dtwRadius, repositoryPath,  
+		dtwWindow, dtwConstraint, dtwRadius, repositoryPath,  
 		} 
 
 	
@@ -62,7 +66,8 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 	private static final long serialVersionUID = 1L;
 	private Map<optionsLabels, LabelControlEntry> jTextFields = null;
 
-	private MapComboBoxModel dtwWindowCbxModel;
+	private MapComboBoxModel<String, JavaMLSearchWindow> dtwWindowCbxModel;
+	private MapComboBoxModel<String, JavaMLLocalConstraint> dtwConstraintCbxModel;
 	
 	/**
 	 * This is the default constructor
@@ -79,7 +84,7 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 	public void initialize() {
 //		this.setSize(300, 200);
 		optionsLabels[] recognitionProcessingLabels = new optionsLabels[]{
-				optionsLabels.dtwWindow,
+				optionsLabels.dtwWindow, optionsLabels.dtwConstraint, 
 				optionsLabels.dtwRadius, optionsLabels.repositoryPath
 		};
 		
@@ -115,7 +120,7 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 		onShowEvent();
 	}
 	
-        public static final String PREFIX_dtwWindow = "dtwWindow_";
+      
         
 	//Override
 	public void onShowEvent() {
@@ -143,6 +148,12 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 				((JComboBox)fieldEntry.getValue().getControl()).setSelectedItem(
 						getMessage(PREFIX_dtwWindow
 						+config.getDtwWindow()));
+				fieldEntry.getValue().setVisible(isAdvanced());
+				break;
+			case dtwConstraint:
+				((JComboBox)fieldEntry.getValue().getControl()).setSelectedItem(
+						getMessage(PREFIX_dtwConstraint
+						+config.getLocalConstraint()));
 				fieldEntry.getValue().setVisible(isAdvanced());
 				break;
 
@@ -178,6 +189,10 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 			JComboBox windowingInput = new JComboBox();
 			windowingInput.setModel(getDtwWindowCbxModel());
 			addFieldList(windowingInput, optionsLabels.dtwWindow.name() );
+			
+			JComboBox constraintInput = new JComboBox();
+			constraintInput.setModel(getDtwConstraintCbxModel());
+			addFieldList(constraintInput, optionsLabels.dtwConstraint.name() );
 
                         
                         JFormattedTextField textField = new JFormattedTextField(
@@ -211,11 +226,19 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 				config.setRadius(radius.intValue());
 				break;
 			case dtwWindow:
-				JavaMLSearchWindow windowingEnum = (JavaMLSearchWindow)getDtwWindowCbxModel().getSelectedObject();
+				JavaMLSearchWindow windowingEnum = getDtwWindowCbxModel().getSelectedObject();
 				if(windowingEnum!=null){
 					config.setDtwWindow(windowingEnum.name());
 				}else{
 					config.setDtwWindow(null);
+				}
+				break;
+			case dtwConstraint:
+				JavaMLLocalConstraint javaMLLocalConstraint = getDtwConstraintCbxModel().getSelectedObject();
+				if(javaMLLocalConstraint!=null){
+					config.setLocalConstraint(javaMLLocalConstraint.name());
+				}else{
+					config.setLocalConstraint(null);
 				}
 				break;
 			case repositoryPath:
@@ -292,15 +315,26 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 	
 
 	
-	protected MapComboBoxModel getDtwWindowCbxModel() {
+	protected MapComboBoxModel<String, JavaMLSearchWindow> getDtwWindowCbxModel() {
 		if (dtwWindowCbxModel == null) {
-			dtwWindowCbxModel = new MapComboBoxModel();
+			dtwWindowCbxModel = new MapComboBoxModel<String, JavaMLSearchWindow>();
 			for (JavaMLSearchWindow windowingTypeEnum : JavaMLSearchWindow.values()) {
 				String label = getMessage(PREFIX_dtwWindow + windowingTypeEnum.name());
-				dtwWindowCbxModel.addElement(new ModelEntry(label, windowingTypeEnum));
+				dtwWindowCbxModel.add(new ModelEntry<String, JavaMLSearchWindow>(label, windowingTypeEnum));
 			}
 		}
 		return dtwWindowCbxModel;
+	}
+
+	public MapComboBoxModel<String, JavaMLLocalConstraint> getDtwConstraintCbxModel() {
+		if (dtwConstraintCbxModel == null) {
+			dtwConstraintCbxModel = new MapComboBoxModel<String, JavaMLLocalConstraint>();
+			for (JavaMLLocalConstraint constraintEnum : JavaMLLocalConstraint.values()) {
+				String label = getMessage(PREFIX_dtwConstraint + constraintEnum.name());
+				dtwConstraintCbxModel.add(new ModelEntry<String, JavaMLLocalConstraint>(label, constraintEnum));
+			}
+		}
+		return dtwConstraintCbxModel;
 	}
 	
 	

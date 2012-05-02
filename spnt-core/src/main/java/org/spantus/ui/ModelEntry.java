@@ -26,35 +26,35 @@ import java.util.Map.Entry;
  * @since 0.0.1 Created Apr 2, 2009
  * 
  */
-public class ModelEntry implements Entry<String, Object> {
-	private String key;
-	private Object value;
+public class ModelEntry<K, V> implements Entry<K, V> {
+	private K key;
+	private V value;
 	private Integer order = 0;
 
-	public ModelEntry(String key, Object value) {
+	public ModelEntry(K key, V value) {
 		this.key = key;
 		this.value = value;
 	}
 
-	public ModelEntry(Entry<String, Object> entry) {
+	public ModelEntry(Entry<K, V> entry) {
 		this.key = entry.getKey();
 		this.value = entry.getValue();
 	}
 
-	public String getKey() {
+	public K getKey() {
 		return key;
 	}
 
-	public Object getValue() {
+	public V getValue() {
 		return value;
 	}
 
-	public Object setValue(Object value) {
+	public V setValue(V value) {
 		this.value = value;
 		return value;
 	}
 
-	public void setKey(String key) {
+	public void setKey(K key) {
 		this.key = key;
 	}
 	
@@ -68,7 +68,7 @@ public class ModelEntry implements Entry<String, Object> {
 
 	@Override
 	public String toString() {
-		return getKey();
+		return getKey().toString();
 	}
 
 

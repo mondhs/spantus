@@ -2,12 +2,12 @@ package org.spantus.math.services;
 
 import java.util.List;
 
-import org.spantus.math.DTW;
+import org.spantus.math.SpntDTW;
 
 public class DTWServiceImpl implements DTWService {
 
 	public Double calculateDTWPath(List<Double> target, List<Double> sample) {
-		return DTW.estimate(target, sample);
+		return SpntDTW.estimate(target, sample);
 	}
 
 }

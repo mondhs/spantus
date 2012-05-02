@@ -20,7 +20,6 @@
  */
 package org.spantus.chart.impl;
 
-import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -28,17 +27,17 @@ import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.text.Format;
 import java.text.MessageFormat;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 import net.quies.math.plot.CoordinateBoundary;
 import net.quies.math.plot.GraphDomain;
 
-import org.spantus.chart.bean.VectorSeriesColorEnum;
-import org.spantus.chart.util.ColorLookup;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.logger.Logger;
+import org.spantus.ui.chart.ChartUtils.ChartScale;
+import org.spantus.ui.chart.ChartUtils;
+import org.spantus.ui.chart.ColorLookup;
+import org.spantus.ui.chart.VectorSeriesColorEnum;
 /**
  * 
  * 
@@ -51,23 +50,18 @@ import org.spantus.logger.Logger;
  */
 public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 
+	
 	private FrameVectorValues values;
-//	private CoordinateBoundary coordinateBoundary;
-	private ColorLookup colorLookup = new ColorLookup();
+	private ColorLookup colorLookup = null;
+	private ChartScale chartScale = ChartScale.sqrt;
 	private GraphDomain domain;
 	private BufferedImage image = null;
-	
 	private Double order = 0D;
 	
-	private Double min = Double.MAX_VALUE;
-	private Double max = -Double.MAX_VALUE;
-	private Double delta = Double.MAX_VALUE;
 
 	private VectorSeriesColorEnum colorType = VectorSeriesColorEnum.blackWhite;
 
 	
-	// private LowerLimitInstance lowerLimit = null;
-	// private UpperLimitInstance upperLimit = null;
 
 	BigDecimal xScalar = new BigDecimal(1);
 	BigDecimal yScalar = new BigDecimal(1);
@@ -77,8 +71,7 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	public WavMatrixChartInstance(String description, FrameVectorValues values) {
 		this.description = description;
 		this.values = values;
-		// this.style = style;
-//		coordinateBoundary = getCoordinateBoundary(values);
+		this.colorLookup = new ColorLookup(colorType);
 		log.debug("name: " + description + "; order: " + getOrder() + "; sampleRate:" + values.getSampleRate()+ "; length: " + values.size());
 
 	}
@@ -111,27 +104,11 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 			}
 
 		}
-		minmax(vals);
-		int height = vals.get(0).size()==0?1:vals.get(0).size();
-		image = new BufferedImage(vals.size(), height,
-				BufferedImage.TYPE_INT_RGB);
-		int[] rgbArray = new int[vals.size() * vals.get(0).size()];
-		int x = 0, y = 0;
-		for (List<Double> fv : vals) {
-			int delta = vals.size();
-			y = 0;
-			LinkedList<Double> lf = new LinkedList<Double>(fv);
-			for (ListIterator<Double> iterator2 = lf.listIterator(fv.size()); iterator2.hasPrevious();) {
-				Double f1 = (Double) iterator2.previous();
-				rgbArray[x + (y * delta)] = lookupColor(f1);
-				y++;
-			}
-			x++;
-		}
-		image.setRGB(0, 0, vals.size(), vals.get(0).size(), rgbArray, 0, vals
-				.size());
+		image = ChartUtils.createImage(vals, getChartScale(), colorLookup);
 		return image;
 	}
+	
+
 
 	private CoordinateBoundary getCoordinateBoundary(FrameVectorValues values) {
 
@@ -181,29 +158,7 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	}
 
 
-	private void minmax(FrameVectorValues values){
-		for (List<Double> fv : values) {
-			boolean first = true;
-			for (Double f1 : fv) {
-				//skip first index for estimation
-				if(first){
-					first = false;
-					continue;
-				}
-				min = Math.min(min, f1);
-				max = Math.max(max, f1);
-			}
-		}
-		delta = max - min;
-	}
 
-
-	public int lookupColor(Double floatValue) {
-		Double fColor = ((Double) (floatValue - min) / (delta));
-		short s = (short)(256*fColor);
-		Color clr = colorLookup.lookup(getColorType(), s);
-		return clr.getRGB();
-	}
 
 	public GraphDomain getDomain() {
 		return domain;
@@ -226,6 +181,7 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	}
 
 	public void setColorType(VectorSeriesColorEnum colorType) {
+		this.colorLookup = new ColorLookup(colorType);
 		this.colorType = colorType;
 	}
 	public String getValueOn(BigDecimal x) {
@@ -255,6 +211,14 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
                 sb.append("]");
                 
 		return sb.toString();
+	}
+
+	public ChartScale getChartScale() {
+		return chartScale;
+	}
+
+	public void setChartScale(ChartScale chartScale) {
+		this.chartScale = chartScale;
 	}
 
 }

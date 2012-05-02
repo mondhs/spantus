@@ -41,12 +41,12 @@ public abstract class AbstractSpectralExtractor extends AbstractExtractor {
 	
 
 	protected FrameVectorValues calculateFFT(FrameValues window){
-		syncFFTParams();
+		syncParams();
 		
 		return getAbstractExtractorVector().calculateWindow(window);
 	}
 	
-	private void syncFFTParams(){
+	private void syncParams(){
 		getAbstractExtractorVector().setConfig(getConfig());
 	}
 	
@@ -64,8 +64,7 @@ public abstract class AbstractSpectralExtractor extends AbstractExtractor {
 	
 	
 	public Double getExtractorSampleRate() {
-//		return (getConfig().getSampleRate()/(getWinowSize()*.85f));
-		return super.getExtractorSampleRate();//(getConfig().getSampleRate()/(getConfig().getWindowSize()));
+		return super.getExtractorSampleRate();
 
 	}
 	public void setAbstractExtractorVector(

@@ -31,24 +31,30 @@ import javax.swing.event.ListDataListener;
  * Created Feb 22, 2010
  *
  */
-public class MapComboBoxModel extends DefaultComboBoxModel {
+public class MapComboBoxModel<K,V> extends DefaultComboBoxModel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Map<String, Object> objectMap;
-	private String selectedObject;
+	private Map<K, V> objectMap;
+	private K selectedObject;
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * use add instead
+	 */
+	@Deprecated
 	public void addElement(Object obj) {
-		if(obj instanceof Entry<?,?>){
-			Entry<String, Object> entry = (Entry<String,Object>)obj;
-			getObjectMap().put(entry.getKey(), entry.getValue());
-		}else{
+//		if(obj instanceof Entry<?,?>){
+//			Entry<K, V> entry = (Entry<K,V>)obj;
+//			getObjectMap().put(entry.getKey(), entry.getValue());
+//		}else{
 			throw new IllegalArgumentException(obj + " is not supported");
-		}
+//		}
+	}
+	public void add(Entry<K,V> entry) {
+		getObjectMap().put(entry.getKey(), entry.getValue());
 	}
 
 	public void insertElementAt(Object obj, int index) {
@@ -63,7 +69,7 @@ public class MapComboBoxModel extends DefaultComboBoxModel {
 		throw new IllegalArgumentException("not implemented!");
 	}
 
-	public Object getSelectedItem() {
+	public K getSelectedItem() {
 //		Object value = getObjectMap().get(selectedKey);
 //		if(value == null){
 //			return null;
@@ -71,21 +77,22 @@ public class MapComboBoxModel extends DefaultComboBoxModel {
 //		ModelEntry entry = new ModelEntry(selectedKey, value);
 		return selectedObject;
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setSelectedItem(Object anItem) {
-		selectedObject = (String)anItem;
+		selectedObject = (K)anItem;
 	}
 	
 	public void setSelectedObject(Object obj) {
 		setSelectedItem(getLabel(obj));
 	}
 
-	public Object get(String key){
+	public V get(String key){
 		return getObjectMap().get(key);
 	}
 	
-	public String getLabel(Object obj){
-		for (Entry<String, Object> entry : getObjectMap().entrySet()) {
+	public K getLabel(Object obj){
+		for (Entry<K, V> entry : getObjectMap().entrySet()) {
 			if(entry.getValue().equals(obj)){
 				return entry.getKey();
 			}
@@ -93,13 +100,13 @@ public class MapComboBoxModel extends DefaultComboBoxModel {
 		return null;
 	}
 	
-	public Object getSelectedObject(){
+	public V getSelectedObject(){
 		return get((String)getSelectedItem());
 	}
 	
-	public Object getElementAt(int index) {
+	public K getElementAt(int index) {
 		int i = 0;
-		for (Entry<String, Object> entry : getObjectMap().entrySet()) {
+		for (Entry<K, V> entry : getObjectMap().entrySet()) {
 			i++;
 			if(i == index){
 				return entry.getKey();
@@ -125,14 +132,14 @@ public class MapComboBoxModel extends DefaultComboBoxModel {
 //		fireIntervalAdded(this, 0, getObjectMap().size()-1);
 //	}
 
-	public Map<String, Object> getObjectMap() {
+	public Map<K, V> getObjectMap() {
 		if(objectMap==null){
-			objectMap = new LinkedHashMap<String, Object>();
+			objectMap = new LinkedHashMap<K, V>();
 		}
 		return objectMap;
 	}
 
-	public void setObjectMap(Map<String, Object> objectMap) {
+	public void setObjectMap(Map<K, V> objectMap) {
 		this.objectMap = objectMap;
 	}
 	

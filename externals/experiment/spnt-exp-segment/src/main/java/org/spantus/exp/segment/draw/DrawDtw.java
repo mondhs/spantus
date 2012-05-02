@@ -38,7 +38,7 @@ import org.jfree.chart.renderer.xy.XYBlockRenderer;
 import org.jfree.data.xy.AbstractXYZDataset;
 import org.jfree.data.xy.XYZDataset;
 import org.spantus.logger.Logger;
-import org.spantus.math.DTW;
+import org.spantus.math.SpntDTW;
 import org.spantus.math.dtw.DtwInfo;
 /**
  * 
@@ -182,7 +182,7 @@ public class DrawDtw {
 		};
 		List<Double> target = new ArrayList<Double>(Arrays.asList(sampleArr[1]));
 		List<Double> sample1 = new ArrayList<Double>(Arrays.asList(sampleArr[0]));
-		DtwInfo info = DTW.createDtwInfo (target, sample1);
+		DtwInfo info = SpntDTW.createDtwInfo (target, sample1);
 
 		DrawDtw demo = new DrawDtw(info);
 		demo.showChart();

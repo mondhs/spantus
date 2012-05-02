@@ -26,9 +26,9 @@ import java.util.Comparator;
  * Created Feb 22, 2010
  *
  */
-public class ModelEntryByNameComparator implements Comparator<ModelEntry> {
+public class ModelEntryByNameComparator<K,V> implements Comparator<ModelEntry<K,V>> {
 
-	public int compare(ModelEntry o1, ModelEntry o2) {
+	public int compare(ModelEntry<K,V> o1, ModelEntry<K,V> o2) {
 		if(o1 == null && o2 == null){
 			return 0;
 		}

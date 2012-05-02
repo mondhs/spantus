@@ -15,6 +15,7 @@ import javax.swing.JToolBar;
 
 import org.spantus.event.SpantusEvent;
 import org.spantus.event.SpantusEventMulticaster;
+import org.spantus.exception.ProcessingException;
 import org.spantus.work.ui.ImageResourcesEnum;
 
 public class RecognitionToolBar extends JToolBar {
@@ -161,8 +162,8 @@ public class RecognitionToolBar extends JToolBar {
 ////				adminDialog.setVisible(true);
 ////				
 ////				break;
-//			default:
-//				break;
+			default:
+				throw new ProcessingException("Not implemented");
 			}
 //			
 		}

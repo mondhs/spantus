@@ -19,7 +19,7 @@ public interface CorpusService {
 	 * @param featureDataMap
 	 * @return
 	 */
-	public List<RecognitionResultDetails> findMultipleMatch(
+	public List<RecognitionResultDetails> findMultipleMatchFull(
 			Map<String, IValues> featureDataMap);
 	
 	/**

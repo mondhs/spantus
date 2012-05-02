@@ -5,9 +5,11 @@ import java.util.ListIterator;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
+import org.spantus.extractor.AbstractExtractorVector;
 
-public class DeltaMFCCExtractor extends MFCCExtractor{
+public class DeltaMFCCExtractor extends AbstractSpectralVectorExtractor{
 	
+	private AbstractExtractorVector abstractExtractorVector;
 	
     private List<Double> previousValues;
 
@@ -15,24 +17,58 @@ public class DeltaMFCCExtractor extends MFCCExtractor{
         return ExtractorEnum.DELTA_MFCC_EXTRACTOR.name();
     }
 	
+	private void syncParams(){
+		getAbstractExtractorVector().setConfig(getConfig());
+	}
+	
+	protected FrameVectorValues calculateMFCC(FrameValues window){
+		syncParams();
+		return getAbstractExtractorVector().calculateWindow(window);
+	}
+	
+	
+	
 	public FrameVectorValues calculateWindow(FrameValues window) {
-		FrameVectorValues mfccValues = super.calculateWindow(window);
-		FrameVectorValues values = new FrameVectorValues(mfccValues);
+		FrameVectorValues mfccValues = calculateMFCC(window);
+		FrameVectorValues values = new FrameVectorValues();
+		values.setSampleRate(mfccValues.getSampleRate());
 
-		for (List<Double> currentList : values) {
+		for (List<Double> currentList : mfccValues) {
 			FrameValues cachedPrevious = new FrameValues(currentList);
+			FrameValues calcCurrentList = new FrameValues(currentList);
 			if(previousValues == null){
 				previousValues =cachedPrevious;
 			}
-			ListIterator<Double> iterator = currentList.listIterator();
+			ListIterator<Double> iterator = calcCurrentList.listIterator();
 			for (Double previous : previousValues) {
 				Double current = iterator.next();
-				iterator.set(Math.pow((current - previous),2));
+				double delta = current - previous;
+//				delta = 10D*Math.log10(Math.pow((delta),2));
+//				if(Double.isInfinite(delta)){
+//					delta = 0;
+//				}
+				values.updateMinMax(delta);
+				iterator.set(delta);
 			}
+			values.add(calcCurrentList);
+			
 			previousValues = cachedPrevious;
 		}
 
 		return values ;
+	}
+
+	public AbstractExtractorVector getAbstractExtractorVector() {
+		if(abstractExtractorVector == null){
+			abstractExtractorVector = ExtractorUtils.createMFCCExtractor();
+		}
+		return abstractExtractorVector;
+	}
+
+
+	public void setAbstractExtractorVector(
+			AbstractExtractorVector abstractExtractorVector) {
+		this.abstractExtractorVector = abstractExtractorVector;
 	}
 
 }

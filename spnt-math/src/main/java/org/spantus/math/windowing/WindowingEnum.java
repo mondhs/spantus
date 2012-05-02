@@ -5,5 +5,5 @@ public enum WindowingEnum {
 	Hanning, 
 	Barlett, 
 	Rextangular,
-	Welch;
+	Welch, ButterworthWindowing;
 }

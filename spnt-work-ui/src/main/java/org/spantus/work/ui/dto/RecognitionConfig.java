@@ -32,6 +32,7 @@ public class RecognitionConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer radius;
     private String dtwWindow;
+    private String localConstraint;
     private String repositoryPath;
 
     public String getDtwWindow() {
@@ -57,4 +58,12 @@ public class RecognitionConfig implements Serializable {
     public void setRepositoryPath(String repositoryPath) {
         this.repositoryPath = repositoryPath;
     }
+
+	public String getLocalConstraint() {
+		return localConstraint;
+	}
+
+	public void setLocalConstraint(String localConstraint) {
+		this.localConstraint = localConstraint;
+	}
 }

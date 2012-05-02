@@ -13,6 +13,8 @@ import java.util.Set;
 
 import javax.sound.sampled.AudioInputStream;
 
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
@@ -24,11 +26,13 @@ import org.spantus.core.beans.RecognitionResultDetails;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.service.CorpusRepository;
 import org.spantus.core.service.CorpusService;
+import org.spantus.exception.ProcessingException;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
 import org.spantus.math.NumberUtils;
 import org.spantus.math.dtw.DtwResult;
 import org.spantus.math.dtw.DtwService;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLLocalConstraint;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.math.services.MathServicesFactory;
 
@@ -50,6 +54,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	private Integer searchRadius;
 
 	private JavaMLSearchWindow javaMLSearchWindow;
+	private JavaMLLocalConstraint javaMLLocalConstraint = JavaMLLocalConstraint.Default;
 
 	public RecognitionResult match(Map<String, IValues> target) {
 		RecognitionResult match = findBestMatch(target);
@@ -74,7 +79,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param target
 	 * @return
 	 */
-	public List<RecognitionResultDetails> findMultipleMatch(
+	public List<RecognitionResultDetails> findMultipleMatchFull(
 			Map<String, IValues> target) {
 		Long begin = System.currentTimeMillis();
 		LOG.debug("[findMultipleMatch]+++ ");
@@ -85,7 +90,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		Map<String, Double> minimum = new HashMap<String, Double>();
 		Map<String, Double> maximum = new HashMap<String, Double>();
 
-		// iterate all entires in corpus
+		// iterate all entries in corpus
 		for (SignalSegment sample : getCorpus().findAllEntries()) {
 			LOG.debug("[findMultipleMatch] sample: {0} ", 
 					sample.getName());
@@ -101,13 +106,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
 				IValueHolder<?> sampleFeatureData = sample.getFeatureFrameVectorValuesMap().get(
 						targetEntry.getKey());
 				if (sampleFeatureData == null) {
+					LOG.error("[findMultipleMatch] sampleFeatureData is not found. skip for " + targetEntry.getKey());
 					continue;
 				}
 
-				// log.debug("[findMultipleMatch] target [{0}]: {1} ",
-				// featureName, targetEntry.getValue());
-				// log.debug("[findMultipleMatch] sample [{0}]: {1} ",
-				// featureName,sampleFeatureData.getValues());
 				result.getSampleLegths().put(
 						featureName,
 						 (double) Math.round(sampleFeatureData.getValues()
@@ -118,28 +120,13 @@ public class CorpusServiceBaseImpl implements CorpusService {
 										.getTime() * 1000));
 				result.setInfo(sample);
 
-				DtwResult dtwResult = null;
-				int targetDimention = targetEntry.getValue().getDimention();
-				// you know your stuff
-				if (targetDimention == 1) {
-					dtwResult = (DtwResult) getDtwService().calculateInfo(
-							(FrameValues) targetEntry.getValue(),
-							(FrameValues) sampleFeatureData.getValues());
-				} else {
-					if (targetDimention  != sampleFeatureData
-							.getValues().getDimention()) {
-						LOG.error("[findMultipleMatch] Sample size not same "
-								+ targetEntry.getKey()
-								+ targetDimention + "!="
-								+ sampleFeatureData.getValues().getDimention());
-						continue;
-					}
-					dtwResult = getDtwService().calculateInfoVector(
-							(FrameVectorValues) targetEntry.getValue(),
-							(FrameVectorValues) sampleFeatureData.getValues());
-				}
+				
+				DtwResult dtwResult = calculateInfo(targetEntry.getKey(), targetEntry.getValue(),sampleFeatureData.getValues());
+				
 				result.getPath().put(featureName, dtwResult.getPath());
 				result.getScores().put(featureName, dtwResult.getResult());
+				result.getCostMatrixMap().put(featureName, dtwResult.getCostMatrix());
+				result.getStatisticalSummaryMap().put(featureName, dtwResult.getStatisticalSummary());
 				updateMinMax(featureName, dtwResult.getResult(), minimum,
 						maximum);
 			}
@@ -156,6 +143,37 @@ public class CorpusServiceBaseImpl implements CorpusService {
 
 	/**
 	 * 
+	 * @param key
+	 * @param targetEntry
+	 * @param sampleFeatureData
+	 * @return
+	 */
+	private DtwResult calculateInfo(String key, IValues targetEntry, IValues sampleFeatureData) {
+		int targetDimention = targetEntry.getDimention();
+		DtwResult dtwResult = null;
+		// you know your stuff
+		if (targetDimention == 1) {
+			dtwResult = (DtwResult) getDtwService().calculateInfo(
+					(FrameValues) targetEntry,
+					(FrameValues) sampleFeatureData);
+		} else {
+			if (targetDimention  != sampleFeatureData
+					.getDimention()) {
+				String msg = MessageFormat.format("[findMultipleMatch] Sample size not same {0}: {1} != {2}",
+						 key,
+						 targetDimention ,
+						 sampleFeatureData.getDimention());
+				throw new ProcessingException(msg);
+			}
+			dtwResult = getDtwService().calculateInfoVector(
+					(FrameVectorValues) targetEntry,
+					(FrameVectorValues) sampleFeatureData);
+		}
+		return dtwResult;
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	private RecognitionResultDetails createRecognitionResultDetail() {
@@ -165,6 +183,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		result.setScores(new HashMap<String, Double>());
 		result.setTargetLegths(new HashMap<String, Double>());
 		result.setSampleLegths(new HashMap<String, Double>());
+		result.setCostMatrixMap(new HashMap<String, RealMatrix>());
+		result.setStatisticalSummaryMap(new HashMap<String, StatisticalSummary>());
 		return result;
 	}
 
@@ -185,12 +205,12 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		if (maximum.get(feature) == null) {
 			maximum.put(feature, -Double.MAX_VALUE);
 		}
-		if (minimum.get(feature).compareTo(value) > 0) {
+		if (minimum.get(feature).compareTo(value) > 0 && !value.isInfinite()) {
 			// log.debug("[updateMinMax] [{2}] minimum {0}>{1}",
 			// minimum.get(feature),value, feature);
 			minimum.put(feature, value);
 		}
-		if (maximum.get(feature).compareTo(value) < 0) {
+		if (maximum.get(feature).compareTo(value) < 0 && !value.isInfinite()) {
 			// log.debug("[updateMinMax] [{2}] maximum {0}<{1}",maximum.get(feature)
 			// ,value, feature);
 			maximum.put(feature, value);
@@ -422,7 +442,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 			if(searchRadius== null ||  javaMLSearchWindow ==null ){
 				dtwService = MathServicesFactory.createDtwService();
 			}else{
-				dtwService = MathServicesFactory.createDtwService(searchRadius, javaMLSearchWindow);
+				dtwService = MathServicesFactory.createDtwService(getSearchRadius(), getJavaMLSearchWindow(),getJavaMLLocalConstraint());
 				
 			}
 		}
@@ -457,6 +477,14 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	public void setJavaMLSearchWindow(JavaMLSearchWindow javaMLSearchWindow) {
 		this.javaMLSearchWindow = javaMLSearchWindow;
 		dtwService =null;
+	}
+
+	public JavaMLLocalConstraint getJavaMLLocalConstraint() {
+		return javaMLLocalConstraint;
+	}
+
+	public void setJavaMLLocalConstraint(JavaMLLocalConstraint javaMLLocalConstraint) {
+		this.javaMLLocalConstraint = javaMLLocalConstraint;
 	}
 
 }

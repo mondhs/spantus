@@ -83,6 +83,7 @@ public class MarkerLabelingBaseImpl implements MarkerLabeling {
 			while ((str = reader.readLine()) != null) {
 				words.add(str);
 			}
+			reader.close();
 			// if only single one line is selected, assume it is single line
 			// format
 			if (words.size() == 1 && markers.size() > 1) {

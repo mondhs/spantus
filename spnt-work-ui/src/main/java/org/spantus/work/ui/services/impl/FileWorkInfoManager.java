@@ -31,6 +31,7 @@ public class FileWorkInfoManager extends AbstractWorkInfoManager {
 			FileInputStream in = new FileInputStream(FILE_NAME);
 			ObjectInputStream s = new ObjectInputStream(in);
 			attr = (Map<String, Object>)s.readObject();
+			s.close();
 		} catch (IOException e) {
 			log.debug("Problem with loading " + e.getMessage());
 		} catch (ClassNotFoundException e) {
@@ -59,6 +60,7 @@ public class FileWorkInfoManager extends AbstractWorkInfoManager {
 			attr.put(CONFIG, info.getProject().getFeatureReader());
 			s.writeObject(attr);
 			s.flush();
+			s.close();
 			log.debug("Config file is saved.");
 		} catch (IOException e) {
 			e.printStackTrace();

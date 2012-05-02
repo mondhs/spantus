@@ -7,7 +7,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.spantus.math.DTW;
+import org.spantus.math.SpntDTW;
 import org.spantus.math.dtw.DtwInfo;
 import org.spantus.math.dtw.DtwResult;
 import org.spantus.math.dtw.DtwInfo.DtwType;
@@ -27,31 +27,31 @@ public class DtwTest extends TestCase {
 	
 
 	public void testDtwI(){
-		assertEquals("dinamic time wraping: " , 2D, DTW.estimate(target, sample1));
-		assertEquals("dinamic time wraping: " , 11D, DTW.estimate(target, sample2));
-		assertEquals("dinamic time wraping: " , 0D, DTW.estimate(target, sample3));
+		assertEquals("dinamic time wraping: " , 2D, SpntDTW.estimate(target, sample1));
+		assertEquals("dinamic time wraping: " , 11D, SpntDTW.estimate(target, sample2));
+		assertEquals("dinamic time wraping: " , 0D, SpntDTW.estimate(target, sample3));
 	}
 	public void testDtwII(){
-		DtwInfo info1 = DTW.createDtwInfo(target, sample1);
+		DtwInfo info1 = SpntDTW.createDtwInfo(target, sample1);
 		info1.setType(DtwType.typeII);
-		assertEquals("dinamic time wraping: " , 2D, DTW.estimate(info1));
-		DtwInfo info2 = DTW.createDtwInfo(target, sample2);
+		assertEquals("dinamic time wraping: " , 2D, SpntDTW.estimate(info1));
+		DtwInfo info2 = SpntDTW.createDtwInfo(target, sample2);
 		info2.setType(DtwType.typeII);
-		assertEquals("dinamic time wraping: " , 13D, DTW.estimate(info2));
-		DtwInfo info3 = DTW.createDtwInfo(target, sample3);
+		assertEquals("dinamic time wraping: " , 13D, SpntDTW.estimate(info2));
+		DtwInfo info3 = SpntDTW.createDtwInfo(target, sample3);
 		info3.setType(DtwType.typeII);
-		assertEquals("dinamic time wraping: " , 1D, DTW.estimate(info3));
+		assertEquals("dinamic time wraping: " , 1D, SpntDTW.estimate(info3));
 	}
 	public void testDtwIII(){
-		DtwInfo info1 = DTW.createDtwInfo(target, sample1);
+		DtwInfo info1 = SpntDTW.createDtwInfo(target, sample1);
 		info1.setType(DtwType.typeIII);
-		assertEquals("dinamic time wraping: " , 1D, DTW.estimate(info1));
-		DtwInfo info2 = DTW.createDtwInfo(target, sample2);
+		assertEquals("dinamic time wraping: " , 1D, SpntDTW.estimate(info1));
+		DtwInfo info2 = SpntDTW.createDtwInfo(target, sample2);
 		info2.setType(DtwType.typeIII);
-		assertEquals("dinamic time wraping: " , 8D, DTW.estimate(info2));
-		DtwInfo info3 = DTW.createDtwInfo(target, sample3);
+		assertEquals("dinamic time wraping: " , 8D, SpntDTW.estimate(info2));
+		DtwInfo info3 = SpntDTW.createDtwInfo(target, sample3);
 		info3.setType(DtwType.typeIII);
-		assertEquals("dinamic time wraping: " , 0D, DTW.estimate(info3));
+		assertEquals("dinamic time wraping: " , 0D, SpntDTW.estimate(info3));
 	}
 	
 	public StringBuffer performance(int size){
@@ -69,7 +69,7 @@ public class DtwTest extends TestCase {
 				target.add(Double.valueOf(i));
 			}
 		} 
-		DtwInfo info = DTW.createDtwInfo(target, sample, (int)(size*.6));
+		DtwInfo info = SpntDTW.createDtwInfo(target, sample, (int)(size*.6));
 //		debug("matrix: \n" + DtwUtils.logMatrix(info.getDistanceMatrix()));
 
 		long start = System.currentTimeMillis();
@@ -85,7 +85,7 @@ public class DtwTest extends TestCase {
 		info.setType(DtwType.typeII);
 		info.resetIterationCount();
 		start = System.currentTimeMillis();
-		result = DTW.dtwRecusion(info);
+		result = SpntDTW.dtwRecusion(info);
 		long time = (System.currentTimeMillis() - start);
 		debug("Dtw calculation time ms type II:" + time);
 		assertTrue("dinamic time wraping type II: " ,!result.getResult().equals(Double.MAX_VALUE));
@@ -96,7 +96,7 @@ public class DtwTest extends TestCase {
 		info.setType(DtwType.typeIII);
 		info.resetIterationCount();
 		start = System.currentTimeMillis();
-		result = DTW.dtwRecusion(info);
+		result = SpntDTW.dtwRecusion(info);
 		time = (System.currentTimeMillis() - start);
 		debug("Dtw calculation time ms type III:" + (System.currentTimeMillis() - start));
 		assertTrue("dinamic time wraping type III: " ,!result.getResult().equals(Double.MAX_VALUE));

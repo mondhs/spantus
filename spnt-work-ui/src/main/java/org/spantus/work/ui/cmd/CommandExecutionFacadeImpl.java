@@ -22,11 +22,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import org.spantus.chart.util.ChartUtils;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.logger.Logger;
 import org.spantus.ui.SwingUtils;
+import org.spantus.ui.chart.ChartUtils;
 import org.spantus.utils.Assert;
 import org.spantus.work.ui.container.SpantusWorkFrame;
 /**

@@ -14,17 +14,17 @@ import javax.swing.JFrame;
 
 import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
-import org.spantus.chart.util.ChartUtils;
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.exception.ProcessingException;
 import org.spantus.mpeg7.Mpeg7ExtractorEnum;
 import org.spantus.mpeg7.config.Mpeg7ConfigUtil;
 import org.spantus.mpeg7.extractors.Mpeg7ExtractorInputReader;
 import org.spantus.mpeg7.io.Mpeg7Factory;
+import org.spantus.ui.chart.ChartUtils;
 import org.spantus.utils.FileUtils;
 
 public class DrawSignalMpeg7 extends JFrame {

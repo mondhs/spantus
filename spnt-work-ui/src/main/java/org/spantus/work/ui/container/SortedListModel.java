@@ -12,29 +12,29 @@ import javax.swing.AbstractListModel;
 
 import org.spantus.ui.ModelEntry;
 
-public class SortedListModel extends AbstractListModel {
+public class SortedListModel<K,V> extends AbstractListModel implements Iterable<ModelEntry<K,V>> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	Collection<ModelEntry> model;
+	Collection<ModelEntry<K,V>> model;
 
-	public SortedListModel(Collection<ModelEntry> collectionModelEntries) {
+	public SortedListModel(Collection<ModelEntry<K,V>> collectionModelEntries) {
 		model = collectionModelEntries;
 	}
 	
 	public SortedListModel() {
-		model = new LinkedList<ModelEntry>();
+		model = new LinkedList<ModelEntry<K,V>>();
 	}
 
 	public int getSize() {
 		return model.size();
 	}
 	
-	public void sort(Comparator<ModelEntry> comparator){
+	public void sort(Comparator<ModelEntry<K,V>> comparator){
 		if(model instanceof List<?>){
-			Collections.sort((List<ModelEntry>)model,comparator);
+			Collections.sort((List<ModelEntry<K,V>>)model,comparator);
 		}
 	}
 
@@ -42,7 +42,7 @@ public class SortedListModel extends AbstractListModel {
 		return model.toArray()[index];
 	}
 
-	public void add(ModelEntry element) {
+	public void add(ModelEntry<K,V> element) {
 		if (model.add(element)) {
 			fireContentsChanged(this, 0, getSize());
 		}
@@ -51,7 +51,7 @@ public class SortedListModel extends AbstractListModel {
 	@SuppressWarnings("unchecked")
 	public void addAll(Object elements[]) {
 		Collection<?> c = Arrays.asList(elements);
-		model.addAll((Collection<? extends ModelEntry>) c);
+		model.addAll((Collection<? extends ModelEntry<K,V>>) c);
 		fireContentsChanged(this, 0, getSize());
 	}
 
@@ -68,10 +68,10 @@ public class SortedListModel extends AbstractListModel {
 //		return model.first();
 //	}
 
-	public Iterator<ModelEntry> iterator() {
+	public Iterator<ModelEntry<K,V>> iterator() {
 		return model.iterator();
 	}
-	public Iterable<ModelEntry> iteratable() {
+	public Iterable<ModelEntry<K,V>> iteratable() {
 		return model;
 	}
 

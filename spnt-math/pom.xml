@@ -13,16 +13,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>net.sourceforge</groupId>
-			<artifactId>javaml</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-math</artifactId>
-					<groupId>commons-math</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<scope>test</scope>
@@ -43,8 +33,12 @@
 					<groupId>com.sun.jmx</groupId>
 					<artifactId>jmxri</artifactId>
 				</exclusion>
-
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.0</version>
 		</dependency>
 	</dependencies>
 

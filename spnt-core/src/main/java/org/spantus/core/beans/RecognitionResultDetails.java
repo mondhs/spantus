@@ -8,6 +8,9 @@ import java.awt.Point;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
+
 /**
  *
  * @author mondhs
@@ -15,6 +18,8 @@ import java.util.Map;
 public class RecognitionResultDetails extends RecognitionResult {
 
     private Map<String, List<Point>> path;
+    private Map<String, RealMatrix> costMatrixMap;
+    private Map<String, StatisticalSummary> statisticalSummaryMap;
     private Map<String, Double> targetLegths;
     private Map<String, Double> sampleLegths;
     private String audioFilePath;
@@ -50,5 +55,23 @@ public class RecognitionResultDetails extends RecognitionResult {
     public void setAudioFilePath(String audioFilePath) {
         this.audioFilePath = audioFilePath;
     }
+
+	public Map<String, RealMatrix> getCostMatrixMap() {
+		return costMatrixMap;
+	}
+
+	public void setCostMatrixMap(Map<String, RealMatrix> costMatrixMap) {
+		this.costMatrixMap = costMatrixMap;
+	}
+
+	public Map<String, StatisticalSummary> getStatisticalSummaryMap() {
+		return statisticalSummaryMap;
+	}
+
+	public void setStatisticalSummaryMap(
+			Map<String, StatisticalSummary> statisticalSummaryMap) {
+		this.statisticalSummaryMap = statisticalSummaryMap;
+	}
+
 
 }

@@ -41,7 +41,6 @@ import org.spantus.chart.SpantusChartToolbar;
 import org.spantus.chart.WrappedChartDescriptionResolver;
 import org.spantus.chart.bean.ChartInfo;
 import org.spantus.chart.bean.ClassifierChartContext;
-import org.spantus.chart.bean.VectorSeriesColorEnum;
 import org.spantus.chart.functions.FrameValueAreaFunction;
 import org.spantus.chart.functions.FrameValueFuncton;
 import org.spantus.chart.functions.FrameValueMatrixFuncton;
@@ -53,6 +52,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.logger.Logger;
+import org.spantus.ui.chart.VectorSeriesColorEnum;
 import org.spantus.utils.Assert;
 
 /**

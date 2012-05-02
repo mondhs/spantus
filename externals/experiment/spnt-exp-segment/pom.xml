@@ -44,7 +44,7 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-
+<!-- 
 		<dependency>
 			<groupId>be.ac.ulg.montefiore.run.jahmm</groupId>
 			<artifactId>jahmm</artifactId>
@@ -55,7 +55,7 @@
 			<artifactId>marytts-signalproc</artifactId>
 			<version>5.0-SNAPSHOT</version>
 		</dependency>
-
+-->
 		<dependency>
 			<groupId>org.odftoolkit</groupId>
 			<artifactId>odfdom-java</artifactId>

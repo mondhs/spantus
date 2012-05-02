@@ -25,7 +25,7 @@ import org.spantus.ui.ModelEntry;
 import org.spantus.ui.ModelEntryByNameComparator;
 import org.spantus.work.ui.i18n.I18nFactory;
  
-public class ShuttleSelectionPanel extends JPanel {
+public class ShuttleSelectionPanel<K,V> extends JPanel {
 	/**
 	 * 
 	 */
@@ -45,11 +45,11 @@ public class ShuttleSelectionPanel extends JPanel {
 
 	private JList sourceList;
 
-	private SortedListModel sourceListModel;
+	private SortedListModel<K,V> sourceListModel;
  
 	private JList destList;
 
-	private SortedListModel destListModel;
+	private SortedListModel<K,V> destListModel;
 
 	private JLabel destLabel;
 
@@ -98,10 +98,11 @@ public class ShuttleSelectionPanel extends JPanel {
 		fillListModel(destListModel, newValue);
 	}
 
-	private void fillListModel(SortedListModel model, ListModel newValues) {
+	@SuppressWarnings("unchecked")
+	private void fillListModel(SortedListModel<K,V> model, ListModel newValues) {
 		int size = newValues.getSize();
 		for (int i = 0; i < size; i++) {
-			model.add((ModelEntry)newValues.getElementAt(i));
+			model.add((ModelEntry<K,V>)newValues.getElementAt(i));
 		}
 	}
 
@@ -109,7 +110,7 @@ public class ShuttleSelectionPanel extends JPanel {
 		fillListModel(sourceListModel, newValue);
 	}
 	
-	public void addSourceElement(ModelEntry modelEntry) {
+	public void addSourceElement(ModelEntry<K,V> modelEntry) {
 		modelEntry.setOrder(0);
 		sourceListModel.add(modelEntry);
 	}
@@ -124,17 +125,18 @@ public class ShuttleSelectionPanel extends JPanel {
 		fillListModel(destListModel, newValue);
 	}
 	
-	public void addDestinationElement(ModelEntry modelEntry) {
+	public void addDestinationElement(ModelEntry<K,V> modelEntry) {
 		modelEntry.setOrder(destListModel.getSize());
 		destListModel.add(modelEntry);
 	}
 
-	private void fillListModel(SortedListModel model, Object newValues[]) {
+	@SuppressWarnings("unchecked")
+	private void fillListModel(SortedListModel<K,V> model, Object newValues[]) {
 		for (Object object : newValues) {
-			if(object instanceof ModelEntry){
-				model.add((ModelEntry)object);
+			if(object instanceof ModelEntry<?,?>){
+				model.add((ModelEntry<K,V>)object);
 			}else {
-				ModelEntry modelEntry =new ModelEntry(object.toString(),object);
+				ModelEntry<K,V> modelEntry =new ModelEntry<K,V>((K)object,(V)object);
 				model.add(modelEntry);
 			}
 		}
@@ -212,8 +214,8 @@ public class ShuttleSelectionPanel extends JPanel {
 		setLayout(new GridBagLayout());
 		sourceLabel = new JLabel(getMessage(DEFAULT_SOURCE_CHOICE_LABEL));
 		//source list should be sorting by name
-		sourceListModel = new SortedListModel(
-				new TreeSet<ModelEntry>(new ModelEntryByNameComparator())
+		sourceListModel = new SortedListModel<K,V>(
+				new TreeSet<ModelEntry<K,V>>(new ModelEntryByNameComparator<K,V>())
 				);
 		sourceList = new JList(sourceListModel);
 		add(sourceLabel, new GridBagConstraints(0, 0, 1, 1, 0, 0,
@@ -235,7 +237,7 @@ public class ShuttleSelectionPanel extends JPanel {
 		removeButton.addActionListener(new RemoveListener());
 
 		destLabel = new JLabel(getMessage(DEFAULT_DEST_CHOICE_LABEL));
-		destListModel = new SortedListModel();
+		destListModel = new SortedListModel<K,V>();
 		destList = new JList(destListModel);
 		add(destLabel, new GridBagConstraints(2, 0, 1, 1, 0, 0,
 				GridBagConstraints.CENTER, GridBagConstraints.NONE,
@@ -264,15 +266,20 @@ public class ShuttleSelectionPanel extends JPanel {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public ModelEntry<K,V> getDestSelectedObject(){
+		return (ModelEntry<K,V>)getDestList().getSelectedValue();
+	}
+	
 	public JList getDestList(){
 		return destList;
 	}
 
-	public SortedListModel getSourceListModel() {
+	public SortedListModel<K,V> getSourceListModel() {
 		return sourceListModel;
 	}
 
-	public SortedListModel getDestListModel() {
+	public SortedListModel<K,V> getDestListModel() {
 		return destListModel;
 	}
 	
@@ -285,12 +292,13 @@ public class ShuttleSelectionPanel extends JPanel {
 //			}
 //		}
 //	}
+	@SuppressWarnings("unchecked")
 	void numerizeDestination(Object[] iter){
 		int size = destListModel.getSize();
 		int i = 0;
 		for (Object object : iter) {
-			if(object instanceof ModelEntry){
-				((ModelEntry)object).setOrder(size + (i++));
+			if(object instanceof ModelEntry<?,?>){
+				((ModelEntry<K,V>)object).setOrder(size + (i++));
 			}
 		}
 	}
@@ -301,10 +309,11 @@ public class ShuttleSelectionPanel extends JPanel {
 //			}
 //		}
 //	}
+	@SuppressWarnings("unchecked")
 	void numerizeSource(Object[] iter){
 		for (Object object : iter) {
 			if(object instanceof ModelEntry){
-				((ModelEntry)object).setOrder(0);
+				((ModelEntry<K,V>)object).setOrder(0);
 			}
 		}
 	}
@@ -320,7 +329,7 @@ public class ShuttleSelectionPanel extends JPanel {
 	public static void main(String args[]) {
 		JFrame f = new JFrame("Dual List Box Tester");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		ShuttleSelectionPanel dual = new ShuttleSelectionPanel();
+		ShuttleSelectionPanel<String,String> dual = new ShuttleSelectionPanel<String,String>();
 		dual.addSourceElements(new String[] { "One", "Two", "Three" });
 		dual.addSourceElements(new String[] { "Four", "Five", "Six" });
 		dual.addSourceElements(new String[] { "Seven", "Eight", "Nine" });

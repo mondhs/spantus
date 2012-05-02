@@ -112,6 +112,8 @@ public final class ExtractorUtils {
 		extractor3DMap.put(ExtractorEnum.MFCC_EXTRACTOR, MFCCExtractor.class);
 		extractor3DMap.put(ExtractorEnum.DELTA_MFCC_EXTRACTOR,
 				DeltaMFCCExtractor.class);
+		extractor3DMap.put(ExtractorEnum.DELTA_DELTA_MFCC_EXTRACTOR,
+				DeltaDeltaMFCCExtractor.class);
 		extractor3DMap.put(ExtractorEnum.PLP_EXTRACTOR, PLPExtractor.class);
 		extractor3DMap.put(ExtractorEnum.SPECTRAL_GAIN_FACTOR,
 				SpectralGainFactorExtractor.class);
@@ -373,5 +375,8 @@ public final class ExtractorUtils {
 
 	public static FFTExtractor createFftExtractor() {
 		return new FFTExtractorCached();
+	}
+	public static MFCCExtractor createMFCCExtractor() {
+		return new MFCCExtractorCached();
 	}
 }

@@ -4,9 +4,14 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
+
 public class DtwResult {
 	private List<Point> path;
 	private Double result;
+	private RealMatrix costMatrix;
+	private StatisticalSummary statisticalSummary;
 	private Point p;
 	
 	public Point getP() {
@@ -34,6 +39,22 @@ public class DtwResult {
 	@Override
 	public String toString() {
 		return "; res: " + getResult();
+	}
+
+	public RealMatrix getCostMatrix() {
+		return costMatrix;
+	}
+
+	public void setCostMatrix(RealMatrix costMatrix) {
+		this.costMatrix = costMatrix;
+	}
+
+	public StatisticalSummary getStatisticalSummary() {
+		return statisticalSummary;
+	}
+
+	public void setStatisticalSummary(StatisticalSummary statisticalSummary) {
+		this.statisticalSummary = statisticalSummary;
 	}
 
 }

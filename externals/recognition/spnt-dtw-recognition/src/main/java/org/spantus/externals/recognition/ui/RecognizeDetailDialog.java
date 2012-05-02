@@ -20,7 +20,6 @@ package org.spantus.externals.recognition.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -29,8 +28,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.Map.Entry;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import javax.swing.JComponent;
@@ -166,7 +165,7 @@ public class RecognizeDetailDialog extends JDialog {
 
     protected DtwChartPanel getChartPanel() {
         if (chartPanel == null) {
-            chartPanel = new DtwChartPanel();
+            chartPanel = new DtwChartPanel(getI18n());
         }
         
         return chartPanel;
@@ -362,19 +361,20 @@ public class RecognizeDetailDialog extends JDialog {
         updateCtx(results);
         if (selctedSampleId == null) {
             getChartPanel().setRecognitionResult(null);
-            getChartPanel().repaint();
+            getChartPanel().repaintCharts(null, null);
             return;
         }
         for (RecognitionResultDetails recognitionResultDetails : results) {
             if (recognitionResultDetails.getInfo().getId().equals(selctedSampleId)) {
-                List<Point> points = recognitionResultDetails.getPath().get(selctedFeatureId);
-                if (points != null) {
-                    //if some feature selected paint only this feature
-                    getChartPanel().setRecognitionResult(recognitionResultDetails, selctedFeatureId);
-                } else {
-                    //if none feature is selected paint all features
-                    getChartPanel().setRecognitionResult(recognitionResultDetails);
-                }
+            	getChartPanel().repaintCharts(recognitionResultDetails, selctedFeatureId);
+//                List<Point> points = recognitionResultDetails.getPath().get(selctedFeatureId);
+//                if (points != null) {
+//                    //if some feature selected paint only this feature
+//                    getChartPanel().setRecognitionResult(recognitionResultDetails, selctedFeatureId);
+//                } else {
+//                    //if none feature is selected paint all features
+//                    getChartPanel().setRecognitionResult(recognitionResultDetails);
+//                }
                 break;
             }
         }
