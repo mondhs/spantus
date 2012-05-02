@@ -69,7 +69,7 @@ public class CorpusServiceBaseImplTest {
         corpusEntry.setId("3");
         corpusEntry.setName(TRYS);
         addFeatureData(corpusEntry.getFeatureFrameVectorValuesMap(), Feature1, 1D, 2D, 3D, 4D);
-        addFeatureData(corpusEntry.getFeatureFrameVectorValuesMap(), Feature2, 4D, 5D, 6D, 7D, 8D);
+        addFeatureData(corpusEntry.getFeatureFrameVectorValuesMap(), Feature2, 4D, 5D, 9D, 7D, 8D);
         corpusEntries.add(corpusEntry);
     }
 
@@ -152,7 +152,7 @@ public class CorpusServiceBaseImplTest {
         //when
         Map<String, IValues> target = new HashMap<String, IValues>();
         target.put(Feature1, createFrameValues(1D, 2D, 3D, 4D));
-        target.put(Feature2, createFrameValues(4D, 5D, 6D, 7D));
+        target.put(Feature2, createFrameValues(4D, 5D, 9D, 7D));
         Map<String, RecognitionResult> results = corpusServiceBaseImpl.bestMatchesForFeatures(target);
         
       //then
