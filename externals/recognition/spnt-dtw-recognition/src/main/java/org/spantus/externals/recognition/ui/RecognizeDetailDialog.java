@@ -67,8 +67,8 @@ public class RecognizeDetailDialog extends JDialog {
 
 	private List<RecognitionResultDetails> results;
     
-    private String selctedSampleId = null;
-    private String selctedFeatureId = null;
+    private String selectedSampleId = null;
+    private String selectedFeatureId = null;
 
     Logger log = Logger.getLogger(RecognizeDetailDialog.class);
 
@@ -196,8 +196,9 @@ public class RecognizeDetailDialog extends JDialog {
             styleSheet.addRule("th {border-color: gray;}");
             styleSheet.addRule("th {padding: 5px;}");
             styleSheet.addRule("td {border-width: 1px;}");
+            styleSheet.addRule("td.selected {background-color: gray;color: black;}");
             styleSheet.addRule("td {border-style: solid;}");
-            styleSheet.addRule("td {border-color: gray;}");
+            styleSheet.addRule("td {color: gray;}");
             styleSheet.addRule("td {padding: 5px;}");
             styleSheet.addRule("div {width: 100%;}");
             styleSheet.addRule("div {position: absolute;}");
@@ -250,11 +251,14 @@ public class RecognizeDetailDialog extends JDialog {
         for (RecognitionResultDetails recognitionResult : results) {
             StringBuilder subTable = new StringBuilder();
             int rowsSize = 1;
-            if (recognitionResult.getInfo().getId().equals(selctedSampleId)) {
+            String selectionClass = "notSelected";
+            if(recognitionResult.getInfo().getId().equals(selectedSampleId)){
+            	selectionClass = "selected";
                 rowsSize = recognitionResult.getScores().size() + 1;
                 for (Entry<String, Double> scoreEntry : recognitionResult.getScores().entrySet()) {
                     subTable.append("<tr>");
-                    subTable.append("<td>").
+                    subTable.
+                    append(html("<td  class=\"{1}\">",selectionClass )).
                             append(html("<a href=\"show={0}\">",  scoreEntry.getKey())).
                             append(getI18n().getMessage(scoreEntry.getKey())).
                             append("</a>").
@@ -267,16 +271,15 @@ public class RecognizeDetailDialog extends JDialog {
             }
 
             sb.append("<tr>");
-            sb.append(html("<td ROWSPAN=\"{0}\">",rowsSize));
-            
+
+				sb.append(html("<td ROWSPAN=\"{0}\" class=\"{1}\">",rowsSize,selectionClass ));
 
 
-            sb.
-                    append(html("<a href=\"play={0}\">",recognitionResult.getInfo().getId())).
+            sb.append(html("<a href=\"play={0}\">",recognitionResult.getInfo().getId())).
                     append(html("<img src=\"{0}\" alt=\"play\" border=\"0\" width=\"24\" height=\"24\" />", playImgSrc)).
                     append("</a>").
                     append(html("<a href=\"show={0}\">",  recognitionResult.getInfo().getId()));
-            if(recognitionResult.getInfo().getId().equals(selctedSampleId)){
+            if(recognitionResult.getInfo().getId().equals(selectedSampleId)){
                 //collapsed +
                 sb.append("&#8863;");
             }else{
@@ -285,18 +288,18 @@ public class RecognizeDetailDialog extends JDialog {
             }
             sb.append(recognitionResult.getInfo().getName()).append("</a>");
             //show expanded id
-            if(recognitionResult.getInfo().getId().equals(selctedSampleId)){
+            if(recognitionResult.getInfo().getId().equals(selectedSampleId)){
             	sb.append("<span>[id=").append(recognitionResult.getInfo().getId()).append("]</span>");
             }
             sb.append("</td>");
-            sb.append(html("<td ROWSPAN=\"{0}\">",rowsSize)).
+            sb.append(html("<td ROWSPAN=\"{0}\" class=\"{1}\">",rowsSize,selectionClass )).
                     append(getI18n().getDecimalFormat().format(
                             recognitionResult.getDistance())).
                      append("</td>");
             //how features are generated
             if (rowsSize == 1) {
-                sb.append("<td>").append("</td>");
-                sb.append("<td>").append("</td>");
+                sb.append(html("<td  class=\"{1}\">",selectionClass )).append("</td>");
+                sb.append(html("<td  class=\"{1}\">",selectionClass )).append("</td>");
             }
             sb.append("</tr>");
             sb.append(subTable);
@@ -314,8 +317,8 @@ public class RecognizeDetailDialog extends JDialog {
     @Override
     public void dispose() {
         super.dispose();
-        selctedFeatureId = null;
-        selctedSampleId = null;
+        selectedFeatureId = null;
+        selectedSampleId = null;
         results = null;
     }
 
@@ -348,25 +351,25 @@ public class RecognizeDetailDialog extends JDialog {
         //check if number that mean sample id
         if (Pattern.matches("^\\d*$", id)) {
 //            Long key = Long.valueOf(id);
-            if (id.equals(selctedSampleId)) {
-                selctedSampleId = null;
+            if (id.equals(selectedSampleId)) {
+                selectedSampleId = null;
             } else {
-                selctedSampleId = id;
+                selectedSampleId = id;
             }
-            selctedFeatureId = null;
+            selectedFeatureId = null;
         } else {
             //if this not a number lets say is feature id
-            selctedFeatureId = id;
+            selectedFeatureId = id;
         }
         updateCtx(results);
-        if (selctedSampleId == null) {
+        if (selectedSampleId == null) {
             getChartPanel().setRecognitionResult(null);
             getChartPanel().repaintCharts(null, null);
             return;
         }
         for (RecognitionResultDetails recognitionResultDetails : results) {
-            if (recognitionResultDetails.getInfo().getId().equals(selctedSampleId)) {
-            	getChartPanel().repaintCharts(recognitionResultDetails, selctedFeatureId);
+            if (recognitionResultDetails.getInfo().getId().equals(selectedSampleId)) {
+            	getChartPanel().repaintCharts(recognitionResultDetails, selectedFeatureId);
 //                List<Point> points = recognitionResultDetails.getPath().get(selctedFeatureId);
 //                if (points != null) {
 //                    //if some feature selected paint only this feature
@@ -433,4 +436,13 @@ public class RecognizeDetailDialog extends JDialog {
             }
         }
     }
+
+
+	public String getSelectedSampleId() {
+		return selectedSampleId;
+	}
+
+	public void setSelectedSampleId(String selectedSampleId) {
+		this.selectedSampleId = selectedSampleId;
+	}
 }

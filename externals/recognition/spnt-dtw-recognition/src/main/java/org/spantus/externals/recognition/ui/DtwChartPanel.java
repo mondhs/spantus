@@ -71,52 +71,27 @@ public class DtwChartPanel extends JPanel {
 	
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g.create();
-		g2d.setBackground(Color.white);
-		g2d.translate(0, getHeight());
-		g2d.rotate(Math.toRadians(-90));
-		g2d.setColor(Color.white);
-		g2d.fillRect(0, 0, getHeight(), getWidth());
-		g2d.setColor(Color.red);
+//		g2d.setBackground(Color.white);
+//		g2d.translate(0, getHeight());
+//		g2d.rotate(Math.toRadians(-90));
+//		g2d.setColor(Color.white);
+//		g2d.fillRect(0, 0, getHeight(), getWidth());
+//		g2d.setColor(Color.red);
 
 		
 
-		if (recognitionResult != null) {
-			// g2d.scale(1.9, 1.9);
-			for (Entry<String, List<Point>> detail : recognitionResult
-					.getPath().entrySet()) {
-				if (!(selctedFeatureId == null || detail.getKey().equals(
-						selctedFeatureId))) {
-					continue;
-				}
-//				List<Point> list = detail.getValue();
-				
-
-			
-
-//				g2d.setColor(Color.gray);
-//				g2d.drawRect(firstPoint.x, firstPoint.y, lastPoint.x,
-//						lastPoint.y);
-//				g2d.rotate(Math.toRadians(90));
-//				String targetLength = ""
-//						+ Math.round(recognitionResult.getTargetLegths().get(
-//								detail.getKey()));
-//				String sampleLength = ""
-//						+ Math.round(recognitionResult.getSampleLegths().get(
-//								detail.getKey()));
+//		if (recognitionResult != null) {
+//			// g2d.scale(1.9, 1.9);
+//			for (Entry<String, List<Point>> detail : recognitionResult
+//					.getPath().entrySet()) {
+//				if (!(selctedFeatureId == null || detail.getKey().equals(
+//						selctedFeatureId))) {
+//					continue;
+//				}
 //
-//				String zero = "0 ms";
-//				g2d.drawString(zero, -fm.stringWidth(zero), 0);
-//				g2d.drawString(detail.getKey().replace("_EXTRACTOR", ""),
-//						firstPoint.x + 10, firstPoint.y - 10);
-//				g2d.drawString(sampleLength, -fm.stringWidth(sampleLength),
-//						-lastPoint.x);
-//				g2d.drawString(targetLength, lastPoint.y, -firstPoint.x);
-//				g2d.rotate(Math.toRadians(-90));
-//				g2d.translate(lastPoint.x + 40, .1);
-
-			}
-		}
-		// done with g2d, dispose it
+//
+//			}
+//		}
 		g2d.dispose();
 	}
 

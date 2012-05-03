@@ -27,6 +27,7 @@ import org.spantus.core.beans.RecognitionResultDetails;
 import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
 import org.spantus.logger.Logger;
+import org.spantus.utils.StringUtils;
 import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -71,6 +72,16 @@ public class RecognizeCmd extends AbsrtactCmd {
         getInfoPnl().setTargetMarker(marker);
         getInfoPnl().updateCtx(results);
         getInfoPnl().setVisible(true);
+        
+        if(StringUtils.hasText(getInfoPnl().getSelectedSampleId())){
+        	for (RecognitionResultDetails detail : results) {
+        		if(getInfoPnl().getSelectedSampleId().equals(detail.getInfo().getId())){
+        			marker.setLabel(detail.getInfo().getName());
+        		}
+				
+			}
+            
+        }
         log.debug("Recognize popup shown");
         return GlobalCommands.sample.reloadMarkers.name();
     }
