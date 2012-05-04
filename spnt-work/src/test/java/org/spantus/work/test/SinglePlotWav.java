@@ -50,7 +50,7 @@ public class SinglePlotWav extends JFrame {
 		URL urlFile = wavFile.toURI().toURL();
 		AudioReader reader = AudioReaderFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = ExtractorsFactory
-				.createReader(reader.getAudioFormat(urlFile));
+				.createReader(reader.findAudioFormat(urlFile));
 //		ExtractorUtils.register(bufferedReader, ExtractorEnum.values());
 		ExtractorUtils.register(bufferedReader, new ExtractorEnum[] {
 				ExtractorEnum.ENERGY_EXTRACTOR,

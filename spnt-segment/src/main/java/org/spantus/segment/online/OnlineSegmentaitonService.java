@@ -69,14 +69,14 @@ public class OnlineSegmentaitonService extends BasicSegmentatorServiceImpl {
 		for (Marker marker : markerSet.getMarkers()) {
 			for (; index < marker.getStart(); index += resolution) {
 				SegmentEvent event = new SegmentEvent(); 
-				event.setId(id);
+				event.setExtractorId(id);
 				event.setSample(index);
 				event.setTime(index);
 				multipleSegmentator.noiseDetected(event);
 			}
 			for (; index <= marker.getEnd(); index += resolution) {
 				SegmentEvent event = new SegmentEvent();
-				event.setId(id);
+				event.setExtractorId(id);
 				event.setSample(index);
 				event.setTime(index);
 				multipleSegmentator.segmentDetected(event);
@@ -86,14 +86,14 @@ public class OnlineSegmentaitonService extends BasicSegmentatorServiceImpl {
 		for (int i = 0; i <= multipleSegmentator.getParam().getMinSpace(); i++) {
 			index++;
 			SegmentEvent event = new SegmentEvent();
-			event.setId(id);
+			event.setExtractorId(id);
 			event.setSample(index);
 			event.setTime(index);
 			multipleSegmentator.noiseDetected(event);
 		}
 		index++;
 		SegmentEvent event = new SegmentEvent();
-		event.setId(id);
+		event.setExtractorId(id);
 		event.setSample(index);
 		event.setTime(index);
 		multipleSegmentator.noiseDetected(event);

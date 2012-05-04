@@ -67,8 +67,8 @@ public class CalculateSnrImpl implements CalculateSnr {
 		FrameValues vals = outputValues;
 		ListIterator<Double> iter = vals.listIterator();
 		for (Marker marker : segments.getMarkers()) {
-			int start = vals.toIndex((double) marker.getStart() / 1000);
-			int end = vals.toIndex((double) marker.getEnd() / 1000);
+			int start = vals.toIndex(marker.getStart() );
+			int end = vals.toIndex(marker.getEnd());
 
 			for (long i = current; i < start; i++) {
 				if(!iter.hasNext()){
@@ -99,8 +99,8 @@ public class CalculateSnrImpl implements CalculateSnr {
 			IExtractor iExtractor, Long start, Long length) {
 		Map<segmentStatics, Double> result = new HashMap<CalculateSnr.segmentStatics, Double>();
 		FrameValues vals = iExtractor.getOutputValues();
-		int startIndex = vals.toIndex((double) start / 1000);
-		int lengthIndex = vals.toIndex((double) length / 1000);
+		int startIndex = vals.toIndex(start);
+		int lengthIndex = vals.toIndex(length);
 		ListIterator<Double> iter = vals.listIterator(startIndex);
 		Double min = Double.MAX_VALUE;
 		Double max = -Double.MAX_VALUE;

@@ -40,7 +40,7 @@ public class ConvexHullTest {
 		Windowing windowing = WindowingFactory.createWindowing(WindowingEnum.Hamming);
 		windowing.apply(window);
 
-		int j = 0;
+//		int j = 0;
 		for (int count = 0; count < 2; count++) {
 
 			for (Double double1 : window) {

@@ -15,13 +15,14 @@ import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
  *
  * @author mondhs
  */
-public class RecognitionResultDetails extends RecognitionResult {
+public class RecognitionResultDetails {
 
     private Map<String, List<Point>> path;
     private Map<String, RealMatrix> costMatrixMap;
     private Map<String, StatisticalSummary> statisticalSummaryMap;
-    private Map<String, Double> targetLegths;
-    private Map<String, Double> sampleLegths;
+    private Map<String, Long> targetLegths;
+    private Map<String, Long> sampleLegths;
+    private Map<String, Double> distances;
     private String audioFilePath;
 
 
@@ -33,18 +34,18 @@ public class RecognitionResultDetails extends RecognitionResult {
         return path;
     }
 
-    public Map<String, Double> getTargetLegths() {
+    public Map<String, Long> getTargetLegths() {
         return targetLegths;
     }
 
-    public void setTargetLegths(Map<String, Double> targetLegths) {
+    public void setTargetLegths(Map<String, Long> targetLegths) {
         this.targetLegths = targetLegths;
     }
-    public Map<String, Double> getSampleLegths() {
+    public Map<String, Long> getSampleLegths() {
         return sampleLegths;
     }
 
-    public void setSampleLegths(Map<String, Double> sampleLegths) {
+    public void setSampleLegths(Map<String, Long> sampleLegths) {
         this.sampleLegths = sampleLegths;
     }
 
@@ -71,6 +72,14 @@ public class RecognitionResultDetails extends RecognitionResult {
 	public void setStatisticalSummaryMap(
 			Map<String, StatisticalSummary> statisticalSummaryMap) {
 		this.statisticalSummaryMap = statisticalSummaryMap;
+	}
+    
+	public Map<String, Double> getDistances() {
+		return distances;
+	}
+
+	public void setDistances(Map<String, Double> distances) {
+		this.distances = distances;
 	}
 
 

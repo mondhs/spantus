@@ -39,5 +39,5 @@ public interface IExtractorListener {
 	 * @param sample
 	 * @param result
 	 */
-	public void afterCalculated(Long sample, FrameValues result);
+	public void afterCalculated(Long sample, FrameValues window, FrameValues result);
 }

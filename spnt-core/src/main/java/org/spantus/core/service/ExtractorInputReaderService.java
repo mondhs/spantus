@@ -17,14 +17,14 @@ import org.spantus.core.threshold.IClassifier;
  */
 public interface ExtractorInputReaderService {
 	public IValues findFeatureVectorValuesForMarker(
-			IExtractorInputReader reader, Marker marker, String featureName);
+			IExtractorInputReader extractorReader, Marker marker, String featureName);
 
 	public Map<String, IValues> findAllVectorValuesForMarker(
-			IExtractorInputReader reader, Marker marker);
+			IExtractorInputReader extractorReader, Marker marker);
 
 	public Map<String, IValues> findAllVectorValuesForMarker(
-			IExtractorInputReader reader);
+			IExtractorInputReader extractorReader);
 	
-	public Set<IClassifier> extractClassifiers(IExtractorInputReader reader);
+	public Set<IClassifier> extractClassifiers(IExtractorInputReader extractorReader);
 
 }

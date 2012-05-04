@@ -5,12 +5,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
+import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.service.ExtractorInputReaderService;
 import org.spantus.core.threshold.IClassifier;
@@ -52,63 +52,48 @@ public class ExtractorInputReaderServiceImpl implements
 		return classifiers;
 	}
 
+	/**
+	 * 
+	 */
 	public Map<String, IValues> findAllVectorValuesForMarker(
 			IExtractorInputReader reader, Marker marker) {
 		Map<String, IValues> result = new HashMap<String, IValues>();
-
-		for (IExtractorVector extractor : reader.getExtractorRegister3D()) {
-			// extractors can have prefixes, jus check if ends with
-			FrameVectorValues values = extractor.getOutputValues();
-			int endIndex = values.size() - 1;
-			// if(values.get(0).size()<=2){
-			// continue;
-			// }
-			Double fromIndex = (marker.getStart().doubleValue() * values
-					.getSampleRate()) / 1000;
-			fromIndex -= extractor.getOffset();
-			fromIndex = fromIndex < 0 ? 0 : fromIndex;
-
-			Double toIndex = fromIndex
-					+ (marker.getLength().doubleValue() * values
-							.getSampleRate()) / 1000;
-			toIndex -= extractor.getOffset();
-
-			toIndex = endIndex < toIndex ? endIndex : toIndex;
-			if (fromIndex > toIndex) {
-				throw new IllegalArgumentException(extractor.getName()
-						+ " fromIndex(" + fromIndex + ") > toIndex(" + toIndex
-						+ "); offset: " + extractor.getOffset());
-			}
-
-			FrameVectorValues fvv = values.subList(fromIndex.intValue(),
-					toIndex.intValue());
-			String key = preprocess(extractor.getName());
-			result.put(key, fvv);
-		}
-		for (IExtractor extractor : reader.getExtractorRegister()) {
+		
+		for (IGeneralExtractor<?> extractor : reader.getGeneralExtractor()){
 			if (extractor.getName().endsWith("SIGNAL_EXTRACTOR")) {
 				continue;
 			}
-			// extractors can have prefixes, just check if ends with
-			FrameValues values = extractor.getOutputValues();
-			int endIndex = values.size() - 1;
-			Double fromIndex = (marker.getStart().doubleValue() * values
-					.getSampleRate()) / 1000;
-			fromIndex = fromIndex < 0 ? 0 : fromIndex;
-			Double toIndex = fromIndex
-					+ (marker.getLength().doubleValue() * values
-							.getSampleRate()) / 1000;
-			toIndex = endIndex < toIndex ? endIndex : toIndex;
-			if (fromIndex > toIndex) {
-				throw new IllegalArgumentException("Nonsence");
-			}
-			FrameValues fv = values.subList(fromIndex.intValue(),
-					toIndex.intValue());
+			IValues values = extractor.getOutputValues();
 			String key = preprocess(extractor.getName());
-			result.put(key, fv);
+			IValues subList = subList(values, marker, extractor.getOffset());
+			result.put(key, subList);
 		}
 
 		return result;
+	}
+
+	
+	protected <T extends IValues> T subList(T values, Marker marker, long offset){
+		int endIndex = values.size() - 1;
+		// if(values.get(0).size()<=2){
+		// continue;
+		// }
+		int fromIndex = values.toIndex(marker.getStart());
+		fromIndex -= offset;
+		int toIndex = values.toIndex(marker.getEnd());
+		
+		fromIndex = fromIndex < 0 ? 0 : fromIndex;
+		toIndex -= offset;
+
+		toIndex = endIndex < toIndex ? endIndex : toIndex;
+		if (fromIndex > toIndex) {
+			throw new IllegalArgumentException(
+					 " fromIndex(" + fromIndex + ") > toIndex(" + toIndex
+					+ "); offset: " + offset);
+		}
+
+		T fvv = values.subList(fromIndex,toIndex);
+		return fvv;
 	}
 
 	/**

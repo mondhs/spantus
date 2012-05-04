@@ -56,7 +56,7 @@ public class ThresholdTest extends TestCase {
 		for (long i = 0; i < values.length; i++) {
 			Double f1 = values[(int)i];
 			FrameValues fv = new FrameValues(getWindow(threshold, f1));
-			wraper.calculate(i, fv);			
+			wraper.calculateWindow(i, fv);			
 		}
 		int j = 0;
 		Double avg = 0D;

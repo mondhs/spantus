@@ -36,7 +36,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	Logger log = Logger.getLogger(getClass());
 
 	
-	public AudioFileFormat getAudioFormat(URL url) {
+	public AudioFileFormat findAudioFormat(URL url) {
 		try {
 			return AudioSystem.getAudioFileFormat(url);
 		} catch (UnsupportedAudioFileException e) {
@@ -111,7 +111,7 @@ public class Mpeg7ReaderImpl implements AudioReader {
 	 * @param descriptor
 	 * @return
 	 */
-	protected IGeneralExtractor readSeries(Element descriptor) {
+	protected IGeneralExtractor<?> readSeries(Element descriptor) {
 		String type = Mpeg7Utils.getAttr(descriptor, Mpeg7attrs.xsi_type);
 		Assert.isTrue(!"".equals(type), "Type not found");
 		FrameVectorValues vectorVals = new FrameVectorValues();

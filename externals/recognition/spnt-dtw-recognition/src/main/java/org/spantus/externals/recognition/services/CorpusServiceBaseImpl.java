@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,6 +25,7 @@ import org.spantus.core.beans.IValueHolder;
 import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.RecognitionResultDetails;
 import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.core.service.CorpusRepository;
 import org.spantus.core.service.CorpusService;
 import org.spantus.exception.ProcessingException;
@@ -51,7 +53,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
 
 	private Set<String> includeFeatures;
 
-	private Integer searchRadius;
+	private Float searchRadius;
+	
+	private Set<ProcessedFrameLinstener> listeners;
+	
 
 	private JavaMLSearchWindow javaMLSearchWindow;
 	private JavaMLLocalConstraint javaMLLocalConstraint = JavaMLLocalConstraint.Default;
@@ -79,113 +84,117 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param target
 	 * @return
 	 */
-	public List<RecognitionResultDetails> findMultipleMatchFull(
+	public List<RecognitionResult> findMultipleMatchFull(
 			Map<String, IValues> target) {
 		Long begin = System.currentTimeMillis();
 		LOG.debug("[findMultipleMatch]+++ ");
-		List<RecognitionResultDetails> results = new ArrayList<RecognitionResultDetails>();
+		List<RecognitionResult> results = new ArrayList<RecognitionResult>();
 		if (target == null || target.isEmpty()) {
 			return results;
 		}
+		
+		Long processedCount = 0L;
+		Long totalToProcess = getCorpus().count()*target.size();
+		started(totalToProcess);
+		
 		Map<String, Double> minimum = new HashMap<String, Double>();
 		Map<String, Double> maximum = new HashMap<String, Double>();
 
 		// iterate all entries in corpus
-		for (SignalSegment sample : getCorpus().findAllEntries()) {
+		for (SignalSegment corpusSample : getCorpus().findAllEntries()) {
 			LOG.debug("[findMultipleMatch] sample: {0} ", 
-					sample.getName());
-			RecognitionResultDetails result = createRecognitionResultDetail();
-
+					corpusSample.getName());
+			RecognitionResult result = createRecognitionResultDetail();
+			Long targetLength = target.values().iterator().next().getTime();
+			Long sampleLength = targetLength;
+			if(corpusSample.getMarker()!=null){
+				sampleLength = corpusSample.getMarker().getLength();
+			}
 			for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
-				if (sample.getFeatureFrameVectorValuesMap().get(targetEntry.getKey()) == null
-						|| sample.getFeatureFrameVectorValuesMap().get(targetEntry.getKey())
-								.getValues() == null) {
-
-				}
 				String featureName = targetEntry.getKey();
-				IValueHolder<?> sampleFeatureData = sample.getFeatureFrameVectorValuesMap().get(
+				
+				IValueHolder<?> sampleFeatureData = corpusSample.getFeatureFrameVectorValuesMap().get(
 						targetEntry.getKey());
+				
 				if (sampleFeatureData == null) {
-					LOG.error("[findMultipleMatch] sampleFeatureData is not found. skip for " + targetEntry.getKey());
+					LOG.error("[findMultipleMatch] sampleFeatureData is not found. skip for " + featureName);
 					continue;
 				}
-
-				result.getSampleLegths().put(
-						featureName,
-						 (double) Math.round(sampleFeatureData.getValues()
-								.getTime() * 1000));
-				result.getTargetLegths()
-						.put(featureName,
-								 (double) Math.round(targetEntry.getValue()
-										.getTime() * 1000));
-				result.setInfo(sample);
-
 				
-				DtwResult dtwResult = calculateInfo(targetEntry.getKey(), targetEntry.getValue(),sampleFeatureData.getValues());
-				
-				result.getPath().put(featureName, dtwResult.getPath());
-				result.getScores().put(featureName, dtwResult.getResult());
-				result.getCostMatrixMap().put(featureName, dtwResult.getCostMatrix());
-				result.getStatisticalSummaryMap().put(featureName, dtwResult.getStatisticalSummary());
-				updateMinMax(featureName, dtwResult.getResult(), minimum,
-						maximum);
+				DtwResult dtwResult = calculateInfo(featureName, targetEntry.getValue(),sampleFeatureData.getValues());
+				result = updateResults(result, dtwResult, featureName, corpusSample, targetEntry);
+				if(result!=null){
+					updateMinMax(featureName, dtwResult.getResult(), minimum,
+							maximum,sampleLength,targetLength);
+					
+				}else{
+					break;
+				}
+				processed(processedCount++, totalToProcess);	
 			}
-			result.setDistance(null);
-			result.setAudioFilePath(getCorpus().findAudioFileById(
+			if(result != null){
+				result.getDetails().setAudioFilePath(getCorpus().findAudioFileById(
 					result.getInfo().getId()));
-			results.add(result);
+				results.add(result);
+			}
 		}
 		results = postProcessResult(results, minimum, maximum);
 		LOG.debug("[findMultipleMatch]--- in {0} ms ",
 				System.currentTimeMillis() - begin);
+		ended();
 		return results;
 	}
-
 	/**
 	 * 
-	 * @param key
+	 * @param result
+	 * @param dtwResult
+	 * @param featureName
+	 * @param sample
 	 * @param targetEntry
-	 * @param sampleFeatureData
 	 * @return
 	 */
-	private DtwResult calculateInfo(String key, IValues targetEntry, IValues sampleFeatureData) {
-		int targetDimention = targetEntry.getDimention();
-		DtwResult dtwResult = null;
-		// you know your stuff
-		if (targetDimention == 1) {
-			dtwResult = (DtwResult) getDtwService().calculateInfo(
-					(FrameValues) targetEntry,
-					(FrameValues) sampleFeatureData);
-		} else {
-			if (targetDimention  != sampleFeatureData
-					.getDimention()) {
-				String msg = MessageFormat.format("[findMultipleMatch] Sample size not same {0}: {1} != {2}",
-						 key,
-						 targetDimention ,
-						 sampleFeatureData.getDimention());
-				throw new ProcessingException(msg);
-			}
-			dtwResult = getDtwService().calculateInfoVector(
-					(FrameVectorValues) targetEntry,
-					(FrameVectorValues) sampleFeatureData);
+	private RecognitionResult updateResults(
+			RecognitionResult resultInfo, DtwResult dtwResult,
+			String featureName, SignalSegment sample,
+			Entry<String, IValues> targetEntry) {
+		if (dtwResult == null || dtwResult.getResult().isInfinite()) {
+			return null;
 		}
-		return dtwResult;
+		
+		RecognitionResultDetails result = resultInfo.getDetails();
+		IValueHolder<?> sampleFeatureData = sample
+				.getFeatureFrameVectorValuesMap().get(targetEntry.getKey());
+		result.getSampleLegths().put(
+				featureName, sampleFeatureData.getValues().getTime() );
+		result.getTargetLegths().put(featureName,targetEntry.getValue().getTime() );
+		resultInfo.setInfo(sample);
+		result.getPath().put(featureName, dtwResult.getPath());
+		resultInfo.getScores().put(featureName, dtwResult.getResult());
+		result.getCostMatrixMap().put(featureName, dtwResult.getCostMatrix());
+		result.getStatisticalSummaryMap().put(featureName,
+				dtwResult.getStatisticalSummary());
+		return resultInfo;
 	}
 
+
+
 	/**
 	 * 
+	 * @param recognitionResultDetails 
 	 * @return
 	 */
-	private RecognitionResultDetails createRecognitionResultDetail() {
-		RecognitionResultDetails result = new RecognitionResultDetails();
-		result.setPath(new HashMap<String, List<Point>>());
-		result.setPath(new HashMap<String, List<Point>>());
-		result.setScores(new HashMap<String, Double>());
-		result.setTargetLegths(new HashMap<String, Double>());
-		result.setSampleLegths(new HashMap<String, Double>());
-		result.setCostMatrixMap(new HashMap<String, RealMatrix>());
-		result.setStatisticalSummaryMap(new HashMap<String, StatisticalSummary>());
-		return result;
+	private RecognitionResult createRecognitionResultDetail() {
+		RecognitionResult resultInfo = new RecognitionResult();
+		resultInfo.setScores(new HashMap<String, Double>());
+		RecognitionResultDetails details = new RecognitionResultDetails();
+		details.setPath(new HashMap<String, List<Point>>());
+		details.setPath(new HashMap<String, List<Point>>());
+		details.setTargetLegths(new HashMap<String, Long>());
+		details.setSampleLegths(new HashMap<String, Long>());
+		details.setCostMatrixMap(new HashMap<String, RealMatrix>());
+		details.setStatisticalSummaryMap(new HashMap<String, StatisticalSummary>());
+		resultInfo.setDetails(details);
+		return resultInfo;
 	}
 
 	/**
@@ -195,9 +204,11 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param value
 	 * @param minimum
 	 * @param maximum
+	 * @param targetLength 
+	 * @param sampleLength 
 	 */
 	private void updateMinMax(String feature, Double value,
-			Map<String, Double> minimum, Map<String, Double> maximum) {
+			Map<String, Double> minimum, Map<String, Double> maximum, Long sampleLength, Long targetLength) {
 		// log.debug("[updateMinMax] feature [{0}]: {1} ", feature, value);
 		if (minimum.get(feature) == null) {
 			minimum.put(feature, Double.MAX_VALUE);
@@ -228,11 +239,15 @@ public class CorpusServiceBaseImpl implements CorpusService {
 			List<T> results, Map<String, Double> minimum,
 			Map<String, Double> maximum) {
 		// log.debug("[postProcessResult]+++");
+		
+		
 
 		for (RecognitionResult result : results) {
 			Map<String, Double> normalizedScores = new HashMap<String, Double>();
+			Map<String, Double> distances = new HashMap<String, Double>();
 			Double normalizedSum = 0D;
-
+			int countAffectiveScores = 0;
+			
 			for (Entry<String, Double> score : result.getScores().entrySet()) {
 				 Double min = minimum.get(score.getKey());
 				 Double max = maximum.get(score.getKey());
@@ -243,13 +258,20 @@ public class CorpusServiceBaseImpl implements CorpusService {
 				if (getIncludeFeatures() == null
 						|| getIncludeFeatures().isEmpty()) {
 					normalizedSum += normalizedScore;
+					countAffectiveScores++;
 				} else if (getIncludeFeatures().contains(score.getKey())) {
 					normalizedSum += normalizedScore;
+					countAffectiveScores++;
 				}
-
 				normalizedScores.put(score.getKey(), normalizedScore);
+				distances.put(score.getKey(), score.getValue());
 			}
-			result.setDistance(normalizedSum);
+			countAffectiveScores = Math.max(1, countAffectiveScores);
+			result.setDistance(normalizedSum/countAffectiveScores);
+			
+			if(result.getDetails() !=null){
+				result.getDetails().setDistances(distances);
+			}
 			result.setScores(normalizedScores);
 		}
 		// log.debug("[postProcessResult] results before sort: {0}", results);
@@ -359,8 +381,18 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		Map<String, Double> minimum = new HashMap<String, Double>();
 		Map<String, Double> maximum = new HashMap<String, Double>();
 		int i = 1;
+		Long processedCount = 0L;
+		Long totalToProcess = getCorpus().count()*target.size();
+		started(totalToProcess);
+		
 		for (SignalSegment corpusSample : getCorpus().findAllEntries()) {
 			long start = System.currentTimeMillis();
+			Long targetLength = target.values().iterator().next().getTime();
+			Long sampleLength = targetLength;
+			if(corpusSample.getMarker()!=null){
+				sampleLength = corpusSample.getMarker().getLength();
+			}
+			
 			RecognitionResult result = new RecognitionResult();
 			result.setScores(new HashMap<String, Double>());
 			result.setInfo(corpusSample);
@@ -374,26 +406,67 @@ public class CorpusServiceBaseImpl implements CorpusService {
 				}
 				result.getScores().put(featureName, result1.getDistance());
 				updateMinMax(featureName, result1.getDistance(), minimum,
-						maximum);
+						maximum, sampleLength, targetLength );
+				processed(processedCount++, totalToProcess);
 			}
-			results.add(result);
-			LOG.debug(
-					"[findBestMatch] {0}. iteration for [{1}] in {2} ms. score: {3} ",
-					i++, corpusSample.getName(),
-					(System.currentTimeMillis() - start), result.getScores()
-							.get("MFCC_EXTRACTOR"));
+			
+			if(!result.getScores().isEmpty()){
+				results.add(result);
+				LOG.debug(
+						"[findBestMatch] {0}. iteration for [{1}] in {2} ms.  ",
+						i++, corpusSample.getName(),
+						(System.currentTimeMillis() - start));
+			}
 			if (results.size() > 100) {
 				results = postProcessResult(results, minimum, maximum);
 			}
+			started(getCorpus().count()*target.size());
 		}
 		results = postProcessResult(results, minimum, maximum);
 		LOG.info(MessageFormat.format("[findBestMatch] sample: {0}", results));
 		if (results.isEmpty()) {
 			return null;
 		}
+		ended();
 		return results.get(0);
 	}
 
+	
+	/**
+	 * 
+	 * @param key
+	 * @param targetEntry
+	 * @param sampleFeatureData
+	 * @return
+	 */
+	protected DtwResult calculateInfo(String key, IValues targetEntry, IValues sampleFeatureData) {
+		int targetDimention = targetEntry.getDimention();
+		DtwResult dtwResult = null;
+		
+		if (targetDimention  != sampleFeatureData
+				.getDimention()) {
+			String msg = MessageFormat.format("[findMultipleMatch] Sample size not same {0}: {1} != {2}",
+					 key,
+					 targetDimention ,
+					 sampleFeatureData.getDimention());
+			throw new ProcessingException(msg);
+		}
+		
+		if (targetDimention == 1) {
+			dtwResult = (DtwResult) getDtwService().calculateInfo(
+					(FrameValues) targetEntry,
+					(FrameValues) sampleFeatureData);
+		} else {
+			dtwResult = getDtwService().calculateInfoVector(
+					(FrameVectorValues) targetEntry,
+					(FrameVectorValues) sampleFeatureData);
+		}
+		if(dtwResult.getResult().isInfinite()){
+			return null;
+		}
+		return dtwResult;
+	}
+	
 	/**
 	 * 
 	 * @param target
@@ -406,26 +479,43 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		if (fd == null) {
 			return null;
 		}
+		if(targetValues.size()<2){
+			return null;
+		}
 		RecognitionResult result = new RecognitionResult();
 		result.setInfo(sample);
 		if (targetValues.getDimention() == 1) {
-			if(((FrameValues) targetValues).size()<2){
-				return null;
-			}
 			result.setDistance(getDtwService().calculateDistance(
 					(FrameValues) targetValues, (FrameValues) fd.getValues()));
 		} else {
-			if(((FrameVectorValues) targetValues).size()<2){
-				return null;
-			}
 			result.setDistance(getDtwService().calculateDistanceVector(
 					(FrameVectorValues) targetValues,
 					(FrameVectorValues) fd.getValues()));
 		}
-
+		if(result.getDistance().isInfinite()){
+			return null;
+		}
 		return result;
 	}
 
+	public void processed(Long current, Long total) {
+		for (ProcessedFrameLinstener linstener : getListeners()) {
+			linstener.processed(current, total);
+		}
+	}
+
+	public void started(Long total) {
+		for (ProcessedFrameLinstener linstener : getListeners()) {
+			linstener.started(total);
+		}
+	}
+	public void ended() {
+		for (ProcessedFrameLinstener linstener : getListeners()) {
+			linstener.ended();
+		}
+	}
+	
+	
 	public void setCorpus(CorpusRepository corpus) {
 		this.corpus = corpus;
 	}
@@ -461,11 +551,11 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		this.includeFeatures = includeFeatures;
 	}
 
-	public Integer getSearchRadius() {
+	public Float getSearchRadius() {
 		return searchRadius;
 	}
 
-	public void setSearchRadius(Integer searchRadius) {
+	public void setSearchRadius(Float searchRadius) {
 		this.searchRadius = searchRadius;
 		dtwService =null;
 	}
@@ -485,6 +575,13 @@ public class CorpusServiceBaseImpl implements CorpusService {
 
 	public void setJavaMLLocalConstraint(JavaMLLocalConstraint javaMLLocalConstraint) {
 		this.javaMLLocalConstraint = javaMLLocalConstraint;
+	}
+	
+	public Set<ProcessedFrameLinstener> getListeners() {
+		if(listeners == null){
+			listeners = new LinkedHashSet<ProcessedFrameLinstener>();
+		}
+		return listeners;
 	}
 
 }

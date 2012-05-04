@@ -146,7 +146,7 @@ public class Plot3d extends JFrame {
 		URL urlFile = wavFile.toURI().toURL();
 		AudioReader reader = AudioReaderFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader
-				.getAudioFormat(urlFile));
+				.findAudioFormat(urlFile));
 		
 		ExtractorResultBuffer signal = new ExtractorResultBuffer(
 				new SignalExtractor());

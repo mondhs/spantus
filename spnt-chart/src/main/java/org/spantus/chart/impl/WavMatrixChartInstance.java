@@ -95,9 +95,9 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	private BufferedImage getImage(FrameVectorValues vals) {
 		if (image != null){
 			if(domain.getFrom() != null){
-				int from = vals.toIndex(domain.getFrom().doubleValue());
-				int to = vals.toIndex(domain.getUntil().doubleValue());
-				to = Math.min(to, vals.toIndex((double)vals.size()));
+				int from = vals.toIndex(domain.getFrom().longValue());
+				int to = vals.toIndex(domain.getUntil().longValue());
+				to = Math.min(to, vals.toIndex(vals.getTime()));
 				return image.getSubimage(from, 0, to-from, image.getHeight());
 			}else{
 				return image;
@@ -185,7 +185,7 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 		this.colorType = colorType;
 	}
 	public String getValueOn(BigDecimal x) {
-		int index = values.toIndex(x.doubleValue());
+		int index = values.toIndex(x.longValue());
 		if(index> values.size()-1){
 			index = values.size()-1;
 		}

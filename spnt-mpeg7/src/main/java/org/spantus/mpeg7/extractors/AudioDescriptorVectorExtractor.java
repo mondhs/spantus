@@ -12,7 +12,7 @@ public class AudioDescriptorVectorExtractor implements IExtractorVector {
 	private FrameVectorValues values = new FrameVectorValues();
 
 	
-	public FrameVectorValues calculate(Long sample, FrameValues frame) {
+	public FrameVectorValues calculateWindow(Long sample, FrameValues frame) {
 		return null;
 	}
 

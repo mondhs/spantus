@@ -92,18 +92,14 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	}
 
 
-	public FrameValues calculate(Long sample, FrameValues values) {
-		return getExtractor().calculate(sample, values);
+	public FrameValues calculateWindow(Long sample, FrameValues values) {
+		return getExtractor().calculateWindow(sample, values);
 	}
 
 	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues fv = getExtractor().calculateWindow(window);
-		return fv;
+		throw new IllegalArgumentException("Not implemented");
 	}
 
-	public void putValues(Long sample, FrameValues values) {
-		getExtractor().putValues(sample, values);
-	}
 
 	public void setConfig(IExtractorConfig config) {
 		getExtractor().setConfig(config);		

@@ -58,6 +58,10 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 		}
 	}
 	
+	public FrameValues(Double mySampleRate ){
+		setSampleRate(mySampleRate);
+	}
+	
 	public FrameValues(Collection<Double> collection, Double mySampleRate ){
 		addAll(collection);
 		setSampleRate(mySampleRate);
@@ -94,6 +98,7 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 		super.add(index, new Double(element));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public FrameValues subList(int fromIndex, int toIndex) {
 		List<Double> lst = super.subList(fromIndex, toIndex);
 		FrameValues fv = new FrameValues(lst); 
@@ -133,17 +138,21 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 		this.sampleRate = sampleRate;
 		milsSamplePeriod = 1000/sampleRate;
 	}
-	public Double getTime() {
-		return (double)size()/sampleRate;
+	public Long getTime() {
+		return indextoMils(size());
 	}
-	public Double toTime(int i){
-		return (double)i / (sampleRate);
+	public Long toTime(int i){
+		return indextoMils(i);
 	}
-	public Long indextoMils(int i){
+	public Long toTime(long i){
+		return indextoMils(i);
+	}
+	public Long indextoMils(long i){
 		return (long)(milsSamplePeriod * i);
 	}
-	public int toIndex(Double f){
-		return (int)(f * sampleRate)-1;
+	public int toIndex(Long time){
+		Double fTime = time.doubleValue();
+		return (int)(fTime * sampleRate/1000)-1;
 	}
 
 	public Double getMinValue() {
@@ -186,4 +195,8 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
         public void setFrameIndex(Long frameIndex) {
             this.frameIndex = frameIndex;
         }
+
+
+
+
 }

@@ -101,7 +101,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 			ctx.getProject().getSample().setMarkerSetHolder(markerSetHolder);
 			
 			
-			
+			getMarkerLabeling().update(ctx.getProject(), getExecutionFacade());
 			getMarkerLabeling().label(
 						ctx.getProject().getSample().getMarkerSetHolder(),
 						ctx, getReader());
@@ -162,7 +162,7 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
 
 	public MarkerLabeling getMarkerLabeling() {
 		if(markerLabeling == null){
-			markerLabeling = new MarkerLabelingProxyImpl();
+			markerLabeling = new MarkerLabelingProxyImpl(getExecutionFacade());
 		}
 		return markerLabeling;
 	}

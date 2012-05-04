@@ -92,7 +92,7 @@ public class StaticThreshold extends AbstractThreshold {
 	protected Double train(Double windowValue, Double thresholdValue){
 		windowsLearned++;
 		if(thresholdValue == null){
-			log.debug("[train]thresholdValue is null for {0}", windowValue);
+			log.debug("[train] {1} thresholdValue is null for {0}", windowValue, getName());
 			thresholdValue = windowValue;
 			return thresholdValue;
 		}

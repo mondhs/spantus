@@ -6,12 +6,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.services.MarkerLabeling;
 
 public class MarkerLabelingTextGridImpl implements MarkerLabeling{
@@ -84,6 +86,13 @@ public class MarkerLabelingTextGridImpl implements MarkerLabeling{
 	public void setCorpusEntryExtractorTextGridMapImpl(
 			CorpusEntryExtractorTextGridMapImpl corpusEntryExtractorTextGridMapImpl) {
 		this.corpusEntryExtractorTextGridMapImpl = corpusEntryExtractorTextGridMapImpl;
+	}
+
+	@Override
+	public void update(SpantusWorkProjectInfo project,
+			ProcessedFrameLinstener listener) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

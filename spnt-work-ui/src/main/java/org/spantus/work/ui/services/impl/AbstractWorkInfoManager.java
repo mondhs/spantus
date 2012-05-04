@@ -121,7 +121,8 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		project.getFeatureReader().setWorkConfig(new WorkUIExtractorConfig());
                 project.getRecognitionConfig().setRepositoryPath("./corpus");
                 project.getRecognitionConfig().setDtwWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow.name());
-                project.getRecognitionConfig().setRadius(15);
+                project.getRecognitionConfig().setLocalConstraint(DtwServiceJavaMLImpl.JavaMLLocalConstraint.Angle.name());
+                project.getRecognitionConfig().setRadius(15F);
                 
                 initializeExperimentId(project);
 		return project;
@@ -141,8 +142,12 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
                     recognition.setDtwWindow(
                             DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow.name());
                 }
+                if(!StringUtils.hasText(recognition.getDtwWindow())){
+                    recognition.setLocalConstraint(
+                            DtwServiceJavaMLImpl.JavaMLLocalConstraint.Angle.name());
+                }
                 if(recognition.getRadius() == null){
-                    recognition.setRadius(15);
+                    recognition.setRadius(15F);
                 }
                 if(!StringUtils.hasText(recognition.getRepositoryPath())){
                      recognition.setRepositoryPath("./corpus");

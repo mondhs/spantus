@@ -12,14 +12,17 @@ import org.spantus.core.IValues;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.service.CorpusService;
 import org.spantus.externals.recognition.bean.CorpusFileEntry;
+import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 
 /**
  *
  * @author mondhs
  */
-public abstract class RecognitionServiceFactory {
+public final class RecognitionServiceFactory {
 
     private static CorpusService corpusService;
+    
+    private RecognitionServiceFactory(){}
 
      public static CorpusService createCorpusService(){
         if(corpusService == null){
@@ -32,6 +35,21 @@ public abstract class RecognitionServiceFactory {
         }
         return corpusService;
      }
+     
+     public static CorpusService createCorpusService(String repositoryPath){
+//         if(corpusService == null){
+             CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
+             corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
+//             corpusServiceimpl.getIncludeFeatures().add("MFCC_EXTRACTOR");
+//              corpusServiceimpl.getIncludeFeatures().add("LPC_EXTRACTOR");
+//              corpusServiceimpl.getIncludeFeatures().add("FFT_EXTRACTOR");
+         	  CorpusRepositoryFileImpl corpus = new CorpusRepositoryFileImpl();
+         	 corpus.setRepositoryPath(repositoryPath);
+             corpusServiceimpl.setCorpus(corpus);
+             corpusService = corpusServiceimpl;
+//         }
+         return corpusService;
+      }
      
      public static SignalSegment createSignalSegment(String label,
  			Map<String, IValues> featureDataMap){

@@ -37,8 +37,11 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
 		return extractorRegisterVector;
 	}
 
-        public Set<IGeneralExtractor> getGeneralExtractor() {
-            return null;
+        public Set<IGeneralExtractor<?>> getGeneralExtractor() {
+        	Set<IGeneralExtractor<?>> general  =new HashSet<IGeneralExtractor<?>>();
+        	general.addAll(getExtractorRegister());
+        	general.addAll(getExtractorRegister3D());
+            return general;
         }
         
 	
@@ -73,7 +76,7 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
 	}
 
 	
-	public void registerExtractor(IGeneralExtractor extractor) {
+	public void registerExtractor(IGeneralExtractor<?> extractor) {
 		// TODO Auto-generated method stub
 		
 	}

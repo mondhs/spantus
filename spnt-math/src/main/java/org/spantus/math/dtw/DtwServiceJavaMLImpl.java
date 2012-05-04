@@ -31,7 +31,7 @@ import org.spantus.math.services.javaml.JavaMLSupport;
 public class DtwServiceJavaMLImpl implements DtwService {
 
 	private JavaMLSearchWindow searchWindow;
-	private Integer searchRadius;
+	private Float searchRadius;
 	private JavaMLLocalConstraint localConstaints;
 
 	public enum JavaMLSearchWindow {
@@ -41,7 +41,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
 		Default, Angle, Wide
 	}
 
-	public static final Integer DEFAULT_RADIUS = 3;
+	public static final float DEFAULT_RADIUS = 10;
 
 	public Double calculateDistance(List<Double> targetVector,
 			List<Double> sampleVector) {
@@ -53,7 +53,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
 		SearchWindow searchWindowInstance = null;
 
 		if (getSearchWindow() == null) {
-			searchWindowInstance = createSearchWindow(tsTarget, tsSample, 0,
+			searchWindowInstance = createSearchWindow(tsTarget, tsSample, 0F,
 					JavaMLSearchWindow.FullWindow, getLocalConstaints());
 		} else {
 			searchWindowInstance = createSearchWindow(tsTarget, tsSample, getLocalConstaints());
@@ -78,7 +78,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
         Double info = null;
         SearchWindow searchWindowInstance = null;
         if(getSearchWindow()==null){
-        	searchWindowInstance = createSearchWindow(tsTarget, tsSample, 0,
+        	searchWindowInstance = createSearchWindow(tsTarget, tsSample, 0F,
 					JavaMLSearchWindow.FullWindow, getLocalConstaints());
         }else{
             searchWindowInstance = createSearchWindow(tsTarget, tsSample, getLocalConstaints());
@@ -103,7 +103,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
 		TimeWarpInfo info = null;
 		SearchWindow searchWindowInstance = null;
 		if (getSearchWindow() == null) {
-			searchWindowInstance = createSearchWindow(tsTarget, tsSample, 0,
+			searchWindowInstance = createSearchWindow(tsTarget, tsSample, 0F,
 					JavaMLSearchWindow.FullWindow, getLocalConstaints());
 		} else {
 			 searchWindowInstance = createSearchWindow(tsTarget,
@@ -133,7 +133,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
 		TimeWarpInfo info = null;
 		SearchWindow searchWindowInstance = null;
 		if (getSearchWindow() == null) {
-			searchWindowInstance = createSearchWindow(tsTarget, tsSample, 0,
+			searchWindowInstance = createSearchWindow(tsTarget, tsSample, 0F,
 					JavaMLSearchWindow.FullWindow, getLocalConstaints());
 		} else {
 			 searchWindowInstance = createSearchWindow(tsTarget,
@@ -157,17 +157,32 @@ public class DtwServiceJavaMLImpl implements DtwService {
 		result.setCostMatrix(info.getCostMatrix());
 		result.setStatisticalSummary(info.getStatisticalSummary());
 
-		for (int i = 1; i < info.getPath().size() ; i++) {
-			ColMajorCell cell = info.getPath().get(i);
-			Point point = new Point(cell.getCol(), cell.getRow());
-			result.getPath().add(point);
+		if(info.getPath() != null){
+			for (int i = 1; i < info.getPath().size() ; i++) {
+				ColMajorCell cell = info.getPath().get(i);
+				Point point = new Point(cell.getCol(), cell.getRow());
+				result.getPath().add(point);
+			}
 		}
 		return result;
 	}
 
+	private static Integer transformWindowRadiusPercent(int targetSize, int sampleSize, Float radiusPercent){
+		if(radiusPercent == null){
+			return null;
+		}
+		Double avg = Math.sqrt((double)targetSize*sampleSize/2);
+		avg = (avg*radiusPercent)/100;
+		avg = Math.max(3, avg);
+		return avg.intValue();
+	}
+	
 	public static SearchWindow createSearchWindow(TimeSeries tsTarget,
-			TimeSeries tsSample, Integer radius, JavaMLSearchWindow searchWindow,JavaMLLocalConstraint localConstaints) {
+			TimeSeries tsSample, Float radiusPercent, JavaMLSearchWindow searchWindow,JavaMLLocalConstraint localConstaints) {
 		SearchWindow searchWindowObj = null;
+		
+		Integer radius = transformWindowRadiusPercent(tsTarget.size(), tsSample.size(), radiusPercent);
+		
 		if (JavaMLSearchWindow.FullWindow.equals(searchWindow)) {
 			searchWindowObj = new FullWindow(tsTarget, tsSample);
 		} else if (JavaMLSearchWindow.LinearWindow.equals(searchWindow)) {
@@ -193,7 +208,7 @@ public class DtwServiceJavaMLImpl implements DtwService {
 					.sqrt((double) tsSample.size())));
 
 			WarpPath coarsePath = AbeelDTW.getWarpPathBetween(shrunkTarget,
-					shrunkSample,createSearchWindow(shrunkTarget, shrunkSample, 0,
+					shrunkSample,createSearchWindow(shrunkTarget, shrunkSample, null,
 							JavaMLSearchWindow.FullWindow, localConstaints));
 			WarpPath expandedPath = expandPath(coarsePath, shrunkTarget,
 					shrunkSample);
@@ -227,11 +242,11 @@ public class DtwServiceJavaMLImpl implements DtwService {
 		this.searchWindow = searchWindow;
 	}
 
-	private Integer getSearchRadius() {
+	private Float getSearchRadius() {
 		return this.searchRadius;
 	}
 
-	public void setSearchRadius(Integer searchRadius) {
+	public void setSearchRadius(Float searchRadius) {
 		this.searchRadius = searchRadius;
 	}
 

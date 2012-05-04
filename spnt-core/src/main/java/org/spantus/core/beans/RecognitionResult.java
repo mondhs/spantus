@@ -4,10 +4,12 @@ import java.util.Map;
 
 
 
+
 public class RecognitionResult {
     private SignalSegment info;
     private Double distance;
-    private Map<String, Double> scores;
+    private RecognitionResultDetails details;
+	private Map<String, Double> scores;
 
     public SignalSegment getInfo() {
         return info;
@@ -26,6 +28,19 @@ public class RecognitionResult {
     }
 
 
+    @Override
+    public String toString() {
+        return getInfo().getName() +  "[" + getDistance() + "]";
+    }
+
+	public RecognitionResultDetails getDetails() {
+		return details;
+	}
+
+	public void setDetails(RecognitionResultDetails details) {
+		this.details = details;
+	}
+
     public Map<String, Double> getScores() {
         return scores;
     }
@@ -33,11 +48,6 @@ public class RecognitionResult {
     public void setScores(Map<String, Double> score) {
         this.scores = score;
     }
-   
 
-    @Override
-    public String toString() {
-        return getInfo().getName() +  "[" + getDistance() + "]";
-    }
 
 }

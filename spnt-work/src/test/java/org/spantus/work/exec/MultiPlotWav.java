@@ -85,7 +85,7 @@ public class MultiPlotWav extends JFrame {
 		File wavFile = new File("../data/text1.wav");
 		URL urlFile = wavFile.toURI().toURL();
 		AudioReader reader = AudioReaderFactory.createAudioReader();
-		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader.getAudioFormat(urlFile));
+		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader.findAudioFormat(urlFile));
 //		ExtractorUtils.register(bufferedReader, ExtractorEnum.values());
 		ExtractorUtils.register(bufferedReader, new ExtractorEnum[]{
 //				ExtractorEnum.FFT_EXTRACTOR,

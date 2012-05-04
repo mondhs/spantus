@@ -18,8 +18,10 @@
  */
 package org.spantus.segment.online;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 
+import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
@@ -38,7 +40,7 @@ import org.spantus.logger.Logger;
  */
 
 public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
-	@SuppressWarnings("unused")
+
 	private static final Logger LOG = Logger
 			.getLogger(MultipleSegmentatorListenerOnline.class);
 
@@ -59,12 +61,12 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 
 	public void onSegmentStarted(SegmentEvent event) {
 		//do nothing
-//		log.debug("[onSegmentedStarted] {0}", event);
+//		LOG.debug("[onSegmentedStarted] {0}", event);
 	}
 
 	public void onSegmentEnded(SegmentEvent event) {
 		//do nothing
-//		log.debug("[onSegmentedStarted] {0}", event);
+//		LOG.debug("[onSegmentEnded] {0}", event);
 	}
 	public void onNoiseProcessed(SegmentEvent event) {
 		//do nothing
@@ -101,7 +103,7 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 				noiseDetected(multievent);
 			}else if(singnalCount>classifiersThreshold){
 				if(getCurrentMarker() == null){
-					setCurrentMarker(createSegment(event));
+					setCurrentMarker(createMarker(event));
 					multievent.setMarker(getCurrentMarker());
 				}
 				segmentDetected(multievent);
@@ -133,14 +135,14 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 //	}
 
 	
-	protected Marker createSegment(SegmentEvent event) {
+	protected Marker createMarker(SegmentEvent event) {
 		Marker marker = new Marker();
 		marker.setStart(event.getTime());
 		marker.setLabel(""+event.getTime());
 //		log.debug("[createSegment] marker({0}ms): {1}", time, marker.toString());
 		return marker;
 	}
-	protected Marker finazlizeSegment(Marker marker, SegmentEvent event) {
+	protected Marker finazlizeMarker(Marker marker, SegmentEvent event) {
 		if (marker == null){
 			return marker;
 		}
@@ -189,6 +191,7 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 	public void registered(String id) {
 		classifiersCount++;
 		classifiersThreshold = classifiersCount/2;
+		LOG.debug("[registered] classifiersCount: {0}; classifiersThreshold: {1}", classifiersCount, classifiersThreshold);
 	}
 
 	protected Marker getCurrentMarker() {
@@ -197,6 +200,24 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 
 	protected void setCurrentMarker(Marker marker) {
 		this.currentMarker = marker;
+	}
+
+	public Integer getClassifiersCount() {
+		return classifiersCount;
+	}
+
+
+	public Integer getClassifiersThreshold() {
+		return classifiersThreshold;
+	}
+
+	public void setClassifiersThreshold(Integer classifiersThreshold) {
+		this.classifiersThreshold = classifiersThreshold;
+	}
+
+	@Override
+	public Collection<SignalSegment> getSignalSegments() {
+		throw new IllegalArgumentException("Not implemented");
 	}
 
 

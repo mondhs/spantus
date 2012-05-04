@@ -14,8 +14,8 @@ import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.IValues;
 import org.spantus.core.beans.RecognitionResult;
-import org.spantus.core.beans.RecognitionResultDetails;
 import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -47,7 +47,7 @@ public class MatchingServiceImpl {
 	 * 
 	 * @param ctx
 	 */
-	public void update(RecognitionConfig recognitionConfig) {
+	public void update(RecognitionConfig recognitionConfig, ProcessedFrameLinstener listener) {
 		String corpusPath = recognitionConfig.getRepositoryPath();
 		String searchWindowStr = recognitionConfig.getDtwWindow();
 		String localConstraintStr = recognitionConfig.getLocalConstraint();
@@ -60,7 +60,7 @@ public class MatchingServiceImpl {
 		if (StringUtils.hasText(localConstraintStr)) {
 			localConstraint = JavaMLLocalConstraint.valueOf(localConstraintStr);
 		}
-		int radius = recognitionConfig.getRadius();
+		Float radius = recognitionConfig.getRadius();
 
 		File corpusDir = new File(corpusPath);
 		if (!corpusDir.equals(getCorpusRepository().getRepoDir())) {
@@ -79,6 +79,8 @@ public class MatchingServiceImpl {
 				ExtractorEnum.PLP_EXTRACTOR.name());
 		corpusService.getIncludeFeatures().add(
 				ExtractorEnum.LPC_EXTRACTOR.name());
+		
+		corpusService.getListeners().add(listener);
 		// corpusService.getIncludeFeatures().add(ExtractorEnum.FFT_EXTRACTOR.name());
 		// corpusServiceimpl.getIncludeFeatures().add(ExtrasSctorEnum.SPECTRAL_FLUX_EXTRACTOR.name());
 
@@ -111,24 +113,23 @@ public class MatchingServiceImpl {
 		getCorpusService().learn(corpusEntry, ais);
 	}
 
-	public List<RecognitionResultDetails> findMultipleMatch(
+	public List<RecognitionResult> findMultipleMatch(
 			Map<String, IValues> fvv) {
 		return getCorpusService().findMultipleMatchFull(fvv);
 	}
 
 	public RecognitionResult match(Map<String, IValues> fvv) {
 		RecognitionResult result = getCorpusService().match(fvv);
-		if (result == null) {
-			return null;
-		}
-		Double mfccScore = result.getScores().get("MFCC_EXTRACTOR");
-		Double plpScore = result.getScores().get("PLP_EXTRACTOR");
-		if (mfccScore != null && mfccScore > 250) {
-			return null;
-		}
-		if (plpScore != null && plpScore > 15) {
-			return null;
-		}
+//		Double mfccScore = result.getScores().get("MFCC_EXTRACTOR");
+//		Double plpScore = result.getScores().get("PLP_EXTRACTOR");
+//		if (mfccScore != null && mfccScore > 250) {
+//			return null;
+//		}
+//		if (plpScore != null && plpScore > 15) {
+//			return null;
+//		}
 		return result;
 	}
+	
+
 }

@@ -49,7 +49,7 @@ public class ExtractorReaderServiceImplTest {
         //then
         Assert.assertNotNull(fvv);
         Assert.assertEquals(3, fvv.size());
-        Assert.assertEquals("", 0.003D, fvv.get(extractorName).getTime(),0);
+        Assert.assertEquals("", 3, fvv.get(extractorName).getTime(),0);
     }
     @Test 
     public void testFindAllVectorValuesForMarker(){
@@ -71,7 +71,7 @@ public class ExtractorReaderServiceImplTest {
         //then
         Assert.assertNotNull(fvv);
         Assert.assertEquals(3, fvv.size());
-        Assert.assertEquals("", 0.003D, fvv.getTime(),0);
+        Assert.assertEquals("", 3, fvv.getTime(),0);
     }
 
 

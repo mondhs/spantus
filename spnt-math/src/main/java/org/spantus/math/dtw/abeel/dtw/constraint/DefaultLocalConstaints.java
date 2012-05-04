@@ -13,9 +13,11 @@ public class DefaultLocalConstaints extends AbstractLocalConstaints {
 
 	@Override
 	public void addConstraints(Map<Pair<Integer, Integer>, Double> constaints, int i, int j) {
-    	safeAdd(constaints, i-1, j-1);
-    	safeAdd(constaints, i-1, j);
-    	safeAdd(constaints, i, j-1);
+    	Double minPriority = 2D;
+    	Double maxPriority = 1D;
+		safeAdd(constaints, i-1, j-1, maxPriority);
+    	safeAdd(constaints, i-1, j, minPriority);
+    	safeAdd(constaints, i, j-1, minPriority);
 	}
 
 	

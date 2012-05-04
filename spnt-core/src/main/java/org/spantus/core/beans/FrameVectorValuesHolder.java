@@ -43,4 +43,5 @@ public class FrameVectorValuesHolder implements IValueHolder<FrameVectorValues>{
 			this.sampleRate = values.getSampleRate();
 		}
 	}
+
 }

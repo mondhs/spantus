@@ -38,26 +38,26 @@ public class ExtractorWrapper implements IExtractor {
 		this.extractor = extractor;
 	}
 	
-	public FrameValues calculate(Long sample, FrameValues values) {
+	public FrameValues calculateWindow(Long sample, FrameValues values) {
 
 		for (IExtractorListener lstn1: getListeners()) {
 			lstn1.beforeCalculated(sample, values);
 		}
-		FrameValues result = getExtractor().calculate(sample, values);
+		FrameValues result = getExtractor().calculateWindow(sample, values);
 		if(result == null){
 			//nothing to calculate
 			return result;
 		}
 	
 		for (IExtractorListener lstn1: getListeners()) {
-			lstn1.afterCalculated(sample, result);
+			lstn1.afterCalculated(sample, values, result);
 		}
 		return result;
 	}
 
-	public FrameValues calculateWindow(FrameValues window) {
-		FrameValues result = getExtractor().calculateWindow(window);
-		return result;
+	@Override
+	public FrameValues calculateWindow(FrameValues values) {
+		throw new IllegalArgumentException("Not implemented");
 	}
 
 	public FrameValues getOutputValues() {
@@ -76,9 +76,6 @@ public class ExtractorWrapper implements IExtractor {
 		return getExtractor().getName();
 	}
 
-	public void putValues(Long sample, FrameValues values) {
-		getExtractor().putValues(sample, values);
-	}
 
 	public void setConfig(IExtractorConfig config) {
 		getExtractor().setConfig(config);

@@ -34,7 +34,7 @@ public class ExtractorVectorOutputHolder implements IExtractorVector {
 	private IExtractorConfig config;
 
 
-	public FrameVectorValues calculate(Long sample, FrameValues values) {
+	public FrameVectorValues calculateWindow(Long sample, FrameValues values) {
 		throw new IllegalAccessError("Should not be called");
 	}
 

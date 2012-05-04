@@ -50,6 +50,7 @@ public abstract class AbstractSpectralVectorExtractor extends AbstractExtractorV
 	
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameVectorValues rtnValues = new FrameVectorValues();
+		rtnValues.setSampleRate(getExtractorSampleRate());
 		return rtnValues;
 	}
 	
@@ -59,11 +60,6 @@ public abstract class AbstractSpectralVectorExtractor extends AbstractExtractorV
 	}
 	
 	
-	public Double getExtractorSampleRate() {
-//		return (getConfig().getSampleRate()/(getWinowSize()*.85f));
-		return super.getExtractorSampleRate();// (getConfig().getSampleRate()/(getConfig().getWindowOverlap()));
-
-	}
 
 	public AbstractExtractorVector getAbstractExtractorVector() {
 		if(abstractExtractorVector == null){

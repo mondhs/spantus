@@ -44,7 +44,7 @@ public class ExtractorResultBuffer implements IExtractor {
 	
 	public void putValues(Long sample, FrameValues values) {
 //		this.frameValues = values;
-		calculate(sample, values);
+		calculateWindow(sample, values);
 	}
 
 //	public FrameValues getFrameValues() {
@@ -73,8 +73,8 @@ public class ExtractorResultBuffer implements IExtractor {
 	}
 
 
-	public FrameValues calculate(Long sample, FrameValues values) {
-		FrameValues val = extractor.calculate(sample, values);
+	public FrameValues calculateWindow(Long sample, FrameValues values) {
+		FrameValues val = extractor.calculateWindow(sample, values);
 		if(val == null){
 			return null;
 		}

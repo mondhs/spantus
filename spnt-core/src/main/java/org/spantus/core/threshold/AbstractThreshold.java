@@ -2,11 +2,15 @@ package org.spantus.core.threshold;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.marker.Marker;
+import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
 
 public abstract class AbstractThreshold extends AbstractClassifier{
+	@SuppressWarnings("unused")
+	private static final Logger LOG = Logger.getLogger(AbstractThreshold.class);
 	private FrameValues thereshold;
 	private Double coef =null;
+	
 	/**
 	 * 
 	 * @param double1
@@ -18,21 +22,22 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 
 	
 	/**
+	 * @param values 
 	 * 
 	 */
-	protected void processDiscriminator(Long sample, Double double1){
+	protected void processDiscriminator(Long sample, Double double1, FrameValues windowValues){
 		Double threshold = calculateThreshold(double1);
 		if(threshold != null){
 			getThresholdValues().add(threshold);
-			calculateState(getClassifierSampleNum(), double1);
+			calculateState(getClassifierSampleNum(), double1, windowValues);
 		}
 		setClassifierSampleNum(getClassifierSampleNum() + 1);
 	}
 
-	public void afterCalculated(Long sample, FrameValues result) {
+	public void afterCalculated(Long sample, FrameValues windowValues, FrameValues result) {
 		getThresholdValues().setSampleRate(getExtractorSampleRate());
 		for (Double float1 : result) {
-			processDiscriminator(sample, float1);
+			processDiscriminator(sample, float1, windowValues);
 		}
 		cleanup();
 	}
@@ -49,14 +54,16 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 	
 	/**
 	 * calculate State at the sample moment with given value
+	 * @param values 
 	 * 
 	 * @param double1
 	 * @param threshold
 	 * @return
 	 */
-	protected void calculateState(Long sample, Double value){
-		Long time = getThresholdValues().indextoMils(sample.intValue());
+	protected void calculateState(Long sample, Double value, FrameValues windowValues){
+		Long time = getThresholdValues().toTime(sample);
 		if(isSignalState(value)){
+//			LOG.debug("[calculateState] + {1} signal - {0}", getName(), time);
 			//segment
 			if(getMarker()==null){
 				setMarker(new Marker());
@@ -69,6 +76,7 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 				}
 			}
 		}else {
+//			LOG.debug("[calculateState] - {1} silent - {0}", getName(), time);
 			//silent
 			if(getMarker()!=null){
 				getMarker().setEnd(time);
@@ -83,8 +91,10 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 		}
 		//notify that segment processed
 		for (IClassificationListener listener : getClassificationListeners()) {
-			listener.onSegmentProcessed(
-					new SegmentEvent(getName(),time,getMarker(),sample, value));
+			SegmentEvent event = new SegmentEvent(getName(),time,getMarker(),sample, value);
+			event.setOutputValues(getOutputValues());
+			event.setWindowValues(windowValues);
+			listener.onSegmentProcessed(event);
 		}
 	}
 

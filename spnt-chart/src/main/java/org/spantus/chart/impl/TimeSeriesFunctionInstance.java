@@ -15,7 +15,7 @@ public abstract class TimeSeriesFunctionInstance implements FunctionInstance, Ch
 	String description;
 	
 	
-	public ChartDescriptionInfo resolve(float time, float verticalPossition) {
+	public ChartDescriptionInfo resolve(Long time, float verticalPossition) {
 		if(getCoordinateBoundary().getYMin().floatValue()<verticalPossition && 
 				getCoordinateBoundary().getYMax().floatValue()>verticalPossition){
 			String value = getValueOn(BigDecimal.valueOf(time));

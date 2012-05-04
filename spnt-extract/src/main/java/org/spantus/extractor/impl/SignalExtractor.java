@@ -50,12 +50,12 @@ public class SignalExtractor extends AbstractExtractor {
 	private Integer downScale = 1;
 	
 	@Override
-	public FrameValues calculate(Long sampleNum, FrameValues values) {
+	public FrameValues calculateWindow(Long sampleNum, FrameValues values) {
 //		log.debug(MessageFormat.format(
 //				"[calculate]+++  name:{0}; sampleRate:{1}; windowSize:{2}",
 //				getName(), getConfig().getSampleRate()/1000, getConfig()
 //						.getWindowSize()));
-
+//test
 		FrameValues calculatedValues = newFrameValues(values);
 		int i=0 ;
 		Double fWork = 0D;

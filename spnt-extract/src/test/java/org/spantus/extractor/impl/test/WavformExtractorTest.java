@@ -63,8 +63,8 @@ public class WavformExtractorTest {
 		energyExtractor.setConfig(config);
                 extractor.setConfig(config);
                 
-		extractor.putValues(1L, x);
-		energyExtractor.putValues(1L, x);
+		extractor.calculateWindow(1L, x);
+		energyExtractor.calculateWindow(1L, x);
                 FrameVectorValues y = extractor.getOutputValues();
                 FrameValues yEnergy = energyExtractor.getOutputValues();
 //		log.debug(extractor.getName() + ": " + y);

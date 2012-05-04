@@ -15,13 +15,15 @@ import javax.swing.JPanel;
 
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
+import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.exception.ProcessingException;
+import org.spantus.math.MatrixUtils;
 
 public final class ChartUtils {
 
 	public enum ChartScale {
-		linear, sqrt
+		linear, sqrt, log
 	}
 
 	private ChartUtils() {
@@ -57,15 +59,29 @@ public final class ChartUtils {
 		int width = vals.size();
 		BufferedImage anImage = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
-		Double minVal = vals.getMinValue();
-		Double deltaVal = vals.getMaxValue() - minVal;
 		Object pixelTmp = null;
 		int x = 0, y = 0;
+		
+		FrameValues min = new FrameValues(MatrixUtils.fill(vals.get(0).size(),Double.POSITIVE_INFINITY));
+		FrameValues max = new FrameValues(MatrixUtils.fill(vals.get(0).size(),Double.NEGATIVE_INFINITY));
+
+		
+		for (List<Double> fv : vals) {
+			int i  = 0;
+			for (Double double1 : fv) {
+				min.set(i, Math.min(min.get(i), double1));
+				max.set(i, Math.max(max.get(i), double1));
+				i++;
+			}
+		}
+		
 		for (List<Double> fv : vals) {
 			y = 0;
 			LinkedList<Double> lf = new LinkedList<Double>(fv);
 			for (ListIterator<Double> iterator2 = lf.listIterator(fv.size()); iterator2
 					.hasPrevious();) {
+				Double minVal = min.get(y);
+				Double deltaVal = max.get(y) - minVal;
 				Double val = (Double) iterator2.previous();
 				int pixelCode = lookupColor(val, minVal,
 						deltaVal, pChartScale, pColorLookup);
@@ -115,6 +131,9 @@ public final class ChartUtils {
 	public static int lookupColor(Double floatValue, Double min, Double delta,
 			ChartScale chartScale, ColorLookup colorLookup) {
 		Double fColor = ((Double) (floatValue - min) / (delta));
+		if (ChartScale.log.equals(chartScale)) {
+			fColor = -fColor*Math.log(fColor);
+		}
 		if (ChartScale.sqrt.equals(chartScale)) {
 			fColor = Math.sqrt(fColor);
 		}

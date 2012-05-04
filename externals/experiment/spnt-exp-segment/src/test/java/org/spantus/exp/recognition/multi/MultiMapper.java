@@ -58,7 +58,7 @@ public class MultiMapper {
 		corpusService = new CorpusServiceBaseImpl();
 		corpusService.setCorpus(corpusRepository);
 		corpusService.setJavaMLSearchWindow(JavaMLSearchWindow.ExpandedResWindow);
-		corpusService.setSearchRadius(3);
+		corpusService.setSearchRadius(15F);
 
 		
 		if (extractor == null) {

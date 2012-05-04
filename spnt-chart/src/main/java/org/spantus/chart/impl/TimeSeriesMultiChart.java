@@ -193,7 +193,7 @@ public class TimeSeriesMultiChart extends AbstractSwingChart {
 		ctx.setMarkSet(extr.getMarkSet());
 		
 		FrameValueThearsholdFuncton function = new FrameValueThearsholdFuncton(ctx);
-		function.setOrder((double)order);
+		function.setOrder(order);
 		if(extr.getOutputValues().size() > 1){
 			graphChart.addFunction(function, style1);	
 		}else{

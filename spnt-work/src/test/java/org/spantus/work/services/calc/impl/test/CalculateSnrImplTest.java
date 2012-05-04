@@ -40,22 +40,15 @@ public class CalculateSnrImplTest {
 	private IExtractor newExtractor(MarkerSet segments) {
 		DummyExtractor dummyExtractor = DumyExtractorInputReader.createExtractor("TEST");
 		FrameValues vals = dummyExtractor.getOutputValues();
-		int current = 1;
+		Long current = 1L;
 		for (Marker marker : segments.getMarkers()) {
-//			if(current == null){
-//				for (int i = 0; i < marker.getStart(); i++) {
-//					vals.set(vals.toIndex((double) i), 0.1);
-//				}
-//				current = marker.getEnd();
-//			}
-//			Double index = vals.get(vals.toIndex((double) marker.getStart()/vals.getSampleRate()));
-			for (double i = current; i < marker.getStart(); i++) {
-				vals.set(vals.toIndex((double) i/vals.getSampleRate()), 0.1+ (0.0001*i));
+			for (Long i = current; i < marker.getStart(); i++) {
+				vals.set(vals.toIndex(i), 0.1+ (0.0001*i));
 			}
-			current = marker.getEnd().intValue();
+			current = marker.getEnd();
 		}
-		for (int i = current; i <= vals.toIndex(vals.getTime())+1; i++) {
-			vals.set(vals.toIndex((double) i/vals.getSampleRate()), 0.1+ (i/1000));
+		for (Long i = current; i <= vals.toIndex(vals.getTime())+1; i++) {
+			vals.set(vals.toIndex(i), 0.1+ (i/1000));
 		}
 		return dummyExtractor;
 	}

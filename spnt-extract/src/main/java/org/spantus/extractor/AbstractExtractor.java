@@ -19,10 +19,7 @@
 package org.spantus.extractor;
 
 import org.spantus.core.FrameValues;
-import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.logger.Logger;
-import org.spantus.utils.Assert;
 
 /**
  * 
@@ -33,46 +30,23 @@ import org.spantus.utils.Assert;
  * Created 2008.04.01
  *
  */
-public abstract class AbstractExtractor extends AbstractGeneralExtractor implements IExtractor {
-	@SuppressWarnings("unused")
-	private Logger log = Logger.getLogger(AbstractExtractor.class);
+public abstract class AbstractExtractor extends AbstractGeneralExtractor<FrameValues> implements IExtractor {
 
+	
 
-
-	public FrameValues calculate(Long sampleNum, FrameValues values) {
-		FrameValues fv = (FrameValues) super.calculate(sampleNum, values);
-		return fv;
+	public AbstractExtractor() {
+		setOutputValues(new FrameValues());
 	}
 
-	protected  IValues calculateAndStoreWindow(FrameValues windowedWindow, IValues storedValues){
-		FrameValues fv = (FrameValues) storedValues;
-		if(fv == null){
-			fv = new FrameValues();
-			storedValues = fv;
-		}
-		FrameValues aFv = calculateWindow(windowedWindow);
-		Assert.isTrue(aFv.getSampleRate() != null, "Sample rate not set ");
-		fv.addAll(aFv);
-		return storedValues;
-	}
-	protected FrameValues calculateWindow(FrameValues windowedWindow, IValues storedValues){
-            FrameValues fv = calculateWindow(windowedWindow);
-            fv.setSampleRate(getExtractorSampleRate());
-            return fv;
-	}
+
+
 	
 	public int getDimension() {
 		return 1;
 	}
 
 	
-	public FrameValues getOutputValues() {
-		throw new RuntimeException("Should be never called");
-	}
-	
-	public Double getExtractorSampleRate() {
-		return getWindowBufferProcessor().calculateExtractorSampleRate(getConfig());//(getConfig().getSampleRate()/(getConfig().getWindowSize()));
-	}
+
 	
 	protected FrameValues newFrameValues(FrameValues window) {
 		FrameValues frameValues = new FrameValues();

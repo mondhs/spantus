@@ -12,7 +12,6 @@ public abstract class AbstractMpeg7Extractor implements IGeneralExtractor {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
-	public abstract FrameVectorValues calculateWindow(FrameValues window);
 
 	public FrameVectorValues getOutputValues() {
 		// TODO Auto-generated method stub

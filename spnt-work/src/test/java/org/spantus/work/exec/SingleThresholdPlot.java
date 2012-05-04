@@ -51,7 +51,7 @@ public class SingleThresholdPlot extends JFrame {
 		URL urlFile = wavFile.toURI().toURL();
 		AudioReader reader = AudioReaderFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = ExtractorsFactory
-				.createReader(reader.getAudioFormat(urlFile));
+				.createReader(reader.findAudioFormat(urlFile));
 		ExtractorUtils.registerThreshold(bufferedReader, new ExtractorEnum[] {
 				ExtractorEnum.ENERGY_EXTRACTOR,
 //				ExtractorEnum.CROSSING_ZERO_EXTRACTOR,

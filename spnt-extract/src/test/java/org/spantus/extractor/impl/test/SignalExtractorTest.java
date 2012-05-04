@@ -52,7 +52,7 @@ public class SignalExtractorTest{
 		extractor.setDownScale(1);
 		int expectedSize = x.size();
 		extractor.setConfig(config);
-		FrameValues y = extractor.calculate(0L, x);
+		FrameValues y = extractor.calculateWindow(0L, x);
 		log.debug(extractor.getName() + ": " + y);
 		Assert.assertEquals(expectedSize, y.size());
 		Assert.assertEquals(extractor.getExtractorSampleRate(), extractor.getConfig().getSampleRate());
@@ -73,7 +73,7 @@ public class SignalExtractorTest{
 		extractor.setDownScale(2);
 		int expectedSize = x.size()/2;
 		extractor.setConfig(config);
-		FrameValues y = extractor.calculate(0L,x);
+		FrameValues y = extractor.calculateWindow(0L,x);
 		log.debug(extractor.getName() + ": " + y);
 		Assert.assertEquals(expectedSize, y.size());
 		Assert.assertEquals(extractor.getExtractorSampleRate()*2, extractor.getConfig().getSampleRate());

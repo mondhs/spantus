@@ -40,7 +40,7 @@ public interface AudioReader extends SignalReader {
 	 * @param url
 	 * @return
 	 */
-	public AudioFileFormat getAudioFormat(URL url);
+	public AudioFileFormat findAudioFormat(URL url);
 
 	public void readSignalSmoothed(URL url,
 			IExtractorInputReader extractorReader);

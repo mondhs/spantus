@@ -30,7 +30,7 @@ public class RecognitionConfig implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Integer radius;
+	private Float radius;
     private String dtwWindow;
     private String localConstraint;
     private String repositoryPath;
@@ -43,11 +43,11 @@ public class RecognitionConfig implements Serializable {
         this.dtwWindow = dtwWindow;
     }
 
-    public Integer getRadius() {
+    public Float getRadius() {
         return radius;
     }
 
-    public void setRadius(Integer radius) {
+    public void setRadius(Float radius) {
         this.radius = radius;
     }
 

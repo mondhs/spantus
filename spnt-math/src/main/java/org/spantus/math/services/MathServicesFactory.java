@@ -82,11 +82,11 @@ public abstract class MathServicesFactory {
 
 
 	public static DtwService createDtwService() {
-		return createDtwService(0, JavaMLSearchWindow.FullWindow, JavaMLLocalConstraint.Default);
+		return createDtwService(10F, JavaMLSearchWindow.FullWindow, JavaMLLocalConstraint.Default);
 	}
 
 
-	public static DtwService createDtwService(Integer searchRadius, JavaMLSearchWindow javaMLSearchWindow, JavaMLLocalConstraint localConstraint) {
+	public static DtwService createDtwService(Float searchRadius, JavaMLSearchWindow javaMLSearchWindow, JavaMLLocalConstraint localConstraint) {
 		DtwServiceJavaMLImpl dtwServiceImpl = new DtwServiceJavaMLImpl();
 		dtwServiceImpl.setSearchRadius(searchRadius);
 		dtwServiceImpl.setSearchWindow(javaMLSearchWindow);

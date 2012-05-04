@@ -21,6 +21,7 @@
 package org.spantus.core.extractor;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.IValues;
 /**
  * 
  * 
@@ -31,11 +32,14 @@ import org.spantus.core.FrameValues;
  * Created 2008.04.11
  *
  */
-public interface IGeneralExtractor {
+public interface IGeneralExtractor<T extends IValues> {
 	
 	public String getName();
 	
-	public void putValues(Long sample, FrameValues values);
+//	public void putValues(Long sample, FrameValues values);
+	
+	public T calculateWindow(Long sample, FrameValues values);
+	public T calculateWindow(FrameValues values);
 	
 	public void flush();
 	
@@ -46,4 +50,6 @@ public interface IGeneralExtractor {
 	public void setConfig(IExtractorConfig config);
 	
 	public long getOffset();
+	
+	public T getOutputValues();
 }

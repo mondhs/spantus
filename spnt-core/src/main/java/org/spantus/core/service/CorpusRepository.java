@@ -10,6 +10,8 @@ import org.spantus.core.beans.SignalSegment;
 
 public interface CorpusRepository {
 	public Collection<SignalSegment> findAllEntries();
+	
+	public Long count();
 
 	public SignalSegment save(SignalSegment entry);
 

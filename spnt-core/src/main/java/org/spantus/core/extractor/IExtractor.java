@@ -29,11 +29,9 @@ import org.spantus.core.FrameValues;
  * Created 2008.04.11
  *
  */
-public interface IExtractor extends IGeneralExtractor{
+public interface IExtractor extends IGeneralExtractor<FrameValues>{
 	
-	public FrameValues getOutputValues();
+
 	
-	public FrameValues calculate(Long sample, FrameValues values);
-	
-	public FrameValues calculateWindow(FrameValues window);
+//	public FrameValues calculateWindow(FrameValues window);
 }

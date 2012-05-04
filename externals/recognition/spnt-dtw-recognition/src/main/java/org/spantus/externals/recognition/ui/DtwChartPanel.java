@@ -34,6 +34,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import org.spantus.core.beans.I18n;
+import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.RecognitionResultDetails;
 
 /**
@@ -55,9 +56,6 @@ public class DtwChartPanel extends JPanel {
 		setPreferredSize(new Dimension(400, 100));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.i18n = i18n;
-//		setBorder
-//	      (new LineBorder(Color.blue, 3));
-
 	}
 
 	@Override
@@ -71,31 +69,35 @@ public class DtwChartPanel extends JPanel {
 	
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g.create();
-//		g2d.setBackground(Color.white);
-//		g2d.translate(0, getHeight());
-//		g2d.rotate(Math.toRadians(-90));
-//		g2d.setColor(Color.white);
-//		g2d.fillRect(0, 0, getHeight(), getWidth());
-//		g2d.setColor(Color.red);
-
-		
-
-//		if (recognitionResult != null) {
-//			// g2d.scale(1.9, 1.9);
-//			for (Entry<String, List<Point>> detail : recognitionResult
-//					.getPath().entrySet()) {
-//				if (!(selctedFeatureId == null || detail.getKey().equals(
-//						selctedFeatureId))) {
-//					continue;
-//				}
-//
-//
-//			}
-//		}
+		g2d.setBackground(Color.white);
+		g2d.fillRect(0, 0, getWidth(),getHeight());
 		g2d.dispose();
 	}
 
-
+	public void repaintCharts(
+			RecognitionResult recognitionResult,
+			String selctedFeatureId) {
+		this.removeAll();
+		charts.clear();
+		if (recognitionResult != null) {
+			for (Entry<String, List<Point>> paths : recognitionResult.getDetails()
+					.getPath().entrySet()) {
+				if (selctedFeatureId != null
+						&& !selctedFeatureId.equals(paths.getKey())) {
+					continue;
+				}
+				DtwChart chart = new DtwChart(paths.getKey(),
+						recognitionResult.getDetails(), i18n);
+				chart.setAlignmentX(Component.CENTER_ALIGNMENT);
+				charts.put(paths.getKey(), chart);
+				this.add(Box.createRigidArea(new Dimension(5, 5)));
+				this.add(chart);
+				this.add(Box.createRigidArea(new Dimension(5, 5)));
+			}
+		}
+		updateUI();
+		repaint(30L);
+	}
 
 	public RecognitionResultDetails getRecognitionResult() {
 		return recognitionResult;
@@ -112,27 +114,12 @@ public class DtwChartPanel extends JPanel {
 		this.selctedFeatureId = selctedFeatureId;
 	}
 
-	public void repaintCharts(RecognitionResultDetails recognitionResultDetails, String selctedFeatureId) {
-//		for (DtwChart chart : charts.values()) {
-//			
-//		}
-		this.removeAll();
-		charts.clear();
-		if(recognitionResultDetails == null){
-			return;
-		}
-		for(Entry<String, List<Point>> paths :recognitionResultDetails.getPath().entrySet()){
-			if(selctedFeatureId != null && !selctedFeatureId.equals(paths.getKey())){
-				continue;
-			}
-			DtwChart chart = new DtwChart(paths.getKey(), recognitionResultDetails, i18n);
-			chart.setAlignmentX(Component.CENTER_ALIGNMENT);
-			charts.put(paths.getKey(), chart);
-			this.add(Box.createRigidArea(new Dimension(5,5)));
-			this.add(chart);
-			this.add(Box.createRigidArea(new Dimension(5,5)));
-		}
-		updateUI();
-		repaint(30L);
+
+	public String getSelctedFeatureId() {
+		return selctedFeatureId;
+	}
+
+	public void setSelctedFeatureId(String selctedFeatureId) {
+		this.selctedFeatureId = selctedFeatureId;
 	}
 }

@@ -8,10 +8,10 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
+import org.spantus.core.extractor.windowing.WindowBufferProcessor;
+import org.spantus.core.extractor.windowing.WindowBufferProcessorCtx;
 import org.spantus.extractor.ExtractorConfig;
 import org.spantus.extractor.FrameValuesTestUtils;
-import org.spantus.extractor.WindowBufferProcessor;
-import org.spantus.extractor.WindowBufferProcessorCtx;
 
 public class WindowBufferProcessorTest {
 
@@ -53,7 +53,7 @@ public class WindowBufferProcessorTest {
 		Assert.assertEquals(20, windowValues2.getLast().intValue());
 		Assert.assertEquals(1, windowValues2.getFrameIndex().intValue());
 		
-		Assert.assertEquals(1.0D, windowValues2.getTime());
+		Assert.assertEquals("Window length ", 1000, windowValues2.getTime().intValue());
 	}
 	
 	

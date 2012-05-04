@@ -15,7 +15,7 @@ public class MockOnlineExtractor implements IExtractor{
 
 	FrameValues values;
 	
-	public FrameValues calculate(Long sample, FrameValues values) {
+	public FrameValues calculateWindow(Long sample, FrameValues values) {
 		return null;
 	}
 

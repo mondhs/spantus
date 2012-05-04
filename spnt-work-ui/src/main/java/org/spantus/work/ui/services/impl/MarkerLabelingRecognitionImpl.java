@@ -5,6 +5,7 @@ import java.util.Map;
 import org.spantus.core.IValues;
 import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
@@ -12,6 +13,7 @@ import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.services.MarkerLabeling;
 
 public class MarkerLabelingRecognitionImpl implements MarkerLabeling{
@@ -20,8 +22,12 @@ public class MarkerLabelingRecognitionImpl implements MarkerLabeling{
 	private MatchingServiceImpl matchingService;
 	
 	
+	public void update(SpantusWorkProjectInfo project, ProcessedFrameLinstener listener){
+		getMatchingService().update(project.getRecognitionConfig(), listener);
+	}
+	
 	public MarkerSetHolder label(MarkerSetHolder markerSetHolder, SpantusWorkInfo ctx, IExtractorInputReader reader) {
-		getMatchingService().update(ctx.getProject().getRecognitionConfig());
+		
 		boolean autoRecognize = (Boolean.TRUE.equals(ctx.getEnv()
 				.getAutoRecognition()));
 		if(!autoRecognize){

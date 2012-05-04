@@ -86,11 +86,11 @@ public class FrameValueThearsholdFuncton extends Function {
 	}
 
 
-	public Double getOrder() {
+	public Integer getOrder() {
 		return charType.getOrder();
 	}
 
-	public void setOrder(Double order) {
+	public void setOrder(Integer order) {
 		charType.setOrder(order);
 	}
 

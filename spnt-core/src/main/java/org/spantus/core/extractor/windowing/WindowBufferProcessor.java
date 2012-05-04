@@ -1,8 +1,13 @@
-package org.spantus.extractor;
+package org.spantus.core.extractor.windowing;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractorConfig;
-
+/**
+ * 
+ * @author mondhs
+ * @since 0.3
+ *
+ */
 public class WindowBufferProcessor {
 	
 	public static WindowBufferProcessorCtx ctreateWindowBufferProcessorCtx(IExtractorConfig config){
@@ -36,6 +41,10 @@ public class WindowBufferProcessor {
 	 * @return
 	 */
 	public Double calculateExtractorSampleRate(IExtractorConfig config) {
+		return calculateExtractorSampleRateStatic(config);
+	}
+	
+	public static Double calculateExtractorSampleRateStatic(IExtractorConfig config) {
 		return (config.getSampleRate()/(config.getWindowSize()-config.getWindowOverlap()));
 	}
 }

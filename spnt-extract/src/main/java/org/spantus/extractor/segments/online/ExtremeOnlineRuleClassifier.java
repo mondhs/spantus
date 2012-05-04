@@ -39,14 +39,16 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 	 * org.spantus.core.extractor.IExtractorListener#afterCalculated(java.lang
 	 * .Long, org.spantus.core.FrameValues)
 	 */
-	public void afterCalculated(Long sample, FrameValues result) {
+	@Override
+	public void afterCalculated(Long sample, FrameValues window,
+			FrameValues result) {
 		if(result == null){
 			return;
 		}
 		// entry class point
 		for (Double value : result) {
 //			getThresholdValues().updateMinMax(value);
-			processValue(onlineCtx, value);
+			processValue(onlineCtx, window, value);
 		}
 	}
 
@@ -78,8 +80,8 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 		ExtremeSegment current = ctx.getCurrentSegment();
 
 		if (current != null && current.getPeakEntry() != null) {
-			processValue(ctx, current.getStartEntry().getValue());
-			processValue(ctx, current.getPeakEntry().getValue());
+			processValue(ctx, null, current.getStartEntry().getValue());
+			processValue(ctx, null, current.getPeakEntry().getValue());
 //			// initSegment(ctx);
 //			if (current.getEndEntry() == null) {
 //				updateEndSegment(current, new ExtremeEntry(ctx.getIndex(), ctx.getPreviousValue(), FeatureStates.min));
@@ -104,10 +106,11 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 	/**
 	 * 
 	 * @param ctx
+	 * @param window 
 	 * @param sample
 	 * @param value
 	 */
-	protected void processValue(ExtremeSegmentsOnlineCtx ctx, Double value) {
+	protected void processValue(ExtremeSegmentsOnlineCtx ctx, FrameValues window, Double value) {
 		Integer index = ctx.getIndex()-1;
 		log.debug("[processValue] {0} value {1}->{2}", index,
 				ctx.getPreviousValue(), value);

@@ -30,6 +30,7 @@ import java.awt.RenderingHints;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,9 +177,9 @@ public class InteractiveChart extends InteractiveGraph {
 		buffer.append("<html><body>");
 //		buffer.append('(');
 		buffer.append("Time: ");
-		buffer.append(getXAxis().getFormat().format(
+		buffer.append(MessageFormat.format("{0,number,#}",
 				render.getXValue(mousePosition.x)));
-		buffer.append("s, \n ");
+		buffer.append("ms, \n ");
 		buffer.append(resolveChart(mousePosition.x, mousePosition.y).replaceAll("\n", "<br\\>"));
 //		buffer.append(')');
 		buffer.append("</body></html>");
@@ -194,7 +195,7 @@ public class InteractiveChart extends InteractiveGraph {
 		List<String> descs = new ArrayList<String>();
 		for (ChartDescriptionResolver resolver : getResolvers()) {
 			ChartDescriptionInfo resolved = resolver
-					.resolve(render.getXValue(x).floatValue(),
+					.resolve(render.getXValue(x).longValue(),
 							render.getYValue(y).floatValue());
 			if (resolved != null) {
 				descs.add("\n"+resolved.getName()+": "+resolved.getValue());

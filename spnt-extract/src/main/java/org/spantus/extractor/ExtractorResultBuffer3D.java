@@ -51,10 +51,10 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 	}
 
 	
-	public void putValues(Long sample, FrameValues values) {
-//		this.frameValues = values;
-		calculate(sample, values);
-	}
+//	public void putValues(Long sample, FrameValues values) {
+////		this.frameValues = values;
+//		calculate(sample, values);
+//	}
 
 //	public FrameValues getFrameValues() {
 //		return frameValues;
@@ -84,8 +84,8 @@ public class ExtractorResultBuffer3D implements IExtractorVector {
 //		return extractor.getConfig().getWindowSize();
 //	}
 
-	public FrameVectorValues calculate(Long sample, FrameValues values) {
-		FrameVectorValues val = extractor.calculate(sample, values);
+	public FrameVectorValues calculateWindow(Long sample, FrameValues values) {
+		FrameVectorValues val = extractor.calculateWindow(sample, values);
 		if(val == null){
 			return null;
 		}

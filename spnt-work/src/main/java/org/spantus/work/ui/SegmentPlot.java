@@ -112,7 +112,7 @@ public class SegmentPlot extends AbstractSegmentPlot {
 	 */
 	@Override
 	public AudioFormat getFormat() {
-		return audioReader.getAudioFormat(getFileUrl()).getFormat();
+		return audioReader.findAudioFormat(getFileUrl()).getFormat();
 	}
 
 	public static void main(String[] args) {

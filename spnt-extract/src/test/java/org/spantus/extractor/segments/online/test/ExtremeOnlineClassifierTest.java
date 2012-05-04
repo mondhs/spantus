@@ -156,7 +156,7 @@ public class ExtremeOnlineClassifierTest {
 		for (Double windowValue : data) {
 			values.add(windowValue);
 		}
-		classifier.afterCalculated(0L, values);
+		classifier.afterCalculated(0L, null, values);
 		classifier.flush();
 		return classifier;
 	}

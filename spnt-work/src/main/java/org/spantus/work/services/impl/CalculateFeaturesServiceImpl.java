@@ -87,7 +87,7 @@ public class CalculateFeaturesServiceImpl{
 	 */
 	public void saveMergedWav(List<URL> urls, File saveFile){
 		AudioReader merger = AudioReaderFactory.createAudioReader();
-		AudioFileFormat fileFormat = merger.getAudioFormat(urls.get(0));
+		AudioFileFormat fileFormat = merger.findAudioFormat(urls.get(0));
 		int sizeInBits = fileFormat.getFormat().getSampleSizeInBits();
 		FrameValues mergeValues = merge(urls);
 		List<Byte> mergedBuffer = new ArrayList<Byte>();

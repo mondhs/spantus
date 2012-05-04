@@ -35,7 +35,7 @@ public class SampleStaticThreshold extends StaticThreshold{
 	@Override
 	public void setExtractor(IExtractor extractor) {
 		super.setExtractor(extractor);
-		afterCalculated(0L, extractor.getOutputValues());
+		afterCalculated(0L, null, extractor.getOutputValues());
 	}
 
 }

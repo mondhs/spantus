@@ -62,7 +62,7 @@ public class DynamicThresholdTest extends TestCase {
 		threshold.setExtractor(mockExtractor);
 		Long i = 0L;
 		for (Double[] dv : values) {
-			threshold.afterCalculated(i, getFrameValues(dv));
+			threshold.afterCalculated(i, null, getFrameValues(dv));
 			i+=3;
 		}
 		return threshold;

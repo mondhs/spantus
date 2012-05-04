@@ -20,11 +20,8 @@
  */
 package org.spantus.extractor;
 
-import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
-import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorVector;
-import org.spantus.logger.Logger;
 
 /**
  * 
@@ -35,39 +32,17 @@ import org.spantus.logger.Logger;
  *        Created 2008.04.01
  * 
  */
-public abstract class AbstractExtractorVector extends AbstractGeneralExtractor
-		implements IExtractorVector {
-	Logger log = Logger.getLogger(AbstractExtractorVector.class);
+public abstract class AbstractExtractorVector extends
+		AbstractGeneralExtractor<FrameVectorValues> implements IExtractorVector {
 
-	public FrameVectorValues calculate(Long sampleNum, FrameValues values) {
-		return (FrameVectorValues) super.calculate(sampleNum, values);
+	public AbstractExtractorVector() {
+		setOutputValues(new FrameVectorValues());
 	}
-
-	protected IValues calculateAndStoreWindow(FrameValues windowedWindow,
-			IValues storedValues) {
-		FrameVectorValues fv = (FrameVectorValues) storedValues;
-		if (fv == null) {
-			fv = new FrameVectorValues();
-			storedValues = fv;
-		}
-		fv.addAll(calculateWindow(windowedWindow));
-		return storedValues;
+	
+	public FrameVectorValues newFrameVectorValues() {
+		FrameVectorValues fvv = new FrameVectorValues();
+		fvv.setSampleRate(getExtractorSampleRate());
+		return fvv;
 	}
-
-//	protected FrameVectorValues calculateWindow(FrameValues windowedWindow,
-//			FrameValues realValues) {
-//		FrameVectorValues fv = calculateWindow(windowedWindow);
-//		fv.setSampleRate(getExtractorSampleRate());
-//		return fv;
-//	}
-
-	public FrameVectorValues getOutputValues() {
-		throw new RuntimeException("Should be never call");
-	}
-
-	public Double getExtractorSampleRate() {
-		return getWindowBufferProcessor().calculateExtractorSampleRate(
-				getConfig());// (getConfig().getSampleRate()/(getConfig().getWindowSize()));
-	}
-
+	
 }

@@ -26,7 +26,7 @@ public class DummyExtractorVector implements IExtractorVector {
         this.outputValues = outputValues;
     }
 
-    public FrameVectorValues calculate(Long sample, FrameValues frame) {
+    public FrameVectorValues calculateWindow(Long sample, FrameValues frame) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -53,7 +53,7 @@ public class DrawSignalCommon extends JFrame {
 	 */
 	AbstractSwingChart chart;
 	IExtractorInputReader reader;
-	List<IGeneralExtractor> extr = new ArrayList<IGeneralExtractor>();
+	List<IGeneralExtractor<?>> extr = new ArrayList<IGeneralExtractor<?>>();
 	String path;
 	String name;
 	String extention;
@@ -87,13 +87,13 @@ public class DrawSignalCommon extends JFrame {
 	}
 
 	public IExtractorInputReader getReader(IExtractorInputReader reader,
-			List<IGeneralExtractor> extr, int index) {
+			List<IGeneralExtractor<?>> extr, int index) {
 		if (index == 0) {
 			return null;
 		}
 		reader.getExtractorRegister().clear();
 		reader.getExtractorRegister3D().clear();
-		IGeneralExtractor gextr = extr.get(index);
+		IGeneralExtractor<?> gextr = extr.get(index);
 		sufix = gextr.getName();
 		if (gextr instanceof IExtractor) {
 			reader.getExtractorRegister().add((IExtractor) gextr);
@@ -131,7 +131,7 @@ public class DrawSignalCommon extends JFrame {
 			throws UnsupportedAudioFileException, IOException {
 		AudioReader reader = AudioReaderFactory.createAudioReader();
 		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(reader
-				.getAudioFormat(audioFile.toURI().toURL()).getFormat());
+				.findAudioFormat(audioFile.toURI().toURL()).getFormat());
 		ExtractorUtils.register(bufferedReader, ExtractorEnum.values(), null);
 		reader.readSignal(audioFile.toURI().toURL(), bufferedReader);
 		return bufferedReader;

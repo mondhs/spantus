@@ -24,56 +24,41 @@ import org.spantus.core.IValues;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IGeneralExtractor;
-import org.spantus.math.windowing.Windowing;
-import org.spantus.math.windowing.WindowingEnum;
-import org.spantus.math.windowing.WindowingFactory;
+import org.spantus.core.extractor.windowing.WindowBufferProcessor;
 
 /**
  * User: mondhs
  * Date: 10.12.12
  * Time: 16.39
  */
-public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
+public abstract class AbstractGeneralExtractor<T extends IValues> implements IGeneralExtractor<T> {
     private IExtractorConfig config;
 
-    private Windowing windowing;
-    private WindowBufferProcessorCtx ctx;
-    private WindowBufferProcessor windowBufferProcessor;
     
     private ExtractorParam param = new ExtractorParam();
     
-    public void putValues(Long sample, FrameValues values) {
-        //do nothing
-    }
-
-	public void flush() {
-		//do nothing
+    private T outputValues;
+    
+    public AbstractGeneralExtractor() {
 	}
-
-	/**
-	 * 
-	 * @param sampleNum
-	 * @param values
-	 * @return
-	 */
-	public IValues calculate(Long sampleNum, FrameValues values) {
-
-		IValues storedValues = null;
-
-		for (Double value : values) {
-			FrameValues window = getWindowBufferProcessor().calculate(value, getCtx());
-			if(window != null){
-				getWindowing().apply(window);
-				storedValues = calculateAndStoreWindow(window, storedValues);
-				storedValues.setSampleRate(getWindowBufferProcessor().calculateExtractorSampleRate(getConfig()));
-			}
-		}
+    
+    
+	@Override
+	public void flush() {
 		
-//		log.debug("[calculate]---");
-		return storedValues;
 	}
 	
-	protected abstract IValues calculateAndStoreWindow(FrameValues windowedWindow, IValues storedValues);
+	public T calculateWindow(Long sampleNum, FrameValues values) {
+		T fv = calculateWindow(values);
+		fv.setSampleRate(getExtractorSampleRate());
+		return fv;
+	}
+	
+	@Override
+	public Double getExtractorSampleRate() {
+		return WindowBufferProcessor.calculateExtractorSampleRateStatic(getConfig());
+	}
+
 
     public void initParam(String key, String defaultValue) {
 		for (String elemKey : getParam().getProperties().keySet()) {
@@ -109,20 +94,11 @@ public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
     }
 
 
-    public void setConfig(IExtractorConfig conf) {
-        this.config = conf;
+    public void setConfig(IExtractorConfig config) {
+        this.config = config;
     }
 
-    public Windowing getWindowing() {
-        if (windowing == null) {
-            WindowingEnum wenum = WindowingEnum.Hamming;
-            if (getConfig().getWindowing() != null) {
-                wenum = WindowingEnum.valueOf(getConfig().getWindowing());
-            }
-            windowing = WindowingFactory.createWindowing(wenum);
-        }
-        return windowing;
-    }
+
 
 
     public ExtractorParam getParam() {
@@ -133,30 +109,26 @@ public abstract class AbstractGeneralExtractor implements IGeneralExtractor {
         this.param = param;
     }
 
-
-	public WindowBufferProcessorCtx getCtx() {
-		if(ctx == null){
-			ctx = WindowBufferProcessor.ctreateWindowBufferProcessorCtx(getConfig());
-		}
-		return ctx;
+	/**
+	 * 
+	 * @param config
+	 * @return
+	 */
+	public Double calculateExtractorSampleRate(IExtractorConfig config) {
+		return (config.getSampleRate()/(config.getWindowSize()-config.getWindowOverlap()));
 	}
+    
 
-	public void setCtx(WindowBufferProcessorCtx ctx) {
-		this.ctx = ctx;
-	}
-
-	public WindowBufferProcessor getWindowBufferProcessor() {
-		if(windowBufferProcessor == null){
-			windowBufferProcessor = new WindowBufferProcessor();
-		}
-		return windowBufferProcessor;
-	}
-
-	public void setWindowBufferProcessor(WindowBufferProcessor windowBufferProcessor) {
-		this.windowBufferProcessor = windowBufferProcessor;
-	}
 	
 	public long getOffset() {
 		return 0;
+	}
+
+	public T getOutputValues() {
+		return outputValues;
+	}
+
+	public void setOutputValues(T outputValues) {
+		this.outputValues = outputValues;
 	}
 }

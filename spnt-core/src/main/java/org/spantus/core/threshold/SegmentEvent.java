@@ -21,6 +21,8 @@ package org.spantus.core.threshold;
 import java.io.Serializable;
 import java.text.MessageFormat;
 
+import org.spantus.core.FrameValues;
+import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
 /**
  * 
@@ -37,14 +39,16 @@ public class SegmentEvent implements Serializable, Cloneable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String id;
+	private String extractorId;
 	private Long time;
 	private Long sample;
 	private Marker marker;
 	private Double value;
+	private IValues outputValues;
+	private FrameValues windowValues;
 	
-	public String getId() {
-		return id;
+	public String getExtractorId() {
+		return extractorId;
 	}
 	/**
 	 * 
@@ -57,9 +61,9 @@ public class SegmentEvent implements Serializable, Cloneable{
 	 * @param sample
 	 * @param marker
 	 */
-	public SegmentEvent(String id, Long time, Marker marker, Long sample,Double value) {
+	public SegmentEvent(String extractorId, Long time, Marker marker, Long sample,Double value) {
 		super();
-		this.id = id;
+		this.extractorId = extractorId;
 		this.time = time;
 		this.sample = sample;
 		this.marker = marker;
@@ -67,8 +71,8 @@ public class SegmentEvent implements Serializable, Cloneable{
 	}
 	
 	
-	public void setId(String id) {
-		this.id = id;
+	public void setExtractorId(String id) {
+		this.extractorId = id;
 	}
 	public Long getTime() {
 		return time;
@@ -91,7 +95,7 @@ public class SegmentEvent implements Serializable, Cloneable{
 	
 	@Override
 	public String toString() {
-		return MessageFormat.format("{0} [id:{1}; time{2}]", SegmentEvent.class.getSimpleName(), getId(), getTime());
+		return MessageFormat.format("{0} [id:{1}; time:{2}]", SegmentEvent.class.getSimpleName(), getExtractorId(), getTime());
 	}
 	
 	public SegmentEvent clone(){
@@ -108,5 +112,17 @@ public class SegmentEvent implements Serializable, Cloneable{
 
 	public void setValue(Double value) {
 		this.value = value;
+	}
+	public IValues getOutputValues() {
+		return outputValues;
+	}
+	public void setOutputValues(IValues iValues) {
+		this.outputValues = iValues;
+	}
+	public FrameValues getWindowValues() {
+		return windowValues;
+	}
+	public void setWindowValues(FrameValues windowValues) {
+		this.windowValues = windowValues;
 	}
 }

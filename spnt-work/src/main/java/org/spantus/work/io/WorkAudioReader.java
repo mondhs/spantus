@@ -47,8 +47,8 @@ public class WorkAudioReader extends AbstractAudioReader{
 		}
 	}
 
-	public AudioFileFormat getAudioFormat(URL url) {
-		return workReader.getAudioFormat(url);
+	public AudioFileFormat findAudioFormat(URL url) {
+		return workReader.findAudioFormat(url);
 	}
 	/**
 	 * Read and merge all the Urls in the list
@@ -113,7 +113,7 @@ public class WorkAudioReader extends AbstractAudioReader{
 		}
 		return rtnVal;
 	}
-	protected boolean isFliped(IGeneralExtractor extractor){
+	protected boolean isFliped(IGeneralExtractor<?> extractor){
 		if(!(extractor instanceof IExtractorVector)){
 			return false;
 		}

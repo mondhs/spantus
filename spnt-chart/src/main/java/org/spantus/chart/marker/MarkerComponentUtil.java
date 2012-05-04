@@ -30,14 +30,14 @@ public abstract class MarkerComponentUtil {
 	
 	public static int timeToScreen(MarkerGraphCtx ctx, Long val){
 		Double offset = ctx.getXOffset().doubleValue();
-		Double startX = (val)/1000.0;
+		Double startX = val.doubleValue();
 		startX -= offset;
 		return (int)((startX/ctx.getXScalar().doubleValue()));
 	}
 	
 	public static Long screenToTime(MarkerGraphCtx ctx, int val){
 		Double offset = ctx.getXOffset().doubleValue();
-		Double start = (val)*1000.0*ctx.getXScalar().doubleValue();
+		Double start = (val)*ctx.getXScalar().doubleValue();
 		start += offset;
 		return start.longValue();
 	}

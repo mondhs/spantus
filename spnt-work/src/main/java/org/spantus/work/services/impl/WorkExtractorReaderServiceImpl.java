@@ -156,7 +156,7 @@ public class WorkExtractorReaderServiceImpl extends ExtractorInputReaderServiceI
 		}
 		AudioReader audioReader = AudioReaderFactory.createAudioReader();
 		IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
-				audioReader.getAudioFormat(inputUrl),
+				audioReader.findAudioFormat(inputUrl),
 				getWindowLengthInMilSec(), getOverlapInPerc());
 		ExtractorUtils.register(extractorReader, extractors, null);
 		audioReader.readSignal(inputUrl, extractorReader);
@@ -213,7 +213,7 @@ public class WorkExtractorReaderServiceImpl extends ExtractorInputReaderServiceI
 	 * @param reader
 	 * @return
 	 */
-	public IGeneralExtractor findExtractorByName(String name,
+	public IGeneralExtractor<?> findExtractorByName(String name,
 			IExtractorInputReader reader) {
 		for (IExtractor extractor : reader.getExtractorRegister()) {
 			if (extractor.getName().contains(name)) {

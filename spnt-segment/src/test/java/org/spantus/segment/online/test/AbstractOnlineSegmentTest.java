@@ -48,8 +48,8 @@ public abstract class AbstractOnlineSegmentTest extends TestCase {
 		for (int i = 0; i < vals.length; i++) {
 			Double f = vals[i];
 			Long l = Long.valueOf(i * step);
-			segmentator1.calculate(l, getWindow(f, sampleRate));
-			segmentator2.calculate(l, getWindow(f, sampleRate));
+			segmentator1.calculateWindow(l, getWindow(f, sampleRate));
+			segmentator2.calculateWindow(l, getWindow(f, sampleRate));
 		}
 		return multipeListener.getMarkSet();
 	}

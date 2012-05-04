@@ -7,7 +7,6 @@ import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.IValues;
 import org.spantus.core.beans.RecognitionResult;
-import org.spantus.core.beans.RecognitionResultDetails;
 import org.spantus.core.beans.SignalSegment;
 
 public interface CorpusService {
@@ -19,7 +18,7 @@ public interface CorpusService {
 	 * @param featureDataMap
 	 * @return
 	 */
-	public List<RecognitionResultDetails> findMultipleMatchFull(
+	public List<RecognitionResult> findMultipleMatchFull(
 			Map<String, IValues> featureDataMap);
 	
 	/**

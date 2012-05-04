@@ -30,7 +30,7 @@ public class LearnCmd extends AbsrtactCmd {
 
     @Override
     public String execute(SpantusWorkInfo ctx) {
-        getMatchingService().update(ctx.getProject().getRecognitionConfig());
+        getMatchingService().update(ctx.getProject().getRecognitionConfig(), getExecutionFacade());
         WorkExtractorReaderService extractorReaderService = WorkServiceFactory.createExtractorReaderService();
 
         Marker marker = ((Marker) getCurrentEvent().getValue());

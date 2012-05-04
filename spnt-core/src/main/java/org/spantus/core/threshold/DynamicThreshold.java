@@ -47,9 +47,9 @@ public class DynamicThreshold extends StaticThreshold {
 	 * recalculate threshold for each frame
 	 */
 	@Override
-	public void afterCalculated(Long sample, FrameValues result) {
+	public void afterCalculated(Long sample, FrameValues windowValues, FrameValues result) {
 		frameThreshold = recacluclateCurrentThreashold(result);
-		super.afterCalculated(sample, result);
+		super.afterCalculated(sample, windowValues, result);
 	}
 	
 	/**

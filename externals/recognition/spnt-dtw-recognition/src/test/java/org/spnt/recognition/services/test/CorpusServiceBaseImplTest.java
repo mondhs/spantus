@@ -22,8 +22,8 @@ import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.beans.FrameVectorValuesHolder;
 import org.spantus.core.beans.RecognitionResult;
-import org.spantus.core.beans.RecognitionResultDetails;
 import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.marker.Marker;
 import org.spantus.core.service.CorpusRepository;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 
@@ -51,6 +51,10 @@ public class CorpusServiceBaseImplTest {
         corpusEntries = new ArrayList<SignalSegment>();
 
         SignalSegment corpusEntry = new SignalSegment();
+        corpusEntry.setMarker(new Marker());
+        corpusEntry.getMarker().setLabel(VIENAS);
+        corpusEntry.getMarker().setStart(0L);
+        corpusEntry.getMarker().setLength(50L);
         corpusEntry.setId("1");
         corpusEntry.setName(VIENAS);
         addFeatureData(corpusEntry.getFeatureFrameVectorValuesMap(), Feature1, 0D, 1D, 1D, 1D, 1D);
@@ -61,6 +65,10 @@ public class CorpusServiceBaseImplTest {
         corpusEntry = new SignalSegment();
         corpusEntry.setId("2");
         corpusEntry.setName(DU);
+        corpusEntry.setMarker(new Marker());
+        corpusEntry.getMarker().setLabel(DU);
+        corpusEntry.getMarker().setStart(0L);
+        corpusEntry.getMarker().setLength(50L);
         addFeatureData(corpusEntry.getFeatureFrameVectorValuesMap(), Feature1, 0D, 1D, 1D, 1D, 1D);
         addFeatureData(corpusEntry.getFeatureFrameVectorValuesMap(), Feature2, 0D, 4D, 5D, 6D, 7D);
         corpusEntries.add(corpusEntry);
@@ -68,6 +76,10 @@ public class CorpusServiceBaseImplTest {
         corpusEntry = new SignalSegment();
         corpusEntry.setId("3");
         corpusEntry.setName(TRYS);
+        corpusEntry.setMarker(new Marker());
+        corpusEntry.getMarker().setLabel(TRYS);
+        corpusEntry.getMarker().setStart(0L);
+        corpusEntry.getMarker().setLength(50L);
         addFeatureData(corpusEntry.getFeatureFrameVectorValuesMap(), Feature1, 1D, 2D, 3D, 4D);
         addFeatureData(corpusEntry.getFeatureFrameVectorValuesMap(), Feature2, 4D, 5D, 9D, 7D, 8D);
         corpusEntries.add(corpusEntry);
@@ -126,18 +138,18 @@ public class CorpusServiceBaseImplTest {
         Map<String, IValues> target = new HashMap<String, IValues>();
         target.put(Feature1, createFrameValues(1D, 2D, 3D, 4D));
         target.put(Feature2, createFrameValues(4D, 5D, 6D, 7D));
-        List<RecognitionResultDetails> results = corpusServiceBaseImpl.findMultipleMatchFull(target);
+        List<RecognitionResult> results = corpusServiceBaseImpl.findMultipleMatchFull(target);
 
         //then
         Assert.assertEquals("All 3 entries ", 3, results.size());
-        RecognitionResultDetails first = results.get(0);
-        RecognitionResultDetails second = results.get(1);
+        RecognitionResult first = results.get(0);
+        RecognitionResult second = results.get(1);
         Assert.assertEquals("match", "3", first.getInfo().getId());
-        Assert.assertEquals("Audio file is set", first.getAudioFilePath(), "3.wav");
-        Assert.assertEquals("first sample length", 40D, first.getSampleLegths().get(Feature1));
-        Assert.assertEquals("first target length", 40D, first.getTargetLegths().get(Feature1));
-        Assert.assertEquals("second sample length", 50D, second.getSampleLegths().get(Feature2));
-        Assert.assertEquals("second target length", 40D, second.getTargetLegths().get(Feature2));
+        Assert.assertEquals("Audio file is set", first.getDetails().getAudioFilePath(), "3.wav");
+        Assert.assertEquals("first sample length", 40, first.getDetails().getSampleLegths().get(Feature1),0);
+        Assert.assertEquals("first target length", 40, first.getDetails().getTargetLegths().get(Feature1),0);
+        Assert.assertEquals("second sample length", 50, second.getDetails().getSampleLegths().get(Feature2),0);
+        Assert.assertEquals("second target length", 40, second.getDetails().getTargetLegths().get(Feature2),0);
 
     }
     

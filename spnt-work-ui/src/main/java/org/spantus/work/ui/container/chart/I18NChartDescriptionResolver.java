@@ -21,7 +21,7 @@ public class I18NChartDescriptionResolver extends
 	}
 	
 	@Override
-	public ChartDescriptionInfo resolve(float time, float value) {
+	public ChartDescriptionInfo resolve(Long time, float value) {
 		ChartDescriptionInfo resolved = super.resolve(time, value);
 		if(resolved == null){
 			return null;

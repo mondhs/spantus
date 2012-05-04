@@ -15,54 +15,67 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
-*/
+ */
 package org.spantus.core.extractor;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.extractor.windowing.WindowBufferProcessor;
+import org.spantus.core.extractor.windowing.WindowBufferProcessorCtx;
 import org.spantus.logger.Logger;
+import org.spantus.math.windowing.Windowing;
+import org.spantus.math.windowing.WindowingEnum;
+import org.spantus.math.windowing.WindowingFactory;
+
 /**
  * 
  * @author Mindaugas Greibus
- *
+ * 
  * @since 0.0.1
  * 
- * Created 2008.04.01
- *
+ *        Created 2008.04.01
+ * 
  */
-public class DefaultExtractorInputReader implements IExtractorInputReader{
+public class DefaultExtractorInputReader implements IExtractorInputReader {
 	protected Logger log = Logger.getLogger(DefaultExtractorInputReader.class);
 
-	FrameValues values;
+	private FrameValues values;
 
-	private int index;
-	private Long offset = 0L;
+	private int frameIndex;
 	
-	IExtractorConfig config;
+	private Long offset = 0L;
 
-	Set<IExtractor> extractorRegister = new LinkedHashSet<IExtractor>();
-	Set<IExtractorVector> extractorRegister3D = new LinkedHashSet<IExtractorVector>();
-	Set<IGeneralExtractor> generalExtractor = new LinkedHashSet<IGeneralExtractor>();
+	private WindowBufferProcessorCtx ctx;
+	
+	private WindowBufferProcessor windowBufferProcessor;
+
+    private Windowing windowing;
+	
+    private IExtractorConfig config;
+
+    private Set<IExtractor> extractorRegister = new LinkedHashSet<IExtractor>();
+    private Set<IExtractorVector> extractorRegister3D = new LinkedHashSet<IExtractorVector>();
+    private Set<IGeneralExtractor<?>> generalExtractor = new LinkedHashSet<IGeneralExtractor<?>>();
 
 	public DefaultExtractorInputReader() {
 		initValues();
 	}
 
 	public void put(Long sample, Double value) {
-		values.add(index++, value);
-		if (index >= config.getFrameSize()) {
-			pushValues(sample, values);
+		values.add(frameIndex++, value);
+		if (frameIndex >= config.getFrameSize()) {
+			pushFrameOfWindows(sample, values);
 			initValues();
 		}
 	}
 
 	private void initValues() {
-		offset += index;
+		offset += frameIndex;
 		values = new FrameValues();
 		values.setSampleRate(getConfig().getSampleRate());
-		index = 0;
+		frameIndex = 0;
 	}
 
 	public void registerExtractor(IExtractor extractor) {
@@ -70,58 +83,77 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 		extractorRegister.add(extractor);
 		generalExtractor.add(extractor);
 	}
+
 	public void registerExtractor(IExtractorVector extractor) {
 		extractor.setConfig(getConfig());
 		extractorRegister3D.add(extractor);
 		generalExtractor.add(extractor);
 	}
-	
-	
-	public void registerExtractor(IGeneralExtractor extractor) {
-		if(extractor instanceof IExtractor){
-			registerExtractor((IExtractor)extractor);
-		}else if(extractor instanceof IExtractorVector){
-			registerExtractor((IExtractorVector)extractor);
+
+	public void registerExtractor(IGeneralExtractor<?> extractor) {
+		if (extractor instanceof IExtractor) {
+			registerExtractor((IExtractor) extractor);
+		} else if (extractor instanceof IExtractorVector) {
+			registerExtractor((IExtractorVector) extractor);
 		}
-		
+
+	}
+
+	public void pushValues(Long sample) {
+		pushFrameOfWindows(sample, values);
 	}
 
 	
-	public void pushValues(Long sample) {
-		for (IGeneralExtractor element : generalExtractor) {
-			element.putValues(sample, values);
-			element.flush();
-		}
-	}
 	/**
 	 * 
 	 * @param sample
 	 * @param ivalues
 	 */
-	protected void pushValues(Long sample, FrameValues ivalues) {
-		for (IGeneralExtractor element : generalExtractor) {
-			element.putValues(sample, ivalues);
+	protected void pushFrameOfWindows(Long sample, FrameValues ivalues) {
+
+		long sampleIndex = sample - ivalues.size();
+		for (Double value : values) {
+			FrameValues window = getWindowBufferProcessor().calculate(value,
+					getCtx());
+			if (window != null) {
+				window.setFrameIndex(sampleIndex);
+				getWindowing().apply(window);
+				pushWindowValues(sample, window);
+			}
+			sampleIndex++;
 		}
 	}
+	
+	/**
+	 * 
+	 * @param sample
+	 * @param ivalues
+	 */
+	protected void pushWindowValues(Long sample, FrameValues ivalues) {
+		for (IGeneralExtractor<?> element : generalExtractor) {
+			element.calculateWindow(sample, ivalues);
+		}
+	}
+
 
 	public Set<IExtractor> getExtractorRegister() {
 		return extractorRegister;
 	}
+
 	public Set<IExtractorVector> getExtractorRegister3D() {
 		return extractorRegister3D;
 	}
 
-        public Set<IGeneralExtractor> getGeneralExtractor() {
-            return generalExtractor;
-        }
+	public Set<IGeneralExtractor<?>> getGeneralExtractor() {
+		return generalExtractor;
+	}
 
-        public void setGeneralExtractor(Set<IGeneralExtractor> generalExtractor) {
-            this.generalExtractor = generalExtractor;
-        }
+	public void setGeneralExtractor(Set<IGeneralExtractor<?>> generalExtractor) {
+		this.generalExtractor = generalExtractor;
+	}
 
-        
 	public IExtractorConfig getConfig() {
-		if(config == null){
+		if (config == null) {
 			config = new DefaultExtractorConfig();
 		}
 		return config;
@@ -129,15 +161,15 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 
 	public void setConfig(IExtractorConfig config) {
 		this.config = config;
-		for (IGeneralExtractor iExtr : generalExtractor) {
+		for (IGeneralExtractor<?> iExtr : generalExtractor) {
 			iExtr.setConfig(config);
 		}
 	}
 
-	public long getFullSampleIndex(){
-		return getOffset() + index;
+	public long getFullSampleIndex() {
+		return getOffset() + frameIndex;
 	}
-	
+
 	public Long getOffset() {
 		return offset;
 	}
@@ -145,5 +177,38 @@ public class DefaultExtractorInputReader implements IExtractorInputReader{
 	public FrameValues getValues() {
 		return values;
 	}
+	
+	public WindowBufferProcessorCtx getCtx() {
+		if(ctx == null){
+			ctx = WindowBufferProcessor.ctreateWindowBufferProcessorCtx(getConfig());
+		}
+		return ctx;
+	}
+
+	public void setCtx(WindowBufferProcessorCtx ctx) {
+		this.ctx = ctx;
+	}
+
+	public WindowBufferProcessor getWindowBufferProcessor() {
+		if(windowBufferProcessor == null){
+			windowBufferProcessor = new WindowBufferProcessor();
+		}
+		return windowBufferProcessor;
+	}
+
+	public void setWindowBufferProcessor(WindowBufferProcessor windowBufferProcessor) {
+		this.windowBufferProcessor = windowBufferProcessor;
+	}
+	
+    public Windowing getWindowing() {
+        if (windowing == null) {
+            WindowingEnum wenum = WindowingEnum.Hamming;
+            if (getConfig().getWindowing() != null) {
+                wenum = WindowingEnum.valueOf(getConfig().getWindowing());
+            }
+            windowing = WindowingFactory.createWindowing(wenum);
+        }
+        return windowing;
+    }
 
 }

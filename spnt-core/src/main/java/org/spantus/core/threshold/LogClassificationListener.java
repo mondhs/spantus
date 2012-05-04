@@ -31,22 +31,22 @@ public class LogClassificationListener implements IClassificationListener {
 	 * 
 	 */
 	public void onSegmentStarted(SegmentEvent event) {
-		log.debug("[onSegmentStarted]{0}: {1}", event.getId(), event.getMarker());
+		log.debug("[onSegmentStarted]{0}: {1}", event.getExtractorId(), event.getMarker());
 	}
 	/**
 	 * 
 	 */
 	public void onSegmentEnded(SegmentEvent event) {
-		log.debug("[onSegmentEnded]{0}: {1}",event.getId(), event.getMarker());
+		log.debug("[onSegmentEnded]{0}: {1}",event.getExtractorId(), event.getMarker());
 	}
 	/**
 	 * 
 	 */
 	public void onSegmentProcessed(SegmentEvent event) {
-		log.debug("[onSegmentProcessed]{0}: {1}", event.getId(), event.getMarker());
+		log.debug("[onSegmentProcessed]{0}: {1}", event.getExtractorId(), event.getMarker());
 	}
 	public void onNoiseProcessed(SegmentEvent event) {
-		log.debug("[onNoiseProcessed]{0}: {1}", event.getId(), event.getMarker());		
+		log.debug("[onNoiseProcessed]{0}: {1}", event.getExtractorId(), event.getMarker());		
 	}
 	/**
 	 * 

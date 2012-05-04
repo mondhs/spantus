@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.mpeg7.config.Mpeg7ExtractorConfig;
 
@@ -26,8 +26,8 @@ public class Mpeg7ExtractorInputReader implements IExtractorInputReader {
 		return vectorExtractors;
 	}
 
-        public Set<IGeneralExtractor> getGeneralExtractor() {
-            Set<IGeneralExtractor> generalSet = new HashSet<IGeneralExtractor>();
+        public Set<IGeneralExtractor<?>> getGeneralExtractor() {
+            Set<IGeneralExtractor<?>> generalSet = new HashSet<IGeneralExtractor<?>>();
             generalSet.addAll(getExtractorRegister());
             generalSet.addAll(getExtractorRegister3D());
             return generalSet;
@@ -45,7 +45,7 @@ public class Mpeg7ExtractorInputReader implements IExtractorInputReader {
 	}
 
 	
-	public void registerExtractor(IGeneralExtractor extractor) {
+	public void registerExtractor(IGeneralExtractor<?> extractor) {
 		// TODO Auto-generated method stub
 		
 	}

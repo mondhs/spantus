@@ -46,7 +46,7 @@ public class OfflineThreshold extends DynamicThreshold {
 		getThresholdValues().clear();
 		setClassifierSampleNum(0);
 		//recalculate segmentation data
-		afterCalculated(0L, getOutputValues());
+		afterCalculated(0L, null, getOutputValues());
 		//reset signal threshold
 		signalThreshold = null;
 	}

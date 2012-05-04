@@ -48,6 +48,11 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 
 	Map<String, CorpusFileEntry> repository;
 
+	@Override
+	public Long count() {
+		return (long) findAllEntries().size();
+	}
+	
 	public Collection<SignalSegment> findAllEntries() {
 		return getCastedRepository();
 	}

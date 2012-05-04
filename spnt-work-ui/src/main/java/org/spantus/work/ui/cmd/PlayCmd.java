@@ -31,13 +31,13 @@ public class PlayCmd extends AbsrtactCmd {
 			this.dto = new SelectionDto();
 		}
 		try {
-			Float from = null;
-			Float length = null;
-			from = dto.getFrom() != null ? dto.getFrom().floatValue() : null;
-			length = dto.getFrom() != null ? dto.getLength().floatValue()
+			Long from = null;
+			Long length = null;
+			from = dto.getFrom() != null ? dto.getFrom().longValue() : null;
+			length = dto.getFrom() != null ? dto.getLength().longValue()
 					: null;
-			AudioManagerFactory.createAudioManager()
-					.play(ctx.getProject().getSample().getCurrentFile(), from,
+			AudioManagerFactory.createAudioManager().
+				playinMils(ctx.getProject().getSample().getCurrentFile(), from,
 							length);
 		} catch (ProcessingException e) {
 			error(e.getLocalizedMessage(), ctx, e);

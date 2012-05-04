@@ -72,7 +72,7 @@ public class ExtractorsOptionPanel extends AbstractOptionPanel {
 			shuttle = new ShuttleSelectionPanel<String,String>();
 			shuttle.addListSelectionListener(new SelectionListSelectionListener());
 			shuttle.setBorder(BorderFactory.createTitledBorder(null, 
-					getMessage("feature"),
+					getMessage("features"),
 					TitledBorder.DEFAULT_JUSTIFICATION,
 					TitledBorder.DEFAULT_POSITION));
 			

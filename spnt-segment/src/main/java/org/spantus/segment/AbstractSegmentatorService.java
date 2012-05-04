@@ -58,7 +58,7 @@ public abstract class AbstractSegmentatorService implements ISegmentatorService 
 	 * @param votes
 	 * @return
 	 */
-	private List<Double> calcCoefs(List<Double> votes){
+	private static List<Double> calcCoefs(List<Double> votes){
 		List<Double> coefs = new ArrayList<Double>(votes.size());
 		for (int z = 0; z < votes.size(); z++) {
 			coefs.add(calcCoef(votes, z));
@@ -71,7 +71,7 @@ public abstract class AbstractSegmentatorService implements ISegmentatorService 
 	 * @param z
 	 * @return
 	 */
-	private Double calcCoef(List<Double> votes, int z){
+	private static Double calcCoef(List<Double> votes, int z){
 		Double result = 1D;
 		double ez = votes.get(z);
 		double alpha = Math.pow(.9, 2);
@@ -93,7 +93,7 @@ public abstract class AbstractSegmentatorService implements ISegmentatorService 
 	 * @param collection
 	 * @return
 	 */
-	public Double calculateVoteResult(Collection<Double> collection){
+	public static Double calculateVoteResult(Collection<Double> collection){
 		List<Double> coefs = calcCoefs(new ArrayList<Double>(collection));
 		Iterator<Double> voteIterator = collection.iterator();
 		Double upSum = 0D;

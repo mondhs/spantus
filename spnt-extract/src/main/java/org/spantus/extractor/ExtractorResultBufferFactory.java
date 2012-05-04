@@ -31,7 +31,7 @@ import org.spantus.core.extractor.IGeneralExtractor;
  */
 public abstract class ExtractorResultBufferFactory {
 	
-	public static IGeneralExtractor create(IGeneralExtractor extractor){
+	public static IGeneralExtractor<?> create(IGeneralExtractor<?> extractor){
 		if(extractor instanceof IExtractor){
 			return create((IExtractor)extractor);
 		}else if(extractor instanceof IExtractorVector){

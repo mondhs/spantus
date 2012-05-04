@@ -30,7 +30,7 @@ public class SegmentationServiceImpl {
 	 */
 	public MarkerSetHolder findMarkers(IExtractorInputReader reader) {
 		Collection<IClassifier> clasifiers = new ArrayList<IClassifier>();
-		for (IGeneralExtractor extractor : reader.getGeneralExtractor()) {
+		for (IGeneralExtractor<?> extractor : reader.getGeneralExtractor()) {
 			if (extractor instanceof IClassifier) {
 				clasifiers.add((IClassifier) extractor);
 			}

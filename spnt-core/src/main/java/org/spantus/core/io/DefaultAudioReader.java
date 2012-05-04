@@ -133,13 +133,13 @@ public class DefaultAudioReader extends AbstractAudioReader {
 
 	}
 	public AudioFormat getCurrentAudioFormat(URL url) {
-		return getAudioFormat(url).getFormat();
+		return findAudioFormat(url).getFormat();
 	}
 	/*
 	 * (non-Javadoc)
 	 * @see org.spantus.core.io.AudioReader#getAudioFormat(java.net.URL)
 	 */
-	public AudioFileFormat getAudioFormat(URL url) {
+	public AudioFileFormat findAudioFormat(URL url) {
 		AudioFileFormat format = null;
 		try {
 			format = AudioSystem.getAudioFileFormat(url);
@@ -185,7 +185,7 @@ public class DefaultAudioReader extends AbstractAudioReader {
 	
 	public SignalFormat getFormat(URL url) {
 		SignalFormat signalFormat = new SignalFormat();
-		AudioFileFormat audioFileFormat = getAudioFormat(url);
+		AudioFileFormat audioFileFormat = findAudioFormat(url);
 		signalFormat.setLength((double) audioFileFormat.getFrameLength());
 		signalFormat.setSampleRate((double) audioFileFormat.getFormat().getSampleRate());
 		signalFormat.setParameters(extractParameters(audioFileFormat, url));
@@ -193,7 +193,7 @@ public class DefaultAudioReader extends AbstractAudioReader {
 	}
 
 	public boolean isFormatSupported(URL url) {
-		AudioFileFormat audioFileFormat = getAudioFormat(url);
+		AudioFileFormat audioFileFormat = findAudioFormat(url);
 		return audioFileFormat != null;
 	}
 

@@ -46,7 +46,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
 import org.spantus.core.beans.I18n;
-import org.spantus.core.beans.RecognitionResultDetails;
+import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.exception.ProcessingException;
@@ -60,12 +60,28 @@ import org.spantus.work.ui.ImageResourcesEnum;
  */
 public class RecognizeDetailDialog extends JDialog {
 
-    /**
+    private static final String TARGET = "target";
+
+	private static final String FEATURE_SCORE = "featureScrore";
+
+	private static final String FEATURE = "feature";
+
+	private static final String TOTAL_SCORE = "totalScore";
+
+	private static final String RECOGNION_RESULT = "recognitionResult";
+
+	private static final String SAMPLE_LABEL = "sampleLabel";
+	
+	private static final String FEATURE_DISTANCE = "featureDistance";
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private List<RecognitionResultDetails> results;
+	
+
+	private List<RecognitionResult> results;
     
     private String selectedSampleId = null;
     private String selectedFeatureId = null;
@@ -99,7 +115,7 @@ public class RecognizeDetailDialog extends JDialog {
     private void initialize() {
         this.setSize(SwingUtils.currentWindowSize(0.75, 0.75));
         SwingUtils.centerWindow(this);
-        setTitle(getI18n().getMessage("RecognitionResults"));
+        setTitle(getI18n().getMessage(RECOGNION_RESULT));
         this.setContentPane(getJContentPane());
     }
 
@@ -209,7 +225,7 @@ public class RecognizeDetailDialog extends JDialog {
         return resultPane;
     }
 
-    public void updateCtx(List<RecognitionResultDetails> results) {
+    public void updateCtx(List<RecognitionResult> results) {
         
         
         HTMLEditorKit kit = ((HTMLEditorKit) getResultPane().getEditorKit());
@@ -232,7 +248,7 @@ public class RecognizeDetailDialog extends JDialog {
         return sb;
     }
 
-    private StringBuilder representResults(List<RecognitionResultDetails> results) {
+    private StringBuilder representResults(List<RecognitionResult> results) {
         StringBuilder sb = new StringBuilder();
         if (results.isEmpty()) {
             return representEmptyResults();
@@ -240,30 +256,37 @@ public class RecognizeDetailDialog extends JDialog {
         String playImgSrc = getClass().getClassLoader().getResource(ImageResourcesEnum.play.getCode())
                     .toString();
 
-         sb.
-            append(html("Target: <a href=\"play={0,number,#}\">", -1)).
+         sb.append(getI18n().getMessage(TARGET)).
+            append(html(": <a href=\"play={0,number,#}\">", -1)).
             append(html("<img src=\"{0}\" alt=\"play\" border=\"0\" width=\"24\" height=\"24\" />", playImgSrc)).
             append("</a>");
         sb.append("<table class=\"resultTable\">");
-        sb.append("<tr><th>").append("Sample Label").append("</th><th>").
-                append("Total Score").
-                append("</th><th>Feature</th><th>Feature Score</th></tr>");
-        for (RecognitionResultDetails recognitionResult : results) {
+        sb.append("<tr><th>").append(getI18n().getMessage(SAMPLE_LABEL)).append("</th><th>").
+                append(getI18n().getMessage(TOTAL_SCORE)).
+                append("</th><th>").append(FEATURE).append("</th><th>").append(FEATURE_SCORE).
+                append("</th><th>").append(FEATURE_DISTANCE).append("</th></tr>");
+        for (RecognitionResult recognitionResult : results) {
             StringBuilder subTable = new StringBuilder();
             int rowsSize = 1;
             String selectionClass = "notSelected";
+           
             if(recognitionResult.getInfo().getId().equals(selectedSampleId)){
             	selectionClass = "selected";
                 rowsSize = recognitionResult.getScores().size() + 1;
                 for (Entry<String, Double> scoreEntry : recognitionResult.getScores().entrySet()) {
+                	Double distance = recognitionResult.getDetails().getDistances().get(scoreEntry.getKey());
                     subTable.append("<tr>");
                     subTable.
-                    append(html("<td  class=\"{1}\">",selectionClass )).
+                    append(html("<td  class=\"{0}\">",selectionClass )).
                             append(html("<a href=\"show={0}\">",  scoreEntry.getKey())).
                             append(getI18n().getMessage(scoreEntry.getKey())).
                             append("</a>").
-                            append("</td><td>").
+                            append("</td>").
+                            append(html("<td  class=\"{0}\">",selectionClass )).
                             append(getI18n().getDecimalFormat().format(scoreEntry.getValue())).
+                            append("</td>").
+                            append(html("<td  class=\"{0}\">",selectionClass )).
+                            append(getI18n().getDecimalFormat().format(distance)).
                             append("</td>");
 
                     subTable.append("</tr>");
@@ -298,8 +321,9 @@ public class RecognizeDetailDialog extends JDialog {
                      append("</td>");
             //how features are generated
             if (rowsSize == 1) {
-                sb.append(html("<td  class=\"{1}\">",selectionClass )).append("</td>");
-                sb.append(html("<td  class=\"{1}\">",selectionClass )).append("</td>");
+                sb.append(html("<td  class=\"{0}\">",selectionClass )).append("</td>");
+                sb.append(html("<td  class=\"{0}\">",selectionClass )).append("</td>");
+                sb.append(html("<td  class=\"{0}\">",selectionClass )).append("</td>");
             }
             sb.append("</tr>");
             sb.append(subTable);
@@ -367,9 +391,9 @@ public class RecognizeDetailDialog extends JDialog {
             getChartPanel().repaintCharts(null, null);
             return;
         }
-        for (RecognitionResultDetails recognitionResultDetails : results) {
-            if (recognitionResultDetails.getInfo().getId().equals(selectedSampleId)) {
-            	getChartPanel().repaintCharts(recognitionResultDetails, selectedFeatureId);
+        for (RecognitionResult recognitionResult : results) {
+            if (recognitionResult.getInfo().getId().equals(selectedSampleId)) {
+            	getChartPanel().repaintCharts(recognitionResult, selectedFeatureId);
 //                List<Point> points = recognitionResultDetails.getPath().get(selctedFeatureId);
 //                if (points != null) {
 //                    //if some feature selected paint only this feature
@@ -393,12 +417,12 @@ public class RecognizeDetailDialog extends JDialog {
                             (getTargetMarker().getLength().floatValue()/1000)
                             );
         }
-        for (RecognitionResultDetails recognitionResultDetails : results) {
-            if (recognitionResultDetails.getInfo().getId().equals(
+        for (RecognitionResult recognitionResult : results) {
+            if (recognitionResult.getInfo().getId().equals(
             		id)) {
                 try {
                     AudioManagerFactory.createAudioManager().play(
-                            (new File(recognitionResultDetails.getAudioFilePath()
+                            (new File(recognitionResult.getDetails().getAudioFilePath()
                             ).toURI().toURL()));
                     break;
                 } catch (MalformedURLException ex) {

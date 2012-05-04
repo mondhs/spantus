@@ -10,10 +10,12 @@ package org.spantus.core;
  * @author mondhs
  */
 public interface IValues {
-    public Double getTime();
+    public Long getTime();
     public Double getSampleRate();
     public void setSampleRate(Double sampleRate);
-    public Double toTime(int i);
-    public int toIndex(Double f);
+    public Long toTime(int i);
+    public int toIndex(Long f);
     public int getDimention();
+    public int size();
+	public <T extends IValues> T subList(int fromIndex, int toIndex);
 }

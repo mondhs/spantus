@@ -55,9 +55,9 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 			Double f2 = SEGMENT2_VALS[i];
 			Double f3 = SEGMENT3_VALS[i];
 			Long l = Long.valueOf(i);
-			segmentator1.calculate(l, getWindow(f1));
-			segmentator2.calculate(l, getWindow(f2));
-			segmentator3.calculate(l, getWindow(f3));
+			segmentator1.calculateWindow(l, getWindow(f1));
+			segmentator2.calculateWindow(l, getWindow(f2));
+			segmentator3.calculateWindow(l, getWindow(f3));
 		}
 		assertNotNull(multipeListener.getMarkSet());
 		log.debug("Markers: " + multipeListener.getMarkSet().getMarkers());
@@ -73,8 +73,8 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 			Double f2 = SEGMENT2_VALS[i];
 			Double f3 = SEGMENT3_VALS[i];
 			Long l = Long.valueOf(i);
-			segmentator2.calculate(l, getWindow(f2));
-			segmentator3.calculate(l, getWindow(f3));
+			segmentator2.calculateWindow(l, getWindow(f2));
+			segmentator3.calculateWindow(l, getWindow(f3));
 		}
 	}
 	/**
@@ -90,8 +90,8 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 			Double f2 = SEGMENT2_VALS[i];
 			Double f3 = SEGMENT3_VALS[i];
 			Long l = Long.valueOf(i);
-			segmentator2.calculate(l, getWindow(f2));
-			segmentator3.calculate(l, getWindow(f3));
+			segmentator2.calculateWindow(l, getWindow(f2));
+			segmentator3.calculateWindow(l, getWindow(f3));
 		}
 		assertNotNull(multipeListener.getMarkSet());
 		log.debug("Markers: " + multipeListener.getMarkSet().getMarkers());
@@ -107,8 +107,8 @@ public class OnlineSegmentatorTest extends AbstractOnlineSegmentTest {
 			Double f2 = SEGMENT2_VALS[i];
 			Double f3 = SEGMENT3_VALS[i];
 			Long l = Long.valueOf(i);
-			segmentator2.calculate(l, getWindow(f2));
-			segmentator3.calculate(l, getWindow(f3));
+			segmentator2.calculateWindow(l, getWindow(f2));
+			segmentator3.calculateWindow(l, getWindow(f3));
 		}
 	}
 	/**

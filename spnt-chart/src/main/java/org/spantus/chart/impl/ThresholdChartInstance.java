@@ -73,7 +73,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 //		}
 		Double min = ctx.getValues().getMinValue();
 		Double max = ctx.getValues().getMaxValue();
-		setOrder(0D);
+		setOrder(0);
 		log.debug("name: " + description + "; order: " + getOrder() + "; min="
 				+ min + "; max: " + max + "; sampleRate:"
 				+ ctx.getValues().getSampleRate() + "; length: "
@@ -136,14 +136,14 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 	
 
 	private CoordinateBoundary getCoordinateBoundary(FrameValues values) {
-		Double xMin = 0D;
-		Double xMax = values.toTime(values.size());
-		Double yMin = getOrder();
-		Double yMax = getOrder() + 1;
+		Long xMin = 0L;
+		Long xMax = values.toTime(values.size());
+		Integer yMin = getOrder();
+		Integer yMax = getOrder() + 1;
 
 		if (domain != null && domain.getUntil() != null) {
-			xMax = domain.getUntil().doubleValue();
-			xMin = domain.getFrom().doubleValue();
+			xMax = domain.getUntil().longValue();
+			xMin = domain.getFrom().longValue();
 		}
 		return new CoordinateBoundary(new BigDecimal(xMin),
 				new BigDecimal(xMax), new BigDecimal(yMin),
@@ -194,13 +194,13 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		int start = 0;
 		int end = vals.size();
 		if (domain != null && domain.getFrom() != null) {
-			start = vals.toIndex(domain.getFrom().doubleValue());
-			end = vals.toIndex(domain.getUntil().doubleValue());
+			start = vals.toIndex(domain.getFrom().longValue());
+			end = vals.toIndex(domain.getUntil().longValue());
 			end = Math.min(end, vals.size());
 		}
 		int length = end - start;
 		int[] temp = new int[length];
-		Double sampledScalar =  scalar * vals.getSampleRate();
+		Double sampledScalar =  scalar /1000 * vals.getSampleRate();
 		
 		for (int j = 0; j < temp.length; j++) {
 			temp[j] = (int) ((j + start) / (sampledScalar));
@@ -227,11 +227,11 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		int maxvalue = maxvalueF.intValue()+3; 
 		Double minvalueF = (getOrder())/yScalar;
 		int minvalue = minvalueF.intValue();
-		Double sampledXScalar = xScalar * getCtx().getValues().getSampleRate();
+		Double sampledXScalar = xScalar / 1000 * getCtx().getValues().getSampleRate();
 		polygon.addPoint(0, minvalue);
 		for (Marker marker : markerSet.getMarkers()) {
-			int startIndex = getCtx().getValues().toIndex(marker.getStart()/1000D)+2;
-			int endIndex = getCtx().getValues().toIndex(marker.getEnd()/1000D)+2;
+			int startIndex = getCtx().getValues().toIndex(marker.getStart())+2;
+			int endIndex = getCtx().getValues().toIndex(marker.getEnd())+2;
 			Double start = startIndex/sampledXScalar;
 			Double end = endIndex/sampledXScalar;
 			polygon.addPoint(start.intValue(), minvalue);
@@ -306,8 +306,8 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		int start = 0;
 		int end = ctx.getValues().size();
 		if (domain != null && domain.getFrom() != null) {
-			start = ctx.getValues().toIndex(domain.getFrom().doubleValue());
-			end = ctx.getValues().toIndex(domain.getUntil().doubleValue());
+			start = ctx.getValues().toIndex(domain.getFrom().longValue());
+			end = ctx.getValues().toIndex(domain.getUntil().longValue());
 			end = Math.min(end, vals.size());
 		}
 		int length = end - start;
@@ -336,11 +336,11 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 		return temp;
 	}
 
-	public Double getOrder() {
+	public Integer getOrder() {
 		return getCtx().getOrder();
 	}
 
-	public void setOrder(Double order) {
+	public void setOrder(Integer order) {
 		getCtx().setOrder(order);
 //		for (Float f1 : getCtx().getValues()) {
 //			minmax(f1);
@@ -353,7 +353,7 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 	}
 
 	public String getValueOn(BigDecimal x) {
-		int index = getCtx().getValues().toIndex(x.doubleValue());
+		int index = getCtx().getValues().toIndex(x.longValue());
 		index++;
 		Double value = null;
 		if (index < getCtx().getValues().size() && index>0) {

@@ -141,7 +141,7 @@ public class Mp3SignalReader extends DefaultAudioReader {
 		return decodedFormat;
 	}
 	
-	public AudioFileFormat getAudioFormat(URL url) {
+	public AudioFileFormat findAudioFormat(URL url) {
 //		AudioFormat baseFormat = null;
 //		try {
 //			baseFormat = AudioSystem.getAudioFileFormat(url).getFormat();

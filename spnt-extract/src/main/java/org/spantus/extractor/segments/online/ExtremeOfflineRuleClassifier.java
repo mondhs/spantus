@@ -40,7 +40,7 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 		getOnlineCtx().reset();
 		
 		for (Double value : getOutputValues()) {
-			processValue(getOnlineCtx() ,value);
+			processValue(getOnlineCtx(), null ,value);
 		}
 		endupPendingSegments(getOnlineCtx());
 		processMarkers(getMarkSet());
@@ -170,7 +170,7 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 				getExtremeSegmentService().getCalculatedLength(extremeSegment);
 			}
 		}
-		int fixUpTo=getOutputValues().toIndex(1D);
+		int fixUpTo=getOutputValues().toIndex(1000L);
 		int i = 0; 
 		IndexValue minValue =new IndexValue(previous.getEndEntry().getIndex(), previous.getEndEntry().getValue()); 
 		i = 0;
@@ -231,7 +231,7 @@ public class ExtremeOfflineRuleClassifier extends ExtremeOnlineRuleClassifier {
 	 * @param extremeSegment
 	 */
 	private void fixFarSegments(ExtremeSegment previous,ExtremeSegment extremeSegment) {
-		int fixUpTo= getOutputValues().toIndex(.3D);
+		int fixUpTo= getOutputValues().toIndex(300L);
 		int i = 0; 
 		IndexValue minValue = null;
 

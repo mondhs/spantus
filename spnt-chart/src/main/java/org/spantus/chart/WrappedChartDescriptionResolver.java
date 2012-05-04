@@ -42,7 +42,7 @@ public class WrappedChartDescriptionResolver implements
 		this.localResolver = localResolver;
 	}
 	
-	public ChartDescriptionInfo resolve(float time, float value) {
+	public ChartDescriptionInfo resolve(Long time, float value) {
 		ChartDescriptionInfo resolved = localResolver.resolve(time,value);
 		if(resolved == null) return null;
 		String resolvedStr = resolved.getName();

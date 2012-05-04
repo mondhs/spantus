@@ -42,7 +42,7 @@ public class MockSegmentatorExtractor implements IExtractor {
 	
 	private String name;
 	
-	public FrameValues calculate(Long sample, FrameValues values) {
+	public FrameValues calculateWindow(Long sample, FrameValues values) {
 		return calculateWindow(values);
 	}
 

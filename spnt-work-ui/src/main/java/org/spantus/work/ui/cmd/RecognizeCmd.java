@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.spantus.core.IValues;
-import org.spantus.core.beans.RecognitionResultDetails;
+import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.marker.Marker;
 import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
 import org.spantus.logger.Logger;
@@ -54,7 +54,7 @@ public class RecognizeCmd extends AbsrtactCmd {
     @Override
     public String execute(SpantusWorkInfo ctx) {
         
-        getMatchingService().update(ctx.getProject().getRecognitionConfig()); 
+        getMatchingService().update(ctx.getProject().getRecognitionConfig(),getExecutionFacade()); 
         
         Marker marker = ((Marker) getCurrentEvent().getValue());
 
@@ -62,7 +62,7 @@ public class RecognizeCmd extends AbsrtactCmd {
                 getReader(),
                 marker);
 
-        List<RecognitionResultDetails> results = getMatchingService().findMultipleMatch(
+        List<RecognitionResult> results = getMatchingService().findMultipleMatch(
                 fvv);
         if(results!=null && results.size()>0){
             marker.setLabel(results.get(0).getInfo().getName());
@@ -74,9 +74,9 @@ public class RecognizeCmd extends AbsrtactCmd {
         getInfoPnl().setVisible(true);
         
         if(StringUtils.hasText(getInfoPnl().getSelectedSampleId())){
-        	for (RecognitionResultDetails detail : results) {
-        		if(getInfoPnl().getSelectedSampleId().equals(detail.getInfo().getId())){
-        			marker.setLabel(detail.getInfo().getName());
+        	for (RecognitionResult result: results) {
+        		if(getInfoPnl().getSelectedSampleId().equals(result.getInfo().getId())){
+        			marker.setLabel(result.getInfo().getName());
         		}
 				
 			}

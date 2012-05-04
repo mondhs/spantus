@@ -116,27 +116,27 @@ public class DecisionSegmentatorOnline extends MultipleSegmentatorListenerOnline
 	public void onProcessNoise(DecisionCtx ctx, SegmentEvent event){}
 	
 	public void onStartSegmentFound(DecisionCtx ctx, SegmentEvent event){
-		ctx.setMarker(createSegment(event));
-		finazlizeSegment(ctx.getMarker(), event);
+		ctx.setMarker(createMarker(event));
+		finazlizeMarker(ctx.getMarker(), event);
 		ctx.setSegmentState(RuleBaseEnum.state.start);
 		debugAction("onStartSegmentFound", ctx);
 	}
 	
 	public void onStartSegmentApproved(DecisionCtx ctx, SegmentEvent event){
 		super.onStartSegment(ctx.getMarker());
-		finazlizeSegment(ctx.getMarker(), event);
+		finazlizeMarker(ctx.getMarker(), event);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
 		debugAction("onStartSegmentApproved", ctx);
 	}
 	
 	public void onProcessSegment(DecisionCtx ctx, SegmentEvent event){
-		finazlizeSegment(ctx.getMarker(), event);
+		finazlizeMarker(ctx.getMarker(), event);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
 		debugAction("onProcessSegment" , ctx);
 	}
 	
 	public void onEndSegmentFound(DecisionCtx ctx, SegmentEvent event){
-		finazlizeSegment(ctx.getMarker(), event);
+		finazlizeMarker(ctx.getMarker(), event);
 		ctx.setSegmentState(RuleBaseEnum.state.end);
 		debugAction("onEndSegmentFound", ctx);
 	}
@@ -152,7 +152,7 @@ public class DecisionSegmentatorOnline extends MultipleSegmentatorListenerOnline
 	}
 	
 	public void onJoinToSegment(DecisionCtx ctx, SegmentEvent event){
-		finazlizeSegment(ctx.getMarker(), event);
+		finazlizeMarker(ctx.getMarker(), event);
 		ctx.setSegmentState(RuleBaseEnum.state.segment);
 		debugAction("onJoinToSegment", ctx);
 	}

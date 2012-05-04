@@ -33,6 +33,7 @@ public class DtwServiceJavaMLImplTest {
 	List<Double> sample2 = new ArrayList<Double>(Arrays.asList(sampleArr[1]));
 	List<Double> sample3 = new ArrayList<Double>(Arrays.asList(sampleArr[2]));
 	List<Double> sample4 = new ArrayList<Double>(Arrays.asList(sampleArr[3]));
+	private static float radius = 10;
 	private DtwServiceJavaMLImpl dtwService;
 
 	@Before
@@ -50,15 +51,15 @@ public class DtwServiceJavaMLImplTest {
 		Double distance2 = dtwService.calculateDistance(target, sample2);
 		Double distance3 = dtwService.calculateDistance(target, sample3);
 		//then
-		Assert.assertEquals("dynamic time wraping: ", 6D, distance1);
-		Assert.assertEquals("dynamic time wraping: ", 25D, distance2);
-		Assert.assertEquals("dynamic time wraping: ", 11D, distance3);
+		Assert.assertEquals("dynamic time wraping: ", 7D, distance1);
+		Assert.assertEquals("dynamic time wraping: ", 27D, distance2);
+		Assert.assertEquals("dynamic time wraping: ", 12D, distance3);
 	}
 
 	@Test
 	public void testExpandedResWindow() {
 		// given
-		int radius = 3;
+		
 
 		// when
 
@@ -70,15 +71,14 @@ public class DtwServiceJavaMLImplTest {
 		Double distance4 = dtwService.calculateDistance(target, sample4);
 
 		// then
-		Assert.assertEquals("dynamic time wraping: ", 25D, distance2);
-		Assert.assertEquals("dynamic time wraping: ", 11D, distance3);
-		Assert.assertEquals("dynamic time wraping: ", 250D, distance4);
+		Assert.assertEquals("dynamic time wraping: ", 27D, distance2);
+		Assert.assertEquals("dynamic time wraping: ", 12D, distance3);
+		Assert.assertEquals("dynamic time wraping: ", 272D, distance4);
 	}
 	
 	@Test
 	public void testLinearWindow() {
 		// given
-		int radius = 3;
 		dtwService.setSearchRadius(radius);
 		dtwService
 				.setSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.LinearWindow);
@@ -91,15 +91,14 @@ public class DtwServiceJavaMLImplTest {
 		Double distance4 = dtwService.calculateDistance(target, sample4);
 
 		// then
-		Assert.assertEquals("dynamic time wraping: ", 25D, distance2);
-		Assert.assertEquals("dynamic time wraping: ", 11D, distance3);
-		Assert.assertEquals("dynamic time wraping: ", 254D, distance4);
+		Assert.assertEquals("dynamic time wraping: ", 27D, distance2);
+		Assert.assertEquals("dynamic time wraping: ", 12D, distance3);
+		Assert.assertEquals("dynamic time wraping: ", 272D, distance4);
 	}
 	
 	@Test
 	public void testAngleLocalConstraint_LinearWindow() {
 		// given
-		int radius = 3;
 		dtwService.setSearchRadius(radius);
 		dtwService
 				.setSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.LinearWindow);
@@ -111,16 +110,15 @@ public class DtwServiceJavaMLImplTest {
 		Double distance4 = dtwService.calculateDistance(target, sample4);
 
 		// then
-		Assert.assertEquals("dynamic time wraping: ", 19D, distance2);
-		Assert.assertEquals("dynamic time wraping: ", 8D, distance3);
-		Assert.assertEquals("dynamic time wraping: ", 155D, distance4);
+		Assert.assertEquals("dynamic time wraping: ", 18D, distance2);
+		Assert.assertEquals("dynamic time wraping: ", 7D, distance3);
+		Assert.assertEquals("dynamic time wraping: ", 138D, distance4);
 	}
 	
 	
 	@Test
 	public void testParallelogramWindow() {
 		// given
-		int radius = 3;
 		dtwService.setSearchRadius(radius);
 		dtwService
 				.setSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ParallelogramWindow);
@@ -135,12 +133,12 @@ public class DtwServiceJavaMLImplTest {
 		Point lastPoint = dtwResult2.getPath().get(dtwResult2.getPath().size()-1);
 
 		// then
-		Assert.assertEquals("dynamic time wraping: ", 32D, dtwResult2.getResult());
+		Assert.assertEquals("dynamic time wraping: ", 33D, dtwResult2.getResult());
 		Assert.assertEquals("first iteration point: ", new Point(9, 11), lastPoint);
 		Assert.assertEquals("last iteration point: ", new Point(0, 0), firstPoint);
 		
-		Assert.assertEquals("dynamic time wraping: ", 11D, dtwResult3.getResult());
-		Assert.assertEquals("dynamic time wraping: ", 264D, dtwResult4.getResult());
+		Assert.assertEquals("dynamic time wraping: ", 12D, dtwResult3.getResult());
+		Assert.assertEquals("dynamic time wraping: ", 272D, dtwResult4.getResult());
 	}
 	
 
@@ -177,7 +175,7 @@ public class DtwServiceJavaMLImplTest {
 //	Test
 	public void testDtwPerformance() {
 		// given
-		int radius = 5;
+		float radius = 20;
 		dtwService.setSearchRadius(radius);
 		dtwService
 				.setSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ParallelogramWindow);

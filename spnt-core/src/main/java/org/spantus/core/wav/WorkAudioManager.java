@@ -60,6 +60,11 @@ public class WorkAudioManager implements AudioManager {
     public void play(URL fileURL) {
         play(fileURL, null, null);
     }
+
+	@Override
+	public void playinMils(URL file, Long starts, Long length) {
+		play(file, starts.floatValue()/1000, length.floatValue()/1000);
+	}
     
     public void play(URL fileURL, Float from, Float length) {
         AudioInputStream stream = createInput(fileURL);
@@ -446,4 +451,8 @@ public class WorkAudioManager implements AudioManager {
             this.playing = playing;
         }
     }
+
+
+
+
 }

@@ -38,6 +38,7 @@ import javax.sound.sampled.AudioInputStream;
 public interface AudioManager {
 	public void play(URL file, Float starts, Float length);
 	public void play(AudioInputStream stream, Float from, Float length) ;
+	public void playinMils(URL file, Long starts, Long length);
         public void play(URL file);
         /**
          * 

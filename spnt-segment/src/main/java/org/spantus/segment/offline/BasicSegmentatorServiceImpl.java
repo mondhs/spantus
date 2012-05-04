@@ -50,6 +50,7 @@ import org.spantus.segment.SegmentatorParam;
  */
 public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 
+	public static final double BASIC_SEGMENTAION_VOTE_THREASHOLD = .3;
 	private Logger log = Logger.getLogger(getClass());
 	private Windowing windowing;
 	
@@ -78,7 +79,7 @@ public class BasicSegmentatorServiceImpl extends AbstractSegmentatorService {
 
 		for (Entry<Long, Map<String, Double>> stateSum : statesSums.entrySet()) {
 			Double vote = calculateVoteResult(stateSum.getValue().values());
-			ctx.setCurrentState(vote > .3 ? 1f : 0f);
+			ctx.setCurrentState(vote > BASIC_SEGMENTAION_VOTE_THREASHOLD ? 1f : 0f);
 			ctx.setCurrentMoment(stateSum.getKey());
 			processState(ctx);
 		}

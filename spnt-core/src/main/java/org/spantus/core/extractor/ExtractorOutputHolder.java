@@ -9,7 +9,7 @@ public class ExtractorOutputHolder implements IExtractor {
 	private Double extractorSampleRate;
 
 
-	public FrameValues calculate(Long sample, FrameValues values) {
+	public FrameValues calculateWindow(Long sample, FrameValues values) {
 		throw new IllegalAccessError("Should not be called");
 	}
 

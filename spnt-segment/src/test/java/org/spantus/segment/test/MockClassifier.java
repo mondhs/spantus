@@ -45,7 +45,7 @@ public class MockClassifier implements IClassifier {
 		return null;
 	}
 
-	public FrameValues calculate(Long sample, FrameValues values) {
+	public FrameValues calculateWindow(Long sample, FrameValues values) {
 		return null;
 	}
 
@@ -91,19 +91,16 @@ public class MockClassifier implements IClassifier {
 
 	public boolean addClassificationListener(
 			IClassificationListener classificationListener) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean removeClassificationListener(
 			IClassificationListener classificationListener) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public long getOffset() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

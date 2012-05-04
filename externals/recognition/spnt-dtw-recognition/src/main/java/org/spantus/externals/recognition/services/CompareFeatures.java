@@ -45,7 +45,7 @@ public class CompareFeatures {
 
 	public Double compareValues(FrameVectorValues targetValues, File sampleFile) {
 		IExtractorInputReader sampleReader = getExtractorInputReader(sampleFile);
-		IGeneralExtractor sampleExtractor = getExtractorReaderService()
+		IGeneralExtractor<?> sampleExtractor = getExtractorReaderService()
 				.findExtractorByName(getWorkingExtractor(), sampleReader);
 		Double distance = calculateDistance(targetValues, sampleExtractor);
 		return distance;
@@ -60,9 +60,9 @@ public class CompareFeatures {
 	public Double compareValues(File targetFile, File sampleFile) {
 		IExtractorInputReader sampleReader = getExtractorInputReader(sampleFile);
 		IExtractorInputReader targetReader = getExtractorInputReader(targetFile);
-		IGeneralExtractor sampleExtractor = getExtractorReaderService()
+		IGeneralExtractor<?> sampleExtractor = getExtractorReaderService()
 				.findExtractorByName(getWorkingExtractor(), sampleReader);
-		IGeneralExtractor targetExtractor = getExtractorReaderService()
+		IGeneralExtractor<?> targetExtractor = getExtractorReaderService()
 				.findExtractorByName(getWorkingExtractor(), targetReader);
 		;
 
@@ -85,8 +85,8 @@ public class CompareFeatures {
 	 * @param sampleExtractor
 	 * @return
 	 */
-	public Double calculateDistance(IGeneralExtractor targetExtractor,
-			IGeneralExtractor sampleExtractor) {
+	public Double calculateDistance(IGeneralExtractor<?> targetExtractor,
+			IGeneralExtractor<?> sampleExtractor) {
 		if (targetExtractor instanceof IExtractor) {
 			return getDtwService().calculateDistance(
 					((IExtractor) targetExtractor).getOutputValues(),
@@ -102,7 +102,7 @@ public class CompareFeatures {
 	}
 
 	public Double calculateDistance(FrameVectorValues targetValues,
-			IGeneralExtractor sampleExtractor) {
+			IGeneralExtractor<?> sampleExtractor) {
 		return getDtwService().calculateDistanceVector(targetValues,
 				((IExtractorVector) sampleExtractor).getOutputValues());
 	}

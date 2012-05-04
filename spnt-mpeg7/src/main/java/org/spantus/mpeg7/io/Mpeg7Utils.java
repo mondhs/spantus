@@ -148,7 +148,7 @@ public abstract class Mpeg7Utils {
 	}
 
 	public static boolean register(IExtractorInputReader reader,
-			IGeneralExtractor extractor) {
+			IGeneralExtractor<?> extractor) {
 		Assert.isTrue(extractor!=null, "Extractor is null");
 		if (extractor instanceof IExtractorVector) {
 			reader.getExtractorRegister3D().add((IExtractorVector) extractor);

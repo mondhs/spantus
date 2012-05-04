@@ -126,20 +126,20 @@ public final class ExtractorUtils {
 
 	/**
 	 * 
-	 * @param bufferedReader
+	 * @param extractorReader
 	 * @param extractorType
 	 * @return
 	 */
-	public static IGeneralExtractor register(
-			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
+	public static IGeneralExtractor<?> register(
+			IExtractorInputReader extractorReader, ExtractorEnum extractorType,
 			ExtractorParam param) {
-		IGeneralExtractor extractor = ExtractorResultBufferFactory
+		IGeneralExtractor<?> extractor = ExtractorResultBufferFactory
 				.create(createInstance(extractorType, param));
-		bufferedReader.registerExtractor(extractor);
+		extractorReader.registerExtractor(extractor);
 		return extractor;
 	}
 
-	public static IGeneralExtractor createInstance(ExtractorEnum extractor,
+	public static IGeneralExtractor<?> createInstance(ExtractorEnum extractor,
 			ExtractorParam param) {
 		try {
 			if (extractorMap.get(extractor) != null) {
@@ -192,25 +192,25 @@ public final class ExtractorUtils {
 
 	/**
 	 * 
-	 * @param bufferedReader
+	 * @param extractorReader
 	 * @param extractorType
 	 * @param param
 	 * @param threshold
 	 * @return
 	 */
 	public static IClassifier registerThreshold(
-			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
+			IExtractorInputReader extractorReader, ExtractorEnum extractorType,
 			ExtractorParam param, AbstractClassifier threshold) {
-		IGeneralExtractor generalExtr = createInstance(extractorType, param);
+		IGeneralExtractor<?> generalExtr = createInstance(extractorType, param);
 		if (generalExtr instanceof IExtractor) {
 			ExtractorWrapper wraper = new ExtractorWrapper(
 					(IExtractor) generalExtr);
 			threshold.setExtractor(new ExtractorResultBuffer(wraper));
 			wraper.getListeners().add(threshold);
-			bufferedReader.registerExtractor(threshold);
+			extractorReader.registerExtractor(threshold);
 			return threshold;
 		} else {
-			register(bufferedReader, extractorType, param);
+			register(extractorReader, extractorType, param);
 			return null;
 		}
 
@@ -218,44 +218,44 @@ public final class ExtractorUtils {
 
 	/**
 	 * 
-	 * @param bufferedReader
+	 * @param extractorReader
 	 * @param extractorType
 	 * @param param
 	 * @return
 	 */
 	public static IClassifier registerThreshold(
-			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
+			IExtractorInputReader extractorReader, ExtractorEnum extractorType,
 			ExtractorParam param) {
-		return registerThreshold(bufferedReader, extractorType, param,
+		return registerThreshold(extractorReader, extractorType, param,
 				ClassifierEnum.online);
 	}
 
 	/**
 	 * 
-	 * @param bufferedReader
+	 * @param extractorReader
 	 * @param extractorType
 	 * @return
 	 */
 	public static IClassifier registerThreshold(
-			IExtractorInputReader bufferedReader, ExtractorEnum extractorType) {
+			IExtractorInputReader extractorReader, ExtractorEnum extractorType) {
 		if (extractor3DMap.get(extractorType) != null) {
-			register(bufferedReader, extractorType, null);
+			register(extractorReader, extractorType, null);
 			return null;
 		} else {
-			return registerThreshold(bufferedReader, extractorType, null,
+			return registerThreshold(extractorReader, extractorType, null,
 					ClassifierEnum.offline);
 		}
 	}
 
 	/**
 	 * 
-	 * @param bufferedReader
+	 * @param extractorReader
 	 * @param extractors
 	 * @param params
 	 */
-	public static void registerThreshold(IExtractorInputReader bufferedReader,
+	public static void registerThreshold(IExtractorInputReader extractorReader,
 			ExtractorEnum[] extractors, Map<String, ExtractorParam> params) {
-		registerThreshold(bufferedReader, extractors, params,
+		registerThreshold(extractorReader, extractors, params,
 				ClassifierEnum.online);
 	}
 
@@ -279,14 +279,14 @@ public final class ExtractorUtils {
 
 	/**
 	 * 
-	 * @param bufferedReader
+	 * @param extractorReader
 	 * @param extractorType
 	 * @param param
 	 * @param thresholdType
 	 * @return
 	 */
 	public static IClassifier registerThreshold(
-			IExtractorInputReader bufferedReader, ExtractorEnum extractorType,
+			IExtractorInputReader extractorReader, ExtractorEnum extractorType,
 			ExtractorParam param, ClassifierEnum thresholdType) {
 		AbstractClassifier threshold = null;
 
@@ -319,19 +319,19 @@ public final class ExtractorUtils {
 		default:
 			break;
 		}
-		return registerThreshold(bufferedReader, extractorType, param,
+		return registerThreshold(extractorReader, extractorType, param,
 				threshold);
 	}
 
 	/**
 	 * 
-	 * @param bufferedReader
+	 * @param extractorReader
 	 * @param extractors
 	 * @param params
 	 * @param thresholdType
 	 */
 	public static List<IClassifier> registerThreshold(
-			IExtractorInputReader bufferedReader, ExtractorEnum[] extractors,
+			IExtractorInputReader extractorReader, ExtractorEnum[] extractors,
 			Map<String, ExtractorParam> params, ClassifierEnum thresholdType) {
 		List<IClassifier> classifiers = new ArrayList<IClassifier>();
 		for (ExtractorEnum extractor : extractors) {
@@ -340,7 +340,7 @@ public final class ExtractorUtils {
 				extractorParam = params.get(extractor.name());
 			}
 			IClassifier classifier = ExtractorUtils.registerThreshold(
-					bufferedReader, extractor, extractorParam, thresholdType);
+					extractorReader, extractor, extractorParam, thresholdType);
 			classifiers.add(classifier);
 		}
 		return classifiers;
@@ -348,14 +348,14 @@ public final class ExtractorUtils {
 
 	/**
 	 * 
-	 * @param bufferedReader
+	 * @param extractorReader
 	 * @param extractors
 	 * @param params
 	 */
-	public static void register(IExtractorInputReader bufferedReader,
+	public static void register(IExtractorInputReader extractorReader,
 			ExtractorEnum[] extractors, Map<String, ExtractorParam> params) {
 		for (ExtractorEnum extractor : extractors) {
-			ExtractorUtils.register(bufferedReader, extractor,
+			ExtractorUtils.register(extractorReader, extractor,
 					ExtractorParamUtils.getSafeParam(params, extractor.name()));
 		}
 	}
@@ -364,9 +364,9 @@ public final class ExtractorUtils {
 	 * 
 	 */
 	public static Set<IClassifier> filterOutClassifers(
-			IExtractorInputReader reader) {
+			IExtractorInputReader extractorReader) {
 		Set<IClassifier> classifiers = new HashSet<IClassifier>();
-		for (IExtractor extractor : reader.getExtractorRegister()) {
+		for (IExtractor extractor : extractorReader.getExtractorRegister()) {
 			if (extractor instanceof IClassifier)
 				classifiers.add((IClassifier) extractor);
 		}

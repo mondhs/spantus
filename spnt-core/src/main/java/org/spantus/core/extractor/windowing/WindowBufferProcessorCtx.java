@@ -1,9 +1,20 @@
-package org.spantus.extractor;
+package org.spantus.core.extractor.windowing;
+
+import java.io.Serializable;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.IExtractorConfig;
-
-public class WindowBufferProcessorCtx {
+/**
+ * 
+ * @author mondhs
+ * @since 0.3
+ *
+ */
+public class WindowBufferProcessorCtx implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 521205001891047971L;
 	private IExtractorConfig config;
 	private FrameValues buffer;
 	

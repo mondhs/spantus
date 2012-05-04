@@ -195,7 +195,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 	}
 
 	private int toCoordinateTime(int j, BigDecimal scalar) {
-		int x = (int) (j / (scalar.doubleValue() * values.getSampleRate()));
+		int x = (int) (j * 1000 / (scalar.doubleValue()  * values.getSampleRate()));
 		return x;
 	}
 
@@ -239,7 +239,7 @@ public class AreaChartInstance extends TimeSeriesFunctionInstance {
 	}
 	
 	public String getValueOn(BigDecimal x) {
-		int index = values.toIndex(x.doubleValue());
+		int index = values.toIndex(x.longValue());
 		if(index> values.size()-1){
 			index = values.size()-1;
 		}

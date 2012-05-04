@@ -42,7 +42,9 @@ import org.spantus.utils.ExtractorParamUtils;
  * 
  * @author Mindaugas Greibus
  * 
- * @since 0.0.1 Created Jun 3, 2009
+ * @since 0.0.1
+ *  
+ * Created Jun 3, 2009
  * 
  */
 public abstract class AndroidExtractorsFactory {

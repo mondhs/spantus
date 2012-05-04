@@ -59,5 +59,5 @@ public interface WorkExtractorReaderService extends ExtractorInputReaderService 
      * @param reader
      * @return
      */
-    public IGeneralExtractor findExtractorByName(String name, IExtractorInputReader reader);
+    public IGeneralExtractor<?> findExtractorByName(String name, IExtractorInputReader reader);
 }

@@ -140,7 +140,7 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 			}
 			switch (fieldEntry.getKey()) {
 			case dtwRadius:
-				textField.setValue(Integer.valueOf((config.getRadius())));
+				textField.setValue(Float.valueOf((config.getRadius())));
 				fieldEntry.getValue().setVisible(isAdvanced());
 				break;
 
@@ -223,7 +223,7 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 			switch (fieldEntry.getKey()) {
 			case dtwRadius:
 				Number radius = (Number)(field.getValue());
-				config.setRadius(radius.intValue());
+				config.setRadius(radius.floatValue());
 				break;
 			case dtwWindow:
 				JavaMLSearchWindow windowingEnum = getDtwWindowCbxModel().getSelectedObject();

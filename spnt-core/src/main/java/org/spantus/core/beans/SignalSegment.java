@@ -1,5 +1,6 @@
 package org.spantus.core.beans;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,8 +14,12 @@ import org.spantus.core.marker.Marker;
 import org.spantus.exception.ProcessingException;
 
 @XmlRootElement(name = "SignalSegment")
-public class SignalSegment {
+public class SignalSegment implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8552336631645110494L;
 	private Marker marker;
 	private Map<String, FrameValuesHolder> featureFrameValuesMap = new HashMap<String, FrameValuesHolder>();
 	private Map<String, FrameVectorValuesHolder> featureFrameVectorValuesMap = new HashMap<String, FrameVectorValuesHolder>();
@@ -110,6 +115,11 @@ public class SignalSegment {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "SignalSegment [marker=" + marker + ", id=" + id + "]";
 	}
 
 }

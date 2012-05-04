@@ -42,8 +42,9 @@ public class FrameVectorValues extends LinkedList<List<Double>> implements
 	private static final long serialVersionUID = 1L;
 	public static final int DEFAULT_FRAME_BUFFER_SIZE = 65536;
 	int frameBufferSize;
-	Double sampleRate = null;
-
+	private Double sampleRate = null;
+	private Double milsSamplePeriod = 1D; 
+	
 	public FrameVectorValues() {
 		setFrameBufferSize(DEFAULT_FRAME_BUFFER_SIZE);
 	}
@@ -61,6 +62,10 @@ public class FrameVectorValues extends LinkedList<List<Double>> implements
 			}
 		}
 		addAll(collection);
+	}
+
+	public FrameVectorValues(Double sampleRate) {
+		setSampleRate(sampleRate);
 	}
 
 	public int getFrameBufferSize() {
@@ -86,22 +91,21 @@ public class FrameVectorValues extends LinkedList<List<Double>> implements
 	}
 
 	public boolean add(List<Double> floats) {
-		// for (int i = 0; i < floats.length; i++) {
-		// max = Math.max(floats[i], max);
-		// min = Math.min(floats[i], min);
-		// }
+		FrameValues values = new FrameValues(floats);
+		
 		if(floats instanceof FrameValues){
 			FrameValues fv = (FrameValues)floats;
 			updateMinMax(fv.getMinValue());
 			updateMinMax(fv.getMaxValue());
+			values.setSampleRate(fv.getSampleRate());
+			values.setFrameIndex(fv.getFrameIndex());
 		}else{
 			for (Double double1 : floats) {
 				updateMinMax(double1);
 			}
 		}
-		FrameValues values = new FrameValues();
-		values.addAll(floats);
-		values.setSampleRate(1D);
+		
+		
 		return super.add(values);
 	}
 
@@ -131,6 +135,7 @@ public class FrameVectorValues extends LinkedList<List<Double>> implements
 		return fv3;
 	}
 
+	@SuppressWarnings("unchecked")
 	public FrameVectorValues subList(int fromIndex, int toIndex) {
 		List<List<Double>> lst = super.subList(fromIndex, toIndex);
 		FrameVectorValues fv = new FrameVectorValues(lst);
@@ -154,8 +159,8 @@ public class FrameVectorValues extends LinkedList<List<Double>> implements
 		}
 	}
 
-	public Double getTime() {
-		return (double) (size()) / sampleRate;
+	public Long getTime() {
+		return indextoMils(size());
 	}
 
 	public Double getSampleRate() {
@@ -163,15 +168,25 @@ public class FrameVectorValues extends LinkedList<List<Double>> implements
 	}
 
 	public void setSampleRate(Double sampleRate) {
+		milsSamplePeriod = 1000/sampleRate;
 		this.sampleRate = sampleRate;
 	}
 
-	public Double toTime(int i) {
-		return (double) i / (sampleRate);
+	public Long toTime(int i) {
+		return indextoMils(i);
+	}
+	public Long toTime(long i) {
+		return indextoMils(i);
 	}
 
-	public int toIndex(Double f) {
-		return (int) (f * sampleRate);
+	public int toIndex(Long time){
+		Double fTime = time.doubleValue();
+		int aTime= (int)(fTime * sampleRate/1000)-1;
+		return Math.max(aTime, 0);
+	}
+	
+	public Long indextoMils(long i){
+		return (long)(milsSamplePeriod * i);
 	}
 
 	public int getDimention() {

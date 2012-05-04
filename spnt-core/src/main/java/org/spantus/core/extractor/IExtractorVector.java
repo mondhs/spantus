@@ -33,8 +33,7 @@ import org.spantus.core.FrameVectorValues;
  * Created 2008.04.11
  *
  */
-public interface IExtractorVector extends IGeneralExtractor{
-	public FrameVectorValues getOutputValues();
-	public FrameVectorValues calculate(Long sample, FrameValues frame);
-	public FrameVectorValues calculateWindow(FrameValues window);
+public interface IExtractorVector extends IGeneralExtractor<FrameVectorValues>{
+//	public FrameVectorValues calculate(Long sample, FrameValues frame);
+//	public FrameVectorValues calculateWindow(FrameValues window);
 }

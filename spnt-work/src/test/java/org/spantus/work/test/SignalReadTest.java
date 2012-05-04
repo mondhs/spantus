@@ -35,7 +35,7 @@ public class SignalReadTest {
 
 		// when
 		IExtractorInputReader extractorReader = ExtractorsFactory
-				.createReader(audioReader.getAudioFormat(urlFile));
+				.createReader(audioReader.findAudioFormat(urlFile));
 
 		ExtractorResultBuffer signal = new ExtractorResultBuffer(
 				new SignalExtractor());

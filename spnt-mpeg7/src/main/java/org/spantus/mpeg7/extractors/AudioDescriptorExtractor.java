@@ -14,7 +14,7 @@ public class AudioDescriptorExtractor implements IExtractor {
 	private Mpeg7ExtractorConfig config;
 	
 	
-	public FrameValues calculate(Long sample, FrameValues values) {
+	public FrameValues calculateWindow(Long sample, FrameValues values) {
 		return this.values;
 	}
 

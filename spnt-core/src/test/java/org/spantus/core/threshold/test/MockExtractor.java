@@ -9,7 +9,7 @@ public class MockExtractor implements IExtractor {
 	private IExtractorConfig config;
 	private Double extractorSampleRate;
 	
-	public FrameValues calculate(Long sample,FrameValues values) {
+	public FrameValues calculateWindow(Long sample,FrameValues values) {
 		return calculateWindow(values);
 	}
 
