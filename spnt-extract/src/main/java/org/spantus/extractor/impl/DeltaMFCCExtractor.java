@@ -34,8 +34,8 @@ public class DeltaMFCCExtractor extends AbstractSpectralVectorExtractor{
 		values.setSampleRate(mfccValues.getSampleRate());
 
 		for (List<Double> currentList : mfccValues) {
-			FrameValues cachedPrevious = new FrameValues(currentList);
-			FrameValues calcCurrentList = new FrameValues(currentList);
+			FrameValues cachedPrevious = new FrameValues(currentList, 1D);
+			FrameValues calcCurrentList = new FrameValues(currentList, 1D);
 			if(previousValues == null){
 				previousValues =cachedPrevious;
 			}

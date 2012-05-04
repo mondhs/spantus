@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.spantus.external</groupId>
 	<artifactId>spnt-wordspot</artifactId>
-	<name>Spantus - skype module</name>
+	<name>Spantus - Word Spotting module</name>
 
 	<dependencies>
 		<dependency>

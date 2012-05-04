@@ -27,8 +27,22 @@
 		<module>spnt-work</module>
 		<module>externals/recognition/spnt-dtw-recognition</module>
 		<module>spnt-work-ui</module>
-	</modules>
-    
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>integeration-modules</id>
+            <activation>
+                <property>
+                    <name>integeration-modules</name>
+                </property>
+            </activation>
+            <modules>
+               <module>externals/integration/spnt-wordspot</module>
+            </modules>
+        </profile>
+    </profiles>    
+
     <dependencies>
 		<dependency>
 			<groupId>junit</groupId>

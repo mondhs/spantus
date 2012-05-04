@@ -85,7 +85,7 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 			updateMinMax(fv.getMaxValue());
 		}
 		if(c instanceof FrameValues){
-			setSampleRate(((FrameValues)c).getSampleRate());
+//			setSampleRate(((FrameValues)c).getSampleRate());
 		}
 		return super.addAll(c);
 	}
