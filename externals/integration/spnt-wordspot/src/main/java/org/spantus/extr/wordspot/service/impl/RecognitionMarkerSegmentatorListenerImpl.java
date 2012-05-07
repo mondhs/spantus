@@ -17,7 +17,13 @@ import org.spantus.logger.Logger;
 import org.spantus.segment.online.MarkerSegmentatorListenerImpl;
 import org.spantus.utils.Assert;
 import org.spantus.utils.StringUtils;
-
+/**
+ * 
+ * @author Mindaugas Greibus
+ * @since 0.3
+ * Created: May 7, 2012
+ *
+ */
 public class RecognitionMarkerSegmentatorListenerImpl extends
 		MarkerSegmentatorListenerImpl {
 	
@@ -30,7 +36,7 @@ public class RecognitionMarkerSegmentatorListenerImpl extends
 	private String repositoryPath = null;
 	
 	@Override
-	protected void processEndedSegment(SignalSegment signalSegment) {
+	protected boolean processEndedSegment(SignalSegment signalSegment) {
 
 		Map<String, FrameVectorValuesHolder> vectorMap = signalSegment.getFeatureFrameVectorValuesMap();
 		FrameVectorValuesHolder signalWindows = vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS);
@@ -42,17 +48,29 @@ public class RecognitionMarkerSegmentatorListenerImpl extends
 			mffcValues.addAll(mfcc.calculateWindow((FrameValues) signalWindow));
 		}
 		vectorMap.put(ExtractorEnum.MFCC_EXTRACTOR.name(), new FrameVectorValuesHolder(mffcValues));
+		
+		String name = match(signalSegment);
+	
+		
+		signalSegment.setName(name);
+		signalSegment.getMarker().setLabel(name);
+		
+		LOG.debug("[processEndedSegment] spotted: {0} in time [{1}:{2}] ", signalSegment.getName(), signalSegment.getMarker().getStart(), signalSegment.getMarker().getEnd() );
+		return !"-".equals(name);
+	}
+	/**
+	 * 
+	 * @param signalSegment
+	 * @return
+	 */
+	protected String match(SignalSegment signalSegment) {
 		RecognitionResult result = getCorpusService().matchByCorpusEntry(signalSegment);
+		
 		if(result == null){
 			throw new IllegalArgumentException("No recognition information in corpus is found");
 		}
 		String name = result.getInfo().getName();
-		
-		signalSegment.setName(name);
-		signalSegment.getMarker().setLabel(signalSegment.getName());
-		
-		LOG.debug("[processEndedSegment] spotted: {0} in time [{1}:{2}] ", signalSegment.getName(), signalSegment.getMarker().getStart(), signalSegment.getMarker().getEnd() );
-		
+		return name;
 	}
 
 	public IExtractorConfig getConfig() {
@@ -65,7 +83,7 @@ public class RecognitionMarkerSegmentatorListenerImpl extends
 
 	public CorpusService getCorpusService() {
 		if(corpusService == null){
-			Assert.isTrue(StringUtils.hasText(repositoryPath));
+			Assert.isTrue(StringUtils.hasText(repositoryPath), "Repository path not set");
 			corpusService = RecognitionServiceFactory.createCorpusService(repositoryPath);
 		}
 		return corpusService;

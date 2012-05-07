@@ -57,6 +57,7 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 	public FrameValues getThresholdValues() {
 		if(thresholdValues == null){
 			thresholdValues = new FrameValues();
+			thresholdValues.setSampleRate(getExtractorSampleRate());
 		}
 		return thresholdValues;
 	}

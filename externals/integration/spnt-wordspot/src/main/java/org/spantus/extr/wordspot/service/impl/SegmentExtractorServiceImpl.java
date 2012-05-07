@@ -37,7 +37,13 @@ import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.io.WorkAudioFactory;
 import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
-
+/**
+ * 
+ * @author Mindaugas Greibus
+ * @since 0.3
+ * Created: May 7, 2012
+ *
+ */
 public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 
 	private static final Logger LOG = Logger
@@ -101,11 +107,18 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	@Override
 	public Collection<SignalSegment> extractSegmentsOnline(URL urlFile) {
 		RecognitionMarkerSegmentatorListenerImpl listener = new RecognitionMarkerSegmentatorListenerImpl();
-		listener.setRepositoryPath(getRepositoryPath());
-		readSignal(urlFile, getExtractors(), listener);
+		listenSegments(urlFile, listener);
 		Collection<SignalSegment> segments = listener.getSignalSegments();
 		LOG.debug("[extractSegments]Found syllables {0}", segments);
 		return segments;
+	}
+	/**
+	 * 
+	 */
+	@Override
+	public void listenSegments(URL urlFile, RecognitionMarkerSegmentatorListenerImpl listener) {
+		listener.setRepositoryPath(getRepositoryPath());
+		readSignal(urlFile, getExtractors(), listener);
 	}
 
 	/**
@@ -253,5 +266,7 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	public void setRepositoryPath(String repositoryPath) {
 		this.repositoryPath = repositoryPath;
 	}
+
+
 
 }

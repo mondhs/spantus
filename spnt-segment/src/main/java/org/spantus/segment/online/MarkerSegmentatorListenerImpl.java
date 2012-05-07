@@ -14,7 +14,13 @@ import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
-
+/**
+ * 
+ * @author Mindaugas Greibus
+ * @since 0.3
+ * Created: May 7, 2012
+ *
+ */
 public class MarkerSegmentatorListenerImpl extends
 		MultipleSegmentatorListenerOnline {
 
@@ -56,8 +62,10 @@ public class MarkerSegmentatorListenerImpl extends
 		if(getCurrentSegment() != null && getCurrentMarkerMap().size()<=getClassifiersThreshold()){
 			finazlizeSegment(getCurrentSegment(), event);
 //			LOG.debug("[onSegmentEnded] --- {0}: {1}", event, getCurrentSegment());
-			signalSegments.add(getCurrentSegment());
-			processEndedSegment(getCurrentSegment());
+			
+			if(processEndedSegment(getCurrentSegment())){
+				signalSegments.add(getCurrentSegment());
+			}
 			setCurrentSegment(null);
 			
 		}
@@ -65,8 +73,9 @@ public class MarkerSegmentatorListenerImpl extends
 		
 	}
 	
-	protected void processEndedSegment(SignalSegment signalSegment) {
+	protected boolean processEndedSegment(SignalSegment signalSegment) {
 		//do nohting
+		return true;
 	}
 
 

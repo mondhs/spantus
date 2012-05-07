@@ -2,7 +2,6 @@ package org.spantus.extr.wordspot.service.impl.test;
 
 //import static org.junit.Assert.fail;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -11,43 +10,31 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.beans.FrameValuesHolder;
 import org.spantus.core.beans.FrameVectorValuesHolder;
 import org.spantus.core.beans.SignalSegment;
-import org.spantus.extr.wordspot.service.impl.SegmentExtractorServiceImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.segment.online.MarkerSegmentatorListenerImpl;
 /**
  * 
- * @author mondhs
+ * @author Mindaugas Greibus
  * @since 0.3
+ * Created: May 7, 2012
  *
  */
-public class SegmentExtractorServiceImplTest {
+public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTest{
 
-	private SegmentExtractorServiceImpl segmentExtractorService;
-	private File wavFile = new File("../../../data/text1.8000.wav");
-	private File repositoryPath = new File("../../../data/corpus");
+
 	
-	@Before
-	public void onSetup(){
 	
-		Assert.assertTrue("repositoryPath exists", repositoryPath.exists());
-		Assert.assertTrue("repositoryPath is directory", repositoryPath.isDirectory());
-		Assert.assertTrue("wavFile exists", wavFile.exists());
-		segmentExtractorService = new SegmentExtractorServiceImpl();
-		segmentExtractorService.setRepositoryPath(repositoryPath.getAbsolutePath());
-		segmentExtractorService.updateParams();
-	}
 	
 	@Test
 	public void testExtractSegmentOnline() throws MalformedURLException {
 		//given
-		URL url = wavFile.toURI().toURL() ;
+		URL url = getWavFile().toURI().toURL() ;
 		//when
-		Collection<SignalSegment> resultOnline = segmentExtractorService.extractSegmentsOnline(url);
+		Collection<SignalSegment> resultOnline = getSegmentExtractorService().extractSegmentsOnline(url);
 		Iterator<SignalSegment> iterator = resultOnline.iterator();
 		SignalSegment firstSegment = iterator.next();
 		SignalSegment secondSegment = iterator.next();
@@ -69,12 +56,12 @@ public class SegmentExtractorServiceImplTest {
 	@Test
 	public void testExtractSegmentOffline() throws MalformedURLException {
 		//given
-		URL url = wavFile.toURI().toURL() ;
+		URL url = getWavFile().toURI().toURL() ;
 		//when
-		Collection<SignalSegment> result = segmentExtractorService.extractSegmentsOffline(url);
+		Collection<SignalSegment> result = getSegmentExtractorService().extractSegmentsOffline(url);
 		SignalSegment firstSegment = result.iterator().next();
 		Map<String, FrameValuesHolder> valueMap = firstSegment.getFeatureFrameValuesMap();
-		Map<String, FrameVectorValuesHolder> vectorMap = firstSegment.getFeatureFrameVectorValuesMap();
+//		Map<String, FrameVectorValuesHolder> vectorMap = firstSegment.getFeatureFrameVectorValuesMap();
 		//then
 		Assert.assertEquals("Total segments", 4, result.size());
 		Assert.assertNotNull("First segment",firstSegment.getMarker());

@@ -101,6 +101,9 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
 
 	public void pushValues(Long sample) {
 		pushFrameOfWindows(sample, values);
+		for (IGeneralExtractor<?> element : generalExtractor) {
+			element.flush();
+		}
 	}
 
 	

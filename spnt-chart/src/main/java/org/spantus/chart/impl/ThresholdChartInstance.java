@@ -100,7 +100,12 @@ public class ThresholdChartInstance extends TimeSeriesFunctionInstance {
 				xScalar.doubleValue(), yScalar.doubleValue()
 				);
 		polylygonY = new Polygon(polylinesX, polylinesY, polylinesX.length);
-		polylygonYt = new Polygon(polylinesX, polylinesYt, polylinesX.length);
+		if(polylygonYt != null){
+			polylygonYt = new Polygon(polylinesX, polylinesYt, polylinesX.length);
+		}else{
+			polylygonYt = null;
+		}
+	
 
 //		polylinesYstate = toCoordinatesSates(getCtx().getMarkSet(), yScalar
 //				.floatValue());
