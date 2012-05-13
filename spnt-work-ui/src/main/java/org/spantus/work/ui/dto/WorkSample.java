@@ -17,7 +17,7 @@ public class WorkSample {
 	private SignalFormat signalFormat;
 	
 	
-	final MarkerSetHolder markerSetHolder = new MarkerSetHolder();
+	private MarkerSetHolder markerSetHolder = new MarkerSetHolder();
 	
 	public String getTitle() {
 		return title;
@@ -63,8 +63,12 @@ public class WorkSample {
 	}
 
 	public void setMarkerSetHolder(MarkerSetHolder markerSetHolder) {
-		this.markerSetHolder.getMarkerSets().clear();
-		this.markerSetHolder.getMarkerSets().putAll(markerSetHolder.getMarkerSets());
+		if(this.markerSetHolder == null){
+			this.markerSetHolder = markerSetHolder;
+		}else{
+			this.markerSetHolder.getMarkerSets().clear();
+			this.markerSetHolder.getMarkerSets().putAll(markerSetHolder.getMarkerSets());
+		}
 	}
 
 	public URL getNoiseFile() {

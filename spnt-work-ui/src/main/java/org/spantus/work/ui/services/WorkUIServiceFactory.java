@@ -8,6 +8,7 @@ import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.io.ProcessedFrameLinstener;
+import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.utils.Assert;
 import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
@@ -36,6 +37,9 @@ public abstract class WorkUIServiceFactory {
 	public static IExtractorInputReader read(SpantusWorkInfo ctx, ProcessedFrameLinstener processedFrameLinstener){
 		setThreshold(ctx.getProject(), ctx.getProject().getFeatureReader().getWorkConfig());
 		WorkSample workSample = ctx.getProject().getSample();
+		if(workSample.getMarkerSetHolder() == null){
+			workSample.setMarkerSetHolder(new MarkerSetHolder());
+		}
 		ReaderService readerService = createReaderService();
 		SignalFormat sfSignal = readerService.getSignalFormat(workSample.getCurrentFile());
 		//check if noise and signal frequencies are the same

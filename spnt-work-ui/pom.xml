@@ -1,167 +1,225 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-   <parent>
-      <artifactId>spnt-root-pom</artifactId>
-      <groupId>org.spantus</groupId>
-      <version>0.3-SNAPSHOT</version>
-   </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>spnt-root-pom</artifactId>
+		<groupId>org.spantus</groupId>
+		<version>0.3-SNAPSHOT</version>
+	</parent>
 
-   <artifactId>spnt-work-ui</artifactId>
-   <name>Spantus - Work UI module</name>
+	<artifactId>spnt-work-ui</artifactId>
+	<name>Spantus - Work UI module</name>
 
-   <dependencies>
-      <dependency>
-         <groupId>org.spantus</groupId>
-         <artifactId>spnt-work</artifactId>
-      </dependency>
-      <dependency>
-      	<groupId>org.spantus.externals.recognition</groupId>
-      	<artifactId>spnt-dtw-recognition</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>com.jgoodies</groupId>
-         <artifactId>forms</artifactId>
-         <version>1.2.1</version>
-      </dependency>
-      <dependency>
-         <groupId>log4j</groupId>
-         <artifactId>log4j</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.mail</groupId>
-               <artifactId>mail</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>javax.jms</groupId>
-               <artifactId>jms</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>com.sun.jdmk</groupId>
-               <artifactId>jmxtools</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>com.sun.jmx</groupId>
-               <artifactId>jmxri</artifactId>
-            </exclusion>
+	<dependencies>
+		<dependency>
+			<groupId>org.spantus</groupId>
+			<artifactId>spnt-work</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.spantus.externals.recognition</groupId>
+			<artifactId>spnt-dtw-recognition</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>forms</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.mail</groupId>
+					<artifactId>mail</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.jms</groupId>
+					<artifactId>jms</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
 
-         </exclusions>
-      </dependency>
-   </dependencies>
-   <build>
-      <plugins>
-         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>native2ascii-maven-plugin</artifactId>
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>native2ascii</goal>
-                  </goals>
-                  <configuration>
-                     <encoding>UTF8</encoding>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins
+			</exclusions>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>native2ascii-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>native2ascii</goal>
+						</goals>
+						<configuration>
+							<encoding>UTF8</encoding>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins
             </groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <configuration>
-               <archive>
-                  <manifest>
-                     <mainClass>org.spantus.work.ui.SpantusWorkMain
-                     </mainClass>
-                     <packageName>org.spantus.work.ui.container
-                     </packageName>
-                  </manifest>
-                  <manifestEntries>
-                     <mode>development</mode>
-                     <url>${project.url}</url>
-                     <!--
-                        <SplashScreen-Image>org/spantus/work/ui/img/logo.gif</SplashScreen-Image>
-                     -->
-                  </manifestEntries>
-               </archive>
-            </configuration>
-         </plugin>
-      </plugins>
-      <pluginManagement>
-      	<plugins>
-      		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-      		<plugin>
-      			<groupId>org.eclipse.m2e</groupId>
-      			<artifactId>lifecycle-mapping</artifactId>
-      			<version>1.0.0</version>
-      			<configuration>
-      				<lifecycleMappingMetadata>
-      					<pluginExecutions>
-      						<pluginExecution>
-      							<pluginExecutionFilter>
-      								<groupId>
-      									org.codehaus.mojo
-      								</groupId>
-      								<artifactId>
-      									native2ascii-maven-plugin
-      								</artifactId>
-      								<versionRange>
-      									[1.0-alpha-1,)
-      								</versionRange>
-      								<goals>
-      									<goal>native2ascii</goal>
-      								</goals>
-      							</pluginExecutionFilter>
-      							<action>
-      								<ignore></ignore>
-      							</action>
-      						</pluginExecution>
-      					</pluginExecutions>
-      				</lifecycleMappingMetadata>
-      			</configuration>
-      		</plugin>
-      	</plugins>
-      </pluginManagement>
-   </build>
-   <profiles>
-      <profile>
-         <id>copyRuntime</id>
-         <activation>
-            <property>
-               <name>copy-dependencies</name>
-            </property>
-         </activation>
-         <build>
-            <plugins>
-               <plugin>
-                  <groupId>org.apache.maven.plugins
-                  </groupId>
-                  <artifactId>maven-dependency-plugin
-                  </artifactId>
-                  <executions>
-                     <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                           <goal>copy-dependencies
-                           </goal>
-                        </goals>
-                        <configuration>
-                           <outputDirectory>
-                              ${project.build.directory}/lib
-                           </outputDirectory>
-                           <overWriteReleases>false
-                           </overWriteReleases>
-                           <overWriteSnapshots>false
-                           </overWriteSnapshots>
-                           <overWriteIfNewer>true</overWriteIfNewer>
-                           <excludeGroupIds>junit</excludeGroupIds>
-                        </configuration>
-                     </execution>
-                  </executions>
-               </plugin>
-            </plugins>
-         </build>
-      </profile>
-   </profiles>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>org.spantus.work.ui.SpantusWorkMain
+							</mainClass>
+							<packageName>org.spantus.work.ui.container
+							</packageName>
+						</manifest>
+						<manifestEntries>
+							<mode>development</mode>
+							<url>${project.url}</url>
+							<!-- <SplashScreen-Image>org/spantus/work/ui/img/logo.gif</SplashScreen-Image> -->
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											native2ascii-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0-alpha-1,)
+										</versionRange>
+										<goals>
+											<goal>native2ascii</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<profiles>
+		<profile>
+			<id>copyRuntime</id>
+			<activation>
+				<property>
+					<name>copy-dependencies</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<!-- <plugin> <groupId>org.apache.maven.plugins </groupId> <artifactId>maven-dependency-plugin 
+						</artifactId> <executions> <execution> <id>copy-dependencies</id> <phase>package</phase> 
+						<goals> <goal>copy-dependencies </goal> </goals> <configuration> <outputDirectory> 
+						${project.build.directory}/lib </outputDirectory> <overWriteReleases>false 
+						</overWriteReleases> <overWriteSnapshots>false </overWriteSnapshots> <overWriteIfNewer>true</overWriteIfNewer> 
+						<excludeGroupIds>junit</excludeGroupIds> </configuration> </execution> </executions> 
+						</plugin> -->
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>base</id>
+								<phase>install</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+								<configuration>
+									<descriptors>
+										<descriptor>src/assembly/zip-spnt.xml</descriptor>
+									</descriptors>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>groovy-maven-plugin</artifactId>
+						<version>1.4</version>
+						<executions>
+							<execution>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<source>
+        <![CDATA[
+        println("==== Creating version.txt ====");
+
+        File confDir = new File("target/classes");
+        if(confDir.exists() && !confDir.isDirectory()) {
+            println("Conf dir is not a directory, wont create version.txt!");
+            return;
+        }
+        if(!confDir.exists()) {
+            confDir.mkdir();
+        }
+        File versionFile = new File(confDir,"version.properties");
+        if(versionFile.exists() && versionFile.isDirectory()) {
+            println("Version file exists and is directory! Wont overwrite");
+            return;
+        }
+ 
+        println("Creating Version File");
+        BufferedWriter writer = new BufferedWriter(new FileWriter(versionFile));
+
+        writer.write("groupId = ${project.groupId}\n");
+        writer.write("artifactId = ${project.artifactId}\n");
+        writer.write("version = ${project.version}\n");
+        writer.write("timestamp = ${maven.build.timestamp}\n");
+
+        String buildTag = "";
+        String buildNumber = "";
+        String buildId = "";
+        try {
+            buildTag = "${BUILD_TAG}";
+            buildNumber = "${BUILD_NUMBER}";
+            buildId = "${BUILD_ID}";
+
+            writer.write("BUILD_TAG = " + buildTag + "\n");
+            writer.write("BUILD_NUMBER = " + buildNumber + "\n");
+            writer.write("BUILD_ID = " + buildId + "\n");
+
+        } catch (Exception e) {
+            println("============= Could not find BUILD_TAG probably this is not a Jenkins/Hudson build ===========");
+        }
+
+        writer.close();
+        ]]>
+									</source>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

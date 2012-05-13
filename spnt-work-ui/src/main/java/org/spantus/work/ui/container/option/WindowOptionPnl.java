@@ -603,7 +603,7 @@ public class WindowOptionPnl extends AbstractOptionPanel implements ReloadableCo
 			labelControlEntry.setVisible(ClassifierEnum.online.name().equals(value));
 			break;
 		case thresholdCoef:
-			labelControlEntry.setVisible(!ClassifierEnum.rules.name().equals(value));
+			labelControlEntry.setVisible(!ClassifierEnum.rulesOffline.name().equals(value));
 			break;
 		case segmentationMinSpace:
 //			boolean isAuto = jTextFields.get(optionsLabels.segmentationServiceType).isVisible();

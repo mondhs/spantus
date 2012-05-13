@@ -24,6 +24,7 @@ import org.spantus.work.ui.dto.SpantusWorkInfo;
 
 public class SpantusUIServiceImpl {
 	Logger log = Logger.getLogger(SpantusUIServiceImpl.class);
+
 	/**
 	 * 
 	 * @param info
@@ -39,13 +40,13 @@ public class SpantusUIServiceImpl {
 					UIManager.getLookAndFeel().getClass().getName());
 		} else {
 			if (isEmpty(env.getMainWindowDimension())) {
-				env.setMainWindowDimension(SwingUtils.currentWindowSize(
-						.75, .75));
+				env.setMainWindowDimension(SwingUtils.currentWindowSize(.75,
+						.75));
 				env.setMainWindowState(JFrame.MAXIMIZED_BOTH);
 			}
 			if (env.getMainWindowState() == JFrame.MAXIMIZED_BOTH) {
-				env.setMainWindowDimension(SwingUtils.currentWindowSize(
-						.75, .75));
+				env.setMainWindowDimension(SwingUtils.currentWindowSize(.75,
+						.75));
 			}
 			frame.setSize(env.getMainWindowDimension().width,
 					env.getMainWindowDimension().height);
@@ -77,56 +78,61 @@ public class SpantusUIServiceImpl {
 		if (info.getEnv().getAutoSegmentation() == null) {
 			info.getEnv().setAutoSegmentation(Boolean.TRUE);
 		}
-                if (info.getEnv().getAutoRecognition() == null) {
+		if (info.getEnv().getAutoRecognition() == null) {
 			info.getEnv().setAutoSegmentation(Boolean.FALSE);
 		}
 		if (info.getEnv().getVectorChartColorTypes() == null) {
-			info.getEnv().setVectorChartColorTypes(VectorSeriesColorEnum.blackWhite.name());
+			info.getEnv().setVectorChartColorTypes(
+					VectorSeriesColorEnum.blackWhite.name());
 		}
 		if (info.getEnv().getAdvancedMode() == null) {
 			info.getEnv().setAdvancedMode(Boolean.FALSE);
 		}
-//		if (info.getEnv().getSpantusVersion() == null) {
-			info.getEnv().setSpantusVersion(getVersion());
-//		}
+		// if (info.getEnv().getSpantusVersion() == null) {
+		info.getEnv().setSpantusVersion(getVersion());
+		// }
 
 		Locale.setDefault(info.getLocale());
 
 	}
-	
-	
-	
-	protected String getVersion(){
-		String version = "N/A"; 	
-		log.error("version not set. trying read from eclipse");
+
+	protected String getVersion() {
+		String version = null;
+		if (version == null) {
+			log.error("version not set. trying read from jar");
 			try {
 				Properties prop = new Properties();
-				InputStream is = new FileInputStream(new File("./target/maven-archiver/pom.properties"));
+				InputStream is = this
+						.getClass()
+						.getClassLoader()
+						.getResourceAsStream(
+								"META-INF/maven/org.spantus/spnt-work-ui/pom.properties");
 				prop.load(is);
 				version = prop.getProperty("version");
 			} catch (IOException e) {
-				log.debug("version for eclipse not found",e);
-			}catch (NullPointerException e) {
-				log.debug("version for eclipse not found",e);
+				log.debug("version for jad not found", e);
+			} catch (NullPointerException e) {
+				log.debug("version for jar not found", e);
 			}
-			if(version == null){
-				log.error("version not set. trying read from jar");
-				try {
-					Properties prop = new Properties();
-					InputStream is = this.getClass().getClassLoader().getResourceAsStream("META-INF/maven/org.spantus/spnt-work-ui/pom.properties");
-					prop.load(is);
-					version = prop.getProperty("version");
-				} catch (IOException e) {
-					log.debug("version for jad not found",e);
-				}catch (NullPointerException e) {
-					log.debug("version for jar not found",e);
-				}
-
+		}
+		if (version == null) {
+			log.error("version not set. trying read from eclipse");
+			try {
+				Properties prop = new Properties();
+				InputStream is = new FileInputStream(new File(
+						"./target/maven-archiver/pom.properties"));
+				prop.load(is);
+				version = prop.getProperty("version");
+			} catch (IOException e) {
+				log.debug("version for eclipse not found", e);
+			} catch (NullPointerException e) {
+				log.debug("version for eclipse not found", e);
 			}
-			if(version == null){
-				log.error("version not set. trying read from properties");
-//				version = getMessage("spantus.work.ui.version");
-			}
+		}
+		if (version == null) {
+			log.error("version not set. trying read from properties");
+			version = "N/A";
+		}
 
 		return version;
 	}
@@ -143,7 +149,7 @@ public class SpantusUIServiceImpl {
 		info.getEnv().setMainWindowDimension(frame.getSize());
 		info.getEnv().setLocation(frame.getLocation());
 		info.getEnv().setMainWindowState(frame.getExtendedState());
-		
+
 	}
 
 	/**

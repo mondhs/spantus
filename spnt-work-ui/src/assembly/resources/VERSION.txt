@@ -1,0 +1,26 @@
+spantus-tool-0.2
+[bugs]
+ 2953690 	chart does not highlight segments of the each feature
+
+[features]
+ 2776363 	Implement recognition module
+ 2870536 	Create info panel to show information about current signal
+ 2891897 	Improve segmentation algortihm based on extremes
+ 2963608 	Refactor exisiting UI event logic
+ 2965140 	MP3 file support
+ 2985555 	Append noise signal 
+
+spantus-tool-0.0.1.2
+[bugs]
+ 2688472 Segment creation problem
+[features]
+ 2688474  	 [SegmentationUI]Improve autosegmentation
+ 2688478  	 [SegmentationUI]Add posibility to load signal form mic 
+ 2688485  	 [SegmentationUI]Change automatic segment description
+ 2747341  	 Add drag&drop support for wav file
+ 2747344  	 Add user guide window as help
+
+
+spantus-tool-0.0.1
+First release
+

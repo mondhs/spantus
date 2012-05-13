@@ -37,6 +37,7 @@ import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.core.beans.I18n;
+import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 import org.spantus.work.ui.dto.RecognitionConfig;
 import org.spantus.work.ui.i18n.I18nFactory;
@@ -152,6 +153,10 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
                 if(!StringUtils.hasText(recognition.getRepositoryPath())){
                      recognition.setRepositoryPath("./corpus");
                 }
+                if(info.getProject().getSample().getMarkerSetHolder() == null){
+                	info.getProject().getSample().setMarkerSetHolder(new MarkerSetHolder());
+                }
+                
 
 	}
 	
