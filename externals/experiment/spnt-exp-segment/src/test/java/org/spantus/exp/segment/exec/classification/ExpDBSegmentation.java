@@ -85,7 +85,7 @@ public class ExpDBSegmentation extends ExpSegmentation {
         List<ExpCriteria> criterias = null;
 
         ClassifierEnum[] enums = new ClassifierEnum[]{ClassifierEnum.dynamic,
-            ClassifierEnum.offline, ClassifierEnum.rules, //				ClassifierEnum.rulesOnline
+            ClassifierEnum.offline, ClassifierEnum.rulesOffline, //				ClassifierEnum.rulesOnline
         };
         String[] noizes = new String[]{
             ExpSegmentationUtil.NOIZEUS_01,

@@ -121,4 +121,12 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener {
 		this.signalSegments = signalSegments;
 	}
 
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
+	}
+
 }

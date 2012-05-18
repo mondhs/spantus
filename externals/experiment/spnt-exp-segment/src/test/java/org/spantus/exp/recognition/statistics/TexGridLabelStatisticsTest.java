@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.exception.ProcessingException;
 import org.spantus.exp.recognition.AbstractSegmentDirTest;
 import org.spantus.exp.recognition.filefilter.WavFileNameFilter;
 import org.spantus.logger.Logger;
@@ -92,8 +93,7 @@ public class TexGridLabelStatisticsTest extends AbstractSegmentDirTest {
 			Files.write(LabelStatistics.getHeader()+"\n"+Joiner.on("\n").join(counted.values()), 
 			new File("./target/test"+getClass().getSimpleName()+".csv"), Charsets.ISO_8859_1);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ProcessingException(e);
 		}
 		
 		

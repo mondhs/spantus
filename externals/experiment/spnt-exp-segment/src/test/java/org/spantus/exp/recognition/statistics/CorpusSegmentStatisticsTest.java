@@ -11,7 +11,6 @@ import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.beans.SignalSegment;
-import org.spantus.core.marker.Marker;
 import org.spantus.exp.recognition.AbstractSegmentDirTest;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
@@ -20,22 +19,20 @@ import org.spantus.math.VectorUtils;
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.TreeMultimap;
 import com.google.common.io.Files;
 
 public class CorpusSegmentStatisticsTest extends AbstractSegmentDirTest {
-	private static final Logger log = Logger
+	private static final Logger LOG = Logger
 			.getLogger(CorpusSegmentStatisticsTest.class);
 
 	@Test
 	public void testCalculateStatistics() {
-		File wavDir = new File(getExpConfig().getDirLearn(), "WAV/AK1/");
-		File markerDir = new File(getExpConfig().getDirLearn(), "GRID/AK1/");
-		TreeMultimap<String, String> multimap = TreeMultimap.create();
-		HashMultimap<String, Marker> markerMultimap = HashMultimap.create();
+//		File wavDir = new File(getExpConfig().getDirLearn(), "WAV/AK1/");
+//		File markerDir = new File(getExpConfig().getDirLearn(), "GRID/AK1/");
+//		TreeMultimap<String, String> multimap = TreeMultimap.create();
+//		HashMultimap<String, Marker> markerMultimap = HashMultimap.create();
 		// Map<String, List<CorpusEntryStat>> map = Maps.newLinkedHashMap();
 		ListMultimap<String, CorpusEntryStat> map = ArrayListMultimap.create();
 
@@ -81,8 +78,7 @@ public class CorpusSegmentStatisticsTest extends AbstractSegmentDirTest {
 					"./target/test" + getClass().getSimpleName() + "_"
 							+ featureName + ".csv"), Charsets.ISO_8859_1);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error(e);
 		}
 	}
 

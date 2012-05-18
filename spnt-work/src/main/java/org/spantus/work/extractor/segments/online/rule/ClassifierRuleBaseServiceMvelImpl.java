@@ -8,14 +8,12 @@ import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.
 import static org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum.action.processSignal;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.mvel2.MVEL;
 import org.spantus.extractor.segments.ExtremeSegmentServiceImpl;
-import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseServiceImpl;
@@ -33,114 +31,13 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 	public ClassifierRuleBaseServiceMvelImpl() {
 	}
 	
-	/**
-	 * 
-	 * @param ctx
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	protected Map<String, Object> prepare(ExtremeSegmentsOnlineCtx ctx) {
-		Map<String, Object> params = new HashMap<String, Object>();
 
-		ExtremeSegment currentSegment = null;
-		ExtremeSegment lastSegment = null;
-		// boolean segmentEnd = ctx.getFoundEndSegment();
-		// boolean segmentStart = ctx.getFoundStartSegment();
-
-		boolean segmentPeak = ctx.getFoundPeakSegment();
-		boolean noiseClass = true;
-
-		Double currentArea = null;
-		Integer currentPeakCount = null;
-		Double currentPeakValue = null;
-		Long currentLength = null;
-		Double currentAngle = null;
-		Long stableLength = null;
-		Double lastArea = null;
-		Double lastPeakValue = null;
-		Integer lastPeakCount = null;
-		Double lastAngle = null;
-		Long lastLength = null;
-		boolean isIncrease = false;
-		boolean isDecrease = false;
-		boolean isSimilar = false;
-		int lastSizeValues = 0;
-		int currentSizeValues = 0;
-		Long distanceBetweenPaeks = Long.MAX_VALUE;
-		String className = "";
-
-		if (ctx.getCurrentSegment() != null) {
-			currentSegment = ctx.getCurrentSegment();
-			currentArea = getExtremeSegmentService().getCalculatedArea(currentSegment);
-			currentPeakCount = currentSegment.getPeakEntries().size();
-			currentLength = getExtremeSegmentService().getCalculatedLength(currentSegment);
-			currentSizeValues = currentSegment.getValues().size();
-			stableLength = currentSegment.getValues().indextoMils(ctx.getStableCount());
-		}
-
-		if (ctx.getExtremeSegments().size() > 0) {
-			lastSegment = ctx.getExtremeSegments().getLast();
-			lastArea = getExtremeSegmentService().getCalculatedArea(lastSegment);
-			lastPeakValue = lastSegment.getPeakEntry().getValue();
-			lastPeakCount = lastSegment.getPeakEntries().size();
-			lastLength = getExtremeSegmentService().getCalculatedLength(lastSegment);
-			lastSizeValues = lastSegment.getValues().size();
-			
-			currentAngle = getExtremeSegmentService().angle(currentSegment);
-			lastAngle = getExtremeSegmentService().angle(lastSegment);
-
-			if (currentSegment.getPeakEntry() != null) {
-				currentPeakValue = currentSegment.getPeakEntry().getValue();
-				isIncrease = getExtremeSegmentService().isIncrease(currentSegment, lastSegment);
-				isDecrease = getExtremeSegmentService().isDecrease(currentSegment, lastSegment);
-				
-				isSimilar = getExtremeSegmentService().isSimilar(currentSegment, lastSegment);
-				className = getClusterService().getClassName(lastSegment, ctx);
-				if (currentPeakCount >= 1) {
-					Integer first = lastSegment.getPeakEntries().getLast()
-							.getIndex();
-					Integer last = currentSegment.getPeakEntries().getFirst()
-							.getIndex();
-					distanceBetweenPaeks = last.longValue() - first;
-					distanceBetweenPaeks = currentSegment.getValues()
-							.indextoMils(distanceBetweenPaeks.intValue());
-
-				}
-
-//				log.debug(
-//						"[testOnRuleBase] Similar: {0}, Increase: {1}; Decrease: {2}; className:{3}",
-//						isSimilar, isIncrease, isDecrease, className);
-			}
-		}
-		params.put("ctx", ctx);
-		params.put("currentSegment", currentSegment);
-		params.put("lastSegment", lastSegment);
-		params.put("distanceBetweenPaeks", distanceBetweenPaeks);
-		params.put("lastLength", lastLength);
-		params.put("currentLength", currentLength);
-		params.put("isIncrease", isIncrease);
-		params.put("isDecrease", isDecrease);
-		params.put("className", className);
-		params.put("lastPeakCount", lastPeakCount);
-		params.put("lastPeakValue", lastPeakValue);
-		params.put("lastAngle", lastAngle);
-		params.put("currentPeakCount", currentPeakCount);
-		params.put("currentPeakValue", currentPeakValue);
-		params.put("currentAngle", currentAngle);
-		params.put("stableLength", stableLength);
-		
-		
-		
-		
-
-		return params;
-	}
 
 	
 	
 	@Override
 	public String testOnRuleBase(ExtremeSegmentsOnlineCtx ctx) {
-		Map<String, Object> param = prepare(ctx);
+		Map<String, Object> param = prepareCtx(ctx);
 		List<Rule> rules = getRules();
 
 		

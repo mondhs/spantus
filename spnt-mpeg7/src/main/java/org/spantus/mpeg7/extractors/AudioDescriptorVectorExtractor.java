@@ -81,7 +81,6 @@ public class AudioDescriptorVectorExtractor implements IExtractorVector {
 
 
 	public void flush() {
-		// TODO Auto-generated method stub
 		
 	}
 	public long getOffset() {

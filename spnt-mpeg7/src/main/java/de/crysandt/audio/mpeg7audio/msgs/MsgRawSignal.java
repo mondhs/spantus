@@ -22,8 +22,6 @@ public class MsgRawSignal extends Msg {
 	public float[] signal;
 	public MsgRawSignal(int time, int duration, int hopsize) {
 		super(time, duration, hopsize);
-		
-		// TODO Auto-generated constructor stub
 	}
 	public MsgRawSignal(float[] segnale) {
 		super(0, 0, 0); // i suck

@@ -77,6 +77,7 @@ public class PartialLikelihoodFunctionCalculationTest {
 						featureValues, ORDER, NUMBER_OF_SELECTED_FRAMES,
 						lpc.getReflection());
 
+		@SuppressWarnings("unused")
 		List<LinkedList<Double>> bellmanFunctions = calculation
 				.processBellmanFunctionCalculation(samples, ORDER,
 						numberOfPhonemes, partialLikelihoodFunctions);

@@ -77,13 +77,11 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
 
 	
 	public void registerExtractor(IGeneralExtractor<?> extractor) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	
 	public void setConfig(IExtractorConfig config) {
-		// TODO Auto-generated method stub
 		
 	}
 

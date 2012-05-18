@@ -18,8 +18,6 @@
 */
 package org.spantus.segment.online.test;
 
-import junit.framework.TestCase;
-
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.ExtractorWrapper;
 import org.spantus.core.marker.MarkerSet;
@@ -33,7 +31,7 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
  * @author Mindaugas Greibus
  *
  */
-public abstract class AbstractOnlineSegmentTest extends TestCase {
+public abstract class AbstractOnlineSegmentTest  {
 	protected MarkerSet segmentRuleBase(Double[] vals) {
 		return segmentRuleBase(vals, 1, 1D);
 	}
@@ -41,8 +39,8 @@ public abstract class AbstractOnlineSegmentTest extends TestCase {
 	protected MarkerSet segmentRuleBase(Double[] vals, int step, Double sampleRate) {
 		DecisionSegmentatorOnline multipeListener = new DecisionSegmentatorOnline();
 		
-		IClassifier segmentator1 = getSegmentator("segmentator1", multipeListener);
-		IClassifier segmentator2 = getSegmentator("segmentator2", multipeListener);
+		IClassifier segmentator1 = createSegmentator("segmentator1", multipeListener);
+		IClassifier segmentator2 = createSegmentator("segmentator2", multipeListener);
 		
 		multipeListener.setParam(createParam());
 		for (int i = 0; i < vals.length; i++) {
@@ -61,7 +59,7 @@ public abstract class AbstractOnlineSegmentTest extends TestCase {
 		return param;
 	}
 
-	public IClassifier getSegmentator(String name,
+	public IClassifier createSegmentator(String name,
 			MultipleSegmentatorListenerOnline multipeListener) {
 		StaticThreshold segmentator1 = new StaticThreshold();
 		MockSegmentatorExtractor mockExtractor = new MockSegmentatorExtractor();

@@ -110,7 +110,7 @@ public class MarkerSegmentatorListenerImplTest {
 		Long sample = time;
 		Double value = time.doubleValue();
 		SegmentEvent event = new SegmentEvent(id, time,
-				marker, sample, value);
+				marker, sample, value, true);
 		return event;
 	}
 

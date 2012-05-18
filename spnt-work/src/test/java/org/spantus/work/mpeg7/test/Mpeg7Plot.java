@@ -29,6 +29,7 @@ import javax.swing.JFrame;
 import org.spantus.chart.AbstractSwingChart;
 import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.exception.ProcessingException;
 import org.spantus.mpeg7.Mpeg7ExtractorEnum;
 import org.spantus.mpeg7.config.Mpeg7ExtractorConfig;
 import org.spantus.mpeg7.extractors.Mpeg7ExtractorInputReader;
@@ -45,6 +46,7 @@ import org.spantus.work.test.SignalSelectionListenerMock;
  *
  */
 public class Mpeg7Plot extends JFrame {
+	
 	/**
 	 * 
 	 */
@@ -63,11 +65,9 @@ public class Mpeg7Plot extends JFrame {
 		try {
 			reader = readSignal();
 		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ProcessingException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ProcessingException(e);
 		}
 		if (reader == null) {
 			throw new RuntimeException();

@@ -596,8 +596,8 @@ public class ExtremeClassifierServiceImpl {
 		Long end = markerService.getTime(endInSample, sampleRate);
 		marker.setStart(start);
 		marker.setEnd(end);
-		marker.getExtractionData().setStartSampleNum(startInSample.longValue());
-		marker.getExtractionData().setEndSampleNum(endInSample.longValue());
+//		marker.getExtractionData().setStartSampleNum(startInSample.longValue());
+//		marker.getExtractionData().setEndSampleNum(endInSample.longValue());
 		return marker;
 	}
 

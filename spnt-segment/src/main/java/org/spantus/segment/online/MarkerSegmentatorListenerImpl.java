@@ -14,6 +14,7 @@ import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
+import org.spantus.utils.Assert;
 /**
  * 
  * @author Mindaugas Greibus
@@ -94,6 +95,7 @@ public class MarkerSegmentatorListenerImpl extends
 
 	@Override
 	public void onSegmentProcessed(SegmentEvent event) {
+		Assert.isTrue(event.getWindowValues()!=null);
 		if(getCurrentSegment() != null){
 			
 			if(firstFeatureId == null){

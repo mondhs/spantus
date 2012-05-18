@@ -152,11 +152,19 @@ public class ExtremeOnlineClassifierTest {
 		classifier.getExtractor().getOutputValues().setSampleRate(100D);//10ms
 		classifier.setRuleBaseService(ruleBase);
 //		classifier.setClusterService(clusterService);
-		FrameValues values = new FrameValues();
-		for (Double windowValue : data) {
-			values.add(windowValue);
+		long i = 0;
+		for (Double aValue : data) {
+			FrameValues windowValue = new FrameValues(100D);
+			windowValue.add(aValue);
+			windowValue.add(aValue+1);
+			windowValue.add(aValue+3);
+			windowValue.setFrameIndex(i);
+			FrameValues values = new FrameValues();
+			values.add(aValue);
+			values.setFrameIndex(i++);
+			classifier.afterCalculated(0L, windowValue, values);
 		}
-		classifier.afterCalculated(0L, null, values);
+		
 		classifier.flush();
 		return classifier;
 	}

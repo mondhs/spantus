@@ -38,7 +38,6 @@ public class Marker implements Serializable, Cloneable{
 
 	private String label;
 	
-	private MarkerExtractionData extractionData;
 
 	public Long getStart() {
 		return start;
@@ -101,16 +100,16 @@ public class Marker implements Serializable, Cloneable{
 		}
 	}
 	
-	public MarkerExtractionData getExtractionData() {
-		if(extractionData == null){
-			extractionData = new MarkerExtractionData();
-		}
-		return extractionData;
-	}
+//	public MarkerExtractionData getExtractionData() {
+//		if(extractionData == null){
+//			extractionData = new MarkerExtractionData();
+//		}
+//		return extractionData;
+//	}
 
-	public void setExtractionData(MarkerExtractionData extractionData) {
-		this.extractionData = extractionData;
-	}
+//	public void setExtractionData(MarkerExtractionData extractionData) {
+//		this.extractionData = extractionData;
+//	}
 
 	
 }

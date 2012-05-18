@@ -38,7 +38,7 @@ import org.spantus.work.io.WorkAudioFactory;
 public class ComarisionFacadeImpl implements ComarisionFacade {
 	
 	private Map<String, ExtractorParam> extractorParams;
-	private ClassifierEnum classifier = ClassifierEnum.rules;
+	private ClassifierEnum classifier = ClassifierEnum.rulesOffline;
 	private SegmentatorServiceEnum segmentation = SegmentatorServiceEnum.online;
 	
 	/* (non-Javadoc)

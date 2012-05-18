@@ -55,7 +55,6 @@ public class MockOnlineExtractor implements IExtractor{
 
 	@Override
 	public long getOffset() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

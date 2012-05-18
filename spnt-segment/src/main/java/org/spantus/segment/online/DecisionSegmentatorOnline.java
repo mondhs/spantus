@@ -60,7 +60,7 @@ public class DecisionSegmentatorOnline extends MultipleSegmentatorListenerOnline
 	 * @see org.spantus.segment.online.MultipleSegmentatorListenerOnline#noiseDetected(org.spantus.core.threshold.SegmentEvent)
 	 */
 	@Override
-	protected void noiseDetected(SegmentEvent event){
+	protected void noiseDetected(final SegmentEvent event){
 		getDecisionContext().setState(false);
 		processState(event);
 	}

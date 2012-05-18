@@ -62,7 +62,7 @@ import org.spantus.logger.Logger;
  */
 public class ModifyObjectPopup implements java.awt.event.ActionListener {
 
-    private Logger log = Logger.getLogger(getClass());
+    private static final Logger LOG = Logger.getLogger(ModifyObjectPopup.class);
     /**
      * As we prompt for user input, this button will appear on the dialog box to
      * signify an approval of input
@@ -106,12 +106,11 @@ public class ModifyObjectPopup implements java.awt.event.ActionListener {
             	rtn = value.toString();
             }
         } catch (IllegalArgumentException e) {
-            log.error(e);
+        	LOG.error(e);
         } catch (IllegalAccessException e) {
-            log.error(e);
+        	LOG.error(e);
         } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        	LOG.error(e);
         }
         return rtn;
     }
@@ -270,14 +269,14 @@ public class ModifyObjectPopup implements java.awt.event.ActionListener {
     public void actionPerformed(ActionEvent e) {
         // See what button the user pressed
         if (e.getSource() == this.okButton) {
-            log.debug("OK pressed");
+        	LOG.debug("OK pressed");
             this.isOK = true;
         } else {
             if("ok".equals(e.getActionCommand())){
                 this.isOK = true;
             }else{
             //cancel or escape
-                log.debug("Cancel pressed");
+            	LOG.debug("Cancel pressed");
                 this.isOK = false;
             }
             

@@ -34,7 +34,7 @@ import org.spantus.segment.online.OnlineSegmentaitonService;
 public final class SegmentFactory {
 	
 	private SegmentFactory() {
-		// TODO Auto-generated constructor stub
+		// Do nothing
 	}
 	
 	public enum SegmentatorServiceEnum{basic, offline, online, waheed};

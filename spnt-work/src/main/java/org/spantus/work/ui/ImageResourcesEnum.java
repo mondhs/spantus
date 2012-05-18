@@ -19,7 +19,6 @@
 package org.spantus.work.ui;
 /**
  * This was copied from spnt-work-ui. 
- * TODO: refactor code 
  * 
  * @author Mindaugas Greibus
  *

@@ -606,7 +606,7 @@ public class HMM
 					double gamma_eti = gamma[e][t][i];
 
 					for (int k = 0; k < SIZE; ++k)
-						// TODO: Old or new center? 
+						//  Old or new center? 
 						/*
 						 * holger: 
 						 * old center leads to positive improvements 

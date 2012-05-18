@@ -14,6 +14,8 @@ import org.junit.Test;
 import org.spantus.core.beans.FrameValuesHolder;
 import org.spantus.core.beans.FrameVectorValuesHolder;
 import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.threshold.ClassifierEnum;
+import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.segment.online.MarkerSegmentatorListenerImpl;
 /**
@@ -27,7 +29,11 @@ public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTes
 
 
 	
-	
+	@Override
+	protected void changeOtherParams(SegmentExtractorServiceConfig config) {
+		super.changeOtherParams(config);
+		getSegmentExtractorService().getConfig().setClassifier(ClassifierEnum.rulesOnline);
+	}
 	
 	@Test
 	public void testExtractSegmentOnline() throws MalformedURLException {

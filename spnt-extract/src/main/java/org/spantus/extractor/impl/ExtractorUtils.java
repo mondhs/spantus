@@ -303,7 +303,7 @@ public final class ExtractorUtils {
 		case convexHullOffline:
 			threshold = applyParams(new ConvexHullThreshold(), param);
 			break;
-		case rules:
+		case rulesOffline:
 			// threshold = new ExtremeOnlineRuleClassifier();
 			ExtremeOfflineRuleClassifier e2s = new ExtremeOfflineRuleClassifier();
 			e2s.setRuleBaseService(ExtremeOnClassifierServiceFactory
@@ -339,7 +339,7 @@ public final class ExtractorUtils {
 			if (params != null) {
 				extractorParam = params.get(extractor.name());
 			}
-			IClassifier classifier = ExtractorUtils.registerThreshold(
+			IClassifier classifier = registerThreshold(
 					extractorReader, extractor, extractorParam, thresholdType);
 			classifiers.add(classifier);
 		}

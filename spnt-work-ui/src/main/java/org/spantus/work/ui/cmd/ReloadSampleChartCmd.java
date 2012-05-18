@@ -18,10 +18,10 @@ public class ReloadSampleChartCmd extends AbsrtactCmd {
 	
 	public String execute(SpantusWorkInfo ctx) {
 		if(ctx.getProject().getSample().getCurrentFile()==null){
-			//TODO: hack
+			 //FIXME: hack cast CommandExecutionFacadeImpl#setReader
 			((CommandExecutionFacadeImpl)getExecutionFacade()).setReader(null);
 		}
-		//TODO: hack
+		 //FIXME: hack cast CommandExecutionFacadeImpl#updateContent
 		((CommandExecutionFacadeImpl)getExecutionFacade()).updateContent();
 		
 		return null;

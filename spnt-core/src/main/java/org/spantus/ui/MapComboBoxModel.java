@@ -70,11 +70,6 @@ public class MapComboBoxModel<K,V> extends DefaultComboBoxModel {
 	}
 
 	public K getSelectedItem() {
-//		Object value = getObjectMap().get(selectedKey);
-//		if(value == null){
-//			return null;
-//		}
-//		ModelEntry entry = new ModelEntry(selectedKey, value);
 		return selectedObject;
 	}
 	@SuppressWarnings("unchecked")
@@ -122,15 +117,9 @@ public class MapComboBoxModel<K,V> extends DefaultComboBoxModel {
 	}
 
 	public void removeListDataListener(ListDataListener l) {
-		// TODO Auto-generated method stub
 		
 	}
 	
-//	@Override
-//	public void addListDataListener(ListDataListener l) {
-//		super.addListDataListener(l);
-//		fireIntervalAdded(this, 0, getObjectMap().size()-1);
-//	}
 
 	public Map<K, V> getObjectMap() {
 		if(objectMap==null){

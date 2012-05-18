@@ -42,7 +42,6 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 		cleanup();
 	}
 	protected void cleanup(){
-//		getState().setSampleRate(getExtractorSampleRate());
 		Assert.isTrue(getConfig() != null, "cofiguration not set");
 		int i = getThresholdValues().size() - getConfig().getBufferSize();
 		while( i > 0 ){
@@ -62,40 +61,42 @@ public abstract class AbstractThreshold extends AbstractClassifier{
 	 */
 	protected void calculateState(Long sample, Double value, FrameValues windowValues){
 		Long time = getThresholdValues().toTime(sample);
-		if(isSignalState(value)){
+		boolean signalState = isSignalState(value);
+		if(signalState){
 //			LOG.debug("[calculateState] + {1} signal - {0}", getName(), time);
 			//segment
 			if(getMarker()==null){
 				setMarker(new Marker());
 				getMarker().setStart(time);
 				getMarker().setLabel(sample.toString());
-//				getMarker().getExtractionData().setStartSampleNum(sample);
 				for (IClassificationListener listener : getClassificationListeners()) {
 					listener.onSegmentStarted(
-							new SegmentEvent(getName(),time,getMarker(),sample, value));
+							new SegmentEvent(getName(),time,getMarker(),sample, value, signalState));
 				}
 			}
-		}else {
+		}
+		//notify that segment processed
+		for (IClassificationListener listener : getClassificationListeners()) {
+			SegmentEvent event = new SegmentEvent(getName(),time,getMarker(),sample, value, signalState);
+			event.setOutputValues(getOutputValues());
+			event.setWindowValues(windowValues);
+			listener.onSegmentProcessed(event);
+		}
+		if(!signalState){
 //			LOG.debug("[calculateState] - {1} silent - {0}", getName(), time);
 			//silent
 			if(getMarker()!=null){
 				getMarker().setEnd(time);
 				getMarkSet().getMarkers().add(getMarker());
-//				getMarker().getExtractionData().setEndSampleNum(sample);
 				for (IClassificationListener listener : getClassificationListeners()) {
 					listener.onSegmentEnded(
-							new SegmentEvent(getName(),time,getMarker(),sample, value));
+							new SegmentEvent(getName(),time,getMarker(),sample, value, signalState));
 				}
 				setMarker(null);
 			}
 		}
-		//notify that segment processed
-		for (IClassificationListener listener : getClassificationListeners()) {
-			SegmentEvent event = new SegmentEvent(getName(),time,getMarker(),sample, value);
-			event.setOutputValues(getOutputValues());
-			event.setWindowValues(windowValues);
-			listener.onSegmentProcessed(event);
-		}
+		
+		
 	}
 
 	

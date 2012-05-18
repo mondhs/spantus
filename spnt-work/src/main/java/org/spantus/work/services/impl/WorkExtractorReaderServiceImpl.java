@@ -88,7 +88,7 @@ public class WorkExtractorReaderServiceImpl extends ExtractorInputReaderServiceI
 	public IExtractorInputReader createReaderWithClassifier(
 			ExtractorEnum[] extractors, File inputFile,
 			Map<String, ExtractorParam> params) {
-		return createReaderWithClassifier(extractors, inputFile, params, ClassifierEnum.rules);
+		return createReaderWithClassifier(extractors, inputFile, params, ClassifierEnum.rulesOffline);
 	}
 	
 	/**

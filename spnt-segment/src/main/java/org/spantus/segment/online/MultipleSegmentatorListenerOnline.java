@@ -28,6 +28,8 @@ import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
 
+import scikit.util.Pair;
+
 /**
  * 
  * 
@@ -61,12 +63,10 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 
 	public void onSegmentStarted(SegmentEvent event) {
 		//do nothing
-//		LOG.debug("[onSegmentedStarted] {0}", event);
 	}
 
 	public void onSegmentEnded(SegmentEvent event) {
 		//do nothing
-//		LOG.debug("[onSegmentEnded] {0}", event);
 	}
 	public void onNoiseProcessed(SegmentEvent event) {
 		//do nothing
@@ -74,11 +74,37 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 	/**
 	 * 
 	 */
-	public void onSegmentProcessed(SegmentEvent event) {
-//		log.debug("[onSegmentedProcessed] {0}", event);
-		SegmentEvent multievent = event.clone();
-		multievent.setMarker(null);
-		Long time = event.getTime();
+	public void onSegmentProcessed(final SegmentEvent event) {
+		LOG.debug("[onSegmentedProcessed] +++ {0}", event);
+		Pair<Integer, Integer> signalNoiseCount= updatesignalNoiseCount(event.getTime(), event.getSignalState());
+		Integer singnalCount = signalNoiseCount.fst();
+		Integer noiseCount = signalNoiseCount.snd();
+		Integer totalCount =  singnalCount+noiseCount;
+		if(totalCount == classifiersCount){
+			LOG.debug("[onSegmentedProcessed] time: {0}; noiseCount={1}; singnalCount={2} ", event.getTime(), noiseCount, singnalCount);
+			if(noiseCount>classifiersThreshold){
+				noiseDetected(event);
+			}else if(singnalCount>classifiersThreshold){
+				segmentDetected(event);
+			}else if (singnalCount == classifiersThreshold && singnalCount==noiseCount ) {
+				noiseDetected(event);
+			}else {
+				throw new IllegalArgumentException("Not impl");
+//				multievent.setMarker(getCurrentMarker());
+//				segmentProcessedMulti(multievent);
+				
+			}
+		}
+		finazlizeMarker(getCurrentMarker(), event);
+		LOG.debug("[onSegmentedProcessed] --- {0}", event);
+	}
+	/**
+	 * 
+	 * @param time 
+	 * @return
+	 */
+	private Pair<Integer, Integer> updatesignalNoiseCount(Long time, boolean signal) {
+		
 		Integer singnalCount = getSequenceSignal().get(time);
 		Integer noiseCount = getSequenceNoise().get(time);
 		if(singnalCount==null){
@@ -87,48 +113,29 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 			getSequenceSignal().put(time, singnalCount);
 			getSequenceNoise().put(time, noiseCount);
 		}
-		if (event.getMarker() == null) {
-			getSequenceNoise().put(time,++noiseCount );
-		} else {
+		if (signal) {
 			getSequenceSignal().put(time,++singnalCount );
+		} else {
+			getSequenceNoise().put(time,++noiseCount );
 		}
-		Integer totalCount =  singnalCount+noiseCount;
-		if(totalCount == classifiersCount){
-			if(noiseCount>classifiersThreshold){
-				if(getCurrentMarker() != null){
-					getCurrentMarker().setEnd(time);
-					multievent.setMarker(getCurrentMarker());
-					setCurrentMarker(null);
-				}
-				noiseDetected(multievent);
-			}else if(singnalCount>classifiersThreshold){
-				if(getCurrentMarker() == null){
-					setCurrentMarker(createMarker(event));
-					multievent.setMarker(getCurrentMarker());
-				}
-				segmentDetected(multievent);
-			}else if (singnalCount == classifiersThreshold && singnalCount==noiseCount ) {
-				if(getCurrentMarker() != null){
-					getCurrentMarker().setEnd(time);
-					multievent.setMarker(getCurrentMarker());
-					setCurrentMarker(null);
-				}
-				noiseDetected(multievent);
-			}else {
-				throw new IllegalArgumentException("Not impl");
-//				multievent.setMarker(getCurrentMarker());
-//				segmentProcessedMulti(multievent);
-				
-			}
-							
-		}
+		Pair<Integer, Integer> signalNoiseCount = new Pair<Integer, Integer>(singnalCount, noiseCount);
+		return signalNoiseCount;
 	}
+
 	protected void segmentDetected(SegmentEvent event){
-//		log.debug("[segmentStartedMulti] started {0} on {1}ms", currentMarker, event.getTime());
+		if(getCurrentMarker() == null){
+			setCurrentMarker(createMarker(event));
+		}
+		LOG.debug("[segmentDetected] started {0} on {1}ms", currentMarker, event.getTime());
 	}
-	protected void noiseDetected(SegmentEvent event){
-//		log.debug("[segmentEndedMulti] ended {0} on {1}ms", currentMarker, event.getTime());
-		onSegmentEnded(event.getMarker());
+	protected void noiseDetected(final SegmentEvent event){
+		Marker aMarker = null;
+		if(getCurrentMarker() != null){
+			getCurrentMarker().setEnd(event.getTime());
+			onSegmentEnded(getCurrentMarker());
+		}
+		LOG.debug("[noiseDetected] ended {0} on {1}ms", aMarker, event.getTime());
+		
 	}
 //	protected void segmentProcessedMulti(SegmentEvent event){
 //		log.debug("[segmentProcessedMulti] processed {0} on {1}ms", currentMarker, event.getTime());
@@ -142,7 +149,7 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 //		log.debug("[createSegment] marker({0}ms): {1}", time, marker.toString());
 		return marker;
 	}
-	protected Marker finazlizeMarker(Marker marker, SegmentEvent event) {
+	protected Marker finazlizeMarker(Marker marker,final SegmentEvent event) {
 		if (marker == null){
 			return marker;
 		}
@@ -161,16 +168,17 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 		newMarker.setStart(marker.getStart());
 //		newMarker.setStartSampleNum(marker.getStartSampleNum());
 		setCurrentMarker(newMarker);
-//		log.debug("[onSegmentStarted] {0}", newMarker.toString());
+		LOG.debug("[onSegmentStarted] {0}", newMarker.toString());
+		LOG.debug("[onSegmentedStarted] marker: {0}; Markers: {1}", marker, getMarkSet());
 		return true;
 	}
+
 	protected boolean onSegmentEnded(Marker marker) {
 		if(marker == null ) return false;
-		
 		marker.setLength(marker.getLength());
 		getMarkSet().getMarkers().add(marker);
-//		log.debug("[onSegmentEnded] {0}", marker);
 		setCurrentMarker(null);
+		LOG.debug("[onSegmentEnded] marker: {0}; Markers: {1}", marker, getMarkSet());
 		return true;
 	}
 	

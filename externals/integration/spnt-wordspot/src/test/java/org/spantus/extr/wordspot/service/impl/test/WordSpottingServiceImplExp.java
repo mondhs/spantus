@@ -9,6 +9,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.threshold.ClassifierEnum;
+import org.spantus.core.wav.AudioManagerFactory;
+import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extr.wordspot.service.impl.WordSpottingListenerLogImpl;
 import org.spantus.extr.wordspot.service.impl.WordSpottingServiceImpl;
 
@@ -26,17 +29,28 @@ public class WordSpottingServiceImplExp extends AbstractSegmentExtractorTest {
 		wordSpottingServiceImpl = new WordSpottingServiceImpl();
 		wordSpottingServiceImpl.setSegmentExtractorService(getSegmentExtractorService());
 	}
+	
+	@Override
+	protected void changeOtherParams(SegmentExtractorServiceConfig config) {
+		super.changeOtherParams(config);
+		getSegmentExtractorService().getConfig().setClassifier(ClassifierEnum.rulesOnline);
+	}
 
 	@Test
 	public void test_wordSpotting() throws MalformedURLException {
 		//given
+		Long length = 1000L*AudioManagerFactory.createAudioManager().findLength(wavFile.toURI().toURL()).longValue();
 		WordSpottingListenerLogImpl listener = new WordSpottingListenerLogImpl("Lietuvos", repositoryPathLevel2.getAbsolutePath());
 		URL url = getWavFile().toURI().toURL() ;
 		//when 
+		long started = System.currentTimeMillis();
 		wordSpottingServiceImpl.wordSpotting(url, listener);
+		long ended= System.currentTimeMillis();
 		List<SignalSegment> segments = listener.getSignalSegments();
 		//then
+		Assert.assertTrue("read time ", length > ended-started);
 		Assert.assertEquals("One segment", 1, segments.size(),0);
+
 	}
 
 	public File getWavFile() {

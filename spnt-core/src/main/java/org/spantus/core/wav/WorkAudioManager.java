@@ -49,7 +49,9 @@ import org.spantus.utils.FileUtils;
 public class WorkAudioManager implements AudioManager {
 
     Logger log = Logger.getLogger(getClass());
-    //Length of file
+    /**
+     *     length of file in seconds
+     */
     public Float findLength(URL file) {
          AudioInputStream stream = createInput(file);
          return getTotalTime(stream);

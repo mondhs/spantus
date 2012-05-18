@@ -2,12 +2,11 @@ package org.spantus.extractor.segments.offline;
 
 import java.io.Serializable;
 
-import org.spantus.utils.Assert;
-
 
 /**
  * 
  * @author Mindaugas Greibus
+ * @since 0.2
  * 
  *
  */

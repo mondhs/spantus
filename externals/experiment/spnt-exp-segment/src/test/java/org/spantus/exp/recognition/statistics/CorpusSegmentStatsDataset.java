@@ -18,6 +18,7 @@ import org.jfree.data.RangeInfo;
 import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.XYDataset;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.logger.Logger;
 import org.spantus.math.NumberUtils;
 import org.spantus.utils.StringUtils;
 
@@ -28,6 +29,7 @@ import com.google.common.collect.HashBiMap;
 public class CorpusSegmentStatsDataset extends AbstractXYDataset implements XYDataset,
 		DomainInfo, RangeInfo {
 
+	public static final Logger LOG =Logger.getLogger(CorpusSegmentStatsDataset.class);
 	/**
 	 * 
 	 */
@@ -72,8 +74,7 @@ public class CorpusSegmentStatsDataset extends AbstractXYDataset implements XYDa
 			}
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error(e);
 		} finally {
 			scanner.close();
 		}

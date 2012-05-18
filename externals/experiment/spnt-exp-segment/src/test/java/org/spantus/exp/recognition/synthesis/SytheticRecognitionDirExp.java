@@ -49,7 +49,7 @@ public class SytheticRecognitionDirExp {
 		config.setModifier(ExtractorModifiersEnum.smooth);
 		config.setSegmentatorServiceType(SegmentatorServiceEnum.basic.name());
 		
-		config.setClassifier(ClassifierEnum.rules);
+		config.setClassifier(ClassifierEnum.rulesOffline);
 		
 //		config.setClassifier(ClassifierEnum.offline);
 //		config.setThreasholdCoef(.05D);

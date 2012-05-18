@@ -1,18 +1,21 @@
 package org.spantus.extractor.segments.online;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
+import org.spantus.core.FrameValues;
 import org.spantus.extractor.segments.offline.ExtremeEntry;
-import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.offline.ExtremeEntry.FeatureStates;
+import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;
 import org.spantus.utils.Assert;
 
 public class ExtremeSegmentsOnlineCtx {
-	private LinkedList<ExtremeSegment> extremeSegments;
-	private LinkedList<Long> mins = new LinkedList<Long>();
+	private Deque<ExtremeSegment> extremeSegments;
+	private Deque<Long> mins = new LinkedList<Long>();
 	private ExtremeSegment currentSegment;
 	private Integer index=0;
 	private ClassifierRuleBaseEnum.state markerState;
@@ -24,10 +27,11 @@ public class ExtremeSegmentsOnlineCtx {
 	private Boolean skipLearn = Boolean.FALSE;
 	
 	
-	public LinkedList<SegmentFeatureData> semgnetFeatures = new LinkedList<SegmentFeatureData>();
+	public Queue<SegmentFeatureData> semgnetFeatures = new LinkedList<SegmentFeatureData>();
 	public List<SegmentFeatureData> segmentStats = new ArrayList<SegmentFeatureData>(3);
 	public List<SegmentFeatureData> segmentCenters = new ArrayList<SegmentFeatureData>(3);
 	public Double maxDistance;
+	private Queue<FrameValues> windowValuesQueue = new LinkedList<FrameValues>();
 	
 
 	public SegmentFeatureData normalizeArea(SegmentFeatureData data){
@@ -148,11 +152,11 @@ public class ExtremeSegmentsOnlineCtx {
 	}
 	
 	
-	public LinkedList<ExtremeSegment> getExtremeSegments() {
+	public Deque<ExtremeSegment> getExtremeSegments() {
 		return extremeSegments;
 	}
 
-	public void setExtremeSegments(LinkedList<ExtremeSegment> extremeSegments) {
+	public void setExtremeSegments(Deque<ExtremeSegment> extremeSegments) {
 		this.extremeSegments = extremeSegments;
 	}
 
@@ -205,11 +209,11 @@ public class ExtremeSegmentsOnlineCtx {
 		this.segmentEntry = segmentEntry;
 	}
 
-	public LinkedList<Long> getMins() {
+	public Deque<Long> getMins() {
 		return mins;
 	}
 
-	public void setMins(LinkedList<Long> mins) {
+	public void setMins(Deque<Long> mins) {
 		this.mins = mins;
 	}
 
@@ -231,6 +235,14 @@ public class ExtremeSegmentsOnlineCtx {
 
 	public int incStableCount() {
 		return this.stableCount++;
+	}
+
+	public void popWindowValues(FrameValues windowValues) {
+		
+	}
+
+	public void pushWindowValues(FrameValues windowValues) {
+		windowValuesQueue.add(windowValues);
 	}
 
 	

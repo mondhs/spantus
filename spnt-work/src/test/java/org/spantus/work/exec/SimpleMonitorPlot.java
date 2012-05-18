@@ -82,7 +82,6 @@ public class SimpleMonitorPlot extends JFrame {
 	}
 	
 	public void paint(Graphics g) {
-		// TODO Auto-generated method stub
 		super.paint(g);
 		graph.render();
 		graph.repaint();

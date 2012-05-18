@@ -143,7 +143,6 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 	@Override
 	protected Marker createMarker(SegmentEvent event) {
 		Marker marker = super.createMarker(event);
-		marker.getExtractionData().setStartSampleNum(event.getSample());
 		return marker;
 	}
 	
@@ -152,7 +151,6 @@ public class RecordSegmentatorOnline extends DecisionSegmentatorOnline {
 		Marker rtnMarker = super.finazlizeMarker(marker, event);
 		if (rtnMarker == null)
 			return rtnMarker;
-		rtnMarker.getExtractionData().setEndSampleNum(event.getSample());
 		return marker;
 	}
 	

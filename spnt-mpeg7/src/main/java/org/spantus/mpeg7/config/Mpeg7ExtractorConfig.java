@@ -76,25 +76,19 @@ public class Mpeg7ExtractorConfig implements IExtractorConfig {
 
 	
 	public void setBufferSize(int bufferSize) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	
 	public void setFrameSize(int frameSize) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	
 	public void setWindowOverlap(int windowOverlap) {
-		// TODO Auto-generated method stub
-		
 	}
 
 
 	public Map<String, ExtractorParam> getParameters() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -109,14 +103,11 @@ public class Mpeg7ExtractorConfig implements IExtractorConfig {
 
 
 	public String getPreemphasis() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	public void setPreemphasis(String preemphasis) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

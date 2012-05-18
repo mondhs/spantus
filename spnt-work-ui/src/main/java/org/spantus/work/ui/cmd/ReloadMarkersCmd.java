@@ -19,7 +19,7 @@ public class ReloadMarkersCmd extends AbsrtactCmd {
 
     @Override
     public String execute(SpantusWorkInfo ctx) {
-        //TODO: hack
+        //FIXME: hack cast CommandExecutionFacadeImpl#updateMarkers
         ((CommandExecutionFacadeImpl) getExecutionFacade()).updateMarkers();
         return null;
     }

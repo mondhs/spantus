@@ -32,5 +32,4 @@ import org.spantus.core.threshold.IClassificationListener;
  */
 public interface ISegmentatorListener extends IClassificationListener{
 	public Collection<SignalSegment> getSignalSegments();
-
 }

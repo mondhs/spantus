@@ -46,8 +46,6 @@ public class Mpeg7ExtractorInputReader implements IExtractorInputReader {
 
 	
 	public void registerExtractor(IGeneralExtractor<?> extractor) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	public IExtractorConfig getConfig() {

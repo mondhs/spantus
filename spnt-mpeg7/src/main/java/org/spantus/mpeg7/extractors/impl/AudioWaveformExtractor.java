@@ -2,7 +2,6 @@ package org.spantus.mpeg7.extractors.impl;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
-import org.spantus.core.IValues;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.mpeg7.extractors.AbstractMpeg7Extractor;
 /**
@@ -22,7 +21,7 @@ public class AudioWaveformExtractor extends AbstractMpeg7Extractor {
 	 */
 	
 	@Override
-	public IValues calculateWindow(Long sample, FrameValues values) {
+	public FrameVectorValues calculateWindow(Long sample, FrameValues values) {
 		throw new IllegalArgumentException("Not implemented");
 	}
 
@@ -81,17 +80,14 @@ public class AudioWaveformExtractor extends AbstractMpeg7Extractor {
 	}
 	
 	public IExtractorConfig getConfig() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	public Double getExtractorSampleRate() {
-		// TODO Auto-generated method stub
 		return 0D;
 	}
 	
 	public void setConfig(IExtractorConfig config) {
-		// TODO Auto-generated method stub
 		
 	}
 	public long getOffset() {

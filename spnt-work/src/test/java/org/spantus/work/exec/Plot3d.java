@@ -20,6 +20,7 @@ import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
+import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorResultBuffer;
 import org.spantus.extractor.ExtractorResultBuffer3D;
 import org.spantus.extractor.ExtractorsFactory;
@@ -63,74 +64,11 @@ public class Plot3d extends JFrame {
 		try {
 			reader = readSignal();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ProcessingException(e);
 		}
-//		for (int i = 0; i < 1000; i++) {
-//			FrameValues sample = new FrameValues();
-//			for (int j = 0; j < 64; j++) {
-//				sample.add(new Float(j * 4));
-//			}
-//			vals.add(sample);
-//		}
+
 	
 		vals = reader.getExtractorRegister3D().iterator().next().getOutputValues();
-//		try {
-//			OutputStream os= new FileOutputStream("fft_val.txt");
-//			ObjectOutput oo = new ObjectOutputStream(os);
-//			oo.writeObject(vals);
-//			oo.close();
-//
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		
-//		InputStream is;
-//		try {
-//			is = new FileInputStream("fft_val.txt");
-//			ObjectInput oi = new ObjectInputStream(is);
-//			vals = (FrameValues3D)oi.readObject();
-//		oi.close();
-		//
-//				} catch (FileNotFoundException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (ClassNotFoundException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//		oi.close();
-		//
-//				} catch (FileNotFoundException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (ClassNotFoundException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//			oi.close();
-//
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-
-		
 		return vals;
 	}
 	/**
@@ -156,9 +94,6 @@ public class Plot3d extends JFrame {
 		bufferedReader.registerExtractor(signal);
 		bufferedReader.registerExtractor(fft);
 
-		// bufferedReader.registerExtractor(new ExtractorResultBuffer3D(
-		// new FFTExtractor()));
-
 		reader.readSignal(urlFile, bufferedReader);
 		
 		return bufferedReader;
@@ -166,7 +101,6 @@ public class Plot3d extends JFrame {
 
 	
 	public void paint(Graphics g) {
-		// TODO Auto-generated method stub
 		super.paint(g);
 		graph.render();
 		graph.repaint();

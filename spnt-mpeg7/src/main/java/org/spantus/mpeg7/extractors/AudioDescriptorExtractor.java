@@ -20,7 +20,6 @@ public class AudioDescriptorExtractor implements IExtractor {
 
 	
 	public FrameValues calculateWindow(FrameValues window) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -31,7 +30,6 @@ public class AudioDescriptorExtractor implements IExtractor {
 
 	
 	public int getDimension() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -70,13 +68,11 @@ public class AudioDescriptorExtractor implements IExtractor {
 
 	
 	public void setConfig(IExtractorConfig config) {
-		// TODO Auto-generated method stub
 		
 	}
 
 
 	public void flush() {
-		// TODO Auto-generated method stub
 		
 	}
 

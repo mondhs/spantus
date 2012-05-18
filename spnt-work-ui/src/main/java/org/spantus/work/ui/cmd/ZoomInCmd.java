@@ -61,7 +61,7 @@ public class ZoomInCmd extends AbsrtactCmd {
 			this.dto = new SelectionDto();
 		}
 //		SelectionDto selectionDto = (SelectionDto) getCurrentEvent().getValue();
-		//TODO: hack
+		//FIXME: hack CommandExecutionFacadeImpl#changedZoom
 		((CommandExecutionFacadeImpl)getExecutionFacade()).changedZoom(
 				dto.getFrom(),
 				dto.getLength());

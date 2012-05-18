@@ -35,6 +35,7 @@ import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
+import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
@@ -64,11 +65,9 @@ public class MultiPlotWav extends JFrame {
 		try {
 			reader = readSignal();
 		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ProcessingException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ProcessingException(e);
 		}
 		if (reader == null) {
 			throw new RuntimeException();

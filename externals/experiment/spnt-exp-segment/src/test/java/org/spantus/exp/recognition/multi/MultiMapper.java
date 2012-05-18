@@ -252,13 +252,7 @@ public class MultiMapper {
 	 * @return
 	 */
 	private String fixRecognitionName(final String recognitionName){
-		String fixedRecognitionName = recognitionName;
-		//TODO: turn this on due get labels
-//		String[] recognitionNames = recognitionName.split("-");
-//		if(recognitionNames.length >= 1){
-//			fixedRecognitionName = CorpusEntryExtractorTextGridMapImpl.cleanupLabel(recognitionNames[0]);
-//		}
-		return fixedRecognitionName;
+		return recognitionName;
 	}
 	/**
 	 * 

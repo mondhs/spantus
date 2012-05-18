@@ -12,6 +12,7 @@ import org.spantus.chart.ChartFactory;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.io.AudioReaderFactory;
 import org.spantus.core.io.AudioReader;
+import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
@@ -33,11 +34,9 @@ public class SingleThresholdPlot extends JFrame {
 		try {
 			reader = readSignal();
 		} catch (UnsupportedAudioFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ProcessingException(e);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ProcessingException(e);
 		}
 		chart = ChartFactory.createChart(reader);
 		chart.addSignalSelectionListener(new SignalSelectionListenerMock());
@@ -76,18 +75,4 @@ public class SingleThresholdPlot extends JFrame {
 		demo.setVisible(true);
 	}
 
-//	public void paint(Graphics g) {
-//		try {
-//			readSignal();
-//		} catch (UnsupportedAudioFileException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		chart.repaint();
-//
-//		super.paint(g);
-//	}
 }

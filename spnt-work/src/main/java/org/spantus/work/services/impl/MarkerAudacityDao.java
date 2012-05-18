@@ -84,18 +84,14 @@ public class MarkerAudacityDao implements MarkerDao {
 	}
 
 	public MarkerSetHolder read(InputStream inputStream) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void write(MarkerSetHolder holder, File file) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void write(MarkerSetHolder holder, OutputStream outputStream) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

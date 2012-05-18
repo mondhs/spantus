@@ -60,7 +60,7 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 	private String rulePath;
 	private boolean rulesTurnedOn;
 	private Map<String, ExtractorParam> params;
-	private ClassifierEnum classifier = ClassifierEnum.rules;
+	private ClassifierEnum classifier = ClassifierEnum.rulesOffline;
 	
 	private SegmentationServiceImpl segmentationService;
 

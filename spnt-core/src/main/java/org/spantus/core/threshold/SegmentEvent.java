@@ -46,6 +46,7 @@ public class SegmentEvent implements Serializable, Cloneable{
 	private Double value;
 	private IValues outputValues;
 	private FrameValues windowValues;
+	private boolean signalState;
 	
 	public String getExtractorId() {
 		return extractorId;
@@ -61,13 +62,14 @@ public class SegmentEvent implements Serializable, Cloneable{
 	 * @param sample
 	 * @param marker
 	 */
-	public SegmentEvent(String extractorId, Long time, Marker marker, Long sample,Double value) {
+	public SegmentEvent(String extractorId, Long time, Marker marker, Long sample,Double value, boolean signalState) {
 		super();
 		this.extractorId = extractorId;
 		this.time = time;
 		this.sample = sample;
 		this.marker = marker;
 		this.value = value;
+		this.signalState=signalState;
 	}
 	
 	
@@ -124,5 +126,11 @@ public class SegmentEvent implements Serializable, Cloneable{
 	}
 	public void setWindowValues(FrameValues windowValues) {
 		this.windowValues = windowValues;
+	}
+	public boolean getSignalState() {
+		return signalState;
+	}
+	public void setSignalState(boolean signalState) {
+		this.signalState = signalState;
 	}
 }

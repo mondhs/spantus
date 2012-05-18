@@ -93,7 +93,7 @@ public abstract class AbstractSegmentatorService implements ISegmentatorService 
 	 * @param collection
 	 * @return
 	 */
-	public static Double calculateVoteResult(Collection<Double> collection){
+	public Double calculateVoteResult(Collection<Double> collection){
 		List<Double> coefs = calcCoefs(new ArrayList<Double>(collection));
 		Iterator<Double> voteIterator = collection.iterator();
 		Double upSum = 0D;

@@ -163,17 +163,14 @@ public class ConfigPropertiesDao implements ConfigDao {
 
 	
 	public IExtractorConfig read(InputStream inputStream) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void write(IExtractorConfig config, File file) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void write(IExtractorConfig config, OutputStream outputStream) {
-		// TODO Auto-generated method stub
 
 	}
 

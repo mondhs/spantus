@@ -1,11 +1,6 @@
 package org.spantus.extractor.segments.offline;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.spantus.core.FrameValues;
-import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.logger.Logger;
@@ -38,24 +33,24 @@ public class ExtremeOfflineClassifier extends AbstractThreshold {
 	 */
 	public static FrameValues refreshThreasholdInfo(MarkerSet markerSet, FrameValues values) {
 
-		Map<Integer,Double> changePoints = new HashMap<Integer,Double>();
+//		Map<Integer,Double> changePoints = new HashMap<Integer,Double>();
 		
 		FrameValues threasholds = new FrameValues();
 		threasholds.setSampleRate(values.getSampleRate());
 		
 
-		for (Iterator<Marker> markerIterator = markerSet.getMarkers().iterator(); markerIterator.hasNext();) {
-			Marker iMarker = markerIterator.next();
-			int start = iMarker.getExtractionData().getStartSampleNum()
-					.intValue();
-			int end = start
-					+ iMarker.getExtractionData().getLengthSampleNum()
-							.intValue();
-			changePoints.put(start,1000D);
-			changePoints.put(end,1000D);
-//			log.debug("[refreshThreasholdInfo] marker: {0}", marker);
-
-		}
+//		for (Iterator<Marker> markerIterator = markerSet.getMarkers().iterator(); markerIterator.hasNext();) {
+//			Marker iMarker = markerIterator.next();
+//			int start = iMarker.getExtractionData().getStartSampleNum()
+//					.intValue();
+//			int end = start
+//					+ iMarker.getExtractionData().getLengthSampleNum()
+//							.intValue();
+//			changePoints.put(start,1000D);
+//			changePoints.put(end,1000D);
+////			log.debug("[refreshThreasholdInfo] marker: {0}", marker);
+//
+//		}
 
 //		Iterator<Double> valIter = values.iterator();
 		for (int index = 0; index < values.size(); index++) {

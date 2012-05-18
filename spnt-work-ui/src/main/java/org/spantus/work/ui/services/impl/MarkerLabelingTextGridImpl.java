@@ -91,8 +91,6 @@ public class MarkerLabelingTextGridImpl implements MarkerLabeling{
 	@Override
 	public void update(SpantusWorkProjectInfo project,
 			ProcessedFrameLinstener listener) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
