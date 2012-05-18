@@ -171,8 +171,8 @@
 									<source>
         <![CDATA[
         println("==== Creating version.txt ====");
-
-        File confDir = new File("target/classes");
+		
+        File confDir = new File("${project.build.directory}","classes");
         if(confDir.exists() && !confDir.isDirectory()) {
             println("Conf dir is not a directory, wont create version.txt!");
             return;

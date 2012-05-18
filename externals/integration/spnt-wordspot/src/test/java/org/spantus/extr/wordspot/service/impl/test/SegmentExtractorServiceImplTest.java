@@ -32,7 +32,7 @@ public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTes
 	@Override
 	protected void changeOtherParams(SegmentExtractorServiceConfig config) {
 		super.changeOtherParams(config);
-		getSegmentExtractorService().getConfig().setClassifier(ClassifierEnum.rulesOnline);
+//		getSegmentExtractorService().getConfig().setClassifier(ClassifierEnum.rulesOnline);
 	}
 	
 	@Test
@@ -54,7 +54,7 @@ public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTes
 		Assert.assertEquals("Extracted feature",3, valueMap.size());
 		Assert.assertEquals("Extracted feature length",141, valueMap.get("smooth_"+ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
 		Assert.assertEquals("Extracted vector feature",2, vectorMap.size());
-		Assert.assertEquals("Extracted feature length",141, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size());
+		Assert.assertEquals("Extracted feature length",142, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size());
 		Assert.assertEquals("first segment recognition",firstSegment.getName(), "padeda");
 		Assert.assertEquals("second segment recognition",secondSegment.getName(), "skirti");
 		
