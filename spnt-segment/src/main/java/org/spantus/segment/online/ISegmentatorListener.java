@@ -21,6 +21,7 @@ package org.spantus.segment.online;
 import java.util.Collection;
 
 import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.threshold.IClassificationListener;
 /**
  * 
@@ -32,4 +33,5 @@ import org.spantus.core.threshold.IClassificationListener;
  */
 public interface ISegmentatorListener extends IClassificationListener{
 	public Collection<SignalSegment> getSignalSegments();
+	public void setConfig(IExtractorConfig config);
 }

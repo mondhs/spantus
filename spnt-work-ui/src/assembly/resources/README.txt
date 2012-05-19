@@ -1,7 +1,7 @@
 Spantus - speech analitical tool
-Copyright (C) 2007-2009 Mindaugas Greibus <spantus@gmail.com>
+Copyright (C) 2007-2012 Mindaugas Greibus <spantus@gmail.com>
 
-Spantus calculates and depicts features of speech signal. Spantus can analyse wav files or stream from micraphone.
+You calculates and depicts multiple audio signal features. You  can do some online analyze wav files or stream from microphone.
 
 1. Status of the project
 

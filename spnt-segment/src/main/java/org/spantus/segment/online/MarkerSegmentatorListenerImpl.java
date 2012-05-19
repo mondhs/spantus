@@ -81,7 +81,7 @@ public class MarkerSegmentatorListenerImpl extends
 
 
 
-	private SignalSegment createSegment(SegmentEvent event) {
+	protected SignalSegment createSegment(SegmentEvent event) {
 		SignalSegment signalSegment = new SignalSegment();
 		signalSegment.setMarker(createMarker(event));
 		signalSegment.setId(""+event.getTime());

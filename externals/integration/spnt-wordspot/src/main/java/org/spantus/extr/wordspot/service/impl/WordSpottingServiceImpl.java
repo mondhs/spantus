@@ -4,6 +4,7 @@ import java.net.URL;
 
 import org.spantus.extr.wordspot.service.SegmentExtractorService;
 import org.spantus.extr.wordspot.service.WordSpottingListener;
+import org.spantus.segment.online.AsyncMarkerSegmentatorListenerImpl;
 /**
  * 
  * @author Mindaugas Greibus
@@ -13,11 +14,18 @@ import org.spantus.extr.wordspot.service.WordSpottingListener;
  */
 public class WordSpottingServiceImpl {
 	
-	SegmentExtractorService segmentExtractorService;
+	private SegmentExtractorService segmentExtractorService;
+	private String repositoryPath;
+	
+	public WordSpottingServiceImpl(String repositoryPath) {
+		this.repositoryPath = repositoryPath;
+	}
 
 	public void wordSpotting(URL urlFile, WordSpottingListener wordSpottingListener){
 		SpottingMarkerSegmentatorListenerImpl listener = new SpottingMarkerSegmentatorListenerImpl(wordSpottingListener);
-		getSegmentExtractorService().listenSegments(urlFile, listener);
+		listener.setRepositoryPath(repositoryPath);
+		AsyncMarkerSegmentatorListenerImpl asyncLister = new AsyncMarkerSegmentatorListenerImpl(listener);
+		getSegmentExtractorService().listenSegments(urlFile, asyncLister);
 		
 	}
 

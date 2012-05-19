@@ -28,13 +28,6 @@ import org.spantus.segment.online.MarkerSegmentatorListenerImpl;
 public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTest{
 
 
-	
-	@Override
-	protected void changeOtherParams(SegmentExtractorServiceConfig config) {
-		super.changeOtherParams(config);
-//		getSegmentExtractorService().getConfig().setClassifier(ClassifierEnum.rulesOnline);
-	}
-	
 	@Test
 	public void testExtractSegmentOnline() throws MalformedURLException {
 		//given

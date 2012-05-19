@@ -17,7 +17,7 @@ public class ExtremeEntry implements Cloneable, Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public enum FeatureStates{stable, max, increasing, min, decreasing} 
+	public enum FeatureStates{stable, max, increasing, min, decreasing, flush} 
 
 	
 	private Integer index;
@@ -97,4 +97,5 @@ public class ExtremeEntry implements Cloneable, Serializable{
 			throw new IllegalArgumentException(e);
 		}
 	}
+	
 }

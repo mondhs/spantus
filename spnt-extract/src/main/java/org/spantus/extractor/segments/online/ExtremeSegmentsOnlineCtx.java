@@ -59,13 +59,8 @@ public class ExtremeSegmentsOnlineCtx {
 		index++;
 		return getIndex();
 	}
-//	public Boolean getFoundStartSegment() {
-//		if(getCurrentSegment()!=null && getCurrentSegment().getStartEntry()!=null){
-//			return (getIndex()) == getCurrentSegment().getStartEntry().getIndex();
-//		}
-//		
-//		return false;
-//	}
+
+
 	public Boolean getFoundChangePoint() {
 		if(getCurrentSegment()!=null && getCurrentSegment().getEndEntry() != null){
 			return getIndex().equals(getCurrentSegment().getEndEntry().getIndex());
@@ -122,6 +117,16 @@ public class ExtremeSegmentsOnlineCtx {
 		
 		return FeatureStates.max.equals(lastEntry.getSignalState());
 	}
+	
+	public Boolean getFeatureInFlush(){
+		ExtremeEntry lastEntry = getSegmentEntry();
+		if(lastEntry == null){
+			return false;
+		}
+		
+		return FeatureStates.flush.equals(lastEntry.getSignalState());
+	}
+	
 	/**
 	 * is Feature Decrease
 	 * @return
@@ -237,8 +242,8 @@ public class ExtremeSegmentsOnlineCtx {
 		return this.stableCount++;
 	}
 
-	public void popWindowValues(FrameValues windowValues) {
-		
+	public void popWindowValues() {
+		windowValuesQueue.poll();
 	}
 
 	public void pushWindowValues(FrameValues windowValues) {

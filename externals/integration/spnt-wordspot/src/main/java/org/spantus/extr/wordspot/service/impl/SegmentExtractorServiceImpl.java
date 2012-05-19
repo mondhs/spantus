@@ -30,6 +30,8 @@ import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.logger.Logger;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
+import org.spantus.segment.online.AsyncMarkerSegmentatorListenerImpl;
+import org.spantus.segment.online.ISegmentatorListener;
 import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.io.WorkAudioFactory;
@@ -79,7 +81,8 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	@Override
 	public Collection<SignalSegment> extractSegmentsOnline(URL urlFile) {
 		RecognitionMarkerSegmentatorListenerImpl listener = new RecognitionMarkerSegmentatorListenerImpl();
-		listenSegments(urlFile, listener);
+		AsyncMarkerSegmentatorListenerImpl asyncListener = new AsyncMarkerSegmentatorListenerImpl(listener);
+		listenSegments(urlFile, asyncListener);
 		Collection<SignalSegment> segments = listener.getSignalSegments();
 		LOG.debug("[extractSegments]Found syllables {0}", segments);
 		return segments;
@@ -88,8 +91,7 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	 * 
 	 */
 	@Override
-	public void listenSegments(URL urlFile, RecognitionMarkerSegmentatorListenerImpl listener) {
-		listener.setRepositoryPath(getConfig().getRepositoryPath());
+	public void listenSegments(URL urlFile, ISegmentatorListener listener) {
 		readSignal(urlFile, getConfig().getExtractors(), listener);
 	}
 
@@ -130,7 +132,7 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	 */
 	protected IExtractorInputReader readSignal(URL urlFile,
 			ExtractorEnum[] extractors,
-			RecognitionMarkerSegmentatorListenerImpl iSegmentatorListener) {
+			ISegmentatorListener iSegmentatorListener) {
 		SignalReader reader = WorkAudioFactory.createAudioReader(urlFile);
 		SignalFormat format = reader.getFormat(urlFile);
 

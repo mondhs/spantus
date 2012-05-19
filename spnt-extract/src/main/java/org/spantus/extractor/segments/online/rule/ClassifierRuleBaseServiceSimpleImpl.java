@@ -6,10 +6,12 @@ import org.spantus.logger.Logger;
 
 /**
  * 
- * @author mondhs
+ * For test only.
  * 
+ * @author mondhs
+ * @since 0.3
  */
-public class ClassifierPostProcessServiceBaseImpl implements
+public class ClassifierRuleBaseServiceSimpleImpl implements
 		ClassifierRuleBaseService {
 
 	Logger log = Logger.getLogger(getClass());
@@ -19,6 +21,8 @@ public class ClassifierPostProcessServiceBaseImpl implements
 			return ClassifierRuleBaseEnum.action.processNoise.name();
 		}else if(ctx.getCurrentSegment() == null){
 			return ClassifierRuleBaseEnum.action.initSegment.name();
+		}else if(ctx.getFeatureInFlush()){
+			return ClassifierRuleBaseEnum.action.changePointLastApproved.name();
 		}else if(ctx.getFeatureInMin()){
 			return ClassifierRuleBaseEnum.action.changePoint.name();	
 		}else if(ctx.getFeatureInMax()){

@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
@@ -52,6 +53,8 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 	private Integer classifiersThreshold = 0;
 	private Marker currentMarker;
 	private MarkerSet markerSet;
+
+	private IExtractorConfig config;
 	
 	public MarkerSet getMarkSet() {
 		if(markerSet == null){
@@ -226,6 +229,15 @@ public class MultipleSegmentatorListenerOnline implements ISegmentatorListener {
 	@Override
 	public Collection<SignalSegment> getSignalSegments() {
 		throw new IllegalArgumentException("Not implemented");
+	}
+
+	@Override
+	public void setConfig(IExtractorConfig config) {
+		this.config = config;
+	}
+
+	public IExtractorConfig getConfig() {
+		return config;
 	}
 
 

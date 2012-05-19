@@ -33,7 +33,6 @@ public class SpottingMarkerSegmentatorListenerImpl extends
 	@Override
 	protected String match(SignalSegment signalSegment) {
 		List<RecognitionResult> result = getCorpusService().findMultipleMatchFull(signalSegment.findAllFeatures());
-		int index = 0;
 		wordSpottingListener.foundSegment(null, signalSegment, result);
 		return null;
 	}

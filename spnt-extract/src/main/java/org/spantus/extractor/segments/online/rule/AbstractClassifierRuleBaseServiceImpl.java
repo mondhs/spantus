@@ -11,13 +11,14 @@ import org.spantus.extractor.segments.online.cluster.ExtremeOnlineClusterService
 import org.spantus.logger.Logger;
 
 /**
+ * Basic rule implementation for short signals.
  * 
  * @author Mindaugas Greibus
  * 
  * @since 0.2 Created Mar 16, 2010
  * 
  */
-public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService {
+public abstract class AbstractClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService {
 	private static final String RULE_DATA_CTX = "ruleDataCtx";
 	public static final String STABLE_LENGTH = "stableLength";
 	public static final String CURRENT_ANGLE = "currentAngle";
@@ -35,9 +36,9 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 	public static final String LAST_SEGMENT = "lastSegment";
 	public static final String CURRENT_SEGMENT = "currentSegment";
 	public static final String CTX = "ctx";
-	
+
 	private final static Logger log = Logger
-			.getLogger(ClassifierRuleBaseServiceImpl.class);
+			.getLogger(AbstractClassifierRuleBaseServiceImpl.class);
 	
 	private ExtremeOnlineClusterService clusterService;
 	private ExtremeSegmentServiceImpl extremeSegmentService;
@@ -64,28 +65,17 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 
 		ExtremeSegment currentSegment = null;
 		ExtremeSegment lastSegment = null;
-		// boolean segmentEnd = ctx.getFoundEndSegment();
-		// boolean segmentStart = ctx.getFoundStartSegment();
-
-//		boolean segmentPeak = ctx.getFoundPeakSegment();
-//		boolean noiseClass = true;
-
-//		Double currentArea = null;
 		Integer currentPeakCount = null;
 		Double currentPeakValue = null;
 		Long currentLength = null;
 		Double currentAngle = null;
 		Long stableLength = null;
-//		Double lastArea = null;
 		Double lastPeakValue = null;
 		Integer lastPeakCount = null;
 		Double lastAngle = null;
 		Long lastLength = null;
 		boolean isIncrease = false;
 		boolean isDecrease = false;
-//		boolean isSimilar = false;
-//		int lastSizeValues = 0;
-//		int currentSizeValues = 0;
 		Long distanceBetweenPaeks = Long.MAX_VALUE;
 		String className = "";
 
@@ -206,37 +196,9 @@ public class ClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService 
 		return ClassifierRuleBaseEnum.action.processSignal;
 	}
 
-	private ClassifierRuleBaseEnum.action decision(ExtremeSegmentsOnlineCtx ctx, RuleDataCtx c) {
-		if (c.currentSegment == null && ctx.getFeatureInMax()) {
-			return ClassifierRuleBaseEnum.action.processNoise;
-		}else if (c.currentSegment == null ) {
-			return ClassifierRuleBaseEnum.action.initSegment;
-		}else if (ctx.getFeatureStable() && c.currentSegment == null) {
-			return ClassifierRuleBaseEnum.action.processNoise;
-		}else if (ctx.getFeatureStable() && c.stableLength <20) {
-			return ClassifierRuleBaseEnum.action.processSignal;
-		}else if (ctx.getFeatureStable() && c.stableLength >20 && c.currentPeakCount > 0) {
-			return ClassifierRuleBaseEnum.action.changePoint;
-		}else if (ctx.getFeatureStable() && c.stableLength >20) {
-			return ClassifierRuleBaseEnum.action.processNoise;
-		}else if (ctx.getFeatureInMin()) {
-			return ClassifierRuleBaseEnum.action.changePoint;
-		}else if (c.lastLength!=null && ctx.getFeatureInMax() && c.lastLength < 100 ) {
-			return ClassifierRuleBaseEnum.action.join;
-		}else if (ctx.getFeatureInMax() && c.isIncrease && c.distanceBetweenPaeks<190 ) {
-			return ClassifierRuleBaseEnum.action.join;
-		}else if (ctx.getFeatureInMax() && c.isDecrease && c.distanceBetweenPaeks<190 ) {
-			return ClassifierRuleBaseEnum.action.join;
-		}else if (c.lastSegment != null && ctx.getFeatureInMax() && c.lastSegment.getStart() < 100 ) {
-			return ClassifierRuleBaseEnum.action.delete;
-		}else if (ctx.getFeatureInMax() ) {
-			return ClassifierRuleBaseEnum.action.changePointLastApproved;
-		}
-		return ClassifierRuleBaseEnum.action.processSignal;
-	}
+
 	
-	@SuppressWarnings("unused")
-	private ClassifierRuleBaseEnum.action decisionFirst(ExtremeSegmentsOnlineCtx ctx, RuleDataCtx c) {
+	protected ClassifierRuleBaseEnum.action decision(ExtremeSegmentsOnlineCtx ctx, RuleDataCtx c) {
 		if (c.currentSegment == null && ctx.getFeatureInMin()) {
 			log.debug("Current not initialized. This first segment");
 			return ClassifierRuleBaseEnum.action.initSegment;

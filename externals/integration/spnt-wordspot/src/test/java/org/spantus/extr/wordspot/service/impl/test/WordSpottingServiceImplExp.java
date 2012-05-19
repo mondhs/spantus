@@ -26,7 +26,7 @@ public class WordSpottingServiceImplExp extends AbstractSegmentExtractorTest {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		wordSpottingServiceImpl = new WordSpottingServiceImpl();
+		wordSpottingServiceImpl = new WordSpottingServiceImpl(repositoryPathLevel1.getAbsolutePath());
 		wordSpottingServiceImpl.setSegmentExtractorService(getSegmentExtractorService());
 	}
 	
@@ -57,7 +57,7 @@ public class WordSpottingServiceImplExp extends AbstractSegmentExtractorTest {
 		return wavFile;
 	}
 
-	public File getRepositoryPath() {
-		return repositoryPathLevel1;
-	}
+//	public File getRepositoryPath() {
+//		return repositoryPathLevel1;
+//	}
 }

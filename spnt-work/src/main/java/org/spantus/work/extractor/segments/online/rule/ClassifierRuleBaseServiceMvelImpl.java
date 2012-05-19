@@ -15,12 +15,12 @@ import java.util.Map;
 import org.mvel2.MVEL;
 import org.spantus.extractor.segments.ExtremeSegmentServiceImpl;
 import org.spantus.extractor.segments.online.ExtremeSegmentsOnlineCtx;
+import org.spantus.extractor.segments.online.rule.AbstractClassifierRuleBaseServiceImpl;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseEnum;
-import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseServiceImpl;
 import org.spantus.logger.Logger;
 
 public class ClassifierRuleBaseServiceMvelImpl extends
-		ClassifierRuleBaseServiceImpl {
+		AbstractClassifierRuleBaseServiceImpl {
 	
 	private static final Logger log = Logger
 			.getLogger(ClassifierRuleBaseServiceMvelImpl.class);
@@ -39,7 +39,6 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 	public String testOnRuleBase(ExtremeSegmentsOnlineCtx ctx) {
 		Map<String, Object> param = prepareCtx(ctx);
 		List<Rule> rules = getRules();
-
 		
 		// log.debug(""+MVEL.eval("lastSegment", param));
 		String command = null;
@@ -58,6 +57,8 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		}
 		return command;
 	}
+	
+	
 	/**
 	 * 
 	 * @param compiledRule
@@ -148,5 +149,11 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 			ExtremeSegmentServiceImpl extremeSegmentService) {
 		this.extremeSegmentService = extremeSegmentService;
 	}
+
+
+
+
+
+
 
 }
