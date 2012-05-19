@@ -1,7 +1,6 @@
 package org.spantus.extr.wordspot.service.impl;
 
 import java.util.List;
-import java.util.Map;
 
 import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.SignalSegment;

@@ -47,7 +47,12 @@ public class RecognitionMarkerSegmentatorListenerImpl extends
 		for (List<Double> signalWindow : signalWindows.getValues()) {
 			mffcValues.addAll(mfcc.calculateWindow((FrameValues) signalWindow));
 		}
-		vectorMap.put(ExtractorEnum.MFCC_EXTRACTOR.name(), new FrameVectorValuesHolder(mffcValues));
+		
+//		SignalSegment recognitionSignalSegment = new SignalSegment();
+//		recognitionSignalSegment.setMarker(signalSegment.getMarker());
+//		recognitionSignalSegment.setName(signalSegment.getName());
+//		recognitionSignalSegment.getFeatureFrameVectorValuesMap().put(ExtractorEnum.MFCC_EXTRACTOR.name(), new FrameVectorValuesHolder(mffcValues));
+		signalSegment.getFeatureFrameVectorValuesMap().put(ExtractorEnum.MFCC_EXTRACTOR.name(), new FrameVectorValuesHolder(mffcValues));
 		
 		String name = match(signalSegment);
 	
@@ -60,11 +65,12 @@ public class RecognitionMarkerSegmentatorListenerImpl extends
 	}
 	/**
 	 * 
+	 * @param segment 
 	 * @param signalSegment
 	 * @return
 	 */
-	protected String match(SignalSegment signalSegment) {
-		RecognitionResult result = getCorpusService().matchByCorpusEntry(signalSegment);
+	protected String match(SignalSegment segment) {
+		RecognitionResult result = getCorpusService().matchByCorpusEntry(segment);
 		
 		if(result == null){
 			throw new IllegalArgumentException("No recognition information in corpus is found");

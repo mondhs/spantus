@@ -7,7 +7,7 @@ import org.spantus.logger.Logger;
 
 public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterServiceSimpleImpl{
 
-	private static final Logger log = Logger.getLogger(ExtremeOnlineClusterServiceImpl.class);
+	private static final Logger LOG = Logger.getLogger(ExtremeOnlineClusterServiceImpl.class);
 
 	/**
 	 * 
@@ -44,7 +44,7 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 				argNum = 2;
 			}else if(coef<0.25){
 				argNum = 0;
-				log.debug("[getClassName] mark for delete: {0} [{1}>{2}];coef: {3} ", segment, getExtremeSegmentService().getCalculatedArea(segment) ,
+				LOG.debug("[getClassName] mark for delete: {0} [{1}>{2}];coef: {3} ", segment, getExtremeSegmentService().getCalculatedArea(segment) ,
 						getExtremeSegmentService().getCalculatedArea(maxSegment),coef);
 			}
 		}
@@ -144,10 +144,10 @@ public class ExtremeOnlineClusterServiceImpl extends ExtremeOnlineClusterService
 //			ctx.segmentStats.set(0, maxData2);
 //			ctx.segmentStats.set(1, maxData1);
 //		}
-		log.debug("[learn]innerData: {0};", normData);
+		LOG.debug("[learn]innerData: {0};", normData);
 
 //		ctx.maxDistance = maxDistance;
-		log.debug("[learn]  minArea: {0}; maxArea: {1}",  
+		LOG.debug("[learn]  minArea: {0}; maxArea: {1}",  
 				minArea, maxArea);
 		return innerData;
 		

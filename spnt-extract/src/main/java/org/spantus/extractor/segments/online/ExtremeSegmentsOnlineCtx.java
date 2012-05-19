@@ -242,8 +242,8 @@ public class ExtremeSegmentsOnlineCtx {
 		return this.stableCount++;
 	}
 
-	public void popWindowValues() {
-		windowValuesQueue.poll();
+	public FrameValues popWindowValues() {
+		return windowValuesQueue.poll();
 	}
 
 	public void pushWindowValues(FrameValues windowValues) {

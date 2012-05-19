@@ -20,7 +20,7 @@ import org.spantus.logger.Logger;
  * Created Mar 16, 2010
  *
  */
-public class ExtremeOnlineClassifierTest {
+public class ExtremeOnlineRuleClassifierTest {
 
 	Logger log = Logger.getLogger(getClass());	
 	

@@ -37,12 +37,12 @@ import org.spantus.utils.ExtractorParamUtils;
 import org.spantus.work.io.WorkAudioFactory;
 import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
+
 /**
  * 
  * @author Mindaugas Greibus
- * @since 0.3
- * Created: May 7, 2012
- *
+ * @since 0.3 Created: May 7, 2012
+ * 
  */
 public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 
@@ -51,7 +51,6 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 
 	private SegmentExtractorServiceConfig config = new SegmentExtractorServiceConfig();
 	private WorkExtractorReaderService extractorReaderService;
-	
 
 	public SegmentExtractorServiceImpl() {
 
@@ -59,7 +58,7 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	}
 
 	public void updateParams() {
-		getConfig().setExtractorParams(new HashMap<String, ExtractorParam>()); 
+		getConfig().setExtractorParams(new HashMap<String, ExtractorParam>());
 		for (ExtractorEnum extractEnum : getConfig().getExtractors()) {
 			ExtractorParam param = new ExtractorParam();
 			ExtractorParamUtils.setValue(param,
@@ -81,12 +80,19 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	@Override
 	public Collection<SignalSegment> extractSegmentsOnline(URL urlFile) {
 		RecognitionMarkerSegmentatorListenerImpl listener = new RecognitionMarkerSegmentatorListenerImpl();
-		AsyncMarkerSegmentatorListenerImpl asyncListener = new AsyncMarkerSegmentatorListenerImpl(listener);
+		listener.setRepositoryPath(getConfig().getRepositoryPath());
+		AsyncMarkerSegmentatorListenerImpl asyncListener = new AsyncMarkerSegmentatorListenerImpl(
+				listener);
 		listenSegments(urlFile, asyncListener);
-		Collection<SignalSegment> segments = listener.getSignalSegments();
-		LOG.debug("[extractSegments]Found syllables {0}", segments);
+		Collection<SignalSegment> segments = asyncListener.getSignalSegments();
+		if(LOG.isDebugMode()){
+			for (SignalSegment segment : segments) {
+				LOG.debug("[extractSegmentsOnline]Found marker {0}", segment.getMarker());
+			}
+		}
 		return segments;
 	}
+
 	/**
 	 * 
 	 */
@@ -101,8 +107,8 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	public Collection<SignalSegment> extractSegmentsOffline(URL urlFile) {
 		Collection<SignalSegment> segments = new ArrayList<SignalSegment>();
 
-		IExtractorInputReader extractorReader = readSignal(urlFile,
-				getConfig().getExtractors(), null);
+		IExtractorInputReader extractorReader = readSignal(urlFile, getConfig()
+				.getExtractors(), null);
 		Set<IClassifier> classifiers = ExtractorUtils
 				.filterOutClassifers(extractorReader);
 		MarkerSetHolder markerSetHolder = extractMarkerSetHolder(classifiers,
@@ -117,7 +123,12 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 			segment.putAll(features);
 			segments.add(segment);
 		}
-		LOG.debug("[extractSegments]Found syllables {0}", segments);
+		if(LOG.isDebugMode()){
+			for (Marker marker : syllables) {
+				LOG.debug("[extractSegmentsOffline]Found marker {0}", marker);
+			}
+		}
+		
 		return segments;
 
 	}
@@ -137,7 +148,8 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 		SignalFormat format = reader.getFormat(urlFile);
 
 		IExtractorConfig config = ExtractorConfigUtil.defaultConfig(
-				format.getSampleRate(), getConfig().getWindowLength() , getConfig().getOverlapInPerc());// 10 ms and 33 %
+				format.getSampleRate(), getConfig().getWindowLength(),
+				getConfig().getOverlapInPerc());// 10 ms and 33 %
 		config.setPreemphasis(getConfig().getPreephasis().name());
 
 		IExtractorInputReader extractorReader = ExtractorsFactory
@@ -168,7 +180,6 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 		return markerSetHolder;
 	}
 
-
 	public SegmentExtractorServiceConfig getConfig() {
 		return config;
 	}
@@ -184,6 +195,5 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 		}
 		return extractorReaderService;
 	}
-
 
 }

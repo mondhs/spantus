@@ -27,7 +27,6 @@ public class MarkerSegmentatorListenerImpl extends
 
 	public static final String SIGNAL_WINDOWS = "SIGNAL_WINDOWS";
 
-	@SuppressWarnings("unused")
 	private static final Logger LOG = Logger
 			.getLogger(MarkerSegmentatorListenerImpl.class);
 	
@@ -38,15 +37,15 @@ public class MarkerSegmentatorListenerImpl extends
 	
 	private SignalSegment currentSegment;
 	
-	private String firstFeatureId = null;;
+	private String firstFeatureId = null;
 
 	@Override
 	public void onSegmentStarted(SegmentEvent event) {
 		getCurrentMarkerMap().put(event.getExtractorId(), createMarker(event));
-//		LOG.debug("[onSegmentedStarted] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
 		if(getCurrentSegment() == null && getCurrentMarkerMap().size()>getClassifiersThreshold()){
+//			LOG.debug("[onSegmentStarted] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
 			setCurrentSegment(createSegment(event));
-//			LOG.debug("[onSegmentedStarted] +++ {0}: {1}", event, getCurrentSegment());
+			LOG.debug("[onSegmentStarted] +++ {0}: {1}", event, getCurrentSegment());
 			
 		}
 
@@ -58,11 +57,10 @@ public class MarkerSegmentatorListenerImpl extends
 	public void onSegmentEnded(SegmentEvent event) {
 		
 		currentMarkerMap.remove(event.getExtractorId());
-//		LOG.debug("[onSegmentEnded] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
-
-		if(getCurrentSegment() != null && getCurrentMarkerMap().size()<=getClassifiersThreshold()){
+		if(getCurrentSegment() != null && ( getCurrentMarkerMap().size()<getClassifiersThreshold() ||  getClassifiersThreshold()==0)){
+//			LOG.debug("[onSegmentEnded] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
 			finazlizeSegment(getCurrentSegment(), event);
-//			LOG.debug("[onSegmentEnded] --- {0}: {1}", event, getCurrentSegment());
+			LOG.debug("[onSegmentEnded] --- {0}: {1}", event, getCurrentSegment());
 			
 			if(processEndedSegment(getCurrentSegment())){
 				signalSegments.add(getCurrentSegment());
@@ -95,7 +93,7 @@ public class MarkerSegmentatorListenerImpl extends
 
 	@Override
 	public void onSegmentProcessed(SegmentEvent event) {
-		Assert.isTrue(event.getWindowValues()!=null);
+		Assert.isTrue(event.getWindowValues()!=null, "Event without windows values");
 		if(getCurrentSegment() != null){
 			
 			if(firstFeatureId == null){

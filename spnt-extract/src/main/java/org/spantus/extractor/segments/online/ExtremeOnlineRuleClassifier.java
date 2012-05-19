@@ -537,7 +537,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 			SegmentEvent event = new SegmentEvent(getName(), time,
 					appendESegment, sample, previousValue, true);
 			event.setOutputValues(appendESegment.getValues());
-			// event.setWindowValues(windowValues);
+			event.setWindowValues(getOnlineCtx().popWindowValues());
 			for (IClassificationListener listener : getClassificationListeners()) {
 				listener.onSegmentProcessed(event);
 			}
