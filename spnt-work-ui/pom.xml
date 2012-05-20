@@ -72,6 +72,20 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>native2ascii-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>native2ascii</goal>
+                        </goals>
+                        <configuration>
+                            <encoding>UTF8</encoding>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -85,20 +99,7 @@
             <build>
                 <plugins>
                     
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>native2ascii-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>native2ascii</goal>
-                                </goals>
-                                <configuration>
-                                    <encoding>UTF8</encoding>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+
                     
 					<!-- <plugin> <groupId>org.apache.maven.plugins </groupId> <artifactId>maven-dependency-plugin 
 						</artifactId> <executions> <execution> <id>copy-dependencies</id> <phase>package</phase> 
