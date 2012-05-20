@@ -21,7 +21,6 @@ import de.crysandt.audio.mpeg7audio.msgs.MsgSpeaker;
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-@SuppressWarnings(value={"unchecked"})
 public class Click
 	extends MsgSpeaker                
 	implements MsgListener
@@ -32,7 +31,7 @@ public class Click
     private double tresh=25;
     private final float SAMPLE_RATE;
     // private LinkedList msglist=new LinkedList();
-    private LinkedList clicks=new LinkedList();
+    private LinkedList<Integer> clicks=new LinkedList<Integer>();
     
     public Click(float samplerate){
         super();

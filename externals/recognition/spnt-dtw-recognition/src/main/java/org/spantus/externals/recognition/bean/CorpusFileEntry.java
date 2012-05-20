@@ -5,6 +5,10 @@ import java.io.File;
 import org.spantus.core.beans.SignalSegment;
 
 public class CorpusFileEntry extends SignalSegment{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6222933724583829149L;
 	File entryFile;
 	File wavFile;
 

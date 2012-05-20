@@ -244,18 +244,20 @@ public class AudioSpectrumBasisProjection
             SVD svd = new SVD(X, m, n);
 
             //U = singularValueDecomposition.getU();
-            float[][] S = svd.getS();
+          //commented out by mondhs           float[][] S = svd.getS();
             float[][] V = svd.getV();
 
             /* Caclculate the error made */
             //		Sum of diagonal elements
-            float sumFull = 0;
-            float sumReduced = 0;
-            for (int i = 0; i < n; i++) {
-                if (i < NUM_IC)
-                    sumReduced += S[i][i];
-                sumFull += S[i][i];
-            }
+//commented out by mondhs
+//            float sumFull = 0;
+//            float sumReduced = 0;
+//            for (int i = 0; i < n; i++) {
+//                if (i < NUM_IC)
+//                    sumReduced += S[i][i];
+//                sumFull += S[i][i];
+//            }
+//\commented out by mondhs
 
 //            float error = sumReduced / sumFull;
 

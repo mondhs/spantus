@@ -11,7 +11,6 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.MarkerSet;
@@ -38,17 +37,17 @@ public class CorpusEntryExtractorFileImplTest {
     }
     
     
-    @Test @Ignore
+    @Test 
     public void testSegmentExtractInMemory(){
        //given
        File filePath = new File(path, FILE_TEST);
       
        List<SignalSegment> entries = extractor.extractInMemory(filePath);
        //then
-       Assert.assertEquals("entries: " , 2, entries.size());
+       Assert.assertEquals("entries: " , 10, entries.size());
     }
     
-     @Test @Ignore
+     @Test 
     public void testSegmentExtractAndSave(){
          //given
        File filePath = new File(path, FILE_TEST);
@@ -56,9 +55,10 @@ public class CorpusEntryExtractorFileImplTest {
        MarkerSetHolder entries = extractor.extractAndLearn(filePath);
        //then
        Assert.assertNotNull(entries);
-       MarkerSet words = entries.getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.word);
+//       MarkerSet phones = entries.getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.phone.name());
+       MarkerSet words = entries.getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.word.name());
        Assert.assertNotNull(words);
-       Assert.assertEquals("entries: " , 2, words.getMarkers().size());
+       Assert.assertEquals("entries: " , 7, words.getMarkers().size());
      }
      
 }

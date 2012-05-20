@@ -7,8 +7,8 @@ import org.spantus.core.beans.SignalSegment;
 
 public interface SignalSegmentDao {
 
-	public abstract void write(SignalSegment segment, File file);
+	public abstract void write(SignalSegment signalSegment, File file);
 
-	public abstract void write(SignalSegment segment, OutputStream outputStream);
+	public abstract void write(SignalSegment signalSegment, OutputStream outputStream);
 
 }

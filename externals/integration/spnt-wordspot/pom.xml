@@ -20,6 +20,12 @@
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-work</artifactId>
+		 <exclusions>
+		  <exclusion>
+		   <artifactId>mvel2</artifactId>
+		   <groupId>org.mvel</groupId>
+		  </exclusion>
+		 </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus.externals.recognition</groupId>

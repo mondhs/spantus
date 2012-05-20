@@ -9,7 +9,6 @@
 
 	<artifactId>spnt-mpeg7</artifactId>
 	<name>Spantus - MPEG7 support</name>
-	<version>0.3-SNAPSHOT</version>
 
 	<dependencies>
 		<dependency>

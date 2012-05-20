@@ -18,13 +18,12 @@ import de.crysandt.audio.mpeg7audio.msgs.MsgSpeaker;
 /**
  * @author Francesco Saletti
  */
-@SuppressWarnings(value={"unchecked"})
 public class AudioTempoType
   extends MsgSpeaker
   implements MsgListener
 {
-  private static LinkedList old_values = new LinkedList();	
-  private static LinkedList maximums = new LinkedList();
+  private static LinkedList<RawAndWeight> old_values = new LinkedList<RawAndWeight>();	
+  private static LinkedList<RawAndWeight> maximums = new LinkedList<RawAndWeight>();
   static float fs;
   final static int k_dec = 16;
   final float a = 0.99f;
@@ -41,7 +40,7 @@ public class AudioTempoType
   	fs=samplerate;
   }
   	
-  class RawAndWeight implements Comparable{
+  class RawAndWeight implements Comparable<RawAndWeight>{
   	float bpm;
   	float acf_value;
   	public RawAndWeight(float bpm, float acfval){
@@ -49,7 +48,7 @@ public class AudioTempoType
   		this.acf_value = acfval;
   	}
 
-	public int compareTo(Object rv) {
+	public int compareTo(RawAndWeight rv) {
 		float rvbpm = ((RawAndWeight)rv).bpm;	
 		return (bpm < rvbpm ? -1 : (bpm == rvbpm ? 0 : 1)) ;
 	}
@@ -216,7 +215,7 @@ public class AudioTempoType
   static float findMax () {
   	if (!(maximums.isEmpty())){
   		float max = ((RawAndWeight)maximums.getFirst()).acf_value;
-  		Iterator it  = maximums.iterator();
+  		Iterator<RawAndWeight> it  = maximums.iterator();
   		while (it.hasNext()) {
   			if (((RawAndWeight)it.next()).acf_value > max)
   				max = ((RawAndWeight)it.next()).acf_value; 
@@ -251,7 +250,7 @@ public class AudioTempoType
 					
 					// add peaks to the list only if they are not sub-multiples of some of the already stored ones
 					if (!maximums.isEmpty()){
-						Iterator it = maximums.iterator();
+						Iterator<RawAndWeight> it = maximums.iterator();
 						while (it.hasNext()) {
 							float actual = (((RawAndWeight)it.next()).bpm) ;
 							if (((60*fs)/(k_dec*(index))) - 3 < actual / 2 &&
@@ -280,13 +279,13 @@ public class AudioTempoType
   	int tollerance = 3;
   	@SuppressWarnings("unused")
 	RawAndWeight result = null;
-  	Iterator it = maximums.iterator();
+  	Iterator<RawAndWeight> it = maximums.iterator();
 	if (maximums.isEmpty())
 		result = att.new RawAndWeight(0,0);
 	if (!(old_values.isEmpty())) {
 		while(it.hasNext()) {
 			RawAndWeight peaknew = (RawAndWeight)it.next();
-			Iterator ito = old_values.iterator();
+			Iterator<RawAndWeight> ito = old_values.iterator();
 			while (ito.hasNext()) {
 				RawAndWeight peakold = (RawAndWeight)ito.next();
 				if (peaknew.bpm > peakold.bpm - tollerance &&
@@ -308,7 +307,7 @@ public class AudioTempoType
   	RawAndWeight result = null;
   	if (maximums.isEmpty()) return att.new RawAndWeight(0,0); 
   	result = (RawAndWeight)maximums.getFirst();
-  	Iterator it = maximums.iterator();
+  	Iterator<RawAndWeight> it = maximums.iterator();
   	while(it.hasNext()) {
   		RawAndWeight actual = (RawAndWeight)it.next();
   		if (actual.acf_value > (result.acf_value) - newpeaktollerance){

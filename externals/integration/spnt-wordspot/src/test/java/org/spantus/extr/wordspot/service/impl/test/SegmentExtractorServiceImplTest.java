@@ -14,8 +14,6 @@ import org.junit.Test;
 import org.spantus.core.beans.FrameValuesHolder;
 import org.spantus.core.beans.FrameVectorValuesHolder;
 import org.spantus.core.beans.SignalSegment;
-import org.spantus.core.threshold.ClassifierEnum;
-import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.segment.online.MarkerSegmentatorListenerImpl;
 /**

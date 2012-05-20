@@ -35,6 +35,15 @@ import org.spantus.logger.Logger;
  *
  */
 public class WavformExtractor extends AbstractExtractorVector {
+	public int getDevideInto() {
+		return devideInto;
+	}
+
+
+	public void setDevideInto(int devideInto) {
+		this.devideInto = devideInto;
+	}
+
 	private Logger log = Logger.getLogger(getClass());
 	private Double previousMin = null;
 	private Double previousMax = null;
@@ -69,7 +78,6 @@ public class WavformExtractor extends AbstractExtractorVector {
 			previousMax = previousMax == null?ctx.max:previousMax;
 			fv.add((ctx.min+previousMin)*.5F);
 			fv.add((ctx.max+previousMax)*.5F);
-//			log.debug("min:{0}; ;max:{1}, index:{2}", ctx.min , ctx.max, ctx.index);
 			previousMin = ctx.min;
 			previousMax = ctx.max;
 			ctx.max = -Double.MAX_VALUE;
@@ -81,8 +89,8 @@ public class WavformExtractor extends AbstractExtractorVector {
 	}
 	
 	public FrameVectorValues calculateWindow(FrameValues window) {
-		FrameVectorValues calculatedValues = new FrameVectorValues();
-		
+		FrameVectorValues calculatedValues = newFrameVectorValues();
+
 		Context ctx = new Context();
 		
 		//if single value in the window, put got sample as min and max

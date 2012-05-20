@@ -19,16 +19,15 @@ import de.crysandt.audio.mpeg7audio.msgs.MsgSpeaker;
 /**
  * @author Guido Raparo
  */
-@SuppressWarnings(value={"unchecked"})
 public class DigitalZero
         extends MsgSpeaker
 		implements MsgListener{
         
      private static final int LENGTH_FRAME=40;//ms    
      private final float SAMPLE_RATE;
-     private LinkedList msglist=new LinkedList();
+     private LinkedList<MsgResizer> msglist=new LinkedList<MsgResizer>();
      private int channel=1;
-     private ArrayList zeros =new ArrayList();
+     private ArrayList<Zero> zeros =new ArrayList<Zero>();
      private int position =1;
      private int zeroposition=1;
      private int length_remember=0;
@@ -65,7 +64,7 @@ public class DigitalZero
             
             //calcola lunghezza del segnale
      	    int length = 0;
-     		Iterator iter = msglist.iterator();
+     		Iterator<MsgResizer> iter = msglist.iterator();
      		while( iter.hasNext() )
      			length += ((MsgResizer)(iter.next())).getSignalLength();
      			

@@ -296,6 +296,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param audioStream
 	 * @return
 	 */
+        @Override
 	public SignalSegment learn(SignalSegment corpusEntry,
 			AudioInputStream audioStream) {
 		// CorpusEntry corpusEntry = create(label, featureDataMap);

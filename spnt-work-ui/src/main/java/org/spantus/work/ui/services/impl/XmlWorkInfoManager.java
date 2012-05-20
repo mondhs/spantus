@@ -28,7 +28,8 @@ public class XmlWorkInfoManager extends AbstractWorkInfoManager{
 
 	
 	public SpantusWorkInfo openWorkInfo() {
-		SpantusWorkInfo info = new SpantusWorkInfo();
+
+            SpantusWorkInfo info = new SpantusWorkInfo();
 		try {
 			FileReader inFile = new FileReader(getConfigPath()+FILE_NAME);
 			getXsteam().fromXML(inFile, info);
@@ -38,6 +39,7 @@ public class XmlWorkInfoManager extends AbstractWorkInfoManager{
 			log.debug("Config file not read. Create new one.");
 			info = newWorkInfo();
 		} catch (RuntimeException e) {	
+                        log.error(e);
 			log.debug("Problem with loading " + e.getMessage());
 			log.debug("Config file not read. Create new one.");
 			info = newWorkInfo();
@@ -69,6 +71,7 @@ public class XmlWorkInfoManager extends AbstractWorkInfoManager{
 			xstream.alias(WORKING_DIR, File.class);
 			xstream.alias(PROJECT, SpantusWorkProjectInfo.class);
 			xstream.registerConverter(new EnumConverter());
+                        xstream.registerConverter(new EncodingConverter());
 		}
 		return xstream;
 	}

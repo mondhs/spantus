@@ -28,7 +28,6 @@ import de.crysandt.math.Function;
  *
  * @author Francesco Saletti
  */
-@SuppressWarnings(value={"unchecked"})
 public class AudioHarmonicity
     extends MsgSpeaker
     implements MsgListener
@@ -36,8 +35,8 @@ public class AudioHarmonicity
     private final int LENGTH_WINDOW = 30;
     private LinkedList<MsgAudioFundamentalFrequency> afflist = new LinkedList<MsgAudioFundamentalFrequency>();
     
-	private Map        hamming = new TreeMap();
-    private Map        fft2n   = new TreeMap();
+	private Map<Integer,float[]>        hamming = new TreeMap<Integer,float[]>();
+    private Map<Integer,FFT2N>        fft2n   = new TreeMap<Integer,FFT2N>();
     private float[] CombSpectrum;
     private float[] SignalSpectrum;
     private int SpectrumLength;
@@ -105,9 +104,9 @@ public class AudioHarmonicity
     private float[] getCombSpectrum() {
         // calculate length of signal
         int length = 0;
-        Iterator i = afflist.iterator();
+        Iterator<MsgAudioFundamentalFrequency> i = afflist.iterator();
         while (i.hasNext())
-            length += ((MsgAudioFundamentalFrequency) (i.next())).getCombSignalLength();
+            length +=  i.next().getCombSignalLength();
 
         float[] s = new float[length];
 

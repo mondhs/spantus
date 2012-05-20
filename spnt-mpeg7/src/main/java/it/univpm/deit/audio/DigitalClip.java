@@ -19,16 +19,15 @@ import de.crysandt.audio.mpeg7audio.msgs.MsgSpeaker;
 /**
  * @author Guido Raparo
  */
-@SuppressWarnings(value={"unchecked"})
 public class DigitalClip
         extends MsgSpeaker
 		implements MsgListener{
         
      private static final int LENGTH_FRAME=50;//ms    
      private final float SAMPLE_RATE;
-     private LinkedList msglist=new LinkedList();
+     private LinkedList<MsgResizer> msglist=new LinkedList<MsgResizer>();
      private int channel=1;
-     private ArrayList clips =new ArrayList();
+     private ArrayList<ClipData> clips =new ArrayList<ClipData>();
      private int position =1;
      private int clipposition=1;
      private int length_remember=0;
@@ -67,7 +66,7 @@ public class DigitalClip
             
             //calcola lunghezza del segnale
      	    int length = 0;
-     		Iterator iter = msglist.iterator();
+     		Iterator<MsgResizer> iter = msglist.iterator();
      		while( iter.hasNext() )
      			length += ((MsgResizer)(iter.next())).getSignalLength();
      			

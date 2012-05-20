@@ -82,7 +82,7 @@ public class DtwChart extends JPanel {
 		g2d.drawString(sampleLength, getWidth()-fm.stringWidth(targetLength)-3, fm.getHeight());
 		g2d.drawString(targetLength, 0, getHeight()-3);
 		String str = MessageFormat.format("[{0},{1}]", lastPoint.x , lastPoint.y);
-		int strWidth = fm.stringWidth(str);
+//		int strWidth = fm.stringWidth(str);
 		g2d.drawString(str, dimension.width - (2*space),dimension.height - (2*space));
 	}
 
@@ -94,8 +94,8 @@ public class DtwChart extends JPanel {
 	protected void drawPaths(Graphics2D g2d, List<Point> points) {
 		int[] xArr = new int[points.size()];
 		int[] yArr = new int[points.size()];
-		Point lastPoint = points.get(points.size() - 1);
-		FontMetrics fm = g2d.getFontMetrics(g2d.getFont());
+//		Point lastPoint = points.get(points.size() - 1);
+//		FontMetrics fm = g2d.getFontMetrics(g2d.getFont());
 		int i = 0;
 		for (Point p : points) {
 			xArr[i] = p.x;

@@ -15,66 +15,54 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
-*/
+ */
 package org.spantus.extractor.impl.test;
 
 import junit.framework.Assert;
+
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
-import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorVector;
-import org.spantus.extractor.ExtractorConfig;
-import org.spantus.extractor.ExtractorResultBuffer;
-import org.spantus.extractor.ExtractorResultBuffer3D;
-import org.spantus.extractor.impl.EnergyExtractor;
+import org.spantus.core.extractor.IExtractorConfig;
+import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.extractor.impl.WavformExtractor;
 
 /**
- *
+ * 
  * @author mondhs
  */
 public class WavformExtractorTest {
-        ExtractorConfig config;
-        FrameValues x;
+	IExtractorConfig config;
+	FrameValues x;
 
-        @Before
+	@Before
 	public void setUp() throws Exception {
 		x = new FrameValues();
-                x.setSampleRate(8000D);
-		for (float i = 1; i < 6.4 *2* Math.PI; i+=.3) {
+		x.setSampleRate(8000D);
+		for (float i = 1; i < 6.4 * 2 * Math.PI; i += .3) {
 			x.add(Math.sin(i));
 		}
-		config=new ExtractorConfig();
-                config.setWindowOverlap(30);
-		config.setSampleRate(x.getSampleRate());
-
+		config = ExtractorConfigUtil.defaultConfig(x.getSampleRate());
 
 	}
-        
-	@Test @Ignore
-	public void testWavformExtractor(){
-		IExtractorVector extractor = new ExtractorResultBuffer3D(
-                        new WavformExtractor());
-                IExtractor energyExtractor = new ExtractorResultBuffer(
-                        new EnergyExtractor());
-		energyExtractor.setConfig(config);
-                extractor.setConfig(config);
-                
-		extractor.calculateWindow(1L, x);
-		energyExtractor.calculateWindow(1L, x);
-                FrameVectorValues y = extractor.getOutputValues();
-                FrameValues yEnergy = energyExtractor.getOutputValues();
-//		log.debug(extractor.getName() + ": " + y);
-		Assert.assertEquals(3, y.size());
-                Assert.assertEquals(1, yEnergy.size());
 
-                Assert.assertEquals("Times equals",yEnergy.getTime(), y.getTime(),
-                        0.000001);
-                Assert.assertEquals("Times equals",(double)x.getTime(),
-                        (double)y.getTime(), 0.005);
-                
+	@Test
+	public void testWavformExtractor() {
+
+		// given
+		WavformExtractor wavformExtractor = new WavformExtractor();
+		wavformExtractor.setDevideInto(3);
+		wavformExtractor.setConfig(config);
+
+		// when
+		FrameVectorValues y = wavformExtractor.calculateWindow(x);
+		;
+
+		// then
+		Assert.assertEquals(3, y.size());
+		Assert.assertEquals("Times equals", 21, y.getTime(), 0);
+//		Assert.assertEquals("Times equals",x.getTime(), y.getTime(), 0.005);
+
 	}
 }
