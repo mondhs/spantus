@@ -131,7 +131,7 @@
                         <version>1.4</version>
                         <executions>
                             <execution>
-                                <phase>generate-resources</phase>
+                                <phase>process-resources</phase>
                                 <goals>
                                     <goal>execute</goal>
                                 </goals>
@@ -148,19 +148,19 @@
         if(!confDir.exists()) {
             confDir.mkdir();
         }
-        File versionFile = new File(confDir,"version.properties");
+        versionFile = new File(confDir,"version.properties");
         if(versionFile.exists() && versionFile.isDirectory()) {
             println("Version file exists and is directory! Wont overwrite");
             return;
         }
- 
-        println("Creating Version File");
-        BufferedWriter writer = new BufferedWriter(new FileWriter(versionFile));
 
-        writer.write("groupId = ${project.groupId}\n");
-        writer.write("artifactId = ${project.artifactId}\n");
-        writer.write("version = ${project.version}\n");
-        writer.write("timestamp = ${maven.build.timestamp}\n");
+	println("Creating Version File: " + versionFile.toString());
+ 
+	versionFile.write("groupId = ${project.groupId}\n")
+	versionFile.append("artifactId = ${project.artifactId}\n");
+	versionFile.append("version = ${project.version}\n");
+	versionFile.append("timestamp = ${maven.build.timestamp}\n");
+
 
         String buildTag = "";
         String buildNumber = "";
@@ -170,15 +170,14 @@
             buildNumber = "${BUILD_NUMBER}";
             buildId = "${BUILD_ID}";
 
-            writer.write("BUILD_TAG = " + buildTag + "\n");
-            writer.write("BUILD_NUMBER = " + buildNumber + "\n");
-            writer.write("BUILD_ID = " + buildId + "\n");
+            versionFile.append("BUILD_TAG = " + buildTag + "\n");
+            versionFile.append("BUILD_NUMBER = " + buildNumber + "\n");
+            versionFile.append("BUILD_ID = " + buildId + "\n");
 
         } catch (Exception e) {
             println("============= Could not find BUILD_TAG probably this is not a Jenkins/Hudson build ===========");
         }
 
-        writer.close();
         ]]>
                                     </source>
                                 </configuration>
