@@ -2,9 +2,7 @@ spantus
 =======
 
 signal(speech) analytical tool.
-You will need maven to build spantus. More info: https://sourceforge.net/apps/mediawiki/spantus/index.php?title=DeveloperNotes
-
-[Developer Notes](http://sourceforge.net/apps/mediawiki/spantus/index.php?title=DeveloperNotes "Spantus development")
+You will need maven to build spantus. More info: [Developer Notes](http://sourceforge.net/apps/mediawiki/spantus/index.php?title=DeveloperNotes "Spantus development")
 
 JDK 7:
 
