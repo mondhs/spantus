@@ -23,7 +23,7 @@ public final class CollectionUtils {
 	 * @return
 	 */
 	//WARNING SUPPRESSED: Type safety: Potential heap pollution via varargs parameter objs
-	@SafeVarargs
+	//SafeVarargs
 	public static <T> List<T> toList(T... objs){
 		List<T> objList = new ArrayList<T>();
 		for (T obj : objs) {

@@ -31,7 +31,7 @@ import javax.swing.event.ListDataListener;
  * Created Feb 22, 2010
  *
  */
-public class MapComboBoxModel<K,V> extends DefaultComboBoxModel<Entry<K,V>> {
+public class MapComboBoxModel<K,V> extends DefaultComboBoxModel {
 
 	/**
 	 * 
@@ -46,7 +46,7 @@ public class MapComboBoxModel<K,V> extends DefaultComboBoxModel<Entry<K,V>> {
 	 */
 	@Deprecated
 	@Override
-	public void addElement(Entry<K, V> anObject) {
+	public void addElement(Object anObject) {
 //		if(obj instanceof Entry<?,?>){
 //			Entry<K, V> entry = (Entry<K,V>)obj;
 //			getObjectMap().put(entry.getKey(), entry.getValue());
@@ -74,7 +74,6 @@ public class MapComboBoxModel<K,V> extends DefaultComboBoxModel<Entry<K,V>> {
 		return selectedObject;
 	}
 	@SuppressWarnings("unchecked")
-	@Override
 	public void setSelectedItem(Object anItem) {
 		selectedObject = (K)anItem;
 	}
@@ -101,7 +100,7 @@ public class MapComboBoxModel<K,V> extends DefaultComboBoxModel<Entry<K,V>> {
 	}
 	
 	@Override
-	public Entry<K, V> getElementAt(int index) {
+	public Object getElementAt(int index) {
 		int i = 0;
 		for (Entry<K, V> entry : getObjectMap().entrySet()) {
 			i++;
@@ -114,8 +113,9 @@ public class MapComboBoxModel<K,V> extends DefaultComboBoxModel<Entry<K,V>> {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public K getElementKeyAt(int index) {
-		return getElementAt(index).getKey();
+		return ((Entry<K, V>)getElementAt(index)).getKey();
 	}
 
 	public int getSize() {
