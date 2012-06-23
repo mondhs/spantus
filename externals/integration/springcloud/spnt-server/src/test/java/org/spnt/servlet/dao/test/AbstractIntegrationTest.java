@@ -4,14 +4,19 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.midi.Track;
 
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.spantus.server.dto.CorporaEntry;
+import org.spantus.server.dto.SignalSegmentEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -29,7 +34,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration
 public abstract class AbstractIntegrationTest {
 
-//	private static final String COLLECTION = "corporaEntry";
+	// private static final String COLLECTION = "corporaEntry";
 
 	@Autowired
 	MongoOperations operations;
@@ -43,30 +48,43 @@ public abstract class AbstractIntegrationTest {
 	List<CorporaEntry> corporaEntries;
 
 	@Before
-	public void setUp() {
-		operations.dropCollection(CorporaEntry.class);
-		corporaEntries = new ArrayList<CorporaEntry>();
-		firstEntry =  new CorporaEntry(1L, "first.wav");
-		corporaEntries.add(firstEntry);
-		secondEntry =  new CorporaEntry(2L, "second.wav");
-		corporaEntries.add(secondEntry);	
+	public void setUp() throws IOException {
 	}
 
+	@After
+	public void teadDown() {
+		getOperations().dropCollection(SignalSegmentEntry.class);
+		getOperations().dropCollection("corporaEntry");
+	}
+
+	public void initializeData() {
+		corporaEntries = new ArrayList<CorporaEntry>();
+		firstEntry = new CorporaEntry(1L, "first.wav");
+		corporaEntries.add(firstEntry);
+		secondEntry = new CorporaEntry(2L, "second.wav");
+		corporaEntries.add(secondEntry);
+	}
 
 	/**
-	 * Asserts the given query returns the first entry {@link CorporaEntry} and only
-	 * that.
+	 * Asserts the given query returns the first entry {@link CorporaEntry} and
+	 * only that.
 	 * 
 	 * @param query
 	 */
 	protected void assertSingleFirstEntry(Query query) {
 
-		List<CorporaEntry> result = operations.find(query, CorporaEntry.class);
+		try {
+			List<CorporaEntry> result = operations.find(query,
+					CorporaEntry.class);
+			assertThat(result, is(notNullValue()));
+			assertThat(result.size(), is(1));
 
-		assertThat(result, is(notNullValue()));
-		assertThat(result.size(), is(1));
+			assertSingleFirstEntry(result.get(0));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
 
-		assertSingleFirstEntry(result.get(0));
 	}
 
 	/**
@@ -108,8 +126,8 @@ public abstract class AbstractIntegrationTest {
 		return operations;
 	}
 
-//	public String getCollection() {
-//		return COLLECTION;
-//	}
+	// public String getCollection() {
+	// return COLLECTION;
+	// }
 
 }

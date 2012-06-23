@@ -10,12 +10,20 @@ import java.util.List;
  * Created May 4, 2010
  *
  */
-public abstract class CollectionUtils {
+public final class CollectionUtils {
 	/**
-	 * 
+	 * Util class no constructor needed.
+	 */
+	private CollectionUtils() {
+	}
+	
+	/**
+	 * Transform 
 	 * @param strings
 	 * @return
 	 */
+	//WARNING SUPPRESSED: Type safety: Potential heap pollution via varargs parameter objs
+	@SafeVarargs
 	public static <T> List<T> toList(T... objs){
 		List<T> objList = new ArrayList<T>();
 		for (T obj : objs) {

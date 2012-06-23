@@ -39,6 +39,8 @@
             </activation>
             <modules>
                <module>externals/integration/spnt-wordspot</module>
+               <module>externals/integration/springcloud/spnt-applet</module>
+               <module>externals/integration/springcloud/spnt-server</module>
             </modules>
         </profile>
  	<profile>

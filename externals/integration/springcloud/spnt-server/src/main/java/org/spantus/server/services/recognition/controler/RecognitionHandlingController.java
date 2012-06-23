@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spantus.core.beans.RecognitionResultDetails;
+import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.service.CorpusService;
 import org.spantus.server.dto.ResultStatus;
@@ -34,13 +34,13 @@ public class RecognitionHandlingController {
 	@RequestMapping(method = RequestMethod.PUT, value = "/recognition/recognize" )
 	public ModelAndView recognize(@RequestBody final SignalSegment segment) throws IOException {
 		LOG.error("[recognize]input: " + segment.getMarker().getLabel());
-		List<RecognitionResultDetails> entryList = corpusService.findMultipleMatch(segment.findAllFeatures());
+		List<RecognitionResult> entryList = corpusService.findMultipleMatchFull(segment.findAllFeatures());
 //		if(LOG.isDebugEnabled()){
-			for (RecognitionResultDetails recognitionResultDetail : entryList) {
-				recognitionResultDetail.getInfo().setFeatureFrameValuesMap(null);
-				recognitionResultDetail.getInfo().setFeatureFrameVectorValuesMap(null);
-				recognitionResultDetail.setPath(null);
-				LOG.error("Result: " + recognitionResultDetail.getInfo().getMarker().getLabel());
+			for (RecognitionResult recognitionResult : entryList) {
+				recognitionResult.getInfo().setFeatureFrameValuesMap(null);
+				recognitionResult.getInfo().setFeatureFrameVectorValuesMap(null);
+				recognitionResult.getDetails().setPath(null);
+				LOG.error("Result: " + recognitionResult.getInfo().getMarker().getLabel());
 			}
 //		}
 		return newMAV(entryList);
@@ -52,7 +52,7 @@ public class RecognitionHandlingController {
 		return mav;
 	}
 	
-	private ModelAndView newMAV(List<RecognitionResultDetails> entryList) {
+	private ModelAndView newMAV(List<RecognitionResult> entryList) {
 		ModelAndView mav = new ModelAndView(CORPORA_JSON_VIEW_KEY);
 		mav.addObject(entryList);
 		return mav;

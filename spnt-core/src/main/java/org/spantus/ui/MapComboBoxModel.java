@@ -31,7 +31,7 @@ import javax.swing.event.ListDataListener;
  * Created Feb 22, 2010
  *
  */
-public class MapComboBoxModel<K,V> extends DefaultComboBoxModel {
+public class MapComboBoxModel<K,V> extends DefaultComboBoxModel<Entry<K,V>> {
 
 	/**
 	 * 
@@ -45,19 +45,20 @@ public class MapComboBoxModel<K,V> extends DefaultComboBoxModel {
 	 * use add instead
 	 */
 	@Deprecated
-	public void addElement(Object obj) {
+	@Override
+	public void addElement(Entry<K, V> anObject) {
 //		if(obj instanceof Entry<?,?>){
 //			Entry<K, V> entry = (Entry<K,V>)obj;
 //			getObjectMap().put(entry.getKey(), entry.getValue());
 //		}else{
-			throw new IllegalArgumentException(obj + " is not supported");
+			throw new IllegalArgumentException(anObject + " is not supported");
 //		}
 	}
 	public void add(Entry<K,V> entry) {
 		getObjectMap().put(entry.getKey(), entry.getValue());
 	}
 
-	public void insertElementAt(Object obj, int index) {
+	public void insertElementAt(Entry<K, V> obj, int index) {
 		throw new IllegalArgumentException("not implemented!");
 	}
 
@@ -99,17 +100,22 @@ public class MapComboBoxModel<K,V> extends DefaultComboBoxModel {
 		return get((String)getSelectedItem());
 	}
 	
-	public K getElementAt(int index) {
+	@Override
+	public Entry<K, V> getElementAt(int index) {
 		int i = 0;
 		for (Entry<K, V> entry : getObjectMap().entrySet()) {
 			i++;
 			if(i == index){
-				return entry.getKey();
+				return entry;
 			}
 			
 		}
 
 		return null;
+	}
+	
+	public K getElementKeyAt(int index) {
+		return getElementAt(index).getKey();
 	}
 
 	public int getSize() {

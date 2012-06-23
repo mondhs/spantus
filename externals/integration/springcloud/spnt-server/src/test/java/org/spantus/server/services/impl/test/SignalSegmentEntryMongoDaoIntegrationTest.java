@@ -3,6 +3,7 @@ package org.spantus.server.services.impl.test;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import junit.framework.Assert;
@@ -14,7 +15,7 @@ import org.junit.runner.RunWith;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.server.dto.SignalSegmentEntry;
 import org.spantus.server.services.impl.SignalSegmentEntryMongoDao;
-import org.spnt.servlet.dao.test.AbstractIntegrationTest;
+import org.spnt.servlet.dao.test.AbstractEmbededIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,7 +23,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class SignalSegmentEntryMongoDaoIntegrationTest extends
-		AbstractIntegrationTest {
+AbstractEmbededIntegrationTest {
 
 	// private static final String COLLECTION = "SignalSegments";
 	private ArrayList<SignalSegmentEntry> signalSegmentEntries;
@@ -34,7 +35,8 @@ public class SignalSegmentEntryMongoDaoIntegrationTest extends
 
 	@Override
 	@Before
-	public void setUp() {
+	public void setUp() throws IOException{
+		super.setUp();
 		signalSegmentEntries = new ArrayList<SignalSegmentEntry>();
 		firstEntry = new SignalSegmentEntry(new SignalSegment());
 		signalSegmentEntries.add(firstEntry);
@@ -48,6 +50,7 @@ public class SignalSegmentEntryMongoDaoIntegrationTest extends
 	@After
 	public void onTeardown(){
 		getOperations().dropCollection(SignalSegmentEntry.class);
+		super.teadDown();
 	}
 
 	@Test

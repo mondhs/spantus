@@ -1,10 +1,7 @@
 package org.spantus.externals.recognition.services;
 
-import java.awt.Point;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -14,10 +11,6 @@ import java.util.Set;
 
 import javax.sound.sampled.AudioInputStream;
 
-import org.apache.commons.math3.linear.RealMatrix;
-import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
-import org.spantus.core.FrameValues;
-import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.beans.FrameValuesHolder;
 import org.spantus.core.beans.FrameVectorValuesHolder;
@@ -28,7 +21,6 @@ import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.io.ProcessedFrameLinstener;
 import org.spantus.core.service.CorpusRepository;
 import org.spantus.core.service.CorpusService;
-import org.spantus.exception.ProcessingException;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.logger.Logger;
 import org.spantus.math.NumberUtils;
@@ -54,6 +46,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	private Set<String> includeFeatures;
 
 	private Float searchRadius;
+	
+	private CorpusServiceHelperImpl corpusServiceHelper;
 	
 	private Set<ProcessedFrameLinstener> listeners;
 	
@@ -101,10 +95,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		Map<String, Double> maximum = new HashMap<String, Double>();
 
 		// iterate all entries in corpus
-		for (SignalSegment corpusSample : getCorpus().findAllEntries()) {
+		for (SignalSegment corpusSample : findAll()) {
 			LOG.debug("[findMultipleMatch] sample: {0} ", 
 					corpusSample.getName());
-			RecognitionResult result = createRecognitionResultDetail();
+			RecognitionResult result = getCorpusServiceHelper().createRecognitionResultDetail();
 			Long targetLength = target.values().iterator().next().getTime();
 			Long sampleLength = targetLength;
 			if(corpusSample.getMarker()!=null){
@@ -121,10 +115,10 @@ public class CorpusServiceBaseImpl implements CorpusService {
 					continue;
 				}
 				
-				DtwResult dtwResult = calculateInfo(featureName, targetEntry.getValue(),sampleFeatureData.getValues());
+				DtwResult dtwResult = getCorpusServiceHelper().findDtwResult(featureName, targetEntry.getValue(),sampleFeatureData.getValues());
 				result = updateResults(result, dtwResult, featureName, corpusSample, targetEntry);
 				if(result!=null){
-					updateMinMax(featureName, dtwResult.getResult(), minimum,
+					getCorpusServiceHelper().updateMinMax(featureName, dtwResult.getResult(), minimum,
 							maximum,sampleLength,targetLength);
 					
 				}else{
@@ -138,7 +132,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 				results.add(result);
 			}
 		}
-		results = postProcessResult(results, minimum, maximum);
+		results = getCorpusServiceHelper().postProcessResult(results, minimum, maximum);
 		LOG.debug("[findMultipleMatch]--- in {0} ms ",
 				System.currentTimeMillis() - begin);
 		ended();
@@ -178,114 +172,8 @@ public class CorpusServiceBaseImpl implements CorpusService {
 
 
 
-	/**
-	 * 
-	 * @param recognitionResultDetails 
-	 * @return
-	 */
-	private RecognitionResult createRecognitionResultDetail() {
-		RecognitionResult resultInfo = new RecognitionResult();
-		resultInfo.setScores(new HashMap<String, Double>());
-		RecognitionResultDetails details = new RecognitionResultDetails();
-		details.setPath(new HashMap<String, List<Point>>());
-		details.setPath(new HashMap<String, List<Point>>());
-		details.setTargetLegths(new HashMap<String, Long>());
-		details.setSampleLegths(new HashMap<String, Long>());
-		details.setCostMatrixMap(new HashMap<String, RealMatrix>());
-		details.setStatisticalSummaryMap(new HashMap<String, StatisticalSummary>());
-		resultInfo.setDetails(details);
-		return resultInfo;
-	}
 
-	/**
-	 * Update information with min max for each feature
-	 * 
-	 * @param feature
-	 * @param value
-	 * @param minimum
-	 * @param maximum
-	 * @param targetLength 
-	 * @param sampleLength 
-	 */
-	private void updateMinMax(String feature, Double value,
-			Map<String, Double> minimum, Map<String, Double> maximum, Long sampleLength, Long targetLength) {
-		// log.debug("[updateMinMax] feature [{0}]: {1} ", feature, value);
-		if (minimum.get(feature) == null) {
-			minimum.put(feature, Double.MAX_VALUE);
-		}
-		if (maximum.get(feature) == null) {
-			maximum.put(feature, -Double.MAX_VALUE);
-		}
-		if (minimum.get(feature).compareTo(value) > 0 && !value.isInfinite()) {
-			// log.debug("[updateMinMax] [{2}] minimum {0}>{1}",
-			// minimum.get(feature),value, feature);
-			minimum.put(feature, value);
-		}
-		if (maximum.get(feature).compareTo(value) < 0 && !value.isInfinite()) {
-			// log.debug("[updateMinMax] [{2}] maximum {0}<{1}",maximum.get(feature)
-			// ,value, feature);
-			maximum.put(feature, value);
-		}
-		// log.debug("[updateMinMax][{0}] [{1}]", minimum, maximum);
-	}
-
-	/**
-	 * post process multi match result. normalize and ordering
-	 * 
-	 * @param results
-	 * @return
-	 */
-	private <T extends RecognitionResult> List<T> postProcessResult(
-			List<T> results, Map<String, Double> minimum,
-			Map<String, Double> maximum) {
-		// log.debug("[postProcessResult]+++");
-		
-		
-
-		for (RecognitionResult result : results) {
-			Map<String, Double> normalizedScores = new HashMap<String, Double>();
-			Map<String, Double> distances = new HashMap<String, Double>();
-			Double normalizedSum = 0D;
-			int countAffectiveScores = 0;
-			
-			for (Entry<String, Double> score : result.getScores().entrySet()) {
-				 Double min = minimum.get(score.getKey());
-				 Double max = maximum.get(score.getKey());
-				 Double delta = max-min;
-				 Double normalizedScore = (score.getValue() - min)/delta;
-//				Double normalizedScore = score.getValue();
-
-				if (getIncludeFeatures() == null
-						|| getIncludeFeatures().isEmpty()) {
-					normalizedSum += normalizedScore;
-					countAffectiveScores++;
-				} else if (getIncludeFeatures().contains(score.getKey())) {
-					normalizedSum += normalizedScore;
-					countAffectiveScores++;
-				}
-				normalizedScores.put(score.getKey(), normalizedScore);
-				distances.put(score.getKey(), score.getValue());
-			}
-			countAffectiveScores = Math.max(1, countAffectiveScores);
-			result.setDistance(normalizedSum/countAffectiveScores);
-			
-			if(result.getDetails() !=null){
-				result.getDetails().setDistances(distances);
-			}
-			result.setScores(normalizedScores);
-		}
-		// log.debug("[postProcessResult] results before sort: {0}", results);
-		Collections.sort(results, new Comparator<RecognitionResult>() {
-			public int compare(RecognitionResult o1, RecognitionResult o2) {
-				return NumberUtils.compare(o1.getDistance(), o2.getDistance());
-			}
-		});
-		int maxElementSize = NumberUtils.min(20, results.size());
-
-		LOG.debug("[postProcessResult] results after sort: {0}", results);
-		// log.debug("[postProcessResult]---");
-		return results.subList(0, maxElementSize);
-	}
+	
 
 	/**
 	 * Same as {@link #learn(java.lang.String, java.util.Map)} only with audio
@@ -345,11 +233,11 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	public Map<String, RecognitionResult> bestMatchesForFeatures(
 			Map<String, IValues> target) {
 		Map<String, RecognitionResult> match = new HashMap<String, RecognitionResult>();
-		for (SignalSegment corpusSample : getCorpus().findAllEntries()) {
+		for (SignalSegment corpusSample : findAll()) {
 			long start = System.currentTimeMillis();
 			for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
 				String featureName = targetEntry.getKey();
-				RecognitionResult result1 = compare(featureName,
+				RecognitionResult result1 = getCorpusServiceHelper().compare(featureName,
 						targetEntry.getValue(), corpusSample);
 				// match if this best for feature
 				if (match.get(featureName) == null) {
@@ -386,7 +274,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 		Long totalToProcess = getCorpus().count()*target.size();
 		started(totalToProcess);
 		
-		for (SignalSegment corpusSample : getCorpus().findAllEntries()) {
+		for (SignalSegment corpusSample : findAll()) {
 			long start = System.currentTimeMillis();
 			Long targetLength = target.values().iterator().next().getTime();
 			Long sampleLength = targetLength;
@@ -399,14 +287,14 @@ public class CorpusServiceBaseImpl implements CorpusService {
 			result.setInfo(corpusSample);
 			for (Map.Entry<String, IValues> targetEntry : target.entrySet()) {
 				String featureName = targetEntry.getKey();
-				RecognitionResult result1 = compare(featureName,
+				RecognitionResult result1 =  getCorpusServiceHelper().compare(featureName,
 						targetEntry.getValue(), corpusSample);
 				if (result1 == null) {
 					LOG.debug("[findBestMatch]result not found");
 					continue;
 				}
 				result.getScores().put(featureName, result1.getDistance());
-				updateMinMax(featureName, result1.getDistance(), minimum,
+				getCorpusServiceHelper().updateMinMax(featureName, result1.getDistance(), minimum,
 						maximum, sampleLength, targetLength );
 				processed(processedCount++, totalToProcess);
 			}
@@ -419,11 +307,11 @@ public class CorpusServiceBaseImpl implements CorpusService {
 						(System.currentTimeMillis() - start));
 			}
 			if (results.size() > 100) {
-				results = postProcessResult(results, minimum, maximum);
+				results = getCorpusServiceHelper().postProcessResult(results, minimum, maximum);
 			}
 			started(getCorpus().count()*target.size());
 		}
-		results = postProcessResult(results, minimum, maximum);
+		results = getCorpusServiceHelper().postProcessResult(results, minimum, maximum);
 		LOG.info(MessageFormat.format("[findBestMatch] sample: {0}", results));
 		if (results.isEmpty()) {
 			return null;
@@ -433,71 +321,12 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	}
 
 	
-	/**
-	 * 
-	 * @param key
-	 * @param targetEntry
-	 * @param sampleFeatureData
-	 * @return
-	 */
-	protected DtwResult calculateInfo(String key, IValues targetEntry, IValues sampleFeatureData) {
-		int targetDimention = targetEntry.getDimention();
-		DtwResult dtwResult = null;
-		
-		if (targetDimention  != sampleFeatureData
-				.getDimention()) {
-			String msg = MessageFormat.format("[findMultipleMatch] Sample size not same {0}: {1} != {2}",
-					 key,
-					 targetDimention ,
-					 sampleFeatureData.getDimention());
-			throw new ProcessingException(msg);
-		}
-		
-		if (targetDimention == 1) {
-			dtwResult = (DtwResult) getDtwService().calculateInfo(
-					(FrameValues) targetEntry,
-					(FrameValues) sampleFeatureData);
-		} else {
-			dtwResult = getDtwService().calculateInfoVector(
-					(FrameVectorValues) targetEntry,
-					(FrameVectorValues) sampleFeatureData);
-		}
-		if(dtwResult.getResult().isInfinite()){
-			return null;
-		}
-		return dtwResult;
+	protected Iterable<SignalSegment> findAll() {
+		return getCorpus().findAllEntries();
 	}
+
+
 	
-	/**
-	 * 
-	 * @param target
-	 * @param sample
-	 * @return
-	 */
-	protected RecognitionResult compare(String featureName,
-			IValues targetValues, SignalSegment sample) {
-		IValueHolder<?> fd = sample.findValueHolder(featureName);
-		if (fd == null) {
-			return null;
-		}
-		if(targetValues.size()<2){
-			return null;
-		}
-		RecognitionResult result = new RecognitionResult();
-		result.setInfo(sample);
-		if (targetValues.getDimention() == 1) {
-			result.setDistance(getDtwService().calculateDistance(
-					(FrameValues) targetValues, (FrameValues) fd.getValues()));
-		} else {
-			result.setDistance(getDtwService().calculateDistanceVector(
-					(FrameVectorValues) targetValues,
-					(FrameVectorValues) fd.getValues()));
-		}
-		if(result.getDistance().isInfinite()){
-			return null;
-		}
-		return result;
-	}
 
 	public void processed(Long current, Long total) {
 		for (ProcessedFrameLinstener linstener : getListeners()) {
@@ -542,6 +371,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 
 	public void setDtwService(DtwService dtwService) {
 		this.dtwService = dtwService;
+		corpusServiceHelper = null;
 	}
 
 	public Set<String> getIncludeFeatures() {
@@ -549,6 +379,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	}
 
 	public void setIncludeFeatures(Set<String> includeFeatures) {
+		corpusServiceHelper = null;
 		this.includeFeatures = includeFeatures;
 	}
 
@@ -559,6 +390,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	public void setSearchRadius(Float searchRadius) {
 		this.searchRadius = searchRadius;
 		dtwService =null;
+		corpusServiceHelper = null;
 	}
 
 	public JavaMLSearchWindow getJavaMLSearchWindow() {
@@ -568,6 +400,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	public void setJavaMLSearchWindow(JavaMLSearchWindow javaMLSearchWindow) {
 		this.javaMLSearchWindow = javaMLSearchWindow;
 		dtwService =null;
+		corpusServiceHelper = null;
 	}
 
 	public JavaMLLocalConstraint getJavaMLLocalConstraint() {
@@ -583,6 +416,19 @@ public class CorpusServiceBaseImpl implements CorpusService {
 			listeners = new LinkedHashSet<ProcessedFrameLinstener>();
 		}
 		return listeners;
+	}
+
+	public CorpusServiceHelperImpl getCorpusServiceHelper() {
+		if(corpusServiceHelper == null){
+			corpusServiceHelper = new CorpusServiceHelperImpl();
+			corpusServiceHelper.setIncludeFeatures(getIncludeFeatures());
+			corpusServiceHelper.setDtwService(getDtwService());
+		}
+		return corpusServiceHelper;
+	}
+
+	public void setCorpusServiceHelper(CorpusServiceHelperImpl corpusServiceHelper) {
+		this.corpusServiceHelper = corpusServiceHelper;
 	}
 
 }

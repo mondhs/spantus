@@ -7,10 +7,12 @@ http://www.springframework.org/schema/data/mongo http://www.springframework.org/
 
 	<!-- Sets up a Mongo DB instance. Configure host, port and credentials if 
 		needed. -->
-	<mongo:db-factory dbname="test" />
+	<mongo:db-factory dbname="mongo_test" />
 
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
 		<constructor-arg ref="mongoDbFactory" />
 	</bean>
+	
+	 
 
 </beans>
