@@ -6,6 +6,7 @@
 		<artifactId>spnt-root-pom</artifactId>
 		<groupId>org.spantus</groupId>
 		<version>0.3-SNAPSHOT</version>
+		<relativePath>../../../../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>spnt-applet</artifactId>
