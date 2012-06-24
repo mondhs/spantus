@@ -17,6 +17,7 @@
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-work</artifactId>
+			<classifier>${envClassifier}</classifier>
 			</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>

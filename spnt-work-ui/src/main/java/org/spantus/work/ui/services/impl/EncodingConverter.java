@@ -17,6 +17,7 @@ import javax.sound.sampled.AudioFormat;
  */
 public class EncodingConverter implements Converter {
 
+	@SuppressWarnings("rawtypes") 
     @Override
     public boolean canConvert(Class type) {
         return AudioFormat.Encoding.class == type;

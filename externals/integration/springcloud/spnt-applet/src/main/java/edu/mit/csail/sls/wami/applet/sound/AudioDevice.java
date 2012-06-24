@@ -45,7 +45,6 @@ import javax.sound.sampled.Mixer;
 
 import org.spantus.logger.Logger;
 import org.spnt.applet.SpntAudoListener;
-import org.spnt.applet.handler.PingHandler;
 
 /**
  * @author cyphers

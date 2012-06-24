@@ -12,24 +12,30 @@
 
 	<dependencySets>
 		<dependencySet>
-			<outputDirectory>./lib/</outputDirectory>
+			<outputDirectory>spantus-tool/lib/</outputDirectory>
 			<includes>
-				<include>*:jar</include>
+				<include>*:jar:*</include>
 			</includes>
+			<excludes>
+				<exclude>*:spnt-work-ui:*</exclude>
+			</excludes>
 		</dependencySet>
 	</dependencySets>
 
 	<fileSets>
-		
 		<fileSet>
 			<directory>src/assembly/resources</directory>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory>spantus-tool/</outputDirectory>
 		</fileSet>
 	</fileSets>
 	<files>
 		<file>
+			<source>target/spnt-work-ui-${artifact.version}-${envClassifier}.jar</source>
+			<outputDirectory>spantus-tool/lib/</outputDirectory>
+		</file>
+		<file>
 			<source>src/main/resources/ClassifierRuleBase.csv</source>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory>spantus-tool/</outputDirectory>
 		</file>
 	</files>
  

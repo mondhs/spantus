@@ -1,7 +1,6 @@
 package org.spantus.segment.online;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +30,7 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener 
 
 	private int classifiersCount;
 
+	@SuppressWarnings("unused")
 	private int classifiersThreshold;
 
 	public AsyncMarkerSegmentatorListenerImpl(

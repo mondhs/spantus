@@ -21,7 +21,7 @@ public class CorpusServiceServerImpl extends CorpusServiceBaseImpl {
 
 
 
-
+    @Override
 	protected Iterable<SignalSegment> findAll() {
 		Function<SignalSegmentEntry, SignalSegment> transformFunction = new Function<SignalSegmentEntry, SignalSegment>() {
 			@Override

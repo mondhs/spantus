@@ -77,7 +77,7 @@ public class SpntStorageServiceFileImpl implements SpntEchoRepository {
 	 * @see org.spnt.servlet.service.SpntStorageService#store(javax.sound.sampled.AudioInputStream)
 	 */
 	public CorporaEntry store(InputStream audioIn) {
-		File file = new File(getStorageDir(), "out.wav");
+//		File file = new File(getStorageDir(), "out.wav");
 //		AudioManagerFactory.createAudioManager().save(audioIn,
 //				file.getAbsolutePath());
 		return new CorporaEntry();

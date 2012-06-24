@@ -12,25 +12,26 @@
 	<name>Spantus - Work module</name>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.spantus</groupId>
-			<artifactId>spnt-core</artifactId>
-		</dependency>
+
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-extract</artifactId>
+			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-chart</artifactId>
+			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-mpeg7</artifactId>
+			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-segment</artifactId>
+			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>

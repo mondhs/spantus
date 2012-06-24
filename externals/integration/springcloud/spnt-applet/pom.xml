@@ -2,16 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.spantus</groupId>
+	<parent>
+		<artifactId>spnt-root-pom</artifactId>
+		<groupId>org.spantus</groupId>
+		<version>0.3-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>spnt-applet</artifactId>
-	<description>Spantus Applet</description>
+	<name>Spantus - External - Spantus Applet for Clound</name>
 	<packaging>jar</packaging>
-	<version>0.3-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-core</artifactId>
-			<version>0.3-SNAPSHOT</version>
+			<classifier>${envClassifier}</classifier>
 		</dependency>
 	</dependencies>
 	<profiles>
@@ -51,12 +55,12 @@
 									<goal>sign</goal>
 								</goals>
 							</execution>
-							          <execution>
-            <id>verify</id>
-            <goals>
-              <goal>verify</goal>
-            </goals>
-          </execution>
+							<execution>
+								<id>verify</id>
+								<goals>
+									<goal>verify</goal>
+								</goals>
+							</execution>
 						</executions>
 						<configuration>
 							<keystore>./cloud.keystore.jks</keystore>

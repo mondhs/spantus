@@ -20,8 +20,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.mongodb.Mongo;
-
 import de.flapdoodle.embedmongo.MongoDBRuntime;
 import de.flapdoodle.embedmongo.MongodExecutable;
 import de.flapdoodle.embedmongo.MongodProcess;
@@ -38,16 +36,12 @@ public class SignalSegmentEntryRepositoryTest {
 	private MongodExecutable _mongodExe;
     private MongodProcess _mongod;
 
-    private Mongo _mongo;
-    private static final String DATABASENAME = "mongo_test";
-	
 	@Before
 	public void onSetup() throws IOException{
 		
 		MongoDBRuntime runtime = MongoDBRuntime.getDefaultInstance();
         _mongodExe = runtime.prepare(new MongodConfig(Version.V2_0, 27017,false));
         _mongod=_mongodExe.start();
-        _mongo = new Mongo("localhost", 27017);
 		
 		for (int i = 0; i < 30; i++) {
 			SignalSegmentEntry entry = new SignalSegmentEntry();

@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.spantus</groupId>
-    <artifactId>spnt-root-pom</artifactId>
-    <packaging>pom</packaging>
-    <version>0.3-SNAPSHOT</version>
-    <name>Spantus root pom</name>
-    <url>http://spantus.sourceforge.net</url>
-    <scm>
-        <connection>scm:svn:https://spantus.svn.sourceforge.net/svnroot/spantus/trunk</connection>
-        <url>http://spantus.sourceforge.net/</url>
-    </scm>
-    <properties>
-		<org.springframework.spring.version>2.5.2</org.springframework.spring.version>
-	</properties>
-    
-   
-    
-    <modules>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.spantus</groupId>
+	<artifactId>spnt-root-pom</artifactId>
+	<packaging>pom</packaging>
+	<version>0.3-SNAPSHOT</version>
+	<name>Spantus root pom</name>
+	<url>http://spantus.sourceforge.net</url>
+	<scm>
+		<connection>scm:svn:https://spantus.svn.sourceforge.net/svnroot/spantus/trunk</connection>
+		<url>http://spantus.sourceforge.net/</url>
+	</scm>
+
+
+	<modules>
 		<module>spnt-math</module>
 		<module>spnt-core</module>
 		<module>spnt-segment</module>
@@ -27,161 +24,244 @@
 		<module>spnt-work</module>
 		<module>externals/recognition/spnt-dtw-recognition</module>
 		<module>spnt-work-ui</module>
-    </modules>
+	</modules>
 
-    <profiles>
-        <profile>
-            <id>integeration-modules</id>
-            <activation>
-                <property>
-                    <name>integeration-modules</name>
-                </property>
-            </activation>
-            <modules>
-               <module>externals/integration/spnt-wordspot</module>
-               <module>externals/integration/springcloud/spnt-applet</module>
-               <module>externals/integration/springcloud/spnt-server</module>
-            </modules>
-        </profile>
- 	<profile>
-            <id>jdk6</id>
-            <activation>
-                <property>
-                    <name>jdk6</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
-					</configuration>
-				</plugin>
-		</plugins>
-            </build>
-        </profile>
-    </profiles>    
+	<profiles>
+		<profile>
+			<id>integeration-modules</id>
+			<activation>
+				<property>
+					<name>integeration-modules</name>
+				</property>
+			</activation>
+			<modules>
+				<module>externals/integration/spnt-wordspot</module>
+				<module>externals/integration/springcloud/spnt-applet</module>
+				<module>externals/integration/springcloud/spnt-server</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>jdk6</id>
+			<activation>
+				<jdk>1.6</jdk>
+			</activation>
+			<properties>
+				<envClassifier>jdk16</envClassifier>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>2.4</version>
+						<configuration>
+							<source>1.6</source>
+							<target>1.6</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>jdk7</id>
+			<activation>
+				<jdk>1.7</jdk>
+			</activation>
+			<properties>
+				<envClassifier>jdk17</envClassifier>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>2.4</version>
+						<configuration>
+							<source>1.7</source>
+							<target>1.7</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
-    <dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
-    <repositories>
-    	<repository>
-    		<id>spnt-global-repo</id>
-    		<name>Spantus releases and 3rd party repo</name>
-    		<url>http://spantus.sourceforge.net/maven/global/</url>
-    		<releases>
-    			<updatePolicy>daily</updatePolicy>
-    		</releases>
-    		<snapshots>
-    			<enabled>false</enabled>
-    		</snapshots>
-    	</repository>
-    	<repository>
-    		<id>spnt-snapshot-repo</id>
-    		<name>Spantus snapsot repo</name>
-    		<url>http://spantus.sourceforge.net/maven/snapshot/</url>
-    		<releases>
-    			<enabled>false</enabled>
-    		</releases>
-    		<snapshots>
-    			<updatePolicy>daily</updatePolicy>
-    		</snapshots>
-    	</repository>
-    </repositories>
 
-    <build>
-        <extensions>
-            <!-- Enabling the use of FTP -->
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh-external</artifactId>
-                <version>2.2</version>
-            </extension>
-        </extensions>
-        <plugins>
-	   </plugins>
+	<repositories>
+		<repository>
+			<id>spnt-global-repo</id>
+			<name>Spantus releases and 3rd party repo</name>
+			<url>http://spantus.sourceforge.net/maven/global/</url>
+			<releases>
+				<updatePolicy>daily</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spnt-snapshot-repo</id>
+			<name>Spantus snapsot repo</name>
+			<url>http://spantus.sourceforge.net/maven/snapshot/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<updatePolicy>daily</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<build>
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>2.2</version>
+			</extension>
+			<extension>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<groupId>org.apache.maven.wagon</groupId>
+				<version>2.2</version>
+			</extension>
+		</extensions>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<classifier>${envClassifier}</classifier>
+				</configuration>
+			</plugin>
+
+		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.4</version>
-					<configuration>
-						<source>1.7</source>
-						<target>1.7</target>
-					</configuration>
-				</plugin>
+
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>native2ascii-maven-plugin</artifactId>
 					<version>1.0-beta-1</version>
 				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											native2ascii-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0-beta-1,)
+										</versionRange>
+										<goals>
+											<goal>native2ascii</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
-    </build>
+	</build>
 
-    <dependencyManagement>
+	<dependencyManagement>
 		<dependencies>
-				<dependency>
-					<groupId>org.spantus</groupId>
-					<artifactId>spnt-core</artifactId>
-					<version>0.3-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>org.spantus</groupId>
-					<artifactId>spnt-math</artifactId>
-					<version>0.3-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>org.spantus</groupId>
-					<artifactId>spnt-extract</artifactId>
-					<version>0.3-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>org.spantus</groupId>
-					<artifactId>spnt-mpeg7</artifactId>
-					<version>0.3-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>org.spantus</groupId>
-					<artifactId>spnt-chart</artifactId>
-					<version>0.3-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>org.spantus.externals.recognition</groupId>
-					<artifactId>spnt-dtw-recognition</artifactId>
-					<version>0.3-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>org.spantus</groupId>
-					<artifactId>spnt-segment</artifactId>
-					<version>0.3-SNAPSHOT</version>
-				</dependency>
+			<dependency>
+				<groupId>org.spantus</groupId>
+				<artifactId>spnt-core</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.spantus</groupId>
+				<artifactId>spnt-math</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.spantus</groupId>
+				<artifactId>spnt-extract</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.spantus</groupId>
+				<artifactId>spnt-mpeg7</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.spantus</groupId>
+				<artifactId>spnt-chart</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.spantus.externals.recognition</groupId>
+				<artifactId>spnt-dtw-recognition</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.spantus</groupId>
+				<artifactId>spnt-segment</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
 
-				<dependency>
-					<groupId>org.spantus</groupId>
-					<artifactId>spnt-work</artifactId>
-					<version>0.3-SNAPSHOT</version>
-				</dependency>
-				<dependency>
-					<groupId>org.spantus</groupId>
-					<artifactId>spnt-work-ui</artifactId>
-					<version>0.3-SNAPSHOT</version>
-				</dependency>
+			<dependency>
+				<groupId>org.spantus</groupId>
+				<artifactId>spnt-work</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.spantus</groupId>
+				<artifactId>spnt-work-ui</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.spantus</groupId>
+				<artifactId>spnt-applet</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.spantus</groupId>
+				<artifactId>spnt-server</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
 
-				<dependency>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-					<version>1.2.15</version>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.15</version>
 				<exclusions>
 					<exclusion>
 						<groupId>javax.mail</groupId>
@@ -206,86 +286,15 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.7</version>
+				<version>4.10</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>
-  				<artifactId>mockito-all</artifactId>
-  				<version>1.8.1</version>
-  				<scope>test</scope>
+				<artifactId>mockito-all</artifactId>
+				<version>1.8.1</version>
+				<scope>test</scope>
 			</dependency>
-			<dependency>
-				<groupId>javax.persistence</groupId>
-				<artifactId>persistence-api</artifactId>
-				<version>1.0</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.transaction</groupId>
-				<artifactId>transaction-api</artifactId>
-				<version>1.1</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jpa</artifactId>
-				<version>2.0.8</version>
-			</dependency>
-			<dependency>
-				<groupId>hsqldb</groupId>
-				<artifactId>hsqldb</artifactId>
-				<version>1.8.0.7</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate</artifactId>
-				<version>3.2.6.ga</version>
-				<exclusions>
-					<exclusion>
-						<artifactId>jta</artifactId>
-						<groupId>javax.transaction</groupId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-annotations</artifactId>
-				<version>3.3.0.ga</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-entitymanager</artifactId>
-				<version>3.3.1.ga</version>
-			</dependency>
-			<dependency>
-				<groupId>concurrent</groupId>
-				<artifactId>concurrent</artifactId>
-				<version>1.3.4</version>
-			</dependency>
-			<dependency>
-				<groupId>com.thoughtworks.xstream</groupId>
-				<artifactId>xstream</artifactId>
-				<version>1.3.1</version>
-			</dependency>
-			
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-orm</artifactId>
-				<version>${org.springframework.spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-test</artifactId>
-				<version>${org.springframework.spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jdbc</artifactId>
-				<version>${org.springframework.spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-aop</artifactId>
-				<version>${org.springframework.spring.version}</version>
-			</dependency>
+
 			<dependency>
 				<groupId>gnu.io</groupId>
 				<artifactId>rxtx</artifactId>
@@ -296,38 +305,43 @@
 				<artifactId>jfreechart</artifactId>
 				<version>1.0.13</version>
 			</dependency>
-                        <dependency>
-                                <groupId>net.sourceforge</groupId>
-                                <artifactId>javaml</artifactId>
-                                <version>0.1.6-spnt</version>
-                        </dependency>
 			<dependency>
-			    <groupId>com.google.guava</groupId>
-			    <artifactId>guava</artifactId>
-			    <version>10.0.1</version>
+				<groupId>net.sourceforge</groupId>
+				<artifactId>javaml</artifactId>
+				<version>0.1.6-spnt</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>12.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thoughtworks.xstream</groupId>
+				<artifactId>xstream</artifactId>
+				<version>1.4.2</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	 <distributionManagement>
-        <repository>
-            <id>sf-repository</id>
-		  <name>sf-repository</name>
-		<url>file:///releases</url>
-            <!--<url>scpexe://shell.sourceforge.net/home/groups/s/sp/spantus/htdocs/repository</url>-->
-        </repository>
-        <snapshotRepository>
-            <id>sf-repository-sanpshot</id>
-		  <name>sf-repository-sanpshot</name>
-		 <url>file:///releases</url>
-            <!--<url>scpexe://shell.sourceforge.net/home/groups/s/sp/spantus/htdocs/snapshot-repo</url>-->
-        </snapshotRepository>
-    </distributionManagement>
-    <licenses>
-        <license>
-            <name>GNU General Public License, version 3</name>
-            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
-            <comments>Read the COPYING file</comments>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+	<distributionManagement>
+		<repository>
+			<id>cloudbees-repository-release</id>
+			<name>cloudbees-repository-release</name>
+			<url>dav:https://repository-spantus.forge.cloudbees.com/release</url>
+			<!--<url>scpexe://shell.sourceforge.net/home/groups/s/sp/spantus/htdocs/repository</url> -->
+		</repository>
+		<snapshotRepository>
+			<id>cloudbees-repository-sanpshot</id>
+			<name>cloudbees-repository-sanpshot</name>
+			<url>dav:https://repository-spantus.forge.cloudbees.com/snapshot</url>
+			<!--<url>scpexe://shell.sourceforge.net/home/groups/s/sp/spantus/htdocs/snapshot-repo</url> -->
+		</snapshotRepository>
+	</distributionManagement>
+	<licenses>
+		<license>
+			<name>GNU General Public License, version 3</name>
+			<url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+			<comments>Read the COPYING file</comments>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 </project>

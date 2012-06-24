@@ -15,11 +15,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.spantus</groupId>
-			<artifactId>spnt-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.spantus</groupId>
 			<artifactId>spnt-work</artifactId>
+			<classifier>${envClassifier}</classifier>
 		 <exclusions>
 		  <exclusion>
 		   <artifactId>mvel2</artifactId>
@@ -30,6 +27,7 @@
 		<dependency>
 			<groupId>org.spantus.externals.recognition</groupId>
 			<artifactId>spnt-dtw-recognition</artifactId>
+			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>

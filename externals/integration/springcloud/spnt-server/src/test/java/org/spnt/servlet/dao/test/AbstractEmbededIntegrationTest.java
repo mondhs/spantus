@@ -2,9 +2,7 @@ package org.spnt.servlet.dao.test;
 
 import java.io.IOException;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 
 import de.flapdoodle.embedmongo.MongoDBRuntime;
@@ -18,15 +16,12 @@ public abstract class AbstractEmbededIntegrationTest extends AbstractIntegration
 	private static MongodExecutable _mongodExe;
     private static MongodProcess _mongod;
 
-//    private Mongo _mongo;
-//    private static final String DATABASENAME = "mongo_test";
 	
 	@BeforeClass
 	public static void setUpClass() throws IOException {
 		MongoDBRuntime runtime = MongoDBRuntime.getDefaultInstance();
         _mongodExe = runtime.prepare(new MongodConfig(Version.V2_0, 27017,false));
         _mongod=_mongodExe.start();
-//        _mongo = new Mongo("localhost", 27017);
 	}
 	
 	@AfterClass

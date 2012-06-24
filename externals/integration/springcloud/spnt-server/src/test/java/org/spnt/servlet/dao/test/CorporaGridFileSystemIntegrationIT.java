@@ -7,8 +7,6 @@ import junit.framework.Assert;
 
 import org.bson.types.ObjectId;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mongodb.gridfs.GridFS;

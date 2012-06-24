@@ -15,10 +15,12 @@
         <dependency>
             <groupId>org.spantus</groupId>
             <artifactId>spnt-work</artifactId>
+            <classifier>${envClassifier}</classifier>
         </dependency>
         <dependency>
             <groupId>org.spantus.externals.recognition</groupId>
             <artifactId>spnt-dtw-recognition</artifactId>
+            <classifier>${envClassifier}</classifier>
         </dependency>
         <dependency>
             <groupId>com.jgoodies</groupId>
@@ -51,7 +53,7 @@
     </dependencies>
     <build>
         <plugins>
-
+<!-- 
             <plugin>
                 <groupId>org.apache.maven.plugins
                 </groupId>
@@ -67,11 +69,11 @@
                         <manifestEntries>
                             <mode>development</mode>
                             <url>${project.url}</url>
-							<!-- <SplashScreen-Image>org/spantus/work/ui/img/logo.gif</SplashScreen-Image> -->
                         </manifestEntries>
                     </archive>
+                    <classifier>${envClassifier}</classifier>
                 </configuration>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>native2ascii-maven-plugin</artifactId>
@@ -98,18 +100,10 @@
             </activation>
             <build>
                 <plugins>
-                    
-
-                    
-					<!-- <plugin> <groupId>org.apache.maven.plugins </groupId> <artifactId>maven-dependency-plugin 
-						</artifactId> <executions> <execution> <id>copy-dependencies</id> <phase>package</phase> 
-						<goals> <goal>copy-dependencies </goal> </goals> <configuration> <outputDirectory> 
-						${project.build.directory}/lib </outputDirectory> <overWriteReleases>false 
-						</overWriteReleases> <overWriteSnapshots>false </overWriteSnapshots> <overWriteIfNewer>true</overWriteIfNewer> 
-						<excludeGroupIds>junit</excludeGroupIds> </configuration> </execution> </executions> 
-						</plugin> -->
                     <plugin>
+                    	<groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-assembly-plugin</artifactId>
+                        <version>2.3</version>
                         <executions>
                             <execution>
                                 <id>base</id>
