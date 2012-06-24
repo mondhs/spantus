@@ -283,6 +283,7 @@
 									<groupId>org.spantus</groupId>
 									<artifactId>spnt-applet</artifactId>
 									<version>0.3-SNAPSHOT</version>
+									<classifier>${envClassifier}</classifier>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/classes/content/applet</outputDirectory>

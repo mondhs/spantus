@@ -21,6 +21,11 @@
 	<profiles>
 		<profile>
 			<id>sign</id>
+			 <activation>
+                <property>
+                    <name>copy-dependencies</name>
+                </property>
+            </activation>
 			<build>
 				<plugins>
 					<plugin>
