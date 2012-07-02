@@ -58,13 +58,13 @@ public class AsyncMarkerSegmentatorListenerImplTest {
 		listener.registered(FEATURE2);
 		listener.registered(FEATURE3);
 		SegmentEvent[] eventFeature1 =new SegmentEvent[]{
-				newSegmentEvent(FEATURE1, 100L), //start
+				newSegmentEvent(FEATURE1, 90L), //start
 				newSegmentEvent(FEATURE1, 300L),//end
 				newSegmentEvent(FEATURE1, 500L),//start
 				newSegmentEvent(FEATURE1, 900L),//end
 		};
 		SegmentEvent[] eventFeature2 =new SegmentEvent[]{
-				newSegmentEvent(FEATURE2, 90L), //start
+				newSegmentEvent(FEATURE2, 100L), //start
 				newSegmentEvent(FEATURE2, 310L),//end
 				newSegmentEvent(FEATURE2, 490L),//start
 				newSegmentEvent(FEATURE2, 910L),//end

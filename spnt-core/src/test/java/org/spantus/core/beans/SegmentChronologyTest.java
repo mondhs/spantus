@@ -24,7 +24,7 @@ public class SegmentChronologyTest {
 
     @Before
     public void onSetup() {
-        segmentChronology = new SegmentChronology<String>(STEP, FULL_THRESHOLD);
+        segmentChronology = new SegmentChronology<String>(STEP, FULL_THRESHOLD, new StringSegmentIdentifier());
     }
 
     @Test
@@ -90,26 +90,6 @@ public class SegmentChronologyTest {
         assertEquals(50, result.getLast().getKey(), 0);
     }
 
-    @Test
-    public void testGetFirstAndLastFull() {
-        //given
-        segmentChronology.add(0L, value1);
-        segmentChronology.add(20L, value1, value2, value3);
-        segmentChronology.add(30L, value1);
-        segmentChronology.add(40L, value1, value2);
-        segmentChronology.add(50L, value1, value2, value3);
-        segmentChronology.add(10L, value1, value2);
-
-        //when
-        Entry<Long, Set<String>> firstBin = segmentChronology.getFirstFullBin();
-        Entry<Long, Set<String>> lastBin = segmentChronology.getLastFullBin();
-
-        //then
-        assertEquals(10, firstBin.getKey(), 0);
-        assertEquals(2, firstBin.getValue().size(), 0);
-        assertEquals(50, lastBin.getKey(), 0);
-        assertEquals(3, lastBin.getValue().size(), 0);
-    }
     
     @Test
     public void testCleanUpTo() {
@@ -140,7 +120,13 @@ public class SegmentChronologyTest {
         segmentChronology.stop(30L, value2);
         segmentChronology.stop(40L, value1);
         segmentChronology.stop(50L, value3);
-
+        segmentChronology.start(60L, value1);
+        segmentChronology.start(70L, value2);
+        segmentChronology.start(80L, value3);
+        segmentChronology.stop(90L, value2);
+        segmentChronology.stop(90L, value1);
+        segmentChronology.stop(90L, value3);
+        
 
         //when
         Entry<Long, Set<String>> firstBin = segmentChronology.getFirstFullBin();
@@ -148,9 +134,9 @@ public class SegmentChronologyTest {
 
         //then
         assertEquals(10, firstBin.getKey(), 0);
-        assertEquals(2, firstBin.getValue().size(), 0);
-        assertEquals(50, lastBin.getKey(), 0);
-        assertEquals(3, lastBin.getValue().size(), 0);
+        assertEquals(2,segmentChronology.getSegmentMap().get(firstBin.getKey()).size(), 0);
+        assertEquals(90, lastBin.getKey(), 0);
+        assertEquals(3, segmentChronology.getSegmentMap().get(lastBin.getKey()).size(), 0);
         
     }
 }
