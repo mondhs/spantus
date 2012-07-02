@@ -55,11 +55,13 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	private JavaMLSearchWindow javaMLSearchWindow;
 	private JavaMLLocalConstraint javaMLLocalConstraint = JavaMLLocalConstraint.Default;
 
+        @Override
 	public RecognitionResult match(Map<String, IValues> target) {
 		RecognitionResult match = findBestMatch(target);
 		return match;
 	}
 
+        @Override
 	public RecognitionResult matchByCorpusEntry(SignalSegment corpusEntry) {
 		Map<String, IValues> target = new HashMap<String, IValues>();
 		for (Entry<String, FrameVectorValuesHolder> featureData : corpusEntry.getFeatureFrameVectorValuesMap().entrySet()) {
@@ -78,6 +80,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param target
 	 * @return
 	 */
+        @Override
 	public List<RecognitionResult> findMultipleMatchFull(
 			Map<String, IValues> target) {
 		Long begin = System.currentTimeMillis();
@@ -111,7 +114,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 						targetEntry.getKey());
 				
 				if (sampleFeatureData == null) {
-					LOG.error("[findMultipleMatch] sampleFeatureData is not found. skip for " + featureName);
+					LOG.debug("[findMultipleMatch] sampleFeatureData is not found. skip for " + featureName);
 					continue;
 				}
 				
@@ -210,6 +213,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @param featureDataMap
 	 * @return
 	 */
+        @Override
 	public SignalSegment learn(String label, Map<String, IValues> featureDataMap) {
 		SignalSegment corpusEntry = create(label, featureDataMap);
 		return getCorpus().save(corpusEntry);
@@ -219,6 +223,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	 * @return
 	 * @param corpusEntry
 	 */
+        @Override
 	public Map<String, RecognitionResult> bestMatchesForFeatures(
 			SignalSegment corpusEntry) {
 		Map<String, IValues> target = new HashMap<String, IValues>();
@@ -230,6 +235,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	/**
 	 * 
 	 */
+        @Override
 	public Map<String, RecognitionResult> bestMatchesForFeatures(
 			Map<String, IValues> target) {
 		Map<String, RecognitionResult> match = new HashMap<String, RecognitionResult>();

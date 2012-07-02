@@ -105,7 +105,7 @@ public class MapComboBoxModel<K,V> extends DefaultComboBoxModel {
 		for (Entry<K, V> entry : getObjectMap().entrySet()) {
 			i++;
 			if(i == index){
-				return entry;
+				return ((Entry<K, V>)entry).getKey();
 			}
 			
 		}
@@ -113,10 +113,6 @@ public class MapComboBoxModel<K,V> extends DefaultComboBoxModel {
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public K getElementKeyAt(int index) {
-		return ((Entry<K, V>)getElementAt(index)).getKey();
-	}
 
 	public int getSize() {
 		return getObjectMap().size()+1;

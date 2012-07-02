@@ -1,9 +1,7 @@
 package org.spantus.extr.wordspot.service.impl.test;
 
 import java.io.File;
-
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extr.wordspot.service.impl.SegmentExtractorServiceImpl;

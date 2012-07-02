@@ -1,9 +1,6 @@
 package org.spantus.extr.wordspot.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.beans.FrameVectorValuesHolder;
 import org.spantus.core.beans.RecognitionResult;
@@ -28,21 +25,24 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener {
 	private static final Logger LOG = Logger
 			.getLogger(WordSpottingListenerLogImpl.class);
 	
-	private List<SignalSegment> signalSegments = new ArrayList<SignalSegment>();
-	private List<SignalSegment> signalSegmentsLevel1 = new ArrayList<SignalSegment>();
+        private List<RecognitionResult> wordMatches = new ArrayList<RecognitionResult>();
+         private Map<RecognitionResult, SignalSegment> wordSegments = new HashMap<RecognitionResult, SignalSegment>();
+
+
+	private List<SignalSegment> signalSegmentsSyllable = new ArrayList<SignalSegment>();
 	
-	private CorpusService corpusServiceLevel2;
-	private String repositoryPathLevel2;
+	private CorpusService corpusServiceWord;
+	private String repositoryPathWord;
 
 	private String target;
 
-	public WordSpottingListenerLogImpl(String target, String repositoryPathLevel2) {
-		this.repositoryPathLevel2 = repositoryPathLevel2;
+	public WordSpottingListenerLogImpl(String target, String repositoryPathSyllable) {
+		this.repositoryPathWord = repositoryPathSyllable;
 		this.target = target;
 	}
 	
 	@Override
-	public String foundSegment(String sourceId, SignalSegment newSegment,  List<RecognitionResult> recognitionResults){
+	public String foundSegment(String sourceId, SignalSegment newSyllable,  List<RecognitionResult> recognitionResults){
 		
 		RecognitionResult rtnRecognitionResult = null;
 		
@@ -52,17 +52,18 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener {
 			if(rtnRecognitionResult == null){
 				rtnRecognitionResult = recognitionResult;
 			}
-			if(recognitionResult.getInfo().getName().toLowerCase().startsWith("Liet".toLowerCase()) ||
-					recognitionResult.getInfo().getName().toLowerCase().startsWith("uvos".toLowerCase())
-					){
-				RecognitionResult level2Match = matchLevel2(signalSegmentsLevel1, newSegment);
-				if(level2Match != null){
-					getSignalSegments().add(newSegment);
-					rtnRecognitionResult= level2Match;
-					signalSegmentsLevel1.clear();
+                        Set<String> acceptableSyllableSet = new HashSet<String>();
+                        acceptableSyllableSet.add("liet");
+                         acceptableSyllableSet.add("uvos");
+			if(acceptableSyllableSet.contains(recognitionResult.getInfo().getName().toLowerCase())){
+				RecognitionResult wordMatch = matchWord(signalSegmentsSyllable, newSyllable);
+				if(wordMatch != null){
+					getWordMatches().add(wordMatch);
+					rtnRecognitionResult= wordMatch;
+					signalSegmentsSyllable.clear();
 					break;
 				}
-				signalSegmentsLevel1.add(newSegment);
+				signalSegmentsSyllable.add(newSyllable);
 			}
 			
 			//check for first 3 matches
@@ -77,49 +78,66 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener {
 	
 		
 		LOG.debug("[processEndedSegment] spotted: {0} in time [{1}:{2}] ",
-				rtnName, newSegment.getMarker().getStart(),
-				newSegment.getMarker().getEnd());
+				rtnName, newSyllable.getMarker().getStart(),
+				newSyllable.getMarker().getEnd());
 		return rtnName;
 	}
 
-	private RecognitionResult matchLevel2(List<SignalSegment> signalSegments, SignalSegment newSegment){
-		if(signalSegments.size() == 0){
+	private RecognitionResult matchWord(List<SignalSegment> existingSyllableSegments, SignalSegment newSyllable){
+		if(existingSyllableSegments.isEmpty()){
 			return null;
 		}
-		SignalSegment lastSegment = signalSegments.get(signalSegments.size()-1);
-		SignalSegment segmentLevel2 = new SignalSegment();
-		segmentLevel2.setMarker(new Marker());
-		segmentLevel2.getMarker().setStart(lastSegment.getMarker().getStart());
-		segmentLevel2.getMarker().setEnd(newSegment.getMarker().getEnd());
+		SignalSegment lastSyllable = existingSyllableSegments.get(existingSyllableSegments.size()-1);
+		SignalSegment segmentWord = new SignalSegment();
+                LOG.debug("[matchWord] merge {0}[{2}] to {1}[{3}]", 
+                         lastSyllable.getMarker(), 
+                         newSyllable.getMarker(),
+                         lastSyllable.getMarker().getStart(),
+                         newSyllable.getMarker().getEnd());
+                if(lastSyllable.getMarker().getStart()>newSyllable.getMarker().getEnd()){
+                    LOG.debug("[matchWord] existing syllable +++++");
+                    for (SignalSegment signalSegment : existingSyllableSegments) {
+                        LOG.debug("[matchWord] existing syllable: {0}", 
+                             signalSegment.getMarker() 
+                        );
+                    }
+                    LOG.debug("[matchWord] existing syllable -----");
+                }
+               
+                 
+                Assert.isTrue(lastSyllable.getMarker().getStart()<newSyllable.getMarker().getEnd(), "last syllable should start befor new is finished");
+		segmentWord.setMarker(new Marker());
+		segmentWord.getMarker().setStart(lastSyllable.getMarker().getStart());
+		segmentWord.getMarker().setEnd(newSyllable.getMarker().getEnd());
 
-		Map<String, FrameVectorValuesHolder> level2VectorMap = segmentLevel2.getFeatureFrameVectorValuesMap();
-		FrameVectorValuesHolder lastVector = lastSegment.getFeatureFrameVectorValuesMap().get(ExtractorEnum.MFCC_EXTRACTOR.name());
-		FrameVectorValuesHolder newVector = newSegment.getFeatureFrameVectorValuesMap().get(ExtractorEnum.MFCC_EXTRACTOR.name());
-		FrameVectorValuesHolder matchHolder = new FrameVectorValuesHolder(new FrameVectorValues(lastVector.getValues()));
-		matchHolder.getValues().addAll(newVector.getValues());
-		level2VectorMap.put(ExtractorEnum.MFCC_EXTRACTOR.name(), matchHolder);
-		RecognitionResult result = getCorpusServiceLevel2().matchByCorpusEntry(segmentLevel2);
+		Map<String, FrameVectorValuesHolder> syllableFeatureMap = segmentWord.getFeatureFrameVectorValuesMap();
+		FrameVectorValuesHolder lastSyllableMFCC = lastSyllable.getFeatureFrameVectorValuesMap().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+		FrameVectorValuesHolder newSyllableMFCC = newSyllable.getFeatureFrameVectorValuesMap().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+		FrameVectorValuesHolder matchHolder = new FrameVectorValuesHolder(new FrameVectorValues(lastSyllableMFCC.getValues()));
+		matchHolder.getValues().addAll(newSyllableMFCC.getValues());
+		syllableFeatureMap.put(ExtractorEnum.MFCC_EXTRACTOR.name(), matchHolder);
+		RecognitionResult result = getCorpusServiceWord().matchByCorpusEntry(segmentWord);
+                getWordSegments().put(result, segmentWord);
 		if(result.getDistance().compareTo(80D)>0){
 			return null;
 		}
 		return result;
 	}
 	
-	public CorpusService getCorpusServiceLevel2() {
-		if(corpusServiceLevel2 == null){
-			Assert.isTrue(StringUtils.hasText(repositoryPathLevel2), "Repository path not set");
-			corpusServiceLevel2 = RecognitionServiceFactory.createCorpusService(repositoryPathLevel2);
+	public CorpusService getCorpusServiceWord() {
+		if(corpusServiceWord == null){
+			Assert.isTrue(StringUtils.hasText(repositoryPathWord), "Repository path not set");
+			corpusServiceWord = RecognitionServiceFactory.createCorpusService(repositoryPathWord);
 		}
-		return corpusServiceLevel2;
+		return corpusServiceWord;
 	}
-	
-	public List<SignalSegment> getSignalSegments() {
-		return signalSegments;
-	}
+	public List<RecognitionResult> getWordMatches() {
+            return wordMatches;
+        }
 
-	public void setSignalSegments(List<SignalSegment> signalSegments) {
-		this.signalSegments = signalSegments;
-	}
+        public Map<RecognitionResult, SignalSegment> getWordSegments() {
+            return wordSegments;
+        }
 
 	public String getTarget() {
 		return target;

@@ -12,18 +12,18 @@ import org.spantus.segment.online.AsyncMarkerSegmentatorListenerImpl;
  * Created: May 7, 2012
  *
  */
-public class WordSpottingServiceImpl {
+public class SyllableSpottingServiceImpl {
 	
 	private SegmentExtractorService segmentExtractorService;
-	private String repositoryPath;
+	private String syllableRepositoryPath;
 	
-	public WordSpottingServiceImpl(String repositoryPath) {
-		this.repositoryPath = repositoryPath;
+	public SyllableSpottingServiceImpl(String syllableRepositoryPath) {
+		this.syllableRepositoryPath = syllableRepositoryPath;
 	}
 
 	public void wordSpotting(URL urlFile, WordSpottingListener wordSpottingListener){
 		SpottingMarkerSegmentatorListenerImpl listener = new SpottingMarkerSegmentatorListenerImpl(wordSpottingListener);
-		listener.setRepositoryPath(repositoryPath);
+		listener.setRepositoryPath(syllableRepositoryPath);
 		AsyncMarkerSegmentatorListenerImpl asyncLister = new AsyncMarkerSegmentatorListenerImpl(listener);
 		getSegmentExtractorService().listenSegments(urlFile, asyncLister);
 		

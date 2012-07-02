@@ -1,9 +1,7 @@
 package org.spantus.segment.online.test;
 
 import java.util.Iterator;
-
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.core.FrameValues;
@@ -40,13 +38,13 @@ public class AsyncMarkerSegmentatorListenerImplTest {
 		listener.onSegmentEnded(eventEnded1);
 		listener.onSegmentStarted(eventStarted2);
 		listener.onSegmentEnded(eventEnded2);
-		Iterator<SignalSegment> iterator = listener.getSignalSegments().iterator();
+		//then
+		Assert.assertEquals(2, listener.getSignalSegments().size());
+                Iterator<SignalSegment> iterator = listener.getSignalSegments().iterator();
 		SignalSegment firstSegment = iterator.next();
 		Marker firstMarker = firstSegment.getMarker();
 		SignalSegment secondSegment = iterator.next();
 		Marker secondMarker = secondSegment.getMarker();
-		//then
-		Assert.assertEquals(2, listener.getSignalSegments().size());
 		Assert.assertEquals(10, firstMarker.getStart(),0);
 		Assert.assertEquals(20, firstMarker.getLength(),0);
 		Assert.assertEquals(50, secondMarker.getStart(),0);
@@ -60,22 +58,22 @@ public class AsyncMarkerSegmentatorListenerImplTest {
 		listener.registered(FEATURE2);
 		listener.registered(FEATURE3);
 		SegmentEvent[] eventFeature1 =new SegmentEvent[]{
-				newSegmentEvent(FEATURE1, 10L), //start
-				newSegmentEvent(FEATURE1, 30L),//end
-				newSegmentEvent(FEATURE1, 50L),//start
-				newSegmentEvent(FEATURE1, 90L),//end
+				newSegmentEvent(FEATURE1, 100L), //start
+				newSegmentEvent(FEATURE1, 300L),//end
+				newSegmentEvent(FEATURE1, 500L),//start
+				newSegmentEvent(FEATURE1, 900L),//end
 		};
 		SegmentEvent[] eventFeature2 =new SegmentEvent[]{
-				newSegmentEvent(FEATURE2, 9L), //start
-				newSegmentEvent(FEATURE2, 31L),//end
-				newSegmentEvent(FEATURE2, 49L),//start
-				newSegmentEvent(FEATURE2, 91L),//end
+				newSegmentEvent(FEATURE2, 90L), //start
+				newSegmentEvent(FEATURE2, 310L),//end
+				newSegmentEvent(FEATURE2, 490L),//start
+				newSegmentEvent(FEATURE2, 910L),//end
 		};
 		SegmentEvent[] eventFeature3 =new SegmentEvent[]{
-				newSegmentEvent(FEATURE3, 11L), //start
-				newSegmentEvent(FEATURE3, 29L),//end
-				newSegmentEvent(FEATURE3, 51L),//start
-				newSegmentEvent(FEATURE3, 89L),//end
+				newSegmentEvent(FEATURE3, 110L), //start
+				newSegmentEvent(FEATURE3, 290L),//end
+				newSegmentEvent(FEATURE3, 510L),//start
+				newSegmentEvent(FEATURE3, 890L),//end
 		};
 				
 		

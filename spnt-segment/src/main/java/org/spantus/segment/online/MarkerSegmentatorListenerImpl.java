@@ -38,9 +38,13 @@ public class MarkerSegmentatorListenerImpl extends
 	private SignalSegment currentSegment;
 	
 	private String firstFeatureId = null;
+        
+        private Long lastEvent;
 
 	@Override
 	public void onSegmentStarted(SegmentEvent event) {
+                LOG.debug("[onSegmentStarted] +++ {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
+                updateLastEvent(event.getTime());
 		getCurrentMarkerMap().put(event.getExtractorId(), createMarker(event));
 		if(getCurrentSegment() == null && getCurrentMarkerMap().size()>getClassifiersThreshold()){
 //			LOG.debug("[onSegmentStarted] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
@@ -55,7 +59,8 @@ public class MarkerSegmentatorListenerImpl extends
 
 	@Override
 	public void onSegmentEnded(SegmentEvent event) {
-		
+                LOG.debug("[onSegmentEnded] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
+                updateLastEvent(event.getTime());
 		currentMarkerMap.remove(event.getExtractorId());
 		if(getCurrentSegment() != null && ( getCurrentMarkerMap().size()<getClassifiersThreshold() ||  getClassifiersThreshold()==0)){
 //			LOG.debug("[onSegmentEnded] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
@@ -93,6 +98,7 @@ public class MarkerSegmentatorListenerImpl extends
 
 	@Override
 	public void onSegmentProcessed(SegmentEvent event) {
+                LOG.debug("[onSegmentProcessed] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
 		Assert.isTrue(event.getWindowValues()!=null, "Event without windows values");
 		if(getCurrentSegment() != null){
 			
@@ -145,6 +151,15 @@ public class MarkerSegmentatorListenerImpl extends
 	public void setCurrentSegment(SignalSegment currentSegment) {
 		this.currentSegment = currentSegment;
 	}
+
+        private void updateLastEvent(Long time) {
+             LOG.debug("[updateLastEvent] on {0} > [{1}] ",
+		 lastEvent, time);
+            if(lastEvent != null){
+              Assert.isTrue(lastEvent < time, "event is not happened in chrnological order");
+            }
+            lastEvent = time;
+        }
 
 
 
