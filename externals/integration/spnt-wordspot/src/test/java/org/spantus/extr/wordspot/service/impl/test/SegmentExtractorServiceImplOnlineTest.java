@@ -64,12 +64,12 @@ public class SegmentExtractorServiceImplOnlineTest extends AbstractSegmentExtrac
         Map<String, FrameVectorValuesHolder> vectorMap = result.get(0).getFeatureFrameVectorValuesMap();
 
         Assert.assertNotNull("First segment", result.get(0).getMarker());
-        Assert.assertEquals("First segment starts", result.get(0).getMarker().getStart(), 243, 0);
+        Assert.assertEquals("First segment starts", result.get(0).getMarker().getStart(), 259, 0);
         Assert.assertEquals("First segment length", result.get(0).getMarker().getEnd(), 429, 1);
         Assert.assertEquals("Extracted feature", 2, valueMap.size());
-        Assert.assertEquals("Extracted feature length", 61, valueMap.get("smooth_" + ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
+        Assert.assertEquals("Extracted feature length", 56, valueMap.get("smooth_" + ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
         Assert.assertEquals("Extracted vector feature", 2, vectorMap.size());
-        Assert.assertEquals("Extracted feature length", 60, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size());
+        Assert.assertEquals("Extracted feature length", 56, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size());
         Assert.assertEquals("segment recognition", "pa", result.get(0).getName());
         Assert.assertEquals("segment recognition", "ded", result.get(1).getName());
         Assert.assertEquals("segment recognition", "da", result.get(2).getName());

@@ -31,7 +31,7 @@ public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTes
 		//when
 		Collection<SignalSegment> resultOnline = getSegmentExtractorService().extractSegmentsOnline(url);
 		//then
-		Assert.assertEquals("Total segments", 2, resultOnline.size());
+		Assert.assertEquals("Total segments", 3, resultOnline.size());
 		Iterator<SignalSegment> iterator = resultOnline.iterator();
 		SignalSegment firstSegment = iterator.next();
 		SignalSegment secondSegment = iterator.next();
@@ -39,11 +39,11 @@ public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTes
 		Map<String, FrameVectorValuesHolder> vectorMap = firstSegment.getFeatureFrameVectorValuesMap();
 		Assert.assertNotNull("First segment",firstSegment.getMarker());
 		Assert.assertEquals("First segment starts",300,firstSegment.getMarker().getStart(), 0);
-		Assert.assertEquals("First segment length",486,firstSegment.getMarker().getLength(), 0);
+		Assert.assertEquals("First segment length",476,firstSegment.getMarker().getLength(), 0);
 		Assert.assertEquals("Extracted feature",3, valueMap.size());
-		Assert.assertEquals("Extracted feature length",603, valueMap.get("smooth_"+ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size(),1);
+		Assert.assertEquals("Extracted feature length",141, valueMap.get("smooth_"+ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size(),1);
 		Assert.assertEquals("Extracted vector feature",2, vectorMap.size());
-		Assert.assertEquals("Extracted feature length",603, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size(),1);
+		Assert.assertEquals("Extracted feature length",141, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size(),1);
 //		Assert.assertEquals("first segment recognition",firstSegment.getName(), "padeda");
 //		Assert.assertEquals("second segment recognition",secondSegment.getName(), "skirti");
 		

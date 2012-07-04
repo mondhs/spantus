@@ -99,9 +99,9 @@ public class MarkerSegmentatorListenerImplTest {
 		//then
 		Assert.assertEquals(2, listener.getSignalSegments().size());
 		Assert.assertEquals(10, firstMarker.getStart(),0);
-		Assert.assertEquals(21, firstMarker.getLength(),0);
+		Assert.assertEquals(20, firstMarker.getLength(),0);
 		Assert.assertEquals(50, secondMarker.getStart(),0);
-		Assert.assertEquals(41, secondMarker.getLength(),0);
+		Assert.assertEquals(40, secondMarker.getLength(),0);
 	}
 	
 

@@ -62,7 +62,7 @@ public class MarkerSegmentatorListenerImpl extends
                 LOG.debug("[onSegmentEnded] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
                 updateLastEvent(event.getTime());
 		currentMarkerMap.remove(event.getExtractorId());
-		if(getCurrentSegment() != null && ( getCurrentMarkerMap().size()<getClassifiersThreshold() ||  getClassifiersThreshold()==0)){
+		if(getCurrentSegment() != null && ( getCurrentMarkerMap().size()<=getClassifiersThreshold() ||  getClassifiersThreshold()==0)){
 //			LOG.debug("[onSegmentEnded] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
 			finazlizeSegment(getCurrentSegment(), event);
 			LOG.debug("[onSegmentEnded] --- {0}: {1}", event, getCurrentSegment());
@@ -156,7 +156,8 @@ public class MarkerSegmentatorListenerImpl extends
              LOG.debug("[updateLastEvent] on {0} > [{1}] ",
 		 lastEvent, time);
             if(lastEvent != null){
-              Assert.isTrue(lastEvent < time, "event is not happened in chrnological order");
+              Assert.isTrue(lastEvent <= time, "event is not happened in chrnological order");
+//               LOG.error("event is not happened in chrnological order");
             }
             lastEvent = time;
         }

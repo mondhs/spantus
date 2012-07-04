@@ -151,7 +151,9 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 				format.getSampleRate(), getConfig().getWindowLength(),
 				getConfig().getOverlapInPerc());// 10 ms and 33 %
 		config.setPreemphasis(getConfig().getPreephasis().name());
-
+                if(iSegmentatorListener != null){
+                    iSegmentatorListener.setConfig(config);
+                }
 		IExtractorInputReader extractorReader = ExtractorsFactory
 				.createReader(config);
 		List<IClassifier> classifiers = ExtractorUtils.registerThreshold(

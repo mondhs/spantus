@@ -45,10 +45,10 @@ public class AsyncMarkerSegmentatorListenerImplTest {
 		Marker firstMarker = firstSegment.getMarker();
 		SignalSegment secondSegment = iterator.next();
 		Marker secondMarker = secondSegment.getMarker();
-		Assert.assertEquals(10, firstMarker.getStart(),0);
-		Assert.assertEquals(20, firstMarker.getLength(),0);
-		Assert.assertEquals(50, secondMarker.getStart(),0);
-		Assert.assertEquals(40, secondMarker.getLength(),0);
+		Assert.assertEquals(100, firstMarker.getStart(),0);
+		Assert.assertEquals(200, firstMarker.getLength(),0);
+		Assert.assertEquals(500, secondMarker.getStart(),0);
+		Assert.assertEquals(400, secondMarker.getLength(),0);
 	}
 	
 	@Test
@@ -100,10 +100,10 @@ public class AsyncMarkerSegmentatorListenerImplTest {
 		Marker secondMarker = secondSegment.getMarker();
 		
 		
-		Assert.assertEquals(10, firstMarker.getStart(),0);
-		Assert.assertEquals(21, firstMarker.getLength(),0);
-		Assert.assertEquals(50, secondMarker.getStart(),0);
-		Assert.assertEquals(41, secondMarker.getLength(),0);
+		Assert.assertEquals(1000, firstMarker.getStart(),0);
+		Assert.assertEquals(2000, firstMarker.getLength(),0);
+		Assert.assertEquals(5000, secondMarker.getStart(),0);
+		Assert.assertEquals(4000, secondMarker.getLength(),0);
 	}
 	
 
@@ -132,9 +132,9 @@ public class AsyncMarkerSegmentatorListenerImplTest {
 		return processSegmentEvent;
 	}
 
-	private SegmentEvent newSegmentEvent(String id, Long time) {
+	private SegmentEvent newSegmentEvent(String id, Long sample) {
 		Marker marker = new Marker();
-		Long sample = time;
+		Long time = sample  * 10;
 		Double value = time.doubleValue();
 		SegmentEvent event = new SegmentEvent(id, time,
 				marker, sample, value, true);

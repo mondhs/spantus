@@ -1,14 +1,9 @@
 package org.spantus.segment.online;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import org.spantus.core.beans.SegmentChronology;
 
 import org.spantus.core.beans.SignalSegment;
@@ -19,19 +14,19 @@ import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
 
 public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener {
+    public static final int STEP = 1;
+    public static final int KNOWN_CLASSIFIER_THRESHOLD = 1;
 
     private static final Logger LOG = Logger.getLogger(AsyncMarkerSegmentatorListenerImpl.class);
-    private SegmentChronology<SegmentEvent> changePointChronology = new SegmentChronology<SegmentEvent>(10, 2, 
+    private SegmentChronology<SegmentEvent> changePointChronology = new SegmentChronology<SegmentEvent>(STEP, KNOWN_CLASSIFIER_THRESHOLD, 
                 new SegmentEventSourceSegmentIdentifier());
-    private SegmentChronology<SegmentEvent> segmentValuesChronology = new SegmentChronology<SegmentEvent>(10, 2,
+    private SegmentChronology<SegmentEvent> segmentValuesChronology = new SegmentChronology<SegmentEvent>(STEP, KNOWN_CLASSIFIER_THRESHOLD,
                 new SegmentEventSourceSegmentIdentifier());
-//	private Set<Long> syncTime = new TreeSet<Long>();
-//	private Long lastProcessedSample = -Long.MAX_VALUE;
     private List<SignalSegment> signalSegments = new ArrayList<SignalSegment>();
     private MarkerSegmentatorListenerImpl underlyingSegmentator;
     private int classifiersCount;
-    @SuppressWarnings("unused")
     private int classifiersThreshold;
+    private Long lastProcessedMoment;
 
     public AsyncMarkerSegmentatorListenerImpl(
             MarkerSegmentatorListenerImpl underlyingSegmentator) {
@@ -40,16 +35,21 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener 
 
     @Override
     public void onSegmentStarted(SegmentEvent theEvent) {
+        if(lastProcessedMoment != null && theEvent.getTime()<lastProcessedMoment){
+             LOG.debug("[onSegmentStarted] too late to process: {0}[{1}]", theEvent.getTime(),
+                theEvent.getExtractorId());
+            return;
+        }
 
-//		if (changePointChronology.getStartMoment() > theEvent.getSample()) {
+//		if (changePointChronology.getStartMoment() > theEvent.getTime()) {
 //			return;
 //		}
-        LOG.debug("[onSegmentStarted] on {0}[{1}]", theEvent.getSample(),
+        LOG.debug("[onSegmentStarted] on {0}[{1}]", theEvent.getTime(),
                 theEvent.getExtractorId());
 
 
         theEvent.setSignalState(true);
-        changePointChronology.start(theEvent.getSample(), theEvent);
+        changePointChronology.start(theEvent.getTime(), theEvent);
     }
 
     /**
@@ -57,15 +57,23 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener 
      */
     @Override
     public void onSegmentEnded(SegmentEvent theEvent) {
-
-//		if (changePointChronology.getStartMoment() > theEvent.getSample()) {
+        if(lastProcessedMoment != null && theEvent.getTime()<lastProcessedMoment){
+             LOG.debug("[onSegmentEnded] too late to process: {0}[{1}]", theEvent.getTime(),
+                theEvent.getExtractorId());
+            return;
+        }
+//		if (changePointChronology.getStartMoment() > theEvent.getTime()) {
 //			return;
 //		}
         theEvent.setSignalState(false);
-        changePointChronology.stop(theEvent.getSample(), theEvent);
+        boolean stoped = changePointChronology.stop(theEvent.getTime(), theEvent);
 
+        if(!stoped){
+            return;
+        }
+        
         Long aCleanupTime = changePointChronology.getLastFullBinIndex();
-        LOG.debug("[onSegmentEnded] on {0}[{1}] +++++++++++++++++++++++++++++++++++++++++", theEvent.getSample(),
+        LOG.debug("[onSegmentEnded] on {0}[{1}] +++++++++++++++++++++++++++++++++++++++++", theEvent.getTime(),
                 theEvent.getExtractorId());
         for (Entry<Long, Set<SegmentEvent>> bin : changePointChronology.getPrior(aCleanupTime)) {
             Long iTime = bin.getKey();
@@ -77,7 +85,7 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener 
             }
         }
         LOG.debug("[onSegmentEnded] on {0} [{1}] ------------------------------------------",
-                theEvent.getSample(), theEvent.getExtractorId());
+                theEvent.getTime(), theEvent.getExtractorId());
         clearUsedValues(aCleanupTime);
     }
 
@@ -86,19 +94,18 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener 
      * @param iTime
      * @return
      */
-    private Long onChangePointAsync(Entry<Long, Set<SegmentEvent>> changePointBin) {
+    private void onChangePointAsync(Entry<Long, Set<SegmentEvent>> changePointBin) {
         LOG.debug("[onChangePointAsync] on {0}", changePointBin);
-        Long aCleanupTime = null;
         for (SegmentEvent iEvent : changePointBin.getValue()) {
             if (iEvent.getSignalState()) {
                 onSegmentStartedAsync(iEvent);
+
                 onSegmentProcessedAsync(changePointBin.getKey());
             } else {
                 onSegmentProcessedAsync(changePointBin.getKey());
-                aCleanupTime = onSegmentEndedAsync(iEvent);
+                onSegmentEndedAsync(iEvent);
             }
         }
-        return aCleanupTime;
     }
 
     /**
@@ -128,12 +135,12 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener 
         if (underlyingSegmentator.getSignalSegments().size() > 0) {
             LOG.debug("[onSegmentEnded] on {1} found: {0}; markers: {2}",
                     underlyingSegmentator.getSignalSegments(),
-                    iEvent.getSample(),
+                    iEvent.getTime(),
                     underlyingSegmentator.getSignalSegments());
             getSignalSegments().addAll(
                     underlyingSegmentator.getSignalSegments());
             underlyingSegmentator.getSignalSegments().clear();
-            aTimeMomoment = iEvent.getSample();
+            aTimeMomoment = iEvent.getTime();
         }
         return aTimeMomoment;
     }
@@ -148,6 +155,7 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener 
         underlyingSegmentator.getMarkSet().getMarkers().clear();
         changePointChronology.cleanUpTill(aTimeMomoment);
         segmentValuesChronology.cleanUpTill(aTimeMomoment);
+        lastProcessedMoment = aTimeMomoment;
     }
 
     @Override
@@ -157,12 +165,17 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener 
 
     @Override
     public void onSegmentProcessed(SegmentEvent theEvent) {
-        if (changePointChronology.getStartMoment() > theEvent.getSample()) {
+         if(lastProcessedMoment != null && theEvent.getTime()<lastProcessedMoment){
+             LOG.debug("[onSegmentProcessed] too late to process: {0}[{1}]", theEvent.getTime(),
+                theEvent.getExtractorId());
+            return;
+        }
+        if (changePointChronology.getStartMoment() > theEvent.getTime()) {
             return;
         }
         Assert.isTrue(theEvent.getWindowValues() != null,
                 "Window values cannot be null");
-        segmentValuesChronology.add(theEvent.getSample(), theEvent);
+        segmentValuesChronology.add(theEvent.getTime(), theEvent);
 
     }
 

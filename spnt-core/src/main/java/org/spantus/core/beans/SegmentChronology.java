@@ -4,7 +4,9 @@
  */
 package org.spantus.core.beans;
 
+import java.text.MessageFormat;
 import java.util.*;
+import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
 
 /**
@@ -15,6 +17,7 @@ import org.spantus.utils.Assert;
 public class SegmentChronology<T> implements Map<Long, Set<T>>,
         Iterable<Map.Entry<Long, Set<T>>> {
 
+    private static final Logger LOG = Logger.getLogger(SegmentChronology.class);
     private HashMap<Long, Set<T>> chronologyMap = new HashMap<Long, Set<T>>();
     private HashMap<Long, Set<String>> segmentMap = new HashMap<Long, Set<String>>();
     private Integer step;
@@ -44,10 +47,13 @@ public class SegmentChronology<T> implements Map<Long, Set<T>>,
 
     public boolean stop(Long key, T value) {
         String id = identifier.extractId(value);
-        Assert.isTrue(activeSegments.containsKey(id), "Segment not started");
+//        Assert.isTrue(activeSegments.containsKey(id), "Segment not started");
+        if(!activeSegments.containsKey(id)){
+            return false;
+        }
         add(key, value);
         activeSegments.remove(id);
-        return false;
+        return true;
     }
 
     protected void fillUpTill(Long timeMoment) {
@@ -104,22 +110,20 @@ public class SegmentChronology<T> implements Map<Long, Set<T>>,
     }
 
     public int cleanUpTill(Long aTimeMoment) {
-        if (aTimeMoment == null) {
+        if (aTimeMoment == null || startMoment.equals(Long.MAX_VALUE) ) {
             return 0;
         }
         int removed = 0;
-        for (Iterator<Long> it = syncTime.iterator(); it.hasNext();) {
-            Long iTime = it.next();
-            startMoment = iTime;
-            if (iTime > aTimeMoment) {
-                break;
-            }
-            it.remove();
+         for (long iTime = startMoment; iTime <= aTimeMoment; iTime += step) {
+//            Long iTime = it.next();
+             LOG.debug("[cleanUpTill] time: {0}<={1}", iTime, aTimeMoment);
+            syncTime.remove(iTime);
             chronologyMap.remove(iTime);
             fullBinSet.remove(iTime);
-
             removed++;
         }
+        startMoment = aTimeMoment+step;
+
         return removed;
     }
 
@@ -300,7 +304,9 @@ public class SegmentChronology<T> implements Map<Long, Set<T>>,
 
         public SegmentCronologyIterator(Long priorMoment) {
             Assert.isTrue(priorMoment == null
-                    || (priorMoment > startMoment && priorMoment <= lastKnownMoment));
+                    || (priorMoment > startMoment && priorMoment <= lastKnownMoment),
+                    "SegmentCronologyIterator has to be in between {0}<{1}<={2}", 
+                    startMoment, priorMoment, lastKnownMoment);
             this.priorMoment = priorMoment;
             this.iterateEndMoment = priorMoment;
         }

@@ -9,29 +9,30 @@ public class ExtractorOutputHolder implements IExtractor {
 	private Double extractorSampleRate;
 
 
+        @Override
 	public FrameValues calculateWindow(Long sample, FrameValues values) {
 		throw new IllegalAccessError("Should not be called");
 	}
-
+        @Override
 	public FrameValues calculateWindow(FrameValues window) {
 		throw new IllegalAccessError("Should not be called");
 	}
-
+        @Override
 	public FrameValues getOutputValues() {
 		return outputValues;
 	}
-
+        @Override
 	public IExtractorConfig getConfig() {
 		return config;
 	}
-
+        @Override
 	public Double getExtractorSampleRate() {
 		if(extractorSampleRate == null){
 			return this.outputValues.getSampleRate();
 		}
 		return extractorSampleRate;
 	}
-
+        @Override
 	public String getName() {
 		return name ;
 	}

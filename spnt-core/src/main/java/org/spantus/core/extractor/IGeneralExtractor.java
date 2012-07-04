@@ -36,9 +36,8 @@ public interface IGeneralExtractor<T extends IValues> {
 	
 	public String getName();
 	
-//	public void putValues(Long sample, FrameValues values);
-	
 	public T calculateWindow(Long sample, FrameValues values);
+        
 	public T calculateWindow(FrameValues values);
 	
 	public void flush();
