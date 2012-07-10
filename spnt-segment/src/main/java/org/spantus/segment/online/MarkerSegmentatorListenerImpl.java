@@ -98,7 +98,7 @@ public class MarkerSegmentatorListenerImpl extends
 
 	@Override
 	public void onSegmentProcessed(SegmentEvent event) {
-                LOG.debug("[onSegmentProcessed] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
+//                LOG.debug("[onSegmentProcessed] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
 		Assert.isTrue(event.getWindowValues()!=null, "Event without windows values");
 		if(getCurrentSegment() != null){
 			
@@ -117,12 +117,13 @@ public class MarkerSegmentatorListenerImpl extends
 			if(vectorHolder == null){
 				vectorHolder = new FrameVectorValuesHolder();
 				vectorHolder.setValues(new FrameVectorValues(event.getOutputValues().getSampleRate()));
-				getCurrentSegment().getFeatureFrameVectorValuesMap().put(SIGNAL_WINDOWS, vectorHolder);
+            			getCurrentSegment().getFeatureFrameVectorValuesMap().put(SIGNAL_WINDOWS, vectorHolder);
 			}
 			valueHolder.getValues().add(event.getValue());
-			
+			LOG.debug("[onSegmentProcessed] event.getValue(){1}?={2}{0} ", event.getValue(), event.getExtractorId(), firstFeatureId);
 			if(event.getExtractorId().equals(firstFeatureId)){
 				vectorHolder.getValues().add(event.getWindowValues());
+                               LOG.debug("[onSegmentProcessed] ++++event.getWindowValues(){0} ", event.getWindowValues());
 			}
 		}
 	}

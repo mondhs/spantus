@@ -116,11 +116,19 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener {
 		FrameVectorValuesHolder matchHolder = new FrameVectorValuesHolder(new FrameVectorValues(lastSyllableMFCC.getValues()));
 		matchHolder.getValues().addAll(newSyllableMFCC.getValues());
 		syllableFeatureMap.put(ExtractorEnum.MFCC_EXTRACTOR.name(), matchHolder);
-		RecognitionResult result = getCorpusServiceWord().matchByCorpusEntry(segmentWord);
-                getWordSegments().put(result, segmentWord);
-		if(result.getDistance().compareTo(80D)>0){
-			return null;
-		}
+                
+                List<RecognitionResult> result1 = getCorpusServiceWord().findMultipleMatchFull(segmentWord);
+                for (RecognitionResult recognitionResult : result1) {
+                    LOG.debug("[matchWord] result: {0} [{1}]", recognitionResult.getInfo().getName(), 
+                            recognitionResult.getDetails().getDistances());
+                }
+                
+                RecognitionResult result = null;
+//		RecognitionResult result = getCorpusServiceWord().matchByCorpusEntry(segmentWord);
+//                getWordSegments().put(result, segmentWord);
+//		if(result.getDistance().compareTo(80D)>0){
+//			return null;
+//		}
 		return result;
 	}
 	

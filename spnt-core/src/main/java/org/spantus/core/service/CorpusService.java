@@ -18,6 +18,8 @@ public interface CorpusService {
 	 * @param featureDataMap
 	 * @return
 	 */
+        public List<RecognitionResult> findMultipleMatchFull(
+			SignalSegment corpusEntry);
 	public List<RecognitionResult> findMultipleMatchFull(
 			Map<String, IValues> featureDataMap);
 	

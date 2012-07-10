@@ -15,10 +15,7 @@ import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
-import org.spantus.core.beans.IValueHolder;
-import org.spantus.core.beans.RecognitionResult;
-import org.spantus.core.beans.RecognitionResultDetails;
-import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.beans.*;
 import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
 import org.spantus.math.NumberUtils;
@@ -230,6 +227,21 @@ public class CorpusServiceHelperImpl {
 //		}
 //		return dtwResult;
 //	}
+        /**
+         * Converts {@link SignalSegment} to {@link Map}
+         * @param corpusEntry
+         * @return 
+         */
+        public Map<String, IValues> toMap(SignalSegment corpusEntry) {
+            Map<String, IValues> target = new HashMap<String, IValues>();
+            for (Entry<String, FrameVectorValuesHolder> featureData : corpusEntry.getFeatureFrameVectorValuesMap().entrySet()) {
+                target.put(featureData.getKey(), featureData.getValue().getValues());
+            }
+            for (Entry<String, FrameValuesHolder> featureData : corpusEntry.getFeatureFrameValuesMap().entrySet()) {
+                target.put(featureData.getKey(), featureData.getValue().getValues());
+            }
+            return target;
+        }
 	
 	/**
 	 * 

@@ -47,7 +47,12 @@ public class RecognitionMarkerSegmentatorListenerImpl extends
 		for (List<Double> signalWindow : signalWindows.getValues()) {
 			mffcValues.addAll(mfcc.calculateWindow((FrameValues) signalWindow));
 		}
-		
+                if(mffcValues.size()==0){
+                    LOG.error("nothing to recognize" + signalSegment);
+                    return false;
+                }
+                    
+		Assert.isTrue(mffcValues.size()>0, "MFCC is not calculated. Size {0} ", mffcValues.size());
 //		SignalSegment recognitionSignalSegment = new SignalSegment();
 //		recognitionSignalSegment.setMarker(signalSegment.getMarker());
 //		recognitionSignalSegment.setName(signalSegment.getName());

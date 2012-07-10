@@ -63,17 +63,17 @@ public class CorpusServiceBaseImpl implements CorpusService {
 
         @Override
 	public RecognitionResult matchByCorpusEntry(SignalSegment corpusEntry) {
-		Map<String, IValues> target = new HashMap<String, IValues>();
-		for (Entry<String, FrameVectorValuesHolder> featureData : corpusEntry.getFeatureFrameVectorValuesMap().entrySet()) {
-			target.put(featureData.getKey(), featureData.getValue().getValues());
-		}
-		for (Entry<String, FrameValuesHolder> featureData : corpusEntry.getFeatureFrameValuesMap().entrySet()) {
-			target.put(featureData.getKey(), featureData.getValue().getValues());
-		}
+		Map<String, IValues> target = getCorpusServiceHelper().toMap(corpusEntry);
 		RecognitionResult match = findBestMatch(target);
 		return match;
 	}
-
+        @Override
+        public List<RecognitionResult> findMultipleMatchFull(SignalSegment corpusEntry){
+            Map<String, IValues> target = getCorpusServiceHelper().toMap(corpusEntry);
+            List<RecognitionResult> match = findMultipleMatchFull(target);
+            return match;
+        }
+        
 	/**
 	 * Find mutliple match
 	 * 
@@ -436,5 +436,7 @@ public class CorpusServiceBaseImpl implements CorpusService {
 	public void setCorpusServiceHelper(CorpusServiceHelperImpl corpusServiceHelper) {
 		this.corpusServiceHelper = corpusServiceHelper;
 	}
+
+
 
 }
