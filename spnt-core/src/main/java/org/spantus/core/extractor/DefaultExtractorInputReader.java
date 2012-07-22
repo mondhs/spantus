@@ -39,17 +39,19 @@ import org.spantus.math.windowing.WindowingFactory;
  * 
  */
 public class DefaultExtractorInputReader implements IExtractorInputReader {
-	protected Logger log = Logger.getLogger(DefaultExtractorInputReader.class);
+    protected Logger log = Logger.getLogger(DefaultExtractorInputReader.class);
 
-	private FrameValues values;
+    private FrameValues frameValues;
 
-	private int frameIndex;
+    private int frameIndex;
 	
-	private Long offset = 0L;
+    private Long offset = 0L;
+    private Long availableStartIndex=0L;
+    private FrameValues signalValues = null;
 
-	private WindowBufferProcessorCtx ctx;
+    private WindowBufferProcessorCtx ctx;
 	
-	private WindowBufferProcessor windowBufferProcessor;
+    private WindowBufferProcessor windowBufferProcessor;
 
     private Windowing windowing;
 	
@@ -64,17 +66,18 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
 	}
 
 	public void put(Long sample, Double value) {
-		values.add(frameIndex++, value);
+		frameValues.add(frameIndex++, value);
+                signalValues.add(value);
 		if (frameIndex >= config.getFrameSize()) {
-			pushFrameOfWindows(sample, values);
+			pushFrameOfWindows(sample, frameValues);
 			initValues();
 		}
 	}
 
 	private void initValues() {
 		offset += frameIndex;
-		values = new FrameValues();
-		values.setSampleRate(getConfig().getSampleRate());
+		frameValues = new FrameValues();
+		frameValues.setSampleRate(getConfig().getSampleRate());
 		frameIndex = 0;
 	}
 
@@ -100,7 +103,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
 	}
 
 	public void pushValues(Long sample) {
-		pushFrameOfWindows(sample, values);
+		pushFrameOfWindows(sample, frameValues);
 		for (IGeneralExtractor<?> element : generalExtractor) {
 			element.flush();
 		}
@@ -115,7 +118,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
 	protected void pushFrameOfWindows(Long sample, FrameValues ivalues) {
 
 		long sampleIndex = sample - ivalues.size();
-		for (Double value : values) {
+		for (Double value : frameValues) {
 			FrameValues window = getWindowBufferProcessor().calculate(value,
 					getCtx());
 			if (window != null) {
@@ -164,6 +167,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
 
 	public void setConfig(IExtractorConfig config) {
 		this.config = config;
+                signalValues = new FrameValues(getConfig().getSampleRate());
 		for (IGeneralExtractor<?> iExtr : generalExtractor) {
 			iExtr.setConfig(config);
 		}
@@ -177,8 +181,8 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
 		return offset;
 	}
 
-	public FrameValues getValues() {
-		return values;
+	public FrameValues getFrameValues() {
+		return frameValues;
 	}
 	
 	public WindowBufferProcessorCtx getCtx() {
@@ -212,6 +216,31 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
             windowing = WindowingFactory.createWindowing(wenum);
         }
         return windowing;
+    }
+
+    @Override
+    public Long getAvailableStartMs() {
+        return signalValues.toTime(availableStartIndex);
+    }
+
+    @Override
+    public Long getAvailableSignalLengthMs() {
+        return signalValues.getTime();
+    }
+
+    @Override
+    public FrameValues findSignalValues(Long startMs, Long lengthMs) {
+       int fromIndex = signalValues.toIndex(startMs);
+       Long availableEndIndex = availableStartIndex+(long)signalValues.size();
+       int lengthIndex = signalValues.toIndex(lengthMs);
+       org.spantus.utils.Assert.isTrue(availableStartIndex<fromIndex &&
+               fromIndex<availableEndIndex, "from {0} should be beteen[{1};{2}]", fromIndex,availableStartIndex, availableEndIndex );
+      
+       lengthIndex = Math.min(lengthIndex, signalValues.toTime(signalValues.size()).intValue());
+       int toIndex = fromIndex+lengthIndex;
+       FrameValues fv = signalValues.subList(fromIndex, toIndex);
+       return fv;
+       
     }
 
 }

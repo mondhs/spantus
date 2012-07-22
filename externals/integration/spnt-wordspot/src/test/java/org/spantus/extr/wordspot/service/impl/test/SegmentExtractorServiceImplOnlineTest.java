@@ -1,6 +1,10 @@
 package org.spantus.extr.wordspot.service.impl.test;
 
 //import static org.junit.Assert.fail;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,7 +15,6 @@ import java.util.Map;
 import javax.sound.sampled.AudioInputStream;
 
 import junit.framework.Assert;
-import org.junit.Ignore;
 
 import org.junit.Test;
 import org.spantus.core.IValues;
@@ -30,7 +33,6 @@ import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.segment.online.MarkerSegmentatorListenerImpl;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.services.impl.MarkerProxyDao;
 
@@ -68,15 +70,16 @@ public class SegmentExtractorServiceImplOnlineTest extends AbstractSegmentExtrac
         Assert.assertEquals("First segment length", result.get(0).getMarker().getEnd(), 429, 1);
         Assert.assertEquals("Extracted feature", 2, valueMap.size());
         Assert.assertEquals("Extracted feature length", 56, valueMap.get("smooth_" + ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
-        Assert.assertEquals("Extracted vector feature", 2, vectorMap.size());
-        Assert.assertEquals("Extracted feature length", 56, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size());
-        Assert.assertEquals("segment recognition", "pa", result.get(0).getName());
-        Assert.assertEquals("segment recognition", "ded", result.get(1).getName());
-        Assert.assertEquals("segment recognition", "da", result.get(2).getName());
-        Assert.assertEquals("segment recognition", "skirt", result.get(3).getName());
-        Assert.assertEquals("segment recognition", "zhodzh", result.get(4).getName());
-
-
+        Assert.assertEquals("Extracted vector feature", 1, vectorMap.size());
+//        Assert.assertEquals("Extracted feature length", 56, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size());
+        Joiner joiner = Joiner.on(";").skipNulls();
+        String recognized = joiner.join(Collections2.transform(result, new Function<SignalSegment,String>(){
+                   @Override
+                   public String apply(SignalSegment input) {
+                       return input.getName();
+                   }
+               }));
+        Assert.assertEquals("segment recognition", "pa;de;da;skirt;zodz", recognized);
     }
 
     @Test

@@ -3,18 +3,13 @@ package org.spantus.work.reader;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import org.spantus.core.FrameValues;
 
-import org.spantus.core.extractor.ExtractorParam;
-import org.spantus.core.extractor.IExtractor;
-import org.spantus.core.extractor.IExtractorConfig;
-import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.extractor.IExtractorVector;
-import org.spantus.core.extractor.IGeneralExtractor;
+import org.spantus.core.extractor.*;
 import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.extractor.ExtractorConfigUtil;
-import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorTypeEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
@@ -29,15 +24,15 @@ import org.spantus.work.services.WorkServiceFactory;
 public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 	
 
-	ExtractorInputReader defaultReader;
+	DefaultExtractorInputReader defaultReader;
 	Mpeg7ExtractorInputReader mpeg7Reader;
 	
 	public MultiFeatureExtractorInputReader() {
-		defaultReader = new ExtractorInputReader();
+		defaultReader = new DefaultExtractorInputReader();
 		mpeg7Reader = new Mpeg7ExtractorInputReader();
 	}
 
-	public ExtractorInputReader getDefaultReader() {
+	public DefaultExtractorInputReader getDefaultReader() {
 		return defaultReader;
 	}
 
@@ -191,4 +186,19 @@ public class MultiFeatureExtractorInputReader implements IExtractorInputReader {
 	public IExtractorConfig getConfig() {
 		return getDefaultReader().getConfig();
 	}
+
+    @Override
+    public Long getAvailableStartMs() {
+        return getDefaultReader().getAvailableStartMs();
+    }
+
+    @Override
+    public Long getAvailableSignalLengthMs() {
+        return getDefaultReader().getAvailableSignalLengthMs();
+    }
+
+    @Override
+    public FrameValues findSignalValues(Long startMs, Long lengthMs) {
+        return getDefaultReader().findSignalValues(startMs, lengthMs);
+    }
 }

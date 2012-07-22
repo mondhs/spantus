@@ -49,7 +49,7 @@ public class Marker implements Serializable, Cloneable{
 
 	public void setEnd(Long end) {
 		Assert.isTrue(getStart()!=null, "start not set");
-		Assert.isTrue(end-getStart()>0, "End should be after start");
+		Assert.isTrue(end-getStart()>=0, "End should be after start");
 		setLength(end-getStart());
 	}
 	
@@ -64,7 +64,7 @@ public class Marker implements Serializable, Cloneable{
 	}
 
 	public void setLength(Long length) {
-		Assert.isTrue(length>0, "Length cannot be negative");
+		Assert.isTrue(length>=0, "Length cannot be negative");
 		this.length = length;
 	}
 	

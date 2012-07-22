@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorListener;
@@ -179,5 +180,19 @@ public abstract class AbstractClassifier implements IClassifier, IExtractorListe
 			Set<IClassificationListener> classificationListeners) {
 		this.classificationListeners = classificationListeners;
 	}
+            @Override
+    public String getRegistryName() {
+        return getExtractor().getRegistryName();
+    }
+
+    @Override
+    public ExtractorParam getParam() {
+        return getExtractor().getParam();
+    }
+
+    @Override
+    public void setParam(ExtractorParam param) {
+        getExtractor().setParam(param);
+    }
 	
 }

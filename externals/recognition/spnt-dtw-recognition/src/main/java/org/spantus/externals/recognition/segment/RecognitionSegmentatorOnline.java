@@ -8,7 +8,6 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.service.CorpusService;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
-import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
 import org.spantus.segment.online.DecisionSegmentatorOnline;
 import org.spantus.work.services.WorkExtractorReaderService;
@@ -16,7 +15,7 @@ import org.spantus.work.services.WorkServiceFactory;
 
 public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 	
-	private ExtractorInputReader bufferedReader;
+	private IExtractorInputReader bufferedReader;
 
 	
 	private WorkExtractorReaderService extractorReaderService;
@@ -65,7 +64,7 @@ public class RecognitionSegmentatorOnline extends DecisionSegmentatorOnline {
 	public Boolean getLearnMode() {
 		return learnMode;
 	}
-	public RecognitionSegmentatorOnline(ExtractorInputReader bufferedReader){
+	public RecognitionSegmentatorOnline(IExtractorInputReader bufferedReader){
 		this.bufferedReader = bufferedReader;
 	}
         public WorkExtractorReaderService getExtractorReaderService() {

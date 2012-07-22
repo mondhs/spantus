@@ -34,7 +34,6 @@ import org.spantus.core.io.DefaultAudioReader;
 import org.spantus.core.io.WraperExtractorReader;
 import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.externals.recognition.segment.RecognitionSegmentatorOnline;
-import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorModifiersEnum;
@@ -85,7 +84,7 @@ public class RecognitionPlot extends JFrame {
 		
 		URL urlFile = wavFile.toURI().toURL();
 		DefaultAudioReader audioReader = (DefaultAudioReader)AudioReaderFactory.createAudioReader();
-		ExtractorInputReader bufferedReader = (ExtractorInputReader)ExtractorsFactory.createReader(audioReader.findAudioFormat(urlFile), 33, 66);
+		IExtractorInputReader bufferedReader = ExtractorsFactory.createReader(audioReader.findAudioFormat(urlFile), 33, 66);
 
 		WraperExtractorReader wraperExtractorReader =  new WraperExtractorReader(bufferedReader,1);
 		wraperExtractorReader.setFormat(audioReader.findAudioFormat(urlFile).getFormat());

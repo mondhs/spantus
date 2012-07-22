@@ -1,6 +1,7 @@
 package org.spantus.mpeg7.extractors;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.mpeg7.config.Mpeg7ExtractorConfig;
@@ -80,6 +81,21 @@ public class AudioDescriptorExtractor implements IExtractor {
 	public long getOffset() {
 		return 0;
 	}
+
+    @Override
+    public String getRegistryName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ExtractorParam getParam() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setParam(ExtractorParam ep) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 
 }

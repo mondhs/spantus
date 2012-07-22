@@ -13,7 +13,6 @@ import org.spantus.core.beans.FrameValuesHolder;
 import org.spantus.core.beans.FrameVectorValuesHolder;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.extractor.impl.ExtractorEnum;
-import org.spantus.segment.online.MarkerSegmentatorListenerImpl;
 /**
  * 
  * @author Mindaugas Greibus
@@ -42,8 +41,8 @@ public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTes
 		Assert.assertEquals("First segment length",476,firstSegment.getMarker().getLength(), 0);
 		Assert.assertEquals("Extracted feature",3, valueMap.size());
 		Assert.assertEquals("Extracted feature length",141, valueMap.get("smooth_"+ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size(),1);
-		Assert.assertEquals("Extracted vector feature",2, vectorMap.size());
-		Assert.assertEquals("Extracted feature length",141, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size(),1);
+		Assert.assertEquals("Extracted vector feature",1, vectorMap.size());
+//		Assert.assertEquals("Extracted feature length",141, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size(),1);
 //		Assert.assertEquals("first segment recognition",firstSegment.getName(), "padeda");
 //		Assert.assertEquals("second segment recognition",secondSegment.getName(), "skirti");
 		

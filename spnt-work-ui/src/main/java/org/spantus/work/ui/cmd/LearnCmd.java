@@ -22,7 +22,9 @@ import org.spantus.work.ui.services.impl.MatchingServiceImpl;
  * @author mondhs
  */
 public class LearnCmd extends AbsrtactCmd {
+
     private MatchingServiceImpl matchingService;
+    private WorkExtractorReaderService extractorReaderService;
 
     public LearnCmd(CommandExecutionFacade executionFacade) {
         super(executionFacade);
@@ -31,31 +33,31 @@ public class LearnCmd extends AbsrtactCmd {
     @Override
     public String execute(SpantusWorkInfo ctx) {
         getMatchingService().update(ctx.getProject().getRecognitionConfig(), getExecutionFacade());
-        WorkExtractorReaderService extractorReaderService = WorkServiceFactory.createExtractorReaderService();
+
 
         Marker marker = ((Marker) getCurrentEvent().getValue());
 
-        Map<String, IValues> fvv = extractorReaderService.findAllVectorValuesForMarker(
-                getReader(),
-                marker);
-        
+//        Map<String, IValues> fvv = extractorReaderService.findAllVectorValuesForMarker(
+//                getReader(),
+//                marker);
+        Map<String, IValues> fvv = getExtractorReaderService().recalcualteValues(getReader(), marker);
+
         AudioInputStream ais = null;
-        try{
-        	ais =
-                AudioManagerFactory.createAudioManager().findInputStreamInMils(
-                ctx.getProject().getSample().getCurrentFile(),
-                marker.getStart(),
-                marker.getLength());
-        }catch( Exception e){
-        	//not a audio
+        try {
+            ais =
+                    AudioManagerFactory.createAudioManager().findInputStreamInMils(
+                    ctx.getProject().getSample().getCurrentFile(),
+                    marker.getStart(),
+                    marker.getLength());
+        } catch (Exception e) {
+            //not a audio
         }
         getMatchingService().learn(marker.getLabel(), fvv, ais);
         return null;
     }
 
-    
     /**
-     * 
+     *
      * @return
      */
     public Set<String> getExpectedActions() {
@@ -64,7 +66,7 @@ public class LearnCmd extends AbsrtactCmd {
     }
 
     public MatchingServiceImpl getMatchingService() {
-        if(matchingService == null){
+        if (matchingService == null) {
             matchingService = MatchingServiceImpl.getInstance();
         }
         return matchingService;
@@ -73,7 +75,15 @@ public class LearnCmd extends AbsrtactCmd {
     public void setMatchingService(MatchingServiceImpl matchingService) {
         this.matchingService = matchingService;
     }
-   
-    
-    
+
+    public WorkExtractorReaderService getExtractorReaderService() {
+        if (extractorReaderService == null) {
+            extractorReaderService = WorkServiceFactory.createExtractorReaderService();
+        }
+        return extractorReaderService;
+    }
+
+    public void setExtractorReaderService(WorkExtractorReaderService extractorReaderService) {
+        this.extractorReaderService = extractorReaderService;
+    }
 }

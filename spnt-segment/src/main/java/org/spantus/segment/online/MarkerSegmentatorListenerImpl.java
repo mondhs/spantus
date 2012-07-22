@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.spantus.core.FrameValues;
-import org.spantus.core.FrameVectorValues;
 import org.spantus.core.beans.FrameValuesHolder;
-import org.spantus.core.beans.FrameVectorValuesHolder;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.SegmentEvent;
@@ -25,7 +23,7 @@ import org.spantus.utils.Assert;
 public class MarkerSegmentatorListenerImpl extends
 		MultipleSegmentatorListenerOnline {
 
-	public static final String SIGNAL_WINDOWS = "SIGNAL_WINDOWS";
+//	public static final String SIGNAL_WINDOWS = "SIGNAL_WINDOWS";
 
 	private static final Logger LOG = Logger
 			.getLogger(MarkerSegmentatorListenerImpl.class);
@@ -108,25 +106,30 @@ public class MarkerSegmentatorListenerImpl extends
 			
 			String extractorId = event.getExtractorId();
 			FrameValuesHolder valueHolder = getCurrentSegment().getFeatureFrameValuesMap().get(extractorId);
-			FrameVectorValuesHolder vectorHolder = getCurrentSegment().getFeatureFrameVectorValuesMap().get(SIGNAL_WINDOWS);
+//			FrameVectorValuesHolder vectorHolder = getCurrentSegment().getFeatureFrameVectorValuesMap().get(SIGNAL_WINDOWS);
 			if(valueHolder == null){
 				valueHolder = new FrameValuesHolder();
 				valueHolder.setValues(new FrameValues(event.getOutputValues().getSampleRate()));
 				getCurrentSegment().getFeatureFrameValuesMap().put(extractorId, valueHolder);
 			}
-			if(vectorHolder == null){
-				vectorHolder = new FrameVectorValuesHolder();
-				vectorHolder.setValues(new FrameVectorValues(event.getOutputValues().getSampleRate()));
-            			getCurrentSegment().getFeatureFrameVectorValuesMap().put(SIGNAL_WINDOWS, vectorHolder);
-			}
+//			if(vectorHolder == null){
+//				vectorHolder = new FrameVectorValuesHolder();
+//				vectorHolder.setValues(new FrameVectorValues(event.getOutputValues().getSampleRate()));
+//            			getCurrentSegment().getFeatureFrameVectorValuesMap().put(SIGNAL_WINDOWS, vectorHolder);
+//			}
 			valueHolder.getValues().add(event.getValue());
-			LOG.debug("[onSegmentProcessed] event.getValue(){1}?={2}{0} ", event.getValue(), event.getExtractorId(), firstFeatureId);
-			if(event.getExtractorId().equals(firstFeatureId)){
-				vectorHolder.getValues().add(event.getWindowValues());
-                               LOG.debug("[onSegmentProcessed] ++++event.getWindowValues(){0} ", event.getWindowValues());
-			}
+//			LOG.debug("[onSegmentProcessed] event.getValue(){1}?={2}{0} ", event.getValue(), event.getExtractorId(), firstFeatureId);
+//			if(event.getExtractorId().equals(firstFeatureId)){
+//				vectorHolder.getValues().add(event.getWindowValues());
+//                               //LOG.debug("[onSegmentProcessed] ++++event.getWindowValues(){0} ", event.getWindowValues());
+//			}
 		}
 	}
+        
+        public void onNoiseProcessed(SegmentEvent event) {
+             LOG.debug("[onNoiseProcessed] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
+	}
+        
 	@Override
 	public void registered(String id) {
 		super.registered(id);
@@ -162,6 +165,8 @@ public class MarkerSegmentatorListenerImpl extends
             }
             lastEvent = time;
         }
+        
+
 
 
 

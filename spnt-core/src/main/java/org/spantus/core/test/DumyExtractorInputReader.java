@@ -132,4 +132,21 @@ public class DumyExtractorInputReader implements IExtractorInputReader {
         return fullF;
     }
 
+    @Override
+    public Long getAvailableStartMs() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Long getAvailableSignalLengthMs() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public FrameValues findSignalValues(Long startMs, Long lengthMs) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+   
+
 }

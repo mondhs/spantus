@@ -2,6 +2,7 @@ package org.spantus.mpeg7.extractors;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.spantus.core.FrameValues;
 
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
@@ -59,5 +60,20 @@ public class Mpeg7ExtractorInputReader implements IExtractorInputReader {
 	public void setConfig(IExtractorConfig config) {
 		this.config = config;
 	}
+
+    @Override
+    public Long getAvailableStartMs() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Long getAvailableSignalLengthMs() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public FrameValues findSignalValues(Long l, Long l1) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

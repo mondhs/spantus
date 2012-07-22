@@ -14,6 +14,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.extractor.DefaultExtractorInputReader;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.dao.ReaderDao;
@@ -24,7 +25,6 @@ import org.spantus.core.io.ByteListInputStream;
 import org.spantus.core.io.SignalReader;
 import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.ExtractorConfigUtil;
-import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.logger.Logger;
@@ -72,14 +72,14 @@ public class CalculateFeaturesServiceImpl{
 //		urls.add(mainSignal);
 //		urls.add(noiseSignal);
 		AudioReader merger = AudioReaderFactory.createAudioReader();
-		ExtractorInputReader bufferedReader = new ExtractorInputReader();
+		DefaultExtractorInputReader bufferedReader = new DefaultExtractorInputReader();
 		ExtractorUtils.register(bufferedReader, new ExtractorEnum[]{
 				ExtractorEnum.ENERGY_EXTRACTOR,
 		}, null);
 		
 		bufferedReader.setConfig(setupReaderByFile(urls.get(0)));
 		merger.readSignal(urls, bufferedReader);
-		return bufferedReader.getValues();
+		return bufferedReader.getFrameValues();
 	}
 	
 	/**

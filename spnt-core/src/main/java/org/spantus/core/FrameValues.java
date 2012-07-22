@@ -89,7 +89,11 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 		}
 		return super.addAll(c);
 	}
-	
+        @Override
+        public <T extends IValues> void addValues(T values) {
+            this.addAll((FrameValues)values);
+        }
+	@Override
 	public void add(int index, Double element) {
 		super.add(index, new Double(element));
 	}
@@ -98,7 +102,7 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 		super.add(index, new Double(element));
 	}
 	
-	@SuppressWarnings("unchecked")
+        @Override
 	public FrameValues subList(int fromIndex, int toIndex) {
 		List<Double> lst = super.subList(fromIndex, toIndex);
 		FrameValues fv = new FrameValues(lst); 
@@ -129,18 +133,24 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 		System.arraycopy(objs, 0, floats, 0, objs.length);
 		return floats;
 	}
-	
+	@Override
 	public Double getSampleRate() {
 		return sampleRate;
 	}
-
+        @Override
 	public void setSampleRate(Double sampleRate) {
 		this.sampleRate = sampleRate;
 		milsSamplePeriod = 1000/sampleRate;
 	}
+        /**
+         * Total length of the values in milliseconds
+         * @return milliseconds
+         */
+        @Override
 	public Long getTime() {
 		return indextoMils(size());
 	}
+        @Override
 	public Long toTime(int i){
 		return indextoMils(i);
 	}
@@ -150,6 +160,7 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 	public Long indextoMils(long i){
 		return (long)(milsSamplePeriod * i);
 	}
+        @Override
 	public int toIndex(Long time){
 		Double fTime = time.doubleValue();
 		return (int)(fTime * sampleRate/1000)-1;

@@ -55,7 +55,7 @@ public class SignalExtractorTest{
 		FrameValues y = extractor.calculateWindow(0L, x);
 		log.debug(extractor.getName() + ": " + y);
 		Assert.assertEquals(expectedSize, y.size());
-		Assert.assertEquals(extractor.getExtractorSampleRate(), extractor.getConfig().getSampleRate());
+		Assert.assertEquals("Sample Rate",80313, extractor.getExtractorSampleRate(), 1);
 	}
 	
 	public void testMean(){

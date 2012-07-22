@@ -10,10 +10,7 @@ import java.util.Set;
 
 import org.spantus.core.IValues;
 import org.spantus.core.beans.SignalSegment;
-import org.spantus.core.extractor.ExtractorParam;
-import org.spantus.core.extractor.IExtractorConfig;
-import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.extractor.SignalFormat;
+import org.spantus.core.extractor.*;
 import org.spantus.core.io.SignalReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
@@ -28,6 +25,7 @@ import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorModifiersEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
 import org.spantus.logger.Logger;
+import org.spantus.math.windowing.WindowingEnum;
 import org.spantus.segment.ISegmentatorService;
 import org.spantus.segment.SegmentFactory;
 import org.spantus.segment.online.AsyncMarkerSegmentatorListenerImpl;
@@ -70,7 +68,6 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 					getConfig().getThresholdCoef());
 
 			getConfig().getExtractorParams().put(extractEnum.name(), param);
-
 		}
 	}
 
@@ -150,10 +147,8 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 		IExtractorConfig config = ExtractorConfigUtil.defaultConfig(
 				format.getSampleRate(), getConfig().getWindowLength(),
 				getConfig().getOverlapInPerc());// 10 ms and 33 %
+                config.setWindowing(WindowingEnum.Hamming.name());
 		config.setPreemphasis(getConfig().getPreephasis().name());
-                if(iSegmentatorListener != null){
-                    iSegmentatorListener.setConfig(config);
-                }
 		IExtractorInputReader extractorReader = ExtractorsFactory
 				.createReader(config);
 		List<IClassifier> classifiers = ExtractorUtils.registerThreshold(
@@ -162,6 +157,9 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 
 		if (iSegmentatorListener != null) {
 			iSegmentatorListener.setConfig(config);
+                        if(iSegmentatorListener instanceof IExtractorInputReaderAware){
+                            ((IExtractorInputReaderAware)iSegmentatorListener).setExtractorInputReader(extractorReader);
+                        }
 			for (IClassifier iClassifier : classifiers) {
 				iClassifier.addClassificationListener(iSegmentatorListener);
 			}

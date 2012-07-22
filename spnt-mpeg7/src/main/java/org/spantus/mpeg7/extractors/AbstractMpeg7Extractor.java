@@ -2,6 +2,7 @@ package org.spantus.mpeg7.extractors;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IGeneralExtractor;
 
 public abstract class AbstractMpeg7Extractor implements IGeneralExtractor<FrameVectorValues> {
@@ -17,6 +18,7 @@ public abstract class AbstractMpeg7Extractor implements IGeneralExtractor<FrameV
 	public int getDimension() {
 		return 0;
 	}
+        
 
 
 
@@ -41,5 +43,20 @@ public abstract class AbstractMpeg7Extractor implements IGeneralExtractor<FrameV
 	public void flush() {
 		
 	}
+        
+            @Override
+    public String getRegistryName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ExtractorParam getParam() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setParam(ExtractorParam ep) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

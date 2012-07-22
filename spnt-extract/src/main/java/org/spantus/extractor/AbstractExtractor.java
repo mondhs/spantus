@@ -32,7 +32,6 @@ import org.spantus.core.extractor.IExtractor;
  */
 public abstract class AbstractExtractor extends AbstractGeneralExtractor<FrameValues> implements IExtractor {
 
-	
 
 	public AbstractExtractor() {
 		setOutputValues(new FrameValues());

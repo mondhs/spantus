@@ -145,6 +145,7 @@ public final class ExtractorUtils {
 			if (extractorMap.get(extractor) != null) {
 				IExtractor extractorInstance = extractorMap.get(extractor)
 						.newInstance();
+                                extractorInstance.setParam(param);
 				if (ExtractorParamUtils.getValue(param,
 						ExtractorModifiersEnum.delta.name(), false)) {
 					DeltaExtractor delta = new DeltaExtractor();

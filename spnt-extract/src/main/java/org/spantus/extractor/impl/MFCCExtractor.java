@@ -52,20 +52,23 @@ public class MFCCExtractor extends AbstractSpectralVectorExtractor {
 
 
     public FrameVectorValues calculateWindow(FrameValues window) {
-        FrameVectorValues spectrum = calculateFFT(window);
-        spectrum.setSampleRate(getExtractorSampleRate());
+//        FrameVectorValues spectrum = calculateFFT(window);
+//        spectrum.setSampleRate(getExtractorSampleRate());
         FrameVectorValues calculatedValues = super.calculateWindow(window);
-        for (List<Double> spectra : spectrum) {
-        	try{
-            List<Double> mfcc = getMfccService().calculateMfccFromSpectrum(window, spectra,
+//        for (List<Double> spectra : spectrum) {
+//        	try{
+//            List<Double> mfcc = getMfccService().calculateMfccFromSpectrum(window, spectra,
+//                    getConfig().getSampleRate());
+//            
+//            calculatedValues.add(mfcc);
+//        	}catch (IllegalArgumentException e) {
+//        		getAbstractExtractorVector().flush();
+//        		throw e;
+//        	}
+//        }
+        List<Double> mfcc = getMfccService().calculateMFCC(window, 
                     getConfig().getSampleRate());
-            calculatedValues.add(mfcc);
-        	}catch (IllegalArgumentException e) {
-        		getAbstractExtractorVector().flush();
-        		throw e;
-        	}
-        }
-
+        calculatedValues.add(mfcc);
 
 
         return calculatedValues;

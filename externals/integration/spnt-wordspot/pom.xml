@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>spnt-root-pom</artifactId>
-		<groupId>org.spantus</groupId>
-		<version>0.3-SNAPSHOT</version>
-		<relativePath>../../..</relativePath>
-	</parent>
-	<groupId>org.spantus.external</groupId>
-	<artifactId>spnt-wordspot</artifactId>
-	<name>Spantus - Word Spotting module</name>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>spnt-root-pom</artifactId>
+        <groupId>org.spantus</groupId>
+        <version>0.3-SNAPSHOT</version>
+        <relativePath>../../..</relativePath>
+    </parent>
+    <groupId>org.spantus.external</groupId>
+    <artifactId>spnt-wordspot</artifactId>
+    <name>Spantus - Word Spotting module</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.spantus</groupId>
-			<artifactId>spnt-work</artifactId>
-			<classifier>${envClassifier}</classifier>
-		 <exclusions>
-		  <exclusion>
-		   <artifactId>mvel2</artifactId>
-		   <groupId>org.mvel</groupId>
-		  </exclusion>
-		 </exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.spantus.externals.recognition</groupId>
-			<artifactId>spnt-dtw-recognition</artifactId>
-			<classifier>${envClassifier}</classifier>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.spantus</groupId>
+            <artifactId>spnt-work</artifactId>
+            <classifier>${envClassifier}</classifier>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mvel2</artifactId>
+                    <groupId>org.mvel</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.spantus.externals.recognition</groupId>
+            <artifactId>spnt-dtw-recognition</artifactId>
+            <classifier>${envClassifier}</classifier>
+        </dependency> 
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 </project>

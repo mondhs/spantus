@@ -53,7 +53,7 @@ public class WavMatrixChartInstance extends TimeSeriesFunctionInstance {
 	
 	private FrameVectorValues values;
 	private ColorLookup colorLookup = null;
-	private ChartScale chartScale = ChartScale.sqrt;
+	private ChartScale chartScale = ChartScale.linear;
 	private GraphDomain domain;
 	private BufferedImage image = null;
 	private Double order = 0D;

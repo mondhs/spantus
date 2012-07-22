@@ -6,6 +6,7 @@
 package org.spantus.core.test;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorConfig;
 
@@ -62,5 +63,20 @@ public class DummyExtractor implements IExtractor{
 	public long getOffset() {
 		return 0;
 	}
+
+    @Override
+    public String getRegistryName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ExtractorParam getParam() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setParam(ExtractorParam param) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

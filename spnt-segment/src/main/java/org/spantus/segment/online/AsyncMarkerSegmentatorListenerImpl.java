@@ -9,11 +9,13 @@ import org.spantus.core.beans.SegmentChronology;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.beans.SourceSegmentIdentifier;
 import org.spantus.core.extractor.IExtractorConfig;
+import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorInputReaderAware;
 import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
 
-public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener {
+public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener, IExtractorInputReaderAware {
     public static final int STEP = 1;
     public static final int KNOWN_CLASSIFIER_THRESHOLD = 1;
 
@@ -27,6 +29,9 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener 
     private int classifiersCount;
     private int classifiersThreshold;
     private Long lastProcessedMoment;
+    private IExtractorInputReader extractorInputReader;
+
+
 
     public AsyncMarkerSegmentatorListenerImpl(
             MarkerSegmentatorListenerImpl underlyingSegmentator) {
@@ -200,6 +205,17 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener 
         underlyingSegmentator.setConfig(config);
     }
 
+    @Override
+    public void setExtractorInputReader(IExtractorInputReader extractorInputReader) {
+        if(underlyingSegmentator instanceof IExtractorInputReaderAware){
+            ((IExtractorInputReaderAware)underlyingSegmentator).setExtractorInputReader(extractorInputReader);
+        }
+        this.extractorInputReader = extractorInputReader; 
+    }
+    public IExtractorInputReader getIExtractorInputReader() {
+        return extractorInputReader;
+    }
+    
     public class SegmentEventSourceSegmentIdentifier implements SourceSegmentIdentifier<SegmentEvent> {
 
         @Override

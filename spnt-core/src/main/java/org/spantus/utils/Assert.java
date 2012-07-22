@@ -27,7 +27,15 @@ import java.text.MessageFormat;
  * Created Feb 22, 2010
  *
  */
-public abstract class Assert {
+public final class Assert {
+
+    /**
+     * Util class, should be never instantiated.
+     */
+    private Assert() {
+    }
+    
+    
 
     static public void isTrue(boolean val) {
         if (val == false) {

@@ -17,5 +17,6 @@ public interface IValues {
     public int toIndex(Long f);
     public int getDimention();
     public int size();
-	public <T extends IValues> T subList(int fromIndex, int toIndex);
+    public <T extends IValues> T subList(int fromIndex, int toIndex);
+    public <T extends IValues> void addValues(T values);
 }

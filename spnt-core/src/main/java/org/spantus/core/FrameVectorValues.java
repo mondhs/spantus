@@ -114,6 +114,10 @@ public class FrameVectorValues extends LinkedList<List<Double>> implements
 		setMaxValue(floats.getMaxValue());
 		super.addAll(floats);
 	}
+        @Override
+        public <T extends IValues> void addValues(T values) {
+            this.addAll((FrameVectorValues)values);
+        }
 
 	public Double get(int x, int y) {
 		return this.get(0).get(0);

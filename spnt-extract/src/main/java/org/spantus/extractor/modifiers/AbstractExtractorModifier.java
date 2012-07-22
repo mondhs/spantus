@@ -19,6 +19,7 @@
 package org.spantus.extractor.modifiers;
 
 import org.spantus.core.FrameValues;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.extractor.AbstractExtractor;
 /**
@@ -41,6 +42,20 @@ public abstract class AbstractExtractorModifier extends AbstractExtractor {
     public void flush() {
         super.flush();
         getExtractor().flush();
+    }
+        @Override
+    public String getRegistryName() {
+        return getExtractor().getRegistryName();
+    }
+
+    @Override
+    public ExtractorParam getParam() {
+        return getExtractor().getParam();
+    }
+
+    @Override
+    public void setParam(ExtractorParam param) {
+        getExtractor().setParam(param);
     }
         
 }

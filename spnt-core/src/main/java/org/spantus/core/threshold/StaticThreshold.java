@@ -18,6 +18,7 @@
 */
 package org.spantus.core.threshold;
 
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.logger.Logger;
 
@@ -100,5 +101,20 @@ public class StaticThreshold extends AbstractThreshold {
 		thresholdValue /=2;
 		return thresholdValue;
 	}
+
+    @Override
+    public String getRegistryName() {
+        return getExtractor().getRegistryName();
+    }
+
+    @Override
+    public ExtractorParam getParam() {
+        return getExtractor().getParam();
+    }
+
+    @Override
+    public void setParam(ExtractorParam param) {
+        getExtractor().setParam(param);
+    }
 
 }

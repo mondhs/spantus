@@ -29,8 +29,7 @@ public class SegmentExtractorServiceConfig {
 	private ExtractorEnum[] extractors = new ExtractorEnum[] {
 			ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
 			ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
-			ExtractorEnum.ENERGY_EXTRACTOR,
-
+			ExtractorEnum.ENERGY_EXTRACTOR
 	};
 
 	private String repositoryPath;

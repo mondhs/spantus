@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-
 package org.spantus.extractor;
 
 import org.spantus.core.FrameValues;
@@ -27,63 +26,55 @@ import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.extractor.windowing.WindowBufferProcessor;
 
 /**
- * User: mondhs
- * Date: 10.12.12
- * Time: 16.39
+ * User: mondhs Date: 10.12.12 Time: 16.39
  */
 public abstract class AbstractGeneralExtractor<T extends IValues> implements IGeneralExtractor<T> {
+
     private IExtractorConfig config;
-
-    
     private ExtractorParam param = new ExtractorParam();
-    
     private T outputValues;
-    
-    public AbstractGeneralExtractor() {
-	}
-    
-    
-	@Override
-	public void flush() {
-		
-	}
-	
-	public T calculateWindow(Long sampleNum, FrameValues values) {
-		T fv = calculateWindow(values);
-		fv.setSampleRate(getExtractorSampleRate());
-		return fv;
-	}
-	
-	@Override
-	public Double getExtractorSampleRate() {
-		return WindowBufferProcessor.calculateExtractorSampleRateStatic(getConfig());
-	}
 
+    public AbstractGeneralExtractor() {
+    }
+
+    @Override
+    public void flush() {
+    }
+
+    public T calculateWindow(Long sampleNum, FrameValues values) {
+        T fv = calculateWindow(values);
+        fv.setSampleRate(getExtractorSampleRate());
+        return fv;
+    }
+
+    @Override
+    public Double getExtractorSampleRate() {
+        return WindowBufferProcessor.calculateExtractorSampleRateStatic(getConfig());
+    }
 
     public void initParam(String key, String defaultValue) {
-		for (String elemKey : getParam().getProperties().keySet()) {
-			if (elemKey.equals(key)) {
-				return;
-			}
-		}
-	}
+        for (String elemKey : getParam().getProperties().keySet()) {
+            if (elemKey.equals(key)) {
+                return;
+            }
+        }
+    }
 
-	public int getParam(String key, int defaultValue) {
-		Object o = getParam().getProperties().get(key);
-		if(o != null && o instanceof Number){
-			return ((Number)o).intValue();
-		}
-		return defaultValue;
-	}
+    public int getParam(String key, int defaultValue) {
+        Object o = getParam().getProperties().get(key);
+        if (o != null && o instanceof Number) {
+            return ((Number) o).intValue();
+        }
+        return defaultValue;
+    }
 
-	public boolean getParam(String key, boolean defaultValue) {
-		Object o = getParam().getProperties().get(key);
-		if(o != null && o instanceof Number){
-			return ((Boolean)o).booleanValue();
-		}
-		return defaultValue;
-	}
-
+    public boolean getParam(String key, boolean defaultValue) {
+        Object o = getParam().getProperties().get(key);
+        if (o != null && o instanceof Number) {
+            return ((Boolean) o).booleanValue();
+        }
+        return defaultValue;
+    }
 
     public int getWinowSize() {
         return getConfig().getWindowSize();
@@ -93,13 +84,9 @@ public abstract class AbstractGeneralExtractor<T extends IValues> implements IGe
         return config;
     }
 
-
     public void setConfig(IExtractorConfig config) {
         this.config = config;
     }
-
-
-
 
     public ExtractorParam getParam() {
         return param;
@@ -109,26 +96,29 @@ public abstract class AbstractGeneralExtractor<T extends IValues> implements IGe
         this.param = param;
     }
 
-	/**
-	 * 
-	 * @param config
-	 * @return
-	 */
-	public Double calculateExtractorSampleRate(IExtractorConfig config) {
-		return (config.getSampleRate()/(config.getWindowSize()-config.getWindowOverlap()));
-	}
-    
+    /**
+     *
+     * @param config
+     * @return
+     */
+    public Double calculateExtractorSampleRate(IExtractorConfig config) {
+        return (config.getSampleRate() / (config.getWindowSize() - config.getWindowOverlap()));
+    }
 
-	
-	public long getOffset() {
-		return 0;
-	}
+    public long getOffset() {
+        return 0;
+    }
 
-	public T getOutputValues() {
-		return outputValues;
-	}
+    public T getOutputValues() {
+        return outputValues;
+    }
 
-	public void setOutputValues(T outputValues) {
-		this.outputValues = outputValues;
-	}
+    public void setOutputValues(T outputValues) {
+        this.outputValues = outputValues;
+    }
+
+    @Override
+    public String getRegistryName() {
+        return getName();
+    }
 }

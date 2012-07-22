@@ -2,6 +2,7 @@ package org.spantus.mpeg7.extractors.impl;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
+import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.mpeg7.extractors.AbstractMpeg7Extractor;
 /**

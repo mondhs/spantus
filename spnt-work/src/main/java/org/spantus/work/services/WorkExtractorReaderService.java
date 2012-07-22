@@ -8,10 +8,12 @@ import java.io.File;
 import java.util.Map;
 
 import javax.sound.sampled.AudioInputStream;
+import org.spantus.core.IValues;
 
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IGeneralExtractor;
+import org.spantus.core.marker.Marker;
 import org.spantus.core.service.ExtractorInputReaderService;
 import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.threshold.IClassifier;
@@ -60,4 +62,7 @@ public interface WorkExtractorReaderService extends ExtractorInputReaderService 
      * @return
      */
     public IGeneralExtractor<?> findExtractorByName(String name, IExtractorInputReader reader);
+    
+    public Map<String, IValues> recalcualteValues(IExtractorInputReader extractorInputReader, Marker marker);
+    public Map<String, IValues> recalcualteValues(IExtractorInputReader extractorInputReader, Marker marker, String extractorName);
 }

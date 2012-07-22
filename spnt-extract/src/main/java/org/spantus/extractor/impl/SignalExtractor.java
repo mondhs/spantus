@@ -22,6 +22,7 @@ package org.spantus.extractor.impl;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.ExtractorParam;
+import org.spantus.core.extractor.windowing.WindowBufferProcessor;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.logger.Logger;
 /**
@@ -80,8 +81,9 @@ public class SignalExtractor extends AbstractExtractor {
 
 	
 	public Double getExtractorSampleRate() {
-//		float overlap = ((float)getConfig().getWindowSize()-getConfig().getWindowOverlap())/getConfig().getWindowSize();
-		return (getConfig().getSampleRate())/((getDownScale()));
+                Double extractorSampleRate = (double)getConfig().getWindowSize()/
+                        (getConfig().getWindowSize()-getConfig().getWindowOverlap());
+		return getConfig().getSampleRate()*extractorSampleRate;
 	}
 
 	public Integer getDownScale() {

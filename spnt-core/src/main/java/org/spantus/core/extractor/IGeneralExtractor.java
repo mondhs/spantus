@@ -32,9 +32,10 @@ import org.spantus.core.IValues;
  * Created 2008.04.11
  *
  */
-public interface IGeneralExtractor<T extends IValues> {
+public interface IGeneralExtractor<T extends IValues>{
 	
 	public String getName();
+        public String getRegistryName();
 	
 	public T calculateWindow(Long sample, FrameValues values);
         
@@ -51,4 +52,8 @@ public interface IGeneralExtractor<T extends IValues> {
 	public long getOffset();
 	
 	public T getOutputValues();
+        
+        public ExtractorParam getParam();
+
+        public void setParam(ExtractorParam param);
 }

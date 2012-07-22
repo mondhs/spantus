@@ -16,7 +16,6 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.dao.ReaderDao;
 import org.spantus.exception.ProcessingException;
-import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.logger.Logger;
 import org.spantus.work.services.converter.FrameValues3DConverter;
 import org.spantus.work.services.converter.FrameValuesConverter;
@@ -24,6 +23,7 @@ import org.spantus.work.services.converter.FrameValuesConverter;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;
+import org.spantus.core.extractor.*;
 
 public class ReaderXmlDaoImpl implements ReaderDao {
 
@@ -69,7 +69,7 @@ public class ReaderXmlDaoImpl implements ReaderDao {
 	}
 
 	protected IExtractorInputReader prepareToSave(IExtractorInputReader reader){
-		ExtractorInputReader rtnReader = new ExtractorInputReader();
+		IExtractorInputReader rtnReader = new DefaultExtractorInputReader();
 		for (IExtractor extractor : reader.getExtractorRegister()) {
 			ExtractorOutputHolder holder = new ExtractorOutputHolder();
 			holder.setName(extractor.getName());

@@ -65,4 +65,20 @@ public class ExtractorOutputHolder implements IExtractor {
 		return 0;
 	}
 
+    @Override
+    public String getRegistryName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public ExtractorParam getParam() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setParam(ExtractorParam param) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+        
+
 }

@@ -13,6 +13,7 @@ import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.service.CorpusService;
 import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
+import org.spantus.math.dtw.DtwServiceJavaMLImpl;
 
 /**
  *
@@ -39,6 +40,26 @@ public final class RecognitionServiceFactory {
      public static CorpusService createCorpusService(String repositoryPath){
 //         if(corpusService == null){
              CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
+             corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
+//             corpusServiceimpl.getIncludeFeatures().add("MFCC_EXTRACTOR");
+//              corpusServiceimpl.getIncludeFeatures().add("LPC_EXTRACTOR");
+//              corpusServiceimpl.getIncludeFeatures().add("FFT_EXTRACTOR");
+         	  CorpusRepositoryFileImpl corpus = new CorpusRepositoryFileImpl();
+         	 corpus.setRepositoryPath(repositoryPath);
+             corpusServiceimpl.setCorpus(corpus);
+             corpusService = corpusServiceimpl;
+//         }
+         return corpusService;
+      }
+     
+          public static CorpusService createCorpusServicePartialSearch(String repositoryPath){
+//         if(corpusService == null){
+             CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
+             
+             corpusServiceimpl.setSearchRadius(15F);
+             corpusServiceimpl.setJavaMLSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ParallelogramWindow);
+             corpusServiceimpl.setJavaMLLocalConstraint(DtwServiceJavaMLImpl.JavaMLLocalConstraint.Angle);
+
              corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
 //             corpusServiceimpl.getIncludeFeatures().add("MFCC_EXTRACTOR");
 //              corpusServiceimpl.getIncludeFeatures().add("LPC_EXTRACTOR");
