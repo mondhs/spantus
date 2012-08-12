@@ -21,26 +21,7 @@
     </dependencies>
             <build>
                 <plugins>
-                    <plugin>
-                    	<groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <version>2.3</version>
-                        <executions>
-                            <execution>
-                                <id>base</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                                <configuration>
-                                    <finalName>${project.build.finalName}-${envClassifier}</finalName>
-                                    <descriptors>
-                                        <descriptor>src/assembly/zip-spnt.xml</descriptor>
-                                    </descriptors>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>groovy-maven-plugin</artifactId>
@@ -103,6 +84,57 @@
                             </execution>
                         </executions>
                     </plugin>
+
+
+	<plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>attach-artifacts</id>
+            <phase>install</phase>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>target/${project.build.finalName}-${envClassifier}-bin.zip</file>
+                  <type>zip</type>
+                  <classifier>bin</classifier>
+                </artifact>
+                ...
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+                    <plugin>
+                    	<groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>2.3</version>
+                        <executions>
+                            <execution>
+                                <id>base</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <configuration>
+                                    <finalName>${project.build.finalName}-${envClassifier}</finalName>
+                                    <descriptors>
+                                        <descriptor>src/assembly/zip-spnt.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+
+
+
 <!--
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
