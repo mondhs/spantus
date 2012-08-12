@@ -112,6 +112,7 @@
                                     <goal>single</goal>
                                 </goals>
                                 <configuration>
+                                    <finalName>${project.build.finalName}-${maven.build.timestamp}-${envClassifier}</finalName>
                                     <descriptors>
                                         <descriptor>src/assembly/zip-spnt.xml</descriptor>
                                     </descriptors>
