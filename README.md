@@ -5,7 +5,7 @@ signal(speech) analytical tool.
 
 Nightly build results on twitter: [spantus_news@twitter](https://twitter.com/spantus_news) 
 
-Nighly build stantalone application can be found: [spnt-standalone](http://repository-spantus.forge.cloudbees.com/snapshot/org/spantus/spnt-standalone/ "maven repo deployments")
+Nightly build standalone application can be found: [spnt-standalone](http://repository-spantus.forge.cloudbees.com/snapshot/org/spantus/spnt-standalone/ "maven repo deployments")
 
 You will need maven to build spantus. More info: [Developer Notes](http://sourceforge.net/apps/mediawiki/spantus/index.php?title=DeveloperNotes "Spantus development")
 
