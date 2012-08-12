@@ -27,6 +27,18 @@
 	</modules>
 
 	<profiles>
+
+		<profile>
+			<id>copyRuntime</id>
+			<activation>
+				<property>
+					<name>copyRuntime</name>
+				</property>
+			</activation>
+			<modules>
+				<module>spnt-standalone</module>
+			</modules>
+		</profile>
 		<profile>
 			<id>integeration-modules</id>
 			<activation>

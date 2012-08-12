@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
 
-	<id>standalone</id>
+	<id>bin</id>
 	<formats>
 		<format>zip</format>
 	</formats>
@@ -16,9 +16,6 @@
 			<includes>
 				<include>*:jar:*</include>
 			</includes>
-			<excludes>
-				<exclude>*:spnt-work-ui:*</exclude>
-			</excludes>
 		</dependencySet>
 	</dependencySets>
 
@@ -29,10 +26,12 @@
 		</fileSet>
 	</fileSets>
 	<files>
+<!--
 		<file>
 			<source>target/spnt-work-ui-${artifact.version}-${envClassifier}.jar</source>
 			<outputDirectory>spantus-tool/lib/</outputDirectory>
 		</file>
+-->
 		<file>
 			<source>src/main/resources/ClassifierRuleBase.csv</source>
 			<outputDirectory>spantus-tool/</outputDirectory>
