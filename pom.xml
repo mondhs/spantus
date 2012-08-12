@@ -98,23 +98,12 @@
 		<repository>
 			<id>spnt-global-repo</id>
 			<name>Spantus releases and 3rd party repo</name>
-			<url>http://spantus.sourceforge.net/maven/global/</url>
+			<url>http://repository-spantus.forge.cloudbees.com/release/</url>
 			<releases>
 				<updatePolicy>daily</updatePolicy>
 			</releases>
 			<snapshots>
 				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spnt-snapshot-repo</id>
-			<name>Spantus snapsot repo</name>
-			<url>http://spantus.sourceforge.net/maven/snapshot/</url>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots>
-				<updatePolicy>daily</updatePolicy>
 			</snapshots>
 		</repository>
 	</repositories>
