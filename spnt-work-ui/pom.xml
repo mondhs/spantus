@@ -112,7 +112,7 @@
                                     <goal>single</goal>
                                 </goals>
                                 <configuration>
-                                    <finalName>${project.build.finalName}-${maven.build.timestamp}-${envClassifier}</finalName>
+                                    <finalName>${project.build.finalName}-${envClassifier}</finalName>
                                     <descriptors>
                                         <descriptor>src/assembly/zip-spnt.xml</descriptor>
                                     </descriptors>
@@ -179,7 +179,24 @@
                             </execution>
                         </executions>
                     </plugin>
-
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>2.6</version>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <repositoryId>artifactory</repositoryId>
+                            <packaging>zip</packaging>
+                            <generatePom>true</generatePom>
+                            <url>${project.distributionManagement.snapshotRepository.url}</url>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <groupId>${project.groupId}</groupId>
+                            <version>${project.version}</version>
+                            <file>${WORKSPACE}/MyZip.zip</file>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
