@@ -231,12 +231,13 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
     @Override
     public FrameValues findSignalValues(Long startMs, Long lengthMs) {
        int fromIndex = signalValues.toIndex(startMs);
+       
        Long availableEndIndex = availableStartIndex+(long)signalValues.size();
        int lengthIndex = signalValues.toIndex(lengthMs);
        org.spantus.utils.Assert.isTrue(availableStartIndex<fromIndex &&
                fromIndex<availableEndIndex, "from {0} should be beteen[{1};{2}]", fromIndex,availableStartIndex, availableEndIndex );
       
-       lengthIndex = Math.min(lengthIndex, signalValues.toTime(signalValues.size()).intValue());
+       lengthIndex = Math.min(lengthIndex, signalValues.size());
        int toIndex = fromIndex+lengthIndex;
        FrameValues fv = signalValues.subList(fromIndex, toIndex);
        return fv;

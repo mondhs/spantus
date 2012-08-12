@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.SignalSegment;
+import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorInputReaderAware;
 import org.spantus.extr.wordspot.service.WordSpottingListener;
 import org.spantus.logger.Logger;
 
@@ -47,5 +49,13 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
     
     public void setWordSpottingListener(WordSpottingListener wordSpottingListener) {
         this.wordSpottingListener = wordSpottingListener;
+    }
+    
+    @Override
+    public void setExtractorInputReader(IExtractorInputReader extractorInputReader) {
+        super.setExtractorInputReader(extractorInputReader);
+        if(wordSpottingListener instanceof IExtractorInputReaderAware){
+            ((IExtractorInputReaderAware)wordSpottingListener).setExtractorInputReader(extractorInputReader);
+        }
     }
 }

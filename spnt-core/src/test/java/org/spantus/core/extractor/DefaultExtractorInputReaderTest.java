@@ -23,7 +23,7 @@ public class DefaultExtractorInputReaderTest {
     public void onSetup(){
         defaultExtractorInputReader = new DefaultExtractorInputReader();
         DefaultExtractorConfig config = new DefaultExtractorConfig();
-        config.setSampleRate(10.0);
+        config.setSampleRate(10000.0);
         defaultExtractorInputReader.setConfig(config);
     }
 
@@ -31,17 +31,17 @@ public class DefaultExtractorInputReaderTest {
     
 
     @Test
-    public void testSomeMethod() {
+    public void testFindSignalValues() {
         //given
-        for (long i = 0; i < 12; i++) {
+        for (long i = 0; i < 12000; i++) {
             defaultExtractorInputReader.put(i, Double.valueOf(i));
         }
-        
+
         //when
-        FrameValues frameValue = defaultExtractorInputReader.findSignalValues(200L, 1100L);
+        FrameValues frameValue = defaultExtractorInputReader.findSignalValues(100L, 1001L);
         //then
-        assertEquals("values extracted", 10, frameValue.size(), 0);
-        assertEquals("first value", 1, frameValue.getFirst(), 0);
-        assertEquals("values extracted", 10, frameValue.getLast(), 0);
+        assertEquals("values extracted", 10009, frameValue.size(), 0);
+        assertEquals("first value", 999, frameValue.getFirst(), 0);
+        assertEquals("last value", 11007, frameValue.getLast(), 0);
     }
 }

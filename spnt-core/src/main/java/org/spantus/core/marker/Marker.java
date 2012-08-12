@@ -79,9 +79,9 @@ public class Marker implements Serializable, Cloneable{
 	public String toString() {
 		long saveStart = getStart() == null?0L:getStart();
 		long saveLength = getLength() == null?0L:getLength();
-		String str = MessageFormat.format("{0}: {1} [{2}; {3}]", 
+		String str = MessageFormat.format("{0}: {1} [{2};+{4}; {3}]", 
 				getClass().getSimpleName(), getLabel(),
-				saveStart, (saveStart+saveLength));
+				saveStart, (saveStart+saveLength), saveLength);
 		return str;
 	}
 	

@@ -2,6 +2,7 @@ package org.spantus.extr.wordspot.service.impl.test;
 
 //import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -22,7 +23,15 @@ import org.spantus.extractor.impl.ExtractorEnum;
  */
 public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTest{
 
+    @Override
+    public void setUp() throws Exception {
+        setRepositoryPath(new File(getRepositoryPathRoot(),"corpus/word"));
+        super.setUp();
+    }
 
+
+        
+    
 	@Test
 	public void testExtractSegmentOnline() throws MalformedURLException {
 		//given
