@@ -152,6 +152,10 @@ public class Logger implements ILogger {
 	public void error(Exception e) {
 		logger.error(e);
 	}
+        @Override
+        public void error(String pattern, Object... arguments) {
+            logger.error(pattern, arguments);
+        }
 
 	public void fatal(String str) {
 		logger.fatal(str);
@@ -161,5 +165,7 @@ public class Logger implements ILogger {
 	public boolean isDebugMode() {
 		return logger.isDebugMode();
 	}
+
+
 
 }

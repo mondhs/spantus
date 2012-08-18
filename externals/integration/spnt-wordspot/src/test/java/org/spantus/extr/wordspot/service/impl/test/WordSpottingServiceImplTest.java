@@ -36,8 +36,8 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
     @Override
     public void setUp() throws Exception {
         initPaths();
-        repositoryPathWord = new File(getRepositoryPathRoot(), "corpus/word");
-        repositoryPathSyllable = new File(getRepositoryPathRoot(), "corpus/syllable");
+        repositoryPathWord = new File(getRepositoryPathRoot(), "CORPUS/word");
+        repositoryPathSyllable = new File(getRepositoryPathRoot(), "CORPUS/syllable");
         super.setUp();
         wordSpottingServiceImpl = new SyllableSpottingServiceImpl(repositoryPathSyllable.getAbsolutePath());
         wordSpottingServiceImpl.setSegmentExtractorService(getSegmentExtractorService());
@@ -73,7 +73,7 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
         String resultsStr = extractResultStr(segments);
 
         //then
-//		Assert.assertTrue("read time " + length + ">"+(ended-started), length > ended-started);
+        //Assert.assertTrue("read time " + length + ">"+(ended-started), length > ended-started);
         Assert.assertEquals("Recognition", "padeda", resultsStr);
 
     }
@@ -110,7 +110,7 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
         this.acceptableSyllables = acceptableSyllables;
     }
 
-    private String extractResultStr(Map<RecognitionResult, SignalSegment> segments) {
+    protected String extractResultStr(Map<RecognitionResult, SignalSegment> segments) {
         Joiner joiner = Joiner.on(";").skipNulls();
         Collection<String> resultsCollection = Collections2.transform(segments.entrySet(),
                 new Function<Map.Entry<RecognitionResult, SignalSegment>, String>() {

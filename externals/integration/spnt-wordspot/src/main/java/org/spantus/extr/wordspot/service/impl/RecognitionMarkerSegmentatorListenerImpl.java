@@ -46,16 +46,10 @@ public class RecognitionMarkerSegmentatorListenerImpl extends MarkerSegmentatorL
                 signalSegment.getMarker(), 
                 ExtractorEnum.MFCC_EXTRACTOR.name());
         IValues mffcValues = fvv.get(ExtractorEnum.MFCC_EXTRACTOR.name());
-        //        if (fvv.get(ExtractorEnum.MFCC_EXTRACTOR.name()).size() == 0) {
-        //            LOG.error("nothing to recognize" + signalSegment);
-        //            return false;
-        //        }
+
 
         Assert.isTrue(mffcValues.size() > 0, "MFCC is not calculated. Size {0} ", mffcValues.size());
-//		SignalSegment recognitionSignalSegment = new SignalSegment();
-//		recognitionSignalSegment.setMarker(signalSegment.getMarker());
-//		recognitionSignalSegment.setName(signalSegment.getName());
-//		recognitionSignalSegment.getFeatureFrameVectorValuesMap().put(ExtractorEnum.MFCC_EXTRACTOR.name(), new FrameVectorValuesHolder(mffcValues));
+
         signalSegment.getFeatureFrameVectorValuesMap().put(ExtractorEnum.MFCC_EXTRACTOR.name(), 
                 new FrameVectorValuesHolder((FrameVectorValues)mffcValues));
 
@@ -69,34 +63,7 @@ public class RecognitionMarkerSegmentatorListenerImpl extends MarkerSegmentatorL
         return !"-".equals(name);
     }
 
-//    private FrameVectorValues calcualteMFCC(Marker marker) {
-//        FrameValues frameValues = getExtractorInputReader().findSignalValues(marker.getStart(), marker.getLength());
-//        FrameVectorValues rtnValues = null ;
-//        MFCCExtractor mfcc = new MFCCExtractor();
-//        mfcc.setConfig(config);
-//        WindowBufferProcessorCtx ctx = WindowBufferProcessor.ctreateWindowBufferProcessorCtx(getConfig());
-//        WindowBufferProcessor windowBufferProcessor = new WindowBufferProcessor();
-//        WindowingEnum wenum = WindowingEnum.valueOf(getExtractorInputReader().getConfig().getWindowing());
-//        Windowing windowing = WindowingFactory.createWindowing(wenum);
-//        long sample = 0L;
-//        for (Double value : frameValues) {
-//            FrameValues window = windowBufferProcessor.calculate(value,
-//                    ctx);
-//            if (window != null) {
-//                windowing.apply(window);
-//                FrameVectorValues mfccValues = mfcc.calculateWindow(sample, window);
-//                if(rtnValues == null){
-//                    rtnValues = mfccValues;
-//                }else{
-//                    rtnValues.addAll(mfccValues);
-//                }
-//                
-//            }
-//            sample++;
-//        }
-//        return rtnValues;
-//
-//    }
+
 
     /**
      *

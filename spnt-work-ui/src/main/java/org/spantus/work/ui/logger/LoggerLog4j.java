@@ -32,6 +32,10 @@ public class LoggerLog4j implements ILogger{
 	public void error(String str, Throwable e) {
 		logger.error(str, e);
 	}
+        @Override
+        public void error(String pattern, Object... arguments) {
+            logger.error(MessageFormat.format(pattern, arguments));
+        }
 	
 	public void fatal(String str) {
 		logger.fatal(str);
@@ -50,5 +54,6 @@ public class LoggerLog4j implements ILogger{
 	public boolean isDebugMode() {
 		return logger.isDebugEnabled();
 	}
+
 	
 }

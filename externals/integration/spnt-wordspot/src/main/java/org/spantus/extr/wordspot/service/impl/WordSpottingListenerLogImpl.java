@@ -37,10 +37,13 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
     private Set<String> acceptableSyllableSet;
     private WorkExtractorReaderService extractorReaderService;
     private IExtractorInputReader extractorInputReader;
+    
+    private ExtractorEnum recognitionFeatureName = ExtractorEnum.MFCC_EXTRACTOR;
 
     public WordSpottingListenerLogImpl(String target, String[] acceptableSyllable, String repositoryPathSyllable) {
         this.repositoryPathWord = repositoryPathSyllable;
         this.targetWord = target;
+        Assert.isTrue(acceptableSyllable!=null, "acceptableSyllable cannot be null");
         acceptableSyllableSet = new HashSet<String>();
         for (String string : acceptableSyllable) {
             acceptableSyllableSet.add(string);
@@ -82,8 +85,8 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
                 LOG.debug("[processEndedSegment] reject syllable {0}",recognitionResult.getInfo().getName());  
             }
 
-            //check for first 3 matches
-            if (++index > 3) {
+            //check for first 1 matches
+            if (++index > 0) {
                 break;
             }
         }
@@ -112,12 +115,15 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
         SignalSegment segmentWord = newSignalSegmentWord(existingSyllableSegments, newSyllable);
         
 
-        List<RecognitionResult> result1 = getCorpusServiceWord().findMultipleMatchFull(segmentWord);
+        List<RecognitionResult> resultList = getCorpusServiceWord().findMultipleMatchFull(segmentWord);
+        if(!isResultAcceptable(resultList)){
+            resultList = Collections.emptyList();
+        }
         RecognitionResult firstResult = null;
-        for (RecognitionResult recognitionResult : result1) {
-            	if(recognitionResult.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()).compareTo(10000D)>0){
-			break;
-		}
+        for (RecognitionResult recognitionResult : resultList) {
+//            	if(recognitionResult.getDetails().getDistances().get(getRecognitionFeatureName().name()).compareTo(10000D)>0){
+//			break;
+//		}
             String recognitionResultName = recognitionResult.getInfo().getName();
             if(firstResult == null){
                 firstResult = recognitionResult;
@@ -168,36 +174,18 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
         segmentWord.getMarker().setStart(firstSyllable.getMarker().getStart());
         segmentWord.getMarker().setLength(0L);
         
-        
-//        FrameVectorValuesHolder matchHolder = null;
-//        for (SignalSegment iSignalSegment : existingSyllableSegments) {
-//            Assert.isTrue(segmentWord.getMarker().getEnd() >= iSignalSegment.getMarker().getStart(), 
-//                    "Should be no empty spaces {0}>={1}",
-//                    segmentWord.getMarker().getEnd(), iSignalSegment.getMarker().getStart());
-//            FrameVectorValuesHolder iMFCC = iSignalSegment.getFeatureFrameVectorValuesMap().get(ExtractorEnum.MFCC_EXTRACTOR.name());
-//            if(matchHolder == null){
-//                matchHolder = new FrameVectorValuesHolder(new FrameVectorValues(iMFCC.getValues()));
-//            }else{
-//                matchHolder.getValues().addAll(iMFCC.getValues());
-//            }
-//            segmentWord.getMarker().setEnd(iSignalSegment.getMarker().getEnd());
-//        }
-        
-//        FrameVectorValuesHolder newSyllableMFCC = newSyllable.getFeatureFrameVectorValuesMap().get(ExtractorEnum.MFCC_EXTRACTOR.name());
-//        matchHolder.getValues().addAll(newSyllableMFCC.getValues());
+
         segmentWord.getMarker().setEnd(newSyllable.getMarker().getEnd());
         
         Map<String, IValues> fvv  = getExtractorReaderService().recalcualteValues(getExtractorInputReader(), 
                 segmentWord.getMarker(), 
-                ExtractorEnum.MFCC_EXTRACTOR.name());
-        IValues mffcValues = fvv.get(ExtractorEnum.MFCC_EXTRACTOR.name());
-        Assert.isTrue(mffcValues.size() > 0, "MFCC is not calculated. Size {0} ", mffcValues.size());
-        segmentWord.getFeatureFrameVectorValuesMap().put(ExtractorEnum.MFCC_EXTRACTOR.name(), 
+                getRecognitionFeatureName().name());
+        IValues mffcValues = fvv.get(getRecognitionFeatureName().name());
+        Assert.isTrue(mffcValues.size() > 0, "{1} is not calculated. Size {0} ", mffcValues.size(), getRecognitionFeatureName());
+        segmentWord.getFeatureFrameVectorValuesMap().put(getRecognitionFeatureName().name(), 
                 new FrameVectorValuesHolder((FrameVectorValues)mffcValues));
         
 
-//        Map<String, FrameVectorValuesHolder> syllableFeatureMap = segmentWord.getFeatureFrameVectorValuesMap();
-//        syllableFeatureMap.put(ExtractorEnum.MFCC_EXTRACTOR.name(), matchHolder);
         
         return segmentWord;
     }
@@ -245,5 +233,30 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
     public IExtractorInputReader getExtractorInputReader() {
         return extractorInputReader;
     }
+
+    private boolean isResultAcceptable(List<RecognitionResult> resultList) {
+        if(resultList == null || resultList.size()<2){
+            return true;
+        }
+        RecognitionResult first = resultList.get(0);
+        Double firstScore = first.getScores().get(getRecognitionFeatureName().name());
+        RecognitionResult second = resultList.get(1);
+        Double secondScore = second.getScores().get(getRecognitionFeatureName().name());
+        boolean sameLabels = first.getInfo().getName().equals(second.getInfo().getName());
+        double scoreDelta = secondScore - firstScore;
+        if(!sameLabels){
+            return scoreDelta > .1;
+        }
+        return true;
+    }
+
+    public ExtractorEnum getRecognitionFeatureName() {
+        return recognitionFeatureName;
+    }
+
+    public void setRecognitionFeatureName(ExtractorEnum recognitionFeatureName) {
+        this.recognitionFeatureName = recognitionFeatureName;
+    }
+    
     
 }

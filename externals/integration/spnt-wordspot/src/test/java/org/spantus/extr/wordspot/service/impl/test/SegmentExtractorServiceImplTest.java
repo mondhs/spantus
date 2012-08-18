@@ -25,7 +25,7 @@ public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTes
 
     @Override
     public void setUp() throws Exception {
-        setRepositoryPath(new File(getRepositoryPathRoot(),"corpus/word"));
+        setRepositoryPath(new File(getRepositoryPathRoot(),"CORPUS/word"));
         super.setUp();
     }
 

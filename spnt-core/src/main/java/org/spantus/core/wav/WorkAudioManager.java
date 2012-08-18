@@ -65,7 +65,9 @@ public class WorkAudioManager implements AudioManager {
 
 	@Override
 	public void playinMils(URL file, Long starts, Long length) {
-		play(file, starts.floatValue()/1000, length.floatValue()/1000);
+            Float startsF = starts == null?null:starts.floatValue()/1000;
+            Float fromF = length==null?null:length.floatValue()/1000;
+            play(file, startsF, fromF);
 	}
     
     public void play(URL fileURL, Float from, Float length) {

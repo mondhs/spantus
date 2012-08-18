@@ -108,6 +108,11 @@ public class SimpleLogger implements ILogger {
     	}
     }
     
+    @Override
+    public void error(String pattern, Object... arguments) {
+        log(ERROR,MessageFormat.format(pattern, arguments));
+    }
+    
     public void error(String str){
         log(ERROR,str);
     }
@@ -153,5 +158,6 @@ public class SimpleLogger implements ILogger {
 		this.logMode = logMode;
 //		debug("Log mode set to:" + logMode);
 	}
+
 
 }

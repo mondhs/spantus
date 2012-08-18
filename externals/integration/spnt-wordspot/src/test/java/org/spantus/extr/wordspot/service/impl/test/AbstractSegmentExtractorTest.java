@@ -11,7 +11,7 @@ public abstract class AbstractSegmentExtractorTest {
     private SegmentExtractorServiceImpl segmentExtractorService;
     private File repositoryPathRoot = new File("../../../data");
     private File wavFile = new File(repositoryPathRoot, "text1.8000.wav");
-    private File repositoryPath = new File(repositoryPathRoot,"corpus/syllable");
+    private File repositoryPath = new File(repositoryPathRoot,"CORPUS/syllable");
 
 
 

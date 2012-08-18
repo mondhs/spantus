@@ -24,6 +24,10 @@ public class LoggerLog4j implements ILogger{
 	public void error(String str) {
 		logger.error(str);
 	}
+        @Override
+        public void error(String pattern, Object... arguments) {
+            logger.error(MessageFormat.format(pattern, arguments));
+        }
 
 	public void error(Exception e) {
 		logger.error(e.getMessage(), e);

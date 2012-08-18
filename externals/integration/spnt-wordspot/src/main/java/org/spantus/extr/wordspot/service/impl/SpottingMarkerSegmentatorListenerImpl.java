@@ -38,6 +38,9 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
         for (RecognitionResult recognitionResult : result) {
             LOG.debug("[match] matched segment: {0} [{1}]", recognitionResult.getInfo().getName(), recognitionResult.getScores());
         }
+        if(result.size()==0){
+             LOG.error("[match] result not found for " + signalSegment);
+        }
 //        RecognitionResult result1 = getCorpusService().matchByCorpusEntry(signalSegment);
         wordSpottingListener.foundSegment(null, signalSegment, result);
         return null;
