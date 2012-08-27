@@ -11,16 +11,15 @@ import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.exp.ExpConfig;
+import org.spantus.logger.Logger;
+import org.spantus.segment.SegmentationServiceImpl;
+import org.spantus.work.services.WorkServiceFactory;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
 import org.spantus.externals.recognition.services.CorpusEntryExtractor;
 import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorFileImpl;
-import org.spantus.logger.Logger;
-import org.spantus.segment.SegmentationServiceImpl;
-import org.spantus.work.services.WorkServiceFactory;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 
 /**
  *
@@ -29,7 +28,7 @@ import com.google.common.collect.Collections2;
 public abstract class AbstractSegmentDirTest {
 
 	private ExpConfig expConfig;
-	
+
 
 
     private static final Logger log = Logger.getLogger(AbstractSegmentDirTest.class);
@@ -70,7 +69,7 @@ public abstract class AbstractSegmentDirTest {
         extractor.setOverlapInPerc(expConfig.getWindowOverlap());
         extractor.setSegmentionParam(getExpConfig().getSegmentationParam());
         extractor.setExtractors(getExpConfig().getExtractors());
-        
+
         markerDao = WorkServiceFactory.createMarkerDao();
     }
 

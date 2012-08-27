@@ -1,6 +1,8 @@
-package org.spantus.exp.recognition.synthesis;
+package org.spantus.exp.synthesis;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
@@ -15,9 +17,11 @@ public class Transcribtion implements Serializable{
 	private MarkerSetHolder holder;
 	private StringBuilder transctiption;
 	private long finished = 0l;
+        private List<MarkerMbrola> markerBrolas;
 
 	public Transcribtion() {
 		transctiption = new StringBuilder();
+                markerBrolas = new ArrayList<>();
 		holder = new MarkerSetHolder();
 		holder.getMarkerSets().put(MarkerSetHolderEnum.phone.name(),  new MarkerSet());
 		holder.getMarkerSets().get(MarkerSetHolderEnum.phone.name()).setMarkerSetType(MarkerSetHolderEnum.phone.name());
@@ -55,6 +59,11 @@ public class Transcribtion implements Serializable{
 	public void incFinished(long finished) {
 		this.finished += finished;
 	}
+
+    public List<MarkerMbrola> getMarkerBrolas() {
+        return markerBrolas;
+    }
 	
+        
 }
 

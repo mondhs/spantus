@@ -1,4 +1,4 @@
-package org.spantus.exp.recognition.synthesis;
+package org.spantus.exp.synthesis.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -11,6 +11,8 @@ import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.wav.AudioManagerFactory;
+import org.spantus.exp.synthesis.SpeechGeneratorLt;
+import org.spantus.exp.synthesis.Transcribtion;
 
 public class SpeechGeneratorTest {
 

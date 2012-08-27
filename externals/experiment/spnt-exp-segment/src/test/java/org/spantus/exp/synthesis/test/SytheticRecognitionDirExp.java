@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.spantus.exp.recognition.synthesis;
+package org.spantus.exp.synthesis.test;
 
 import java.io.File;
 

@@ -5,51 +5,53 @@ import java.text.MessageFormat;
 import org.apache.log4j.Logger;
 import org.spantus.logger.ILogger;
 
+public class LoggerLog4j implements ILogger {
 
-public class LoggerLog4j implements ILogger{
-	Logger logger;
-	
-	public LoggerLog4j(Class<?> logClass){
-	    this.logger = Logger.getLogger(logClass);
-	}
+    Logger logger;
 
-	public void debug(String pattern, Object... arguments) {
-		debug(MessageFormat.format(pattern, arguments));
-	}
+    public LoggerLog4j(Class<?> logClass) {
+        this.logger = Logger.getLogger(logClass);
+    }
 
-	public void debug(String str) {
-		logger.debug(str);
-	}
+    public void debug(String pattern, Object... arguments) {
+        debug(MessageFormat.format(pattern, arguments));
+    }
 
-	public void error(String str) {
-		logger.error(str);
-	}
+    public void debug(String str) {
+        logger.debug(str);
+    }
 
-	public void error(Exception e) {
-		logger.error(e.getMessage(), e);
-	}
-	public void error(String str, Throwable e) {
-		logger.error(str, e);
-	}
+    @Override
+    public void error(String string, Object... os) {
+    }
 
-	public void fatal(String str) {
-		logger.fatal(str);
-	}
+    public void error(String str) {
+        logger.error(str);
+    }
 
-	public void info(String pattern, Object... arguments) {
-		info(MessageFormat.format(pattern, arguments));
-		
-	}
+    public void error(Exception e) {
+        logger.error(e.getMessage(), e);
+    }
 
-	public void info(String str) {
-		logger.info(str);
-		
-	}
+    public void error(String str, Throwable e) {
+        logger.error(str, e);
+    }
 
-	public boolean isDebugMode() {
-		return logger.isDebugEnabled();
-	}
+    public void fatal(String str) {
+        logger.fatal(str);
+    }
 
+    public void info(String pattern, Object... arguments) {
+        info(MessageFormat.format(pattern, arguments));
 
-	
+    }
+
+    public void info(String str) {
+        logger.info(str);
+
+    }
+
+    public boolean isDebugMode() {
+        return logger.isDebugEnabled();
+    }
 }

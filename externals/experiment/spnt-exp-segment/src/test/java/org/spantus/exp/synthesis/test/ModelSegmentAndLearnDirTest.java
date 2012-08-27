@@ -1,10 +1,11 @@
-package org.spantus.exp.recognition.synthesis;
+package org.spantus.exp.synthesis.test;
 
 import java.io.File;
 
 import org.junit.Test;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.exp.ExpConfig;
 import org.spantus.exp.ExpConfig;
 import org.spantus.exp.recognition.AbstractSegmentDirTest;
 import org.spantus.exp.recognition.filefilter.SpantusNameFilter;

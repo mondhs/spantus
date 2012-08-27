@@ -27,6 +27,7 @@ import java.util.TreeSet;
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.beans.SampleInfo;
+import org.spantus.core.extractor.DefaultExtractorInputReader;
 import org.spantus.core.extractor.ExtractorOutputHolder;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
@@ -36,7 +37,6 @@ import org.spantus.core.threshold.DynamicThreshold;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.exp.segment.beans.ProcessReaderInfo;
 import org.spantus.exp.segment.services.ProcessReader;
-import org.spantus.extractor.ExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
@@ -93,7 +93,7 @@ public class ProcessReaderImpl implements ProcessReader {
 			}
 			
 		}
-		IExtractorInputReader newReader = new ExtractorInputReader();
+		IExtractorInputReader newReader = new DefaultExtractorInputReader();
 		newReader.getExtractorRegister().addAll(thresholds);
 		info.setReader(newReader);
 		info.getThresholds().clear();

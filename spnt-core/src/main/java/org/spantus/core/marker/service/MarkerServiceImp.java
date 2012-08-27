@@ -20,12 +20,14 @@ package org.spantus.core.marker.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
+import java.util.Map.Entry;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
+import org.spantus.core.marker.MarkerSetHolder;
+import org.spantus.utils.Assert;
 
 public class MarkerServiceImp implements IMarkerService {
-
+        @Override
 	public Marker addMarker(MarkerSet markerSet, Long start, Long length) {
 		Marker marker = new Marker();
 		marker.setStart(start);
@@ -33,20 +35,34 @@ public class MarkerServiceImp implements IMarkerService {
 		markerSet.getMarkers().add(marker);
 		return marker;
 	}
-
+        @Override
 	public boolean removeMarker(MarkerSet markerSet, Marker marker) {
 		boolean removed = markerSet.getMarkers().remove(marker);
 		return removed;
 	}
-
+        @Override
 	public boolean validate(MarkerSet markerSet, Marker marker,
 			Long newStart, Long newLength) {
 		return true;
 	}
-	
+        @Override	
 	public Long getTime(int sampleNum, Double sampleRate) {
 		return BigDecimal.valueOf((sampleNum * 1000) / sampleRate).setScale(0,
 				RoundingMode.HALF_UP).longValue();
 	}
+
+        @Override
+        public Marker findByLabel(String label, MarkerSetHolder markerSetHolder) {
+            Assert.isTrue(markerSetHolder!=null, "markerSetHolder cannot be null");
+            for ( Entry<String, MarkerSet> markerSets : markerSetHolder) {
+                markerSets.getKey();
+                for ( Marker marker : markerSets.getValue()) {
+                    if(label.equals(marker.getLabel())){
+                        return marker;
+                    }
+                }
+            }
+            return null;
+        }
 
 }

@@ -50,6 +50,7 @@
 				<module>externals/integration/spnt-wordspot</module>
 				<module>externals/integration/springcloud/spnt-applet</module>
 				<module>externals/integration/springcloud/spnt-server</module>
+				<module>externals/recognition/spnt-hmm-recognition</module>
 			</modules>
 		</profile>
 		<profile>
@@ -224,6 +225,12 @@
 			<dependency>
 				<groupId>org.spantus.externals.recognition</groupId>
 				<artifactId>spnt-dtw-recognition</artifactId>
+				<version>0.3-SNAPSHOT</version>
+				<classifier>${envClassifier}</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.spantus.externals.recognition</groupId>
+				<artifactId>spnt-hmm-recognition</artifactId>
 				<version>0.3-SNAPSHOT</version>
 				<classifier>${envClassifier}</classifier>
 			</dependency>

@@ -1,4 +1,4 @@
-package org.spantus.exp.recognition.synthesis;
+package org.spantus.exp.synthesis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
