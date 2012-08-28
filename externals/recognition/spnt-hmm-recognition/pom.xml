@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>org.spantus.externals.recognition</groupId>
-    <artifactId>spnt-dtw-recognition</artifactId>
+    <artifactId>spnt-hmm-recognition</artifactId>
     <name>Spantus - External - HMM recognition</name>
 
     <dependencies>
