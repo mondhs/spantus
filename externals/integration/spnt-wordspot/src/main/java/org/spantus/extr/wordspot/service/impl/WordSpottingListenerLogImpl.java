@@ -35,6 +35,12 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
     private String repositoryPathWord;
     private String targetWord;
     private Set<String> acceptableSyllableSet;
+    /**
+     * temp implementation
+     * @deprecated
+     */
+    @Deprecated
+    private Map<String, Double> acceptableSyllableThresholdMap;
     private WorkExtractorReaderService extractorReaderService;
     private IExtractorInputReader extractorInputReader;
     
@@ -45,9 +51,12 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
         this.targetWord = target;
         Assert.isTrue(acceptableSyllable!=null, "acceptableSyllable cannot be null");
         acceptableSyllableSet = new HashSet<String>();
+        acceptableSyllableThresholdMap = new HashMap<>();
         for (String string : acceptableSyllable) {
             acceptableSyllableSet.add(string);
         }
+        acceptableSyllableThresholdMap.put("liet", 5E8);
+        acceptableSyllableThresholdMap.put("tuvos", 9E8);
     }
     /**
      * 
@@ -68,9 +77,16 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
                 rtnRecognitionResult = recognitionResult;
             }
 
-
-            if (acceptableSyllableSet.contains(recognitionResult.getInfo().getName().toLowerCase())) {
+            Double mfccVaue = recognitionResult.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+            String syllableName = recognitionResult.getInfo().getName().toLowerCase();
+            Double threshold = Double.MAX_VALUE;
+            if(acceptableSyllableThresholdMap.containsKey(syllableName)){
+                threshold = acceptableSyllableThresholdMap.get(syllableName);
+            }
+            if (acceptableSyllableSet.contains(syllableName)
+                    && mfccVaue<threshold) {
                 RecognitionResult wordMatch = matchWord(signalSegmentsSyllable, newSyllable);
+                
                 if (wordMatch != null) {
                     getWordMatches().add(wordMatch);
                     rtnRecognitionResult = wordMatch;
@@ -80,9 +96,7 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
                 signalSegmentsSyllable.add(newSyllable);
                 break;
             }else{
-
-                
-                LOG.debug("[processEndedSegment] reject syllable {0}",recognitionResult.getInfo().getName());  
+                LOG.debug("[processEndedSegment] reject syllable {0} and mfcc: {1}",syllableName, mfccVaue);  
             }
 
             //check for first 1 matches

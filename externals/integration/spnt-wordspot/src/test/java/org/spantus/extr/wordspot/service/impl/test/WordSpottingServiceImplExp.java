@@ -47,7 +47,11 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
     
     @Override
     protected void initPaths() {
-        setWavFile(new File("/home/as/tmp/garsynas.lietuvos-syn/TEST/", "RAj031004_13_11b-30_1.wav"));
+        String fileName = 
+                "RAj031004_13_11b-30_1.wav"
+//                "RAj031004_13_16a-30_1.wav"
+                ;
+        setWavFile(new File("/home/as/tmp/garsynas.lietuvos-syn/TEST/", fileName));
         setRepositoryPathRoot(new File("/home/as/tmp/garsynas.lietuvos-syn/"));
         setAcceptableSyllables(new String[]{"liet", "tuvos"});
         setSearchWord("lietuvos");
@@ -63,7 +67,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
         Long length = 1000L * AudioManagerFactory.createAudioManager().findLength(getWavFile().toURI().toURL()).longValue();
         File markerFile = new File(getWavFile().getParentFile().getAbsoluteFile(),
                  FileUtils.replaceExtention(getWavFile(), ".mspnt.xml"));
-        Marker marker = getMarkerService().findByLabel("-l'-ie-t-u-v-oo-s", getMarkerDao().read(markerFile));
+        Marker marker = getMarkerService().findByLabel("-l'-ie-t-|-u-v-oo-s", getMarkerDao().read(markerFile));
         
         WordSpottingListenerLogImpl listener = new WordSpottingListenerLogImpl(getSearchWord(),
                 getAcceptableSyllables(), 
@@ -75,6 +79,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
         long ended = System.currentTimeMillis();
         Map<RecognitionResult, SignalSegment> segments = listener.getWordSegments();
         String resultsStr = extractResultStr(segments);
+        
 
         log.error("Marker =>" + marker);
         log.error(getWavFile() + "=>" + segments);
@@ -82,6 +87,9 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
         //then
         //Assert.assertTrue("read time " + length + ">"+(ended-started), length > ended-started);
         Assert.assertEquals("Recognition", "lietuvos", resultsStr);
+        SignalSegment firstSegment = segments.values().iterator().next();
+        Assert.assertEquals("Recognition start", marker.getStart(), firstSegment.getMarker().getStart(),100);
+        Assert.assertEquals("Recognition length", marker.getLength(), firstSegment.getMarker().getLength(),50);
 
     }
     

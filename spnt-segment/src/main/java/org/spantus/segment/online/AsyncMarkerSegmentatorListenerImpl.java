@@ -41,8 +41,8 @@ public class AsyncMarkerSegmentatorListenerImpl implements ISegmentatorListener,
     @Override
     public void onSegmentStarted(SegmentEvent theEvent) {
         if(lastProcessedMoment != null && theEvent.getTime()<lastProcessedMoment){
-             LOG.debug("[onSegmentStarted] too late to process: {0}[{1}]", theEvent.getTime(),
-                theEvent.getExtractorId());
+//             LOG.debug("[onSegmentStarted] too late to process: {0}[{1}]", theEvent.getTime(),
+//                theEvent.getExtractorId());
             return;
         }
 

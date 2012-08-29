@@ -95,16 +95,24 @@ public class EspeakGeneratorLt extends AbstractSpeechGenerator {
             process.waitFor();
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(
                     process.getInputStream()));
-            parseAndAppend(transcribtion, "< 10");
+            parseAndAppend(transcribtion, "< 0");
             String s;
+            MarkerSet words = transcribtion.getHolder().getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.word.name());
             // read the output from the command
             while ((s = stdInput.readLine()) != null) {
                 if (s.length() == 0) {
                     continue;
                 }
                 parseAndAppend(transcribtion, s);
+                if (words.getMarkers().size() > 0) {
+                    Marker lastWord = words.getMarkers().get(words.getMarkers().size() - 1);
+                    if("-l'-ie-t".equals(lastWord.getLabel())){
+                        parseAndAppend(transcribtion, "| 0");
+                    }
+
+                }
             }
-            parseAndAppend(transcribtion, "> 10");
+            parseAndAppend(transcribtion, "> 0");
 
         } catch (IOException | InterruptedException e) {
             throw new IllegalArgumentException(e);
@@ -130,10 +138,11 @@ public class EspeakGeneratorLt extends AbstractSpeechGenerator {
         Long phoneLength = Long.valueOf(lengthStr);
         MarkerMbrola phoneMarker = newMarkerSynthesis(transcribtion.getFinished(),
                 phoneLength, phoneLabel, splitedIter);
+        phoneLength = phoneMarker.getMarker().getLength();
         Long currentEnd = phoneMarker.getMarker().getEnd();
         if ("_".equals(phoneLabel)) {
             if (lastWord != null) {
-                lastWord.setEnd(currentEnd);
+                lastWord.setEnd(phoneMarker.getMarker().getStart());
             }
             lastWord = new Marker();
             lastWord.setLabel("");
@@ -150,7 +159,7 @@ public class EspeakGeneratorLt extends AbstractSpeechGenerator {
         phonemes.getMarkers().add(phoneMarker.getMarker());
         transcribtion.getMarkerBrolas().add(phoneMarker);
         transcribtion.getTransctiption().append(phone);
-        transcribtion.incFinished(phoneMarker.getMarker().getLength());
+        transcribtion.incFinished(phoneLength);
     }
 
     /**
@@ -182,7 +191,11 @@ public class EspeakGeneratorLt extends AbstractSpeechGenerator {
         Marker marker = phoneMarker.getMarker();
         switch (marker.getLabel()) {
             case "_":
-                marker.setLength(30L);
+                marker.setLength(60L);
+                break;
+            case "|":
+                marker.setLabel("_");
+                marker.setLength(60L);
                 break;
             case "<":
             case ">":
@@ -229,7 +242,7 @@ public class EspeakGeneratorLt extends AbstractSpeechGenerator {
         for (Map.Entry<String, String> entry : sentences.entrySet()) {
            speechGenerator.bulkGeneration(entry.getKey(),entry.getValue(), "/tmp/test", 30, 1);
         }
-        speechGenerator.bulkGeneration("lietuvos_test","laisvos Lietuvos kariai", "/tmp/test", 30, 1);
+        speechGenerator.bulkGeneration("lietuvos_test","laisvos Lietuvos kariai 40 aš tu jis ji kad kai", "/tmp/test", 30, 1);
 
     }
 }
