@@ -191,11 +191,11 @@ public class EspeakGeneratorLt extends AbstractSpeechGenerator {
         Marker marker = phoneMarker.getMarker();
         switch (marker.getLabel()) {
             case "_":
-                marker.setLength(60L);
+                marker.setLength(100L);
                 break;
             case "|":
                 marker.setLabel("_");
-                marker.setLength(60L);
+                marker.setLength(100L);
                 break;
             case "<":
             case ">":
@@ -204,7 +204,7 @@ public class EspeakGeneratorLt extends AbstractSpeechGenerator {
                 break;
             default:
                 float lenghtCoef =
-                        1;
+                        1F;
 //                        rand();
                 long newLength = (long) (marker.getLength() * lenghtCoef);
                 marker.setLength(newLength);
@@ -241,6 +241,7 @@ public class EspeakGeneratorLt extends AbstractSpeechGenerator {
         Map<String, String> sentences = speechGenerator.readSentencesToMap();
         for (Map.Entry<String, String> entry : sentences.entrySet()) {
            speechGenerator.bulkGeneration(entry.getKey(),entry.getValue(), "/tmp/test", 30, 1);
+           break;
         }
         speechGenerator.bulkGeneration("lietuvos_test","laisvos Lietuvos kariai 40 aš tu jis ji kad kai", "/tmp/test", 30, 1);
 
