@@ -52,13 +52,20 @@ public class WorkAudioManager implements AudioManager {
     /**
      *     length of file in seconds
      */
+    @Override
     public Float findLength(URL file) {
          AudioInputStream stream = createInput(file);
          return getTotalTime(stream);
     }
-    
+    @Override
+    public Long findLengthInMils(URL file) {
+         AudioInputStream stream = createInput(file);
+         Float timeInMils = getTotalTime(stream)*1000F;
+         return timeInMils.longValue();
+    }
     
 
+    @Override
     public void play(URL fileURL) {
         play(fileURL, null, null);
     }
@@ -70,6 +77,7 @@ public class WorkAudioManager implements AudioManager {
             play(file, startsF, fromF);
 	}
     
+    @Override
     public void play(URL fileURL, Float from, Float length) {
         AudioInputStream stream = createInput(fileURL);
         if(stream == null){
@@ -87,6 +95,7 @@ public class WorkAudioManager implements AudioManager {
         play(stream, fromVal, lengthVal);
     }
 
+    @Override
     public void play(AudioInputStream stream, Float from, Float length) {
         log.debug("[play] from:{0}; length= {1} ", from, length);
         double totalTime = getTotalTime(stream);
@@ -114,6 +123,7 @@ public class WorkAudioManager implements AudioManager {
     /**
      *
      */
+    @Override
     public String save(URL fileURL, Float starts, Float length, String pathToSavePrefered) {
         log.debug("[save] from:{0}; lenght:{1}; pathToSave:{2}", starts,
                 length, pathToSavePrefered);
@@ -128,6 +138,7 @@ public class WorkAudioManager implements AudioManager {
         }
        
     }
+    @Override
     public String save(AudioInputStream ais, String pathToSavePrefered ) {
         File nextAvaible = FileUtils.findNextAvaibleFile(pathToSavePrefered);
         try {
@@ -147,6 +158,7 @@ public class WorkAudioManager implements AudioManager {
      * @param length
      * @return
      */
+    @Override
     public AudioInputStream findInputStream(URL file, Float starts, Float length) {
         log.debug("[findInputStream] {2} from:{0}; lenght:{1}; ", starts,
                 length, file);
@@ -207,6 +219,7 @@ public class WorkAudioManager implements AudioManager {
      * @param length
      * @return
      */
+    @Override
     public AudioInputStream findInputStreamInMils(URL file, Long starts, Long length) {
         return findInputStream(
                 file,
@@ -221,6 +234,7 @@ public class WorkAudioManager implements AudioManager {
      * @param audioFormat
      * @return
      */
+    @Override
     public AudioInputStream findInputStreamInMils(ByteArrayOutputStream outputStream, Long starts, Long length,
             AudioFormat audioFormat) {
 
@@ -275,7 +289,7 @@ public class WorkAudioManager implements AudioManager {
      * @throws UnsupportedAudioFileException
      * @throws IOException
      */
-    public static final AudioInputStream createAudioInputStream(URL fileURL) throws UnsupportedAudioFileException, IOException {
+    public static  AudioInputStream createAudioInputStream(URL fileURL) throws UnsupportedAudioFileException, IOException {
         AudioInputStream stream = null;
         try{
             stream = AudioSystem.getAudioInputStream(fileURL);
@@ -335,6 +349,7 @@ public class WorkAudioManager implements AudioManager {
          *
          * @see java.lang.Runnable#run()
          */
+        @Override
         public void run() {
             playback(stream, starts, length);
             // playing = false;
@@ -405,7 +420,7 @@ public class WorkAudioManager implements AudioManager {
                 readSize = Math.min(length, buffer.length);
                 while ((byteCount = stream.read(buffer, 0, (int) readSize)) > 0
                         && totalByte < length && isPlaying()) {
-
+                    
                     byte[] proceedBuf = preprocessSamples(buffer, byteCount);
 
                     if (byteCount > 0) {
@@ -415,15 +430,6 @@ public class WorkAudioManager implements AudioManager {
                     totalByte += byteCount;
                     readSize = Math.min((length - totalByte), readSize);
                 }
-//				int i = 0;
-//				while (i<100) {
-//                try {
-//                    sleep(1000);
-//                } catch (InterruptedException e) {
-//                    log.error(e);
-//                }
-//					i++;
-//				}
 
                 line.drain();
                 line.stop();

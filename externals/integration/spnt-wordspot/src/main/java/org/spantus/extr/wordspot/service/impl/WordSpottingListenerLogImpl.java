@@ -55,8 +55,8 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
         for (String string : acceptableSyllable) {
             acceptableSyllableSet.add(string);
         }
-        acceptableSyllableThresholdMap.put("liet", 7E8);
-        acceptableSyllableThresholdMap.put("tuvos", 10E8);
+        acceptableSyllableThresholdMap.put("liet", 7.5E8);
+        acceptableSyllableThresholdMap.put("tuvos", 12E8);
     }
     /**
      * 

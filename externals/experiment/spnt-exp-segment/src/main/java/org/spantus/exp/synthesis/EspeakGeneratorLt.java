@@ -239,11 +239,15 @@ public class EspeakGeneratorLt extends AbstractSpeechGenerator {
 
         EspeakGeneratorLt speechGenerator = new EspeakGeneratorLt();
         Map<String, String> sentences = speechGenerator.readSentencesToMap();
+        int[] snrArr = new int[]{30};
         for (Map.Entry<String, String> entry : sentences.entrySet()) {
-           speechGenerator.bulkGeneration(entry.getKey(),entry.getValue(), "/tmp/test", 30, 1);
-           break;
+            for (int snr : snrArr) {
+                speechGenerator.bulkGeneration(entry.getKey(),entry.getValue(), "/tmp/test", snr, 1);
+            }
+           
+//           break;
         }
-        speechGenerator.bulkGeneration("lietuvos_test","laisvos Lietuvos kariai 40 aš tu jis ji kad kai", "/tmp/test", 30, 1);
+//        speechGenerator.bulkGeneration("lietuvos_test","laisvos Lietuvos kariai 40 aš tu jis ji kad kai", "/tmp/test", 30, 1);
 
     }
 }

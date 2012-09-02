@@ -11,11 +11,13 @@ import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.services.impl.MatchingServiceImpl;
+import scikit.util.Pair;
 
 /**
  *
@@ -35,7 +37,8 @@ public class LearnCmd extends AbsrtactCmd {
         getMatchingService().update(ctx.getProject().getRecognitionConfig(), getExecutionFacade());
 
 
-        Marker marker = ((Marker) getCurrentEvent().getValue());
+        Pair<MarkerSet,Marker> markerPair = ((Pair<MarkerSet,Marker>) getCurrentEvent().getValue());
+        Marker marker = markerPair.snd();
 
 //        Map<String, IValues> fvv = extractorReaderService.findAllVectorValuesForMarker(
 //                getReader(),
@@ -52,7 +55,7 @@ public class LearnCmd extends AbsrtactCmd {
         } catch (Exception e) {
             //not a audio
         }
-        getMatchingService().learn(marker.getLabel(), fvv, ais);
+        getMatchingService().learn(markerPair.fst().getMarkerSetType(), marker.getLabel(), fvv, ais);
         return null;
     }
 

@@ -37,7 +37,7 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
     public void setUp() throws Exception {
         initPaths();
         repositoryPathWord = new File(getRepositoryPathRoot(), "CORPUS/word");
-        repositoryPathSyllable = new File(getRepositoryPathRoot(), "CORPUS/syllable");
+        repositoryPathSyllable = new File(getRepositoryPathRoot(), "CORPUS/phone");
         super.setUp();
         wordSpottingServiceImpl = new SyllableSpottingServiceImpl(repositoryPathSyllable.getAbsolutePath());
         wordSpottingServiceImpl.setSegmentExtractorService(getSegmentExtractorService());

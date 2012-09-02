@@ -51,6 +51,7 @@ public interface AudioManager {
 	public String save(URL file, Float starts, Float length, String pathToSave);
 	public String save(AudioInputStream ais , String pathToSave);
         public Float findLength(URL file);
+        public Long findLengthInMils(URL file);
         /**
          * Finds stream in seconds
          * @param file

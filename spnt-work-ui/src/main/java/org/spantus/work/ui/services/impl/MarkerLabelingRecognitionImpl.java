@@ -56,7 +56,7 @@ public class MarkerLabelingRecognitionImpl implements MarkerLabeling{
 		for (Marker marker : markerSet.getMarkers()) {
 			Map<String, IValues> fvv = getExtractorReaderService()
 					.findAllVectorValuesForMarker(reader, marker);
-			RecognitionResult result = getMatchingService().match(fvv);
+			RecognitionResult result = getMatchingService().match(markerSet.getMarkerSetType(),fvv);
 			if (result != null) {
 				marker.setLabel(result.getInfo().getName());
 			}

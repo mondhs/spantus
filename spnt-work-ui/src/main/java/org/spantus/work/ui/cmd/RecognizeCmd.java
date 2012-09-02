@@ -18,32 +18,23 @@
  */
 package org.spantus.work.ui.cmd;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.spantus.core.FrameValues;
-import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.beans.RecognitionResult;
-import org.spantus.core.extractor.IExtractorConfig;
-import org.spantus.core.extractor.IExtractorInputReader;
-import org.spantus.core.extractor.windowing.WindowBufferProcessor;
-import org.spantus.core.extractor.windowing.WindowBufferProcessorCtx;
 import org.spantus.core.marker.Marker;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.externals.recognition.ui.RecognizeDetailDialog;
-import org.spantus.extractor.impl.MFCCExtractor;
 import org.spantus.logger.Logger;
-import org.spantus.math.windowing.Windowing;
-import org.spantus.math.windowing.WindowingEnum;
-import org.spantus.math.windowing.WindowingFactory;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
 import org.spantus.work.ui.services.impl.MatchingServiceImpl;
+import scikit.util.Pair;
 
 /**
  *
@@ -65,7 +56,8 @@ public class RecognizeCmd extends AbsrtactCmd {
 
         getMatchingService().update(ctx.getProject().getRecognitionConfig(), getExecutionFacade());
 
-        Marker marker = ((Marker) getCurrentEvent().getValue());
+        Pair<MarkerSet,Marker> markerPair = ((Pair<MarkerSet,Marker>) getCurrentEvent().getValue());
+        Marker marker = markerPair.snd();
 
         Map<String, IValues> fvv = getExtractorReaderService().recalcualteValues(getReader(), marker);
 //        getExtractorReaderService().findAllVectorValuesForMarker(
@@ -73,6 +65,7 @@ public class RecognizeCmd extends AbsrtactCmd {
 //                marker);
 
         List<RecognitionResult> results = getMatchingService().findMultipleMatch(
+                markerPair.fst().getMarkerSetType(),
                 fvv);
         if (results != null && results.size() > 0) {
             marker.setLabel(results.get(0).getInfo().getName());

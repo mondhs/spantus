@@ -20,6 +20,7 @@ import org.spantus.chart.marker.MarkerComponent;
 import org.spantus.chart.marker.MarkerComponentServiceImpl;
 import org.spantus.chart.marker.MarkerSetComponent;
 import org.spantus.core.marker.Marker;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.event.SpantusEvent;
 import org.spantus.event.SpantusEventMulticaster;
 import org.spantus.logger.Logger;
@@ -28,6 +29,7 @@ import org.spantus.work.ui.cmd.GlobalCommands;
 import org.spantus.work.ui.dto.SelectionDto;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.i18n.I18nFactory;
+import scikit.util.Pair;
 
 public class MarkerPopupMenu extends JPopupMenu {
 
@@ -95,10 +97,10 @@ public class MarkerPopupMenu extends JPopupMenu {
 	}
 
 	public void addMarker(JComponent source) {
-		Component invoker = getInvoker(source);
+		Component invoker = findInvoker(source);
 		if (invoker instanceof MarkerSetComponent) {
 			MarkerSetComponent _markerSetComponent = ((MarkerSetComponent) invoker);
-			MarkerComponentEventHandler ml = getShower(source);
+			MarkerComponentEventHandler ml = findActiveMarkerComponent(source);
 			Point p = ml.getCurrentPoint();
 			getMarkerComponentService().addMarker(_markerSetComponent, p,
 					getDefaultSegmentLength());
@@ -108,11 +110,11 @@ public class MarkerPopupMenu extends JPopupMenu {
 	}
 
 	public void remove(JComponent source) {
-		Component invoker = getInvoker(source);
+		Component invoker = findInvoker(source);
 		if (invoker instanceof MarkerSetComponent) {
 			// MarkerSetComponent _markerSetComponent = ((MarkerSetComponent)
 			// invoker);
-			MarkerComponentEventHandler ml = getShower(source);
+			MarkerComponentEventHandler ml = findActiveMarkerComponent(source);
 			ml.removeMarker(ml.getCurrentMarker());
 			// Marker marker =
 			// getMarkerComponentService().remove(_markerSetComponent,
@@ -125,10 +127,10 @@ public class MarkerPopupMenu extends JPopupMenu {
 	 * @param source
 	 */
 	public void editMarker(JComponent source) {
-		Component invoker = getInvoker(source);
+		Component invoker = findInvoker(source);
 		if (invoker instanceof MarkerSetComponent) {
 			MarkerSetComponent markerSetComponent = ((MarkerSetComponent) invoker);
-			MarkerComponentEventHandler ml = getShower(source);
+			MarkerComponentEventHandler ml = findActiveMarkerComponent(source);
 			editMarker(ml.getCurrentMarker(), markerSetComponent);
 		}
 	}
@@ -169,15 +171,15 @@ public class MarkerPopupMenu extends JPopupMenu {
 	}
 
 	public void play(JComponent source) {
-		Component invoker = getInvoker(source);
-		Marker marker = findMarker(source);
-		if (marker != null) {
+		Component invoker = findInvoker(source);
+		Pair<MarkerSet, Marker> markerPair = findMarker(source);
+		if (markerPair != null) {
 			MarkerSetComponent markerSetComponent = ((MarkerSetComponent) invoker);
-			SelectionDto selectionDto = new SelectionDto(marker);
+			SelectionDto selectionDto = new SelectionDto(markerPair.snd());
 			getEventMulticaster().multicastEvent(
 					SpantusEvent.createEvent(this, GlobalCommands.sample.play,
 							selectionDto));
-			log.debug("palyed: " + marker);
+			log.debug("palyed: " + markerPair.snd());
 			markerSetComponent.repaint();
 		}
 
@@ -185,24 +187,24 @@ public class MarkerPopupMenu extends JPopupMenu {
 
 
 	public void executeOnMarker(JComponent source, Enum<?> cmd) {
-		Marker marker = findMarker(source);
+		Pair<MarkerSet, Marker> markerPair = findMarker(source);
 		getEventMulticaster().multicastEvent(
-				SpantusEvent.createEvent(this, cmd, marker));
+				SpantusEvent.createEvent(this, cmd, markerPair));
 	}
 
 	protected String getResource(String str) {
 		return I18nFactory.createI18n().getMessage(str);
 	}
 
-	protected Marker findMarker(JComponent source) {
-		Component invoker = getInvoker(source);
-		if (invoker instanceof MarkerSetComponent) {
-			// MarkerSetComponent _markerSetComponent = ((MarkerSetComponent)
-			// invoker);
-			MarkerComponentEventHandler ml = getShower(source);
+	protected Pair<MarkerSet,Marker> findMarker(JComponent source) {
+		Component aInvoker = findInvoker(source);
+		if (aInvoker instanceof MarkerSetComponent) {
+			MarkerSetComponent aMarkerSetComponent = ((MarkerSetComponent)aInvoker);
+                        MarkerSet aMarkerSet = aMarkerSetComponent.getMarkerSet();
+			MarkerComponentEventHandler ml = findActiveMarkerComponent(source);
 			if (ml.getCurrentMarker() != null) {
-				Marker _marker = ml.getCurrentMarker().getMarker();
-				return _marker;
+				Marker aMarker = ml.getCurrentMarker().getMarker();
+				return new Pair<MarkerSet,Marker>(aMarkerSet, aMarker);
 			}
 		}
 		return null;
@@ -249,8 +251,8 @@ public class MarkerPopupMenu extends JPopupMenu {
 	 * @param source
 	 * @return
 	 */
-	protected MarkerComponentEventHandler getShower(JComponent source) {
-		Container markerGraph = getInvoker(source).getParent();
+	protected MarkerComponentEventHandler findActiveMarkerComponent(JComponent source) {
+		Container markerGraph = findInvoker(source).getParent();
 		MouseListener ml = markerGraph.getMouseListeners()[0];
 		if (ml instanceof MarkerComponentEventHandler) {
 			return (MarkerComponentEventHandler) ml;
@@ -258,7 +260,7 @@ public class MarkerPopupMenu extends JPopupMenu {
 		return null;
 	}
 
-	protected Component getInvoker(JComponent source) {
+	protected Component findInvoker(JComponent source) {
 		if (source instanceof MarkerSetComponent) {
 			return source;
 		}

@@ -47,7 +47,9 @@ public class RecognitionMarkerSegmentatorListenerImpl extends MarkerSegmentatorL
                 ExtractorEnum.MFCC_EXTRACTOR.name());
         IValues mffcValues = fvv.get(ExtractorEnum.MFCC_EXTRACTOR.name());
 
-
+        if(mffcValues==null){
+            return false;
+        }
         Assert.isTrue(mffcValues.size() > 0, "MFCC is not calculated. Size {0} ", mffcValues.size());
 
         signalSegment.getFeatureFrameVectorValuesMap().put(ExtractorEnum.MFCC_EXTRACTOR.name(), 
