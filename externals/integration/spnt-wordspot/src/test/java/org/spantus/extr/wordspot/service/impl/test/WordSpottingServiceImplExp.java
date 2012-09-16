@@ -78,23 +78,25 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
     @Override
     protected void initPaths() {
         String path =
-                "/tmp/test" //                "/home/as/tmp/garsynas.lietuvos-syn/TEST/"
+//                "/tmp/test" //                
+                "/home/as/tmp/garsynas.lietuvos-syn-wpitch/TEST/"
                 ;
         String fileName =
                 //                "RAj031004_13_11b-30_1.wav"
                 //                "RAj031004_13_16a-30_1.wav"
                 //                "RAj031013_18_24a-30_1.wav"
 //                "RCz041110_18_29-30_1.wav"
-                "RBz041003_18_6-30_1.wav"
+//                "RBz041003_18_6-30_1.wav"
+                "RBs041003_13_36a-30_1.wav"
+//                "RZj0907_13_15b-30_1.wav"
                 ;
         setWavFile(new File(path, fileName));
-        setRepositoryPathRoot(new File("/home/as/tmp/garsynas.lietuvos-syn/"));
+        setRepositoryPathRoot(new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch/"));
         setAcceptableSyllables(new String[]{"liet", "tuvos"});
         setSearchWord("lietuvos");
     }
-
+   
     @Test
-
     @Category(SlowTests.class)
     @Override
     public void test_wordSpotting() throws MalformedURLException {
@@ -116,7 +118,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
     }
 
  
-    @Ignore
+    @Ignore 
     @Test
     @Category(SlowTests.class)
     public void bulkTest() throws MalformedURLException {
@@ -133,10 +135,11 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 //                    )){
 //                continue;
 //            }
+             log.debug("start: " + file);
                 WordSpotResult result = doWordspot(file);
                 wspotDao.save(result);
 //                String resultsStr = extractResultStr(result.getSegments());
-                log.debug("Processed: " + file);
+                log.debug("done: " + file);
         }
 //        log.error("files =>" + files.length);
 //        log.error("list =>" + list);
@@ -152,11 +155,16 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
         WordSpottingListenerLogImpl listener = new WordSpottingListenerLogImpl(getSearchWord(),
                 getAcceptableSyllables(),
                 getRepositoryPathWord().getAbsolutePath());
+        listener.setServiceConfig(serviceConfig);
         Long length = AudioManagerFactory.createAudioManager().findLengthInMils(
                 aWavUrl);
         File markerFile = new File(aWavFile.getParentFile().getAbsoluteFile(),
                 FileUtils.replaceExtention(aWavFile, ".mspnt.xml"));
-        Marker marker = getMarkerService().findByLabel("-l'-ie-t-|-u-v-oo-s", getMarkerDao().read(markerFile));
+        Marker lietMarker = getMarkerService().findByLabel("-l-ie-t", getMarkerDao().read(markerFile));
+        Marker uvosMarker = getMarkerService().findByLabel("-u-v-o:-s", getMarkerDao().read(markerFile));
+        Marker marker = new Marker();
+        marker.setStart(lietMarker.getStart());
+        marker.setEnd(uvosMarker.getEnd());
         result.setAudioLength(length);
         result.setOriginalMarker(marker);
         result.setFileName(aWavFile.getName());

@@ -47,7 +47,7 @@ public class SegmentExtractorServiceImplOnlineTest extends AbstractSegmentExtrac
     @Override
     protected void changeOtherParams(SegmentExtractorServiceConfig config) {
         super.changeOtherParams(config);
-        getSegmentExtractorService().getConfig().setClassifier(ClassifierEnum.rulesOnline);
+        getSegmentExtractorService().getServiceConfig().setClassifier(ClassifierEnum.rulesOnline);
     }
 
     @Test

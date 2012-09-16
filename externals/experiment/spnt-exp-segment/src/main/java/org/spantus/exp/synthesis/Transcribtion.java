@@ -16,6 +16,8 @@ public class Transcribtion implements Serializable{
 	private static final long serialVersionUID = 3087867740948425957L;
 	private MarkerSetHolder holder;
 	private StringBuilder transctiption;
+        private String originalText;
+
 	private long finished = 0l;
         private List<MarkerMbrola> markerBrolas;
 
@@ -60,10 +62,18 @@ public class Transcribtion implements Serializable{
 		this.finished += finished;
 	}
 
-    public List<MarkerMbrola> getMarkerBrolas() {
-        return markerBrolas;
-    }
-	
+        public List<MarkerMbrola> getMarkerBrolas() {
+            return markerBrolas;
+        }
+
+        public String getOriginalText() {
+            return originalText;
+        }
+
+        public void setOriginalText(String originalText) {
+            this.originalText = originalText;
+        }
+
         
 }
 

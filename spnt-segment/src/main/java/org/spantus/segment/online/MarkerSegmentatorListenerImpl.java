@@ -64,7 +64,6 @@ public class MarkerSegmentatorListenerImpl extends
 //			LOG.debug("[onSegmentEnded] {0} ({1} of {2})", event, getCurrentMarkerMap().size(), getClassifiersThreshold());
 			finazlizeSegment(getCurrentSegment(), event);
 			LOG.debug("[onSegmentEnded] --- {0}: {1}", event, getCurrentSegment());
-			
 			if(processEndedSegment(getCurrentSegment())){
 				signalSegments.add(getCurrentSegment());
 			}

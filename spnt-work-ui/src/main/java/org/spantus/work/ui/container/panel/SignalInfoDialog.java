@@ -156,7 +156,9 @@ public class SignalInfoDialog extends SpantusAboutDialog {
         sb.append("</div>");
         sb.append("<div>");
         sb.append("<span class=\"label\">").append(getMessage("windowOverlapInSamples")).append(":</spant>");
-        sb.append("<span class=\"value\">").append("" + overlapInSamples).append("</spant>");
+        sb.append("<span class=\"value\">").append("" + overlapInSamples)
+                .append("(+").append(""+readerConfig.getWindowOverlap()).append(")")
+                .append("</spant>");
         sb.append("</div>");
         return sb;
     }

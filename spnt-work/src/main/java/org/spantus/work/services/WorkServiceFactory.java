@@ -27,7 +27,7 @@ import org.spantus.work.services.reader.impl.WekaArffDaoImpl;
  * @since 0.0.1
  */
 public abstract class WorkServiceFactory {
-	private static MarkerDao markerDao;
+	private static MarkerProxyDao markerDao;
 	private static ReaderDao readerDao;
 	private static BundleDao bundleDao;
 	private static WorkExtractorReaderService extractorReaderService;
@@ -42,6 +42,16 @@ public abstract class WorkServiceFactory {
 		}
 		return markerDao;
 	}
+        /**
+         * Resolve format by {@link MarkerProxyDao#resolveMarkerDao(java.lang.String) }
+         * @param format
+         * @return 
+         */
+        public static MarkerDao resolveMarkerDao(String format) {
+            createMarkerDao();
+            return  markerDao.resolveMarkerDao(format); 
+        }
+        
 
 	public static ReaderDao createReaderDao() {
 		if (readerDao == null) {

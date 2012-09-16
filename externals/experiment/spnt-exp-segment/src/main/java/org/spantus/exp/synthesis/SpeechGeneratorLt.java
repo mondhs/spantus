@@ -259,6 +259,11 @@ public class SpeechGeneratorLt extends AbstractSpeechGenerator{
 		
 	}
 
+    @Override
+    protected void processMarker(MarkerMbrola phoneMarker) {
+        //Do nothing
+    }
+
 
 
 }

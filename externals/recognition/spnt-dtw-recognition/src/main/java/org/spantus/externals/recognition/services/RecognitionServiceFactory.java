@@ -52,11 +52,11 @@ public final class RecognitionServiceFactory {
          return corpusService;
       }
      
-          public static CorpusService createCorpusServicePartialSearch(String repositoryPath){
+          public static CorpusService createCorpusServicePartialSearch(String repositoryPath, Float radius){
 //         if(corpusService == null){
              CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
              
-             corpusServiceimpl.setSearchRadius(15F);
+             corpusServiceimpl.setSearchRadius(radius);
              corpusServiceimpl.setJavaMLSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ParallelogramWindow);
              corpusServiceimpl.setJavaMLLocalConstraint(DtwServiceJavaMLImpl.JavaMLLocalConstraint.Angle);
 

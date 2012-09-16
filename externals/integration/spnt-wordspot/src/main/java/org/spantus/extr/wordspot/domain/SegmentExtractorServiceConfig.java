@@ -12,118 +12,123 @@ import org.spantus.segment.online.OnlineDecisionSegmentatorParam;
 
 public class SegmentExtractorServiceConfig {
 
-	private Map<String, ExtractorParam> extractorParams = new HashMap<String, ExtractorParam>();
+    private Map<String, ExtractorParam> extractorParams = new HashMap<String, ExtractorParam>();
+    private PreemphasisEnum preephasis = PreemphasisEnum.full;
+    private ClassifierEnum classifier = ClassifierEnum.online;
+    private Float thresholdCoef = 3F;
+    private SegmentatorServiceEnum segmentation = SegmentatorServiceEnum.basic;
+    private OnlineDecisionSegmentatorParam segmentationParam;
+    private ExtractorEnum[] extractors = new ExtractorEnum[]{
+        ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
+        ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
+        ExtractorEnum.ENERGY_EXTRACTOR
+    };
+    private String repositoryPath;
+    private int windowLength = 10;
+    private int overlapInPerc = 33;
+    private Float syllableDtwRadius = 30F;
+    private Float wordDtwRadius = 15F;
 
-	private PreemphasisEnum preephasis = PreemphasisEnum.full;
-
-	private ClassifierEnum classifier = ClassifierEnum.online;
-
-	private Float thresholdCoef = 3F;
-
-	private SegmentatorServiceEnum segmentation = SegmentatorServiceEnum.basic;
-
-	private OnlineDecisionSegmentatorParam segmentationParam;
 
 
+    public SegmentExtractorServiceConfig() {
+        segmentationParam = new OnlineDecisionSegmentatorParam();
+        segmentationParam.setMinSpace(0L);
+        segmentationParam.setMinLength(0L);
+        segmentationParam.setExpandStart(0L);
+        segmentationParam.setExpandEnd(0L);
+    }
 
-	private ExtractorEnum[] extractors = new ExtractorEnum[] {
-			ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
-			ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR,
-			ExtractorEnum.ENERGY_EXTRACTOR
-	};
+    public Map<String, ExtractorParam> getExtractorParams() {
+        return extractorParams;
+    }
 
-	private String repositoryPath;
+    public void setExtractorParams(Map<String, ExtractorParam> extractorParams) {
+        this.extractorParams = extractorParams;
+    }
 
-	private int windowLength = 10;
+    public ClassifierEnum getClassifier() {
+        return classifier;
+    }
 
-	private int overlapInPerc = 33;
+    public void setClassifier(ClassifierEnum classifier) {
+        this.classifier = classifier;
+    }
 
-	public SegmentExtractorServiceConfig() {
-		segmentationParam = new OnlineDecisionSegmentatorParam();
-		segmentationParam.setMinSpace(0L);
-		segmentationParam.setMinLength(0L);
-		segmentationParam.setExpandStart(0L);
-		segmentationParam.setExpandEnd(0L);
-	}
-	
-	public Map<String, ExtractorParam> getExtractorParams() {
-		return extractorParams;
-	}
+    public ExtractorEnum[] getExtractors() {
+        return extractors;
+    }
 
-	public void setExtractorParams(Map<String, ExtractorParam> extractorParams) {
-		this.extractorParams = extractorParams;
-	}
+    public void setExtractors(ExtractorEnum[] extractors) {
+        this.extractors = extractors;
+    }
 
-	public ClassifierEnum getClassifier() {
-		return classifier;
-	}
+    public OnlineDecisionSegmentatorParam getSegmentationParam() {
+        return segmentationParam;
+    }
 
-	public void setClassifier(ClassifierEnum classifier) {
-		this.classifier = classifier;
-	}
+    public void setSegmentationParam(
+            OnlineDecisionSegmentatorParam segmentationParam) {
+        this.segmentationParam = segmentationParam;
+    }
 
-	public ExtractorEnum[] getExtractors() {
-		return extractors;
-	}
+    public SegmentatorServiceEnum getSegmentation() {
+        return segmentation;
+    }
 
-	public void setExtractors(ExtractorEnum[] extractors) {
-		this.extractors = extractors;
-	}
+    public void setSegmentation(SegmentatorServiceEnum segmentation) {
+        this.segmentation = segmentation;
+    }
 
-	public OnlineDecisionSegmentatorParam getSegmentationParam() {
-		return segmentationParam;
-	}
+    public PreemphasisEnum getPreephasis() {
+        return preephasis;
+    }
 
-	public void setSegmentationParam(
-			OnlineDecisionSegmentatorParam segmentationParam) {
-		this.segmentationParam = segmentationParam;
-	}
+    public void setPreephasis(PreemphasisEnum preephasis) {
+        this.preephasis = preephasis;
+    }
 
-	public SegmentatorServiceEnum getSegmentation() {
-		return segmentation;
-	}
+    public Float getThresholdCoef() {
+        return thresholdCoef;
+    }
 
-	public void setSegmentation(SegmentatorServiceEnum segmentation) {
-		this.segmentation = segmentation;
-	}
+    public void setThresholdCoef(Float thresholdCoef) {
+        this.thresholdCoef = thresholdCoef;
+    }
 
-	public PreemphasisEnum getPreephasis() {
-		return preephasis;
-	}
+    public String getRepositoryPath() {
+        return repositoryPath;
+    }
 
-	public void setPreephasis(PreemphasisEnum preephasis) {
-		this.preephasis = preephasis;
-	}
+    public void setRepositoryPath(String repositoryPath) {
+        this.repositoryPath = repositoryPath;
+    }
 
-	public Float getThresholdCoef() {
-		return thresholdCoef;
-	}
+    public int getWindowLength() {
+        return windowLength;
+    }
 
-	public void setThresholdCoef(Float thresholdCoef) {
-		this.thresholdCoef = thresholdCoef;
-	}
+    public void setWindowLength(int windowLength) {
+        this.windowLength = windowLength;
+    }
 
-	public String getRepositoryPath() {
-		return repositoryPath;
-	}
+    public int getOverlapInPerc() {
+        return overlapInPerc;
+    }
 
-	public void setRepositoryPath(String repositoryPath) {
-		this.repositoryPath = repositoryPath;
-	}
+    public void setOverlapInPerc(int overlapInPerc) {
+        this.overlapInPerc = overlapInPerc;
+    }
 
-	public int getWindowLength() {
-		return windowLength;
-	}
+    public Float getSyllableDtwRadius() {
+        return this.syllableDtwRadius;
+    }
+    
+    public Float getWordDtwRadius() {
+        return wordDtwRadius;
+    }
 
-	public void setWindowLength(int windowLength) {
-		this.windowLength = windowLength;
-	}
-
-	public int getOverlapInPerc() {
-		return overlapInPerc;
-	}
-
-	public void setOverlapInPerc(int overlapInPerc) {
-		this.overlapInPerc = overlapInPerc;
-	}
+    public void setWordDtwRadius(Float wordDtwRadius) {
+        this.wordDtwRadius = wordDtwRadius;
+    }
 }

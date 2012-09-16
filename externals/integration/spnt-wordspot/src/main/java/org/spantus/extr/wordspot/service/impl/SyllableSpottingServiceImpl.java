@@ -1,6 +1,8 @@
 package org.spantus.extr.wordspot.service.impl;
 
 import java.net.URL;
+import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
+import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfigAware;
 
 import org.spantus.extr.wordspot.service.SegmentExtractorService;
 import org.spantus.extr.wordspot.service.WordSpottingListener;
@@ -12,10 +14,11 @@ import org.spantus.segment.online.AsyncMarkerSegmentatorListenerImpl;
  * Created: May 7, 2012
  *
  */
-public class SyllableSpottingServiceImpl {
+public class SyllableSpottingServiceImpl  implements SegmentExtractorServiceConfigAware{
 	
 	private SegmentExtractorService segmentExtractorService;
 	private String syllableRepositoryPath;
+        private SegmentExtractorServiceConfig serviceConfig;
 	
 	public SyllableSpottingServiceImpl(String syllableRepositoryPath) {
 		this.syllableRepositoryPath = syllableRepositoryPath;
@@ -23,6 +26,7 @@ public class SyllableSpottingServiceImpl {
 
 	public void wordSpotting(URL urlFile, WordSpottingListener wordSpottingListener){
 		SpottingMarkerSegmentatorListenerImpl listener = new SpottingMarkerSegmentatorListenerImpl(wordSpottingListener);
+                listener.setServiceConfig(serviceConfig);
 		listener.setRepositoryPath(syllableRepositoryPath);
 		AsyncMarkerSegmentatorListenerImpl asyncLister = new AsyncMarkerSegmentatorListenerImpl(listener);
 		getSegmentExtractorService().listenSegments(urlFile, asyncLister);
@@ -31,7 +35,9 @@ public class SyllableSpottingServiceImpl {
 
 	public SegmentExtractorService getSegmentExtractorService() {
 		if(segmentExtractorService == null){
-			segmentExtractorService = new SegmentExtractorServiceImpl();
+			SegmentExtractorServiceImpl aSegmentExtractorService = new SegmentExtractorServiceImpl();
+                        aSegmentExtractorService.setServiceConfig(serviceConfig);
+                        segmentExtractorService=aSegmentExtractorService;
 		}
 		return segmentExtractorService;
 	}
@@ -40,4 +46,9 @@ public class SyllableSpottingServiceImpl {
 			SegmentExtractorService segmentExtractorService) {
 		this.segmentExtractorService = segmentExtractorService;
 	}
+
+    @Override
+    public void setServiceConfig(SegmentExtractorServiceConfig serviceConfig) {
+        this.serviceConfig = serviceConfig;
+    }
 }

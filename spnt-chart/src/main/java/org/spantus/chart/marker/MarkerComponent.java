@@ -33,6 +33,7 @@ import javax.swing.UIManager;
 import org.spantus.core.marker.Marker;
 import org.spantus.logger.Logger;
 import org.spantus.math.NumberUtils;
+import org.spantus.utils.Assert;
 /**
  * 
  * @author Mindaugas Greibus
@@ -129,7 +130,10 @@ public class MarkerComponent extends JComponent{
 
 	public void resetScreenCoord(){
 		this.startX = MarkerComponentUtil.timeToScreen(getCtx(), getMarker().getStart());	
-		Long endXTime = getMarker().getStart()+getMarker().getLength();
+                Assert.isTrue(getMarker() != null, "marker cannot be null");
+                Assert.isTrue(getMarker().getStart() != null, "marker start cannot be null");
+                Assert.isTrue(getMarker().getLength() != null, "marker lenth cannot be null");
+                Long endXTime = getMarker().getStart()+getMarker().getLength();
 		this.endX = MarkerComponentUtil.timeToScreen(getCtx(), endXTime);
 	}
 	

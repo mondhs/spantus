@@ -41,6 +41,7 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
         super.setUp();
         wordSpottingServiceImpl = new SyllableSpottingServiceImpl(repositoryPathSyllable.getAbsolutePath());
         wordSpottingServiceImpl.setSegmentExtractorService(getSegmentExtractorService());
+        wordSpottingServiceImpl.setServiceConfig(serviceConfig);
     }
 
     /**
@@ -55,7 +56,7 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
     @Override
     protected void changeOtherParams(SegmentExtractorServiceConfig config) {
         super.changeOtherParams(config);
-        getSegmentExtractorService().getConfig().setClassifier(ClassifierEnum.rulesOnline);
+        getSegmentExtractorService().getServiceConfig().setClassifier(ClassifierEnum.rulesOnline);
     }
 
     @Test

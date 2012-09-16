@@ -17,14 +17,14 @@ public class MarkerProxyDao implements MarkerDao {
     public static final String LABA = "laba";
     public static final String MSPNTXML = "mspnt.xml";
     public static final String TEXT_GRID = "TextGrid";
-    public static final String TXT = "txt";
+    public static final String AUDACITY_TXT = "txt";
     Map<String, MarkerDao> markerDaoRegister;
     private Logger log = Logger.getLogger(MarkerProxyDao.class);
 
     public MarkerProxyDao() {
         markerDaoRegister = new HashMap<String, MarkerDao>();
         markerDaoRegister.put(MSPNTXML, new MarkerXmlDaoImpl());
-        markerDaoRegister.put(TXT, new MarkerAudacityDao());
+        markerDaoRegister.put(AUDACITY_TXT, new MarkerAudacityDao());
         markerDaoRegister.put(LABA, new MarkerLabaDao());
         markerDaoRegister.put(TEXT_GRID, new MarkerTextGridDao());
 
@@ -57,14 +57,14 @@ public class MarkerProxyDao implements MarkerDao {
     }
 
     public void write(MarkerSetHolder holder, OutputStream outputStream) {
-        MarkerDao markerDao = resolveMarkerDao("MSPNTXML");
+        MarkerDao markerDao = resolveMarkerDao(MSPNTXML);
         if (markerDao != null) {
             markerDao.write(holder, outputStream);
         }
 
     }
 
-    protected MarkerDao resolveMarkerDao(String name) {
+    public MarkerDao resolveMarkerDao(String name) {
         for (Entry<String, MarkerDao> markerDao : markerDaoRegister.entrySet()) {
             if (name.endsWith(markerDao.getKey())) {
                 return markerDao.getValue();

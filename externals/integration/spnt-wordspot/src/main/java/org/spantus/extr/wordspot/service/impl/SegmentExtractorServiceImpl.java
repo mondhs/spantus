@@ -18,6 +18,7 @@ import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.core.threshold.IClassifier;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
+import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfigAware;
 import org.spantus.extr.wordspot.service.SegmentExtractorService;
 import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.extractor.ExtractorsFactory;
@@ -42,22 +43,20 @@ import org.spantus.work.services.WorkServiceFactory;
  * @since 0.3 Created: May 7, 2012
  * 
  */
-public class SegmentExtractorServiceImpl implements SegmentExtractorService {
+public class SegmentExtractorServiceImpl implements SegmentExtractorService, SegmentExtractorServiceConfigAware {
 
 	private static final Logger LOG = Logger
 			.getLogger(SegmentExtractorServiceImpl.class);
 
-	private SegmentExtractorServiceConfig config = new SegmentExtractorServiceConfig();
+	private SegmentExtractorServiceConfig serviceConfig;
 	private WorkExtractorReaderService extractorReaderService;
 
 	public SegmentExtractorServiceImpl() {
-
-		updateParams();
 	}
 
 	public void updateParams() {
-		getConfig().setExtractorParams(new HashMap<String, ExtractorParam>());
-		for (ExtractorEnum extractEnum : getConfig().getExtractors()) {
+		getServiceConfig().setExtractorParams(new HashMap<String, ExtractorParam>());
+		for (ExtractorEnum extractEnum : getServiceConfig().getExtractors()) {
 			ExtractorParam param = new ExtractorParam();
 			ExtractorParamUtils.setValue(param,
 					ExtractorModifiersEnum.smooth.name(), Boolean.TRUE);
@@ -65,9 +64,9 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 					ExtractorModifiersEnum.mean.name(), Boolean.TRUE);
 			ExtractorParamUtils.<Float> setValue(param,
 					ExtractorParamUtils.commonParam.threasholdCoef.name(),
-					getConfig().getThresholdCoef());
+					getServiceConfig().getThresholdCoef());
 
-			getConfig().getExtractorParams().put(extractEnum.name(), param);
+			getServiceConfig().getExtractorParams().put(extractEnum.name(), param);
 		}
 	}
 
@@ -77,7 +76,8 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	@Override
 	public Collection<SignalSegment> extractSegmentsOnline(URL urlFile) {
 		RecognitionMarkerSegmentatorListenerImpl listener = new RecognitionMarkerSegmentatorListenerImpl();
-		listener.setRepositoryPath(getConfig().getRepositoryPath());
+                listener.setServiceConfig(getServiceConfig());
+		listener.setRepositoryPath(getServiceConfig().getRepositoryPath());
 		AsyncMarkerSegmentatorListenerImpl asyncListener = new AsyncMarkerSegmentatorListenerImpl(
 				listener);
 		listenSegments(urlFile, asyncListener);
@@ -95,7 +95,7 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	 */
 	@Override
 	public void listenSegments(URL urlFile, ISegmentatorListener listener) {
-		readSignal(urlFile, getConfig().getExtractors(), listener);
+		readSignal(urlFile, getServiceConfig().getExtractors(), listener);
 	}
 
 	/**
@@ -104,12 +104,12 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 	public Collection<SignalSegment> extractSegmentsOffline(URL urlFile) {
 		Collection<SignalSegment> segments = new ArrayList<SignalSegment>();
 
-		IExtractorInputReader extractorReader = readSignal(urlFile, getConfig()
+		IExtractorInputReader extractorReader = readSignal(urlFile, getServiceConfig()
 				.getExtractors(), null);
 		Set<IClassifier> classifiers = ExtractorUtils
 				.filterOutClassifers(extractorReader);
 		MarkerSetHolder markerSetHolder = extractMarkerSetHolder(classifiers,
-				getConfig().getSegmentationParam());
+				getServiceConfig().getSegmentationParam());
 		MarkerSet syllables = markerSetHolder.getMarkerSets().get(
 				MarkerSetHolderEnum.phone.name());
 		for (Marker marker : syllables) {
@@ -145,15 +145,15 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 		SignalFormat format = reader.getFormat(urlFile);
 
 		IExtractorConfig config = ExtractorConfigUtil.defaultConfig(
-				format.getSampleRate(), getConfig().getWindowLength(),
-				getConfig().getOverlapInPerc());// 10 ms and 33 %
+				format.getSampleRate(), getServiceConfig().getWindowLength(),
+				getServiceConfig().getOverlapInPerc());// 10 ms and 33 %
                 config.setWindowing(WindowingEnum.Hamming.name());
-		config.setPreemphasis(getConfig().getPreephasis().name());
+		config.setPreemphasis(getServiceConfig().getPreephasis().name());
 		IExtractorInputReader extractorReader = ExtractorsFactory
 				.createReader(config);
 		List<IClassifier> classifiers = ExtractorUtils.registerThreshold(
-				extractorReader, extractors, getConfig().getExtractorParams(),
-				getConfig().getClassifier());
+				extractorReader, extractors, getServiceConfig().getExtractorParams(),
+				getServiceConfig().getClassifier());
 
 		if (iSegmentatorListener != null) {
 			iSegmentatorListener.setConfig(config);
@@ -175,17 +175,17 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService {
 			Set<IClassifier> classifiers, OnlineDecisionSegmentatorParam param) {
 		MarkerSetHolder markerSetHolder = null;
 		ISegmentatorService online = (ISegmentatorService) SegmentFactory
-				.createSegmentator(getConfig().getSegmentation().name());
+				.createSegmentator(getServiceConfig().getSegmentation().name());
 		markerSetHolder = online.extractSegments(classifiers, param);
 		return markerSetHolder;
 	}
 
-	public SegmentExtractorServiceConfig getConfig() {
-		return config;
+	public SegmentExtractorServiceConfig getServiceConfig() {
+		return serviceConfig;
 	}
 
-	public void setConfig(SegmentExtractorServiceConfig config) {
-		this.config = config;
+	public void setServiceConfig(SegmentExtractorServiceConfig config) {
+		this.serviceConfig = config;
 	}
 
 	public WorkExtractorReaderService getExtractorReaderService() {

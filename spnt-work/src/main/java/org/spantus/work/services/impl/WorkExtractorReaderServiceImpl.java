@@ -32,7 +32,6 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import org.spantus.core.FrameValues;
-import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 
 import org.spantus.core.extractor.ExtractorParam;
@@ -57,7 +56,6 @@ import org.spantus.extractor.ExtractorConfigUtil;
 import org.spantus.extractor.ExtractorsFactory;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
-import org.spantus.extractor.impl.MFCCExtractor;
 import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
 import org.spantus.logger.Logger;
 import org.spantus.math.windowing.Windowing;
@@ -274,7 +272,17 @@ public class WorkExtractorReaderServiceImpl extends ExtractorInputReaderServiceI
     
     protected Map<String, IValues> recalcualteValues(IExtractorInputReader extractorInputReader, Marker marker, Set<IGeneralExtractor<?>> extractorSet) {
         Map<String, IValues> rtnMap = new HashMap<String, IValues>();
-        FrameValues frameValues = extractorInputReader.findSignalValues(marker.getStart(), marker.getLength());
+        long end = Math.min(marker.getEnd(),extractorInputReader.getAvailableSignalLengthMs());
+        long length = end - marker.getStart();
+        if (length<0){
+            return null;
+        }
+        FrameValues frameValues = null;
+        try{
+            frameValues = extractorInputReader.findSignalValues(marker.getStart(), length);
+        }catch(IndexOutOfBoundsException ex){
+            throw new ProcessingException(ex);
+        }
         IExtractorConfig extractConfig = extractorInputReader.getConfig();
         WindowBufferProcessorCtx ctx = WindowBufferProcessor.ctreateWindowBufferProcessorCtx(extractConfig);
         WindowBufferProcessor windowBufferProcessor = new WindowBufferProcessor();

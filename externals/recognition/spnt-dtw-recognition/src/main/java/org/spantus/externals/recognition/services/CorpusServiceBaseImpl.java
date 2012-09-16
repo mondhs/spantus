@@ -123,9 +123,15 @@ public class CorpusServiceBaseImpl implements CorpusService {
                 processed(processedCount++, totalToProcess);
             }
             if (result != null) {
-                result.getDetails().setAudioFilePath(getCorpus().findAudioFileById(
-                        result.getInfo().getId()));
-                results.add(result);
+                RecognitionResultDetails details = result.getDetails();
+                if(result.getInfo() != null){
+                    SignalSegment resultInfo = result.getInfo();
+                    String audioFile = getCorpus().findAudioFileById(resultInfo.getId());
+                    details.setAudioFilePath(audioFile);
+                    results.add(result);
+                }else{
+                    LOG.error("[findMultipleMatchFull]result.getInfo() is null ");
+                }
             }
         }
         results = getCorpusServiceHelper().postProcessResult(results, minimum, maximum);
