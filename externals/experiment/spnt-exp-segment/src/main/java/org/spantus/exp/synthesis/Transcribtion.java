@@ -18,7 +18,8 @@ public class Transcribtion implements Serializable{
 	private StringBuilder transctiption;
         private String originalText;
 
-	private long finished = 0l;
+	private Long finished = 0l;
+        private Long  previousPhoneLength=null;
         private List<MarkerMbrola> markerBrolas;
 
 	public Transcribtion() {
@@ -55,10 +56,10 @@ public class Transcribtion implements Serializable{
 		return finished;
 	}
 
-	public void setFinished(long finished) {
+	public void setFinished(Long finished) {
 		this.finished = finished;
 	}
-	public void incFinished(long finished) {
+	public void incFinished(Long finished) {
 		this.finished += finished;
 	}
 
@@ -73,6 +74,15 @@ public class Transcribtion implements Serializable{
         public void setOriginalText(String originalText) {
             this.originalText = originalText;
         }
+
+        public long getPreviousPhoneLength() {
+            return previousPhoneLength;
+        }
+
+        public void setPreviousPhoneLength(long previousPhoneLength) {
+            this.previousPhoneLength = previousPhoneLength;
+        }
+        
 
         
 }

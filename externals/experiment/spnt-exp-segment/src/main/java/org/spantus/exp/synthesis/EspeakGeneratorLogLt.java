@@ -84,6 +84,7 @@ public class EspeakGeneratorLogLt extends AbstractSpeechGenerator {
             MarkerSetHolder retrievedInfo = aucacityMarkerDao.read(process.getInputStream());
             MarkerSet phonesSet = retrievedInfo.getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.phone.name());
             for (Marker entry : phonesSet.getMarkers()) {
+                transcribtion.setPreviousPhoneLength(entry.getLength());
                 parseAndAppend(transcribtion, MessageFormat.format("{0} {1,number,####}", 
                        entry.getLabel(), entry.getLength() ));
             }
@@ -111,7 +112,7 @@ public class EspeakGeneratorLogLt extends AbstractSpeechGenerator {
 //           
 ////           break;
 //        }
-        speechGenerator.bulkGeneration("lietuvos_test", "trijų Baltijos valstybių vardu pranešimą skaitys Lietuvos atstovas as ", "/tmp/test", 30, 1);
+        speechGenerator.bulkGeneration("lietuvos_test_bulk", "trijų Baltijos valstybių vardu pranešimą skaitys Lietuvos atstovas", "/tmp/test", null, 1);
 
     }
 }

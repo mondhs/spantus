@@ -82,17 +82,15 @@ public class SignalChartInstance extends TimeSeriesFunctionInstance{
 
 	public void renderFunction(BigDecimal[] xCoordinate,
 			BigDecimal[] yCoordinate, BigDecimal xScalar, BigDecimal yScalar) {
-//
-//		if(polylinesX.size() > 0) return;
-
-//		int[] x = toCoordinatesTime(values.size(), xScalar.floatValue());
-//		int[] y = toCoordinatesValues(values, yScalar.floatValue());
-		
-//		polylinesX.add(x);
-//		polylinesY.add(y);
-//		if(signalPolygon==null){
-			signalPolygon =toPolygon(values, xScalar.floatValue(), yScalar.floatValue());
-//		}
+////
+////		if(polylinesX.size() > 0) return;
+////		int[] x = toCoordinatesTime(values.size(), xScalar.floatValue());
+////		int[] y = toCoordinatesValues(values, yScalar.floatValue());
+////		polylinesX.add(x);
+////		polylinesY.add(y);
+		if(signalPolygon==null){
+                	signalPolygon =toPolygon(values, xScalar.floatValue(), yScalar.floatValue());
+                }
 		this.xScalar = xScalar;
 		this.yScalar = yScalar;
 	}

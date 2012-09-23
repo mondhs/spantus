@@ -54,7 +54,8 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 	public FrameValues(Collection<Double> collection){
 		addAll(collection);
 		if(collection instanceof FrameValues){
-			setSampleRate(((FrameValues)collection).getSampleRate());
+                    FrameValues fv = ((FrameValues)collection);
+                    setSampleRate(fv.getSampleRate());
 		}
 	}
 	

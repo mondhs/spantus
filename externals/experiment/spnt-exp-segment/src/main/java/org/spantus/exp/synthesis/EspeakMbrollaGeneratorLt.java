@@ -67,7 +67,8 @@ public class EspeakMbrollaGeneratorLt extends AbstractSpeechGenerator {
     @Override
     public Transcribtion translate(String sentence, float lengthCoef) {
         Transcribtion transcribtion = new Transcribtion();
-
+        long initSilence = 62L; ////by esepeak: 1000samples/sampleRate16K=0.0625
+        transcribtion.setPreviousPhoneLength(initSilence);
 
         try {
             String command = MessageFormat.format(
@@ -84,7 +85,7 @@ public class EspeakMbrollaGeneratorLt extends AbstractSpeechGenerator {
             process.waitFor();
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(
                     process.getInputStream()));
-            parseAndAppend(transcribtion, "< 0");
+//            parseAndAppend(transcribtion, "< 0");
             String s;
             MarkerSet words = transcribtion.getHolder().getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.word.name());
             // read the output from the command
@@ -93,15 +94,14 @@ public class EspeakMbrollaGeneratorLt extends AbstractSpeechGenerator {
                     continue;
                 }
                 parseAndAppend(transcribtion, s);
-                if (words.getMarkers().size() > 0) {
-                    Marker lastWord = words.getMarkers().get(words.getMarkers().size() - 1);
-                    if("-l'-ie-t".equals(lastWord.getLabel())){
-                        parseAndAppend(transcribtion, "| 0");
-                    }
-
-                }
+//                if (words.getMarkers().size() > 0) {
+//                    Marker lastWord = words.getMarkers().get(words.getMarkers().size() - 1);
+//                    if("-l'-ie-t".equals(lastWord.getLabel())){
+//                        parseAndAppend(transcribtion, "| 0");
+//                    }
+//                }
             }
-            parseAndAppend(transcribtion, "> 0");
+//            parseAndAppend(transcribtion, "> 0");
 
         } catch (IOException | InterruptedException e) {
             throw new IllegalArgumentException(e);
@@ -144,14 +144,14 @@ public class EspeakMbrollaGeneratorLt extends AbstractSpeechGenerator {
         EspeakMbrollaGeneratorLt speechGenerator = new EspeakMbrollaGeneratorLt();
         Map<String, String> sentences = speechGenerator.readSentencesToMap("/home/as/tmp/lietuvos_sakiniai.csv");
         int[] snrArr = new int[]{30};
-//        for (Map.Entry<String, String> entry : sentences.entrySet()) {
-//            for (int snr : snrArr) {
-//                speechGenerator.bulkGeneration(entry.getKey(),entry.getValue(), "/tmp/test", snr, 1);
-//            }
-//           
-////           break;
-//        }
-        speechGenerator.bulkGeneration("lietuvos_test","trijų Baltijos valstybių vardu pranešimą skaitys Lietuvos atstovas", "/tmp/test", 30, 1);
+        for (Map.Entry<String, String> entry : sentences.entrySet()) {
+            for (int snr : snrArr) {
+                speechGenerator.bulkGeneration(entry.getKey(),entry.getValue(), "/tmp/test", snr, 1);
+            }
+           
+//           break;
+        }
+//        speechGenerator.bulkGeneration("lietuvos_mbr_test","trijų Baltijos valstybių vardu pranešimą skaitys Lietuvos atstovas", "/tmp/test", 30, 1);
 
     }
 }

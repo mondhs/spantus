@@ -22,7 +22,8 @@ public class LoggerLog4j implements ILogger {
     }
 
     @Override
-    public void error(String string, Object... os) {
+    public void error(String pattern, Object... arguments) {
+         logger.error(MessageFormat.format(pattern, arguments));
     }
 
     public void error(String str) {

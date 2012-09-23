@@ -95,7 +95,14 @@ public class CorpusServiceBaseImpl implements CorpusService {
             LOG.debug("[findMultipleMatch] sample: {0} ",
                     corpusSample.getName());
             RecognitionResult result = getCorpusServiceHelper().createRecognitionResultDetail();
-            Long targetLength = target.values().iterator().next().getTime();
+            Long targetLength = 0L;
+            for ( IValues entry : target.values()) {
+               if(entry!=null){
+                   targetLength = entry.getTime();
+                   //all length should be the same;
+                   break;
+               }
+            }
             Long sampleLength = targetLength;
             if (corpusSample.getMarker() != null) {
                 sampleLength = corpusSample.getMarker().getLength();

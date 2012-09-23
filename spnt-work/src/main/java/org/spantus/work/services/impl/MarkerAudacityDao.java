@@ -25,10 +25,13 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 
 import org.spantus.core.extractor.dao.MarkerDao;
@@ -36,6 +39,7 @@ import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
+import org.spantus.exception.ProcessingException;
 import org.spantus.logger.Logger;
 
 /**
@@ -49,7 +53,7 @@ import org.spantus.logger.Logger;
  */
 public class MarkerAudacityDao implements MarkerDao {
 
-    Logger log = Logger.getLogger(MarkerAudacityDao.class);
+    private static final Logger LOG = Logger.getLogger(MarkerAudacityDao.class);
 
     public MarkerSetHolder read(File file) {
         MarkerSetHolder markerSetHolder = null;
@@ -58,16 +62,17 @@ public class MarkerAudacityDao implements MarkerDao {
             fstream = new FileInputStream(file);
             markerSetHolder = read(fstream);
         } catch (FileNotFoundException ex) {
-            log.error(ex);
+            LOG.error(ex);
         }
-       
+
         return markerSetHolder;
 
     }
+
     /**
-     * 
+     *
      * @param inputStream
-     * @return 
+     * @return
      */
     public MarkerSetHolder read(InputStream inputStream) {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
@@ -89,12 +94,12 @@ public class MarkerAudacityDao implements MarkerDao {
                     m.setLength(length.longValue());
                     m.setLabel(entries[2]);
                     markerSet.getMarkers().add(m);
-                    log.debug("read " + m);
+                    LOG.debug("read " + m);
                 }
             }
             br.close();
         } catch (IOException ex) {
-            log.error(ex);
+            LOG.error(ex);
         }
 
         // Close the input stream
@@ -102,8 +107,43 @@ public class MarkerAudacityDao implements MarkerDao {
     }
 
     public void write(MarkerSetHolder holder, File file) {
+        try {
+            FileOutputStream outputFile = new FileOutputStream(file, false);
+            saveDataToFile(holder, outputFile);
+            outputFile.flush();
+            outputFile.close();
+        } catch (Exception ex) {
+            LOG.error(ex);
+        }
     }
 
     public void write(MarkerSetHolder holder, OutputStream outputStream) {
+        try {
+            saveDataToFile(holder, outputStream);
+        } catch (Exception ex) {
+            throw new ProcessingException(ex);
+        }
+    }
+
+    private void saveDataToFile(MarkerSetHolder holder, OutputStream outputFile) {
+        try {
+            for (MarkerSetHolderEnum en : MarkerSetHolderEnum.values()) {
+                MarkerSet markerSet = holder.getMarkerSets().get(en.name());
+                if (markerSet == null) {
+                    continue;
+                }
+                for (Marker marker : markerSet.getMarkers()) {
+
+                    String line = MessageFormat.format("{0,number,#.###}\t{1,number,#.###}\t{2}\n",
+                            marker.getStart().doubleValue()/1000,
+                            marker.getEnd().doubleValue()/1000,
+                            marker.getLabel());
+                    outputFile.write(line.getBytes(Charset.forName("UTF-8")));
+
+                }
+            }
+        } catch (IOException ex) {
+            throw new ProcessingException(ex);
+        }
     }
 }

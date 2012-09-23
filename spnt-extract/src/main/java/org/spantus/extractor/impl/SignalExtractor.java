@@ -22,6 +22,8 @@ package org.spantus.extractor.impl;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.extractor.ExtractorParam;
+import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorInputReaderAware;
 import org.spantus.core.extractor.windowing.WindowBufferProcessor;
 import org.spantus.extractor.AbstractExtractor;
 import org.spantus.logger.Logger;
@@ -34,8 +36,11 @@ import org.spantus.logger.Logger;
  * Created 2008.02.29
  *
  */
-public class SignalExtractor extends AbstractExtractor {
+public class SignalExtractor extends AbstractExtractor implements IExtractorInputReaderAware{
 	Logger log = Logger.getLogger(SignalExtractor.class);
+        
+        private IExtractorInputReader reader;
+        FrameValues outputValues = null;
 	
 	public SignalExtractor() {
 		getParam().setClassName(SignalExtractor.class.getSimpleName());
@@ -48,30 +53,22 @@ public class SignalExtractor extends AbstractExtractor {
 	public String getName() {
 		return ExtractorEnum.SIGNAL_EXTRACTOR.name();
 	}
-	private Integer downScale = 1;
-	
+        
+        
+
+        @Override
+        public FrameValues getOutputValues() {
+            if(outputValues == null){
+                outputValues=reader.findSignalValues(reader.getAvailableStartMs(), reader.getAvailableSignalLengthMs());
+            }
+            return outputValues;
+        }
+
+        
+        
 	@Override
 	public FrameValues calculateWindow(Long sampleNum, FrameValues values) {
-//		log.debug(MessageFormat.format(
-//				"[calculate]+++  name:{0}; sampleRate:{1}; windowSize:{2}",
-//				getName(), getConfig().getSampleRate()/1000, getConfig()
-//						.getWindowSize()));
-//test
-		FrameValues calculatedValues = newFrameValues(values);
-		int i=0 ;
-		Double fWork = 0D;
-		
-		for (Double float1 : values) {
-			i++;
-			fWork += float1;
-			if(i <= getDownScale()){
-				calculatedValues.add(fWork/getDownScale());
-				fWork = 0D; i = 0;
-			}
-		}
-//		log.debug("[calculate]---");
-//		calculatedValues.addAll(values);
-		return calculatedValues;
+		return null;
 	}
 	
 	
@@ -81,17 +78,15 @@ public class SignalExtractor extends AbstractExtractor {
 
 	
 	public Double getExtractorSampleRate() {
-                Double extractorSampleRate = (double)getConfig().getWindowSize()/
-                        (getConfig().getWindowSize()-getConfig().getWindowOverlap());
-		return getConfig().getSampleRate()*extractorSampleRate;
+//                Double extractorSampleRate = (double)getConfig().getWindowSize()/
+//                        (getConfig().getWindowSize()-getConfig().getWindowOverlap());
+		return getConfig().getSampleRate();//*extractorSampleRate;
 	}
 
-	public Integer getDownScale() {
-		return downScale;
-	}
 
-	public void setDownScale(Integer downScale) {
-		this.downScale = downScale;
-	}
+    @Override
+    public void setExtractorInputReader(IExtractorInputReader reader) {
+        this.reader = reader;
+    }
 
 }

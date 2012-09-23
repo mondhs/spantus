@@ -58,8 +58,8 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
         for (String string : acceptableSyllable) {
             acceptableSyllableSet.add(string);
         }
-        acceptableSyllableThresholdMap.put("liet", 5E8);
-        acceptableSyllableThresholdMap.put("tuvos", 12E8);
+         acceptableSyllableThresholdMap.put("liet", 8E8);
+        acceptableSyllableThresholdMap.put("tuvos", 3.3E9);
     }
     /**
      * 
@@ -77,37 +77,13 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
         for (RecognitionResult recognitionResult : recognitionResults) {
             String syllableName = recognitionResult.getInfo().getName().toLowerCase();
             newSyllable.getMarker().setLabel(syllableName);
-            //take first one as default
             if (rtnRecognitionResult == null) {
                 rtnRecognitionResult = recognitionResult;
             }
-            boolean isAcceptable = checkIfAcceptableBellowThreshold(syllableName, recognitionResult, signalSegmentsSyllable);
-            if(!isAcceptable){
-                signalSegmentsSyllable.clear();
-                break;
+            RecognitionResult foundRecognitionResult = foundSegment(newSyllable, recognitionResult);
+            if(foundRecognitionResult != null){
+                rtnRecognitionResult = foundRecognitionResult;
             }
-            isAcceptable = checkIfAcceptableRepeatableSyllable(syllableName, recognitionResult, signalSegmentsSyllable);
-            if(!isAcceptable){
-                signalSegmentsSyllable.clear();
-                signalSegmentsSyllable.add(newSyllable);
-                break;
-            }
-            if (acceptableSyllableSet.contains(syllableName)
-                    && isAcceptable) {
-                RecognitionResult wordMatch = matchWord(signalSegmentsSyllable, newSyllable);
-                
-                if (wordMatch != null) {
-                    getWordMatches().add(wordMatch);
-                    rtnRecognitionResult = wordMatch;
-                    signalSegmentsSyllable.clear();
-                    break;
-                }
-                signalSegmentsSyllable.add(newSyllable);
-                break;
-            }else{
-                LOG.debug("[processEndedSegment] reject syllable {0}",syllableName);  
-            }
-
             //check for first 1 matches
             if (++index > 0) {
                 break;
@@ -123,6 +99,46 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
 
         return rtnName;
     }
+    
+    /**
+     * 
+     * @param newSyllable
+     * @param recognitionResult
+     * @return 
+     */
+    private RecognitionResult foundSegment(SignalSegment newSyllable, RecognitionResult recognitionResult) {
+            RecognitionResult rtnRecognitionResult = null;
+            String syllableName = newSyllable.getMarker().getLabel();
+        
+            boolean isAcceptable = checkIfAcceptableBellowThreshold(syllableName, recognitionResult, signalSegmentsSyllable);
+            if(!isAcceptable){
+                signalSegmentsSyllable.clear();
+                return rtnRecognitionResult;
+            }
+            isAcceptable = checkIfAcceptableRepeatableSyllable(syllableName, recognitionResult, signalSegmentsSyllable);
+            if(!isAcceptable){
+                signalSegmentsSyllable.clear();
+                signalSegmentsSyllable.add(newSyllable);
+                return rtnRecognitionResult;
+            }
+            if (acceptableSyllableSet.contains(syllableName)
+                    && isAcceptable) {
+                RecognitionResult wordMatch = matchWord(signalSegmentsSyllable, newSyllable);
+                
+                if (wordMatch != null) {
+                    getWordMatches().add(wordMatch);
+                    rtnRecognitionResult = wordMatch;
+                    signalSegmentsSyllable.clear();
+                    return rtnRecognitionResult;
+                }
+                signalSegmentsSyllable.add(newSyllable);
+                return rtnRecognitionResult;
+            }else{
+                LOG.debug("[processEndedSegment] reject syllable {0}",syllableName);  
+            }
+            return rtnRecognitionResult;
+    }
+    
     /**
      * 
      * @param syllableName
@@ -312,6 +328,8 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
     public void setServiceConfig(SegmentExtractorServiceConfig serviceConfig) {
         this.serviceConfig = serviceConfig;
     }
+
+
 
 
     

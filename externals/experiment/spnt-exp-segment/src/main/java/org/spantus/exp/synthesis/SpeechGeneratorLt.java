@@ -22,7 +22,7 @@ import org.spantus.utils.StringUtils;
 
 public class SpeechGeneratorLt extends AbstractSpeechGenerator{
 	private static final String PHONEME_FORMAT = "{0} {1}\n";
-	private Map<String, Integer> lengths = null;
+	private Map<String, Long> lengths = null;
 
 
 
@@ -32,14 +32,14 @@ public class SpeechGeneratorLt extends AbstractSpeechGenerator{
 	
 	public SpeechGeneratorLt() {
 		lengths = Maps.newHashMap();
-		lengths.put("a", 130);
-		lengths.put("e", 130);
-		lengths.put("r", 45);
-		lengths.put("t", 65);
-		lengths.put("g", 59);
-		lengths.put("m", 67);
-		lengths.put("n", 57);
-		lengths.put("_", 250);
+		lengths.put("a", 130L);
+		lengths.put("e", 130L);
+		lengths.put("r", 45L);
+		lengths.put("t", 65L);
+		lengths.put("g", 59L);
+		lengths.put("m", 67L);
+		lengths.put("n", 57L);
+		lengths.put("_", 250L);
 	}
 
 	/**
@@ -147,9 +147,9 @@ public class SpeechGeneratorLt extends AbstractSpeechGenerator{
 		long start = transcribtion.getFinished();
 
 		for (String phoneItem : findPhones(syllable)) {
-			Integer length =  (lengths.get(phoneItem));
+			Long length =  (lengths.get(phoneItem));
 			Assert.isTrue(length != null, "Not found " + phoneItem);
-			length = (int) (length * lengthCoef);
+			length = (long) (length * lengthCoef);
 			transcribtion.getTransctiption().append(
 					MessageFormat.format(PHONEME_FORMAT, phoneItem, length));
 			transcribtion.incFinished(length);
@@ -157,7 +157,7 @@ public class SpeechGeneratorLt extends AbstractSpeechGenerator{
 
 		transcribtion.getTransctiption().append(
 				MessageFormat.format(PHONEME_FORMAT, "_", 20));
-		transcribtion.incFinished(10);
+		transcribtion.incFinished(10L);
 		Marker marker = new Marker();
 		marker.setLabel(syllable);
 		marker.setStart(start);
@@ -214,11 +214,11 @@ public class SpeechGeneratorLt extends AbstractSpeechGenerator{
 	
 
 
-	public Map<String, Integer> getLengths() {
+	public Map<String, Long> getLengths() {
 		return lengths;
 	}
 
-	public void setLengths(Map<String, Integer> lengths) {
+	public void setLengths(Map<String, Long> lengths) {
 		this.lengths = lengths;
 	}
 

@@ -223,6 +223,10 @@ public abstract class AbstractClassifierRuleBaseServiceImpl implements Classifie
 				&& (c.lastLength + c.currentLength) < 180) {
 			log.debug("Found max. join as decrease {0}", c.isDecrease);
 			return ClassifierRuleBaseEnum.action.join;
+ 		} else if (ctx.getFeatureInMax() 
+				&&  c.distanceBetweenPaeks <40) {
+			log.debug("Found max. join as between peaks not enough space {0}", c.distanceBetweenPaeks);
+			return ClassifierRuleBaseEnum.action.join;                       
 			// } else if (ctx.getFeatureInMax() && (lastLength+currentLength) <
 			// 280 ) {
 			// log.debug("too small gap for new segment lastLength:{0}<40, current:{1}>100",

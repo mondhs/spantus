@@ -29,6 +29,7 @@ import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.ExtractorWrapper;
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorInputReaderAware;
 import org.spantus.core.extractor.IGeneralExtractor;
 import org.spantus.core.threshold.AbstractClassifier;
 import org.spantus.core.threshold.AbstractThreshold;
@@ -133,10 +134,18 @@ public final class ExtractorUtils {
 	public static IGeneralExtractor<?> register(
 			IExtractorInputReader extractorReader, ExtractorEnum extractorType,
 			ExtractorParam param) {
-		IGeneralExtractor<?> extractor = ExtractorResultBufferFactory
-				.create(createInstance(extractorType, param));
-		extractorReader.registerExtractor(extractor);
-		return extractor;
+                IGeneralExtractor<?> underlyingExtractor = createInstance(extractorType, param);
+		IGeneralExtractor<?> wrapingExtractor = ExtractorResultBufferFactory.
+                        create(underlyingExtractor);
+                if(underlyingExtractor instanceof IExtractorInputReaderAware){
+                    ((IExtractorInputReaderAware)underlyingExtractor).setExtractorInputReader(extractorReader);
+                }
+                if(underlyingExtractor instanceof SignalExtractor){
+                    extractorReader.registerExtractor(underlyingExtractor);
+                }else{
+                    extractorReader.registerExtractor(wrapingExtractor);
+                }
+		return wrapingExtractor;
 	}
 
 	public static IGeneralExtractor<?> createInstance(ExtractorEnum extractor,

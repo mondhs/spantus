@@ -194,10 +194,11 @@ public abstract class AbstractSpeechGenerator {
         Iterator<String> splitedIter = splitter.split(phone).iterator();
         String phoneLabel = splitedIter.next();
         String lengthStr = splitedIter.next();
-        Long phoneLength = Long.valueOf(lengthStr);
+        long previousPhoneLength = transcribtion.getPreviousPhoneLength();
+        Long nextPhoneLength = Long.valueOf(lengthStr);
         MarkerMbrola phoneMarker = newMarkerSynthesis(transcribtion.getFinished(),
-                phoneLength, phoneLabel, splitedIter);
-        phoneLength = phoneMarker.getMarker().getLength();
+                previousPhoneLength, phoneLabel, splitedIter);
+        previousPhoneLength = phoneMarker.getMarker().getLength();
         Long currentEnd = phoneMarker.getMarker().getEnd();
         if ("_".equals(phoneLabel)) {
             if (lastWord != null) {
@@ -219,7 +220,8 @@ public abstract class AbstractSpeechGenerator {
         phonemes.getMarkers().add(phoneMarker.getMarker());
         transcribtion.getMarkerBrolas().add(phoneMarker);
         transcribtion.getTransctiption().append(phone);
-        transcribtion.incFinished(phoneLength);
+        transcribtion.incFinished(previousPhoneLength);
+        transcribtion.setPreviousPhoneLength(nextPhoneLength);
     }
     
         /**

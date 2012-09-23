@@ -41,7 +41,7 @@ public class DefaultExtractorInputReaderTest {
         FrameValues frameValue = defaultExtractorInputReader.findSignalValues(100L, 1001L);
         //then
         assertEquals("values extracted", 10009, frameValue.size(), 0);
-        assertEquals("first value", 999, frameValue.getFirst(), 0);
-        assertEquals("last value", 11007, frameValue.getLast(), 0);
+        assertEquals("first value", 1000, frameValue.getFirst(), 0);
+        assertEquals("last value", 11008, frameValue.getLast(), 0);
     }
 }
