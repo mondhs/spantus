@@ -5,6 +5,7 @@
 package org.spantus.work.services;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Map;
 
 import javax.sound.sampled.AudioInputStream;
@@ -24,7 +25,13 @@ import org.spantus.extractor.impl.ExtractorEnum;
  * @author mondhs
  */
 public interface WorkExtractorReaderService extends ExtractorInputReaderService {
-
+    /**
+     * 
+     * @param extractors
+     * @param url
+     * @return 
+     */
+    public IExtractorInputReader createReader(ExtractorEnum[] extractors, URL url);
     /**
      * Read given signal file extracts feature data
      * @param extractors

@@ -26,6 +26,17 @@ public class SignalSegment implements Serializable{
 	private String name;
 	private String id;
 
+        public SignalSegment() {
+        }
+
+        public SignalSegment(Marker marker) {
+            this.marker = marker;
+        }
+        
+        
+        
+        
+
 	public Marker getMarker() {
 		return marker;
 	}

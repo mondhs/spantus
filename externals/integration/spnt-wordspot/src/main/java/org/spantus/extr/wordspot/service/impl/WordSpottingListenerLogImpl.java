@@ -13,7 +13,7 @@ import org.spantus.core.service.CorpusService;
 import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfigAware;
-import org.spantus.extr.wordspot.service.WordSpottingListener;
+import org.spantus.extr.wordspot.service.SpottingListener;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
@@ -27,7 +27,7 @@ import org.spantus.work.services.WorkServiceFactory;
  * @since 0.3 Created: May 7, 2012
  *
  */
-public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtractorInputReaderAware, SegmentExtractorServiceConfigAware {
+public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorInputReaderAware, SegmentExtractorServiceConfigAware {
 
     private static final Logger LOG = Logger.getLogger(WordSpottingListenerLogImpl.class);
     private List<RecognitionResult> wordMatches = new ArrayList<RecognitionResult>();

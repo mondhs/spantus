@@ -5,7 +5,7 @@ import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfigAware;
 
 import org.spantus.extr.wordspot.service.SegmentExtractorService;
-import org.spantus.extr.wordspot.service.WordSpottingListener;
+import org.spantus.extr.wordspot.service.SpottingListener;
 import org.spantus.segment.online.AsyncMarkerSegmentatorListenerImpl;
 /**
  * 
@@ -14,7 +14,7 @@ import org.spantus.segment.online.AsyncMarkerSegmentatorListenerImpl;
  * Created: May 7, 2012
  *
  */
-public class SyllableSpottingServiceImpl  implements SegmentExtractorServiceConfigAware{
+public class SyllableSpottingServiceImpl  implements SegmentExtractorServiceConfigAware, SpottingService{
 	
 	private SegmentExtractorService segmentExtractorService;
 	private String syllableRepositoryPath;
@@ -24,7 +24,8 @@ public class SyllableSpottingServiceImpl  implements SegmentExtractorServiceConf
 		this.syllableRepositoryPath = syllableRepositoryPath;
 	}
 
-	public void wordSpotting(URL urlFile, WordSpottingListener wordSpottingListener){
+    @Override
+	public void wordSpotting(URL urlFile, SpottingListener wordSpottingListener){
 		SpottingMarkerSegmentatorListenerImpl listener = new SpottingMarkerSegmentatorListenerImpl(wordSpottingListener);
                 listener.setServiceConfig(serviceConfig);
 		listener.setRepositoryPath(syllableRepositoryPath);

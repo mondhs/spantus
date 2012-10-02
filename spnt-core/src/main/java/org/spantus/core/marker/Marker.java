@@ -37,7 +37,20 @@ public class Marker implements Serializable, Cloneable{
 	private Long length;
 
 	private String label;
+
+        public Marker() {
+        }
+
+        
+        
+        public Marker(Long start, Long length, String label) {
+            this();
+            this.start = start;
+            this.length = length;
+            this.label = label;
+        }
 	
+        
 
 	public Long getStart() {
 		return start;

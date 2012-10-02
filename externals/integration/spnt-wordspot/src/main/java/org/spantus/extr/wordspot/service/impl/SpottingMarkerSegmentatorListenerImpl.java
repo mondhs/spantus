@@ -21,7 +21,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorInputReaderAware;
 import org.spantus.core.marker.Marker;
 import org.spantus.extr.wordspot.dto.SpottingSyllableCtx;
-import org.spantus.extr.wordspot.service.WordSpottingListener;
+import org.spantus.extr.wordspot.service.SpottingListener;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
 import scikit.util.Pair;
@@ -35,7 +35,7 @@ import scikit.util.Pair;
 public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegmentatorListenerImpl {
 
     private static final Logger LOG = Logger.getLogger(SpottingMarkerSegmentatorListenerImpl.class);
-    private WordSpottingListener wordSpottingListener;
+    private SpottingListener wordSpottingListener;
     private String sourceId = "sourceId";
 
     protected SpottingMarkerSegmentatorListenerImpl() {
@@ -43,7 +43,7 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
         sourceId = sourceId + hashCode();
     }
 
-    public SpottingMarkerSegmentatorListenerImpl(WordSpottingListener wordSpottingListener) {
+    public SpottingMarkerSegmentatorListenerImpl(SpottingListener wordSpottingListener) {
         this();
         this.wordSpottingListener = wordSpottingListener;
     }
@@ -166,11 +166,11 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
         return new Pair<Double, Double>(firstMfccValue, delta);
     }
 
-    public WordSpottingListener getWordSpottingListener() {
+    public SpottingListener getWordSpottingListener() {
         return wordSpottingListener;
     }
 
-    public void setWordSpottingListener(WordSpottingListener wordSpottingListener) {
+    public void setWordSpottingListener(SpottingListener wordSpottingListener) {
         this.wordSpottingListener = wordSpottingListener;
     }
 

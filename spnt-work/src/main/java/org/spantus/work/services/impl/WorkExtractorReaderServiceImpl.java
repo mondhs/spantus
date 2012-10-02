@@ -147,6 +147,25 @@ public class WorkExtractorReaderServiceImpl extends ExtractorInputReaderServiceI
 
         return extractorReader;
     }
+    
+        /**
+     *
+     * @param extractors
+     * @param inputFile
+     * @return
+     */
+    @Override
+    public IExtractorInputReader createReader(ExtractorEnum[] extractors,
+            URL url) {
+        AudioReader audioReader = AudioReaderFactory.createAudioReader();
+        IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
+                audioReader.findAudioFormat(url),
+                getWindowLengthInMilSec(), getOverlapInPerc());
+        ExtractorUtils.register(extractorReader, extractors, null);
+        audioReader.readSignal(url, extractorReader);
+
+        return extractorReader;
+    }
 
     /**
      *
@@ -160,17 +179,11 @@ public class WorkExtractorReaderServiceImpl extends ExtractorInputReaderServiceI
         URL inputUrl;
         try {
             inputUrl = inputFile.toURI().toURL();
+            return createReader(extractors, inputUrl);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-        AudioReader audioReader = AudioReaderFactory.createAudioReader();
-        IExtractorInputReader extractorReader = ExtractorsFactory.createReader(
-                audioReader.findAudioFormat(inputUrl),
-                getWindowLengthInMilSec(), getOverlapInPerc());
-        ExtractorUtils.register(extractorReader, extractors, null);
-        audioReader.readSignal(inputUrl, extractorReader);
-
-        return extractorReader;
+        
     }
 
     /**

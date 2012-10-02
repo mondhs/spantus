@@ -42,9 +42,8 @@ import org.spantus.work.services.WorkServiceFactory;
 public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 
     private static final Logger log = Logger.getLogger(WordSpottingServiceImplExp.class);
-    private MarkerDao markerDao;
+
     private WspotJdbcDao wspotDao;
-    private IMarkerService markerService;
     
 
     
@@ -71,8 +70,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        markerDao = WorkServiceFactory.createMarkerDao();
-        markerService = MarkerServiceFactory.createMarkerService();
+       
          wspotDao = new WspotJdbcDao();
     }
 
@@ -180,18 +178,12 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 
     }
     
-    public MarkerDao getMarkerDao() {
-        return markerDao;
-    }
 
-    public IMarkerService getMarkerService() {
-        return markerService;
-    }
 
+
+    
     private Marker findKeyword(File aWavFile) {
-        File markerFile = new File(aWavFile.getParentFile().getAbsoluteFile(),
-                FileUtils.replaceExtention(aWavFile, ".mspnt.xml"));
-        MarkerSetHolder markers = getMarkerDao().read(markerFile);
+        MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
         Marker marker = getMarkerService().findByLabel("-l'-ie-t-|-u-v-oo-s", markers);
         if(marker == null){
             Marker lietMarker = getMarkerService().findByLabel("-l-ie-t", markers);
