@@ -148,9 +148,11 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
     private boolean checkIfAcceptableBellowThreshold(String syllableName, RecognitionResult recognitionResult, List<SignalSegment> existingSyllableSegments) {
         Double mfccVaue = recognitionResult.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
             Double threshold = -Double.MAX_VALUE;
-            if(acceptableSyllableThresholdMap.containsKey(syllableName)){
-                threshold = acceptableSyllableThresholdMap.get(syllableName);
+            //if is not defined do not filter
+            if(!acceptableSyllableThresholdMap.containsKey(syllableName)){
+                return true;
             }
+            threshold = acceptableSyllableThresholdMap.get(syllableName);
             boolean bellowThreshold = mfccVaue<threshold;
             if(!bellowThreshold){
                 LOG.debug("[processEndedSegment] reject syllable {0} and mfcc: {1}",syllableName, mfccVaue);
@@ -260,7 +262,7 @@ public class WordSpottingListenerLogImpl implements WordSpottingListener,IExtrac
         if (corpusServiceWord == null) {
             Assert.isTrue(StringUtils.hasText(repositoryPathWord), "Repository path not set");
             corpusServiceWord = RecognitionServiceFactory.createCorpusServicePartialSearch(repositoryPathWord, 
-                    serviceConfig.getWordDtwRadius());
+                    serviceConfig.getWordDtwRadius(), ExtractorEnum.MFCC_EXTRACTOR.name());
         }
         return corpusServiceWord;
     }

@@ -104,10 +104,17 @@ public abstract class WorkServiceFactory {
 
 	public static WorkExtractorReaderService createExtractorReaderService() {
 		if (extractorReaderService == null) {
-			extractorReaderService = new WorkExtractorReaderServiceImpl();
+			WorkExtractorReaderServiceImpl extractorReaderServiceImpl = new WorkExtractorReaderServiceImpl();
+                        extractorReaderService = extractorReaderServiceImpl;
 		}
 		return extractorReaderService;
 	}
+        public static WorkExtractorReaderService createExtractorReaderService(int windowLengthInMilSec, int overlapInPerc) {
+            WorkExtractorReaderServiceImpl extractorReaderServiceImpl = new WorkExtractorReaderServiceImpl();
+            extractorReaderServiceImpl.setWindowLengthInMilSec(windowLengthInMilSec);
+            extractorReaderServiceImpl.setOverlapInPerc(overlapInPerc);
+            return extractorReaderServiceImpl;
+        }
 	public static ClassifierRuleBaseService createClassifierRuleBaseService() {
 		ClassifierRuleBaseServiceMvelImpl ruleBase = new ClassifierRuleBaseServiceFileMvelImpl();
 		ruleBase.setClusterService(ExtremeOnClassifierServiceFactory.createClusterService());

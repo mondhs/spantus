@@ -243,6 +243,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
         for ( Double en : fv) {
            fv.updateMinMax(en);
         }
+        fv.size();
        return fv;
        
     }

@@ -137,7 +137,9 @@ public class RecognitionMarkerSegmentatorListenerImpl extends MarkerSegmentatorL
     public CorpusService getCorpusService() {
         if (corpusService == null) {
             Assert.isTrue(StringUtils.hasText(repositoryPath), "Repository path not set");
-            corpusService = RecognitionServiceFactory.createCorpusServicePartialSearch(repositoryPath, getServiceConfig().getSyllableDtwRadius());
+            corpusService = RecognitionServiceFactory.createCorpusServicePartialSearch(
+                    repositoryPath, 
+                    getServiceConfig().getSyllableDtwRadius(), ExtractorEnum.MFCC_EXTRACTOR.name());
         }
         return corpusService;
     }

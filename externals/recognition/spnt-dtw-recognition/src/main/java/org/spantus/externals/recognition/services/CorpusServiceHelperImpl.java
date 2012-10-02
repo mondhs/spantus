@@ -21,6 +21,7 @@ import org.spantus.logger.Logger;
 import org.spantus.math.NumberUtils;
 import org.spantus.math.dtw.DtwResult;
 import org.spantus.math.dtw.DtwService;
+import org.spantus.utils.Assert;
 
 public class CorpusServiceHelperImpl {
 	
@@ -234,6 +235,8 @@ public class CorpusServiceHelperImpl {
          */
         public Map<String, IValues> toMap(SignalSegment corpusEntry) {
             Map<String, IValues> target = new HashMap<String, IValues>();
+            Assert.isTrue(corpusEntry != null, "Corpus entry cannot be null");
+            Assert.isTrue(corpusEntry.getFeatureFrameVectorValuesMap() != null, "Corpus entry FrameVectorValuesMap cannot be null");
             for (Entry<String, FrameVectorValuesHolder> featureData : corpusEntry.getFeatureFrameVectorValuesMap().entrySet()) {
                 target.put(featureData.getKey(), featureData.getValue().getValues());
             }

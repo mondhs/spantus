@@ -24,6 +24,7 @@ import javax.sound.sampled.AudioFormat;
 
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.exception.ProcessingException;
+import org.spantus.math.windowing.WindowingEnum;
 /**
  * 
  * @author Mindaugas Greibus
@@ -70,6 +71,7 @@ public abstract class ExtractorConfigUtil {
 		config.setFrameSize(calculateFrameSize( windowSize, windowOverlap, 100));
 //		config.setBitsPerSample(sampleSizeInBits);
 		config.setBufferSize(calculateBufferSize(config.getFrameSize(), 80));
+                config.setWindowing(WindowingEnum.Rectangular.name());
 		return config;
 	}
 	

@@ -65,6 +65,7 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
         //given
         Long length = 1000L * AudioManagerFactory.createAudioManager().findLength(getWavFile().toURI().toURL()).longValue();
         WordSpottingListenerLogImpl listener = new WordSpottingListenerLogImpl(getSearchWord(), getAcceptableSyllables(), repositoryPathWord.getAbsolutePath());
+        listener.setServiceConfig(serviceConfig);
         URL url = getWavFile().toURI().toURL();
         //when 
         long started = System.currentTimeMillis();

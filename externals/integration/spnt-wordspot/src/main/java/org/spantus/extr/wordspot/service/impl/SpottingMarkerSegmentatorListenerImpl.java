@@ -1,19 +1,15 @@
 package org.spantus.extr.wordspot.service.impl;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import com.google.common.collect.Multiset;
-import com.google.common.collect.Ordering;
 import com.google.common.collect.SetMultimap;
 import com.google.common.primitives.Ints;
 import java.lang.String;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,6 +20,7 @@ import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.extractor.IExtractorInputReaderAware;
 import org.spantus.core.marker.Marker;
+import org.spantus.extr.wordspot.dto.SpottingSyllableCtx;
 import org.spantus.extr.wordspot.service.WordSpottingListener;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
@@ -65,7 +62,7 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
         Long availableLength = getExtractorInputReader().getAvailableSignalLengthMs();
         List<RecognitionResult> result = null;
         SpottingSyllableCtx ctx = new SpottingSyllableCtx();
-        for (Long i = -50L; i < 100L; i += 10L) {
+        for (Long i = -50L; i < 50L; i += 10L) {
             aMarker.setStart(initialStart + i);
             Map<String, IValues> mapValues = recalculateFeatures(aMarker);
             result = getCorpusService().findMultipleMatchFull(mapValues);
@@ -76,18 +73,18 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
                 continue;
             }
         }
-        if (ctx.maxDeltaStart != null) {
+        if (ctx.getMaxDeltaStart() != null) {
 //            signalSegment.getMarker().setStart(ctx.maxDeltaStart);
         }
-        if (ctx.minFirstMfccStart != null) {
+        if (ctx.getMinFirstMfccStart() != null) {
             //recalculate if current index not in the range of common syllables(same names);
-            Long tmpMinFirstMfccStart = findMinMfccForMostCommon(ctx.syllableNameMap, ctx.minMfccMap);
-            if(tmpMinFirstMfccStart == null){
-                tmpMinFirstMfccStart = ctx.minFirstMfccStart;
+            Long tmpMinFirstMfccStart = findMinMfccForMostCommon(ctx.getSyllableNameMap(), ctx.getMinMfccMap());
+            if (tmpMinFirstMfccStart == null) {
+                tmpMinFirstMfccStart = ctx.getMinFirstMfccStart();
             }
-                
+
             signalSegment.getMarker().setStart(tmpMinFirstMfccStart);
-            result = ctx.resultMap.get(signalSegment.getMarker().getStart());
+            result = ctx.getResultMap().get(signalSegment.getMarker().getStart());
         }
 //        ctx.printDeltas();
 //        ctx.printMFCC();
@@ -112,23 +109,23 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
         Double firstMfccValue = deltaAndFirstMfccValue.fst();
         Double delta = deltaAndFirstMfccValue.snd();
 
-        ctx.resultMap.put(aMarker.getStart(), result);
+        ctx.getResultMap().put(aMarker.getStart(), result);
 
         if (result == null || result.isEmpty()) {
-            ctx.syllableNameMap.put(aMarker.getStart(), "");
+            ctx.getSyllableNameMap().put(aMarker.getStart(), "");
             return null;//most probably we will not fine anythig here
         }
-        
+
         String name = result.get(0).getInfo().getName();
-        ctx.syllableNameMap.put(aMarker.getStart(), name);
+        ctx.getSyllableNameMap().put(aMarker.getStart(), name);
 
         if (firstMfccValue == null) {
             //do nothing
         } else {
-            ctx.minMfccMap.put(aMarker.getStart(), firstMfccValue);
-            if (ctx.minFirstMfccValue.doubleValue() > firstMfccValue.doubleValue()) {
-                ctx.minFirstMfccValue = firstMfccValue;
-                ctx.minFirstMfccStart = aMarker.getStart();
+            ctx.getMinMfccMap().put(aMarker.getStart(), firstMfccValue);
+            if (ctx.getMinFirstMfccValue().doubleValue() > firstMfccValue.doubleValue()) {
+                ctx.setMinFirstMfccValue(firstMfccValue);
+                ctx.setMinFirstMfccStart(aMarker.getStart());
             }
         }
 
@@ -136,10 +133,10 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
         if (delta == null && result.size() == 1) {
             return false;//only one hit, keep searching
         } else {
-            ctx.maxDeltaMap.put(aMarker.getStart(), delta);
-            if (ctx.maxDelta.doubleValue() < delta.doubleValue()) {
-                ctx.maxDelta = delta;
-                ctx.maxDeltaStart = aMarker.getStart();
+            ctx.getMaxDeltaMap().put(aMarker.getStart(), delta);
+            if (ctx.getMaxDelta().doubleValue() < delta.doubleValue()) {
+                ctx.setMaxDelta(delta);
+                ctx.setMaxDeltaStart(aMarker.getStart());
             }
         }
         return true;
@@ -194,96 +191,31 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
     }
 
     private Long findMinMfccForMostCommon(Map<Long, String> syllableNameMap, Map<Long, Double> minMfccMap) {
-         SetMultimap<Long, String> multimap = Multimaps.forMap(syllableNameMap);
-         Multimap<String, Long> inverse = Multimaps.invertFrom(multimap, HashMultimap.<String,Long> create());
-         if(inverse.keySet().size()==1){
-             //assume already calculated during regular iteration.
-             return null;   
-         }
-         String commonElementKey = inverse.keySet().iterator().next();
-         Long minArg = Long.MAX_VALUE; 
-         Double minVal = Double.MAX_VALUE; 
-         for (Long entry : inverse.get(commonElementKey)) {
-            if(minMfccMap.get(entry) < minVal){
+        SetMultimap<Long, String> multimap = Multimaps.forMap(syllableNameMap);
+        Multimap<String, Long> inverse = Multimaps.invertFrom(multimap, HashMultimap.<String, Long>create());
+        if (inverse.keySet().size() == 1) {
+            //assume already calculated during regular iteration.
+            return null;
+        }
+        ArrayList<Entry<String, Collection<Long>>> entries = new ArrayList<>(inverse.asMap().entrySet());
+
+
+        Collections.sort(entries, new Comparator<Map.Entry<String, Collection<Long>>>() {
+            @Override
+            public int compare(Map.Entry<String, Collection<Long>> e1,
+                    Map.Entry<String, Collection<Long>> e2) {
+                return Ints.compare(e2.getValue().size(), e1.getValue().size());
+            }
+        });
+        Entry<String, Collection<Long>> commonElement = entries.iterator().next();
+        Long minArg = Long.MAX_VALUE;
+        Double minVal = Double.MAX_VALUE;
+        for (Long entry : commonElement.getValue()) {
+            if (minMfccMap.get(entry) < minVal) {
                 minArg = entry;
                 minVal = minMfccMap.get(minArg);
-            } 
-         }
-         return minArg;
-    }
-
-    public class SpottingSyllableCtx {
-
-        Double maxDelta = -Double.MAX_VALUE;
-        Double minFirstMfccValue = Double.MAX_VALUE;
-        Map<Long, String> syllableNameMap = new LinkedHashMap<>();
-        Map<Long, Double> minMfccMap = new LinkedHashMap<>();
-        Map<Long, Double> maxDeltaMap = new LinkedHashMap<>();
-        Long minFirstMfccStart = null;
-        Long maxDeltaStart = null;
-        private Map<Long, List<RecognitionResult>> resultMap = new HashMap<Long, List<RecognitionResult>>();
-
-        public void printDeltas() {
-            printMap("printDeltas", maxDeltaMap);
-        }
-
-        public void printMFCC() {
-            printMap("printMFCC", minMfccMap);
-        }
-
-        public void printSyllableFrequence() {
-             SetMultimap<Long, String> multimap = Multimaps.forMap(syllableNameMap);
-             final Multimap<String, Long> inverse = Multimaps.invertFrom(multimap, HashMultimap.<String,Long> create());
-//            Multimap<String, List<Long>>mmap = sortedByDescendingFrequency(syllableFrequenceMMap);
-            Joiner joiner = Joiner.on("\n").skipNulls();
-            String recognized = joiner.join(Collections2.transform(inverse.keySet(),
-                    new Function<String, String>() {
-                        @Override
-                        public String apply(String input) {
-                            return "" + input + ";" + inverse.get(input).size();
-                        }
-                    }));
-            LOG.error("syllableFrequenceMap" + " \n" + recognized);
-        }
-
-        /**
-         * @return a {@link Multimap} whose entries are sorted by descending
-         * frequency
-         */
-        public <T,K> Multimap<T, K>  sortedByDescendingFrequency(Multimap<T, K> multimap) {
-            // ImmutableMultimap.Builder preserves key/value order
-            ImmutableMultimap.Builder<T, K> result = ImmutableMultimap.builder();
-            for (Multiset.Entry<T> entry : DESCENDING_COUNT_ORDERING.sortedCopy(multimap.keys().entrySet())) {
-                result.putAll(entry.getElement(), multimap.get(entry.getElement()));
             }
-            return result.build();
         }
-
-        protected void printMap(String mapName, Map<Long, Double> theMap) {
-            Joiner joiner = Joiner.on("\n").skipNulls();
-            String recognized = joiner.join(Collections2.transform(theMap.entrySet(),
-                    new Function<Entry<Long, Double>, String>() {
-                        @Override
-                        public String apply(Entry<Long, Double> input) {
-                            return "" + input.getKey() + ";" + input.getValue() + ";" + syllableNameMap.get(input.getKey());
-                        }
-                    }));
-            LOG.error(mapName + " \n" + recognized);
-        }
+        return minArg;
     }
-    /**
-     * An {@link Ordering} that orders {@link Multiset.Entry Multiset entries}
-     * by ascending count.
-     */
-    private static final Ordering<Multiset.Entry<?>> ASCENDING_COUNT_ORDERING = new Ordering<Multiset.Entry<?>>() {
-        @Override
-        public int compare(Multiset.Entry<?> left, Multiset.Entry<?> right) {
-            return Ints.compare(left.getCount(), right.getCount());
-        }
-    };
-    /**
-     * An {@link Ordering} that orders {@link Multiset.Entry Multiset entries}
-     * by descending count.
-     */
-    private static final Ordering<Multiset.Entry<?>> DESCENDING_COUNT_ORDERING = ASCENDING_COUNT_ORDERING.reverse();
 }

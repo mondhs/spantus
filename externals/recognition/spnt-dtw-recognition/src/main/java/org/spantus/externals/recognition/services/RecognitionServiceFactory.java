@@ -52,7 +52,8 @@ public final class RecognitionServiceFactory {
          return corpusService;
       }
      
-          public static CorpusService createCorpusServicePartialSearch(String repositoryPath, Float radius){
+          public static CorpusService createCorpusServicePartialSearch(String repositoryPath, Float radius, 
+                  String... includeExtractors){
 //         if(corpusService == null){
              CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
              
@@ -61,11 +62,11 @@ public final class RecognitionServiceFactory {
              corpusServiceimpl.setJavaMLLocalConstraint(DtwServiceJavaMLImpl.JavaMLLocalConstraint.Angle);
 
              corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
-//             corpusServiceimpl.getIncludeFeatures().add("MFCC_EXTRACTOR");
-//              corpusServiceimpl.getIncludeFeatures().add("LPC_EXTRACTOR");
-//              corpusServiceimpl.getIncludeFeatures().add("FFT_EXTRACTOR");
-         	  CorpusRepositoryFileImpl corpus = new CorpusRepositoryFileImpl();
-         	 corpus.setRepositoryPath(repositoryPath);
+              for (String extractor : includeExtractors) {
+                  corpusServiceimpl.getIncludeFeatures().add(extractor);
+              }
+                CorpusRepositoryFileImpl corpus = new CorpusRepositoryFileImpl();
+         	corpus.setRepositoryPath(repositoryPath);
              corpusServiceimpl.setCorpus(corpus);
              corpusService = corpusServiceimpl;
 //         }

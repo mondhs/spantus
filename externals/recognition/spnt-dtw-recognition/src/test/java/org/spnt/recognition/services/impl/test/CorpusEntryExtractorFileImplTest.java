@@ -44,10 +44,10 @@ public class CorpusEntryExtractorFileImplTest {
       
        List<SignalSegment> entries = extractor.extractInMemory(filePath);
        //then
-       Assert.assertEquals("entries: " , 10, entries.size());
+       Assert.assertEquals("entries: " , 11, entries.size());
     }
-    
      @Test 
+    
     public void testSegmentExtractAndSave(){
          //given
        File filePath = new File(path, FILE_TEST);
