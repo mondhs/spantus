@@ -63,12 +63,12 @@ public class FFTExtractor extends AbstractExtractorVector {
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameValues calculatedTempValues = window;
 		FrameVectorValues calculatedValues = new FrameVectorValues();
-		
-//		float sampleRate = getConfig().getSampleRate();
-		
+        //		float sampleRate = getConfig().getSampleRate();
+                Long frameIndex = window.getFrameIndex();
+                frameIndex = frameIndex == null?0L:frameIndex;
 		
 		List<Double> fftOutput = getFftService().calculateFFTMagnitude(
-                window.getFrameIndex(),
+                frameIndex,
                 calculatedTempValues, window.getSampleRate());
 //		int upperLimit = (int)(getUpperFrequency()*fftOutput.size()/getConfig().getSampleRate());
 //		upperLimit = Math.min(upperLimit, fftOutput.size());

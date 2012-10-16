@@ -24,13 +24,13 @@ import org.spantus.externals.recognition.services.CorpusServiceBaseImpl;
 import org.spantus.externals.recognition.services.impl.CorpusEntryExtractorTextGridMapImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.segment.SegmentationServiceImpl;
 import org.spantus.utils.FileUtils;
 import org.spantus.utils.StringUtils;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import org.spantus.math.dtw.JavaMLSearchWindow;
 
 public class MultiMapper {
 

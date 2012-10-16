@@ -263,7 +263,7 @@ public final class AbeelDTW {
             throw new InternalError("ERROR:  cannot calculate the distance between vectors of different sizes.");
         double sqSum = 0.0D;
         for (int x = 0; x < vector1.length; x++){
-        	double diff=vector1[x]-vector2[x];
+            double diff=vector1[x]-vector2[x];
             sqSum+=diff*diff;
         }
         return Math.sqrt(sqSum);

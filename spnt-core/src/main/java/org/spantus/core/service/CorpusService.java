@@ -14,7 +14,7 @@ public interface CorpusService {
 
 	public RecognitionResult match(Map<String, IValues> featureDataMap);
 	/**
-	 * find mutliple matches
+	 * find multiple matches
 	 * @param featureDataMap
 	 * @return
 	 */

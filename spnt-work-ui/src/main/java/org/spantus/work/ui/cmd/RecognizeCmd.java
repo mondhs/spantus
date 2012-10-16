@@ -60,9 +60,8 @@ public class RecognizeCmd extends AbsrtactCmd {
         Marker marker = markerPair.snd();
 
         Map<String, IValues> fvv = getExtractorReaderService().recalcualteValues(getReader(), marker);
-//        getExtractorReaderService().findAllVectorValuesForMarker(
-//                getReader(),
-//                marker);
+
+      
 
         List<RecognitionResult> results = getMatchingService().findMultipleMatch(
                 markerPair.fst().getMarkerSetType(),

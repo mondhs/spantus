@@ -13,7 +13,8 @@ import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.service.CorpusService;
 import org.spantus.externals.recognition.bean.CorpusFileEntry;
 import org.spantus.externals.recognition.corpus.CorpusRepositoryFileImpl;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl;
+import org.spantus.math.dtw.JavaMLLocalConstraint;
+import org.spantus.math.dtw.JavaMLSearchWindow;
 
 /**
  *
@@ -58,8 +59,8 @@ public final class RecognitionServiceFactory {
              CorpusServiceBaseImpl corpusServiceimpl = new CorpusServiceBaseImpl();
              
              corpusServiceimpl.setSearchRadius(radius);
-             corpusServiceimpl.setJavaMLSearchWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ParallelogramWindow);
-             corpusServiceimpl.setJavaMLLocalConstraint(DtwServiceJavaMLImpl.JavaMLLocalConstraint.Angle);
+             corpusServiceimpl.setJavaMLSearchWindow(JavaMLSearchWindow.ParallelogramWindow);
+             corpusServiceimpl.setJavaMLLocalConstraint(JavaMLLocalConstraint.Angle);
 
              corpusServiceimpl.setIncludeFeatures(new HashSet<String>());
               for (String extractor : includeExtractors) {

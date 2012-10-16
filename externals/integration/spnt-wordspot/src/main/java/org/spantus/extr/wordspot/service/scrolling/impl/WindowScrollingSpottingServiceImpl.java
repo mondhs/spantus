@@ -35,6 +35,7 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
     private WorkExtractorReaderService extractorReaderService;
     private CorpusService corpusService;
     private SignalSegment keySegment;
+    private long delta = 10;
     /**
      * 
      * @param urlFile
@@ -44,9 +45,9 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
     public void wordSpotting(URL urlFile, SpottingListener spottingListener) {
         SpottingSyllableCtx ctx = new SpottingSyllableCtx();
         ctx.setMinFirstMfccValue(Double.MAX_VALUE);
-        IExtractorInputReader aReader = getExtractorReaderService().createReader(new ExtractorEnum[]{ExtractorEnum.SIGNAL_EXTRACTOR}, urlFile);
+        IExtractorInputReader aReader = createReader(urlFile);
         long availableStartMs = aReader.getAvailableSignalLengthMs() - keySegment.getMarker().getLength();
-        for (long start = 10; start < availableStartMs; start += 10) {
+        for (long start = 10; start < availableStartMs; start += delta) {
             Marker iMarker = new Marker();
             iMarker.setStart(start);
             iMarker.setLength(keySegment.getMarker().getLength());
@@ -55,28 +56,9 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
                 continue;
             }
             List<RecognitionResult> result = match(segment);
-            if (result.size() > 0) {
-                RecognitionResult first = null;
-                for (RecognitionResult recognitionResult : result) {
-                    if (keySegment.getMarker().getLabel().equals(
-                            recognitionResult.getInfo().getName())) {
-                        first = recognitionResult;
-                    }
-                }
-                if (first == null) {
-                    continue;
-                }
-                String name = first.getInfo().getName();
-                Double firstMfccValue = first.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
-                ctx.getResultMap().put(iMarker.getStart(), result);
-                ctx.getSyllableNameMap().put(iMarker.getStart(), name);
-                ctx.getMinMfccMap().put(iMarker.getStart(), firstMfccValue);
-                if(ctx.getMinFirstMfccValue().doubleValue()>firstMfccValue.doubleValue()){
-                    ctx.setMinFirstMfccValue(firstMfccValue);
-                    ctx.setMinFirstMfccStart(iMarker.getStart());
-                }
+            if(processAndContinue(result, ctx, start)){
+                continue;
             }
-            result.size();
         }
         //        ctx.printDeltas();
         ctx.printMFCC();
@@ -88,11 +70,55 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
                 keySegment.getMarker().getLabel())), null);
     }
     /**
+     * Friendly method for testing
+     * @param urlFile
+     * @return 
+     */
+    public IExtractorInputReader createReader(URL urlFile) {
+       return getExtractorReaderService().createReader(new ExtractorEnum[]{ExtractorEnum.SIGNAL_EXTRACTOR}, urlFile);
+    }
+    
+        private boolean processAndContinue(List<RecognitionResult> result, 
+                SpottingSyllableCtx ctx,
+                Long start) {
+            if (result.isEmpty()) {
+                return false;
+            }
+            RecognitionResult firstMatch = null;
+            RecognitionResult firstGoodMatch = null;
+            for (RecognitionResult recognitionResult : result) {
+                if(firstMatch == null){
+                    firstMatch = recognitionResult;
+                }
+                if (keySegment.getMarker().getLabel().equals(
+                        recognitionResult.getInfo().getName())) {
+                    firstGoodMatch = recognitionResult;
+                    break;
+                }
+            }
+            if (firstGoodMatch == null) {
+                return true;
+            }
+            String name = firstMatch.getInfo().getName();
+            Double firstMfccValue = firstMatch.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+            ctx.getResultMap().put(start, result);
+            ctx.getSyllableNameMap().put(start, name);
+            ctx.getMinMfccMap().put(start, firstMfccValue);
+            if(ctx.getMinFirstMfccValue().doubleValue()>firstMfccValue.doubleValue()){
+                ctx.setMinFirstMfccValue(firstMfccValue);
+                ctx.setMinFirstMfccStart(start);
+            }
+            return false;
+        }
+
+    
+    /**
+     * 
      * 
      * @param segment
      * @return 
      */
-    protected List<RecognitionResult> match(SignalSegment segment) {
+    public List<RecognitionResult> match(SignalSegment segment) {
         List<RecognitionResult> result = getCorpusService().findMultipleMatchFull(segment);
 
         if (result == null) {
@@ -102,12 +128,13 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
         return result;
     }
     /**
+     * Friendly method for testing
      * 
      * @param theExtractorReader
      * @param theMarker
      * @return 
      */
-    protected SignalSegment recalculateFeatures(IExtractorInputReader theExtractorReader, Marker theMarker) {
+    public SignalSegment recalculateFeatures(IExtractorInputReader theExtractorReader, Marker theMarker) {
         Map<String, IValues> fvv = getExtractorReaderService().recalcualteValues(theExtractorReader,
                 theMarker,
                 ExtractorEnum.MFCC_EXTRACTOR.name());
@@ -150,6 +177,18 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
     public void setKeySegment(SignalSegment keySegment) {
         this.keySegment = keySegment;
     }
+
+    public long getDelta() {
+        return delta;
+    }
+
+    public void setDelta(long delta) {
+        this.delta = delta;
+    }
+    
+    
+
+
     
     
 }

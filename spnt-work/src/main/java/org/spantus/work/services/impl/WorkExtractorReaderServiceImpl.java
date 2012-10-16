@@ -308,7 +308,7 @@ public class WorkExtractorReaderServiceImpl extends ExtractorInputReaderServiceI
             if (window != null) {
                 windowing.apply(window);
                 for (IGeneralExtractor generalExtractor : extractorSet) {
-                    IValues recalculatedValues = generalExtractor.calculateWindow(sample, window);
+                    IValues recalculatedValues = generalExtractor.calculateWindow(sample, new FrameValues(window));
                     if(rtnMap.get(generalExtractor.getName())==null){
                         rtnMap.put(generalExtractor.getName(), recalculatedValues);
                     }else{

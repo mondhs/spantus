@@ -62,8 +62,12 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
         Long availableLength = getExtractorInputReader().getAvailableSignalLengthMs();
         List<RecognitionResult> result = null;
         SpottingSyllableCtx ctx = new SpottingSyllableCtx();
-        for (Long i = -50L; i < 50L; i += 10L) {
+        for (Long i = -50L; i < 150L; i += 20L) {
             aMarker.setStart(initialStart + i);
+            if(aMarker.getEnd()>availableLength){
+                break;
+            }
+
             Map<String, IValues> mapValues = recalculateFeatures(aMarker);
             result = getCorpusService().findMultipleMatchFull(mapValues);
             Boolean processes = processResult(ctx, result, aMarker);
@@ -83,17 +87,17 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
                 tmpMinFirstMfccStart = ctx.getMinFirstMfccStart();
             }
 
-            signalSegment.getMarker().setStart(tmpMinFirstMfccStart);
-            result = ctx.getResultMap().get(signalSegment.getMarker().getStart());
+            aMarker.setStart(tmpMinFirstMfccStart);
+            result = ctx.getResultMap().get(aMarker.getStart());
         }
 //        ctx.printDeltas();
 //        ctx.printMFCC();
 //        ctx.printSyllableFrequence();
-        if (LOG.isDebugMode() && signalSegment.getMarker().getStart() > SpottingDebug.EXPECTED_BREAKPOINT) {
+        if (LOG.isDebugMode() && aMarker.getStart() > SpottingDebug.EXPECTED_BREAKPOINT) {
             LOG.debug("break point should go here");
         }
 
-        wordSpottingListener.foundSegment(sourceId, signalSegment, result);
+        wordSpottingListener.foundSegment(sourceId, new SignalSegment(aMarker), result);
         return null;
     }
 

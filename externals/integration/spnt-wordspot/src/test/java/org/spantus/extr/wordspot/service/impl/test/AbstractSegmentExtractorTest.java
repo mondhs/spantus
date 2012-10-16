@@ -15,18 +15,24 @@ import org.spantus.work.services.WorkServiceFactory;
 public abstract class AbstractSegmentExtractorTest {
 
     private SegmentExtractorServiceImpl segmentExtractorService;
-    private File repositoryPathRoot = new File("../../../data");
-    private File wavFile = new File(repositoryPathRoot, "text1-8000.wav");
-    private File repositoryPath = new File(repositoryPathRoot,"CORPUS/phone");
+    private File repositoryPathRoot;
+    private File wavFile;
+    private File repositoryPath;
     private MarkerDao markerDao;
     private IMarkerService markerService;
     protected SegmentExtractorServiceConfig serviceConfig = new SegmentExtractorServiceConfig();
         
 
+    protected void setUpPath() throws Exception {
+        repositoryPathRoot = new File("../../../data");
+        wavFile = new File(repositoryPathRoot, "text1-8000.wav");
+        repositoryPath = new File(repositoryPathRoot,"CORPUS/phone");
+    }
 
 
     @Before
     public void setUp() throws Exception {
+        setUpPath();
         Assert.assertTrue("repositoryPath exists", getRepositoryPath().exists());
         Assert.assertTrue("repositoryPath is directory", getRepositoryPath().isDirectory());
         Assert.assertTrue("wavFile not exists", getWavFile().exists());

@@ -30,8 +30,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.spantus.logger.Logger;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLLocalConstraint;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
 import org.spantus.ui.MapComboBoxModel;
 import org.spantus.ui.ModelEntry;
 import org.spantus.work.ui.container.ReloadableComponent;
@@ -40,6 +38,8 @@ import org.spantus.work.ui.dto.RecognitionConfig;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.FormLayout;
+import org.spantus.math.dtw.JavaMLLocalConstraint;
+import org.spantus.math.dtw.JavaMLSearchWindow;
 /**
  * Window(Feature) Option Panel
  * 

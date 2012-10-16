@@ -38,7 +38,8 @@ import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.core.beans.I18n;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl;
+import org.spantus.math.dtw.JavaMLLocalConstraint;
+import org.spantus.math.dtw.JavaMLSearchWindow;
 import org.spantus.work.ui.dto.RecognitionConfig;
 import org.spantus.work.ui.i18n.I18nFactory;
 import org.spantus.work.ui.services.WorkInfoManager;
@@ -121,8 +122,8 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
 		project.getFeatureReader().setReaderPerspective(WorkReadersEnum.multiFeature);
 		project.getFeatureReader().setWorkConfig(new WorkUIExtractorConfig());
                 project.getRecognitionConfig().setRepositoryPath("./corpus");
-                project.getRecognitionConfig().setDtwWindow(DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow.name());
-                project.getRecognitionConfig().setLocalConstraint(DtwServiceJavaMLImpl.JavaMLLocalConstraint.Angle.name());
+                project.getRecognitionConfig().setDtwWindow(JavaMLSearchWindow.ExpandedResWindow.name());
+                project.getRecognitionConfig().setLocalConstraint(JavaMLLocalConstraint.Angle.name());
                 project.getRecognitionConfig().setRadius(15F);
                 
                 initializeExperimentId(project);
@@ -141,11 +142,11 @@ public abstract class AbstractWorkInfoManager implements WorkInfoManager {
                 }
                 if(!StringUtils.hasText(recognition.getDtwWindow())){
                     recognition.setDtwWindow(
-                            DtwServiceJavaMLImpl.JavaMLSearchWindow.ExpandedResWindow.name());
+                            JavaMLSearchWindow.ExpandedResWindow.name());
                 }
                 if(!StringUtils.hasText(recognition.getDtwWindow())){
                     recognition.setLocalConstraint(
-                            DtwServiceJavaMLImpl.JavaMLLocalConstraint.Angle.name());
+                            JavaMLLocalConstraint.Angle.name());
                 }
                 if(recognition.getRadius() == null){
                     recognition.setRadius(15F);

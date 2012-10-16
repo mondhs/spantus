@@ -55,15 +55,6 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
                     return Longs.compare(left.getValue().getMarker().getStart(),
                             right.getValue().getMarker().getStart());
                 }
-//
-//            @Override
-//            public int compare(Entry<RecognitionResult, SignalSegment> left,
-//                Entry<RecognitionResult, SignalSegment> right) {
-//                Longs.compare(left.getValue().getMarker().getStart(),
-//                        right.getValue().getMarker().getStart());
-//            }
-//            
-//        
             };
 
     @Before
@@ -82,7 +73,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
                 "/home/as/tmp/garsynas.lietuvos-syn-wopitch//TEST"
                 ;
         String fileName =
-                                "RAj031004_13_11b-30_1.wav"
+                                "RZj0815_13_23-30_1.wav"
                 //                "RAj031004_13_16a-30_1.wav"
                 //                "RAj031013_18_24a-30_1.wav"
 //                "RCz041110_18_29-30_1.wav"
@@ -96,7 +87,8 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
         setAcceptableSyllables(new String[]{"liet", "tuvos"});
         setSearchWord("lietuvos");
     }
-    @Ignore 
+    
+     @Ignore
     @Test
     @Category(SlowTests.class)
     @Override
@@ -130,11 +122,11 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
         List<AssertionError> list = new ArrayList<>();
         int foundSize = 0;
         for (File file : files) {
-            if(!file.getName().contains(
-                    "RZd0706_18_06-30_1.wav"
-                    )){
-                continue;
-            }
+//            if(!file.getName().contains(
+//                    "RZd0706_18_06-30_1.wav"
+//                    )){
+//                continue;
+//            }
              log.debug("start: " + file);
                 WordSpotResult result = doWordspot(file);
                 wspotDao.save(result);

@@ -12,7 +12,6 @@ import java.util.Set;
 import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.IValues;
-import org.spantus.core.beans.FrameValuesHolder;
 import org.spantus.core.beans.FrameVectorValuesHolder;
 import org.spantus.core.beans.IValueHolder;
 import org.spantus.core.beans.RecognitionResult;
@@ -26,8 +25,8 @@ import org.spantus.logger.Logger;
 import org.spantus.math.NumberUtils;
 import org.spantus.math.dtw.DtwResult;
 import org.spantus.math.dtw.DtwService;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLLocalConstraint;
-import org.spantus.math.dtw.DtwServiceJavaMLImpl.JavaMLSearchWindow;
+import org.spantus.math.dtw.JavaMLLocalConstraint;
+import org.spantus.math.dtw.JavaMLSearchWindow;
 import org.spantus.math.services.MathServicesFactory;
 
 /**

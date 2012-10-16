@@ -384,7 +384,8 @@ public final class ExtractorUtils {
 	}
 
 	public static FFTExtractor createFftExtractor() {
-		return new FFTExtractorCached();
+		new FFTExtractorCached();
+                return new FFTExtractor();
 	}
 	public static MFCCExtractor createMFCCExtractor() {
 		return new MFCCExtractorCached();

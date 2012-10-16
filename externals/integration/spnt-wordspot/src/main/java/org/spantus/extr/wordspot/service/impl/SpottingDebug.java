@@ -9,5 +9,5 @@ package org.spantus.extr.wordspot.service.impl;
  * @author as
  */
 public class SpottingDebug {
-     public static long EXPECTED_BREAKPOINT = 100;
+     public static long EXPECTED_BREAKPOINT = 169;
 }

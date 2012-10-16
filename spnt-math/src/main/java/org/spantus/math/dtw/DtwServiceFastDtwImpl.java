@@ -1,25 +1,24 @@
 package org.spantus.math.dtw;
 
+import com.dtw.FastDTW;
+import com.dtw.FullWindow;
+import com.dtw.LinearWindow;
+import com.dtw.ParallelogramWindow;
+import com.timeseries.TimeSeries;
+import com.timeseries.TimeSeriesPoint;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
-import org.spantus.math.dtw.abeel.dtw.AbeelDTW;
-import org.spantus.math.dtw.abeel.dtw.TimeWarpInfo;
-import org.spantus.math.dtw.abeel.dtw.WarpPath;
-import org.spantus.math.dtw.abeel.dtw.constraint.AngleLocalConstaints;
-import org.spantus.math.dtw.abeel.dtw.constraint.DefaultLocalConstaints;
-import org.spantus.math.dtw.abeel.dtw.constraint.LocalConstaints;
-import org.spantus.math.dtw.abeel.dtw.constraint.WideLocalConstaints;
-import org.spantus.math.dtw.abeel.dtw.window.FullWindow;
-import org.spantus.math.dtw.abeel.dtw.window.LinearWindow;
-import org.spantus.math.dtw.abeel.dtw.window.ParallelogramWindow;
-import org.spantus.math.dtw.abeel.dtw.window.SearchWindow;
-import org.spantus.math.dtw.abeel.dtw.window.WarpPathWindow;
-import org.spantus.math.dtw.abeel.matrix.ColMajorCell;
-import org.spantus.math.dtw.abeel.timeseries.PAA;
-import org.spantus.math.dtw.abeel.timeseries.TimeSeries;
-import org.spantus.math.services.javaml.JavaMLSupport;
+import org.spantus.math.VectorUtils;
+import com.dtw.SearchWindow;
+import com.dtw.TimeWarpInfo;
+import com.dtw.WarpPath;
+import com.dtw.WarpPathWindow;
+import com.matrix.ColMajorCell;
+import com.timeseries.PAA;
+import com.util.DistanceFunction;
+import com.util.DistanceFunctionFactory;
 
 /**
  * 
@@ -28,20 +27,44 @@ import org.spantus.math.services.javaml.JavaMLSupport;
  * @since 0.0.1 Created Apr 30, 2009
  * 
  */
-public class DtwServiceJavaMLImpl implements DtwService {
+public class DtwServiceFastDtwImpl implements DtwService {
+    public static final String DISTANCE_FUNCTION_NAME = 
+            "ManhattanDistance";
+//            "EuclideanDistance";
 
 	private JavaMLSearchWindow searchWindow;
 	private Float searchRadius;
 	private JavaMLLocalConstraint localConstaints;
 
 
+
+
 	public static final float DEFAULT_RADIUS = 10;
 
+        
+        public static TimeSeries toTimeSeries(List<Double> values) {
+		TimeSeries ts = new TimeSeries(values);
+		return ts;
+	}
+
+	public static TimeSeries toTimeSeries(List<List<Double>> matrix,
+			int numOfDimensions) {
+		TimeSeries ts = new TimeSeries(numOfDimensions);
+		double i = 1;
+		for (List<Double> values : matrix) {
+			Collection<Double> doubles = VectorUtils.toDoubleList(values);
+			TimeSeriesPoint tsp = new TimeSeriesPoint(doubles);
+			ts.addLast(i++, tsp);
+		}
+		
+		return ts;
+	}
+        
 	public Double calculateDistance(List<Double> targetVector,
 			List<Double> sampleVector) {
 
-		TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetVector);
-		TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleVector);
+		TimeSeries tsTarget = toTimeSeries(targetVector);
+		TimeSeries tsSample = toTimeSeries(sampleVector);
 
 		Double info = null;
 		SearchWindow searchWindowInstance = null;
@@ -52,8 +75,9 @@ public class DtwServiceJavaMLImpl implements DtwService {
 		} else {
 			searchWindowInstance = createSearchWindow(tsTarget, tsSample, getLocalConstaints());
 		}
-		info = AbeelDTW.getWarpDistBetween(tsTarget, tsSample,
-				searchWindowInstance);
+                DistanceFunction distFn = DistanceFunctionFactory.getDistFnByName(DISTANCE_FUNCTION_NAME); 
+		info = FastDTW.getWarpDistBetween(tsTarget, tsSample,
+				distFn);
 
 		return info;
 	}
@@ -66,8 +90,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
 
 	public Double calculateDistanceVector(List<List<Double>> targetMatrix,
             List<List<Double>> sampleMatrix) {
-        TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
-        TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetMatrix, targetMatrix.get(0).size());
+        TimeSeries tsSample = toTimeSeries(sampleMatrix, sampleMatrix.get(0).size());
+        TimeSeries tsTarget = toTimeSeries(targetMatrix, targetMatrix.get(0).size());
 
         Double info = null;
         SearchWindow searchWindowInstance = null;
@@ -78,7 +102,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
             searchWindowInstance = createSearchWindow(tsTarget, tsSample, getLocalConstaints());
           
         }
-        info = AbeelDTW.getWarpDistBetween(tsTarget, tsSample, searchWindowInstance);
+        DistanceFunction distFn = DistanceFunctionFactory.getDistFnByName(DISTANCE_FUNCTION_NAME); 
+        info = FastDTW.getWarpDistBetween(tsTarget, tsSample, distFn);
         return info;
 
     }
@@ -91,8 +116,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
 	 */
 	public DtwResult calculateInfo(List<Double> targetVector,
 			List<Double> sampleVector) {
-		TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetVector);
-		TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleVector);
+		TimeSeries tsTarget = toTimeSeries(targetVector);
+		TimeSeries tsSample = toTimeSeries(sampleVector);
 
 		TimeWarpInfo info = null;
 		SearchWindow searchWindowInstance = null;
@@ -104,9 +129,9 @@ public class DtwServiceJavaMLImpl implements DtwService {
 					tsSample, getLocalConstaints());
 			
 		}
-
-		info = AbeelDTW.getWarpInfoBetween(tsTarget, tsSample,
-				searchWindowInstance);
+                DistanceFunction distFn = DistanceFunctionFactory.getDistFnByName(DISTANCE_FUNCTION_NAME);     
+		info = FastDTW.getWarpInfoBetween(tsTarget, tsSample, 3,
+				distFn);
 		DtwResult result = newDtwResult(info);
 		return result;
 	}
@@ -119,9 +144,9 @@ public class DtwServiceJavaMLImpl implements DtwService {
 	 */
 	public DtwResult calculateInfoVector(List<List<Double>> targetMatrix,
 			List<List<Double>> sampleMatrix) {
-		TimeSeries tsSample = JavaMLSupport.toTimeSeries(sampleMatrix,
+		TimeSeries tsSample = toTimeSeries(sampleMatrix,
 				sampleMatrix.get(0).size());
-		TimeSeries tsTarget = JavaMLSupport.toTimeSeries(targetMatrix,
+		TimeSeries tsTarget = toTimeSeries(targetMatrix,
 				targetMatrix.get(0).size());
 
 		TimeWarpInfo info = null;
@@ -134,8 +159,9 @@ public class DtwServiceJavaMLImpl implements DtwService {
 					tsSample, getLocalConstaints());
 			
 		}
-		info = AbeelDTW.getWarpInfoBetween(tsTarget, tsSample,
-				searchWindowInstance);
+                DistanceFunction distFn = DistanceFunctionFactory.getDistFnByName(DISTANCE_FUNCTION_NAME); 
+		info = FastDTW.getWarpInfoBetween(tsTarget, tsSample, 3,
+				distFn);
 		DtwResult result = newDtwResult(info);
 		return result;
 
@@ -148,8 +174,8 @@ public class DtwServiceJavaMLImpl implements DtwService {
 	private DtwResult newDtwResult(TimeWarpInfo info) {
 		DtwResult result = new DtwResult();
 		result.setResult(info.getDistance());
-		result.setCostMatrix(info.getCostMatrix());
-		result.setStatisticalSummary(info.getStatisticalSummary());
+//		result.setCostMatrix(info.getCostMatrix());
+//		result.setStatisticalSummary(info.getStatisticalSummary());
 
 		if(info.getPath() != null){
 			for (int i = 1; i < info.getPath().size() ; i++) {
@@ -201,32 +227,35 @@ public class DtwServiceJavaMLImpl implements DtwService {
 			PAA shrunkSample = new PAA(tsSample, (int) Math.round(Math
 					.sqrt((double) tsSample.size())));
 
-			WarpPath coarsePath = AbeelDTW.getWarpPathBetween(shrunkTarget,
-					shrunkSample,createSearchWindow(shrunkTarget, shrunkSample, null,
-							JavaMLSearchWindow.FullWindow, localConstaints));
+                        DistanceFunction distFn = DistanceFunctionFactory.getDistFnByName(DISTANCE_FUNCTION_NAME); 
+                        
+                        //createSearchWindow(shrunkTarget, shrunkSample, null, JavaMLSearchWindow.FullWindow, localConstaints)
+                        
+			WarpPath coarsePath = FastDTW.getWarpPathBetween(shrunkTarget,
+					shrunkSample,distFn);
 			WarpPath expandedPath = expandPath(coarsePath, shrunkTarget,
 					shrunkSample);
 			searchWindowObj = new WarpPathWindow(expandedPath, radius);
 		}
 		
 		
-		searchWindowObj.setLocalConstaints(createLocalConstraint(localConstaints));
+//		searchWindowObj.setLocalConstaints(createLocalConstraint(localConstaints));
 		return searchWindowObj;
 	}
 
-	private static LocalConstaints createLocalConstraint(
-			JavaMLLocalConstraint localConstaints) {
-		switch (localConstaints) {
-		case Default:
-			return new DefaultLocalConstaints();
-		case Angle:
-			return new AngleLocalConstaints();
-		case Wide:
-			return new WideLocalConstaints();
-		default:
-			throw new IllegalArgumentException("Not Implemented");
-		}
-	}
+//	private static LocalConstaints createLocalConstraint(
+//			JavaMLLocalConstraint localConstaints) {
+//		switch (localConstaints) {
+//		case Default:
+//			return new DefaultLocalConstaints();
+//		case Angle:
+//			return new AngleLocalConstaints();
+//		case Wide:
+//			return new WideLocalConstaints();
+//		default:
+//			throw new IllegalArgumentException("Not Implemented");
+//		}
+//	}
 
 	public JavaMLSearchWindow getSearchWindow() {
 		return searchWindow;

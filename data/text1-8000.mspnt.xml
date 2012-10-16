@@ -425,7 +425,7 @@
           <org.spantus.extractor.segments.offline.ExtremeSegment>
             <start>1130</start>
             <length>371</length>
-            <label>žodž</label>
+            <label>zodz</label>
             <startEntry reference="../../org.spantus.extractor.segments.offline.ExtremeSegment[4]/endEntry"/>
             <peakEntry>
               <index>414</index>

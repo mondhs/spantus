@@ -196,6 +196,7 @@ public class FrameValues extends LinkedList<Double> implements IValues, List<Dou
 			maxValue = Math.max(maxValue, value);
 		}
 	}
+        
         public int getDimention() {
             return 1;
         }
