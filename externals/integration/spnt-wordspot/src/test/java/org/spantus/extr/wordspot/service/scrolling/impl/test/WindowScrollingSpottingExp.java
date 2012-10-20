@@ -27,13 +27,18 @@ import org.spantus.extractor.impl.ExtractorEnum;
  */
 public class WindowScrollingSpottingExp extends WindowScrollingSpottingTest {
 
+    
     @Override
-    protected void setUpPath() throws Exception {
-        super.setUpPath();
-        setRepositoryPathRoot(new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch"));
-        setWavFile(new File(getRepositoryPathRoot(), "TRAIN/lietuvos_mbr_test-30_1.wav"));
-        setRepositoryPath(new File(getRepositoryPathRoot(), "CORPUS/phone"));
+    protected File createRepositoryPathRoot(){
+        return  new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
     }
+    
+    @Override
+     protected File createWavFile(File aRepositoryPathRoot){
+        return  new File(aRepositoryPathRoot,"TRAIN/lietuvos_mbr_test-30_1.wav");
+    }
+
+    
 
     @Override
     protected Marker findByLabel(MarkerSetHolder markers) {

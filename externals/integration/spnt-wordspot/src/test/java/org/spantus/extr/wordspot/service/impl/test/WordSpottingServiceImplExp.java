@@ -61,18 +61,23 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-       
-         wspotDao = new WspotJdbcDao();
+        setSearchWord("lietuvos");
+        setAcceptableSyllables(new String[]{"liet", "tuvos"});
+        wspotDao = new WspotJdbcDao();
     }
 
     @Override
-    protected void setUpPath() throws Exception {
-        super.setUpPath();
-        String path =
+    protected File createRepositoryPathRoot() {
+                String rootPath = "/TEST/"
 //                "/tmp/test" //                
 //                "/home/as/tmp/garsynas.lietuvos-syn-wpitch/TEST/"
-                "/home/as/tmp/garsynas.lietuvos-syn-wopitch//TEST"
-                ;
+//                "/home/as/tmp/garsynas.lietuvos-syn-wopitch//TEST"
+                   ;
+        return new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
+    }
+
+    @Override
+    protected File createWavFile(File aRepositoryPathRoot) {
         String fileName =
                                 "RZj0815_13_23-30_1.wav"
                 //                "RAj031004_13_16a-30_1.wav"
@@ -83,13 +88,15 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 //                "RBp031123_13_29-30_1.wav"
 //                "lietuvos_mbr_test-30_1.wav"
                 ;
-        setWavFile(new File(path, fileName));
-        setRepositoryPathRoot(new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/"));
-        setAcceptableSyllables(new String[]{"liet", "tuvos"});
-        setSearchWord("lietuvos");
+        return new File(aRepositoryPathRoot, fileName);
     }
     
-     @Ignore
+    
+    
+
+
+    
+
     @Test
     @Category(SlowTests.class)
     @Override
@@ -112,7 +119,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
     }
 
 
-
+    @Ignore
     @Test
     @Category(SlowTests.class)
     public void bulkTest() throws MalformedURLException {

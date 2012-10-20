@@ -23,16 +23,24 @@ public abstract class AbstractSegmentExtractorTest {
     protected SegmentExtractorServiceConfig serviceConfig = new SegmentExtractorServiceConfig();
         
 
-    protected void setUpPath() throws Exception {
-        repositoryPathRoot = new File("../../../data");
-        wavFile = new File(repositoryPathRoot, "text1-8000.wav");
-        repositoryPath = new File(repositoryPathRoot,"CORPUS/phone");
+    protected File createRepositoryPathRoot(){
+        return  new File("../../../data");
     }
-
+    
+    protected File createRepositoryPath(File aRepositoryPathRoot){
+        return  new File(aRepositoryPathRoot,"CORPUS/phone");
+    }
+    
+     protected File createWavFile(File aRepositoryPathRoot){
+        return  new File(aRepositoryPathRoot,"text1-8000.wav");
+    }
 
     @Before
     public void setUp() throws Exception {
-        setUpPath();
+        repositoryPathRoot =createRepositoryPathRoot();
+        wavFile = createWavFile(repositoryPathRoot);
+        repositoryPath = createRepositoryPath(repositoryPathRoot);
+
         Assert.assertTrue("repositoryPath exists", getRepositoryPath().exists());
         Assert.assertTrue("repositoryPath is directory", getRepositoryPath().isDirectory());
         Assert.assertTrue("wavFile not exists", getWavFile().exists());

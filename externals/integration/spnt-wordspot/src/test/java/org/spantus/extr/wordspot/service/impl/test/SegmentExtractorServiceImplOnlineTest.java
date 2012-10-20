@@ -66,10 +66,10 @@ public class SegmentExtractorServiceImplOnlineTest extends AbstractSegmentExtrac
         Map<String, FrameVectorValuesHolder> vectorMap = result.get(0).getFeatureFrameVectorValuesMap();
 
         Assert.assertNotNull("First segment", result.get(0).getMarker());
-        Assert.assertEquals("First segment starts", result.get(0).getMarker().getStart(), 259, 0);
-        Assert.assertEquals("First segment length", result.get(0).getMarker().getEnd(), 429, 1);
+        Assert.assertEquals("First segment starts", 246, result.get(0).getMarker().getStart(),  0);
+        Assert.assertEquals("First segment length", 429, result.get(0).getMarker().getEnd(),  1);
         Assert.assertEquals("Extracted feature", 2, valueMap.size());
-        Assert.assertEquals("Extracted feature length", 56, valueMap.get("smooth_" + ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
+        Assert.assertEquals("Extracted feature length", 60, valueMap.get("smooth_" + ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
         Assert.assertEquals("Extracted vector feature", 1, vectorMap.size());
 //        Assert.assertEquals("Extracted feature length", 56, vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS).getValues().size());
         Joiner joiner = Joiner.on(";").skipNulls();
@@ -93,10 +93,10 @@ public class SegmentExtractorServiceImplOnlineTest extends AbstractSegmentExtrac
         //then
         Assert.assertEquals("Total segments", 5, result.size());
         Assert.assertNotNull("First segment", firstSegment.getMarker());
-        Assert.assertEquals("First segment starts", firstSegment.getMarker().getStart(), 256, 0);
-        Assert.assertEquals("First segment length", firstSegment.getMarker().getLength(), 191, 0);
+        Assert.assertEquals("First segment starts", 252, firstSegment.getMarker().getStart(), 0);
+        Assert.assertEquals("First segment length", 195, firstSegment.getMarker().getLength(),  0);
         Assert.assertEquals("Extracted feature", 3, valueMap.size());
-        Assert.assertEquals("Extracted feature", 57, valueMap.get("smooth_" + ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
+        Assert.assertEquals("Extracted feature", 58, valueMap.get("smooth_" + ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
 //		Assert.assertEquals("Extracted vector feature",1, vectorMap.size());
     }
 

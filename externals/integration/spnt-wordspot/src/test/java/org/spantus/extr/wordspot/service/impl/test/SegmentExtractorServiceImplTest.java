@@ -46,8 +46,8 @@ public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTes
 		Map<String, FrameValuesHolder> valueMap = firstSegment.getFeatureFrameValuesMap();
 		Map<String, FrameVectorValuesHolder> vectorMap = firstSegment.getFeatureFrameVectorValuesMap();
 		Assert.assertNotNull("First segment",firstSegment.getMarker());
-		Assert.assertEquals("First segment starts",300,firstSegment.getMarker().getStart(), 0);
-		Assert.assertEquals("First segment length",476,firstSegment.getMarker().getLength(), 0);
+		Assert.assertEquals("First segment starts",297,firstSegment.getMarker().getStart(), 0);
+		Assert.assertEquals("First segment length",479,firstSegment.getMarker().getLength(), 0);
 		Assert.assertEquals("Extracted feature",3, valueMap.size());
 		Assert.assertEquals("Extracted feature length",141, valueMap.get("smooth_"+ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size(),1);
 		Assert.assertEquals("Extracted vector feature",1, vectorMap.size());
@@ -68,8 +68,8 @@ public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTes
 		//then
 		Assert.assertEquals("Total segments", 4, result.size());
 		Assert.assertNotNull("First segment",firstSegment.getMarker());
-		Assert.assertEquals("First segment starts",firstSegment.getMarker().getStart(),332, 0);
-		Assert.assertEquals("First segment length",firstSegment.getMarker().getLength(),412, 0);
+		Assert.assertEquals("First segment starts",331, firstSegment.getMarker().getStart(), 0);
+		Assert.assertEquals("First segment length",413, firstSegment.getMarker().getLength(), 0);
 		Assert.assertEquals("Extracted feature",3, valueMap.size());
 		Assert.assertEquals("Extracted feature",122, valueMap.get("smooth_"+ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
 //		Assert.assertEquals("Extracted vector feature",1, vectorMap.size());

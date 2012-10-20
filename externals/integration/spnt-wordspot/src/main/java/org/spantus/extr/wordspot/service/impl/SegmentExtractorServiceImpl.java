@@ -147,7 +147,7 @@ public class SegmentExtractorServiceImpl implements SegmentExtractorService, Seg
 		IExtractorConfig config = ExtractorConfigUtil.defaultConfig(
 				format.getSampleRate(), getServiceConfig().getWindowLength(),
 				getServiceConfig().getOverlapInPerc());// 10 ms and 33 %
-                config.setWindowing(WindowingEnum.Hamming.name());
+                config.setWindowing(WindowingEnum.Rectangular.name());
 		config.setPreemphasis(getServiceConfig().getPreephasis().name());
 		IExtractorInputReader extractorReader = ExtractorsFactory
 				.createReader(config);
