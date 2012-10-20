@@ -32,26 +32,27 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
     private String searchWord;
     private String[] acceptableSyllables;
 
+    @Override
+    protected void setUpPath() throws Exception {
+        super.setUpPath();
+        repositoryPathWord = new File(getRepositoryPathRoot(), "CORPUS/word");
+        repositoryPathSyllable = new File(getRepositoryPathRoot(), "CORPUS/phone");
+        setSearchWord("padeda");
+        setAcceptableSyllables(new String[]{"pa", "de", "da"});
+    }
+
+    
+    
+    
     @Before
     @Override
     public void setUp() throws Exception {
-        initPaths();
-        repositoryPathWord = new File(getRepositoryPathRoot(), "CORPUS/word");
-        repositoryPathSyllable = new File(getRepositoryPathRoot(), "CORPUS/phone");
         super.setUp();
         wordSpottingServiceImpl = new SyllableSpottingServiceImpl(repositoryPathSyllable.getAbsolutePath());
         wordSpottingServiceImpl.setSegmentExtractorService(getSegmentExtractorService());
         wordSpottingServiceImpl.setServiceConfig(serviceConfig);
     }
 
-    /**
-     * override {@link wavFile} and {@link repositoryPathRoot} and
-     * {@link searchWord}
-     */
-    protected void initPaths() {
-        setSearchWord("padeda");
-        setAcceptableSyllables(new String[]{"pa", "de", "da"});
-    }
 
     @Override
     protected void changeOtherParams(SegmentExtractorServiceConfig config) {

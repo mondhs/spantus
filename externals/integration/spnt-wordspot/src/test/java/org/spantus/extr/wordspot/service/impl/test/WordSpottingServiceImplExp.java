@@ -66,7 +66,8 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
     }
 
     @Override
-    protected void initPaths() {
+    protected void setUpPath() throws Exception {
+        super.setUpPath();
         String path =
 //                "/tmp/test" //                
 //                "/home/as/tmp/garsynas.lietuvos-syn-wpitch/TEST/"
