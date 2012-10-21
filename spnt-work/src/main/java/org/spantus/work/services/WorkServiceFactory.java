@@ -8,6 +8,7 @@ import org.spantus.core.service.impl.ExtractorInputReaderServiceImpl;
 import org.spantus.extractor.segments.online.ExtremeOnClassifierServiceFactory;
 import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
 import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseService;
+import org.spantus.extractor.segments.online.rule.ClassifierRuleBaseServiceBaseImpl;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceFileMvelImpl;
 import org.spantus.work.extractor.segments.online.rule.ClassifierRuleBaseServiceMvelImpl;
@@ -116,11 +117,7 @@ public abstract class WorkServiceFactory {
             return extractorReaderServiceImpl;
         }
 	public static ClassifierRuleBaseService createClassifierRuleBaseService() {
-		ClassifierRuleBaseServiceMvelImpl ruleBase = new ClassifierRuleBaseServiceFileMvelImpl();
-		ruleBase.setClusterService(ExtremeOnClassifierServiceFactory.createClusterService());
-		
-//		ClassifierPostProcessServiceBaseImpl ruleBase = new ClassifierPostProcessServiceBaseImpl();
-		return ruleBase;
+		return createClassifierRuleBaseService(null);
 	}
 	/**
 	 * 
@@ -128,13 +125,13 @@ public abstract class WorkServiceFactory {
 	 * @return
 	 */
 	public static ClassifierRuleBaseService createClassifierRuleBaseService(String rulePath) {
+//		ClassifierRuleBaseService ruleBase = new ClassifierRuleBaseServiceBaseImpl(); 
 		ClassifierRuleBaseServiceFileMvelImpl ruleBase = new ClassifierRuleBaseServiceFileMvelImpl();
 		if(rulePath != null){
 			ruleBase.setPath(rulePath);
 		}
 		ruleBase.setClusterService(ExtremeOnClassifierServiceFactory.createClusterService());
 		
-//		ClassifierPostProcessServiceBaseImpl ruleBase = new ClassifierPostProcessServiceBaseImpl();
 		return ruleBase;
 	}
 	

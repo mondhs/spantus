@@ -58,8 +58,8 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
         for (String string : acceptableSyllable) {
             acceptableSyllableSet.add(string);
         }
-         acceptableSyllableThresholdMap.put("liet", 2.3E9);
-        acceptableSyllableThresholdMap.put("tuvos", 1.4E10);
+        acceptableSyllableThresholdMap.put("liet", 5E9);
+        acceptableSyllableThresholdMap.put("tuvos", 8E10);
     }
     /**
      * 
@@ -110,6 +110,10 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
             RecognitionResult rtnRecognitionResult = null;
             String syllableName = newSyllable.getMarker().getLabel();
         
+            if (LOG.isDebugMode() && newSyllable.getMarker().getStart() > SpottingDebug.EXPECTED_BREAKPOINT) {
+                LOG.debug("break point should go here");
+            }
+            
             boolean isAcceptable = checkIfAcceptableBellowThreshold(syllableName, recognitionResult, signalSegmentsSyllable);
             if(!isAcceptable){
                 signalSegmentsSyllable.clear();

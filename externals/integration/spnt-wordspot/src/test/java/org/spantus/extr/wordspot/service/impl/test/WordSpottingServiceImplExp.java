@@ -78,7 +78,8 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 
     @Override
     protected File createWavFile(File aRepositoryPathRoot) {
-        String fileName =
+        String internalPath = "TEST/";
+        String fileName = internalPath +
                                 "RZj0815_13_23-30_1.wav"
                 //                "RAj031004_13_16a-30_1.wav"
                 //                "RAj031013_18_24a-30_1.wav"

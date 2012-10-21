@@ -1,10 +1,6 @@
 package org.spantus.extr.wordspot.service.impl.test;
 
 //import static org.junit.Assert.fail;
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.sound.sampled.AudioInputStream;
 
 import junit.framework.Assert;
@@ -35,6 +32,10 @@ import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.services.impl.MarkerProxyDao;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
 
 /**
  *

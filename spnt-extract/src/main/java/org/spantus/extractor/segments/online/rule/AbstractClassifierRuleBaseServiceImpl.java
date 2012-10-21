@@ -19,7 +19,7 @@ import org.spantus.logger.Logger;
  * 
  */
 public abstract class AbstractClassifierRuleBaseServiceImpl implements ClassifierRuleBaseService {
-	private static final String RULE_DATA_CTX = "ruleDataCtx";
+	public static final String RULE_DATA_CTX = "ruleDataCtx";
 	public static final String STABLE_LENGTH = "stableLength";
 	public static final String CURRENT_ANGLE = "currentAngle";
 	public static final String CURRENT_PEAK_VALUE = "currentPeakValue";
@@ -43,17 +43,6 @@ public abstract class AbstractClassifierRuleBaseServiceImpl implements Classifie
 	private ExtremeOnlineClusterService clusterService;
 	private ExtremeSegmentServiceImpl extremeSegmentService;
 
-	/**
-	 * test on rule base
-	 * 
-	 * @param ctx
-	 */
-	public String testOnRuleBase(ExtremeSegmentsOnlineCtx ctx) {
-		ClassifierRuleBaseEnum.action actionVal = testOnRuleBase(ctx,
-				Boolean.TRUE);
-		log.debug("[testOnRuleBase] {0}", actionVal.name());
-		return actionVal.name();
-	}
 
 	/**
 	 * 
@@ -173,84 +162,63 @@ public abstract class AbstractClassifierRuleBaseServiceImpl implements Classifie
 		return params;
 	}
 
-	/**
-	 * 
-	 * @param ctx
-	 * @param isEnum
-	 * @return
-	 */
-	public ClassifierRuleBaseEnum.action testOnRuleBase(
-			ExtremeSegmentsOnlineCtx ctx, Boolean isEnum) {
-
-		Map<String, Object> param = prepareCtx(ctx);
-		RuleDataCtx c = (RuleDataCtx) param.get(RULE_DATA_CTX);
-
-		ClassifierRuleBaseEnum.action action = decision(ctx, c);
-		if(action != null){
-			return action;
-		}
-		
-		log.debug("[testOnRuleBase]  not handled area and length {0}}",
-				c.currentLength);
-
-		return ClassifierRuleBaseEnum.action.processSignal;
-	}
 
 
 	
-	protected ClassifierRuleBaseEnum.action decision(ExtremeSegmentsOnlineCtx ctx, RuleDataCtx c) {
-		if (c.currentSegment == null && ctx.getFeatureInMin()) {
-			log.debug("Current not initialized. This first segment");
-			return ClassifierRuleBaseEnum.action.initSegment;
-		} else if (c.lastSegment == null && ctx.getFeatureInMin()) {
-			log.debug("Previous not initialized. this is second segment");
-			return ClassifierRuleBaseEnum.action.initSegment;
-		} else if (c.lastSegment == null && ctx.getFeatureInMax()) {
-			// do nothing
-			log.debug("Previous not initialized");
-			return ClassifierRuleBaseEnum.action.processSignal;
-		} else if (ctx.getFeatureInMin()) {
-			log.debug("Found min. Possible change point");
-			return ClassifierRuleBaseEnum.action.changePoint;
-		} else if (ctx.getFeatureInMax() && c.distanceBetweenPaeks < 180
-				&& (c.lastLength + c.currentLength) < 280) {
-			log.debug("Found max. join as between peaks not enough space");
-			return ClassifierRuleBaseEnum.action.join;
-		} else if (ctx.getFeatureInMax() && c.isIncrease) {
-			log.debug("Found max. join as increase");
-			return ClassifierRuleBaseEnum.action.join;
-		} else if (ctx.getFeatureInMax() && c.isDecrease
-				&& (c.lastLength + c.currentLength) < 180) {
-			log.debug("Found max. join as decrease {0}", c.isDecrease);
-			return ClassifierRuleBaseEnum.action.join;
- 		} else if (ctx.getFeatureInMax() 
-				&&  c.distanceBetweenPaeks <40) {
-			log.debug("Found max. join as between peaks not enough space {0}", c.distanceBetweenPaeks);
-			return ClassifierRuleBaseEnum.action.join;                       
-			// } else if (ctx.getFeatureInMax() && (lastLength+currentLength) <
-			// 280 ) {
-			// log.debug("too small gap for new segment lastLength:{0}<40, current:{1}>100",
-			// lastLength, currentLength);
-			// return ClassifierRuleBaseEnum.action.join;
-			// } else if (ctx.getFeatureInMax() && currentLength < 40 ) {
-			// log.debug("too small gap for new segment lastLength:{0}<40, current:{1}>100",
-			// lastLength, currentLength);
-			// return ClassifierRuleBaseEnum.action.join;
-			// } else if (ctx.getFeatureInMax() && isSimilar) {
-			// log.debug("Found max. join as similar");
-			// return ClassifierRuleBaseEnum.action.join;
-		} else if (ctx.getFeatureInMax() && c.lastLength < 20) {
-			log.debug("too small last", c.lastLength);
-			return ClassifierRuleBaseEnum.action.join;
-		} else if (ctx.getFeatureInMax() && "0".equals(c.className)) {
-			log.debug("Found max. delete segment as noise");
-			return ClassifierRuleBaseEnum.action.delete;
-		} else if (ctx.getFeatureInMax()) {
-			log.debug("Found max. approve previous change point");
-			return ClassifierRuleBaseEnum.action.changePointLastApproved;
-		}
-		return null;
-	}
+
+//	protected ClassifierRuleBaseEnum.action decision(ExtremeSegmentsOnlineCtx ctx, RuleDataCtx c) {
+//		if (c.currentSegment == null && ctx.getFeatureInMin()) {
+//			log.debug("Current not initialized. This first segment");
+//			return ClassifierRuleBaseEnum.action.initSegment;
+//		} else if (c.lastSegment == null && ctx.getFeatureInMin()) {
+//			log.debug("Previous not initialized. this is second segment");
+//			return ClassifierRuleBaseEnum.action.initSegment;
+//		} else if (c.lastSegment == null && ctx.getFeatureInMax()) {
+//			// do nothing
+//			log.debug("Previous not initialized");
+//			return ClassifierRuleBaseEnum.action.processSignal;
+//		} else if (ctx.getFeatureInMin()) {
+//			log.debug("Found min. Possible change point");
+//			return ClassifierRuleBaseEnum.action.changePoint;
+//		} else if (ctx.getFeatureInMax() && c.distanceBetweenPaeks < 180
+//				&& (c.lastLength + c.currentLength) < 280) {
+//			log.debug("Found max. join as between peaks not enough space");
+//			return ClassifierRuleBaseEnum.action.join;
+//		} else if (ctx.getFeatureInMax() && c.isIncrease) {
+//			log.debug("Found max. join as increase");
+//			return ClassifierRuleBaseEnum.action.join;
+//		} else if (ctx.getFeatureInMax() && c.isDecrease
+//				&& (c.lastLength + c.currentLength) < 180) {
+//			log.debug("Found max. join as decrease {0}", c.isDecrease);
+//			return ClassifierRuleBaseEnum.action.join;
+// 		} else if (ctx.getFeatureInMax() 
+//				&&  c.distanceBetweenPaeks <40) {
+//			log.debug("Found max. join as between peaks not enough space {0}", c.distanceBetweenPaeks);
+//			return ClassifierRuleBaseEnum.action.join;                       
+//			// } else if (ctx.getFeatureInMax() && (lastLength+currentLength) <
+//			// 280 ) {
+//			// log.debug("too small gap for new segment lastLength:{0}<40, current:{1}>100",
+//			// lastLength, currentLength);
+//			// return ClassifierRuleBaseEnum.action.join;
+//			// } else if (ctx.getFeatureInMax() && currentLength < 40 ) {
+//			// log.debug("too small gap for new segment lastLength:{0}<40, current:{1}>100",
+//			// lastLength, currentLength);
+//			// return ClassifierRuleBaseEnum.action.join;
+//			// } else if (ctx.getFeatureInMax() && isSimilar) {
+//			// log.debug("Found max. join as similar");
+//			// return ClassifierRuleBaseEnum.action.join;
+//		} else if (ctx.getFeatureInMax() && c.lastLength < 20) {
+//			log.debug("too small last", c.lastLength);
+//			return ClassifierRuleBaseEnum.action.join;
+//		} else if (ctx.getFeatureInMax() && "0".equals(c.className)) {
+//			log.debug("Found max. delete segment as noise");
+//			return ClassifierRuleBaseEnum.action.delete;
+//		} else if (ctx.getFeatureInMax()) {
+//			log.debug("Found max. approve previous change point");
+//			return ClassifierRuleBaseEnum.action.changePointLastApproved;
+//		}
+//		return null;
+//	}
 
 	/**
 	 * learn delegate to cluster service

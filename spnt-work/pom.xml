@@ -16,22 +16,18 @@
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-extract</artifactId>
-			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-chart</artifactId>
-			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-mpeg7</artifactId>
-			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-segment</artifactId>
-			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
@@ -65,4 +61,7 @@
 			<version>2.4</version>
 		</dependency>
 	</dependencies>
+	<properties>
+		<envClassifier>jdk17</envClassifier>
+	</properties>
 </project>

@@ -14,7 +14,6 @@
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-core</artifactId>
-			<classifier>${envClassifier}</classifier>
 		</dependency>
 	</dependencies>
 </project>
