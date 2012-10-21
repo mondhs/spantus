@@ -46,11 +46,11 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
         SpottingSyllableCtx ctx = new SpottingSyllableCtx();
         ctx.setMinFirstMfccValue(Double.MAX_VALUE);
         IExtractorInputReader aReader = createReader(urlFile);
-        long availableStartMs = aReader.getAvailableSignalLengthMs() - keySegment.getMarker().getLength();
+        long availableStartMs = aReader.getAvailableSignalLengthMs() - 
+        		keySegment.getMarker().getLength();
         for (long start = 10; start < availableStartMs; start += delta) {
-            Marker iMarker = new Marker();
-            iMarker.setStart(start);
-            iMarker.setLength(keySegment.getMarker().getLength());
+            Marker iMarker = new Marker(start,
+            		keySegment.getMarker().getLength(),""	);
             SignalSegment segment = recalculateFeatures(aReader, iMarker);
             if (segment == null) {
                 continue;
@@ -61,13 +61,13 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
             }
         }
         //        ctx.printDeltas();
-        ctx.printMFCC();
-        ctx.printSyllableFrequence();
-        
-        spottingListener.foundSegment(null, new SignalSegment(new Marker(
+//        ctx.printMFCC();
+//        ctx.printSyllableFrequence();
+        SignalSegment signalSegment = new SignalSegment(new Marker(
                 ctx.getMinFirstMfccStart(), 
                 keySegment.getMarker().getLength(),
-                keySegment.getMarker().getLabel())), null);
+                keySegment.getMarker().getLabel()));
+        spottingListener.foundSegment(null, signalSegment, ctx.getResultMap().get(ctx.getMinFirstMfccStart()));
     }
     /**
      * Friendly method for testing
@@ -104,8 +104,9 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
             ctx.getResultMap().put(start, result);
             ctx.getSyllableNameMap().put(start, name);
             ctx.getMinMfccMap().put(start, firstMfccValue);
-            if(ctx.getMinFirstMfccValue().doubleValue()>firstMfccValue.doubleValue()){
-                ctx.setMinFirstMfccValue(firstMfccValue);
+            Double firstGoodMatchMfccValue = firstGoodMatch.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+            if(ctx.getMinFirstMfccValue().doubleValue()>firstGoodMatchMfccValue.doubleValue()){
+                ctx.setMinFirstMfccValue(firstGoodMatchMfccValue);
                 ctx.setMinFirstMfccStart(start);
             }
             return false;

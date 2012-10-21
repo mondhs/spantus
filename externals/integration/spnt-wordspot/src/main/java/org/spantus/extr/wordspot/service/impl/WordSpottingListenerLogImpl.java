@@ -58,7 +58,7 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
         for (String string : acceptableSyllable) {
             acceptableSyllableSet.add(string);
         }
-        acceptableSyllableThresholdMap.put("liet", 5E9);
+        acceptableSyllableThresholdMap.put("liet", 6E9);
         acceptableSyllableThresholdMap.put("tuvos", 8E10);
     }
     /**
@@ -184,11 +184,17 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
         }
        
         SignalSegment segmentWord = newSignalSegmentWord(existingSyllableSegments, newSyllable);
-        
 
         List<RecognitionResult> resultList = getCorpusServiceWord().findMultipleMatchFull(segmentWord);
         if(!isResultAcceptable(resultList)){
-            resultList = Collections.emptyList();
+        	if(existingSyllableSegments.size()>1){
+        		existingSyllableSegments.remove(0);
+        		segmentWord = newSignalSegmentWord(existingSyllableSegments, newSyllable);
+        		resultList = getCorpusServiceWord().findMultipleMatchFull(segmentWord);
+        	}
+        }
+        if(!isResultAcceptable(resultList)){
+        	resultList = Collections.emptyList();
         }
         RecognitionResult firstResult = null;
         for (RecognitionResult recognitionResult : resultList) {
@@ -317,7 +323,7 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
         boolean sameLabels = first.getInfo().getName().equals(second.getInfo().getName());
         double scoreDelta = secondScore - firstScore;
         if(!sameLabels){
-            return scoreDelta > .1;
+            return scoreDelta > .09;
         }
         return true;
     }
