@@ -229,19 +229,16 @@
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-core</artifactId>
 			<scope>compile</scope>
-			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus.externals.recognition</groupId>
 			<artifactId>spnt-dtw-recognition</artifactId>
 			<scope>compile</scope>
-			<classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-applet</artifactId>
 			<scope>compile</scope>
-			<classifier>${envClassifier}</classifier>
 		</dependency>
 	</dependencies>
 	<build>
@@ -283,7 +280,6 @@
 									<groupId>org.spantus</groupId>
 									<artifactId>spnt-applet</artifactId>
 									<version>0.3-SNAPSHOT</version>
-									<classifier>${envClassifier}</classifier>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/classes/content/applet</outputDirectory>
