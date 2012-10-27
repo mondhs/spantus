@@ -44,6 +44,7 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
     @Override
     public void wordSpotting(URL urlFile, SpottingListener spottingListener) {
         SpottingSyllableCtx ctx = new SpottingSyllableCtx();
+        Assert.isTrue(keySegment != null, "keyword cannot be null, please, setKeySegment(...) first");
         ctx.setMinFirstMfccValue(Double.MAX_VALUE);
         IExtractorInputReader aReader = createReader(urlFile);
         long availableStartMs = aReader.getAvailableSignalLengthMs() - 

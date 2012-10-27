@@ -27,6 +27,7 @@ public interface IMarkerService {
 	public boolean removeMarker(MarkerSet markerSet, Marker marker);
 	public boolean validate(MarkerSet markerSet, Marker marker, Long newStart, Long newLength);
 	public Long getTime(int sampleNum, Double sampleRate);
-        public Marker findByLabel(String label, MarkerSetHolder markerSetHolder);
+	public Marker findFirstByLabel(MarkerSetHolder markerSetHolder,String label);
+	public Marker findFirstByPhrase(MarkerSetHolder markerSetHolder, String... labels);
 
 }

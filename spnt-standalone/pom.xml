@@ -20,7 +20,6 @@
         <dependency>
             <groupId>org.spantus</groupId>
             <artifactId>spnt-work-ui</artifactId>
-            <classifier>${envClassifier}</classifier>
         </dependency>
     </dependencies>
             <build>

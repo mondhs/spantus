@@ -4,15 +4,12 @@
  */
 package org.spantus.extr.wordspot.service.impl.test;
 
-import com.google.common.collect.Ordering;
-import com.google.common.primitives.Longs;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,46 +18,38 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.SignalSegment;
-import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.junit.SlowTests;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSetHolder;
-import org.spantus.core.marker.service.IMarkerService;
-import org.spantus.core.marker.service.MarkerServiceFactory;
 import org.spantus.core.wav.AudioManagerFactory;
+import org.spantus.extr.wordspot.guava.RecognitionResultSignalSegmentOrder;
+import org.spantus.extr.wordspot.service.impl.SyllableSpottingListenerLogImpl;
 import org.spantus.extr.wordspot.service.impl.WordSpottingListenerLogImpl;
 import org.spantus.extr.wordspot.service.impl.test.util.ExtNameFilter;
 import org.spantus.extr.wordspot.util.dao.WordSpotResult;
 import org.spantus.extr.wordspot.util.dao.WspotJdbcDao;
-import org.spantus.utils.FileUtils;
-import org.spantus.work.services.WorkServiceFactory;
+
+import com.google.common.collect.Ordering;
 
 /**
  * 
  * @author as
  */
-public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
+public class WordSpottingServiceImplSyllableExp extends WordSpottingServiceImplTest {
 
 	private static final Logger log = Logger
-			.getLogger(WordSpottingServiceImplExp.class);
+			.getLogger(WordSpottingServiceImplSyllableExp.class);
 
+	private static final String[] KEY_WORD_SEQUENCE_ARR = new String[]{"liet"};
 	private WspotJdbcDao wspotDao;
 
-	private static final Ordering<Entry<RecognitionResult, SignalSegment>> order = new Ordering<Entry<RecognitionResult, SignalSegment>>() {
-		@Override
-		public int compare(Entry<RecognitionResult, SignalSegment> left,
-				Entry<RecognitionResult, SignalSegment> right) {
-			return Longs.compare(left.getValue().getMarker().getStart(), right
-					.getValue().getMarker().getStart());
-		}
-	};
+	private static final Ordering<Entry<RecognitionResult, SignalSegment>> order = new RecognitionResultSignalSegmentOrder();
 
 	@Before
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		setSearchWord("lietuvos");
-		setAcceptableSyllables(new String[] { "liet", "tuvos" });
+		setAcceptableSyllables(KEY_WORD_SEQUENCE_ARR);
 		wspotDao = new WspotJdbcDao();
 	}
 
@@ -100,7 +89,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 		// then
 		// Assert.assertTrue("read time " + length + ">"+(ended-started), length
 		// > ended-started);
-		Assert.assertEquals("Recognition", "lietuvos", resultsStr);
+		Assert.assertEquals("Recognition", KEY_WORD_SEQUENCE_ARR[0], resultsStr);
 		SignalSegment firstSegment = result.getSegments().values().iterator()
 				.next();
 		Assert.assertEquals("Recognition start", result.getOriginalMarker()
@@ -109,6 +98,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 				.getLength(), firstSegment.getMarker().getLength(), 150);
 
 	}
+	
 
 	@Test
 	@Category(SlowTests.class)
@@ -118,7 +108,6 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 
 		File[] files = getWavFile().getParentFile().listFiles(
 				new ExtNameFilter("wav"));
-		List<AssertionError> list = new ArrayList<>();
 		int foundSize = 0;
 		for (File file : files) {
 			// if(!file.getName().contains(
@@ -149,7 +138,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 		URL aWavUrl = aWavFile.toURI().toURL();
 
 		WordSpotResult result = new WordSpotResult();
-		WordSpottingListenerLogImpl listener = new WordSpottingListenerLogImpl(
+		SyllableSpottingListenerLogImpl listener = new SyllableSpottingListenerLogImpl(
 				getSearchWord(), getAcceptableSyllables(),
 				getRepositoryPathWord().getAbsolutePath());
 		listener.setServiceConfig(serviceConfig);
@@ -173,23 +162,10 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 	}
 
 	private Marker findKeyword(File aWavFile) {
-		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
-		Marker marker = getMarkerService().findByLabel("-l'-ie-t-|-u-v-oo-s",
-				markers);
-		if (marker == null) {
-			Marker lietMarker = getMarkerService().findByLabel("-l-ie-t",
-					markers);
-			Marker uvosMarker = getMarkerService().findByLabel("-u-v-o:-s",
-					markers);
-			if (uvosMarker == null) {
-				uvosMarker = getMarkerService().findByLabel("-u-v-oo-s",
-						markers);
-			}
-			marker = new Marker();
-			marker.setStart(lietMarker.getStart());
-			marker.setEnd(uvosMarker.getEnd());
-			marker.setLabel(lietMarker.getLabel() + uvosMarker.getLabel());
-		}
+		MarkerSetHolder markerSetHolder = findMarkerSetHolderByWav(aWavFile);
+		String keyMakerLabel = KEY_WORD_SEQUENCE_ARR[0];
+		Marker marker = getMarkerService().findFirstByLabel(markerSetHolder, keyMakerLabel);
+		marker.setLabel(keyMakerLabel);
 		return marker;
 	}
 }

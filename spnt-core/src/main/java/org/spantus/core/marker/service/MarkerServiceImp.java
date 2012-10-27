@@ -20,11 +20,15 @@ package org.spantus.core.marker.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Map.Entry;
+
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.utils.Assert;
+
 
 public class MarkerServiceImp implements IMarkerService {
         @Override
@@ -52,17 +56,59 @@ public class MarkerServiceImp implements IMarkerService {
 	}
 
         @Override
-        public Marker findByLabel(String label, MarkerSetHolder markerSetHolder) {
+        public Marker findFirstByLabel(MarkerSetHolder markerSetHolder, String label) {
             Assert.isTrue(markerSetHolder!=null, "markerSetHolder cannot be null");
             for ( Entry<String, MarkerSet> markerSets : markerSetHolder) {
                 markerSets.getKey();
                 for ( Marker marker : markerSets.getValue()) {
-                    if(label.equals(marker.getLabel())){
+                	String markerLabel = cleanupLabel(marker.getLabel());
+                    if(label.equals(markerLabel)){
                         return marker;
                     }
                 }
             }
             return null;
         }
+		@Override
+		public Marker findFirstByPhrase(MarkerSetHolder markerSetHolder,
+				String... labels) {
+			if(labels.length < 2){
+				throw new IllegalArgumentException("Phase should contains at least 2 labels");
+			}
+			LinkedList<String> labelList = new LinkedList<String>(Arrays.asList(labels));
+			for ( Entry<String, MarkerSet> markerSets : markerSetHolder) {
+                markerSets.getKey();
+                Marker rtn = null;
+                for ( Marker marker : markerSets.getValue()) {
+                	String markerLabel = cleanupLabel(marker.getLabel());
+                	if(!labelList.getFirst().equals(markerLabel)){
+                		if(rtn != null){
+                			rtn = null;
+                			break;
+                		}
+                		continue;
+                	}
+                	if(rtn == null){
+                		rtn = new Marker(0L,0L, "");
+                		String firstRemoved = labelList.removeFirst();
+                		rtn.setStart(marker.getStart());
+                		rtn.setEnd(marker.getEnd());
+                		rtn.setLabel(rtn.getLabel()+firstRemoved);
+                	}else{
+                		String firstRemoved = labelList.removeFirst();
+                		rtn.setEnd(marker.getEnd());
+                		rtn.setLabel(rtn.getLabel()+firstRemoved);
+                	}
+                	if(labelList.size() == 0){
+                		return rtn; 
+                	}
+                }
+            }
+			return null;
+		}
+		private String cleanupLabel(String label) {
+			String rtn = label.replaceAll("\\-","");
+			return rtn;
+		}
 
 }

@@ -1,6 +1,7 @@
 package org.spantus.extr.wordspot.service.impl;
 
 import java.util.*;
+
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.beans.FrameVectorValuesHolder;
@@ -103,10 +104,10 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
     /**
      * 
      * @param newSyllable
-     * @param recognitionResult
+     * @param syllableRecognitionResult
      * @return 
      */
-    private RecognitionResult foundSegment(SignalSegment newSyllable, RecognitionResult recognitionResult) {
+    private RecognitionResult foundSegment(SignalSegment newSyllable, RecognitionResult syllableRecognitionResult) {
             RecognitionResult rtnRecognitionResult = null;
             String syllableName = newSyllable.getMarker().getLabel();
         
@@ -114,12 +115,12 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
                 LOG.debug("break point should go here");
             }
             
-            boolean isAcceptable = checkIfAcceptableBellowThreshold(syllableName, recognitionResult, signalSegmentsSyllable);
+            boolean isAcceptable = checkIfAcceptableBellowThreshold(syllableName, syllableRecognitionResult, signalSegmentsSyllable);
             if(!isAcceptable){
                 signalSegmentsSyllable.clear();
                 return rtnRecognitionResult;
             }
-            isAcceptable = checkIfAcceptableRepeatableSyllable(syllableName, recognitionResult, signalSegmentsSyllable);
+            isAcceptable = checkIfAcceptableRepeatableSyllable(syllableName, syllableRecognitionResult, signalSegmentsSyllable);
             if(!isAcceptable){
                 signalSegmentsSyllable.clear();
                 signalSegmentsSyllable.add(newSyllable);
@@ -127,23 +128,37 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
             }
             if (acceptableSyllableSet.contains(syllableName)
                     && isAcceptable) {
-                RecognitionResult wordMatch = matchWord(signalSegmentsSyllable, newSyllable);
-                
-                if (wordMatch != null) {
-                    getWordMatches().add(wordMatch);
-                    rtnRecognitionResult = wordMatch;
-                    signalSegmentsSyllable.clear();
-                    return rtnRecognitionResult;
-                }
-                signalSegmentsSyllable.add(newSyllable);
+            	
+            	rtnRecognitionResult = matchAndRegistry(signalSegmentsSyllable, newSyllable, syllableRecognitionResult);
                 return rtnRecognitionResult;
             }else{
                 LOG.debug("[processEndedSegment] reject syllable {0}",syllableName);  
             }
             return rtnRecognitionResult;
     }
-    
     /**
+     * 
+     * @param aSignalSegmentsSyllable
+     * @param newSyllable
+     * @param syllableRecognitionResult
+     * @return
+     */
+    protected RecognitionResult matchAndRegistry(
+			List<SignalSegment> aSignalSegmentsSyllable,
+			SignalSegment newSyllable,
+			RecognitionResult syllableRecognitionResult) {
+    	RecognitionResult wordMatch = matchWord(aSignalSegmentsSyllable, newSyllable);
+        RecognitionResult rtnRecognitionResult = null;
+		if (wordMatch != null) {
+            getWordMatches().add(wordMatch);
+            rtnRecognitionResult = wordMatch;
+            aSignalSegmentsSyllable.clear();
+            return rtnRecognitionResult;
+        }
+        signalSegmentsSyllable.add(newSyllable);
+        return rtnRecognitionResult;
+	}
+	/**
      * 
      * @param syllableName
      * @param recognitionResult
@@ -178,7 +193,7 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
      * @param newSyllable
      * @return 
      */
-    private RecognitionResult matchWord(List<SignalSegment> existingSyllableSegments, SignalSegment newSyllable) {
+    protected RecognitionResult matchWord(List<SignalSegment> existingSyllableSegments, SignalSegment newSyllable) {
         if (existingSyllableSegments.isEmpty()) {
             return null;
         }
