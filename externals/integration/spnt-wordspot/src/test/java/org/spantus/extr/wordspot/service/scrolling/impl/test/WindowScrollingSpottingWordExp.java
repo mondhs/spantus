@@ -61,7 +61,9 @@ public class WindowScrollingSpottingWordExp extends WindowScrollingSpottingTest 
     
     @Override
     protected File createRepositoryPathRoot(){
-        return  new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
+        return  
+				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+//        		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
     }
     
     @Override
@@ -160,7 +162,7 @@ public class WindowScrollingSpottingWordExp extends WindowScrollingSpottingTest 
  		 Long length = AudioManagerFactory.createAudioManager()
 				.findLengthInMils(aWavUrl);
          result.setAudioLength(length);
-         result.setOriginalMarker(keySegment.getMarker());
+         result.getOriginalMarker().add(keySegment.getMarker());
          result.setFileName(aWavFile.getName());
          result.setExperimentStarted(System.currentTimeMillis());
          final Map<RecognitionResult, SignalSegment> segments = new LinkedHashMap<>();

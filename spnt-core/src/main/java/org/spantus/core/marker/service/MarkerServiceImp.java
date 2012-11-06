@@ -58,11 +58,12 @@ public class MarkerServiceImp implements IMarkerService {
         @Override
         public Marker findFirstByLabel(MarkerSetHolder markerSetHolder, String label) {
             Assert.isTrue(markerSetHolder!=null, "markerSetHolder cannot be null");
+            String searchLabel = cleanupLabel(label);
             for ( Entry<String, MarkerSet> markerSets : markerSetHolder) {
                 markerSets.getKey();
                 for ( Marker marker : markerSets.getValue()) {
                 	String markerLabel = cleanupLabel(marker.getLabel());
-                    if(label.equals(markerLabel)){
+                    if(searchLabel.equals(markerLabel)){
                         return marker;
                     }
                 }

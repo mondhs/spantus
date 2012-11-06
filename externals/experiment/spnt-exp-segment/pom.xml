@@ -15,14 +15,10 @@
 		<dependency>
 			<groupId>org.spantus</groupId>
 			<artifactId>spnt-work</artifactId>
-			<version>0.3-SNAPSHOT</version>
-                        <classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.spantus.externals.recognition</groupId>
 			<artifactId>spnt-dtw-recognition</artifactId>
-			<version>0.3-SNAPSHOT</version>
-                        <classifier>${envClassifier}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>

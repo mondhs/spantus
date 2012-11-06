@@ -34,10 +34,10 @@ import com.google.common.collect.Ordering;
  * 
  * @author as
  */
-public class WordSpottingServiceImplWordExp extends WordSpottingServiceImplTest {
+public class SpottingServiceImplWordExp extends WordSpottingServiceImplTest {
 
 	private static final Logger log = Logger
-			.getLogger(WordSpottingServiceImplWordExp.class);
+			.getLogger(SpottingServiceImplWordExp.class);
 
 	private WspotJdbcDao wspotDao;
 
@@ -54,12 +54,9 @@ public class WordSpottingServiceImplWordExp extends WordSpottingServiceImplTest 
 
 	@Override
 	protected File createRepositoryPathRoot() {
-//		String rootPath = "/TEST/"
-		// "/tmp/test" //
-		// "/home/as/tmp/garsynas.lietuvos-syn-wpitch/TEST/"
-		// "/home/as/tmp/garsynas.lietuvos-syn-wopitch//TEST"
-		;
-		return new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
+		return 
+				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+//				new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
 	}
 
 	@Override
@@ -91,9 +88,10 @@ public class WordSpottingServiceImplWordExp extends WordSpottingServiceImplTest 
 		Assert.assertEquals("Recognition", "lietuvos", resultsStr);
 		SignalSegment firstSegment = result.getSegments().values().iterator()
 				.next();
-		Assert.assertEquals("Recognition start", result.getOriginalMarker()
+		Marker firstOriginal = result.getOriginalMarker().get(0);
+		Assert.assertEquals("Recognition start", firstOriginal
 				.getStart(), firstSegment.getMarker().getStart(), 320D);
-		Assert.assertEquals("Recognition length", result.getOriginalMarker()
+		Assert.assertEquals("Recognition length", firstOriginal
 				.getLength(), firstSegment.getMarker().getLength(), 150);
 
 	}
@@ -145,7 +143,7 @@ public class WordSpottingServiceImplWordExp extends WordSpottingServiceImplTest 
 		// various experiments uses various lietuvos trasnsciption
 		Marker keywordMarker = findKeyword(aWavFile);
 		result.setAudioLength(length);
-		result.setOriginalMarker(keywordMarker);
+		result.getOriginalMarker().add(keywordMarker);
 		result.setFileName(aWavFile.getName());
 
 		// when

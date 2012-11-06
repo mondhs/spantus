@@ -60,7 +60,7 @@ public class WindowScrollingSpottingTest extends AbstractSegmentExtractorTest {
 	public void testWordSpotting() throws MalformedURLException {
 		// given
 		URL aWavUrl = getWavFile().toURI().toURL();
-		spottingService.setKeySegment(findKeywordSegment(getWavFile(), "skirt"));
+		spottingService.setKeySegment(findKeywordSegment("skirt", getWavFile(), "skirt"));
 		final SignalSegment foundSegment = new SignalSegment();
 		// when
 		spottingService.wordSpotting(aWavUrl, new SpottingListener() {
@@ -106,13 +106,13 @@ public class WindowScrollingSpottingTest extends AbstractSegmentExtractorTest {
 	}
 
 
-	protected SignalSegment findKeywordSegment(File aWavFile, String keyWord) {
+	protected SignalSegment findKeywordSegment(String keyWordValue, File aWavFile, String keyWordCode) {
 		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
-		Marker keywordMarker = getMarkerService().findFirstByLabel(markers,keyWord);
+		Marker keywordMarker = getMarkerService().findFirstByLabel(markers,keyWordCode);
 //    		Marker marker = findKeyword(aWavFile, keyWord);
     	 SignalSegment keySegment = new SignalSegment(new Marker(keywordMarker.getStart(),
     			 keywordMarker.getLength(),
-    			 keyWord));
+    			 keyWordValue));
         return keySegment;
     }
 

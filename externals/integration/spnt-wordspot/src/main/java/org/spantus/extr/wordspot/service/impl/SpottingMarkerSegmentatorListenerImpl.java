@@ -156,7 +156,7 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
                 second = recognitionResult;
                 break;
             }
-            LOG.debug("[match] matched segment: {0} [{1}]", recognitionResult.getInfo().getName(), recognitionResult.getScores());
+            //LOG.debug("[findFirstTwoDela] matched segment: {0} [{1}]", recognitionResult.getInfo().getName(), recognitionResult.getScores());
         }
         Double delta = null;
         Double firstMfccScore = null;

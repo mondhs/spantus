@@ -1,8 +1,5 @@
 package org.spantus.extr.wordspot.service.impl.test;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Collections2;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,10 +16,15 @@ import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.junit.SlowTests;
 import org.spantus.core.threshold.ClassifierEnum;
-import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
-import org.spantus.extr.wordspot.service.impl.WordSpottingListenerLogImpl;
+import org.spantus.extr.wordspot.guava.RecognitionResultSignalSegmentOrder;
 import org.spantus.extr.wordspot.service.impl.SyllableSpottingServiceImpl;
+import org.spantus.extr.wordspot.service.impl.WordSpottingListenerLogImpl;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Ordering;
 
 public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
 
@@ -32,6 +34,8 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
     private String searchWord;
     private String[] acceptableSyllables;
 
+    protected static final Ordering<Entry<RecognitionResult, SignalSegment>> order = new RecognitionResultSignalSegmentOrder();
+    
     protected File createRepositoryPathWord(File rootPath){
         return  new File(rootPath, "CORPUS/word");
     }
@@ -64,14 +68,14 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
     @Category(SlowTests.class)
     public void test_wordSpotting() throws MalformedURLException {
         //given
-        Long length = 1000L * AudioManagerFactory.createAudioManager().findLength(getWavFile().toURI().toURL()).longValue();
+        //Long length = 1000L * AudioManagerFactory.createAudioManager().findLength(getWavFile().toURI().toURL()).longValue();
         WordSpottingListenerLogImpl listener = new WordSpottingListenerLogImpl(getSearchWord(), getAcceptableSyllables(), repositoryPathWord.getAbsolutePath());
         listener.setServiceConfig(serviceConfig);
         URL url = getWavFile().toURI().toURL();
         //when 
-        long started = System.currentTimeMillis();
+        //long started = System.currentTimeMillis();
         wordSpottingServiceImpl.wordSpotting(url, listener);
-        long ended = System.currentTimeMillis();
+        //long ended = System.currentTimeMillis();
         Map<RecognitionResult, SignalSegment> segments = listener.getWordSegments();
         String resultsStr = extractResultStr(segments);
 
@@ -114,12 +118,14 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
     }
 
     protected String extractResultStr(Map<RecognitionResult, SignalSegment> segments) {
+    	List<Entry<RecognitionResult, SignalSegment>> orderedValues = order.sortedCopy(segments.entrySet());
         Joiner joiner = Joiner.on(";").skipNulls();
-        Collection<String> resultsCollection = Collections2.transform(segments.entrySet(),
+        Collection<String> resultsCollection = Collections2.transform(orderedValues,
                 new Function<Map.Entry<RecognitionResult, SignalSegment>, String>() {
                     @Override
                     public String apply(Entry<RecognitionResult, SignalSegment> input) {
-                        return input.getKey().getInfo().getName();
+                        return input.getKey().getInfo().getName()//+  input.getValue().getMarker().getStart()
+                        		;
                     }
                 });
 

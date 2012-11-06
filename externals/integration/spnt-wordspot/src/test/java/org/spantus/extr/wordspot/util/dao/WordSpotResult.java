@@ -4,8 +4,10 @@
  */
 package org.spantus.extr.wordspot.util.dao;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
 import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.Marker;
@@ -15,18 +17,18 @@ import org.spantus.core.marker.Marker;
  * @author mondhs
  */
 public class WordSpotResult {
-    private Marker originalMarker;
+    private List<Marker> originalMarker = new ArrayList<>();
     Map<RecognitionResult, SignalSegment> segments;
     private long experimentStarted;
     private long experimentEnded;
     private long audioLength;
     private String fileName;
 
-    public Marker getOriginalMarker() {
+    public List<Marker> getOriginalMarker() {
         return originalMarker;
     }
 
-    public void setOriginalMarker(Marker originalMarker) {
+    public void setOriginalMarker(List<Marker> originalMarker) {
         this.originalMarker = originalMarker;
     }
 

@@ -34,37 +34,38 @@ import org.spantus.extr.wordspot.util.dao.WordSpotResult;
 import org.spantus.extr.wordspot.util.dao.WspotJdbcDao;
 import org.spantus.extractor.impl.ExtractorEnum;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Ordering;
 
 /**
- *
+ * 
  * @author mondhs
  */
-public class WindowScrollingSpottingSyllableExp extends WindowScrollingSpottingTest {
+public class WindowScrollingSpottingSyllableExp extends
+		WindowScrollingSpottingTest {
 
-    private static final Logger log = Logger.getLogger(WindowScrollingSpottingSyllableExp.class);
-    
+	private static final Logger log = Logger
+			.getLogger(WindowScrollingSpottingSyllableExp.class);
+
 	private WspotJdbcDao wspotDao;
 
-	private static final String KEY_WORD_NAME = "liet";
-	
-    
-    private static final Ordering<Entry<RecognitionResult, SignalSegment>> order = new RecognitionResultSignalSegmentOrder();
+	private Map<String, String> keyWordMap = ImmutableMap.of("liet", "liet", "uvoos", "tuvos");
 
-    @Override
-    public void setUp() throws Exception {
-    	super.setUp();
+	private static final Ordering<Entry<RecognitionResult, SignalSegment>> order = new RecognitionResultSignalSegmentOrder();
+
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
 		wspotDao = new WspotJdbcDao();
-    }
-    
-    
-    @Override
-    protected File createRepositoryPathRoot(){
-        return  new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
-    }
-    
-   
-    
+	}
+
+	@Override
+	protected File createRepositoryPathRoot() {
+		return
+		 new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+//		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
+	}
+
 	@Override
 	protected File createWavFile(File aRepositoryPathRoot) {
 		String internalPath = "TEST/";
@@ -74,135 +75,158 @@ public class WindowScrollingSpottingSyllableExp extends WindowScrollingSpottingT
 		return new File(aRepositoryPathRoot, fileName);
 	}
 
-    
 
+	@Test
+	@Category(SlowTests.class)
+	public void bulkTest() throws MalformedURLException {
+		wspotDao.setRecreate(true);
+		wspotDao.init();
 
-    @Test
-    @Category(SlowTests.class)
-    public void bulkTest() throws MalformedURLException {
-        wspotDao.setRecreate(true);
-        wspotDao.init();
-        
-        File[] files = getWavFile().getParentFile().listFiles(new ExtNameFilter("wav"));
-        int foundSize = 0;
-        for (File file : files) {
-//            if(!file.getName().contains(
-//                    "RBg031126_13_31-30_1.wav"
-//                    )){
-//                continue;
-//            }
-             log.debug("start: " + file);
-                WordSpotResult result = doWordspot(file);
-                wspotDao.save(result);
-                foundSize += result.getSegments().size();
-//                String resultsStr = extractResultStr(result.getSegments());
-                log.debug("done: " + file);
-                log.error("Marker =>" + result.getOriginalMarker());
-                log.error(getWavFile() + "=>" + order.sortedCopy(result.getSegments().entrySet()));                
-        }
-//        log.error("files =>" + files.length);
-        log.error("foundSize =>" + foundSize);
-//        Assert.assertEquals(0, list.size());
-        wspotDao.destroy();
-        Assert.assertTrue("One element at least", foundSize>0);
+		File[] files = getWavFile().getParentFile().listFiles(
+				new ExtNameFilter("wav"));
+		int foundSize = 0;
+		for (File file : files) {
+			for (Entry<String, String> keyEntiry : keyWordMap.entrySet()) {
+				// if(!file.getName().contains(
+				// "RBg031126_13_31-30_1.wav"
+				// )){
+				// continue;
+				// }
 
-    }
-	
-
-    @Test
-    @Override
-    public void testWordSpotting() throws MalformedURLException {
-        //given
-        URL aWavUrl = getWavFile().toURI().toURL();
-        SignalSegment keySegment = findKeywordSegment(getWavFile(),  KEY_WORD_NAME);
-
-        getSpottingService().setKeySegment(keySegment);
-        final SignalSegment foundSegment = new SignalSegment();
-        //when
-        getSpottingService().wordSpotting(aWavUrl, new SpottingListener() {
-            @Override
-            public String foundSegment(String sourceId, SignalSegment newSegment, List<RecognitionResult> recognitionResults) {
-                foundSegment.setMarker(newSegment.getMarker());
-                return newSegment.getMarker().getLabel();
-            }
-        });
-        //then
-        assertNotNull("Keyword not found", foundSegment);
-        assertNotNull("Keyword not found", foundSegment.getMarker());
-        assertNotNull("Keyword not found", foundSegment.getMarker().getStart());
-        assertEquals("start of found key marker should be same", getSpottingService().getKeySegment().getMarker().getStart(),
-                foundSegment.getMarker().getStart(), 150L);
-    }
-    
-    /**
-     * 
-     * @param file
-     * @return
-     * @throws MalformedURLException
-     */
-    private WordSpotResult doWordspot(File aWavFile) throws MalformedURLException {
-    	 WordSpotResult result = new WordSpotResult();
-    	 URL aWavUrl = aWavFile.toURI().toURL();
-    	 SignalSegment keySegment = findKeywordSegment( aWavFile,  KEY_WORD_NAME);
- 	     Assert.assertNotNull("keyword not found", keySegment);
- 		 Long length = AudioManagerFactory.createAudioManager()
-				.findLengthInMils(aWavUrl);
-         result.setAudioLength(length);
-         result.setOriginalMarker(keySegment.getMarker());
-         result.setFileName(aWavFile.getName());
-         result.setExperimentStarted(System.currentTimeMillis());
-         final Map<RecognitionResult, SignalSegment> segments = new LinkedHashMap<>();
-         getSpottingService().setKeySegment(keySegment);
-    	 
-
-         final SignalSegment foundSegment = new SignalSegment();
-         //when
-         getSpottingService().wordSpotting(aWavUrl, new SpottingListener() {
-             @Override
-             public String foundSegment(String sourceId, SignalSegment newSegment, List<RecognitionResult> recognitionResults) {
-                 foundSegment.setMarker(newSegment.getMarker());
-                 segments.put(recognitionResults.get(0), newSegment);
-                 return newSegment.getMarker().getLabel();
-             }
-         });
-
-         result.setExperimentEnded(System.currentTimeMillis());
-         result.setSegments(segments);
-         
-         return result;
+				log.debug("start: " + file);
+				WordSpotResult result = doWordspot(keyEntiry.getValue(), file,
+						keyEntiry.getKey());
+				wspotDao.save(result);
+				foundSize += result.getSegments().size();
+				// String resultsStr = extractResultStr(result.getSegments());
+				log.debug("done: " + file);
+				log.error("Marker =>" + result.getOriginalMarker());
+				log.error(getWavFile() + "=>"
+						+ order.sortedCopy(result.getSegments().entrySet()));
+			}
+		}
+		// log.error("files =>" + files.length);
+		log.error("foundSize =>" + foundSize);
+		// Assert.assertEquals(0, list.size());
+		wspotDao.destroy();
+		Assert.assertTrue("One element at least", foundSize > 0);
 
 	}
-    
-    @Test
-    @Override
-    public void testExactPlaceWordSpotting() throws MalformedURLException {
-        //given
-        URL aWavUrl = getWavFile().toURI().toURL();
-        SignalSegment keySegment = findKeywordSegment(getWavFile(), KEY_WORD_NAME);
-        getSpottingService().setDelta(1);
-        getSpottingService().setKeySegment(keySegment);
+	@Ignore
+	@Test
+	@Override
+	public void testWordSpotting() throws MalformedURLException {
+		// given
+		URL aWavUrl = getWavFile().toURI().toURL();
+		for (Entry<String, String> keyEntiry : keyWordMap.entrySet()) {
+			SignalSegment keySegment = findKeywordSegment(keyEntiry.getValue(),
+					getWavFile(), keyEntiry.getKey());
 
-        //when
-        IExtractorInputReader reader = getSpottingService().createReader(aWavUrl);
-        SignalSegment recalculatedFeatures = getSpottingService().recalculateFeatures(reader, keySegment.getMarker());
-        List<RecognitionResult> matchedResults = getSpottingService().match(recalculatedFeatures);
+			getSpottingService().setKeySegment(keySegment);
+			final SignalSegment foundSegment = new SignalSegment();
+			// when
+			getSpottingService().wordSpotting(aWavUrl, new SpottingListener() {
+				@Override
+				public String foundSegment(String sourceId,
+						SignalSegment newSegment,
+						List<RecognitionResult> recognitionResults) {
+					foundSegment.setMarker(newSegment.getMarker());
+					return newSegment.getMarker().getLabel();
+				}
+			});
+			// then
+			assertNotNull("Keyword not found", foundSegment);
+			assertNotNull("Keyword not found", foundSegment.getMarker());
+			assertNotNull("Keyword not found", foundSegment.getMarker()
+					.getStart());
+			assertEquals("Keyword not found", keyEntiry.getValue(), foundSegment.getMarker().getLabel());
+			assertEquals(
+					"start of found key marker should be same",
+					getSpottingService().getKeySegment().getMarker().getStart(),
+					foundSegment.getMarker().getStart(), 150L);
+		}
 
-        //then
+	}
 
-        assertNotNull(matchedResults);
-        assertEquals("Results", 3, matchedResults.size());
-        RecognitionResult matched = matchedResults.get(0);
-        assertEquals("Results", "liet", matched.getInfo().getName());
-        assertEquals("Results", 7087807282.6, matched.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 1);
-    }
-    
-	protected SignalSegment findKeywordSegment(String keyWordName, File aWavFile, String... keyWordSequence) {
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 * @throws MalformedURLException
+	 */
+	private WordSpotResult doWordspot(String keywordValue, File aWavFile,
+			String keyWordCode) throws MalformedURLException {
+		WordSpotResult result = new WordSpotResult();
+		URL aWavUrl = aWavFile.toURI().toURL();
+		SignalSegment keySegment = findKeywordSegment(keywordValue, aWavFile,
+				keyWordCode);
+		Assert.assertNotNull("keyword not found", keySegment);
+		Long length = AudioManagerFactory.createAudioManager()
+				.findLengthInMils(aWavUrl);
+		result.setAudioLength(length);
+		result.getOriginalMarker().add(keySegment.getMarker());
+		result.setFileName(aWavFile.getName());
+		result.setExperimentStarted(System.currentTimeMillis());
+		final Map<RecognitionResult, SignalSegment> segments = new LinkedHashMap<>();
+		getSpottingService().setKeySegment(keySegment);
+
+		final SignalSegment foundSegment = new SignalSegment();
+		// when
+		getSpottingService().wordSpotting(aWavUrl, new SpottingListener() {
+			@Override
+			public String foundSegment(String sourceId,
+					SignalSegment newSegment,
+					List<RecognitionResult> recognitionResults) {
+				foundSegment.setMarker(newSegment.getMarker());
+				segments.put(recognitionResults.get(0), newSegment);
+				return newSegment.getMarker().getLabel();
+			}
+		});
+
+		result.setExperimentEnded(System.currentTimeMillis());
+		result.setSegments(segments);
+
+		return result;
+
+	}
+	@Ignore
+	@Test
+	@Override
+	public void testExactPlaceWordSpotting() throws MalformedURLException {
+		// given
+		URL aWavUrl = getWavFile().toURI().toURL();
+		SignalSegment keySegment = findKeywordSegment("liet", getWavFile(),
+				"liet");
+		getSpottingService().setDelta(1);
+		getSpottingService().setKeySegment(keySegment);
+
+		// when
+		IExtractorInputReader reader = getSpottingService().createReader(
+				aWavUrl);
+		SignalSegment recalculatedFeatures = getSpottingService()
+				.recalculateFeatures(reader, keySegment.getMarker());
+		List<RecognitionResult> matchedResults = getSpottingService().match(
+				recalculatedFeatures);
+
+		// then
+
+		assertNotNull(matchedResults);
+		assertEquals("Results", 3, matchedResults.size());
+		RecognitionResult matched = matchedResults.get(0);
+		assertEquals("Results", "liet", matched.getInfo().getName());
+		assertEquals("Results", 7087807282.6, matched.getDetails()
+				.getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 1);
+	}
+
+	protected SignalSegment findKeywordSegment(String keyWordName,
+			File aWavFile, String... keyWordSequence) {
 		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
-		Marker keywordMarker = getMarkerService().findFirstByPhrase(markers, keyWordSequence);
-//    		Marker marker = findKeyword(aWavFile, keyWord);
-    	 SignalSegment keySegment = new SignalSegment(new Marker(keywordMarker.getStart(),
-    			 keywordMarker.getLength(),
-    			 keyWordName));
-        return keySegment;
-    }
+		Marker keywordMarker = getMarkerService().findFirstByPhrase(markers,
+				keyWordSequence);
+		// Marker marker = findKeyword(aWavFile, keyWord);
+		SignalSegment keySegment = new SignalSegment(new Marker(
+				keywordMarker.getStart(), keywordMarker.getLength(),
+				keyWordName));
+		return keySegment;
+	}
 }

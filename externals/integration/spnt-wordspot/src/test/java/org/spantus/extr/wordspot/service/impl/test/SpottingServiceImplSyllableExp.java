@@ -22,45 +22,40 @@ import org.spantus.core.junit.SlowTests;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.wav.AudioManagerFactory;
-import org.spantus.extr.wordspot.guava.RecognitionResultSignalSegmentOrder;
 import org.spantus.extr.wordspot.service.impl.SyllableSpottingListenerLogImpl;
-import org.spantus.extr.wordspot.service.impl.WordSpottingListenerLogImpl;
 import org.spantus.extr.wordspot.service.impl.test.util.ExtNameFilter;
 import org.spantus.extr.wordspot.util.dao.WordSpotResult;
 import org.spantus.extr.wordspot.util.dao.WspotJdbcDao;
 
-import com.google.common.collect.Ordering;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * 
  * @author as
  */
-public class WordSpottingServiceImplSyllableExp extends WordSpottingServiceImplTest {
+public class SpottingServiceImplSyllableExp extends WordSpottingServiceImplTest {
 
 	private static final Logger log = Logger
-			.getLogger(WordSpottingServiceImplSyllableExp.class);
+			.getLogger(SpottingServiceImplSyllableExp.class);
 
-	private static final String[] KEY_WORD_SEQUENCE_ARR = new String[]{"liet"};
+	private final static Map<String, String> keyWordMap = ImmutableMap.of(
+			"liet", "liet", "uvoos", "tuvos");
 	private WspotJdbcDao wspotDao;
-
-	private static final Ordering<Entry<RecognitionResult, SignalSegment>> order = new RecognitionResultSignalSegmentOrder();
 
 	@Before
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		setAcceptableSyllables(KEY_WORD_SEQUENCE_ARR);
+		setAcceptableSyllables(keyWordMap.values().toArray(
+				new String[keyWordMap.size()]));
 		wspotDao = new WspotJdbcDao();
 	}
 
 	@Override
 	protected File createRepositoryPathRoot() {
-//		String rootPath = "/TEST/"
-		// "/tmp/test" //
-		// "/home/as/tmp/garsynas.lietuvos-syn-wpitch/TEST/"
-		// "/home/as/tmp/garsynas.lietuvos-syn-wopitch//TEST"
-		;
-		return new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
+		return
+		new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+		//new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
 	}
 
 	@Override
@@ -71,7 +66,6 @@ public class WordSpottingServiceImplSyllableExp extends WordSpottingServiceImplT
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
-
 	@Ignore
 	@Test
 	@Category(SlowTests.class)
@@ -89,16 +83,16 @@ public class WordSpottingServiceImplSyllableExp extends WordSpottingServiceImplT
 		// then
 		// Assert.assertTrue("read time " + length + ">"+(ended-started), length
 		// > ended-started);
-		Assert.assertEquals("Recognition", KEY_WORD_SEQUENCE_ARR[0], resultsStr);
-		SignalSegment firstSegment = result.getSegments().values().iterator()
-				.next();
-		Assert.assertEquals("Recognition start", result.getOriginalMarker()
-				.getStart(), firstSegment.getMarker().getStart(), 320D);
-		Assert.assertEquals("Recognition length", result.getOriginalMarker()
-				.getLength(), firstSegment.getMarker().getLength(), 150);
+		Assert.assertEquals("Recognition", "tuvos;liet;tuvos;tuvos", resultsStr);
+//		SignalSegment firstSegment = result.getSegments().values().iterator()
+//				.next();
+		// Assert.assertEquals("Recognition start", result.getOriginalMarker()
+		// .getStart(), firstSegment.getMarker().getStart(), 320D);
+		// Assert.assertEquals("Recognition length", result.getOriginalMarker()
+		// .getLength(), firstSegment.getMarker().getLength(), 150);
 
 	}
-	
+
 
 	@Test
 	@Category(SlowTests.class)
@@ -110,11 +104,9 @@ public class WordSpottingServiceImplSyllableExp extends WordSpottingServiceImplT
 				new ExtNameFilter("wav"));
 		int foundSize = 0;
 		for (File file : files) {
-			// if(!file.getName().contains(
-			// "RZd0706_18_06-30_1.wav"
-			// )){
-			// continue;
-			// }
+//			if (!file.getName().contains("RZd0706_18_06-30_1.wav")) {
+//				continue;
+//			}
 			log.debug("start: " + file);
 			WordSpotResult result = doWordspot(file);
 			wspotDao.save(result);
@@ -145,9 +137,13 @@ public class WordSpottingServiceImplSyllableExp extends WordSpottingServiceImplT
 		Long length = AudioManagerFactory.createAudioManager()
 				.findLengthInMils(aWavUrl);
 		// various experiments uses various lietuvos trasnsciption
-		Marker keywordMarker = findKeyword(aWavFile);
+		for (Entry<String, String> element : keyWordMap.entrySet()) {
+			SignalSegment signalSegment = findKeywordSegment(element.getValue(), aWavFile, element.getKey());
+			result.getOriginalMarker().add(signalSegment.getMarker());
+		}
+		// 
 		result.setAudioLength(length);
-		result.setOriginalMarker(keywordMarker);
+		// 
 		result.setFileName(aWavFile.getName());
 
 		// when
@@ -161,11 +157,16 @@ public class WordSpottingServiceImplSyllableExp extends WordSpottingServiceImplT
 
 	}
 
-	private Marker findKeyword(File aWavFile) {
-		MarkerSetHolder markerSetHolder = findMarkerSetHolderByWav(aWavFile);
-		String keyMakerLabel = KEY_WORD_SEQUENCE_ARR[0];
-		Marker marker = getMarkerService().findFirstByLabel(markerSetHolder, keyMakerLabel);
-		marker.setLabel(keyMakerLabel);
-		return marker;
+	protected SignalSegment findKeywordSegment(String keyWordValue,
+			File aWavFile, String keyWordCode) {
+		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
+		Marker keywordMarker = getMarkerService().findFirstByLabel(markers,
+				keyWordCode);
+		// Marker marker = findKeyword(aWavFile, keyWord);
+		SignalSegment keySegment = new SignalSegment(new Marker(
+				keywordMarker.getStart(), keywordMarker.getLength(),
+				keyWordValue));
+		return keySegment;
 	}
+
 }
