@@ -41,11 +41,11 @@ import com.google.common.collect.Ordering;
  * 
  * @author mondhs
  */
-public class WindowScrollingSpottingSyllableExp extends
+public class SyllableWindowScrollingSpottingExp extends
 		WindowScrollingSpottingTest {
 
 	private static final Logger log = Logger
-			.getLogger(WindowScrollingSpottingSyllableExp.class);
+			.getLogger(SyllableWindowScrollingSpottingExp.class);
 
 	private WspotJdbcDao wspotDao;
 
@@ -62,7 +62,8 @@ public class WindowScrollingSpottingSyllableExp extends
 	@Override
 	protected File createRepositoryPathRoot() {
 		return
-		 new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
+//		 new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
 //		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
 	}
 

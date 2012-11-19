@@ -1,6 +1,5 @@
 package org.spantus.exp.synthesis;
 
-import com.google.common.io.ByteStreams;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,12 +10,16 @@ import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.logger.Logger;
+
+import com.google.common.io.ByteStreams;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -45,8 +48,11 @@ public class EspeakMbrollaGeneratorLt extends AbstractSpeechGenerator {
             Process process = Runtime.getRuntime().exec(command);
             try (OutputStream stdin = process.getOutputStream()) {
                 for (MarkerMbrola markerSynthesis : phonemes) {
-                    stdin.write(markerSynthesis.toMbrolaString()
-                            .getBytes(Charset.forName("UTF-8")));
+                	String mbrollaStr = null;
+                	//mbrollaStr = markerSynthesis.toMbrolaString();
+                	mbrollaStr = markerSynthesis.toMbrolaStringWithPitch();
+                	stdin.write(
+                			mbrollaStr.getBytes(Charset.forName("UTF-8")));
                 }
             }
             AudioFormat format = new AudioFormat(16000f, 16, 1, true, false);
@@ -131,9 +137,9 @@ public class EspeakMbrollaGeneratorLt extends AbstractSpeechGenerator {
 //                break;
 //            default:
                 float lenghtCoef =
-//                        1F;
+                        1F;
 //                        rand();
-                		lengthCoef;
+//                		lengthCoef;
                 Marker marker = phoneMarker.getMarker();
                 long newLength = (long) (marker.getLength() * lenghtCoef);
                 marker.setLength(newLength);

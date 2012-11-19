@@ -228,7 +228,11 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
             firstResult = null;
         }
         if(firstResult!=null){
-            getWordSegments().put(firstResult, segmentWord);
+        	if(getTarget().equals(segmentWord.getMarker().getLabel())){
+        		getWordSegments().put(firstResult, segmentWord);
+        	}else{
+        		LOG.debug("[processEndedSegment] reject word [{0}] as do not match target [{1}]",segmentWord.getMarker().getLabel(), getTarget());
+        	}
         }
         
         

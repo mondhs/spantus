@@ -22,46 +22,50 @@ import org.spantus.core.junit.SlowTests;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.wav.AudioManagerFactory;
-import org.spantus.extr.wordspot.service.impl.SyllableSpottingListenerLogImpl;
+import org.spantus.extr.wordspot.guava.RecognitionResultSignalSegmentOrder;
+import org.spantus.extr.wordspot.service.impl.WordSpottingListenerLogImpl;
 import org.spantus.extr.wordspot.service.impl.test.util.ExtNameFilter;
 import org.spantus.extr.wordspot.util.dao.WordSpotResult;
 import org.spantus.extr.wordspot.util.dao.WspotJdbcDao;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Ordering;
 
 /**
  * 
  * @author as
  */
-public class SpottingServiceImplSyllableExp extends WordSpottingServiceImplTest {
+public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
+
+	private static final String SEARCH_KEY_WORD = "lietuvos";
 
 	private static final Logger log = Logger
-			.getLogger(SpottingServiceImplSyllableExp.class);
+			.getLogger(WordSpottingServiceImplExp.class);
 
-	private final static Map<String, String> keyWordMap = ImmutableMap.of(
-			"liet", "liet", "uvoos", "tuvos");
 	private WspotJdbcDao wspotDao;
+
+	private static final Ordering<Entry<RecognitionResult, SignalSegment>> order = new RecognitionResultSignalSegmentOrder();
 
 	@Before
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		setAcceptableSyllables(keyWordMap.values().toArray(
-				new String[keyWordMap.size()]));
+		setSearchWord(SEARCH_KEY_WORD);
+		setAcceptableSyllables(new String[] { "liet", "tuvos" });
 		wspotDao = new WspotJdbcDao();
 	}
 
 	@Override
 	protected File createRepositoryPathRoot() {
-		return
-		new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
-		//new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
+		return 
+				new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
+//				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+//				new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
 	}
 
 	@Override
 	protected File createWavFile(File aRepositoryPathRoot) {
 		String internalPath = "TEST/";
-		String fileName = internalPath + "RBg031126_13_31-30_1.wav"
+		String fileName = internalPath + "RZg0819_18_41b-30_1.wav"
 		// "lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
@@ -83,16 +87,16 @@ public class SpottingServiceImplSyllableExp extends WordSpottingServiceImplTest 
 		// then
 		// Assert.assertTrue("read time " + length + ">"+(ended-started), length
 		// > ended-started);
-		Assert.assertEquals("Recognition", "tuvos;liet;tuvos;tuvos", resultsStr);
-//		SignalSegment firstSegment = result.getSegments().values().iterator()
-//				.next();
-		// Assert.assertEquals("Recognition start", result.getOriginalMarker()
-		// .getStart(), firstSegment.getMarker().getStart(), 320D);
-		// Assert.assertEquals("Recognition length", result.getOriginalMarker()
-		// .getLength(), firstSegment.getMarker().getLength(), 150);
+		Assert.assertEquals("Recognition", SEARCH_KEY_WORD, resultsStr);
+		SignalSegment firstSegment = result.getSegments().values().iterator()
+				.next();
+		Marker firstOriginal = result.getOriginalMarker().get(0);
+		Assert.assertEquals("Recognition start", firstOriginal
+				.getStart(), firstSegment.getMarker().getStart(), 320D);
+		Assert.assertEquals("Recognition length", firstOriginal
+				.getLength(), firstSegment.getMarker().getLength(), 200);
 
 	}
-
 
 	@Test
 	@Category(SlowTests.class)
@@ -104,9 +108,11 @@ public class SpottingServiceImplSyllableExp extends WordSpottingServiceImplTest 
 				new ExtNameFilter("wav"));
 		int foundSize = 0;
 		for (File file : files) {
-//			if (!file.getName().contains("RZd0706_18_06-30_1.wav")) {
-//				continue;
-//			}
+			// if(!file.getName().contains(
+			// "RZd0706_18_06-30_1.wav"
+			// )){
+			// continue;
+			// }
 			log.debug("start: " + file);
 			WordSpotResult result = doWordspot(file);
 			wspotDao.save(result);
@@ -130,20 +136,17 @@ public class SpottingServiceImplSyllableExp extends WordSpottingServiceImplTest 
 		URL aWavUrl = aWavFile.toURI().toURL();
 
 		WordSpotResult result = new WordSpotResult();
-		SyllableSpottingListenerLogImpl listener = new SyllableSpottingListenerLogImpl(
+		WordSpottingListenerLogImpl listener = new WordSpottingListenerLogImpl(
 				getSearchWord(), getAcceptableSyllables(),
 				getRepositoryPathWord().getAbsolutePath());
 		listener.setServiceConfig(serviceConfig);
 		Long length = AudioManagerFactory.createAudioManager()
 				.findLengthInMils(aWavUrl);
 		// various experiments uses various lietuvos trasnsciption
-		for (Entry<String, String> element : keyWordMap.entrySet()) {
-			SignalSegment signalSegment = findKeywordSegment(element.getValue(), aWavFile, element.getKey());
-			result.getOriginalMarker().add(signalSegment.getMarker());
-		}
-		// 
+		Marker keywordMarker = findKeyword(aWavFile);
+		keywordMarker.setLabel(SEARCH_KEY_WORD);
 		result.setAudioLength(length);
-		// 
+		result.getOriginalMarker().add(keywordMarker);
 		result.setFileName(aWavFile.getName());
 
 		// when
@@ -157,16 +160,20 @@ public class SpottingServiceImplSyllableExp extends WordSpottingServiceImplTest 
 
 	}
 
-	protected SignalSegment findKeywordSegment(String keyWordValue,
-			File aWavFile, String keyWordCode) {
+	private Marker findKeyword(File aWavFile) {
 		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
-		Marker keywordMarker = getMarkerService().findFirstByLabel(markers,
-				keyWordCode);
-		// Marker marker = findKeyword(aWavFile, keyWord);
-		SignalSegment keySegment = new SignalSegment(new Marker(
-				keywordMarker.getStart(), keywordMarker.getLength(),
-				keyWordValue));
-		return keySegment;
+		Marker marker = getMarkerService().findFirstByLabel(markers, "-l'-ie-t-|-u-v-oo-s");
+		if (marker == null) {
+			Marker lietMarker = getMarkerService().findFirstByLabel(markers,"-l-ie-t");
+			Marker uvosMarker = getMarkerService().findFirstByLabel(markers,"-u-v-o:-s");
+			if (uvosMarker == null) {
+				uvosMarker = getMarkerService().findFirstByLabel(markers,"-u-v-oo-s");
+			}
+			marker = new Marker();
+			marker.setStart(lietMarker.getStart());
+			marker.setEnd(uvosMarker.getEnd());
+			marker.setLabel(lietMarker.getLabel() + uvosMarker.getLabel());
+		}
+		return marker;
 	}
-
 }

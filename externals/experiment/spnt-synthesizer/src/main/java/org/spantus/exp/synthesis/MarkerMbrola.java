@@ -43,10 +43,17 @@ public class MarkerMbrola {
     public String toMbrolaString() {
         StringBuilder phonemeBuilder = new StringBuilder();
         phonemeBuilder.append(getMarker().getLabel()).append(" ").append(getMarker().getLength());
-//        for (Pair<Integer, Integer> durationAndValue : this.getPitches()) {
-//            phonemeBuilder.append("\t").append(durationAndValue.fst())
-//                    .append(" ").append(durationAndValue.snd());
-//        }
+        phonemeBuilder.append("\n");
+        return phonemeBuilder.toString();
+    }
+    
+    public String toMbrolaStringWithPitch() {
+        StringBuilder phonemeBuilder = new StringBuilder();
+        phonemeBuilder.append(getMarker().getLabel()).append(" ").append(getMarker().getLength());
+        for (Pair<Integer, Integer> durationAndValue : this.getPitches()) {
+            phonemeBuilder.append("\t").append(durationAndValue.fst())
+                    .append(" ").append(durationAndValue.snd());
+        }
         phonemeBuilder.append("\n");
         return phonemeBuilder.toString();
     }

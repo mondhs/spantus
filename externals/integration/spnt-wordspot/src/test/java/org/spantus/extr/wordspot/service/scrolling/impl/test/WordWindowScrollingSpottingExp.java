@@ -40,9 +40,9 @@ import com.google.common.collect.Ordering;
  *
  * @author mondhs
  */
-public class WindowScrollingSpottingWordExp extends WindowScrollingSpottingTest {
+public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest {
 
-    private static final Logger log = Logger.getLogger(WindowScrollingSpottingWordExp.class);
+    private static final Logger log = Logger.getLogger(WordWindowScrollingSpottingExp.class);
     
 	private WspotJdbcDao wspotDao;
 
@@ -62,7 +62,8 @@ public class WindowScrollingSpottingWordExp extends WindowScrollingSpottingTest 
     @Override
     protected File createRepositoryPathRoot(){
         return  
-				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+        		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
+//				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
 //        		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
     }
     
@@ -82,14 +83,6 @@ public class WindowScrollingSpottingWordExp extends WindowScrollingSpottingTest 
 
     
 
-//    @Override
-//    protected Marker findByLabel(MarkerSetHolder markers) {
-//        Marker rtn = findKeyword(getWavFile(), "-l-ie-t");
-//        //new Marker(4137L, 363L, "liet");
-//        rtn.setLabel("liet");
-//        return rtn;
-//        
-//    }
     @Test
     @Category(SlowTests.class)
     public void bulkTest() throws MalformedURLException {
@@ -145,7 +138,7 @@ public class WindowScrollingSpottingWordExp extends WindowScrollingSpottingTest 
         assertNotNull("Keyword not found", foundSegment.getMarker());
         assertNotNull("Keyword not found", foundSegment.getMarker().getStart());
         assertEquals("start of found key marker same as matched", getSpottingService().getKeySegment().getMarker().getStart(),
-                foundSegment.getMarker().getStart(), 120L);
+                foundSegment.getMarker().getStart(), 220L);
     }
     
     /**
@@ -186,8 +179,7 @@ public class WindowScrollingSpottingWordExp extends WindowScrollingSpottingTest 
          return result;
 
 	}
-    
-	@Ignore  
+    @Ignore
     @Test
     @Override
     public void testExactPlaceWordSpotting() throws MalformedURLException {
@@ -205,9 +197,9 @@ public class WindowScrollingSpottingWordExp extends WindowScrollingSpottingTest 
         //then
 
         assertNotNull(matchedResults);
-        assertEquals("Results", 4, matchedResults.size());
+        assertEquals("Results", 2, matchedResults.size());
         RecognitionResult matched = matchedResults.get(0);
-        assertEquals("Results", "lietuvos", matched.getInfo().getName());
+        assertEquals("Results", KEY_WORD_NAME, matched.getInfo().getName());
         assertEquals("Results", 29332559613.881, matched.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 1);
     }
     

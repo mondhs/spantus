@@ -1,7 +1,5 @@
 package org.spantus.exp.synthesis;
 
-import com.google.common.base.Splitter;
-import com.google.common.io.ByteStreams;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +7,10 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Map;
-import java.util.regex.Pattern;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+
 import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
@@ -19,6 +18,8 @@ import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.logger.Logger;
 import org.spantus.work.services.WorkServiceFactory;
 import org.spantus.work.services.impl.MarkerProxyDao;
+
+import com.google.common.io.ByteStreams;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
