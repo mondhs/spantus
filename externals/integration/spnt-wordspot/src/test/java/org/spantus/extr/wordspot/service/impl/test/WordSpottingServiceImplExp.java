@@ -10,7 +10,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -38,7 +39,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 
 	private static final String SEARCH_KEY_WORD = "lietuvos";
 
-	private static final Logger log = Logger
+	private static final Logger log = LoggerFactory
 			.getLogger(WordSpottingServiceImplExp.class);
 
 	private WspotJdbcDao wspotDao;

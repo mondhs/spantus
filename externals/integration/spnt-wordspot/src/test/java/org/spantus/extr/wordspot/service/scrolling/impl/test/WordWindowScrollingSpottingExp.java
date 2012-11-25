@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -42,7 +43,7 @@ import com.google.common.collect.Ordering;
  */
 public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest {
 
-    private static final Logger log = Logger.getLogger(WordWindowScrollingSpottingExp.class);
+    private static final Logger log = LoggerFactory.getLogger(WordWindowScrollingSpottingExp.class);
     
 	private WspotJdbcDao wspotDao;
 
@@ -62,8 +63,8 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
     @Override
     protected File createRepositoryPathRoot(){
         return  
-        		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
-//				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+//        		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
+				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
 //        		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
     }
     
@@ -74,15 +75,19 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
     
 	@Override
 	protected File createWavFile(File aRepositoryPathRoot) {
-		String internalPath = "TEST/";
-		String fileName = internalPath + "RBg031126_13_31-30_1.wav"
-		// "lietuvos_mbr_test-30_1.wav"
+		String internalPath = 
+				"TRAIN/"
+//				"TEST/"
+				;
+		String fileName = internalPath + 
+//				"RBg031126_13_31-30_1.wav"
+		 "lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
 
     
-
+	@Ignore
     @Test
     @Category(SlowTests.class)
     public void bulkTest() throws MalformedURLException {
@@ -115,7 +120,7 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
     }
 	
 
-	@Ignore
+
     @Test
     @Override
     public void testWordSpotting() throws MalformedURLException {
@@ -179,7 +184,6 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
          return result;
 
 	}
-    @Ignore
     @Test
     @Override
     public void testExactPlaceWordSpotting() throws MalformedURLException {
@@ -200,7 +204,7 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
         assertEquals("Results", 2, matchedResults.size());
         RecognitionResult matched = matchedResults.get(0);
         assertEquals("Results", KEY_WORD_NAME, matched.getInfo().getName());
-        assertEquals("Results", 29332559613.881, matched.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 1);
+        assertEquals("Results", 3.9494287781605034E10, matched.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 1);
     }
     
 	protected SignalSegment findKeywordSegment(String keyWordName, File aWavFile, String... keyWordSequence) {

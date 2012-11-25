@@ -6,7 +6,8 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.math.services.impl.ConvexHullServiceImpl;
@@ -15,7 +16,7 @@ import org.spantus.math.windowing.WindowingEnum;
 import org.spantus.math.windowing.WindowingFactory;
 
 public class ConvexHullTest {
-	public static final Logger LOG = Logger.getLogger(ConvexHullTest.class);
+	public static final Logger LOG = LoggerFactory.getLogger(ConvexHullTest.class);
 	private List<Double> signalDouble;
 	private Integer[] idealResult = new Integer[]{
 			0,

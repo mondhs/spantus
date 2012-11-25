@@ -7,6 +7,9 @@ package org.spantus.extr.wordspot.service.scrolling.impl;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
 import org.spantus.core.beans.FrameVectorValuesHolder;
@@ -15,15 +18,12 @@ import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.service.CorpusService;
-import org.spantus.externals.recognition.services.RecognitionServiceFactory;
-import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extr.wordspot.dto.SpottingSyllableCtx;
 import org.spantus.extr.wordspot.service.SpottingListener;
 import org.spantus.extr.wordspot.service.impl.SpottingService;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.utils.Assert;
 import org.spantus.work.services.WorkExtractorReaderService;
-import org.spantus.work.services.WorkServiceFactory;
 
 /**
  *
@@ -32,6 +32,7 @@ import org.spantus.work.services.WorkServiceFactory;
  */
 public class WindowScrollingSpottingServiceImpl implements SpottingService {
 
+	private static final Logger log = LoggerFactory.getLogger(WindowScrollingSpottingServiceImpl.class);
     private WorkExtractorReaderService extractorReaderService;
     private CorpusService corpusService;
     private SignalSegment keySegment;
@@ -49,7 +50,7 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
         IExtractorInputReader aReader = createReader(urlFile);
         long availableStartMs = aReader.getAvailableSignalLengthMs() - 
         		keySegment.getMarker().getLength();
-        for (long start = 10; start < availableStartMs; start += delta) {
+        for (long start = 10; start < availableStartMs; start += getDelta()) {
             Marker iMarker = new Marker(start,
             		keySegment.getMarker().getLength(),""	);
             SignalSegment segment = recalculateFeatures(aReader, iMarker);
@@ -100,8 +101,11 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
             if (firstGoodMatch == null) {
                 return true;
             }
-            String name = firstMatch.getInfo().getName();
-            Double firstMfccValue = firstMatch.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+            String name = firstGoodMatch.getInfo().getName();
+//            firstMatch.getInfo().getName();
+            Double firstMfccValue = firstGoodMatch.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+            //firstMatch.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+            
             ctx.getResultMap().put(start, result);
             ctx.getSyllableNameMap().put(start, name);
             ctx.getMinMfccMap().put(start, firstMfccValue);

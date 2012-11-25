@@ -43,7 +43,7 @@ public abstract class AbstractSegmentExtractorTest {
 
         Assert.assertTrue("repositoryPath exists " + getRepositoryPath().getAbsolutePath(), getRepositoryPath().exists());
         Assert.assertTrue("repositoryPath is directory", getRepositoryPath().isDirectory());
-        Assert.assertTrue("wavFile not exists", getWavFile().exists());
+        Assert.assertTrue("wavFile not exists" + getWavFile(), getWavFile().exists());
         segmentExtractorService = new SegmentExtractorServiceImpl();
         segmentExtractorService.setServiceConfig(serviceConfig);
         segmentExtractorService.getServiceConfig().setRepositoryPath(getRepositoryPath().getAbsolutePath());

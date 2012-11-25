@@ -2,15 +2,16 @@ package org.spantus.work.ui.logger;
 
 import java.text.MessageFormat;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spantus.logger.ILogger;
 
 
-public class LoggerLog4j implements ILogger{
+public class LoggerSlf4j implements ILogger{
 	Logger logger;
 	
-	public LoggerLog4j(Class<?> logClass){
-	    this.logger = Logger.getLogger(logClass);
+	public LoggerSlf4j(Class<?> logClass){
+	    this.logger = LoggerFactory.getLogger(logClass);
 	}
 
 	public void debug(String pattern, Object... arguments) {
@@ -24,6 +25,10 @@ public class LoggerLog4j implements ILogger{
 	public void error(String str) {
 		logger.error(str);
 	}
+        @Override
+        public void error(String pattern, Object... arguments) {
+            logger.error(MessageFormat.format(pattern, arguments));
+        }
 
 	public void error(Exception e) {
 		logger.error(e.getMessage(), e);
@@ -31,14 +36,9 @@ public class LoggerLog4j implements ILogger{
 	public void error(String str, Throwable e) {
 		logger.error(str, e);
 	}
-        @Override
-        public void error(String pattern, Object... arguments) {
-            logger.error(MessageFormat.format(pattern, arguments));
-        }
-
 
 	public void fatal(String str) {
-		logger.fatal(str);
+		logger.error(str);
 	}
 
 	public void info(String pattern, Object... arguments) {
@@ -54,7 +54,6 @@ public class LoggerLog4j implements ILogger{
 	public boolean isDebugMode() {
 		return logger.isDebugEnabled();
 	}
-
 
 
 	

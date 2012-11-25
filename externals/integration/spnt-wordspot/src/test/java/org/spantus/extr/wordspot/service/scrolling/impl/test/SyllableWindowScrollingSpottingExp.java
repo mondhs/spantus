@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,7 +45,7 @@ import com.google.common.collect.Ordering;
 public class SyllableWindowScrollingSpottingExp extends
 		WindowScrollingSpottingTest {
 
-	private static final Logger log = Logger
+	private static final Logger LOG = LoggerFactory
 			.getLogger(SyllableWindowScrollingSpottingExp.class);
 
 	private WspotJdbcDao wspotDao;
@@ -62,21 +63,25 @@ public class SyllableWindowScrollingSpottingExp extends
 	@Override
 	protected File createRepositoryPathRoot() {
 		return
-		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
-//		 new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+//		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
+		 new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
 //		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
 	}
 
 	@Override
 	protected File createWavFile(File aRepositoryPathRoot) {
-		String internalPath = "TEST/";
-		String fileName = internalPath + "RBg031126_13_31-30_1.wav"
-		// "lietuvos_mbr_test-30_1.wav"
+		String internalPath =
+//				"TRAIN/"
+				"TEST/"
+				;
+		String fileName = internalPath + 
+		"RBg031126_13_31-30_1.wav"
+//		 "lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
 
-
+	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {
@@ -94,26 +99,26 @@ public class SyllableWindowScrollingSpottingExp extends
 				// continue;
 				// }
 
-				log.debug("start: " + file);
+				LOG.debug("start: " + file);
 				WordSpotResult result = doWordspot(keyEntiry.getValue(), file,
 						keyEntiry.getKey());
 				wspotDao.save(result);
 				foundSize += result.getSegments().size();
 				// String resultsStr = extractResultStr(result.getSegments());
-				log.debug("done: " + file);
-				log.error("Marker =>" + result.getOriginalMarker());
-				log.error(getWavFile() + "=>"
+				LOG.debug("done: " + file);
+				LOG.error("Marker =>" + result.getOriginalMarker());
+				LOG.error(getWavFile() + "=>"
 						+ order.sortedCopy(result.getSegments().entrySet()));
 			}
 		}
 		// log.error("files =>" + files.length);
-		log.error("foundSize =>" + foundSize);
+		LOG.error("foundSize =>" + foundSize);
 		// Assert.assertEquals(0, list.size());
 		wspotDao.destroy();
 		Assert.assertTrue("One element at least", foundSize > 0);
 
 	}
-	@Ignore
+
 	@Test
 	@Override
 	public void testWordSpotting() throws MalformedURLException {
@@ -144,7 +149,7 @@ public class SyllableWindowScrollingSpottingExp extends
 			assertEquals(
 					"start of found key marker should be same",
 					getSpottingService().getKeySegment().getMarker().getStart(),
-					foundSegment.getMarker().getStart(), 150L);
+					foundSegment.getMarker().getStart(), 250L);
 		}
 
 	}
@@ -190,7 +195,6 @@ public class SyllableWindowScrollingSpottingExp extends
 		return result;
 
 	}
-	@Ignore
 	@Test
 	@Override
 	public void testExactPlaceWordSpotting() throws MalformedURLException {
@@ -212,10 +216,10 @@ public class SyllableWindowScrollingSpottingExp extends
 		// then
 
 		assertNotNull(matchedResults);
-		assertEquals("Results", 3, matchedResults.size());
+		assertEquals("Results", 5, matchedResults.size());
 		RecognitionResult matched = matchedResults.get(0);
 		assertEquals("Results", "liet", matched.getInfo().getName());
-		assertEquals("Results", 7087807282.6, matched.getDetails()
+		assertEquals("Results", 9.71021772319221E9, matched.getDetails()
 				.getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 1);
 	}
 

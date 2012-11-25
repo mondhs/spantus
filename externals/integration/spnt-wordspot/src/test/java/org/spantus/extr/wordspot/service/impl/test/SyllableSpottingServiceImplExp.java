@@ -10,7 +10,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -35,7 +36,7 @@ import com.google.common.collect.ImmutableMap;
  */
 public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest {
 
-	private static final Logger log = Logger
+	private static final Logger log = LoggerFactory
 			.getLogger(SyllableSpottingServiceImplExp.class);
 
 	private final static Map<String, String> keyWordMap = ImmutableMap.of(
@@ -53,9 +54,10 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 
 	@Override
 	protected File createRepositoryPathRoot() {
-		return new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
+		return 
+//		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
 //		new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
-		// new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
+		 new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
 	}
 
 	@Override
@@ -67,7 +69,7 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		return new File(aRepositoryPathRoot, fileName);
 	}
 
-	@Ignore
+
 	@Test
 	@Category(SlowTests.class)
 	@Override
@@ -93,7 +95,7 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		// .getLength(), firstSegment.getMarker().getLength(), 150);
 
 	}
-
+	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {
