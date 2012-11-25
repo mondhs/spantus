@@ -24,10 +24,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
             <groupId>be.ac.ulg.montefiore.run.jahmm</groupId>
             <artifactId>jahmm</artifactId>
             <version>0.6.2</version>
