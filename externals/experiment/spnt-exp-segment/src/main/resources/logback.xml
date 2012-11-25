@@ -10,7 +10,7 @@
   <logger name="org.spantus.extr.wordspot" level="TRACE"/>
   
 
-  <root level="error">
+  <root level="debug">
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>

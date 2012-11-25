@@ -128,7 +128,7 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
         URL aWavUrl = getWavFile().toURI().toURL();
         SignalSegment keySegment = findKeywordSegment(KEY_WORD_NAME, getWavFile(),  KEY_WORD_SEQUENCE_ARR);
 
-        getSpottingService().setKeySegment(keySegment);
+        getSpottingService().addKeySegment(keySegment);
         final SignalSegment foundSegment = new SignalSegment();
         //when
         getSpottingService().wordSpotting(aWavUrl, new SpottingListener() {
@@ -142,7 +142,7 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
         assertNotNull("Keyword not found", foundSegment);
         assertNotNull("Keyword not found", foundSegment.getMarker());
         assertNotNull("Keyword not found", foundSegment.getMarker().getStart());
-        assertEquals("start of found key marker same as matched", getSpottingService().getKeySegment().getMarker().getStart(),
+        assertEquals("start of found key marker same as matched", getSpottingService().getKeySegmentList().get(0).getMarker().getStart(),
                 foundSegment.getMarker().getStart(), 220L);
     }
     
@@ -164,7 +164,7 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
          result.setFileName(aWavFile.getName());
          result.setExperimentStarted(System.currentTimeMillis());
          final Map<RecognitionResult, SignalSegment> segments = new LinkedHashMap<>();
-         getSpottingService().setKeySegment(keySegment);
+         getSpottingService().addKeySegment(keySegment);
     	 
 
          final SignalSegment foundSegment = new SignalSegment();
@@ -191,7 +191,7 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
         URL aWavUrl = getWavFile().toURI().toURL();
         SignalSegment keySegment = findKeywordSegment(KEY_WORD_NAME,  getWavFile(), KEY_WORD_SEQUENCE_ARR);
         getSpottingService().setDelta(1);
-        getSpottingService().setKeySegment(keySegment);
+        getSpottingService().addKeySegment(keySegment);
 
         //when
         IExtractorInputReader reader = getSpottingService().createReader(aWavUrl);
@@ -204,7 +204,7 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
         assertEquals("Results", 2, matchedResults.size());
         RecognitionResult matched = matchedResults.get(0);
         assertEquals("Results", KEY_WORD_NAME, matched.getInfo().getName());
-        assertEquals("Results", 3.9494287781605034E10, matched.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 1);
+        assertEquals("Results", 6E9, matched.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 1E9);
     }
     
 	protected SignalSegment findKeywordSegment(String keyWordName, File aWavFile, String... keyWordSequence) {

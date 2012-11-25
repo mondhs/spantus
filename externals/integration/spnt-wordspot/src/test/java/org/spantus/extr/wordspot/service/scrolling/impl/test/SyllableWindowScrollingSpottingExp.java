@@ -128,7 +128,7 @@ public class SyllableWindowScrollingSpottingExp extends
 			SignalSegment keySegment = findKeywordSegment(keyEntiry.getValue(),
 					getWavFile(), keyEntiry.getKey());
 
-			getSpottingService().setKeySegment(keySegment);
+			getSpottingService().addKeySegment(keySegment);
 			final SignalSegment foundSegment = new SignalSegment();
 			// when
 			getSpottingService().wordSpotting(aWavUrl, new SpottingListener() {
@@ -148,7 +148,7 @@ public class SyllableWindowScrollingSpottingExp extends
 			assertEquals("Keyword not found", keyEntiry.getValue(), foundSegment.getMarker().getLabel());
 			assertEquals(
 					"start of found key marker should be same",
-					getSpottingService().getKeySegment().getMarker().getStart(),
+					getSpottingService().getKeySegmentList().get(0).getMarker().getStart(),
 					foundSegment.getMarker().getStart(), 250L);
 		}
 
@@ -174,7 +174,7 @@ public class SyllableWindowScrollingSpottingExp extends
 		result.setFileName(aWavFile.getName());
 		result.setExperimentStarted(System.currentTimeMillis());
 		final Map<RecognitionResult, SignalSegment> segments = new LinkedHashMap<>();
-		getSpottingService().setKeySegment(keySegment);
+		getSpottingService().addKeySegment(keySegment);
 
 		final SignalSegment foundSegment = new SignalSegment();
 		// when
@@ -203,7 +203,7 @@ public class SyllableWindowScrollingSpottingExp extends
 		SignalSegment keySegment = findKeywordSegment("liet", getWavFile(),
 				"liet");
 		getSpottingService().setDelta(1);
-		getSpottingService().setKeySegment(keySegment);
+		getSpottingService().addKeySegment(keySegment);
 
 		// when
 		IExtractorInputReader reader = getSpottingService().createReader(

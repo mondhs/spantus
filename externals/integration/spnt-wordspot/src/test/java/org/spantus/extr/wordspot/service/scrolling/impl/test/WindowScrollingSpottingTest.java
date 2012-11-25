@@ -10,6 +10,7 @@ import static org.junit.Assert.assertNotNull;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -23,6 +24,7 @@ import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extr.wordspot.service.SpottingListener;
 import org.spantus.extr.wordspot.service.impl.test.AbstractSegmentExtractorTest;
+import org.spantus.extr.wordspot.service.scrolling.impl.ScrollingFactory;
 import org.spantus.extr.wordspot.service.scrolling.impl.WindowScrollingSpottingServiceImpl;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.work.services.WorkExtractorReaderService;
@@ -51,32 +53,34 @@ public class WindowScrollingSpottingTest extends AbstractSegmentExtractorTest {
 						.getServiceConfig().getSyllableDtwRadius(),
 						ExtractorEnum.MFCC_EXTRACTOR.name());
 
-		spottingService = new WindowScrollingSpottingServiceImpl();
-		spottingService.setCorpusService(corpusService);
-		spottingService.setExtractorReaderService(extractorReaderService);
+		spottingService = ScrollingFactory.createWindowScrollingSpottingServiceImpl(getRepositoryPath(), corpusService, extractorReaderService);
 	}
 
 	@Test
 	public void testWordSpotting() throws MalformedURLException {
 		// given
 		URL aWavUrl = getWavFile().toURI().toURL();
-		spottingService.setKeySegment(findKeywordSegment("skirt", getWavFile(), "skirt"));
-		final SignalSegment foundSegment = new SignalSegment();
+		spottingService.addKeySegment(findKeywordSegment("skirt", getWavFile(), "skirt"));
+		spottingService.addKeySegment(findKeywordSegment("zodz", getWavFile(), "zodz"));
+		final List<Marker> foundSegment = new ArrayList<Marker>();
 		// when
 		spottingService.wordSpotting(aWavUrl, new SpottingListener() {
 			@Override
 			public String foundSegment(String sourceId,
 					SignalSegment newSegment,
 					List<RecognitionResult> recognitionResults) {
-				foundSegment.setMarker(newSegment.getMarker());
+				foundSegment.add(newSegment.getMarker());
 				return newSegment.getMarker().getLabel();
 			}
 		});
 		// then
-		assertNotNull(foundSegment.getMarker());
-		assertEquals("start of found key marker same as matched",
-				spottingService.getKeySegment().getMarker().getStart(),
-				foundSegment.getMarker().getStart(), 10L);
+		assertEquals(2,foundSegment.size(),0);
+		for (int i = 0; i < foundSegment.size(); i++) {
+			assertEquals("start of found key marker same as matched",
+					spottingService.getKeySegmentList().get(i).getMarker().getStart(),
+					foundSegment.get(i).getStart(), 10L);
+		}
+
 	}
 
 	@Test

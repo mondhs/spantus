@@ -1,6 +1,13 @@
 package org.spantus.extr.wordspot.service.impl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.spantus.core.FrameVectorValues;
 import org.spantus.core.IValues;
@@ -14,6 +21,7 @@ import org.spantus.core.service.CorpusService;
 import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfigAware;
+import org.spantus.extr.wordspot.service.SegmentRecognitionThresholdService;
 import org.spantus.extr.wordspot.service.SpottingListener;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.logger.Logger;
@@ -21,6 +29,7 @@ import org.spantus.utils.Assert;
 import org.spantus.utils.StringUtils;
 import org.spantus.work.services.WorkExtractorReaderService;
 import org.spantus.work.services.WorkServiceFactory;
+
 
 /**
  *
@@ -38,29 +47,22 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
     private String repositoryPathWord;
     private String targetWord;
     private Set<String> acceptableSyllableSet;
-    /**
-     * temp implementation
-     * @deprecated
-     */
-    @Deprecated
-    private Map<String, Double> acceptableSyllableThresholdMap;
     private WorkExtractorReaderService extractorReaderService;
     private IExtractorInputReader extractorInputReader;
     
     private ExtractorEnum recognitionFeatureName = ExtractorEnum.MFCC_EXTRACTOR;
     private SegmentExtractorServiceConfig serviceConfig;
+    private SegmentRecognitionThresholdService syllableRecognitionThresholdService;
+    private SegmentRecognitionThresholdService wordRecognitionThresholdService;
 
-    public WordSpottingListenerLogImpl(String target, String[] acceptableSyllable, String repositoryPathSyllable) {
-        this.repositoryPathWord = repositoryPathSyllable;
+    public WordSpottingListenerLogImpl(String target, String[] acceptableSyllable, String repositoryPathWord) {
+        this.repositoryPathWord = repositoryPathWord;
         this.targetWord = target;
         Assert.isTrue(acceptableSyllable!=null, "acceptableSyllable cannot be null");
         acceptableSyllableSet = new HashSet<String>();
-        acceptableSyllableThresholdMap = new HashMap<>();
-        for (String string : acceptableSyllable) {
-            acceptableSyllableSet.add(string);
-        }
-        acceptableSyllableThresholdMap.put("liet", 6E9);
-        acceptableSyllableThresholdMap.put("tuvos", 8E10);
+        syllableRecognitionThresholdService = new SegmentRecognitionThresholdServiceImpl(repositoryPathWord, "phone");
+        wordRecognitionThresholdService = new SegmentRecognitionThresholdServiceImpl(repositoryPathWord, "word");
+        acceptableSyllableSet.addAll(Arrays.asList(acceptableSyllable));
     }
     /**
      * 
@@ -115,7 +117,7 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
                 LOG.debug("break point should go here");
             }
             
-            boolean isAcceptable = checkIfAcceptableBellowThreshold(syllableName, syllableRecognitionResult, signalSegmentsSyllable);
+            boolean isAcceptable = syllableRecognitionThresholdService.checkIfBellowThreshold(syllableName, syllableRecognitionResult);
             if(!isAcceptable){
                 signalSegmentsSyllable.clear();
                 return rtnRecognitionResult;
@@ -164,20 +166,7 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
      * @param recognitionResult
      * @return 
      */
-    private boolean checkIfAcceptableBellowThreshold(String syllableName, RecognitionResult recognitionResult, List<SignalSegment> existingSyllableSegments) {
-        Double mfccVaue = recognitionResult.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
-            Double threshold = -Double.MAX_VALUE;
-            //if is not defined do not filter
-            if(!acceptableSyllableThresholdMap.containsKey(syllableName)){
-                return true;
-            }
-            threshold = acceptableSyllableThresholdMap.get(syllableName);
-            boolean bellowThreshold = mfccVaue<threshold;
-            if(!bellowThreshold){
-                LOG.debug("[processEndedSegment] reject syllable {0} and mfcc: {1}",syllableName, mfccVaue);
-            }
-            return bellowThreshold ;
-    }
+
         private boolean checkIfAcceptableRepeatableSyllable(String syllableName, RecognitionResult recognitionResult, List<SignalSegment> existingSyllableSegments) {
             boolean repeatableSyllable = false;
             if(existingSyllableSegments!=null && !existingSyllableSegments.isEmpty()){
@@ -201,14 +190,14 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
         SignalSegment segmentWord = newSignalSegmentWord(existingSyllableSegments, newSyllable);
 
         List<RecognitionResult> resultList = getCorpusServiceWord().findMultipleMatchFull(segmentWord);
-        if(!isResultAcceptable(resultList)){
+        if(!wordRecognitionThresholdService.checkIfFirstDeltaGreater(resultList, 0.09)){
         	if(existingSyllableSegments.size()>1){
         		existingSyllableSegments.remove(0);
         		segmentWord = newSignalSegmentWord(existingSyllableSegments, newSyllable);
         		resultList = getCorpusServiceWord().findMultipleMatchFull(segmentWord);
         	}
         }
-        if(!isResultAcceptable(resultList)){
+        if(!wordRecognitionThresholdService.checkIfFirstDeltaGreater(resultList, 0.09)){
         	resultList = Collections.emptyList();
         }
         RecognitionResult firstResult = null;
@@ -331,21 +320,6 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
         return extractorInputReader;
     }
 
-    private boolean isResultAcceptable(List<RecognitionResult> resultList) {
-        if(resultList == null || resultList.size()<2){
-            return true;
-        }
-        RecognitionResult first = resultList.get(0);
-        Double firstScore = first.getScores().get(getRecognitionFeatureName().name());
-        RecognitionResult second = resultList.get(1);
-        Double secondScore = second.getScores().get(getRecognitionFeatureName().name());
-        boolean sameLabels = first.getInfo().getName().equals(second.getInfo().getName());
-        double scoreDelta = secondScore - firstScore;
-        if(!sameLabels){
-            return scoreDelta > .09;
-        }
-        return true;
-    }
 
     public ExtractorEnum getRecognitionFeatureName() {
         return recognitionFeatureName;
@@ -359,8 +333,6 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
     public void setServiceConfig(SegmentExtractorServiceConfig serviceConfig) {
         this.serviceConfig = serviceConfig;
     }
-
-
 
 
     

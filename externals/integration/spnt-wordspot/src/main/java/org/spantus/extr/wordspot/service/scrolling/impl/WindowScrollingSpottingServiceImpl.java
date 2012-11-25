@@ -5,6 +5,8 @@
 package org.spantus.extr.wordspot.service.scrolling.impl;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,7 @@ import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.service.CorpusService;
 import org.spantus.extr.wordspot.dto.SpottingSyllableCtx;
+import org.spantus.extr.wordspot.service.SegmentRecognitionThresholdService;
 import org.spantus.extr.wordspot.service.SpottingListener;
 import org.spantus.extr.wordspot.service.impl.SpottingService;
 import org.spantus.extractor.impl.ExtractorEnum;
@@ -32,11 +35,12 @@ import org.spantus.work.services.WorkExtractorReaderService;
  */
 public class WindowScrollingSpottingServiceImpl implements SpottingService {
 
-	private static final Logger log = LoggerFactory.getLogger(WindowScrollingSpottingServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(WindowScrollingSpottingServiceImpl.class);
     private WorkExtractorReaderService extractorReaderService;
     private CorpusService corpusService;
-    private SignalSegment keySegment;
+    private List<SignalSegment> keySegmentList;
     private long delta = 10;
+	private SegmentRecognitionThresholdService segmentRecognitionThresholdService;
     /**
      * 
      * @param urlFile
@@ -44,34 +48,58 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
      */
     @Override
     public void wordSpotting(URL urlFile, SpottingListener spottingListener) {
-        SpottingSyllableCtx ctx = new SpottingSyllableCtx();
-        Assert.isTrue(keySegment != null, "keyword cannot be null, please, setKeySegment(...) first");
-        ctx.setMinFirstMfccValue(Double.MAX_VALUE);
+        Assert.isTrue(getKeySegmentList() != null || getKeySegmentList().isEmpty(), "keyword cannot be null, please, setKeySegmentList(...) first");
+        Map<SignalSegment, SpottingSyllableCtx> ctxMap = newSpottingSyllableCtx(getKeySegmentList() );
         IExtractorInputReader aReader = createReader(urlFile);
-        long availableStartMs = aReader.getAvailableSignalLengthMs() - 
-        		keySegment.getMarker().getLength();
+        long availableStartMs = calcAvailableStartMs(getKeySegmentList(), aReader.getAvailableSignalLengthMs());
+        
+        LOG.debug("[wordSpotting] delta {}", getDelta());
+        
         for (long start = 10; start < availableStartMs; start += getDelta()) {
-            Marker iMarker = new Marker(start,
-            		keySegment.getMarker().getLength(),""	);
-            SignalSegment segment = recalculateFeatures(aReader, iMarker);
-            if (segment == null) {
-                continue;
-            }
-            List<RecognitionResult> result = match(segment);
-            if(processAndContinue(result, ctx, start)){
-                continue;
-            }
+            for (SignalSegment keySegment : getKeySegmentList()) {
+            	Marker iMarker = new Marker(start,
+                		keySegment.getMarker().getLength(),""	);
+                SignalSegment segment = recalculateFeatures(aReader, iMarker);
+                if (segment == null) {
+                    continue;
+                }
+                List<RecognitionResult> result = match(segment);
+                SpottingSyllableCtx ctx = ctxMap.get(keySegment);
+                SignalSegment foundSignalSegment = processAndContinue(keySegment, result, ctxMap.get(keySegment), start);
+                if(foundSignalSegment !=null){
+                    LOG.debug("[wordSpotting] foundSignalSegment {}", foundSignalSegment);
+                	spottingListener.foundSegment(null, foundSignalSegment, ctx.getResultMap().get(foundSignalSegment.getMarker().getStart()));
+                }
+			}
         }
-        //        ctx.printDeltas();
-//        ctx.printMFCC();
+//        ctx.printDeltas();
+//        ctxMap.get(getKeySegmentList().get(1)).printMFCC();
 //        ctx.printSyllableFrequence();
-        SignalSegment signalSegment = new SignalSegment(new Marker(
-                ctx.getMinFirstMfccStart(), 
-                keySegment.getMarker().getLength(),
-                keySegment.getMarker().getLabel()));
-        spottingListener.foundSegment(null, signalSegment, ctx.getResultMap().get(ctx.getMinFirstMfccStart()));
+        ctxMap.size();
+
     }
-    /**
+    
+    private long calcAvailableStartMs(List<SignalSegment> aKeySegmentList, long availableSignalLengthMs) {
+    	long maxLength = - Long.MAX_VALUE;
+    	for (SignalSegment signalSegment : aKeySegmentList) {
+    		maxLength = Math.max(maxLength, signalSegment.getMarker().getLength());
+		}
+    	long availableStartMs = availableSignalLengthMs - 
+    	maxLength;
+		return availableStartMs;
+	}
+
+	private Map<SignalSegment, SpottingSyllableCtx> newSpottingSyllableCtx(List<SignalSegment> list) {
+    	Map<SignalSegment, SpottingSyllableCtx> ctxMap = new HashMap<SignalSegment, SpottingSyllableCtx>();
+    	for (SignalSegment signalSegment : list) {
+    		SpottingSyllableCtx ctx = new SpottingSyllableCtx();
+            ctx.setMinFirstMfccValue(null);
+    		ctxMap.put(signalSegment, ctx);
+		}
+    	
+		return ctxMap;
+	}
+	/**
      * Friendly method for testing
      * @param urlFile
      * @return 
@@ -80,11 +108,13 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
        return getExtractorReaderService().createReader(new ExtractorEnum[]{ExtractorEnum.SIGNAL_EXTRACTOR}, urlFile);
     }
     
-        private boolean processAndContinue(List<RecognitionResult> result, 
+        private SignalSegment processAndContinue(SignalSegment keySegment, List<RecognitionResult> result, 
                 SpottingSyllableCtx ctx,
                 Long start) {
+        	
+        	String keyLabel = keySegment.getMarker().getLabel();
             if (result.isEmpty()) {
-                return false;
+                return null;
             }
             RecognitionResult firstMatch = null;
             RecognitionResult firstGoodMatch = null;
@@ -92,14 +122,14 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
                 if(firstMatch == null){
                     firstMatch = recognitionResult;
                 }
-                if (keySegment.getMarker().getLabel().equals(
+                if (keyLabel.equals(
                         recognitionResult.getInfo().getName())) {
                     firstGoodMatch = recognitionResult;
                     break;
                 }
             }
             if (firstGoodMatch == null) {
-                return true;
+                return null;
             }
             String name = firstGoodMatch.getInfo().getName();
 //            firstMatch.getInfo().getName();
@@ -109,12 +139,42 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
             ctx.getResultMap().put(start, result);
             ctx.getSyllableNameMap().put(start, name);
             ctx.getMinMfccMap().put(start, firstMfccValue);
-            Double firstGoodMatchMfccValue = firstGoodMatch.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
-            if(ctx.getMinFirstMfccValue().doubleValue()>firstGoodMatchMfccValue.doubleValue()){
-                ctx.setMinFirstMfccValue(firstGoodMatchMfccValue);
-                ctx.setMinFirstMfccStart(start);
+            
+            
+            if(segmentRecognitionThresholdService.checkIfBellowThreshold(keyLabel, firstGoodMatch)){
+                Double firstGoodMatchMfccValue = firstGoodMatch.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+                if(ctx.getMinFirstMfccValue() == null){
+                    //if search minimum was not started                	
+                    ctx.setMinFirstMfccValue(firstGoodMatchMfccValue);
+                    ctx.setMinFirstMfccStart(start);
+                    LOG.debug("started search value {}", start);
+                }else{
+                	//if we are under threshold for some time              
+                    if(ctx.getMinFirstMfccValue().doubleValue()>firstGoodMatchMfccValue.doubleValue()){
+                        ctx.setMinFirstMfccValue(firstGoodMatchMfccValue);
+                        ctx.setMinFirstMfccStart(start);
+                        LOG.debug("keep searching value min {}", start);
+                    }else{
+                    	LOG.debug("keep searching value to big {}", start);
+                    }
+                }
+            	return null;
+            }else{
+            	if(ctx.getMinFirstMfccValue() != null){
+                    SignalSegment signalSegment = new SignalSegment(new Marker(
+                            ctx.getMinFirstMfccStart(), 
+                            keySegment.getMarker().getLength(),
+                            keyLabel));
+                    ctx.setMinFirstMfccValue(null);
+                    ctx.setMinFirstMfccStart(null);
+                    LOG.debug("found min value {}", signalSegment);
+                    return signalSegment;
+            	}
             }
-            return false;
+            
+
+            
+            return null;
         }
 
     
@@ -176,13 +236,6 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
         return corpusService;
     }
 
-    public SignalSegment getKeySegment() {
-        return keySegment;
-    }
-
-    public void setKeySegment(SignalSegment keySegment) {
-        this.keySegment = keySegment;
-    }
 
     public long getDelta() {
         return delta;
@@ -191,10 +244,23 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
     public void setDelta(long delta) {
         this.delta = delta;
     }
-    
-    
+	public List<SignalSegment> getKeySegmentList() {
+		return keySegmentList;
+	}
+	public void setKeySegmentList(List<SignalSegment> keySegmentList) {
+		this.keySegmentList = keySegmentList;
+	}
+	public void addKeySegment(SignalSegment keySegment) {
+		if(keySegmentList == null){
+			keySegmentList = new ArrayList<>();
+		}
+		keySegmentList.add(keySegment);
+	}
 
-
+	public void setSegmentRecognitionThresholdService(
+			SegmentRecognitionThresholdService segmentRecognitionThresholdService) {
+		this.segmentRecognitionThresholdService = segmentRecognitionThresholdService;
+	}
     
     
 }

@@ -1,6 +1,5 @@
 package org.spantus.extr.wordspot.service.impl;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.spantus.core.beans.RecognitionResult;
@@ -22,6 +21,7 @@ public class SyllableSpottingListenerLogImpl extends WordSpottingListenerLogImpl
 	 */
     public SyllableSpottingListenerLogImpl(String target,
 			String[] acceptableSyllable, String repositoryPathSyllable) {
+    	//String theRepositoryPathWord = repositoryPathSyllable;
 		super(target, acceptableSyllable, repositoryPathSyllable);
 	}
 

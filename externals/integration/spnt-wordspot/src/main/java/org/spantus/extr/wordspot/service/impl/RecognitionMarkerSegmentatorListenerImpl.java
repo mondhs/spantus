@@ -48,7 +48,7 @@ public class RecognitionMarkerSegmentatorListenerImpl extends MarkerSegmentatorL
 
     protected boolean processEndedSegment(SignalSegment signalSegment) {
 
-        Map<String, FrameVectorValuesHolder> vectorMap = signalSegment.getFeatureFrameVectorValuesMap();
+//        Map<String, FrameVectorValuesHolder> vectorMap = signalSegment.getFeatureFrameVectorValuesMap();
         //		FrameVectorValuesHolder signalWindows = vectorMap.get(MarkerSegmentatorListenerImpl.SIGNAL_WINDOWS);
         Marker aMarker = signalSegment.getMarker().clone();
         aMarker.setStart(aMarker.getStart());

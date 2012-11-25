@@ -42,7 +42,7 @@ public class Logger implements ILogger {
 
 	static {
 		String[] clazzes = new String[] {
-				"org.spantus.work.ui.logger.LoggerLog4j",
+				"org.spantus.work.ui.logger.LoggerSlf4j",
 				"org.spantus.android.SpntAndroidLogger",
 				"org.spantus.logger.SimpleLogger" };
 		ILogger logger1 = null;

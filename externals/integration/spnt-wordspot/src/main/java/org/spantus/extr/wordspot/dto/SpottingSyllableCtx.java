@@ -4,6 +4,14 @@
  */
 package org.spantus.extr.wordspot.dto;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.spantus.core.beans.RecognitionResult;
+import org.spantus.logger.Logger;
+
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Collections2;
@@ -15,13 +23,6 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.SetMultimap;
 import com.google.common.primitives.Ints;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import org.spantus.core.beans.RecognitionResult;
-import org.spantus.extr.wordspot.service.impl.SpottingMarkerSegmentatorListenerImpl;
-import org.spantus.logger.Logger;
 
 /**
  *
