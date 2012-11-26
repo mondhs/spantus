@@ -1,6 +1,8 @@
 spantus
 =======
 
+[![Build Status](https://secure.travis-ci.org/mondhs/spantus.png)](https://travis-ci.org/mondhs/spantus)
+
 signal(speech) analytical tool.
 
 Nightly build results on twitter: [spantus_news@twitter](https://twitter.com/spantus_news) 
