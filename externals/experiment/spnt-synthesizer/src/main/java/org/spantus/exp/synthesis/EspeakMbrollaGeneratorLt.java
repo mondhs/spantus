@@ -49,8 +49,10 @@ public class EspeakMbrollaGeneratorLt extends AbstractSpeechGenerator {
             try (OutputStream stdin = process.getOutputStream()) {
                 for (MarkerMbrola markerSynthesis : phonemes) {
                 	String mbrollaStr = null;
-                	//mbrollaStr = markerSynthesis.toMbrolaString();
-                	mbrollaStr = markerSynthesis.toMbrolaStringWithPitch();
+                	//Without pitch
+                	mbrollaStr = markerSynthesis.toMbrolaString();
+                	//with pitch
+//                	mbrollaStr = markerSynthesis.toMbrolaStringWithPitch();
                 	stdin.write(
                 			mbrollaStr.getBytes(Charset.forName("UTF-8")));
                 }
@@ -137,8 +139,8 @@ public class EspeakMbrollaGeneratorLt extends AbstractSpeechGenerator {
 //                break;
 //            default:
                 float lenghtCoef =
-                        1F;
-//                        rand();
+//                        1F;
+                        rand();
 //                		lengthCoef;
                 Marker marker = phoneMarker.getMarker();
                 long newLength = (long) (marker.getLength() * lenghtCoef);

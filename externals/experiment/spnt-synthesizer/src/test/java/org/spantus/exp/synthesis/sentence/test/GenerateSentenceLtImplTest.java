@@ -4,7 +4,10 @@
  */
 package org.spantus.exp.synthesis.sentence.test;
 
-import java.util.List;
+import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,9 +32,27 @@ public class GenerateSentenceLtImplTest {
     public void testGenerate() {
         //given
         //when
-        List<String> messages = generator.generateBulk(10);
+        Set<String> messages = new HashSet<>(generator.generateBulk(10));
         //then
-        LOG.debug("Messages: {0}", messages);
+        //LOG.debug("Messages: {0}", messages);
         Assert.assertEquals("Size", 10, messages.size());
     }
+    
+    @Test
+    public void testUniqueGenerate() {
+        //given
+        //when
+        Set<String> messages = new HashSet<>(generator.generateBulkUnique(400));
+        int index = 0;
+        for (String string : messages) {
+			System.out.println(MessageFormat.format("{0}; {1}", index, string) );
+			index++;
+		}
+        
+        //then
+        //LOG.debug("Messages: {0}", messages);
+        Assert.assertEquals("Size", 400, messages.size());
+    }
+    
+    
 }

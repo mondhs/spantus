@@ -20,8 +20,9 @@ public class SentenceGenerateContext {
      * Adjectives which precede the noun they modify are usually referred to as attributive adjectives. Lt: pažyminys 
      * timeFactor - Lt: laiko applinkybė
      * placeFactor - LT: vietos applinkybė
+     * conjunction - LT: Jungtukas
      */
-    enum ClauseEnum{subject, predicate, attributive, timeFactor, placeFactor};
+    enum ClauseEnum{subject, predicate, attributive, timeFactor, placeFactor, conjunction};
         
 
     

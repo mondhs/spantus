@@ -5,6 +5,7 @@
 package org.spantus.exp.synthesis.sentence;
 
 import static org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseEnum.attributive;
+import static org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseEnum.conjunction;
 import static org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseEnum.placeFactor;
 import static org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseEnum.predicate;
 import static org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseEnum.subject;
@@ -15,8 +16,10 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseEnum;
 import org.spantus.logger.Logger;
@@ -24,6 +27,7 @@ import org.spantus.logger.Logger;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 /**
  *
@@ -49,7 +53,7 @@ public class GenerateSentenceLtImpl {
                 //write stdin
                 Process process = Runtime.getRuntime().exec(command);
                 try (OutputStream stdin = process.getOutputStream()) {
-                    List<String> sentenceList = impl.generateBulk(10);
+                	Collection<String> sentenceList = impl.generateBulkUnique(10);
                     for (String sentence : sentenceList) {
                         sentence =sentence + ". ";
                         System.out.println(sentence);
@@ -64,14 +68,27 @@ public class GenerateSentenceLtImpl {
     
     
     
-    public List<String> generateBulk(int size){
-        SentenceGenerateContext ctx = createContext();
+    public Collection<String> generateBulk(int size){
+//        SentenceGenerateContext ctx = createContext();
         List<String> list = Lists.newArrayListWithCapacity(size);
         for (int i = 0; i < size; i++) {
             list.add(generate());
         }
         return list;
     }
+   
+    public Collection<String> generateBulkUnique(int size){
+
+    	Set<String> list = Sets.newHashSet();
+      for (int i = 0; i < size*10; i++) {
+          list.add(generate());
+          if(list.size()>=size){
+        	  break;
+          }
+      }
+      return list;
+  }
+
     
     public String generate(){
         SentenceGenerateContext ctx = createContext();
@@ -121,17 +138,21 @@ public class GenerateSentenceLtImpl {
                 clauseRepository.put(entry, Resources.readLines(entryUrl,Charsets.UTF_8));
             }
             formatingSequene = Maps.newHashMap();
-            formatingSequene.put(ClauseEnum.subject, "{0}");
-            formatingSequene.put(ClauseEnum.predicate, "{1}");
-            formatingSequene.put(ClauseEnum.attributive, "{2}");
-            formatingSequene.put(ClauseEnum.timeFactor, "{3}");
-            formatingSequene.put(ClauseEnum.placeFactor, "{4}");
+            int index = 0;
+            for (ClauseEnum element : ClauseEnum.values()) {
+            	formatingSequene.put(element, "{"+index+"}");
+            	index++;
+			}
             
             suggestedClauseSequence = Lists.newArrayList();
-            suggestedClauseSequence.add(Lists.newArrayList(timeFactor, attributive, subject, predicate, placeFactor));
-            suggestedClauseSequence.add(Lists.newArrayList(timeFactor,  subject, placeFactor, attributive, predicate));
-            suggestedClauseSequence.add(Lists.newArrayList(attributive, subject, timeFactor, predicate, placeFactor));
-            suggestedClauseSequence.add(Lists.newArrayList(timeFactor, attributive, placeFactor, subject, predicate));
+            suggestedClauseSequence.add(Lists.newArrayList(conjunction, timeFactor, attributive, subject));
+            suggestedClauseSequence.add(Lists.newArrayList(conjunction, placeFactor, attributive, predicate));
+            suggestedClauseSequence.add(Lists.newArrayList(conjunction, attributive, subject));
+            suggestedClauseSequence.add(Lists.newArrayList(conjunction, timeFactor, attributive, placeFactor));
+//            suggestedClauseSequence.add(Lists.newArrayList(timeFactor, attributive, subject, predicate, placeFactor));
+//            suggestedClauseSequence.add(Lists.newArrayList(timeFactor,  subject, placeFactor, attributive, predicate));
+//            suggestedClauseSequence.add(Lists.newArrayList(conjunction, attributive, subject, timeFactor, predicate, placeFactor));
+//            suggestedClauseSequence.add(Lists.newArrayList(timeFactor, attributive, placeFactor, subject, predicate));
             
 
         } catch (IOException ex) {
