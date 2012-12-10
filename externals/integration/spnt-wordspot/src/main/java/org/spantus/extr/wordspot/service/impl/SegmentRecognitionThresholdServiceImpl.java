@@ -1,8 +1,5 @@
 package org.spantus.extr.wordspot.service.impl;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,17 +10,14 @@ import org.spantus.core.beans.RecognitionResult;
 import org.spantus.extr.wordspot.service.SegmentRecognitionThresholdService;
 import org.spantus.extractor.impl.ExtractorEnum;
 
-import com.thoughtworks.xstream.XStream;
-
 public class SegmentRecognitionThresholdServiceImpl implements
 		SegmentRecognitionThresholdService {
 
-	private static final String SEGMENT_THRESHOLD_XML = "segment-threshold.xml";
+
 	private static final Logger LOG = LoggerFactory
 			.getLogger(SegmentRecognitionThresholdServiceImpl.class);
-//	private String repositoryPathWord;
 	private Map<String, Double> acceptableSyllableThresholdMap;
-	private XStream xstream;
+	private AcceptableSyllableThresholdDaoImpl acceptableSyllableThresholdDaoImpl;
 	private String extractorEnum = ExtractorEnum.MFCC_EXTRACTOR.name();
 	
 	
@@ -41,29 +35,10 @@ public class SegmentRecognitionThresholdServiceImpl implements
 		acceptableSyllableThresholdMap = new HashMap<>();
 		acceptableSyllableThresholdMap.put("liet", 6E9);
 		acceptableSyllableThresholdMap.put("tuvos", 8E10);
-		FileWriter outputFile;
-		try {
-			String targetRepository = repositoryPathWord
-					+ "/"+SEGMENT_THRESHOLD_XML;
-			if(type!=null){
-				targetRepository = repositoryPathWord
-						+ "/../"+ type +"/"+SEGMENT_THRESHOLD_XML;
-			}
-			outputFile = new FileWriter("./target/"+SEGMENT_THRESHOLD_XML,
-					false);
-			getXsteam().toXML(acceptableSyllableThresholdMap, outputFile);
-			@SuppressWarnings("unchecked")
-			Map<String, Double> testAcceptableSyllableThresholdMap = (Map<String, Double>) getXsteam()
-					.fromXML(
-							new FileReader(targetRepository));
-			if (testAcceptableSyllableThresholdMap != null) {
-				acceptableSyllableThresholdMap = testAcceptableSyllableThresholdMap;
-			} else {
-				LOG.debug("There is no segment-threashold.xml in {}",
-						repositoryPathWord);
-			}
-		} catch (IOException e) {
-			LOG.error("Cannot read", e);
+		getAcceptableSyllableThresholdDaoImpl().write(acceptableSyllableThresholdMap);
+		Map<String, Double> temp = getAcceptableSyllableThresholdDaoImpl().read(repositoryPathWord, type);
+		if(temp!=null){
+			acceptableSyllableThresholdMap = temp;
 		}
 	}
 
@@ -110,12 +85,18 @@ public class SegmentRecognitionThresholdServiceImpl implements
 		return threshold;
 	}
 
-	protected XStream getXsteam() {
-		if (xstream == null) {
-			xstream = new XStream();
+	public AcceptableSyllableThresholdDaoImpl getAcceptableSyllableThresholdDaoImpl() {
+		if(acceptableSyllableThresholdDaoImpl == null){
+			acceptableSyllableThresholdDaoImpl = new AcceptableSyllableThresholdDaoImpl();
 		}
-		return xstream;
+		return acceptableSyllableThresholdDaoImpl;
 	}
+
+	public void setAcceptableSyllableThresholdDaoImpl(
+			AcceptableSyllableThresholdDaoImpl acceptableSyllableThresholdDaoImpl) {
+		this.acceptableSyllableThresholdDaoImpl = acceptableSyllableThresholdDaoImpl;
+	}
+
 
 
 

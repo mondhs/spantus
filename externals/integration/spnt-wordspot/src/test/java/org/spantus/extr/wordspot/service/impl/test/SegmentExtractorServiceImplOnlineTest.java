@@ -18,7 +18,6 @@ import org.spantus.core.IValues;
 import org.spantus.core.beans.FrameValuesHolder;
 import org.spantus.core.beans.FrameVectorValuesHolder;
 import org.spantus.core.beans.SignalSegment;
-import org.spantus.core.dao.SignalSegmentDao;
 import org.spantus.core.extractor.dao.MarkerDao;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
@@ -102,7 +101,7 @@ public class SegmentExtractorServiceImplOnlineTest extends AbstractSegmentExtrac
     }
 
     private void dumpResults(ArrayList<SignalSegment> result) throws MalformedURLException {
-        SignalSegmentDao signalSegmentDao = WorkServiceFactory.createSignalSegmentDao();
+//        SignalSegmentDao signalSegmentDao = WorkServiceFactory.createSignalSegmentDao();
         MarkerDao markerDao = WorkServiceFactory.createMarkerDao();
         long timeStamp = System.currentTimeMillis();
         MarkerSetHolder holder = new MarkerSetHolder();

@@ -15,8 +15,6 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
 import org.spantus.core.marker.Marker;
-import org.spantus.core.marker.MarkerSet;
-import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.logger.Logger;
 
 import com.google.common.io.ByteStreams;
@@ -95,7 +93,7 @@ public class EspeakMbrollaGeneratorLt extends AbstractSpeechGenerator {
                     process.getInputStream()));
 //            parseAndAppend(transcribtion, "< 0");
             String s;
-            MarkerSet words = transcribtion.getHolder().getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.word.name());
+//            MarkerSet words = transcribtion.getHolder().getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.word.name());
             // read the output from the command
             while ((s = stdInput.readLine()) != null) {
                 if (s.length() == 0) {

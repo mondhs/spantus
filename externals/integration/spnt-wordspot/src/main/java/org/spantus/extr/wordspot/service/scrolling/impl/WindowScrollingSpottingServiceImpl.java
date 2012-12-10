@@ -55,7 +55,7 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
         
         LOG.debug("[wordSpotting] delta {}", getDelta());
         
-        for (long start = 10; start < availableStartMs; start += getDelta()) {
+        for (long start = getDelta(); start < availableStartMs; start += getDelta()) {
             for (SignalSegment keySegment : getKeySegmentList()) {
             	Marker iMarker = new Marker(start,
                 		keySegment.getMarker().getLength(),""	);
@@ -72,9 +72,8 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
                 }
 			}
         }
-//        ctx.printDeltas();
+//        ctxMap.get(getKeySegmentList().get(0)).printMFCC();
 //        ctxMap.get(getKeySegmentList().get(1)).printMFCC();
-//        ctx.printSyllableFrequence();
         ctxMap.size();
 
     }

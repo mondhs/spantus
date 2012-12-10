@@ -242,8 +242,8 @@ public class SpeechGeneratorLt extends AbstractSpeechGenerator{
                 String text = "Lietuvos kariuomenė buvo kuriama sunkiomis sąlygomis – 1918 metų pabaigoje, po Pirmojo pasaulinio karo, iš Lietuvos traukėsi vokiečių kariuomenė";
 
                                 
-		Transcribtion trascribtion = speechGenerator.translate(
-				"_regata_mane__rega_mename_", speechGenerator.rand());
+//		Transcribtion trascribtion = speechGenerator.translate(
+//				"_regata_mane__rega_mename_", speechGenerator.rand());
 //		AudioInputStream ais = speechGenerator.generate(trascribtion);
 //		String fileName = speechGenerator.persist(ais, "./target/zodis.wav");
 //		AudioManagerFactory.createAudioManager().play(
@@ -251,13 +251,13 @@ public class SpeechGeneratorLt extends AbstractSpeechGenerator{
 //		speechGenerator.persist(trascribtion, fileName + ".mspnt.xml");
 //		speechGenerator.addNoize(fileName, 0);
 		
-//		Integer[] levels = new  Integer[]{30, 15, 10, 5, 0};
+		Integer[] levels = new  Integer[]{30, 15, 10, 5, 0};
 //		for (Integer level : levels) {
 //			speechGenerator.bulkGeneration(text, "/home/as/tmp/garsyno.modelis/TEST",level, 50);
 //		}
-//		for (Integer level : levels) {
-//			speechGenerator.bulkGeneration(text, "/home/as/tmp/garsyno.modelis/TRAIN",level, 1);
-//		}
+		for (Integer level : levels) {
+			speechGenerator.bulkGeneration(text, "/home/as/tmp/garsyno.modelis/TRAIN",level, 1);
+		}
 
 		
 	}

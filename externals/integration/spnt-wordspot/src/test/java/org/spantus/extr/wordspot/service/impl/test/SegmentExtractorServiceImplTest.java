@@ -42,7 +42,7 @@ public class SegmentExtractorServiceImplTest extends AbstractSegmentExtractorTes
 		Assert.assertEquals("Total segments", 3, resultOnline.size());
 		Iterator<SignalSegment> iterator = resultOnline.iterator();
 		SignalSegment firstSegment = iterator.next();
-		SignalSegment secondSegment = iterator.next();
+//		SignalSegment secondSegment = iterator.next();
 		Map<String, FrameValuesHolder> valueMap = firstSegment.getFeatureFrameValuesMap();
 		Map<String, FrameVectorValuesHolder> vectorMap = firstSegment.getFeatureFrameVectorValuesMap();
 		Assert.assertNotNull("First segment",firstSegment.getMarker());

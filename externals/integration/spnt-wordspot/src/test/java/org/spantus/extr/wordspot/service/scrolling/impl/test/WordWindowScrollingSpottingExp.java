@@ -6,6 +6,7 @@ package org.spantus.extr.wordspot.service.scrolling.impl.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -30,11 +31,13 @@ import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.wav.AudioManagerFactory;
 import org.spantus.extr.wordspot.guava.RecognitionResultSignalSegmentOrder;
 import org.spantus.extr.wordspot.service.SpottingListener;
+import org.spantus.extr.wordspot.service.impl.AcceptableSyllableThresholdDaoImpl;
 import org.spantus.extr.wordspot.service.impl.test.util.ExtNameFilter;
 import org.spantus.extr.wordspot.util.dao.WordSpotResult;
 import org.spantus.extr.wordspot.util.dao.WspotJdbcDao;
 import org.spantus.extractor.impl.ExtractorEnum;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 
 /**
@@ -63,9 +66,10 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
     @Override
     protected File createRepositoryPathRoot(){
         return  
+        		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
+//				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
 //        		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
-				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
-//        		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
+
     }
     
     @Override
@@ -76,43 +80,49 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
 	@Override
 	protected File createWavFile(File aRepositoryPathRoot) {
 		String internalPath = 
-				"TRAIN/"
-//				"TEST/"
+//				"TRAIN/"
+				"TEST/"
 				;
 		String fileName = internalPath + 
+				"1-30_1.wav"
 //				"RBg031126_13_31-30_1.wav"
-		 "lietuvos_mbr_test-30_1.wav"
+//		 "lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
 
     
-	@Ignore
+//	@Ignore
     @Test
     @Category(SlowTests.class)
     public void bulkTest() throws MalformedURLException {
         wspotDao.setRecreate(true);
         wspotDao.init();
-        
+        log.debug("path: {}", getWavFile().getParentFile().getAbsoluteFile());
         File[] files = getWavFile().getParentFile().listFiles(new ExtNameFilter("wav"));
+        log.debug("fileSize: {}", files.length);
         int foundSize = 0;
+        int index = 0;
         for (File file : files) {
 //            if(!file.getName().contains(
 //                    "RBg031126_13_31-30_1.wav"
 //                    )){
 //                continue;
 //            }
-             log.debug("start: " + file);
+        		Long start = System.currentTimeMillis();
+             	log.debug("start {}: {}",index,  file);
                 WordSpotResult result = doWordspot(file);
                 wspotDao.save(result);
                 foundSize += result.getSegments().size();
 //                String resultsStr = extractResultStr(result.getSegments());
-                log.debug("done: " + file);
-                log.error("Marker =>" + result.getOriginalMarker());
-                log.error(getWavFile() + "=>" + order.sortedCopy(result.getSegments().entrySet()));                
+                log.debug("Marker => {}", result.getOriginalMarker());
+                log.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
+                log.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
+                log.debug("done {} in {} : {}\n", new Object[]{index,  System.currentTimeMillis()-start, file});
+                index++;
         }
 //        log.error("files =>" + files.length);
-        log.error("foundSize =>" + foundSize);
+        log.debug("foundSize =>{}", foundSize);
 //        Assert.assertEquals(0, list.size());
         wspotDao.destroy();
         Assert.assertTrue("One element at least", foundSize>0);
@@ -129,16 +139,19 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
         SignalSegment keySegment = findKeywordSegment(KEY_WORD_NAME, getWavFile(),  KEY_WORD_SEQUENCE_ARR);
 
         getSpottingService().addKeySegment(keySegment);
-        final SignalSegment foundSegment = new SignalSegment();
+        final List<SignalSegment> foundSegments = Lists.newArrayList();
         //when
         getSpottingService().wordSpotting(aWavUrl, new SpottingListener() {
             @Override
             public String foundSegment(String sourceId, SignalSegment newSegment, List<RecognitionResult> recognitionResults) {
-                foundSegment.setMarker(newSegment.getMarker());
+                foundSegments.add(newSegment);
                 return newSegment.getMarker().getLabel();
             }
         });
         //then
+        assertEquals("foundSegments",1,  foundSegments.size(),1);
+        SignalSegment foundSegment = foundSegments.get(0);
+        assertEquals("Results", KEY_WORD_NAME, foundSegment.getMarker().getLabel());
         assertNotNull("Keyword not found", foundSegment);
         assertNotNull("Keyword not found", foundSegment.getMarker());
         assertNotNull("Keyword not found", foundSegment.getMarker().getStart());
@@ -192,6 +205,9 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
         SignalSegment keySegment = findKeywordSegment(KEY_WORD_NAME,  getWavFile(), KEY_WORD_SEQUENCE_ARR);
         getSpottingService().setDelta(1);
         getSpottingService().addKeySegment(keySegment);
+        AcceptableSyllableThresholdDaoImpl acceptableSyllableThresholdDaoImpl = new AcceptableSyllableThresholdDaoImpl();
+        Map<String, Double> test = acceptableSyllableThresholdDaoImpl.read(getRepositoryPath().getAbsolutePath(), "word");
+        Double keyword_threshold = test.get(KEY_WORD_NAME);
 
         //when
         IExtractorInputReader reader = getSpottingService().createReader(aWavUrl);
@@ -201,10 +217,10 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
         //then
 
         assertNotNull(matchedResults);
-        assertEquals("Results", 2, matchedResults.size());
+        assertTrue("Results",  matchedResults.size()>1);
         RecognitionResult matched = matchedResults.get(0);
         assertEquals("Results", KEY_WORD_NAME, matched.getInfo().getName());
-        assertEquals("Results", 6E9, matched.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 1E9);
+        assertEquals("Results", keyword_threshold, matched.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), keyword_threshold);
     }
     
 	protected SignalSegment findKeywordSegment(String keyWordName, File aWavFile, String... keyWordSequence) {

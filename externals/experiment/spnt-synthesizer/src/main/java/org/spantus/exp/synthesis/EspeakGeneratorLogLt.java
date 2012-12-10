@@ -106,13 +106,13 @@ public class EspeakGeneratorLogLt extends AbstractSpeechGenerator {
         EspeakGeneratorLogLt speechGenerator = new EspeakGeneratorLogLt();
         Map<String, String> sentences = speechGenerator.readSentencesToMap("/home/as/tmp/lietuvos_sakiniai.csv");
         int[] snrArr = new int[]{30};
-//        for (Map.Entry<String, String> entry : sentences.entrySet()) {
-//            for (int snr : snrArr) {
-//                speechGenerator.bulkGeneration(entry.getKey(),entry.getValue(), "/tmp/test", snr, 1);
-//            }
-//           
-////           break;
-//        }
+        for (Map.Entry<String, String> entry : sentences.entrySet()) {
+            for (int snr : snrArr) {
+                speechGenerator.bulkGeneration(entry.getKey(),entry.getValue(), "/tmp/test", snr, 1);
+            }
+           
+//           break;
+        }
         speechGenerator.bulkGeneration("lietuvos_test_bulk", "trijų Baltijos valstybių vardu pranešimą skaitys Lietuvos atstovas", "/tmp/test", null, 1);
 
     }
