@@ -67,6 +67,9 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 		return peakEntry;
 	}
 	public void setPeakEntry(ExtremeEntry middleEntry) {
+		if(endEntry != null){
+			Assert.isTrue(middleEntry.after(endEntry), "Peak {0} should be after end {1}",middleEntry, endEntry );
+		}
 		this.peakEntry = middleEntry;
 	}
 	public ExtremeEntry getEndEntry() {
@@ -76,6 +79,7 @@ public class ExtremeSegment extends Marker implements Serializable, Cloneable {
 		if(endEntry != null){
 			Assert.isTrue(getStartEntry()!=null, "start not set");
 			Assert.isTrue(getStartEntry().after(endEntry), "End should be after start");
+			Assert.isTrue(getPeakEntry().after(endEntry), "Peak should be after end");
 		}
 		this.endEntry = endEntry;
 	}

@@ -56,7 +56,8 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
         LOG.debug("[wordSpotting] delta {}", getDelta());
         
         for (long start = getDelta(); start < availableStartMs; start += getDelta()) {
-            for (SignalSegment keySegment : getKeySegmentList()) {
+        	long startTime = System.currentTimeMillis();
+        	for (SignalSegment keySegment : getKeySegmentList()) {
             	Marker iMarker = new Marker(start,
                 		keySegment.getMarker().getLength(),""	);
                 SignalSegment segment = recalculateFeatures(aReader, iMarker);
@@ -67,11 +68,12 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
                 SpottingSyllableCtx ctx = ctxMap.get(keySegment);
                 SignalSegment foundSignalSegment = processAndContinue(keySegment, result, ctxMap.get(keySegment), start);
                 if(foundSignalSegment !=null){
-                    LOG.debug("[wordSpotting] foundSignalSegment {}", foundSignalSegment);
+//                    LOG.debug("[wordSpotting] foundSignalSegment {}", foundSignalSegment);
                 	spottingListener.foundSegment(null, foundSignalSegment, ctx.getResultMap().get(foundSignalSegment.getMarker().getStart()));
                 }
 			}
         }
+       
 //        ctxMap.get(getKeySegmentList().get(0)).printMFCC();
 //        ctxMap.get(getKeySegmentList().get(1)).printMFCC();
         ctxMap.size();
@@ -146,15 +148,15 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
                     //if search minimum was not started                	
                     ctx.setMinFirstMfccValue(firstGoodMatchMfccValue);
                     ctx.setMinFirstMfccStart(start);
-                    LOG.debug("started search value {}", start);
+//                    LOG.debug("started search value {}", start);
                 }else{
                 	//if we are under threshold for some time              
                     if(ctx.getMinFirstMfccValue().doubleValue()>firstGoodMatchMfccValue.doubleValue()){
                         ctx.setMinFirstMfccValue(firstGoodMatchMfccValue);
                         ctx.setMinFirstMfccStart(start);
-                        LOG.debug("keep searching value min {}", start);
+//                        LOG.debug("keep searching value min {}", start);
                     }else{
-                    	LOG.debug("keep searching value to big {}", start);
+//                    	LOG.debug("keep searching value to big {}", start);
                     }
                 }
             	return null;

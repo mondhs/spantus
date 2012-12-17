@@ -298,13 +298,13 @@ public class ExtremeClassifierServiceImpl {
 			next = s1;
 		}
 		joined.setStartEntry(prior.getStartEntry());
-		joined.setEndEntry(next.getEndEntry());
 
 		if(s1.getPeakEntry().getValue().compareTo(s2.getPeakEntry().getValue())>0){
 			joined.setPeakEntry(s1.getPeakEntry());
 		}else{
 			joined.setPeakEntry(s2.getPeakEntry());	
 		}
+		joined.setEndEntry(next.getEndEntry());		
 
 //		joined.setNext(next.getNext());
 //		joined.setPrevious(prior.getPrevious());

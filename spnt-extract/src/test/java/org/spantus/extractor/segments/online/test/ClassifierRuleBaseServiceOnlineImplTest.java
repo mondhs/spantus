@@ -1,9 +1,13 @@
 package org.spantus.extractor.segments.online.test;
 
 import static org.spantus.extractor.segments.online.test.FeedUtill.feedData;
+
+import java.util.Iterator;
+
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.spantus.core.marker.Marker;
@@ -53,7 +57,7 @@ public class ClassifierRuleBaseServiceOnlineImplTest {
 	 */
 	public static final Double[] complexMinMaxReallife = new Double[] {
 			// initial nose
-			0.191D, 0.19D, 0.18D, 0.17D, 0.16D, 0.15D, 0.14D, 0.13D, 0.12D,
+			0.191D, 0.192D, 0.18D, 0.17D, 0.16D, 0.15D, 0.14D, 0.13D, 0.12D,
 			0.1D, 0D,
 			// segments
 			0D, 1D, 0D, 1D, 3D, 2D, 4D, 3D, 6D, 4D, 5D, 3D, 4D, 0D, 1D, 0D, 1D,
@@ -118,7 +122,7 @@ public class ClassifierRuleBaseServiceOnlineImplTest {
 //		Assert.assertEquals("start", 210, marker2.getStart(), 0);
 //		Assert.assertEquals("length", 70, marker2.getLength(), 0);
 	}
-
+	
 	@Test
 	public void shouldSegment_Complex() throws Exception {
 		// given
@@ -131,10 +135,15 @@ public class ClassifierRuleBaseServiceOnlineImplTest {
 		// then
 //		Assert.assertEquals(1, classifier.getExtremeSegments().size());
 //		Assert.assertEquals(1, classifier.getMarkSet().getMarkers().size());
-		Assert.assertEquals("segments", 1, classifier.getOnlineCtx().getExtremeSegments().size());
-		ExtremeSegment firstSegment = classifier.getOnlineCtx().getExtremeSegments().getFirst();
-		Assert.assertEquals("start", 110, firstSegment.getStart(), 0);
-		Assert.assertEquals("length", 240, firstSegment.getLength(), 0);
+		Assert.assertEquals("segments", 3, classifier.getOnlineCtx().getExtremeSegments().size());
+		Iterator<ExtremeSegment> segIter = classifier.getOnlineCtx().getExtremeSegments().iterator();
+		ExtremeSegment firstSegment = segIter.next();
+		Assert.assertEquals("start", 0, firstSegment.getStart(), 0);
+		Assert.assertEquals("length", 110, firstSegment.getLength(), 0);
+		ExtremeSegment secondSegment = segIter.next();
+		Assert.assertEquals("start", 110, secondSegment.getStart(), 0);
+		Assert.assertEquals("length", 110, secondSegment.getLength(), 0);
+
 	}
 
 	@Test

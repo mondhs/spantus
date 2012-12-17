@@ -77,6 +77,20 @@ public class ClassifierRuleBaseServiceBaseImpl extends
 //		6;"ctx.featureStable && stableLength >20 ";"processNoise";"this is part of noise"			
 		} else if (ctx.getFeatureStable() && c.stableLength > 20) {
 			return ClassifierRuleBaseEnum.action.processNoise;
+//		7a;"ctx.featureInMin && ctx.previousValue > 1E6";"processSignal";"Higher mins are M pattern"
+		} else if (ctx.getFeatureInMin() && "smooth_SPECTRAL_FLUX_EXTRACTOR".equals(ctx.getExtractorName()) 
+				&& ctx.getPreviousValue() > 1E6) {
+			return ClassifierRuleBaseEnum.action.processSignal;
+		} else if (ctx.getFeatureInMin() && "smooth_ENERGY_EXTRACTOR".equals(ctx.getExtractorName()) 
+				&& ctx.getPreviousValue() > 1E6) {
+			return ClassifierRuleBaseEnum.action.processSignal;
+		} else if (ctx.getFeatureInMin() && "smooth_SIGNAL_ENTROPY_EXTRACTOR".equals(ctx.getExtractorName()) 
+				&& ctx.getPreviousValue() > 5E4) {
+			return ClassifierRuleBaseEnum.action.processSignal;			
+
+//		} else if (ctx.getFeatureInMin() 
+//				&& ctx.getPreviousValue() > 1E6) {
+//			return ClassifierRuleBaseEnum.action.processSignal;			
 //		7;"ctx.featureInMin";"changePoint";"change point"			
 		} else if (ctx.getFeatureInMin()) {
 			return ClassifierRuleBaseEnum.action.changePoint;

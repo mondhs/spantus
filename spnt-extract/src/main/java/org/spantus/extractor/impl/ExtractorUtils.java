@@ -353,6 +353,7 @@ public final class ExtractorUtils {
 					extractorReader, extractor, extractorParam, thresholdType);
 			classifiers.add(classifier);
 		}
+		log.error("[registerThreshold] Registred: {0}", classifiers);
 		return classifiers;
 	}
 

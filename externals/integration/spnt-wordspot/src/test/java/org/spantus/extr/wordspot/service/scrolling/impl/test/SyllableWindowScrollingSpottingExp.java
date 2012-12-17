@@ -36,6 +36,7 @@ import org.spantus.extr.wordspot.util.dao.WspotJdbcDao;
 import org.spantus.extractor.impl.ExtractorEnum;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 
 /**
@@ -50,7 +51,7 @@ public class SyllableWindowScrollingSpottingExp extends
 
 	private WspotJdbcDao wspotDao;
 
-	private Map<String, String> keyWordMap = ImmutableMap.of("liet", "liet", "uvoos", "tuvos");
+	private Map<String, String> keyWordMap = ImmutableMap.of("uvoos", "tuvos", "liet", "liet");
 
 	private static final Ordering<Entry<RecognitionResult, SignalSegment>> order = new RecognitionResultSignalSegmentOrder();
 
@@ -63,8 +64,8 @@ public class SyllableWindowScrollingSpottingExp extends
 	@Override
 	protected File createRepositoryPathRoot() {
 		return
-//		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
-		 new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
+//		 new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
 //		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
 	}
 
@@ -75,22 +76,23 @@ public class SyllableWindowScrollingSpottingExp extends
 				"TEST/"
 				;
 		String fileName = internalPath + 
-		"RBg031126_13_31-30_1.wav"
+		"1-30_1.wav"
 //		 "lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
 
-	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {
 		wspotDao.setRecreate(true);
 		wspotDao.init();
-
+		LOG.debug("path: {}", getWavFile().getParentFile().getAbsoluteFile());
 		File[] files = getWavFile().getParentFile().listFiles(
 				new ExtNameFilter("wav"));
-		int foundSize = 0;
+		LOG.debug("fileSize: {}", files.length);
+        int foundSize = 0;
+        int index = 0;
 		for (File file : files) {
 			for (Entry<String, String> keyEntiry : keyWordMap.entrySet()) {
 				// if(!file.getName().contains(
@@ -98,27 +100,31 @@ public class SyllableWindowScrollingSpottingExp extends
 				// )){
 				// continue;
 				// }
-
-				LOG.debug("start: " + file);
+        		Long start = System.currentTimeMillis();
+             	LOG.debug("start {}", file);
+             	LOG.debug("index {} - {}", index,  keyEntiry);
 				WordSpotResult result = doWordspot(keyEntiry.getValue(), file,
 						keyEntiry.getKey());
 				wspotDao.save(result);
 				foundSize += result.getSegments().size();
 				// String resultsStr = extractResultStr(result.getSegments());
-				LOG.debug("done: " + file);
-				LOG.error("Marker =>" + result.getOriginalMarker());
-				LOG.error(getWavFile() + "=>"
-						+ order.sortedCopy(result.getSegments().entrySet()));
+                LOG.debug("Marker => {}", result.getOriginalMarker());
+                LOG.debug("KeySegmentList => {}", getSpottingService().getKeySegmentList().size());
+                
+                LOG.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
+                LOG.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
+                LOG.debug("done {} in {} : {}\n", new Object[]{index,  System.currentTimeMillis()-start, file});
 			}
+			index++;
 		}
 		// log.error("files =>" + files.length);
-		LOG.error("foundSize =>" + foundSize);
+        LOG.debug("foundSize =>{}", foundSize);
 		// Assert.assertEquals(0, list.size());
 		wspotDao.destroy();
 		Assert.assertTrue("One element at least", foundSize > 0);
 
 	}
-
+	@Ignore
 	@Test
 	@Override
 	public void testWordSpotting() throws MalformedURLException {
@@ -129,18 +135,20 @@ public class SyllableWindowScrollingSpottingExp extends
 					getWavFile(), keyEntiry.getKey());
 
 			getSpottingService().addKeySegment(keySegment);
-			final SignalSegment foundSegment = new SignalSegment();
+	        final List<SignalSegment> foundSegments = Lists.newArrayList();
 			// when
 			getSpottingService().wordSpotting(aWavUrl, new SpottingListener() {
 				@Override
 				public String foundSegment(String sourceId,
 						SignalSegment newSegment,
 						List<RecognitionResult> recognitionResults) {
-					foundSegment.setMarker(newSegment.getMarker());
+					foundSegments.add(newSegment);
 					return newSegment.getMarker().getLabel();
 				}
 			});
 			// then
+			 assertEquals("foundSegments",15,  foundSegments.size(),1);
+			 SignalSegment foundSegment = foundSegments.get(0);
 			assertNotNull("Keyword not found", foundSegment);
 			assertNotNull("Keyword not found", foundSegment.getMarker());
 			assertNotNull("Keyword not found", foundSegment.getMarker()
@@ -174,6 +182,9 @@ public class SyllableWindowScrollingSpottingExp extends
 		result.setFileName(aWavFile.getName());
 		result.setExperimentStarted(System.currentTimeMillis());
 		final Map<RecognitionResult, SignalSegment> segments = new LinkedHashMap<>();
+        if(getSpottingService().getKeySegmentList() != null){
+       	 getSpottingService().getKeySegmentList().clear();
+        }
 		getSpottingService().addKeySegment(keySegment);
 
 		final SignalSegment foundSegment = new SignalSegment();
@@ -195,6 +206,7 @@ public class SyllableWindowScrollingSpottingExp extends
 		return result;
 
 	}
+	@Ignore
 	@Test
 	@Override
 	public void testExactPlaceWordSpotting() throws MalformedURLException {

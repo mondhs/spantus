@@ -31,8 +31,8 @@ public class ExtremeSegmentServiceImplTest {
 		ExtremeEntry peadkEntry = new ExtremeEntry(5, 5D, FeatureStates.max);
 		ExtremeEntry endEntry = new ExtremeEntry(10,10D, FeatureStates.min);
 		current.setStartEntry(startEntry);
-		current.setEndEntry(endEntry);
 		current.setPeakEntry(peadkEntry);
+		current.setEndEntry(endEntry);
 		
 		//when
 		Double angle = extremeSegmentService.angle(current);

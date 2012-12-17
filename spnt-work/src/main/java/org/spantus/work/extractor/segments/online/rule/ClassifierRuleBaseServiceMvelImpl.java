@@ -45,7 +45,6 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 		for (Rule ruleEntry : rules) {
 //			log.error("exec [" + ruleEntry.getBody() + "]: ");
 			Boolean commandInd = execute(ruleEntry.getCompiledRule(), param);
-//			log.error("" + commandInd);			
 			if (commandInd) {
 				command = ruleEntry.getResult();
 				ruleEntry.incCounter();

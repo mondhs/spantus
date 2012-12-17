@@ -55,21 +55,24 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-//		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
+		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
 //		new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
-		 new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
+//		 new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
 	}
 
 	@Override
 	protected File createWavFile(File aRepositoryPathRoot) {
-		String internalPath = "TEST/";
-		String fileName = internalPath + "RBg031126_13_31-30_1.wav"
-		// "lietuvos_mbr_test-30_1.wav"
+		String internalPath = 
+				"TEST/";
+//				"TRAIN/";
+		String fileName = internalPath + 
+				"1-30_1.wav"
+//		 "lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
 
-
+	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	@Override
@@ -86,7 +89,7 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		// then
 		// Assert.assertTrue("read time " + length + ">"+(ended-started), length
 		// > ended-started);
-		Assert.assertEquals("Recognition", "tuvos;liet;tuvos;tuvos", resultsStr);
+		Assert.assertEquals("Recognition", "liet;tuvos;liet;tuvos", resultsStr);
 		// SignalSegment firstSegment = result.getSegments().values().iterator()
 		// .next();
 		// Assert.assertEquals("Recognition start", result.getOriginalMarker()
@@ -95,32 +98,36 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		// .getLength(), firstSegment.getMarker().getLength(), 150);
 
 	}
-	@Ignore
+
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {
 		wspotDao.setRecreate(true);
 		wspotDao.init();
-
+		log.debug("path: {}", getWavFile().getParentFile().getAbsoluteFile());
 		File[] files = getWavFile().getParentFile().listFiles(
 				new ExtNameFilter("wav"));
+		log.debug("fileSize: {}", files.length);
 		int foundSize = 0;
+        int index = 0;
 		for (File file : files) {
 			// if (!file.getName().contains("RZd0706_18_06-30_1.wav")) {
 			// continue;
 			// }
-			log.debug("start: " + file);
+    		Long start = System.currentTimeMillis();
+         	log.debug("start {}: {}",index,  file);
 			WordSpotResult result = doWordspot(file);
 			wspotDao.save(result);
 			foundSize += result.getSegments().size();
 			// String resultsStr = extractResultStr(result.getSegments());
-			log.debug("done: " + file);
-			log.error("Marker =>" + result.getOriginalMarker());
-			log.error(getWavFile() + "=>"
-					+ order.sortedCopy(result.getSegments().entrySet()));
+            log.debug("Marker => {}", result.getOriginalMarker());
+            log.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
+            log.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
+            log.debug("done {} in {} : {}\n", new Object[]{index, System.currentTimeMillis()-start, file});
+            index++;
 		}
 		// log.error("files =>" + files.length);
-		log.error("foundSize =>" + foundSize);
+        log.debug("foundSize =>{}", foundSize);
 		// Assert.assertEquals(0, list.size());
 		wspotDao.destroy();
 		Assert.assertTrue("One element at least", foundSize > 0);

@@ -57,7 +57,7 @@ public class CorpusEntryExtractorFileImplTest {
        Assert.assertNotNull(entries);
 //       MarkerSet phones = entries.getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.phone.name());
        MarkerSet words = entries.getMarkerSets().get(MarkerSetHolder.MarkerSetHolderEnum.word.name());
-       Assert.assertNotNull(words);
+       Assert.assertNotNull("Words", words);
        Assert.assertEquals("entries: " , 7, words.getMarkers().size());
      }
      

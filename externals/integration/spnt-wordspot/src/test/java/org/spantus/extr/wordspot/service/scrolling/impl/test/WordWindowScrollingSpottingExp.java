@@ -46,7 +46,7 @@ import com.google.common.collect.Ordering;
  */
 public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest {
 
-    private static final Logger log = LoggerFactory.getLogger(WordWindowScrollingSpottingExp.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WordWindowScrollingSpottingExp.class);
     
 	private WspotJdbcDao wspotDao;
 
@@ -66,8 +66,8 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
     @Override
     protected File createRepositoryPathRoot(){
         return  
-        		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
-//				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
+//        		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
+				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
 //        		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
 
     }
@@ -98,9 +98,9 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
     public void bulkTest() throws MalformedURLException {
         wspotDao.setRecreate(true);
         wspotDao.init();
-        log.debug("path: {}", getWavFile().getParentFile().getAbsoluteFile());
+        LOG.debug("path: {}", getWavFile().getParentFile().getAbsoluteFile());
         File[] files = getWavFile().getParentFile().listFiles(new ExtNameFilter("wav"));
-        log.debug("fileSize: {}", files.length);
+        LOG.debug("fileSize: {}", files.length);
         int foundSize = 0;
         int index = 0;
         for (File file : files) {
@@ -110,19 +110,21 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
 //                continue;
 //            }
         		Long start = System.currentTimeMillis();
-             	log.debug("start {}: {}",index,  file);
+             	LOG.debug("start {}: {}",index,  file);
                 WordSpotResult result = doWordspot(file);
                 wspotDao.save(result);
                 foundSize += result.getSegments().size();
 //                String resultsStr = extractResultStr(result.getSegments());
-                log.debug("Marker => {}", result.getOriginalMarker());
-                log.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
-                log.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
-                log.debug("done {} in {} : {}\n", new Object[]{index,  System.currentTimeMillis()-start, file});
+                LOG.debug("Marker => {}", result.getOriginalMarker());
+                LOG.debug("KeySegmentList => {}", getSpottingService().getKeySegmentList().size());
+                
+                LOG.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
+                LOG.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
+                LOG.debug("done {} in {} : {}\n", new Object[]{index,  System.currentTimeMillis()-start, file});
                 index++;
         }
 //        log.error("files =>" + files.length);
-        log.debug("foundSize =>{}", foundSize);
+        LOG.debug("foundSize =>{}", foundSize);
 //        Assert.assertEquals(0, list.size());
         wspotDao.destroy();
         Assert.assertTrue("One element at least", foundSize>0);
@@ -130,7 +132,7 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
     }
 	
 
-
+    @Ignore
     @Test
     @Override
     public void testWordSpotting() throws MalformedURLException {
@@ -177,6 +179,9 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
          result.setFileName(aWavFile.getName());
          result.setExperimentStarted(System.currentTimeMillis());
          final Map<RecognitionResult, SignalSegment> segments = new LinkedHashMap<>();
+         if(getSpottingService().getKeySegmentList() != null){
+        	 getSpottingService().getKeySegmentList().clear();
+         }
          getSpottingService().addKeySegment(keySegment);
     	 
 
@@ -197,6 +202,8 @@ public class WordWindowScrollingSpottingExp extends WindowScrollingSpottingTest 
          return result;
 
 	}
+
+    @Ignore
     @Test
     @Override
     public void testExactPlaceWordSpotting() throws MalformedURLException {

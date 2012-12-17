@@ -32,6 +32,7 @@ public class ExtremeSegmentsOnlineCtx {
 	public List<SegmentFeatureData> segmentCenters = new ArrayList<SegmentFeatureData>(3);
 	public Double maxDistance;
 	private Queue<FrameValues> windowValuesQueue = new LinkedList<FrameValues>();
+	private String extractorName;
 	
 
 	public SegmentFeatureData normalizeArea(SegmentFeatureData data){
@@ -248,6 +249,14 @@ public class ExtremeSegmentsOnlineCtx {
 
 	public void pushWindowValues(FrameValues windowValues) {
 		windowValuesQueue.add(windowValues);
+	}
+
+	public void setExtractorName(String extractorName) {
+		this.extractorName = extractorName;		
+	}
+
+	public String getExtractorName() {
+		return extractorName;
 	}
 
 	

@@ -104,10 +104,8 @@ public abstract class AbstractClassifierRuleBaseServiceImpl implements Classifie
 //						currentSegment, lastSegment);
 				className = getClusterService().getClassName(lastSegment, ctx);
 				if (currentPeakCount >= 1) {
-					Integer first = lastSegment.getPeakEntries().getLast()
-							.getIndex();
-					Integer last = currentSegment.getPeakEntries().getFirst()
-							.getIndex();
+					Integer first = lastSegment.getPeakEntry().getIndex();
+					Integer last = currentSegment.getPeakEntry().getIndex();
 					distanceBetweenPaeks = last.longValue() - first;
 					distanceBetweenPaeks = currentSegment.getValues()
 							.indextoMils(distanceBetweenPaeks.intValue());
