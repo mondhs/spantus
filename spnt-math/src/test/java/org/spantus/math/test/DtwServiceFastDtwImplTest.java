@@ -61,7 +61,6 @@ public class DtwServiceFastDtwImplTest {
 	}
 
 
-        @Ignore
 	@Test 
 	public void testCalculateDistanceVector() {
 		//given

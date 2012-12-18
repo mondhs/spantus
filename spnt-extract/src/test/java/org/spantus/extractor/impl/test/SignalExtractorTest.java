@@ -23,9 +23,11 @@ package org.spantus.extractor.impl.test;
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.spantus.core.FrameValues;
+import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.extractor.ExtractorConfig;
 import org.spantus.extractor.FrameValuesTestUtils;
 import org.spantus.extractor.impl.SignalExtractor;
@@ -47,15 +49,24 @@ public class SignalExtractorTest{
 		}
 		config=FrameValuesTestUtils.createExtractorConfig();
 	}
-	@Test @Ignore
+	@Test 
 	public void testSignal(){
+		//given
 		SignalExtractor extractor = new SignalExtractor();
+		IExtractorInputReader reader = Mockito.mock(IExtractorInputReader.class);
+		extractor.setExtractorInputReader(reader);
+		BDDMockito.given(reader.getAvailableStartMs()).willReturn(Long.valueOf(0));
+		BDDMockito.given(reader.getAvailableSignalLengthMs()).willReturn(Long.valueOf(x.size()));
+		BDDMockito.given(reader.findSignalValues(0L, Long.valueOf(x.size()))).willReturn(x);
 		int expectedSize = x.size();
 		extractor.setConfig(config);
+		//when
 		FrameValues y = extractor.calculateWindow(0L, x);
+		y = extractor.getOutputValues();
+		//then
 		log.debug(extractor.getName() + ": " + y);
 		Assert.assertEquals(expectedSize, y.size());
-		Assert.assertEquals("Sample Rate",80313, extractor.getExtractorSampleRate(), 1);
+		Assert.assertEquals("Sample Rate",8000, extractor.getExtractorSampleRate(), 1);
 	}
 	@Test
 	public void testMean(){

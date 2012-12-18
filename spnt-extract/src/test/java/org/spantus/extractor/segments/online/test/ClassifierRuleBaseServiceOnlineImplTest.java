@@ -7,13 +7,11 @@ import java.util.Iterator;
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.threshold.IClassificationListener;
 import org.spantus.core.threshold.LogClassificationListener;
-import org.spantus.core.threshold.SegmentEvent;
 import org.spantus.extractor.segments.offline.ExtremeSegment;
 import org.spantus.extractor.segments.offline.test.ExtremeClassifierTest;
 import org.spantus.extractor.segments.online.ExtremeOnlineRuleClassifier;
