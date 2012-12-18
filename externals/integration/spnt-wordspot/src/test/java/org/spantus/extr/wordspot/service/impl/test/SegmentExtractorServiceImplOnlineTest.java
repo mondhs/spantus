@@ -93,10 +93,10 @@ public class SegmentExtractorServiceImplOnlineTest extends AbstractSegmentExtrac
         //then
         Assert.assertEquals("Total segments", 5, result.size());
         Assert.assertNotNull("First segment", firstSegment.getMarker());
-        Assert.assertEquals("First segment starts", 252, firstSegment.getMarker().getStart(), 0);
-        Assert.assertEquals("First segment length", 195, firstSegment.getMarker().getLength(),  0);
+        Assert.assertEquals("First segment starts", 255, firstSegment.getMarker().getStart(), 0);
+        Assert.assertEquals("First segment length", 203, firstSegment.getMarker().getLength(),  0);
         Assert.assertEquals("Extracted feature", 3, valueMap.size());
-        Assert.assertEquals("Extracted feature", 58, valueMap.get("smooth_" + ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
+        Assert.assertEquals("Extracted feature", 60, valueMap.get("smooth_" + ExtractorEnum.SPECTRAL_FLUX_EXTRACTOR.name()).getValues().size());
 //		Assert.assertEquals("Extracted vector feature",1, vectorMap.size());
     }
 

@@ -79,13 +79,13 @@ public class ClassifierRuleBaseServiceBaseImpl extends
 			return ClassifierRuleBaseEnum.action.processNoise;
 //		7a;"ctx.featureInMin && ctx.previousValue > 1E6";"processSignal";"Higher mins are M pattern"
 		} else if (ctx.getFeatureInMin() && "smooth_SPECTRAL_FLUX_EXTRACTOR".equals(ctx.getExtractorName()) 
-				&& ctx.getPreviousValue() > 1E6) {
+				&& ctx.getPreviousValue() > 9E7) {
 			return ClassifierRuleBaseEnum.action.processSignal;
 		} else if (ctx.getFeatureInMin() && "smooth_ENERGY_EXTRACTOR".equals(ctx.getExtractorName()) 
 				&& ctx.getPreviousValue() > 1E6) {
 			return ClassifierRuleBaseEnum.action.processSignal;
 		} else if (ctx.getFeatureInMin() && "smooth_SIGNAL_ENTROPY_EXTRACTOR".equals(ctx.getExtractorName()) 
-				&& ctx.getPreviousValue() > 5E4) {
+				&& ctx.getPreviousValue() > 1E5) {
 			return ClassifierRuleBaseEnum.action.processSignal;			
 
 //		} else if (ctx.getFeatureInMin() 

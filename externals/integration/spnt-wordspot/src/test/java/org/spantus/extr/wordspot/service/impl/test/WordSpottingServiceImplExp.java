@@ -69,13 +69,13 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 				"TEST/";
 //				"TRAIN/";
 		String fileName = internalPath + 
-				"394-30_1.wav"
+				"41-30_1.wav"
 //				"RZg0819_18_41b-30_1.wav"
 //		 "lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
-
+	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	@Override
@@ -102,7 +102,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 				.getLength(), firstSegment.getMarker().getLength(), 200);
 
 	}
-	@Ignore
+
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {
