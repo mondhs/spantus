@@ -54,9 +54,10 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
         long availableStartMs = calcAvailableStartMs(getKeySegmentList(), aReader.getAvailableSignalLengthMs());
         
         LOG.debug("[wordSpotting] delta {}", getDelta());
-        
+        int count=0;
+        int  found = 0; 
+        long startTime = System.currentTimeMillis();
         for (long start = getDelta(); start < availableStartMs; start += getDelta()) {
-        	long startTime = System.currentTimeMillis();
         	for (SignalSegment keySegment : getKeySegmentList()) {
             	Marker iMarker = new Marker(start,
                 		keySegment.getMarker().getLength(),""	);
@@ -69,9 +70,14 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
                 SignalSegment foundSignalSegment = processAndContinue(keySegment, result, ctxMap.get(keySegment), start);
                 if(foundSignalSegment !=null){
 //                    LOG.debug("[wordSpotting] foundSignalSegment {}", foundSignalSegment);
+                	found++;
                 	spottingListener.foundSegment(null, foundSignalSegment, ctx.getResultMap().get(foundSignalSegment.getMarker().getStart()));
+                	start+=iMarker.getLength();
                 }
+                count++;
 			}
+        	LOG.debug("[wordSpotting][{}] found {} in {}; calculations {}; keysegment {}", new Object[]{start, found, (System.currentTimeMillis()-startTime),count, 
+        			getKeySegmentList()});
         }
        
 //        ctxMap.get(getKeySegmentList().get(0)).printMFCC();
@@ -113,9 +119,11 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
                 SpottingSyllableCtx ctx,
                 Long start) {
         	
+        	SignalSegment signalSegment = null;
+        	
         	String keyLabel = keySegment.getMarker().getLabel();
             if (result.isEmpty()) {
-                return null;
+                return signalSegment;
             }
             RecognitionResult firstMatch = null;
             RecognitionResult firstGoodMatch = null;
@@ -130,7 +138,7 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
                 }
             }
             if (firstGoodMatch == null) {
-                return null;
+                return signalSegment;
             }
             String name = firstGoodMatch.getInfo().getName();
 //            firstMatch.getInfo().getName();
@@ -159,23 +167,26 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
 //                    	LOG.debug("keep searching value to big {}", start);
                     }
                 }
-            	return null;
             }else{
             	if(ctx.getMinFirstMfccValue() != null){
-                    SignalSegment signalSegment = new SignalSegment(new Marker(
+                    signalSegment = new SignalSegment(new Marker(
                             ctx.getMinFirstMfccStart(), 
                             keySegment.getMarker().getLength(),
                             keyLabel));
+                    LOG.debug("found min value{}@{} :{}", new Object[]{
+                    		ctx.getMinFirstMfccValue(),
+                    		ctx.getMinFirstMfccStart(),
+                    		signalSegment
+                    		});
                     ctx.setMinFirstMfccValue(null);
                     ctx.setMinFirstMfccStart(null);
-                    LOG.debug("found min value {}", signalSegment);
-                    return signalSegment;
+                    
             	}
             }
             
 
             
-            return null;
+            return signalSegment;
         }
 
     

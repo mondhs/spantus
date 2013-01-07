@@ -18,6 +18,8 @@
 */
 package org.spantus.core.marker.service;
 
+import java.util.Collection;
+
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
@@ -28,6 +30,9 @@ public interface IMarkerService {
 	public boolean validate(MarkerSet markerSet, Marker marker, Long newStart, Long newLength);
 	public Long getTime(int sampleNum, Double sampleRate);
 	public Marker findFirstByLabel(MarkerSetHolder markerSetHolder,String label);
+	public Collection<Marker> findAllSequenesByLabels(MarkerSetHolder markerSetHolder,String label1,String label2);
 	public Marker findFirstByPhrase(MarkerSetHolder markerSetHolder, String... labels);
+	public Collection<Marker> findAllByLabel(MarkerSetHolder markerSetHolder,String label);
+	public Collection<Marker> findAllByPhrase(MarkerSetHolder markerSetHolder, String... labels);
 
 }

@@ -3,8 +3,8 @@ package org.spantus.extr.wordspot.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +41,7 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
 
     private static final Logger LOG = Logger.getLogger(WordSpottingListenerLogImpl.class);
     private List<RecognitionResult> wordMatches = new ArrayList<RecognitionResult>();
-    private Map<RecognitionResult, SignalSegment> wordSegments = new HashMap<RecognitionResult, SignalSegment>();
+    private Map<RecognitionResult, SignalSegment> wordSegments = new LinkedHashMap<RecognitionResult, SignalSegment>();
     private List<SignalSegment> signalSegmentsSyllable = new ArrayList<SignalSegment>();
     private CorpusService corpusServiceWord;
     private String repositoryPathWord;
@@ -218,6 +218,7 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
         }
         if(firstResult!=null){
         	if(getTarget().equals(segmentWord.getMarker().getLabel())){
+        		segmentWord.getMarker().setId(Long.valueOf(getWordSegments().size()));
         		getWordSegments().put(firstResult, segmentWord);
         	}else{
         		LOG.debug("[processEndedSegment] reject word [{0}] as do not match target [{1}]",segmentWord.getMarker().getLabel(), getTarget());

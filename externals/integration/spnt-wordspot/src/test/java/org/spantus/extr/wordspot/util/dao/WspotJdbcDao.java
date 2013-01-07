@@ -9,15 +9,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.Marker;
 import org.spantus.exception.ProcessingException;
 import org.spantus.extractor.impl.ExtractorEnum;
+import org.spantus.utils.Assert;
 
 /**
  *
@@ -88,21 +89,21 @@ public class WspotJdbcDao {
     	String fileName = result.getFileName();
     	insertExpInfo(result);
         
-        Map<String, Marker> orignalMap = new HashMap<>();
+        Set<Marker> orignalMap = new LinkedHashSet<Marker>();
         for (Marker originalMarker : result.getOriginalMarker()) {
             String markerLabel = originalMarker.getLabel();
             Long markerStart = originalMarker.getStart();
             Long markerEnd = originalMarker.getEnd();
-            orignalMap.put(markerLabel, originalMarker);
+            orignalMap.add(originalMarker);
             markerLabel = markerLabel.replaceAll("[\'|-]", "");
             
             String insertWordSpotSampleExpQuery = "INSERT INTO WordSpotSampleExp ("
                     + "EKEY, FILENAME, MARKERLABEL,MARKERSTART,MARKEREND) VALUES "
-                    + "(''{0}-{1}'', ''{0}'',  ''{1}'' ,{2,number,#},"
-                    + "{3,number,#});";
+                    + "(''{0}-{1}-{2}'', ''{0}'',  ''{1}'' ,{3,number,#},"
+                    + "{4,number,#});";
 
             String queryWordSpotSampleExp = MessageFormat.format(insertWordSpotSampleExpQuery,
-                    fileName, markerLabel, markerStart, markerEnd);
+                    fileName, markerLabel,originalMarker.getId(), markerStart, markerEnd);
 
             insert(queryWordSpotSampleExp);
 		}
@@ -118,22 +119,30 @@ public class WspotJdbcDao {
             Long foundEnd = signalSegment.getMarker().getEnd();
             String foundLabel = signalSegment.getMarker().getLabel();
             Double mfccVaue = recognitionResult.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
-            Marker originalMarker = orignalMap.get(foundLabel);
+            Marker originalMarker = null;
+            Long minDelta = Long.MAX_VALUE ;
+            for (Marker iOriginalMarker : orignalMap) {
+            	long delta = Math.abs(iOriginalMarker.getStart()-foundStart);
+				if(delta<minDelta){
+					minDelta=delta;
+					originalMarker = iOriginalMarker;
+				}
+			}
             foundLabel = foundLabel.replaceAll("[\'|-]", "");
-
-            String markerLabel = originalMarker.getLabel();
+            
+            if(originalMarker == null){
+            	Assert.isTrue(originalMarker != null, "Not found for {0}", foundLabel);
+            }
+            
             Long markerStart = originalMarker.getStart();
             Long markerEnd = originalMarker.getEnd();
-            orignalMap.put(markerLabel, originalMarker);
-
-
 
             String insertQuery = "INSERT INTO WordSpotFoundExp (EKEY, FILENAME, MARKERLABEL, MARKERSTART,MARKEREND,FOUNDSTART,FOUNDEND,MFCCVAUE) VALUES "
-                    + "(''{0}-{1}'', ''{0}'' , ''{1}'',{2,number,#},"
-                    + "{3,number,#},{4,number,#},{5,number,#},{6,number,#.###});";
+                    + "(''{0}-{1}-{2}'', ''{0}'' , ''{1}'',{3,number,#},"
+                    + "{4,number,#},{5,number,#},{6,number,#},{7,number,#.###});";
 
             String queryWORDSPOTEXP = MessageFormat.format(insertQuery,
-                    fileName, foundLabel, markerStart, markerEnd, foundStart, foundEnd, mfccVaue);
+                    fileName, foundLabel,signalSegment.getMarker().getId(), markerStart, markerEnd, foundStart, foundEnd, mfccVaue);
             insert(queryWORDSPOTEXP);
         }
     }

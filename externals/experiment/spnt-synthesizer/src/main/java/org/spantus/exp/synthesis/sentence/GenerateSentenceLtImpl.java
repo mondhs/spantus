@@ -10,6 +10,7 @@ import static org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseE
 import static org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseEnum.predicate;
 import static org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseEnum.subject;
 import static org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseEnum.timeFactor;
+import static org.spantus.exp.synthesis.sentence.SentenceGenerateContext.ClauseEnum.keyword;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,7 +36,8 @@ import com.google.common.io.Resources;
  */
 public class GenerateSentenceLtImpl {
     
-    public static final Logger LOG = Logger.getLogger(GenerateSentenceLtImpl.class);
+
+	public static final Logger LOG = Logger.getLogger(GenerateSentenceLtImpl.class);
     
 
     
@@ -111,17 +113,16 @@ public class GenerateSentenceLtImpl {
         String separator = ""; 
         for (ClauseEnum entry : ctx.getClauseSequence()) {
             String randomClause = randomWordByClause(entry);
-            if(attributive.equals(entry)){
-                randomClause = "Lietuvos " + randomClause;
-            }
+//            if(attributive.equals(entry)){
+//                randomClause = "Lietuvos " + randomClause;
+//            }
             message.append(separator).append(randomClause);
             separator = " ";
         }
         return message.toString();
     }
 
-    private String randomWordByClause(ClauseEnum clause ){
-
+    private String randomWordByClause(ClauseEnum clause){
         List<String> clauseList = clauseRepository.get(clause);
         Double randIndex = Math.random() * clauseList.size();
         return clauseList.get(randIndex.intValue());
@@ -145,10 +146,10 @@ public class GenerateSentenceLtImpl {
 			}
             
             suggestedClauseSequence = Lists.newArrayList();
-            suggestedClauseSequence.add(Lists.newArrayList(conjunction, timeFactor, attributive, subject));
-            suggestedClauseSequence.add(Lists.newArrayList(conjunction, placeFactor, attributive, predicate));
-            suggestedClauseSequence.add(Lists.newArrayList(conjunction, attributive, subject));
-            suggestedClauseSequence.add(Lists.newArrayList(conjunction, timeFactor, attributive, placeFactor));
+            suggestedClauseSequence.add(Lists.newArrayList(conjunction, keyword, timeFactor, keyword, attributive, subject));
+            suggestedClauseSequence.add(Lists.newArrayList(placeFactor, keyword, conjunction, keyword, attributive, predicate));
+            suggestedClauseSequence.add(Lists.newArrayList(conjunction, keyword, conjunction, keyword, attributive, subject));
+            suggestedClauseSequence.add(Lists.newArrayList(conjunction, keyword, timeFactor, keyword, attributive, placeFactor));
 //            suggestedClauseSequence.add(Lists.newArrayList(timeFactor, attributive, subject, predicate, placeFactor));
 //            suggestedClauseSequence.add(Lists.newArrayList(timeFactor,  subject, placeFactor, attributive, predicate));
 //            suggestedClauseSequence.add(Lists.newArrayList(conjunction, attributive, subject, timeFactor, predicate, placeFactor));

@@ -43,6 +43,7 @@ public class SyllableSpottingListenerLogImpl extends WordSpottingListenerLogImpl
     		List<SignalSegment> aSignalSegmentsSyllable,
     		SignalSegment newSyllable,
     		RecognitionResult syllableRecognitionResult) {
+    	newSyllable.getMarker().setId(Long.valueOf(getWordSegments().size()));
     	getWordSegments().put(syllableRecognitionResult, newSyllable);
     	return syllableRecognitionResult;
     }

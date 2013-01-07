@@ -21,14 +21,13 @@ public class SentenceGenerateContext {
      * timeFactor - Lt: laiko applinkybė
      * placeFactor - LT: vietos applinkybė
      * conjunction - LT: Jungtukas
+     * keyword - this is word that is important for investigation
      */
-    enum ClauseEnum{subject, predicate, attributive, timeFactor, placeFactor, conjunction};
+    enum ClauseEnum{subject, predicate, attributive, timeFactor, placeFactor, conjunction, keyword};
         
 
     
     private List<ClauseEnum> clauseSequence;
-    
-
 
     public List<ClauseEnum> getClauseSequence() {
         return clauseSequence;

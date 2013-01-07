@@ -10,17 +10,18 @@ import static org.junit.Assert.assertNotNull;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.extractor.IExtractorInputReader;
@@ -36,6 +37,7 @@ import org.spantus.extr.wordspot.util.dao.WspotJdbcDao;
 import org.spantus.extractor.impl.ExtractorEnum;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 
@@ -54,7 +56,7 @@ public class SyllableWindowScrollingSpottingExp extends
 	private Map<String, String> keyWordMap = ImmutableMap.of("uvoos", "tuvos", "liet", "liet");
 
 	private static final Ordering<Entry<RecognitionResult, SignalSegment>> order = new RecognitionResultSignalSegmentOrder();
-
+	
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
@@ -63,10 +65,10 @@ public class SyllableWindowScrollingSpottingExp extends
 
 	@Override
 	protected File createRepositoryPathRoot() {
-		return
-		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
-//		 new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
-//		new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch");
+		return 
+//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
+//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
+				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
 	}
 
 	@Override
@@ -76,12 +78,13 @@ public class SyllableWindowScrollingSpottingExp extends
 				"TEST/"
 				;
 		String fileName = internalPath + 
-		"1-30_1.wav"
+		"001-30_1.wav"
 //		 "lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
-
+	
+//	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {
@@ -126,15 +129,50 @@ public class SyllableWindowScrollingSpottingExp extends
 	}
 	@Ignore
 	@Test
+	public void testDoWordSpotting() throws MalformedURLException {
+		
+		// given
+		File file = getWavFile();
+		for (Entry<String, String> keyEntiry : keyWordMap.entrySet()) {
+			Collection<Marker> keySegments = findKeywordSegments(keyEntiry.getValue(),
+					getWavFile(), keyEntiry.getKey());
+			Marker keySegment = keySegments.iterator().next();
+			getSpottingService().addKeySegment(new SignalSegment(keySegment));
+    		Long start = System.currentTimeMillis();
+         	
+			LOG.debug("start {}", file);
+         	LOG.debug("index {} ",  keyEntiry);
+	        WordSpotResult result = doWordspot(keyEntiry.getValue(), file,
+					keyEntiry.getKey());
+            LOG.debug("done  in {} : {}\n", new Object[]{System.currentTimeMillis()-start, file});
+			// then
+			 assertEquals("foundSegments",2,  result.getSegments().size(),2);
+			 final SignalSegment cKeySegment = getSpottingService().getKeySegmentList().get(0);
+			 SignalSegment foundSegment = Iterables.find(result.getSegments().values(), new MatchedPredicate(cKeySegment));
+			assertNotNull("Keyword not found", foundSegment);
+			assertNotNull("Keyword not found", foundSegment.getMarker());
+			assertNotNull("Keyword not found", foundSegment.getMarker()
+					.getStart());
+			assertEquals("Keyword not found", keyEntiry.getValue(), foundSegment.getMarker().getLabel());
+			assertEquals(
+					"start of found key marker should be same",
+					getSpottingService().getKeySegmentList().get(0).getMarker().getStart(),
+					foundSegment.getMarker().getStart(), 250L);
+		}
+
+	}
+
+	@Ignore
+	@Test
 	@Override
 	public void testWordSpotting() throws MalformedURLException {
 		// given
 		URL aWavUrl = getWavFile().toURI().toURL();
 		for (Entry<String, String> keyEntiry : keyWordMap.entrySet()) {
-			SignalSegment keySegment = findKeywordSegment(keyEntiry.getValue(),
+			Collection<Marker> keySegments = findKeywordSegments(keyEntiry.getValue(),
 					getWavFile(), keyEntiry.getKey());
-
-			getSpottingService().addKeySegment(keySegment);
+			Marker keySegment = keySegments.iterator().next();
+			getSpottingService().addKeySegment(new SignalSegment(keySegment));
 	        final List<SignalSegment> foundSegments = Lists.newArrayList();
 			// when
 			getSpottingService().wordSpotting(aWavUrl, new SpottingListener() {
@@ -147,8 +185,8 @@ public class SyllableWindowScrollingSpottingExp extends
 				}
 			});
 			// then
-			 assertEquals("foundSegments",15,  foundSegments.size(),1);
-			 SignalSegment foundSegment = foundSegments.get(0);
+			assertEquals("foundSegments",4,  foundSegments.size(),0);
+			SignalSegment foundSegment = Iterables.find(foundSegments, new MatchedPredicate(keySegment));
 			assertNotNull("Keyword not found", foundSegment);
 			assertNotNull("Keyword not found", foundSegment.getMarker());
 			assertNotNull("Keyword not found", foundSegment.getMarker()
@@ -156,7 +194,7 @@ public class SyllableWindowScrollingSpottingExp extends
 			assertEquals("Keyword not found", keyEntiry.getValue(), foundSegment.getMarker().getLabel());
 			assertEquals(
 					"start of found key marker should be same",
-					getSpottingService().getKeySegmentList().get(0).getMarker().getStart(),
+					keySegment.getStart(),
 					foundSegment.getMarker().getStart(), 250L);
 		}
 
@@ -172,20 +210,22 @@ public class SyllableWindowScrollingSpottingExp extends
 			String keyWordCode) throws MalformedURLException {
 		WordSpotResult result = new WordSpotResult();
 		URL aWavUrl = aWavFile.toURI().toURL();
-		SignalSegment keySegment = findKeywordSegment(keywordValue, aWavFile,
+		Collection<Marker> keySegments = findKeywordSegments(keywordValue, aWavFile,
 				keyWordCode);
+		Marker keySegment = keySegments.iterator().next();
 		Assert.assertNotNull("keyword not found", keySegment);
 		Long length = AudioManagerFactory.createAudioManager()
 				.findLengthInMils(aWavUrl);
 		result.setAudioLength(length);
-		result.getOriginalMarker().add(keySegment.getMarker());
+		result.getOriginalMarker().addAll(keySegments);
 		result.setFileName(aWavFile.getName());
 		result.setExperimentStarted(System.currentTimeMillis());
 		final Map<RecognitionResult, SignalSegment> segments = new LinkedHashMap<>();
         if(getSpottingService().getKeySegmentList() != null){
        	 getSpottingService().getKeySegmentList().clear();
         }
-		getSpottingService().addKeySegment(keySegment);
+		getSpottingService().addKeySegment(new SignalSegment(keySegment));
+		getSpottingService().setDelta(10);
 
 		final SignalSegment foundSegment = new SignalSegment();
 		// when
@@ -195,6 +235,7 @@ public class SyllableWindowScrollingSpottingExp extends
 					SignalSegment newSegment,
 					List<RecognitionResult> recognitionResults) {
 				foundSegment.setMarker(newSegment.getMarker());
+				newSegment.getMarker().setId(Long.valueOf(segments.size()));
 				segments.put(recognitionResults.get(0), newSegment);
 				return newSegment.getMarker().getLabel();
 			}
@@ -204,7 +245,6 @@ public class SyllableWindowScrollingSpottingExp extends
 		result.setSegments(segments);
 
 		return result;
-
 	}
 	@Ignore
 	@Test
@@ -212,38 +252,42 @@ public class SyllableWindowScrollingSpottingExp extends
 	public void testExactPlaceWordSpotting() throws MalformedURLException {
 		// given
 		URL aWavUrl = getWavFile().toURI().toURL();
-		SignalSegment keySegment = findKeywordSegment("liet", getWavFile(),
+		Collection<Marker> keySegments = findKeywordSegments("liet", getWavFile(),
 				"liet");
+		Marker keySegment = keySegments.iterator().next();
 		getSpottingService().setDelta(1);
-		getSpottingService().addKeySegment(keySegment);
+		getSpottingService().addKeySegment(new SignalSegment(keySegment));
 
 		// when
 		IExtractorInputReader reader = getSpottingService().createReader(
 				aWavUrl);
 		SignalSegment recalculatedFeatures = getSpottingService()
-				.recalculateFeatures(reader, keySegment.getMarker());
+				.recalculateFeatures(reader, keySegment);
 		List<RecognitionResult> matchedResults = getSpottingService().match(
 				recalculatedFeatures);
-
 		// then
-
 		assertNotNull(matchedResults);
 		assertEquals("Results", 5, matchedResults.size());
 		RecognitionResult matched = matchedResults.get(0);
 		assertEquals("Results", "liet", matched.getInfo().getName());
-		assertEquals("Results", 9.71021772319221E9, matched.getDetails()
-				.getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 1);
+		assertEquals("Results", 2.24, matched.getDetails()
+				.getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 5e9);
 	}
 
-	protected SignalSegment findKeywordSegment(String keyWordName,
-			File aWavFile, String... keyWordSequence) {
+	protected Collection<Marker> findKeywordSegments(String keyWordName,
+			File aWavFile, String keyWordSequence) {
 		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
-		Marker keywordMarker = getMarkerService().findFirstByPhrase(markers,
+		Collection<Marker> markerList = getMarkerService().findAllByLabel(markers,
 				keyWordSequence);
 		// Marker marker = findKeyword(aWavFile, keyWord);
-		SignalSegment keySegment = new SignalSegment(new Marker(
-				keywordMarker.getStart(), keywordMarker.getLength(),
-				keyWordName));
-		return keySegment;
+//		SignalSegment keySegment = new SignalSegment(new Marker(
+//				keywordMarker.getStart(), keywordMarker.getLength(),
+//				keyWordName));
+		long i = 0;
+		for (Marker marker : markerList) {
+			marker.setId(i++);
+			marker.setLabel(keyWordName);
+		}
+		return markerList;
 	}
 }

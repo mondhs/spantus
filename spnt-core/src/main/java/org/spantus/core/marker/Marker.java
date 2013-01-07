@@ -15,42 +15,41 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
-*/
+ */
 package org.spantus.core.marker;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
 
 import org.spantus.utils.Assert;
+
 /**
  * Marker represent segment information in segmentation process
  * 
  * @author Mindaugas Greibus
- *
+ * 
  */
-public class Marker implements Serializable, Cloneable{
+public class Marker implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Long start;
-	
+
 	private Long length;
 
 	private String label;
 
-        public Marker() {
-        }
+	private Long id;
 
-        
-        
-        public Marker(Long start, Long length, String label) {
-            this();
-            this.start = start;
-            this.length = length;
-            this.label = label;
-        }
-	
-        
+	public Marker() {
+	}
+
+	public Marker(Long start, Long length, String label) {
+		this();
+		this.start = start;
+		this.length = length;
+		this.label = label;
+	}
 
 	public Long getStart() {
 		return start;
@@ -61,15 +60,15 @@ public class Marker implements Serializable, Cloneable{
 	}
 
 	public void setEnd(Long end) {
-		Assert.isTrue(getStart()!=null, "start not set");
-		Assert.isTrue(end-getStart()>=0, "End should be after start");
-		setLength(end-getStart());
+		Assert.isTrue(getStart() != null, "start not set");
+		Assert.isTrue(end - getStart() >= 0, "End should be after start");
+		setLength(end - getStart());
 	}
-	
-	public Long getEnd(){
-		Assert.isTrue(getStart()!=null, "start not set");
-		Assert.isTrue(getLength()!=null, "length not set");
-		return getStart()+getLength();
+
+	public Long getEnd() {
+		Assert.isTrue(getStart() != null, "start not set");
+		Assert.isTrue(getLength() != null, "length not set");
+		return getStart() + getLength();
 	}
 
 	public void setStart(Long start) {
@@ -77,10 +76,10 @@ public class Marker implements Serializable, Cloneable{
 	}
 
 	public void setLength(Long length) {
-		Assert.isTrue(length>=0, "Length cannot be negative");
+		Assert.isTrue(length >= 0, "Length cannot be negative");
 		this.length = length;
 	}
-	
+
 	public String getLabel() {
 		return label;
 	}
@@ -88,41 +87,40 @@ public class Marker implements Serializable, Cloneable{
 	public void setLabel(String label) {
 		this.label = label;
 	}
+
 	@Override
 	public String toString() {
-		long saveStart = getStart() == null?0L:getStart();
-		long saveLength = getLength() == null?0L:getLength();
-		String str = MessageFormat.format("{0}: {1} [{2,number,####};+{4,number,####}; {3,number,####}]", 
-				getClass().getSimpleName(), getLabel(),
-				saveStart, (saveStart+saveLength), saveLength);
+		long saveStart = getStart() == null ? 0L : getStart();
+		long saveLength = getLength() == null ? 0L : getLength();
+		String str = MessageFormat.format(
+				"{0}: {1} [{2,number,####};+{4,number,####}; {3,number,####}]",
+				getClass().getSimpleName(), getLabel(), saveStart,
+				(saveStart + saveLength), saveLength);
 		return str;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(obj == null) return false;
+		if (obj == null)
+			return false;
 		boolean val = this.hashCode() == obj.hashCode();
 		return val;
 	}
 
-	public Marker clone(){
+	public Marker clone() {
 		try {
-			return (Marker)super.clone();
+			return (Marker) super.clone();
 		} catch (CloneNotSupportedException e) {
 			throw new IllegalArgumentException(e);
 		}
 	}
-	
-//	public MarkerExtractionData getExtractionData() {
-//		if(extractionData == null){
-//			extractionData = new MarkerExtractionData();
-//		}
-//		return extractionData;
-//	}
 
-//	public void setExtractionData(MarkerExtractionData extractionData) {
-//		this.extractionData = extractionData;
-//	}
+	public Long getId() {
+		return id;
+	}
 
-	
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 }

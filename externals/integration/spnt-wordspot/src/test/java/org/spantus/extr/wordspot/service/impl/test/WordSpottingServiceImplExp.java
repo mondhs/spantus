@@ -7,16 +7,17 @@ package org.spantus.extr.wordspot.service.impl.test;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.junit.SlowTests;
@@ -58,9 +59,9 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-				new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
-//				new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
-//				new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
+//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
+//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
+				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 				"TEST/";
 //				"TRAIN/";
 		String fileName = internalPath + 
-				"41-30_1.wav"
+				"041-30_1.wav"
 //				"RZg0819_18_41b-30_1.wav"
 //		 "lietuvos_mbr_test-30_1.wav"
 		;
@@ -92,7 +93,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 		// then
 		// Assert.assertTrue("read time " + length + ">"+(ended-started), length
 		// > ended-started);
-		Assert.assertEquals("Recognition", SEARCH_KEY_WORD, resultsStr);
+		Assert.assertEquals("Recognition", SEARCH_KEY_WORD+";"+SEARCH_KEY_WORD, resultsStr);
 		SignalSegment firstSegment = result.getSegments().values().iterator()
 				.next();
 		Marker firstOriginal = result.getOriginalMarker().get(0);
@@ -152,13 +153,11 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 		Long length = AudioManagerFactory.createAudioManager()
 				.findLengthInMils(aWavUrl);
 		// various experiments uses various lietuvos trasnsciption
-		Marker keywordMarker = findKeyword(aWavFile);
-		keywordMarker.setLabel(SEARCH_KEY_WORD);
+		Collection<Marker> keywordMarkers = findKeyword(aWavFile);
 		result.setAudioLength(length);
-		result.getOriginalMarker().add(keywordMarker);
+		result.getOriginalMarker().addAll(keywordMarkers);
 		result.setFileName(aWavFile.getName());
 
-		// when
 		result.setExperimentStarted(System.currentTimeMillis());
 		wordSpottingServiceImpl.wordSpotting(aWavUrl, listener);
 		result.setExperimentEnded(System.currentTimeMillis());
@@ -169,20 +168,20 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 
 	}
 
-	private Marker findKeyword(File aWavFile) {
-		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
-		Marker marker = getMarkerService().findFirstByLabel(markers, "-l'-ie-t-|-u-v-oo-s");
-		if (marker == null) {
-			Marker lietMarker = getMarkerService().findFirstByLabel(markers,"-l-ie-t");
-			Marker uvosMarker = getMarkerService().findFirstByLabel(markers,"-u-v-o:-s");
-			if (uvosMarker == null) {
-				uvosMarker = getMarkerService().findFirstByLabel(markers,"-u-v-oo-s");
-			}
-			marker = new Marker();
-			marker.setStart(lietMarker.getStart());
-			marker.setEnd(uvosMarker.getEnd());
-			marker.setLabel(lietMarker.getLabel() + uvosMarker.getLabel());
+	private Collection<Marker> findKeyword(File aWavFile) {
+		MarkerSetHolder markerSetHolder = findMarkerSetHolderByWav(aWavFile);
+		Collection<Marker> markerList = getMarkerService().findAllByLabel(markerSetHolder, "-l'-ie-t-|-u-v-oo-s");
+		if (markerList == null || markerList.isEmpty()) {
+			markerList = getMarkerService().findAllSequenesByLabels(markerSetHolder, "-l-ie-t", "-u-v-o:-s");
 		}
-		return marker;
+		if (markerList == null || markerList.isEmpty()) {
+			markerList = getMarkerService().findAllSequenesByLabels(markerSetHolder, "-l-ie-t", "-u-v-oo-s");
+		}
+		long i = 0;
+		for (Marker marker : markerList) {
+			marker.setId(i);
+			i++;
+		}
+		return markerList;
 	}
 }

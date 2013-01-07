@@ -7,6 +7,7 @@ package org.spantus.extr.wordspot.service.impl.test;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -55,9 +56,9 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-		new File("/home/as/tmp/garsynas.lietuvos-syn-dynlen");
-//		new File("/home/as/tmp/garsynas.lietuvos-syn-wpitch");
-//		 new File("/home/as/tmp/garsynas.lietuvos-syn-wopitch/");
+				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
+//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
+//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 				"TEST/";
 //				"TRAIN/";
 		String fileName = internalPath + 
-				"1-30_1.wav"
+				"001-30_1.wav"
 //		 "lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
@@ -98,7 +99,7 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		// .getLength(), firstSegment.getMarker().getLength(), 150);
 
 	}
-
+//	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {
@@ -147,9 +148,9 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 				.findLengthInMils(aWavUrl);
 		// various experiments uses various lietuvos trasnsciption
 		for (Entry<String, String> element : keyWordMap.entrySet()) {
-			SignalSegment signalSegment = findKeywordSegment(
+			Collection<Marker> keywordMarkers = findKeywordSegment(
 					element.getValue(), aWavFile, element.getKey());
-			result.getOriginalMarker().add(signalSegment.getMarker());
+			result.getOriginalMarker().addAll(keywordMarkers);
 		}
 		//
 		result.setAudioLength(length);
@@ -167,16 +168,21 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 
 	}
 
-	protected SignalSegment findKeywordSegment(String keyWordValue,
+	protected Collection<Marker> findKeywordSegment(String keyWordValue,
 			File aWavFile, String keyWordCode) {
 		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
-		Marker keywordMarker = getMarkerService().findFirstByLabel(markers,
+		Collection<Marker> markerList = getMarkerService().findAllByLabel(markers,
 				keyWordCode);
 		// Marker marker = findKeyword(aWavFile, keyWord);
-		SignalSegment keySegment = new SignalSegment(new Marker(
-				keywordMarker.getStart(), keywordMarker.getLength(),
-				keyWordValue));
-		return keySegment;
+//		SignalSegment keySegment = new SignalSegment(new Marker(
+//				keywordMarker.getStart(), keywordMarker.getLength(),
+//				keyWordValue));
+		long i = 0;
+		for (Marker marker : markerList) {
+			marker.setId(i);
+			i++;
+		}
+		return markerList;
 	}
 
 }
