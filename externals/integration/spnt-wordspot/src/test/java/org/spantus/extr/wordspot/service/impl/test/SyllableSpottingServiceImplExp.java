@@ -8,6 +8,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -24,12 +25,14 @@ import org.spantus.core.junit.SlowTests;
 import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.wav.AudioManagerFactory;
+import org.spantus.extr.wordspot.guava.MarkerOrder;
 import org.spantus.extr.wordspot.service.impl.SyllableSpottingListenerLogImpl;
 import org.spantus.extr.wordspot.service.impl.test.util.ExtNameFilter;
 import org.spantus.extr.wordspot.util.dao.WordSpotResult;
 import org.spantus.extr.wordspot.util.dao.WspotJdbcDao;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 
 /**
  * 
@@ -56,8 +59,8 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
-//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
+//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
+				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
 //				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
 	}
 
@@ -146,12 +149,9 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		listener.setServiceConfig(serviceConfig);
 		Long length = AudioManagerFactory.createAudioManager()
 				.findLengthInMils(aWavUrl);
-		// various experiments uses various lietuvos trasnsciption
-		for (Entry<String, String> element : keyWordMap.entrySet()) {
-			Collection<Marker> keywordMarkers = findKeywordSegment(
-					element.getValue(), aWavFile, element.getKey());
-			result.getOriginalMarker().addAll(keywordMarkers);
-		}
+		List<Marker> originalMarker = findOriginal(aWavFile) ;
+		result.setOriginalMarker(originalMarker);
+		
 		//
 		result.setAudioLength(length);
 		//
@@ -168,6 +168,24 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 
 	}
 
+	
+	private List<Marker> findOriginal(File aWavFile) {
+		List<Marker> originalMarker = Lists.newArrayList();
+		// various experiments uses various lietuvos trasnsciption
+		for (Entry<String, String> element : keyWordMap.entrySet()) {
+			Collection<Marker> keywordMarkers = findKeywordSegment(
+					element.getValue(), aWavFile, element.getKey());
+			originalMarker.addAll(keywordMarkers);
+		}
+		originalMarker = new MarkerOrder().sortedCopy(originalMarker);
+		long i = 0;
+		for (Marker marker : originalMarker) {
+			marker.setId(i);
+			i++;
+		}
+		return originalMarker;
+	}
+
 	protected Collection<Marker> findKeywordSegment(String keyWordValue,
 			File aWavFile, String keyWordCode) {
 		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
@@ -177,11 +195,6 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 //		SignalSegment keySegment = new SignalSegment(new Marker(
 //				keywordMarker.getStart(), keywordMarker.getLength(),
 //				keyWordValue));
-		long i = 0;
-		for (Marker marker : markerList) {
-			marker.setId(i);
-			i++;
-		}
 		return markerList;
 	}
 

@@ -78,7 +78,7 @@ public class WindowScrollingSpottingTest extends AbstractSegmentExtractorTest {
 		for (int i = 0; i < foundSegment.size(); i++) {
 			assertEquals("start of found key marker same as matched",
 					spottingService.getKeySegmentList().get(i).getMarker().getStart(),
-					foundSegment.get(i).getStart(), 10L);
+					foundSegment.get(i).getStart(), 150L);
 		}
 
 	}
