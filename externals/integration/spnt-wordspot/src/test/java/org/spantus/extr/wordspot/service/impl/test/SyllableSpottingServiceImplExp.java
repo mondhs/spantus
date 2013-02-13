@@ -60,18 +60,19 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 	protected File createRepositoryPathRoot() {
 		return 
 //				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
-				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
 //				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
+		new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
+		
 	}
 
 	@Override
 	protected File createWavFile(File aRepositoryPathRoot) {
 		String internalPath = 
 				"TEST/";
-//				"TRAIN/";
+//				"";
 		String fileName = internalPath + 
 				"001-30_1.wav"
-//		 "lietuvos_mbr_test-30_1.wav"
+//		 "TRAIN/lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
@@ -180,6 +181,11 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		originalMarker = new MarkerOrder().sortedCopy(originalMarker);
 		long i = 0;
 		for (Marker marker : originalMarker) {
+			String markerLabel = marker.getLabel();
+			markerLabel = markerLabel.replaceAll("[\'|-]", "");
+			if(keyWordMap.get(markerLabel) != null){
+				marker.setLabel(keyWordMap.get(markerLabel));
+			}
 			marker.setId(i);
 			i++;
 		}

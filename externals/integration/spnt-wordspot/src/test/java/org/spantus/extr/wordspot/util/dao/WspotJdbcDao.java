@@ -60,7 +60,7 @@ public class WspotJdbcDao {
                         + "markerEnd BIGINT,"
                         + "foundStart BIGINT,"
                         + "foundEnd BIGINT,"
-                        + "mfccVaue FLOAT);"
+                        + "mfccValue FLOAT);"
                         + "\n"
                         + "DROP TABLE WordSpotSampleExp IF EXISTS;"
                         + "CREATE CACHED TABLE WordSpotSampleExp("
@@ -118,7 +118,7 @@ public class WspotJdbcDao {
             Long foundStart = signalSegment.getMarker().getStart();
             Long foundEnd = signalSegment.getMarker().getEnd();
             String foundLabel = signalSegment.getMarker().getLabel();
-            Double mfccVaue = recognitionResult.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+            Double mfccValue = recognitionResult.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
             Marker originalMarker = null;
             Long minDelta = Long.MAX_VALUE ;
             for (Marker iOriginalMarker : orignalMap) {
@@ -137,12 +137,12 @@ public class WspotJdbcDao {
             Long markerStart = originalMarker.getStart();
             Long markerEnd = originalMarker.getEnd();
 
-            String insertQuery = "INSERT INTO WordSpotFoundExp (EKEY, FILENAME, MARKERLABEL, MARKERSTART,MARKEREND,FOUNDSTART,FOUNDEND,MFCCVAUE) VALUES "
+            String insertQuery = "INSERT INTO WordSpotFoundExp (EKEY, FILENAME, MARKERLABEL, MARKERSTART,MARKEREND,FOUNDSTART,FOUNDEND,MFCCVALUE) VALUES "
                     + "(''{0}-{1}-{2}'', ''{0}'' , ''{1}'',{3,number,#},"
                     + "{4,number,#},{5,number,#},{6,number,#},{7,number,#.###});";
 
             String queryWORDSPOTEXP = MessageFormat.format(insertQuery,
-                    fileName, foundLabel,signalSegment.getMarker().getId(), markerStart, markerEnd, foundStart, foundEnd, mfccVaue);
+                    fileName, foundLabel,originalMarker.getId(), markerStart, markerEnd, foundStart, foundEnd, mfccValue);
             insert(queryWORDSPOTEXP);
         }
     }
