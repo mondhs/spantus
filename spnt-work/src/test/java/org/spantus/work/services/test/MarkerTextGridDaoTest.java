@@ -20,8 +20,12 @@ package org.spantus.work.services.test;
 
 import java.io.File;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.spantus.core.marker.Marker;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
@@ -31,12 +35,12 @@ import org.spantus.work.services.impl.MarkerTextGridDao;
  * @author mondhs
  *
  */
-public class MarkerTextGridDaoTest extends TestCase {
+
+public class MarkerTextGridDaoTest  {
 	MarkerTextGridDao markerDao;
 	File inputFile;
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		markerDao = new MarkerTextGridDao();
 		inputFile = new File("../data/t_1_2.TextGrid");
 	}
@@ -44,12 +48,32 @@ public class MarkerTextGridDaoTest extends TestCase {
 	 * test read functionality
 	 * @throws Exception
 	 */
+	@Test
 	public void testRead() throws Exception {
 		MarkerSetHolder  holder = markerDao.read(inputFile);
-		assertNotNull(holder);
+		Assert.assertNotNull(holder);
 		MarkerSet markerSet = holder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
-		assertNotNull(markerSet);
-		assertEquals(2,markerSet.getMarkers().size());
-
+		Assert.assertNotNull(markerSet);
+		Assert.assertEquals(2,markerSet.getMarkers().size());
+	}
+	@Test
+	public void testWrite() throws Exception {
+		//given
+		MarkerSetHolder holder = new  MarkerSetHolder();
+		MarkerSet wordMarkerSet = new MarkerSet();
+		wordMarkerSet.setMarkerSetType(MarkerSetHolderEnum.word.name());
+		holder.getMarkerSets().put(wordMarkerSet.getMarkerSetType(), wordMarkerSet);
+		MarkerSet phoneMarkerSet = new MarkerSet();
+		phoneMarkerSet.setMarkerSetType(MarkerSetHolderEnum.phone.name());
+		holder.getMarkerSets().put(phoneMarkerSet.getMarkerSetType(), phoneMarkerSet);
+		wordMarkerSet.getMarkers().add(new Marker(100L, 50L,"Vienas"));
+		wordMarkerSet.getMarkers().add(new Marker(200L, 50L,"Du"));
+		phoneMarkerSet.getMarkers().add(new Marker(100L, 25L,"Vie"));
+		phoneMarkerSet.getMarkers().add(new Marker(125L, 25L,"nas"));
+		phoneMarkerSet.getMarkers().add(new Marker(200L, 50L,"Du"));
+		//when
+		markerDao.write(holder, new File("./target/test.TextGrid"));
+		//then
+		//should be define assert logic
 	}
 }

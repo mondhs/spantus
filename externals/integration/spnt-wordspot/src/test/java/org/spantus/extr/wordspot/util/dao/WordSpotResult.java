@@ -23,6 +23,7 @@ public class WordSpotResult {
     private long experimentEnded;
     private long audioLength;
     private String fileName;
+	private int operationCount;
 
     public List<Marker> getOriginalMarker() {
         return originalMarker;
@@ -71,6 +72,16 @@ public class WordSpotResult {
     public String getFileName() {
         return fileName;
     }
+
+	public void setOperationCount(int experimentOperationCount) {
+		this.operationCount = experimentOperationCount;
+		
+	}
+
+	public int getOperationCount() {
+		return operationCount;
+	}
+	
 
    
 }

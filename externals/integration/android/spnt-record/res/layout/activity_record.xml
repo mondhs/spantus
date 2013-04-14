@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <AbsoluteLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        tools:ignore="Deprecated" >
+        <org.spantus.record.view.AudioView
+            android:id="@+id/audioview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </AbsoluteLayout>
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:nextFocusDown="@+id/play"
+        android:nextFocusUp="@+id/endmarker"
+        tools:ignore="SelectableText" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="62dip"
+        android:gravity="center" >
+
+        <ToggleButton
+            android:id="@+id/togglebutton_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recordToggle"
+            android:textOff="@string/listen"
+            android:textOn="@string/stop" />
+
+        <Button
+            android:id="@+id/redrawBtn"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/redraw" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressbar_level"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

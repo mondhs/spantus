@@ -39,7 +39,7 @@ public class RecognitionMarkerSegmentatorListenerImpl extends MarkerSegmentatorL
     private IExtractorInputReader extractorInputReader;
     private WorkExtractorReaderService extractorReaderService;
     private SegmentExtractorServiceConfig serviceConfig;
-
+	private int operationCount;
     public RecognitionMarkerSegmentatorListenerImpl() {
         LOG.debug("Init");
     }
@@ -117,7 +117,7 @@ public class RecognitionMarkerSegmentatorListenerImpl extends MarkerSegmentatorL
      */
     protected RecognitionResult match(SignalSegment segment) {
         RecognitionResult result = getCorpusService().matchByCorpusEntry(segment);
-
+        this.operationCount++;
         if (result == null) {
             throw new IllegalArgumentException("No recognition information in corpus is found");
         }
@@ -171,6 +171,12 @@ public class RecognitionMarkerSegmentatorListenerImpl extends MarkerSegmentatorL
         }
         return extractorReaderService;
     }
+
+
+
+	public int getOperationCount() {
+		return operationCount;
+	}
 
  
 

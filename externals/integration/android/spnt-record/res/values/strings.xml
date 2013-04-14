@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Spantus Record</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello!</string>
+    <string name="start_recording">Start Recording</string>
+    <string name="title_activity_record">RecordActivity</string>
+    <string name="title_activity_sensor">Sensor</string>
+    <string name="start_sensing">Start Sensing</string>
+    <string name="redraw">Redraw</string>
+    <string name="recordToggle">Record</string>
+    <string name="listen">Listen</string>
+    <string name="stop">Stop</string>
+
+</resources>

@@ -19,6 +19,7 @@ public class SyllableSpottingServiceImpl  implements SegmentExtractorServiceConf
 	private SegmentExtractorService segmentExtractorService;
 	private String syllableRepositoryPath;
         private SegmentExtractorServiceConfig serviceConfig;
+		private int operationCount;
 	
 	public SyllableSpottingServiceImpl(String syllableRepositoryPath) {
 		this.syllableRepositoryPath = syllableRepositoryPath;
@@ -26,12 +27,12 @@ public class SyllableSpottingServiceImpl  implements SegmentExtractorServiceConf
 
     @Override
 	public void wordSpotting(URL urlFile, SpottingListener wordSpottingListener){
-		SpottingMarkerSegmentatorListenerImpl listener = new SpottingMarkerSegmentatorListenerImpl(wordSpottingListener);
+    	SpottingMarkerSegmentatorListenerImpl listener = new SpottingMarkerSegmentatorListenerImpl(wordSpottingListener);
                 listener.setServiceConfig(serviceConfig);
 		listener.setRepositoryPath(syllableRepositoryPath);
 		AsyncMarkerSegmentatorListenerImpl asyncLister = new AsyncMarkerSegmentatorListenerImpl(listener);
 		getSegmentExtractorService().listenSegments(urlFile, asyncLister);
-		
+		this.operationCount = listener.getOperationCount();
 	}
 
 	public SegmentExtractorService getSegmentExtractorService() {
@@ -52,4 +53,8 @@ public class SyllableSpottingServiceImpl  implements SegmentExtractorServiceConf
     public void setServiceConfig(SegmentExtractorServiceConfig serviceConfig) {
         this.serviceConfig = serviceConfig;
     }
+
+	public int getOperationCount() {
+		return this.operationCount;
+	}
 }

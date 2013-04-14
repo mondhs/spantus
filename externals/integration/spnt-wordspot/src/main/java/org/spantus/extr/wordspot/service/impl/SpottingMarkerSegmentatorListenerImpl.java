@@ -37,6 +37,8 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
     private static final Logger LOG = Logger.getLogger(SpottingMarkerSegmentatorListenerImpl.class);
     private SpottingListener wordSpottingListener;
     private String sourceId = "sourceId";
+    private int operationCount;
+
 
     protected SpottingMarkerSegmentatorListenerImpl() {
         LOG.debug("Init");
@@ -70,6 +72,7 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
 
             Map<String, IValues> mapValues = recalculateFeatures(aMarker);
             result = getCorpusService().findMultipleMatchFull(mapValues);
+            this.operationCount++;
             Boolean processes = processResult(ctx, result, aMarker);
             if (processes == null) {
                 break;
@@ -222,4 +225,10 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
         }
         return minArg;
     }
+
+    @Override
+	public int getOperationCount() {
+		return operationCount;
+	}
+
 }

@@ -66,8 +66,8 @@ public class SyllableWindowScrollingSpottingExp extends
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
-				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
+				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
+//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
 //				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
 
 	}
@@ -241,7 +241,7 @@ public class SyllableWindowScrollingSpottingExp extends
 				return newSegment.getMarker().getLabel();
 			}
 		});
-
+		result.setOperationCount(getSpottingService().getOperationCount());
 		result.setExperimentEnded(System.currentTimeMillis());
 		result.setSegments(segments);
 

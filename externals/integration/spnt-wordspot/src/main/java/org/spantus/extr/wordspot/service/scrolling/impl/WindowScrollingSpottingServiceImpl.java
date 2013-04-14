@@ -41,6 +41,7 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
     private List<SignalSegment> keySegmentList;
     private long delta = 10;
 	private SegmentRecognitionThresholdService segmentRecognitionThresholdService;
+	private int operationCount =0;
     /**
      * 
      * @param urlFile
@@ -79,7 +80,9 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
         	LOG.debug("[wordSpotting][{}] found {} in {}; calculations {}; keysegment {}", new Object[]{start, found, (System.currentTimeMillis()-startTime),count, 
         			getKeySegmentList()});
         }
-       
+        //LOG.error("[wordSpotting] count: {}, availableStartMs {}",count, availableStartMs);
+        this.operationCount =count; 
+        
 //        ctxMap.get(getKeySegmentList().get(0)).printMFCC();
 //        ctxMap.get(getKeySegmentList().get(1)).printMFCC();
         ctxMap.size();
@@ -273,6 +276,11 @@ public class WindowScrollingSpottingServiceImpl implements SpottingService {
 			SegmentRecognitionThresholdService segmentRecognitionThresholdService) {
 		this.segmentRecognitionThresholdService = segmentRecognitionThresholdService;
 	}
+
+	public int getOperationCount() {
+		return operationCount;
+	}
+
     
     
 }

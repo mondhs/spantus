@@ -61,6 +61,8 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
     private Set<IExtractorVector> extractorRegister3D = new LinkedHashSet<IExtractorVector>();
     private Set<IGeneralExtractor<?>> generalExtractor = new LinkedHashSet<IGeneralExtractor<?>>();
 
+	private long totalWindows=0;
+
 	public DefaultExtractorInputReader() {
 		initValues();
 	}
@@ -136,6 +138,7 @@ public class DefaultExtractorInputReader implements IExtractorInputReader {
 	 * @param ivalues
 	 */
 	protected void pushWindowValues(Long sample, FrameValues ivalues) {
+		this.totalWindows++;
 		for (IGeneralExtractor<?> element : generalExtractor) {
 			element.calculateWindow(sample, ivalues);
 		}

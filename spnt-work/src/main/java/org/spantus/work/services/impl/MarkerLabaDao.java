@@ -24,6 +24,8 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -114,11 +116,15 @@ public class MarkerLabaDao implements MarkerDao {
 	}
 
 	public void write(MarkerSetHolder holder, File file) {
-
+		try {
+			write(holder,new FileOutputStream(file));
+		} catch (FileNotFoundException e) {
+			log.error("Cannot write", e);
+		}
 	}
 
 	public void write(MarkerSetHolder holder, OutputStream outputStream) {
-
+		throw new IllegalArgumentException("Not impl");
 	}
 
 }

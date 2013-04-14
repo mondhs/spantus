@@ -59,9 +59,9 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
+				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
 //				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
-		new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
+//		new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
 		
 	}
 
@@ -71,13 +71,13 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 				"TEST/";
 //				"";
 		String fileName = internalPath + 
-				"001-30_1.wav"
+				"002-30_1.wav"
 //		 "TRAIN/lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
 
-	@Ignore
+//	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	@Override
@@ -103,7 +103,7 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		// .getLength(), firstSegment.getMarker().getLength(), 150);
 
 	}
-//	@Ignore
+	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {
@@ -162,6 +162,7 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		result.setExperimentStarted(System.currentTimeMillis());
 		wordSpottingServiceImpl.wordSpotting(aWavUrl, listener);
 		result.setExperimentEnded(System.currentTimeMillis());
+		result.setOperationCount(wordSpottingServiceImpl.getOperationCount());
 		Map<RecognitionResult, SignalSegment> segments = listener
 				.getWordSegments();
 		result.setSegments(segments);

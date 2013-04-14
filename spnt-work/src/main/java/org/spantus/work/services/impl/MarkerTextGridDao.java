@@ -22,9 +22,13 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -124,14 +128,77 @@ public class MarkerTextGridDao implements MarkerDao {
 	}
 
 	public void write(MarkerSetHolder holder, File file) {
-		throw new IllegalArgumentException("Not impl");
-
+		try {
+			FileOutputStream fop = new FileOutputStream(file);
+			write(holder,fop);
+			fop.flush();
+			fop.close();
+		} catch (FileNotFoundException e) {
+			log.error("Cannot write", e);
+		} catch (IOException e) {
+			log.error("Cannot write", e);
+		}
 	}
-
+	/**
+	 * 
+	 */
 	public void write(MarkerSetHolder holder, OutputStream outputStream) {
-		throw new IllegalArgumentException("Not impl");
-	}
+		StringBuffer sb = new StringBuffer();
+		Double xmax = findLastMarkerEndInSeconds(holder);
+		int size = holder.getMarkerSets().size();
+		sb.append("File type = \"ooTextFile\"").append("\n");
+		sb.append("Object class = \"TextGrid\"").append("\n");
+		sb.append("").append("\n");
+		sb.append("xmin = 0").append(" \n");
+		sb.append("xmax = ").append(xmax).append(" \n");
+		sb.append("tiers? <exists>").append(" \n");
+		sb.append("size = ").append(size).append(" \n");
+		sb.append("item []: ").append(" \n");
+		int markerSetIndex = 0;
+		for (Entry<String, MarkerSet> markerSetEntry : holder) {
+			markerSetIndex++;
+			sb.append("    item [").append(markerSetIndex).append("]:").append(" \n");
+			sb.append("        class = \"IntervalTier\"").append(" \n");
+			sb.append("        name = \"").append(markerSetEntry.getValue().getMarkerSetType()).append("\"").append(" \n");		
+			sb.append("        xmin = 0").append(" \n");
+			sb.append("        xmax = ").append(xmax).append(" \n");
+			sb.append("        intervals: size = ").append(markerSetEntry.getValue().getMarkers().size()).append(" \n");
+			int markerIndex = 0;
+			for (Marker  markerEntry: markerSetEntry.getValue().getMarkers()) {
+				markerIndex++;
+				sb.append("        intervals [").append(markerIndex).append("]:").append(" \n");	
+				sb.append("            xmin = ").append(markerEntry.getStart().doubleValue()/1000).append(" \n");
+				sb.append("            xmax = ").append(markerEntry.getEnd().doubleValue()/1000).append(" \n");
+				sb.append("            text = \"").append(markerEntry.getLabel()).append("\" \n");
+			}
 
+		}
+
+		try {
+			outputStream.write(sb.toString().getBytes());
+		} catch (IOException e) {
+			log.error("Cannot write", e);
+		}
+	}
+	/**
+	 * 
+	 * @param holder
+	 * @return
+	 */
+	private Double findLastMarkerEndInSeconds(MarkerSetHolder holder) {
+		Long lastMarkerEnd = 0L;
+		for (Entry<String, MarkerSet> markerSetEntry : holder) {
+			for (Marker  markerEntry: markerSetEntry.getValue().getMarkers()) {
+				lastMarkerEnd = Math.max(lastMarkerEnd, markerEntry.getEnd()); 
+			}
+		}
+		return lastMarkerEnd.doubleValue()/1000;
+	}
+	/**
+	 * 
+	 * @author as
+	 *
+	 */
 	public class ReadListener {
 		MarkerSetHolder markerSetHolder = new MarkerSetHolder();
 		MarkerSet markerSet;

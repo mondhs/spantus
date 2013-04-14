@@ -49,6 +49,7 @@ public class WspotJdbcDao {
                                 + "experimentStarted BIGINT,"
                                 + "experimentEnded  BIGINT,"
                                 + "audioLength  BIGINT,"
+                                + "OPERATIONCOUNT BIGINT,"
                                 + ");"                		
                 		+ "DROP TABLE WordSpotFoundExp IF EXISTS;"
                         + "CREATE CACHED TABLE WordSpotFoundExp("
@@ -158,12 +159,12 @@ public class WspotJdbcDao {
         long audioLength = result.getAudioLength();
         
         String insertWordSpotInfoExpQuery = "INSERT INTO WordSpotInfoExp ("
-                + "FILENAME,proccessinglength,EXPERIMENTSTARTED,EXPERIMENTENDED,AUDIOLENGTH) VALUES "
-                + "(''{0}'' ,{1,number,#},{2,number,#},{3,number,#},{4,number,#});";
+                + "FILENAME,proccessinglength,EXPERIMENTSTARTED,EXPERIMENTENDED,AUDIOLENGTH, OPERATIONCOUNT) VALUES "
+                + "(''{0}'' ,{1,number,#},{2,number,#},{3,number,#},{4,number,#}, {5,number,#});";
         String queryWordSpotInfoExp = MessageFormat.format(insertWordSpotInfoExpQuery,
                 fileName,
                 proccessinglength, experimentStarted, experimentEnded,
-                audioLength);
+                audioLength, result.getOperationCount());
         insert(queryWordSpotInfoExp);
 	}
 
