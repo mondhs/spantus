@@ -34,5 +34,6 @@ public interface IMarkerService {
 	public Marker findFirstByPhrase(MarkerSetHolder markerSetHolder, String... labels);
 	public Collection<Marker> findAllByLabel(MarkerSetHolder markerSetHolder,String label);
 	public Collection<Marker> findAllByPhrase(MarkerSetHolder markerSetHolder, String... labels);
+	public Collection<Marker> findAllByPhrase(MarkerSetHolder markerSetHolder, Collection<String> labels);
 
 }

@@ -54,7 +54,7 @@ public class SegmentRecognitionThresholdServiceImpl implements
             
             boolean bellowThreshold = mfccVaue<threshold;
             if(!bellowThreshold){
-                LOG.debug("[processEndedSegment] reject syllable {} and mfcc: {}",syllableName, mfccVaue);
+                LOG.debug("[checkIfBellowThreshold] reject syllable {} and mfcc: {}",syllableName, mfccVaue);
             }
             return bellowThreshold ;
     }

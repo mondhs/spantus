@@ -64,7 +64,7 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
         Long availableLength = getExtractorInputReader().getAvailableSignalLengthMs();
         List<RecognitionResult> result = null;
         SpottingSyllableCtx ctx = new SpottingSyllableCtx();
-        for (Long i = -50L; i < 150L; i += 20L) {
+        for (Long i = -100L; i < 100L; i += 10L) {
             aMarker.setStart(initialStart + i);
             if(aMarker.getEnd()>availableLength){
                 break;
@@ -97,7 +97,7 @@ public class SpottingMarkerSegmentatorListenerImpl extends RecognitionMarkerSegm
 //        ctx.printMFCC();
 //        ctx.printSyllableFrequence();
         if (LOG.isDebugMode() && aMarker.getStart() > SpottingDebug.EXPECTED_BREAKPOINT) {
-            LOG.debug("break point should go here");
+            LOG.debug("break point should go here. Marker started {0}", aMarker.getStart());
         }
 
         wordSpottingListener.foundSegment(sourceId, new SignalSegment(aMarker), result);

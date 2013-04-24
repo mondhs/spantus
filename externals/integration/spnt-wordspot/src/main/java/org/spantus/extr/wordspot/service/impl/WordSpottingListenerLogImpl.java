@@ -114,7 +114,7 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
             String syllableName = newSyllable.getMarker().getLabel();
         
             if (LOG.isDebugMode() && newSyllable.getMarker().getStart() > SpottingDebug.EXPECTED_BREAKPOINT) {
-                LOG.debug("break point should go here");
+                LOG.debug("break point should go here. segment started: {0} ", newSyllable.getMarker().getStart());
             }
             
             boolean isAcceptable = syllableRecognitionThresholdService.checkIfBellowThreshold(syllableName, syllableRecognitionResult);
@@ -132,6 +132,7 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
                     && isAcceptable) {
             	
             	rtnRecognitionResult = matchAndRegistry(signalSegmentsSyllable, newSyllable, syllableRecognitionResult);
+            	LOG.debug("[foundSegment] Success: {0}", rtnRecognitionResult);
                 return rtnRecognitionResult;
             }else{
                 LOG.debug("[processEndedSegment] reject syllable {0}",syllableName);  
@@ -167,7 +168,7 @@ public class WordSpottingListenerLogImpl implements SpottingListener,IExtractorI
      * @return 
      */
 
-        private boolean checkIfAcceptableRepeatableSyllable(String syllableName, RecognitionResult recognitionResult, List<SignalSegment> existingSyllableSegments) {
+    private boolean checkIfAcceptableRepeatableSyllable(String syllableName, RecognitionResult recognitionResult, List<SignalSegment> existingSyllableSegments) {
             boolean repeatableSyllable = false;
             if(existingSyllableSegments!=null && !existingSyllableSegments.isEmpty()){
                 SignalSegment previousSyllable = existingSyllableSegments.get(existingSyllableSegments.size()-1);

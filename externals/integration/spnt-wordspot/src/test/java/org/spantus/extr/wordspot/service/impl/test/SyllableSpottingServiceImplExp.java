@@ -8,17 +8,18 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spantus.core.beans.RecognitionResult;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.junit.SlowTests;
@@ -59,6 +60,7 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
+//				new File("/home/as/tmp/garsynas.lietuvos");
 				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
 //				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
 //		new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
@@ -70,14 +72,15 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		String internalPath = 
 				"TEST/";
 //				"";
-		String fileName = internalPath + 
+		String fileName = internalPath +
+//				"RZd0826_18_12c.wav"
 				"002-30_1.wav"
 //		 "TRAIN/lietuvos_mbr_test-30_1.wav"
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
 
-//	@Ignore
+	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	@Override
@@ -92,18 +95,11 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 				+ order.sortedCopy(result.getSegments().entrySet()));
 
 		// then
-		// Assert.assertTrue("read time " + length + ">"+(ended-started), length
-		// > ended-started);
-		Assert.assertEquals("Recognition", "liet;tuvos;liet;tuvos", resultsStr);
-		// SignalSegment firstSegment = result.getSegments().values().iterator()
-		// .next();
-		// Assert.assertEquals("Recognition start", result.getOriginalMarker()
-		// .getStart(), firstSegment.getMarker().getStart(), 320D);
-		// Assert.assertEquals("Recognition length", result.getOriginalMarker()
-		// .getLength(), firstSegment.getMarker().getLength(), 150);
+		Assert.assertEquals("Recognition", "liet;tuvos;", resultsStr);
+
 
 	}
-	@Ignore
+//	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {
@@ -184,6 +180,7 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		for (Marker marker : originalMarker) {
 			String markerLabel = marker.getLabel();
 			markerLabel = markerLabel.replaceAll("[\'|-]", "");
+			markerLabel = markerLabel.replaceAll("(o:)", "oo");
 			if(keyWordMap.get(markerLabel) != null){
 				marker.setLabel(keyWordMap.get(markerLabel));
 			}
@@ -198,10 +195,20 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
 		Collection<Marker> markerList = getMarkerService().findAllByLabel(markers,
 				keyWordCode);
-		// Marker marker = findKeyword(aWavFile, keyWord);
-//		SignalSegment keySegment = new SignalSegment(new Marker(
-//				keywordMarker.getStart(), keywordMarker.getLength(),
-//				keyWordValue));
+		if(markerList == null || markerList.isEmpty()){
+			Collection<String> phoneCollection = Collections.emptyList();
+			if("liet".equals(keyWordValue)){
+				phoneCollection = Lists.newArrayList("l'", "ie", "t"); 
+			}else if ("tuvos".equals(keyWordValue)) {
+				phoneCollection = Lists.newArrayList("u", "v", "o:", "s"); 
+			}
+			markerList = getMarkerService().findAllByPhrase(markers,phoneCollection);
+		}
+		long i = 0;
+		for (Marker marker : markerList) {
+			marker.setId(i++);
+			marker.setLabel(keyWordValue);
+		}
 		return markerList;
 	}
 

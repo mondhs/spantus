@@ -139,11 +139,11 @@ public class WspotJdbcDao {
             Long markerEnd = originalMarker.getEnd();
 
             String insertQuery = "INSERT INTO WordSpotFoundExp (EKEY, FILENAME, MARKERLABEL, MARKERSTART,MARKEREND,FOUNDSTART,FOUNDEND,MFCCVALUE) VALUES "
-                    + "(''{0}-{1}-{2}'', ''{0}'' , ''{1}'',{3,number,#},"
+                    + "(''{0}-{8}-{2}'', ''{0}'' , ''{1}'',{3,number,#},"
                     + "{4,number,#},{5,number,#},{6,number,#},{7,number,#.###});";
 
             String queryWORDSPOTEXP = MessageFormat.format(insertQuery,
-                    fileName, foundLabel,originalMarker.getId(), markerStart, markerEnd, foundStart, foundEnd, mfccValue);
+                    fileName, foundLabel,originalMarker.getId(), markerStart, markerEnd, foundStart, foundEnd, mfccValue, originalMarker.getLabel());
             insert(queryWORDSPOTEXP);
         }
     }

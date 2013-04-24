@@ -30,7 +30,11 @@ public class RecognitionResult {
 
     @Override
     public String toString() {
-        return getInfo().getName() +  "[" + getDistance() + "]";
+    	Map<String, Double> distantces = null;
+    	if(getDetails()!= null){
+    		distantces = getDetails().getDistances();
+    	}
+        return getInfo().getName() +  "[" + distantces + "]";
     }
 
 	public RecognitionResultDetails getDetails() {

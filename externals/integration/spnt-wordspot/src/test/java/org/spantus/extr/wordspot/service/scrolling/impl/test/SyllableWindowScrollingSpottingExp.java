@@ -11,6 +11,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,9 +67,10 @@ public class SyllableWindowScrollingSpottingExp extends
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
+//				new File("/home/as/tmp/garsynas.lietuvos");
+//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
 //				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
-//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
+				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
 
 	}
 
@@ -78,7 +80,8 @@ public class SyllableWindowScrollingSpottingExp extends
 //				"TRAIN/"
 				"TEST/"
 				;
-		String fileName = internalPath + 
+		String fileName = internalPath +
+//		"RZd0826_18_12c.wav"
 		"001-30_1.wav"
 //		 "lietuvos_mbr_test-30_1.wav"
 		;
@@ -275,19 +278,28 @@ public class SyllableWindowScrollingSpottingExp extends
 				.getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name()), 5e9);
 	}
 
-	protected Collection<Marker> findKeywordSegments(String keyWordName,
-			File aWavFile, String keyWordSequence) {
+	protected Collection<Marker> findKeywordSegments(String keyWordValue,
+			File aWavFile, String keyWordCode) {
 		MarkerSetHolder markers = findMarkerSetHolderByWav(aWavFile);
 		Collection<Marker> markerList = getMarkerService().findAllByLabel(markers,
-				keyWordSequence);
-		// Marker marker = findKeyword(aWavFile, keyWord);
-//		SignalSegment keySegment = new SignalSegment(new Marker(
-//				keywordMarker.getStart(), keywordMarker.getLength(),
-//				keyWordName));
+				keyWordCode);
+		// marker marker = findkeyword(awavfile, keyword);
+//		signalsegment keysegment = new signalsegment(new marker(
+//				keywordmarker.getstart(), keywordmarker.getlength(),
+//				keywordname));
+		if(markerList == null || markerList.isEmpty()){
+			Collection<String> phoneCollection = Collections.emptyList();
+			if("liet".equals(keyWordValue)){
+				phoneCollection = Lists.newArrayList("l'", "ie", "t"); 
+			}else if ("tuvos".equals(keyWordValue)) {
+				phoneCollection = Lists.newArrayList("u", "v", "o:", "s"); 
+			}
+			markerList = getMarkerService().findAllByPhrase(markers,phoneCollection);
+		}
 		long i = 0;
 		for (Marker marker : markerList) {
 			marker.setId(i++);
-			marker.setLabel(keyWordName);
+			marker.setLabel(keyWordValue);
 		}
 		return markerList;
 	}

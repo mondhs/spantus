@@ -75,6 +75,8 @@ public class MarkerServiceImp implements IMarkerService {
             return rtnMarkers;
         }
         
+        
+        
         @Override
         public Marker findFirstByLabel(MarkerSetHolder markerSetHolder, String label) {
             Assert.isTrue(markerSetHolder!=null, "markerSetHolder cannot be null");
@@ -126,9 +128,7 @@ public class MarkerServiceImp implements IMarkerService {
 		@Override
 		public Marker findFirstByPhrase(MarkerSetHolder markerSetHolder,
 				String... labels) {
-			if(labels.length < 2){
-				throw new IllegalArgumentException("Phase should contains at least 2 labels");
-			}
+			Assert.isTrue(labels.length < 2, "Phase should contains at least 2 labels");
 			LinkedList<String> labelList = new LinkedList<String>(Arrays.asList(labels));
 			for ( Entry<String, MarkerSet> markerSets : markerSetHolder) {
                 markerSets.getKey();
@@ -167,7 +167,17 @@ public class MarkerServiceImp implements IMarkerService {
 			if(labels.length < 2){
 				throw new IllegalArgumentException("Phase should contains at least 2 labels");
 			}
-			LinkedList<String> labelList = new LinkedList<String>(Arrays.asList(labels));
+			List<String> labelList = Arrays.asList(labels);
+			return findAllByPhrase(markerSetHolder, labelList);
+		}
+		/**
+		 * 
+		 */
+		@Override
+		public Collection<Marker> findAllByPhrase(
+				MarkerSetHolder markerSetHolder, Collection<String> labels) {
+			
+			LinkedList<String> labelList = new LinkedList<String>(labels);
 			Collection<Marker> rtnList = new ArrayList<Marker>();
 			for ( Entry<String, MarkerSet> markerSets : markerSetHolder) {
                 markerSets.getKey();
@@ -177,7 +187,9 @@ public class MarkerServiceImp implements IMarkerService {
 					if(!labelList.getFirst().equals(markerLabel)){
                 		if(rtn  != null){
                 			rtn = null;
-                			break;
+                			if(labels.size()!= labelList.size()){
+                				labelList = new LinkedList<String>(labels);	
+                			}
                 		}
                 		continue;
                 	}
@@ -194,7 +206,7 @@ public class MarkerServiceImp implements IMarkerService {
                 	}
                 	if(labelList.size() == 0){
                 		rtnList.add(rtn); 
-                		labelList = new LinkedList<String>(Arrays.asList(labels));
+                		labelList = new LinkedList<String>(labels);
                 		rtn = null;
                 	}
                 }
@@ -202,11 +214,11 @@ public class MarkerServiceImp implements IMarkerService {
 			return rtnList;
 		}
 		
-		
 		private String cleanupLabel(String label) {
 			String rtn = label.replaceAll("\\-","");
 			return rtn;
 		}
+
 
 
 }

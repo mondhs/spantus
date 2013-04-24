@@ -11,7 +11,7 @@
 		<logger name="org.spantus.extr.wordspot.service.impl.test" level="TRACE" />
 <!-- 		<logger name="org.spantus.extr.wordspot.service.scrolling.impl" level="TRACE" /> -->
 		<logger name="org.spantus.extr.wordspot.service.scrolling.impl.test" level="TRACE" />
-<!-- 	<logger name="org.spantus.extr.wordspot" level="TRACE" /> -->
+<!--  	<logger name="org.spantus.extr.wordspot.service.impl" level="TRACE" />  -->
 
 	<root level="error">
 		<appender-ref ref="STDOUT" />

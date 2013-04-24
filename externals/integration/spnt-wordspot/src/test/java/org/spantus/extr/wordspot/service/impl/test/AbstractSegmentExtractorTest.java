@@ -57,6 +57,12 @@ public abstract class AbstractSegmentExtractorTest {
         File markerFile = new File(aWavFile.getParentFile().getAbsoluteFile(),
                 FileUtils.replaceExtention(aWavFile, ".mspnt.xml"));
         MarkerSetHolder markers = getMarkerDao().read(markerFile);      
+        if(markers == null ){
+        	markerFile = new File(aWavFile.getParentFile().getAbsoluteFile(),
+                    FileUtils.replaceExtention(aWavFile, ".TextGrid"));
+        	markers = getMarkerDao().read(markerFile);
+        }
+        org.spantus.utils.Assert.isTrue(markers!=null, "cannot be found markers for " + aWavFile);
         return markers;
     }
 
