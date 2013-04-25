@@ -1,28 +1,26 @@
 package org.spantus.android.segmentor.record.activity;
 
 import java.text.MessageFormat;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.spantus.android.segmentor.R;
 import org.spantus.android.segmentor.record.entity.ExtractorReaderCtx;
 import org.spantus.android.segmentor.record.entity.RecordState;
+import org.spantus.android.segmentor.record.entity.SpantusAudioCtx;
 import org.spantus.android.segmentor.record.entity.WindowMinMax;
 import org.spantus.android.segmentor.services.AndroidExtractorsFactory;
 import org.spantus.android.segmentor.services.impl.RecordServiceImpl;
 import org.spantus.android.segmentor.view.AudioView;
-import org.spantus.android.segmentor.R;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.io.BaseWraperExtractorReader;
-import org.spantus.core.io.WraperExtractorReader;
 import org.spantus.logger.Logger;
+import org.spantus.logger.SimpleLogger;
 
 import android.app.Activity;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -35,8 +33,7 @@ public class RecordActivity extends Activity {
 
 	public static final int sampleRate = 8000;
 	public static final int bufferSizeFactor = 1;
-	private static final Logger LOG = Logger
-			.getLogger(RecordServiceImpl.class);
+	private static final Logger LOG = Logger.getLogger(RecordServiceImpl.class);
 
 	private ProgressBar mLevel;
 	private AudioView mAudioView;
@@ -60,9 +57,9 @@ public class RecordActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_record);
-
+		SimpleLogger.setLogMode(SimpleLogger.ERROR);
 		LOG.debug("[onCreate]");
-		
+
 		mAudioView = (AudioView) findViewById(R.id.audioview);
 
 		mLevel = (ProgressBar) findViewById(R.id.progressbar_level);
@@ -85,15 +82,17 @@ public class RecordActivity extends Activity {
 
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
-						if (isChecked
-								&& RecordState.RECORDING.equals(factory()
-										.getSpantusAudioCtx().getRecordState())) {
-
+						SpantusAudioCtx audioCtx = factory()
+								.getSpantusAudioCtx();
+						RecordState recordState = factory()
+								.getSpantusAudioCtx().getRecordState();
+						if (isChecked && RecordState.STOPED.equals(recordState)) {
 							ExtractorReaderCtx readerCtx = factory()
 									.createDefaultReader();
 							final BaseWraperExtractorReader wraperReader = factory()
 									.createBaseWraperExtractorReader(readerCtx,
 											1);
+							audioCtx.setReaderCtx(readerCtx);
 							Thread thread = new Thread(new Runnable() {
 								public void run() {
 									factory().createRecordService().record(
@@ -110,8 +109,7 @@ public class RecordActivity extends Activity {
 							handler.removeCallbacks(update);
 							handler.postDelayed(update, 25);
 
-						} else if (RecordState.RECORDING.equals(factory()
-								.getSpantusAudioCtx().getRecordState())) {
+						} else if (RecordState.RECORDING.equals(recordState)) {
 							factory().createRecordService().stopRequest(
 									factory().getSpantusAudioCtx());
 							handler.removeCallbacks(update);
@@ -170,8 +168,36 @@ public class RecordActivity extends Activity {
 			RecordActivity.this.mLevel.setProgress(lastLevel);
 			lastLevel /= 2;
 			mAudioView.updateModel();
-			// mInfoOut.setText(MessageFormat.format("processesd {0}s and {1}samples",
-			// (System.currentTimeMillis()-mRecordCtx.getSrartedOn())/1000,mRecordCtx.getSamplesProcessed()));
+			SpantusAudioCtx audioCtx = factory().getSpantusAudioCtx();
+			for (IExtractorVector extractor : audioCtx.getReaderCtx()
+					.getReader().getExtractorRegister3D()) {
+				if ("WAVFORM_EXTRACTOR".equals(extractor.getName())
+						&& extractor.getOutputValues().size() > 0) {
+					List<List<Double>> values = new ArrayList<List<Double>>(extractor.getOutputValues());
+					for (List<Double> wavformVal : values) {
+						WindowMinMax minMax = new WindowMinMax();
+						minMax.setMin(wavformVal.get(0).intValue());
+						minMax.setMax(wavformVal.get(1).intValue());
+						mLastLevel = wavformVal.get(1).intValue();
+						mAudioView.onAudioMinMax(System.currentTimeMillis(),
+								minMax);
+					}
+					extractor.getOutputValues().clear();
+				}
+			}
+			LOG.error("size:"
+					+ factory().getSpantusAudioCtx().getReaderCtx().getReader()
+							.getExtractorRegister3D().iterator().next()
+							.getOutputValues().size());
+
+			long started = audioCtx.getSrartedOn() == null ? System
+					.currentTimeMillis() : audioCtx.getSrartedOn();
+			long processed = audioCtx.getSamplesProcessed() == null ? 0 : audioCtx.getSamplesProcessed();
+
+			mInfoOut.setText(MessageFormat.format(
+					"processesd {0}s and {1}samples",
+					(System.currentTimeMillis() - started) / 1000,
+					processed));
 			handler.postAtTime(this, SystemClock.uptimeMillis() + 500);
 		}
 

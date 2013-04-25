@@ -83,7 +83,7 @@ public class RecordServiceImpl implements RecordService {
 			AudioRecord audioRecord = AndroidExtractorsFactory.getFactory().createAudioRecord(recordFormat);
 			byte[] buffer = new byte[recordFormat.getBufferSize()];
 			ctx.setSrartedOn(System.currentTimeMillis());
-			
+			ctx.setSamplesProcessed(0L);
 			audioRecord.startRecording();
 			while (RecordState.RECORDING.equals(ctx.getRecordState())) {
 				int bufferReadResult = audioRecord.read(buffer, 0,

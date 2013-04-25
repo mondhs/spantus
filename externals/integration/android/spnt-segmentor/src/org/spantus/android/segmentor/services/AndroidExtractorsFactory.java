@@ -13,13 +13,16 @@ import org.spantus.core.extractor.DefaultExtractorInputReader;
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
 import org.spantus.core.extractor.IExtractorInputReader;
+import org.spantus.core.extractor.IExtractorVector;
 import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.io.BaseWraperExtractorReader;
 import org.spantus.core.threshold.AbstractThreshold;
 import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.core.threshold.IClassifier;
+import org.spantus.extractor.ExtractorResultBuffer3D;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.extractor.impl.ExtractorUtils;
+import org.spantus.extractor.impl.WavformExtractor;
 import org.spantus.logger.Logger;
 import org.spantus.utils.ExtractorParamUtils;
 
@@ -40,29 +43,29 @@ public final class AndroidExtractorsFactory {
 
 	private static AndroidExtractorsFactory androidExtractorsFactory;
 	private static RecordService recordService;
-	private static SpantusAudioCtx ctx; 
-	
+	private static SpantusAudioCtx ctx;
+
 	private AndroidExtractorsFactory() {
-		androidExtractorsFactory = new AndroidExtractorsFactory();
 	}
-	
-	
-	
-	public static AndroidExtractorsFactory getFactory(){
+
+	public static AndroidExtractorsFactory getFactory() {
+		if (androidExtractorsFactory == null) {
+			androidExtractorsFactory = new AndroidExtractorsFactory();
+		}
 		return androidExtractorsFactory;
 	}
-	
-	public RecordService createRecordService(){
-		if(AndroidExtractorsFactory.recordService == null){
+
+	public RecordService createRecordService() {
+		if (AndroidExtractorsFactory.recordService == null) {
 			RecordServiceImpl recordServiceImpl = new RecordServiceImpl();
 			recordService = recordServiceImpl;
 		}
 		return recordService;
 	}
-	
-	public SpantusAudioCtx getSpantusAudioCtx(){
-		if(ctx == null){
-		 ctx = new SpantusAudioCtx();
+
+	public SpantusAudioCtx getSpantusAudioCtx() {
+		if (ctx == null) {
+			ctx = new SpantusAudioCtx();
 		}
 		return ctx;
 	}
@@ -87,11 +90,16 @@ public final class AndroidExtractorsFactory {
 				ExtractorEnum.LOUDNESS_EXTRACTOR,
 				ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
 				ExtractorEnum.WAVFORM_EXTRACTOR, ExtractorEnum.MFCC_EXTRACTOR);
+		for (IExtractorVector extractor : readerCtx.getReader()
+				.getExtractorRegister3D()) {
+			if ("WAVFORM_EXTRACTOR".equals(extractor.getName())) {
+				((WavformExtractor)((ExtractorResultBuffer3D)extractor).getExtractor()).setDevideInto(2);
+			}
+		}
 		return readerCtx;
 	}
 
-	public ExtractorReaderCtx createReader(
-			IExtractorConfig extractorConfig,
+	public ExtractorReaderCtx createReader(IExtractorConfig extractorConfig,
 			Map<String, ExtractorParam> params, ExtractorEnum... extractors) {
 		IExtractorInputReader reader = new DefaultExtractorInputReader();
 		ExtractMarkerOnlineSegmentatorListener segmentatorListener = new ExtractMarkerOnlineSegmentatorListener();
@@ -154,8 +162,9 @@ public final class AndroidExtractorsFactory {
 				recordFormat.getAudioEncoding(), recordFormat.getBufferSize());
 		return audioRecord;
 	}
-	
-	public BaseWraperExtractorReader createBaseWraperExtractorReader(ExtractorReaderCtx readerCtx, int size){
+
+	public BaseWraperExtractorReader createBaseWraperExtractorReader(
+			ExtractorReaderCtx readerCtx, int size) {
 		return new BaseWraperExtractorReader(readerCtx.getReader(), size);
 	}
 

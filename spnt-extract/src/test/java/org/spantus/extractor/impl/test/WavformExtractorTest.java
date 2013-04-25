@@ -52,7 +52,7 @@ public class WavformExtractorTest {
 
 		// given
 		WavformExtractor wavformExtractor = new WavformExtractor();
-		wavformExtractor.setDevideInto(3);
+		wavformExtractor.setDevideInto(4);
 		wavformExtractor.setConfig(config);
 
 		// when
@@ -61,7 +61,7 @@ public class WavformExtractorTest {
 
 		// then
 		Assert.assertEquals(3, y.size());
-		Assert.assertEquals("Times equals", 21, y.getTime(), 0);
+		Assert.assertEquals("Times equals", 16, y.getTime(), 0);
 //		Assert.assertEquals("Times equals",x.getTime(), y.getTime(), 0.005);
 
 	}

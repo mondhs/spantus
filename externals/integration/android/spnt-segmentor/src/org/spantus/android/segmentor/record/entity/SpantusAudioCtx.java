@@ -5,6 +5,7 @@ public class SpantusAudioCtx {
 	private RecordState recordState = RecordState.STOPED;
 	private Long srartedOn;
 	private Long samplesProcessed;
+	private ExtractorReaderCtx readerCtx;
 
 	public Long getSrartedOn() {
 		return srartedOn;
@@ -36,5 +37,15 @@ public class SpantusAudioCtx {
 	public String toString() {
 		return "SpntAudioContext [recordState=" + recordState + "]";
 	}
+
+	public ExtractorReaderCtx getReaderCtx() {
+		return readerCtx;
+	}
+
+	public void setReaderCtx(ExtractorReaderCtx readerCtx) {
+		this.readerCtx = readerCtx;
+	}
+
+
 
 }

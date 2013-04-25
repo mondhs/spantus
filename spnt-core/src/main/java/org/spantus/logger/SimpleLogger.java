@@ -146,16 +146,15 @@ public class SimpleLogger implements ILogger {
     /**
      * @return Returns the logMode.
      */
-    public int getLogMode() {
+    public static int getLogMode() {
         return logMode;
     }
-    public boolean isDebugMode() {
+    public  boolean isDebugMode() {
         return DEBUG >= getLogMode();
     }
 
-	@SuppressWarnings("static-access")
-	public void setLogMode(int logMode) {
-		this.logMode = logMode;
+	public static void setLogMode(int logMode) {
+		SimpleLogger.logMode = logMode;
 //		debug("Log mode set to:" + logMode);
 	}
 

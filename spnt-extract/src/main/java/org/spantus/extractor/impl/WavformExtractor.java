@@ -48,6 +48,7 @@ public class WavformExtractor extends AbstractExtractorVector {
 	private Double previousMin = null;
 	private Double previousMax = null;
 	private int devideInto = 3;
+	Context ctx = new Context();
 
 	public WavformExtractor() {
 //		devideInto = 5;
@@ -71,7 +72,7 @@ public class WavformExtractor extends AbstractExtractorVector {
 		FrameValues fv = null;
 		ctx.max = Math.max(ctx.max, float1);
 		ctx.min = Math.min(ctx.min, float1);
-		if(ctx.index == ctx.chunkSize){
+		if(ctx.index <= 0){
 			fv = new FrameValues();
 			fv.setSampleRate((double) 1);
 			previousMin = previousMin == null?ctx.min:previousMin;
@@ -84,14 +85,13 @@ public class WavformExtractor extends AbstractExtractorVector {
 			ctx.min = Double.MAX_VALUE;
 
 		}
-		ctx.index++;
+		ctx.index--;
 		return fv;
 	}
 	
 	public FrameVectorValues calculateWindow(FrameValues window) {
 		FrameVectorValues calculatedValues = newFrameVectorValues();
 
-		Context ctx = new Context();
 		
 		//if single value in the window, put got sample as min and max
 		if(window.size() == 1){
@@ -103,14 +103,17 @@ public class WavformExtractor extends AbstractExtractorVector {
 		}
 		
 		int chunkSize  = (window.size()/devideInto)+1;
-		ctx.chunkSize = chunkSize;
+//		ctx.chunkSize = chunkSize;
+		if(ctx.index<0){
+			ctx.index = chunkSize;
+		}
 		
 		for (Double float1 : window) {
 			FrameValues fv = push(float1, ctx);
 			if(fv!=null){
 				calculatedValues.add(fv);	
-				ctx.chunkSize = ctx.index + chunkSize;
-				ctx.chunkSize = Math.min(ctx.chunkSize, window.size()-1);
+				ctx.index = chunkSize;
+//				ctx.chunkSize = Math.min(ctx.chunkSize, window.size()-1);
 			}
 		}
 		
@@ -129,8 +132,8 @@ public class WavformExtractor extends AbstractExtractorVector {
 	}
 
 	public class Context{
-		 int index = 0;
-		 int chunkSize = 0;
+		 int index = -1;
+//		 int chunkSize = 0;
 		 Double max = -Double.MAX_VALUE;
 		 Double min = Double.MAX_VALUE;
 	}
