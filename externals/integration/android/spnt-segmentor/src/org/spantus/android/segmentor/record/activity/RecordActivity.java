@@ -176,6 +176,15 @@ public class RecordActivity extends Activity {
 					List<List<Double>> values = new ArrayList<List<Double>>(extractor.getOutputValues());
 					for (List<Double> wavformVal : values) {
 						WindowMinMax minMax = new WindowMinMax();
+						if(wavformVal == null){
+							continue;
+						}
+						if(wavformVal.get(0) == null ){
+							continue;
+						}
+						if(wavformVal.get(1)==null){
+							continue;
+						}
 						minMax.setMin(wavformVal.get(0).intValue());
 						minMax.setMax(wavformVal.get(1).intValue());
 						mLastLevel = wavformVal.get(1).intValue();

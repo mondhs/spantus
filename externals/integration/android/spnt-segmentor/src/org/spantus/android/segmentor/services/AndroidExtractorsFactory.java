@@ -86,14 +86,16 @@ public final class AndroidExtractorsFactory {
 						DEFAULT_WINDOW_OVERLAP);
 		Map<String, ExtractorParam> params = new HashMap<String, ExtractorParam>();
 		ExtractorReaderCtx readerCtx = createReader(extractorConfig, params,
-				ExtractorEnum.ENERGY_EXTRACTOR,
-				ExtractorEnum.LOUDNESS_EXTRACTOR,
-				ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
-				ExtractorEnum.WAVFORM_EXTRACTOR, ExtractorEnum.MFCC_EXTRACTOR);
+//				ExtractorEnum.ENERGY_EXTRACTOR,
+//				ExtractorEnum.LOUDNESS_EXTRACTOR,
+//				ExtractorEnum.SIGNAL_ENTROPY_EXTRACTOR,
+//				ExtractorEnum.MFCC_EXTRACTOR,
+				ExtractorEnum.WAVFORM_EXTRACTOR 
+				);
 		for (IExtractorVector extractor : readerCtx.getReader()
 				.getExtractorRegister3D()) {
 			if ("WAVFORM_EXTRACTOR".equals(extractor.getName())) {
-				((WavformExtractor)((ExtractorResultBuffer3D)extractor).getExtractor()).setDevideInto(2);
+				((WavformExtractor)((ExtractorResultBuffer3D)extractor).getExtractor()).setDevideInto(1);
 			}
 		}
 		return readerCtx;

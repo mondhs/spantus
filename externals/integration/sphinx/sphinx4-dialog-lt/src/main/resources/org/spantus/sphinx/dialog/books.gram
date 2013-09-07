@@ -1,0 +1,14 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for dialog manager example
+ */
+
+grammar books;
+import <commands.standard_commands>;
+
+public <books> =     skaityk Balso Atpažinimas  | 
+                     skaityk Efektyvi Java  |
+                     skaityk betkokią knygą;
+
+public <commands> = <standard_commands> ;

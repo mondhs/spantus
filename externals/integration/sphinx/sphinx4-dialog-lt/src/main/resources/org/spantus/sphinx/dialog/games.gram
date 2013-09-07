@@ -1,0 +1,15 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for dialog manager example
+ */
+
+grammar games;
+
+import <commands.standard_commands>;
+
+public <commands> = <standard_commands> ;
+
+public <command> =      žaisti Dūmą  |
+                        žaisti šachmatais  |
+                        žaisti tenisą ;

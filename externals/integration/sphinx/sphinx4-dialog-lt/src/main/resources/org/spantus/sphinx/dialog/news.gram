@@ -1,0 +1,14 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for dialog manager example
+ */
+
+grammar news;
+
+import <commands.standard_commands>;
+
+public <commands> = <standard_commands> ;
+
+public <read_news> =    skaityti delfį  {browse delfi.lt} |
+        skaityti lietuvos rytą {browse lrytas.lt};

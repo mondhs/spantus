@@ -1,0 +1,19 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for dialog manager example
+ */
+
+grammar menu;
+
+public <command> =      
+                        klausyti muziką         { goto_music } |
+                        paskambink       { goto_phone } |
+                        žaisti             { goto_games } |
+                        skaityti knygą             { goto_books } |
+                        skaityti laiškus           { goto_email } |
+                        skaityti laikraštį        { goto_news } |
+                        parodyti statistikas         { stats } |
+                        žiūrėti filmą           { goto_movies } |
+                        išeiti iš programos        { exit } |
+                        pagelba                { help } ;

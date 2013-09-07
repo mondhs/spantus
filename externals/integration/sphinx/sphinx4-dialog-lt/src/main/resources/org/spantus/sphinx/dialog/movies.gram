@@ -1,0 +1,14 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for dialog manager example
+ */
+
+grammar movies;
+
+import <commands.standard_commands>;
+
+public <movies> =     žiūrėti strazdanota vasara   |
+                      žiūrėti Velnio nuotaka;
+
+public <commands> = <standard_commands> ;

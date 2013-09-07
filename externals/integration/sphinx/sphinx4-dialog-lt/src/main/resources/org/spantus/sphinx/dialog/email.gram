@@ -1,0 +1,21 @@
+#JSGF V1.0;
+
+/**
+ * JSGF Grammar for dialog manager demo
+ */
+
+grammar email;
+import <commands.standard_commands>;
+
+public <commands> = <standard_commands> ;
+
+public <command> =      
+                        ištrink žinutę          |
+                        pažymėk žinutę kaip skaitytą     |
+                        permesk į <folder> |
+                        sekanti žinutė     |
+                        skaityti žinutė   |
+                        žinutė prieštai;
+
+
+<folder> = šiukšlinę | priminimui | darbo | asmeninis | šnekučiai;
