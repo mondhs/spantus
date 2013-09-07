@@ -7,13 +7,13 @@
 grammar menu;
 
 public <command> =      
-                        klausyti muziką         { goto_music } |
+                        //klausyti muziką         { goto_music } |
                         paskambink       { goto_phone } |
-                        žaisti             { goto_games } |
-                        skaityti knygą             { goto_books } |
-                        skaityti laiškus           { goto_email } |
-                        skaityti laikraštį        { goto_news } |
+                        //žaisti             { goto_games } |
+                        //skaityti knygą             { goto_books } |
+                        //peržiūrėti laiškus           { goto_email } |
+                        perbėgti naujienas        { goto_news } |
                         parodyti statistikas         { stats } |
-                        žiūrėti filmą           { goto_movies } |
+                        //žiūrėti filmą           { goto_movies } |
                         išeiti iš programos        { exit } |
                         pagelba                { help } ;

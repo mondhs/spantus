@@ -10,5 +10,7 @@ import <commands.standard_commands>;
 
 public <commands> = <standard_commands> ;
 
-public <read_news> =    skaityti delfį  {browse delfi.lt} |
-        skaityti lietuvos rytą {browse lrytas.lt};
+public <read_news> = rodyk elertė  {browse firefox --new-tab lrt.lt} |    
+		rodyk panoramą  {browse  firefox --new-tab http://www.lrt.lt/mediateka/laidos/P/1444/panorama} |
+		rodyk kauno žinias {browse  firefox --new-tab kaunozinios.lt} |
+        rodyk lietuvos rytą {browse  firefox --new-tab lrytas.lt};

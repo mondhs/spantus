@@ -11,4 +11,4 @@ import <commands.standard_commands>;
 public <commands> = <standard_commands> ;
 
 public <phone> =     skambink mindaugui {mindaugas}|
-                     skamgink jonui { jonas } ;
+                     skambink jonui { jonas } ;

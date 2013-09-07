@@ -15,14 +15,12 @@ package org.spantus.sphinx.dialog;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.speech.recognition.GrammarException;
-import javax.speech.recognition.RuleGrammar;
-import javax.speech.recognition.RuleParse;
 
-import com.sun.speech.engine.recognition.BaseRecognizer;
-import com.sun.speech.engine.recognition.BaseRuleGrammar;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spantus.sphinx.dialog.beheviour.DialogNodeBehavior;
 
 import edu.cmu.sphinx.frontend.util.Microphone;
 import edu.cmu.sphinx.jsgf.JSGFGrammar;
@@ -48,6 +46,9 @@ import edu.cmu.sphinx.util.props.S4Component;
  * each active node.
  */
 public class DialogManager implements Configurable {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(DialogManager.class);
+	
     /**
      * The property that defines the name of the grammar component 
      * to be used by this dialog manager
@@ -72,9 +73,8 @@ public class DialogManager implements Configurable {
     // ------------------------------------
     // Configuration data
     // ------------------------------------
-    private JSGFGrammar grammar;
-    private Logger logger;
-    private Recognizer recognizer;
+    JSGFGrammar grammar;
+    Recognizer recognizer;
         private Microphone microphone;
 
     // ------------------------------------
@@ -90,7 +90,6 @@ public class DialogManager implements Configurable {
     * @see edu.cmu.sphinx.util.props.Configurable#newProperties(edu.cmu.sphinx.util.props.PropertySheet)
     */
     public void newProperties(PropertySheet ps) throws PropertyException {
-        logger = ps.getLogger();
         grammar = 
             (JSGFGrammar) ps.getComponent(PROP_JSGF_GRAMMAR);
         microphone = 
@@ -109,7 +108,7 @@ public class DialogManager implements Configurable {
      * @param behavior the application specified behavior for the node
      */
     public void addNode(String name, DialogNodeBehavior behavior) {
-        DialogNode node = new DialogNode(name, behavior);
+        DialogNode node = new DialogNode(this, name, behavior);
         putNode(node);
     }
 
@@ -176,24 +175,28 @@ public class DialogManager implements Configurable {
                     } else {
                         DialogNode node = nodeMap.get(nextStateName);
                         if (node == null) {
-                            warn("Can't transition to unknown state " 
-                                    + nextStateName);
+                        	LOG.warn("Can't transition to unknown state {}", 
+                                    nextStateName);
                         } else {
                             curNode = node;
                         }
                     }
                 }
             } else {
-                error("Can't start the microphone");
+            	LOG.error("Can't start the microphone");
             }
         } catch (GrammarException ge) {
-            error("grammar problem in state " + curNode.getName() 
-                    + ' ' + ge);
+        	LOG.error("grammar problem in state {}", curNode.getName());
+        	LOG.error("Error: ", ge);
         } catch (IOException ioe) {
-            error("problem loading grammar in state " + curNode.getName() 
-                    + ' ' + ioe);
+        	LOG.error("problem loading grammar in state {}", curNode.getName());
+        	LOG.error("Error: ", ioe);
         }
     }
+    
+	public Result recognize() {
+		return getRecognizer().recognize();
+	}
 
 
     /**
@@ -225,34 +228,6 @@ public class DialogManager implements Configurable {
     }
 
 
-    /**
-     * Issues a warning message
-     *
-     * @param s the message
-     */
-    private void warn(String s) {
-        System.out.println("Warning: " + s);
-    }
-
-    /**
-     * Issues an error message
-     *
-     * @param s the message
-     */
-    private void error(String s) {
-        System.out.println("Error: " + s);
-    }
-
-    /**
-     * Issues a tracing message
-     *
-     * @parma s the message
-     */
-    private void trace(String s) {
-        logger.info(s);
-    }
-
-
     public Recognizer getRecognizer() {
         return recognizer;
     }
@@ -266,261 +241,11 @@ public class DialogManager implements Configurable {
         this.recognizer = recognizer;
     }
 
-    /**
-     * Represents a node in the dialog
-     */
-    class   DialogNode {
-        private DialogNodeBehavior behavior;
-        private String name;
 
-        /**
-         * Creates a dialog node with the given name an application
-         * behavior
-         *
-         * @param name the name of the node
-         *
-         * @param behavior the application behavor for the node
-         *
-         */
-        DialogNode(String name, DialogNodeBehavior behavior) {
-            this.behavior = behavior;
-            this.name = name;
-        }
+	public JSGFGrammar getGrammar() {
+		return this.grammar;
+	}
 
 
-        /**
-         * Initializes the node
-         */
-        
-        void init() {
-            behavior.onInit(this);
-        }
 
-        /**
-         * Enters the node, prepares it for recognition
-         * @throws JSGFGrammarException 
-         * @throws JSGFGrammarParseException 
-         */
-        void enter() throws IOException, JSGFGrammarParseException, JSGFGrammarException {
-            trace("Entering " + name);
-            behavior.onEntry();
-            behavior.onReady();
-        }
-
-        /**
-         * Performs recognition at the node.
-         *
-         * @return the result tag
-         */
-        String recognize() throws GrammarException {
-            trace("Recognize " + name);
-            Result result = recognizer.recognize();
-            return behavior.onRecognize(result);
-        }
-
-        /**
-         * Exits the node
-         */
-        void exit() {
-            trace("Exiting " + name);
-            behavior.onExit();
-        }
-
-        /**
-         * Gets the name of the node
-         *
-         * @return the name of the node
-         */
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * Returns the JSGF Grammar for the dialog manager that
-         * contains this node
-         *
-         * @return the grammar
-         */
-        public JSGFGrammar getGrammar() {
-            return grammar;
-        }
-
-        /**
-         * Traces a message
-         *
-         * @param msg the message to trace
-         */
-        public void trace(String msg) {
-            DialogManager.this.trace(msg);
-        }
-
-        public DialogManager getDialogManager() {
-            return DialogManager.this;
-        }
-    }
-}
-
-/**
-* Provides the default behavior for dialog node. Applications will
-* typically extend this class and override methods as appropriate
-*/
-class DialogNodeBehavior {
-    private DialogManager.DialogNode node;
-
-    /**
-     * Called during the initialization phase
-     *
-     * @param node the dialog node that the behavior is attached to
-     */
-    public void onInit(DialogManager.DialogNode node) {
-        this.node = node;
-    }
-
-    /**
-     * Called when this node becomes the active node
-     * @throws JSGFGrammarException 
-     * @throws JSGFGrammarParseException 
-     */
-    public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException {
-        trace("Entering " + getName());
-    }
-
-    /**
-     * Called when this node is ready to perform recognition
-     */
-    public void onReady() {
-        trace("Ready " + getName());
-    }
-
-    /*
-     * Called with the recognition results. Should return a string
-     * representing the name of the next node.
-     */
-    public String onRecognize(Result result) throws GrammarException {
-        String tagString =  getTagString(result);
-        trace("Recognize result: " + result.getBestFinalResultNoFiller());
-        trace("Recognize tag   : " + tagString);
-        return tagString;
-    }
-
-    /**
-     * Called when this node is no lnoger the active node
-     */
-    public void onExit() {
-        trace("Exiting " + getName());
-    }
-
-    /**
-     * Returns the name for this node
-     *
-     * @return the name of the node
-     */
-    public String getName() {
-        return node.getName();
-    }
-
-    /**
-     * Returns the string representation of this object
-     *
-     * @return the string representation of this object
-     */
-    public String toString() {
-        return "Node " + getName();
-    }
-
-    /**
-     * Retrieves the grammar associated with this ndoe
-     *
-     * @return the grammar
-     */
-    public JSGFGrammar getGrammar() {
-        return node.getGrammar();
-    }
-
-    /**
-     * Retrieves the rule parse for the given result
-     *
-     * @param the recognition result
-     * @return the rule parse for the result
-     * @throws GrammarException if there is an error while parsing the
-     * result
-     */
-    RuleParse getRuleParse(Result result) throws GrammarException {
-        String resultText = result.getBestFinalResultNoFiller();
-        BaseRecognizer jsapiRecognizer = new BaseRecognizer(getGrammar().getGrammarManager());
-        try {
-            jsapiRecognizer.allocate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        RuleGrammar ruleGrammar = new BaseRuleGrammar (jsapiRecognizer, getGrammar().getRuleGrammar());
-        RuleParse ruleParse = ruleGrammar.parse(resultText, null);
-        return ruleParse;
-    }
-
-    /**
-     * Gets a space delimited string of tags representing the result
-     *
-     * @param result the recognition result
-     * @return the tag string
-     * @throws GrammarException if there is an error while parsing the
-     * result
-     */
-    String getTagString(Result result) throws GrammarException {
-        RuleParse ruleParse = getRuleParse(result);
-        if (ruleParse == null)
-            return null;
-        String[] tags = ruleParse.getTags();
-        if (tags == null)
-            return "";
-        StringBuilder sb = new StringBuilder();
-        for (String tag : tags)
-            sb.append(tag).append(' ');
-        return sb.toString().trim();
-    }
-
-    /**
-     * Outputs a trace message
-     *
-     * @param the trace message
-     */
-    void trace(String msg) {
-        node.trace(msg);
-    }
-}
-
-
-/**
- * A Dialog node behavior that loads a completely new
- * grammar upon entry into the node
- */
-class NewGrammarDialogNodeBehavior extends DialogNodeBehavior {
-
-    /**
-     * creates a  NewGrammarDialogNodeBehavior 
-     *
-     * @param grammarName the grammar name
-     */
-    public NewGrammarDialogNodeBehavior() {
-    }
-
-    /**
-     * Called with the dialog manager enters this entry
-     * @throws JSGFGrammarException 
-     * @throws JSGFGrammarParseException 
-     */
-    public void onEntry() throws IOException, JSGFGrammarParseException, JSGFGrammarException {
-        super.onEntry();
-        getGrammar().loadJSGF(getGrammarName());
-    }
-
-    /**
-     * Returns the name of the grammar. The name of the grammar is the same as
-     * the name of the node
-     *
-     * @return the grammar name
-     */
-    public String getGrammarName() {
-        return getName();
-    }
 }

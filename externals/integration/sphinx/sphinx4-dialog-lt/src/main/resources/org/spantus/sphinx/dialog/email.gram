@@ -15,7 +15,7 @@ public <command> =
                         permesk į <folder> |
                         sekanti žinutė     |
                         skaityti žinutė   |
-                        žinutė prieštai;
+                        žinutė prieš tai;
 
 
 <folder> = šiukšlinę | priminimui | darbo | asmeninis | šnekučiai;

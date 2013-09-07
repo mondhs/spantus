@@ -8,4 +8,4 @@ grammar commands;
 
 public <standard_commands> =
                       padėk                   { help } |
-                      [eik į pagrindinį meniu    { goto_menu } ;
+                      ([eik į pagrindinį]|pagrindinis) meniu    { goto_menu } ;

@@ -9,8 +9,10 @@
 		<relativePath>../../../../pom.xml</relativePath>
 	</parent>
 
+
 	<artifactId>sphinx4-dialog-lt</artifactId>
 	<name>Spantus - Sphinx - Dialog(Lithuanian) module</name>
+
 
 	<dependencies>
 		<dependency>
@@ -23,6 +25,13 @@
 			<artifactId>lt.cd_cont_200</artifactId>
 			<version>1.0</version>
 		</dependency>
+
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>

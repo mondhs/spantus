@@ -9,6 +9,6 @@ import <commands.standard_commands>;
 
 public <books> =     skaityk Balso Atpažinimas  | 
                      skaityk Efektyvi Java  |
-                     skaityk betkokią knygą;
+                     skaityk Marti;
 
 public <commands> = <standard_commands> ;
