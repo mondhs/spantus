@@ -19,6 +19,7 @@
             <item>accuracyTracker </item>
             <item>speedTracker </item>
             <item>memoryTracker </item>
+            <item>recognizerMonitor </item>
         </propertylist>
    </component>
 
@@ -173,6 +174,30 @@
         <property name="showSummary" value="true"/>
         <property name="showDetails" value="false"/>
     </component>
+    
+        <component name="recognizerMonitor" 
+                type="edu.cmu.sphinx.instrumentation.RecognizerMonitor">
+        <property name="recognizer" value="${recognizer}"/>
+        <propertylist name="allocatedMonitors">
+            <item>linguistDumper </item>
+            <item>configMonitor</item>
+        </propertylist>
+    </component>
+    
+    <!-- create the configMonitor  -->
+    <component name="configMonitor"  
+          type="edu.cmu.sphinx.instrumentation.ConfigMonitor">
+        <property name="showConfig" value="true"/>
+        <property name="showConfigAsGDL" value="true"/>
+    </component>
+    
+    
+    <component name="linguistDumper" 
+                type="edu.cmu.sphinx.linguist.util.GDLDumper">
+        <property name="linguist" value="flatLinguist"/>
+        <property name="logMath" value="logMath"/>
+    </component>
+    
 
     <component name="logMath" type="edu.cmu.sphinx.util.LogMath">
         <property name="logBase" value="1.0001"/>
