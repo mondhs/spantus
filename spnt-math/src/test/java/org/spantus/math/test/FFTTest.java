@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
 import junit.framework.TestCase;
 
 import org.spantus.math.TransformUtil;
 import org.spantus.math.VectorUtils;
+
+import edu.cmu.sphinx.spantus.frontend.transform.DiscreteFourierTransform;
 
 public class FFTTest extends TestCase{
 	Logger log = Logger.getLogger(this.getClass().getSimpleName());

@@ -10,7 +10,7 @@
  *
  */
 
-package edu.cmu.sphinx.frontend.feature;
+package edu.cmu.sphinx.spantus.frontend.feature;
 
 import java.util.LinkedList;
 import java.util.List;

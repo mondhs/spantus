@@ -26,10 +26,10 @@ import java.util.List;
 
 import org.spantus.math.VectorUtils;
 
-import edu.cmu.sphinx.frontend.feature.BatchCMN;
-import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
-import edu.cmu.sphinx.frontend.transform.DiscreteCosineTransform;
-import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
+import edu.cmu.sphinx.spantus.frontend.feature.BatchCMN;
+import edu.cmu.sphinx.spantus.frontend.frequencywarp.MelFrequencyFilterBank;
+import edu.cmu.sphinx.spantus.frontend.transform.DiscreteCosineTransform;
+import edu.cmu.sphinx.spantus.frontend.transform.DiscreteFourierTransform;
 
 
 /**

@@ -9,7 +9,7 @@
  * WARRANTIES.
  *
  */
-package edu.cmu.sphinx.frontend.frequencywarp;
+package edu.cmu.sphinx.spantus.frontend.frequencywarp;
 
 /**
  * Filters an input power spectrum through a bank of number of mel-filters. The output is an array of filtered values,

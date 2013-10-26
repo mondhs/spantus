@@ -5,7 +5,7 @@
  * @version 1.0
  */
 
-package edu.cmu.sphinx.frontend.frequencywarp;
+package edu.cmu.sphinx.spantus.frontend.frequencywarp;
 
 import java.util.Arrays;
 

@@ -19,18 +19,20 @@
 
 package org.spantus.math.test;
 
-import edu.cmu.sphinx.frontend.frequencywarp.MelFrequencyFilterBank;
-import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
 import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.spantus.math.MFCC;
 import org.spantus.math.MatrixUtils;
 import org.spantus.math.VectorUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
+import edu.cmu.sphinx.spantus.frontend.frequencywarp.MelFrequencyFilterBank;
+import edu.cmu.sphinx.spantus.frontend.transform.DiscreteFourierTransform;
 
 public class MFCCTest {
 	Logger log = Logger.getLogger(this.getClass().getSimpleName());

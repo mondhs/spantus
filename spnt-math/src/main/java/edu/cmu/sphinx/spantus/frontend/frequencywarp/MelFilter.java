@@ -11,7 +11,7 @@
  */
 
 
-package edu.cmu.sphinx.frontend.frequencywarp;
+package edu.cmu.sphinx.spantus.frontend.frequencywarp;
 
 
 /**

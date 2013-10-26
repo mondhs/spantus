@@ -9,7 +9,7 @@
  * WARRANTIES.
  *
  */
-package edu.cmu.sphinx.frontend.transform;
+package edu.cmu.sphinx.spantus.frontend.transform;
 
 
 /**

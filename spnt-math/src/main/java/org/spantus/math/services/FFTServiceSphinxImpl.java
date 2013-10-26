@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.spantus.math.VectorUtils;
 
-import edu.cmu.sphinx.frontend.transform.DiscreteFourierTransform;
+import edu.cmu.sphinx.spantus.frontend.transform.DiscreteFourierTransform;
 
 /**
  * 

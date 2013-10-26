@@ -50,14 +50,12 @@ public interface CorpusService {
 	public Map<String, RecognitionResult> bestMatchesForFeatures(
 			SignalSegment signalSegment);
 
-/**
-         * Same as learn {@link #learn(java.lang.String, java.util.Map)] only with
-         * audio stream
-         * @param label
-         * @param featureDataMap
-         * @param audioStream
-         * @return
-         */
+	/**
+	 * 
+	 * @param corpusEntry
+	 * @param audioStream
+	 * @return
+	 */
 	public SignalSegment learn(SignalSegment corpusEntry,
 			AudioInputStream audioStream);
 

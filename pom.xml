@@ -23,6 +23,7 @@
 		<module>spnt-mpeg7</module>
 		<module>spnt-work</module>
 		<module>externals/recognition/spnt-dtw-recognition</module>
+		<module>externals/recognition/spnt-sphinx-recognition</module>
 		<module>spnt-work-ui</module>
 	</modules>
 
@@ -228,6 +229,11 @@
 				<artifactId>spnt-hmm-recognition</artifactId>
 				<version>0.3-SNAPSHOT</version>
 			</dependency>
+			<dependency>
+				<groupId>org.spantus.externals.recognition</groupId>
+				<artifactId>spnt-sphinx-recognition</artifactId>
+				<version>0.3-SNAPSHOT</version>
+			</dependency>			
 			<dependency>
 				<groupId>org.spantus</groupId>
 				<artifactId>spnt-segment</artifactId>

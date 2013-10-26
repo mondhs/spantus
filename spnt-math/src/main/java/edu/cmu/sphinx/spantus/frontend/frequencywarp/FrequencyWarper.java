@@ -10,7 +10,7 @@
  *
  */
 
-package edu.cmu.sphinx.frontend.frequencywarp;
+package edu.cmu.sphinx.spantus.frontend.frequencywarp;
 
 /**
  * Defines the Bark frequency warping function. This class provides methods to convert frequencies from a linear scale

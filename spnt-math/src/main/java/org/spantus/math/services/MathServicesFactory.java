@@ -23,12 +23,12 @@ package org.spantus.math.services;
 import org.spantus.math.cluster.ClusterService;
 import org.spantus.math.cluster.KNNServiceImpl;
 import org.spantus.math.dtw.DtwService;
-import org.spantus.math.services.impl.ConvexHullServiceImpl;
-
-import edu.cmu.sphinx.frontend.frequencywarp.PLPCepstrumProducer;
 import org.spantus.math.dtw.DtwServiceFastDtwImpl;
 import org.spantus.math.dtw.JavaMLLocalConstraint;
 import org.spantus.math.dtw.JavaMLSearchWindow;
+import org.spantus.math.services.impl.ConvexHullServiceImpl;
+
+import edu.cmu.sphinx.spantus.frontend.frequencywarp.PLPCepstrumProducer;
 
 /**
  * 

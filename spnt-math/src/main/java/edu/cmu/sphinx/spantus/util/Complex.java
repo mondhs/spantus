@@ -10,7 +10,7 @@
  *
  */
 
-package edu.cmu.sphinx.util;
+package edu.cmu.sphinx.spantus.util;
 
 /** Implements complex types and arythmetics */
 public class Complex {

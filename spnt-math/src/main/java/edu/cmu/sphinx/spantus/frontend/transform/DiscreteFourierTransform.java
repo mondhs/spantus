@@ -10,13 +10,13 @@
  *
  */
 
-package edu.cmu.sphinx.frontend.transform;
+package edu.cmu.sphinx.spantus.frontend.transform;
 
 //import edu.cmu.sphinx.frontend.BaseDataProcessor;
 //import edu.cmu.sphinx.frontend.Data;
 //import edu.cmu.sphinx.frontend.DataProcessingException;
 //import edu.cmu.sphinx.frontend.DoubleData;
-import edu.cmu.sphinx.util.Complex;
+import edu.cmu.sphinx.spantus.util.Complex;
 
 /**
  * Computes the Discrete Fourier Transform (FT) of an input sequence, using Fast Fourier Transform (FFT). Fourier
