@@ -21,6 +21,10 @@
 			<artifactId>spnt-dtw-recognition</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.spantus.externals.recognition</groupId>
+			<artifactId>spnt-sphinx-recognition</artifactId>
+		</dependency>		
+		<dependency>
 			<groupId>com.jgoodies</groupId>
 			<artifactId>forms</artifactId>
 			<version>1.2.1</version>

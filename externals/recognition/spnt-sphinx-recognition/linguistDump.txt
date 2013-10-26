@@ -1,0 +1,357 @@
+graph: {
+    layout_algorithm: minbackward
+    orientation: left_to_right
+    manhatten_edges: yes
+    splines: no
+    node: {title: "P(<sil>[SIL,SIL])-G10" label: "P(<sil>[SIL,SIL])-G10" color: lightblue shape: box vertical_order: 0}
+   edge: { sourcename: "P(<sil>[SIL,SIL])-G10" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<*SIL[(empty),(empty)]> in P0" label: "U0<*SIL[(empty),(empty)]>_P(<sil>[SIL,SIL])-G10" color: green shape: box vertical_order: 1}
+   edge: { sourcename: "U0<*SIL[(empty),(empty)]> in P0" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<*SIL[(empty),(empty)]> in P0" targetname: "B[SIL,G]5" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<*SIL[(empty),(empty)]> in P0" targetname: "B[SIL,EI]5" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<*SIL[(empty),(empty)]> in P0" targetname: "B[SIL,V]5" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<*SIL[(empty),(empty)]> in P0" targetname: "B[SIL,S]5" label: "(1,1)" color: black}
+    node: {title: "B[SIL,S]5" label: "B[SIL,S]5" color: lightred shape: box vertical_order: 6}
+   edge: { sourcename: "B[SIL,S]5" targetname: "B[SIL,S]35" label: "(1,1)" color: black}
+    node: {title: "B[SIL,V]5" label: "B[SIL,V]5" color: lightred shape: box vertical_order: 6}
+   edge: { sourcename: "B[SIL,V]5" targetname: "B[SIL,V]11" label: "(1,1)" color: black}
+    node: {title: "B[SIL,EI]5" label: "B[SIL,EI]5" color: lightred shape: box vertical_order: 6}
+   edge: { sourcename: "B[SIL,EI]5" targetname: "B[SIL,EI]11" label: "(1,1)" color: black}
+    node: {title: "B[SIL,G]5" label: "B[SIL,G]5" color: lightred shape: box vertical_order: 6}
+   edge: { sourcename: "B[SIL,G]5" targetname: "B[SIL,G]35" label: "(1,1)" color: black}
+    node: {title: "B[SIL,S]35" label: "B[SIL,S]35" color: lightred shape: box vertical_order: 7}
+   edge: { sourcename: "B[SIL,S]35" targetname: "P(suk[SIL,S])-G370" label: "(1,1)" color: black}
+    node: {title: "B[SIL,V]11" label: "B[SIL,V]11" color: lightred shape: box vertical_order: 7}
+   edge: { sourcename: "B[SIL,V]11" targetname: "P(varyk[SIL,V])-G140" label: "(1,1)" color: black}
+    node: {title: "B[SIL,EI]11" label: "B[SIL,EI]11" color: lightred shape: box vertical_order: 7}
+   edge: { sourcename: "B[SIL,EI]11" targetname: "P(eik[SIL,EI])-G130" label: "(1,1)" color: black}
+    node: {title: "B[SIL,G]35" label: "B[SIL,G]35" color: lightred shape: box vertical_order: 7}
+   edge: { sourcename: "B[SIL,G]35" targetname: "P(gręžkis[SIL,G])-G380" label: "(1,1)" color: black}
+    node: {title: "P(suk[SIL,S])-G370" label: "P(suk[SIL,S])-G370" color: lightblue shape: box vertical_order: 8}
+   edge: { sourcename: "P(suk[SIL,S])-G370" targetname: "U0<S[SIL,UH]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(varyk[SIL,V])-G140" label: "P(varyk[SIL,V])-G140" color: lightblue shape: box vertical_order: 8}
+   edge: { sourcename: "P(varyk[SIL,V])-G140" targetname: "U0<V[SIL,A]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(eik[SIL,EI])-G130" label: "P(eik[SIL,EI])-G130" color: lightblue shape: box vertical_order: 8}
+   edge: { sourcename: "P(eik[SIL,EI])-G130" targetname: "U0<EI[SIL,K]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(gręžkis[SIL,G])-G380" label: "P(gręžkis[SIL,G])-G380" color: lightblue shape: box vertical_order: 8}
+   edge: { sourcename: "P(gręžkis[SIL,G])-G380" targetname: "U0<G[SIL,R]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "U0<S[SIL,UH]> in P0" label: "U0<S[SIL,UH]>_P(suk[SIL,S])-G370" color: green shape: box vertical_order: 9}
+   edge: { sourcename: "U0<S[SIL,UH]> in P0" targetname: "U1<UH[S,K]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<V[SIL,A]> in P0" label: "U0<V[SIL,A]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 9}
+   edge: { sourcename: "U0<V[SIL,A]> in P0" targetname: "U1<A[V,R]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<EI[SIL,K]> in P0" label: "U0<EI[SIL,K]>_P(eik[SIL,EI])-G130" color: green shape: box vertical_order: 9}
+   edge: { sourcename: "U0<EI[SIL,K]> in P0" targetname: "U1<K[EI,T]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<EI[SIL,K]> in P0" targetname: "U1<K[EI,P]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<EI[SIL,K]> in P0" targetname: "U1<K[EI,A]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<EI[SIL,K]> in P0" targetname: "U1<K[EI,K]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<EI[SIL,K]> in P0" targetname: "U1<K[EI,D]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<EI[SIL,K]> in P0" targetname: "U1<K[EI,V]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<EI[SIL,K]> in P0" targetname: "U1<K[EI,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<G[SIL,R]> in P0" label: "U0<G[SIL,R]>_P(gręžkis[SIL,G])-G380" color: green shape: box vertical_order: 9}
+   edge: { sourcename: "U0<G[SIL,R]> in P0" targetname: "U1<R[G,EA]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<UH[S,K]> in P0" label: "U1<UH[S,K]>_P(suk[SIL,S])-G370" color: green shape: box vertical_order: 14}
+   edge: { sourcename: "U1<UH[S,K]> in P0" targetname: "U2<K[UH,K]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U1<UH[S,K]> in P0" targetname: "U2<K[UH,D]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U1<UH[S,K]> in P0" targetname: "U2<K[UH,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<A[V,R]> in P0" label: "U1<A[V,R]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 14}
+   edge: { sourcename: "U1<A[V,R]> in P0" targetname: "U2<R[A,IY]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<K[EI,SIL]> in P0" label: "U1<K[EI,SIL]>_P(eik[SIL,EI])-G130" color: green shape: box vertical_order: 14}
+   edge: { sourcename: "U1<K[EI,SIL]> in P0" targetname: "P(<sil>[K,SIL])-G610" label: "(1,1)" color: black}
+    node: {title: "U1<K[EI,V]> in P0" label: "U1<K[EI,V]>_P(eik[SIL,EI])-G130" color: green shape: box vertical_order: 14}
+   edge: { sourcename: "U1<K[EI,V]> in P0" targetname: "B[K,V]15" label: "(1,1)" color: black}
+    node: {title: "U1<K[EI,D]> in P0" label: "U1<K[EI,D]>_P(eik[SIL,EI])-G130" color: green shape: box vertical_order: 14}
+   edge: { sourcename: "U1<K[EI,D]> in P0" targetname: "B[K,D]15" label: "(1,1)" color: black}
+    node: {title: "U1<K[EI,K]> in P0" label: "U1<K[EI,K]>_P(eik[SIL,EI])-G130" color: green shape: box vertical_order: 14}
+   edge: { sourcename: "U1<K[EI,K]> in P0" targetname: "B[K,K]15" label: "(1,1)" color: black}
+    node: {title: "U1<K[EI,A]> in P0" label: "U1<K[EI,A]>_P(eik[SIL,EI])-G130" color: green shape: box vertical_order: 14}
+   edge: { sourcename: "U1<K[EI,A]> in P0" targetname: "B[K,A]15" label: "(1,1)" color: black}
+    node: {title: "U1<K[EI,P]> in P0" label: "U1<K[EI,P]>_P(eik[SIL,EI])-G130" color: green shape: box vertical_order: 14}
+   edge: { sourcename: "U1<K[EI,P]> in P0" targetname: "B[K,P]15" label: "(1,1)" color: black}
+    node: {title: "U1<K[EI,T]> in P0" label: "U1<K[EI,T]>_P(eik[SIL,EI])-G130" color: green shape: box vertical_order: 14}
+   edge: { sourcename: "U1<K[EI,T]> in P0" targetname: "B[K,T]15" label: "(1,1)" color: black}
+    node: {title: "U1<R[G,EA]> in P0" label: "U1<R[G,EA]>_P(gręžkis[SIL,G])-G380" color: green shape: box vertical_order: 14}
+   edge: { sourcename: "U1<R[G,EA]> in P0" targetname: "U2<EA[R,ZH]> in P0" label: "(1,1)" color: black}
+    node: {title: "U2<K[UH,SIL]> in P0" label: "U2<K[UH,SIL]>_P(suk[SIL,S])-G370" color: green shape: box vertical_order: 19}
+   edge: { sourcename: "U2<K[UH,SIL]> in P0" targetname: "P(<sil>[K,SIL])-G510" label: "(1,1)" color: black}
+    node: {title: "U2<K[UH,D]> in P0" label: "U2<K[UH,D]>_P(suk[SIL,S])-G370" color: green shape: box vertical_order: 19}
+   edge: { sourcename: "U2<K[UH,D]> in P0" targetname: "B[K,D]39" label: "(1,1)" color: black}
+    node: {title: "U2<K[UH,K]> in P0" label: "U2<K[UH,K]>_P(suk[SIL,S])-G370" color: green shape: box vertical_order: 19}
+   edge: { sourcename: "U2<K[UH,K]> in P0" targetname: "B[K,K]39" label: "(1,1)" color: black}
+    node: {title: "U2<R[A,IY]> in P0" label: "U2<R[A,IY]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 19}
+   edge: { sourcename: "U2<R[A,IY]> in P0" targetname: "U3<IY[R,K]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[K,SIL])-G610" label: "P(<sil>[K,SIL])-G610" color: lightblue shape: box vertical_order: 19}
+   edge: { sourcename: "P(<sil>[K,SIL])-G610" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "B[K,V]15" label: "B[K,V]15" color: lightred shape: box vertical_order: 19}
+   edge: { sourcename: "B[K,V]15" targetname: "B[K,V]19" label: "(1,1)" color: black}
+    node: {title: "B[K,D]15" label: "B[K,D]15" color: lightred shape: box vertical_order: 19}
+   edge: { sourcename: "B[K,D]15" targetname: "B[K,D]19" label: "(1,1)" color: black}
+    node: {title: "B[K,K]15" label: "B[K,K]15" color: lightred shape: box vertical_order: 19}
+   edge: { sourcename: "B[K,K]15" targetname: "B[K,K]19" label: "(1,1)" color: black}
+    node: {title: "B[K,A]15" label: "B[K,A]15" color: lightred shape: box vertical_order: 19}
+   edge: { sourcename: "B[K,A]15" targetname: "B[K,A]27" label: "(1,1)" color: black}
+    node: {title: "B[K,P]15" label: "B[K,P]15" color: lightred shape: box vertical_order: 19}
+   edge: { sourcename: "B[K,P]15" targetname: "B[K,P]27" label: "(1,1)" color: black}
+   edge: { sourcename: "B[K,P]15" targetname: "B[K,P]19" label: "(1,1)" color: black}
+    node: {title: "B[K,T]15" label: "B[K,T]15" color: lightred shape: box vertical_order: 19}
+   edge: { sourcename: "B[K,T]15" targetname: "B[K,T]19" label: "(1,1)" color: black}
+    node: {title: "U2<EA[R,ZH]> in P0" label: "U2<EA[R,ZH]>_P(gręžkis[SIL,G])-G380" color: green shape: box vertical_order: 19}
+   edge: { sourcename: "U2<EA[R,ZH]> in P0" targetname: "U3<ZH[EA,K]> in P0" label: "(1,1)" color: black}
+    node: {title: "B[K,V]19" label: "B[K,V]19" color: lightred shape: box vertical_order: 20}
+   edge: { sourcename: "B[K,V]19" targetname: "P(vieną[K,V])-G210" label: "(1,1)" color: black}
+    node: {title: "B[K,D]19" label: "B[K,D]19" color: lightred shape: box vertical_order: 20}
+   edge: { sourcename: "B[K,D]19" targetname: "P(du[K,D])-G220" label: "(1,1)" color: black}
+    node: {title: "B[K,K]19" label: "B[K,K]19" color: lightred shape: box vertical_order: 20}
+   edge: { sourcename: "B[K,K]19" targetname: "P(keturis[K,K])-G240" label: "(1,1)" color: black}
+    node: {title: "B[K,A]27" label: "B[K,A]27" color: lightred shape: box vertical_order: 20}
+   edge: { sourcename: "B[K,A]27" targetname: "P(atgal[K,A])-G300" label: "(1,1)" color: black}
+    node: {title: "B[K,P]27" label: "B[K,P]27" color: lightred shape: box vertical_order: 20}
+   edge: { sourcename: "B[K,P]27" targetname: "P(pirmyn[K,P])-G290" label: "(1,1)" color: black}
+    node: {title: "B[K,P]19" label: "B[K,P]19" color: lightred shape: box vertical_order: 20}
+   edge: { sourcename: "B[K,P]19" targetname: "P(penkis[K,P])-G250" label: "(1,1)" color: black}
+    node: {title: "B[K,T]19" label: "B[K,T]19" color: lightred shape: box vertical_order: 20}
+   edge: { sourcename: "B[K,T]19" targetname: "P(tris[K,T])-G230" label: "(1,1)" color: black}
+    node: {title: "P(vieną[K,V])-G210" label: "P(vieną[K,V])-G210" color: lightblue shape: box vertical_order: 21}
+   edge: { sourcename: "P(vieną[K,V])-G210" targetname: "U0<V[K,IE]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(du[K,D])-G220" label: "P(du[K,D])-G220" color: lightblue shape: box vertical_order: 21}
+   edge: { sourcename: "P(du[K,D])-G220" targetname: "U0<D[K,UH]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(keturis[K,K])-G240" label: "P(keturis[K,K])-G240" color: lightblue shape: box vertical_order: 21}
+   edge: { sourcename: "P(keturis[K,K])-G240" targetname: "U0<K[K,E]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(atgal[K,A])-G300" label: "P(atgal[K,A])-G300" color: lightblue shape: box vertical_order: 21}
+   edge: { sourcename: "P(atgal[K,A])-G300" targetname: "U0<A[K,T]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(pirmyn[K,P])-G290" label: "P(pirmyn[K,P])-G290" color: lightblue shape: box vertical_order: 21}
+   edge: { sourcename: "P(pirmyn[K,P])-G290" targetname: "U0<P[K,IH]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(penkis[K,P])-G250" label: "P(penkis[K,P])-G250" color: lightblue shape: box vertical_order: 21}
+   edge: { sourcename: "P(penkis[K,P])-G250" targetname: "U0<P[K,E]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(tris[K,T])-G230" label: "P(tris[K,T])-G230" color: lightblue shape: box vertical_order: 21}
+   edge: { sourcename: "P(tris[K,T])-G230" targetname: "U0<T[K,R]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "U0<V[K,IE]> in P0" label: "U0<V[K,IE]>_P(vieną[K,V])-G210" color: green shape: box vertical_order: 22}
+   edge: { sourcename: "U0<V[K,IE]> in P0" targetname: "U1<IE[V,N]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<D[K,UH]> in P0" label: "U0<D[K,UH]>_P(du[K,D])-G220" color: green shape: box vertical_order: 22}
+   edge: { sourcename: "U0<D[K,UH]> in P0" targetname: "U1<UH[D,M]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U0<D[K,UH]> in P0" targetname: "U1<UH[D,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<K[K,E]> in P0" label: "U0<K[K,E]>_P(keturis[K,K])-G240" color: green shape: box vertical_order: 22}
+   edge: { sourcename: "U0<K[K,E]> in P0" targetname: "U1<E[K,T]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<A[K,T]> in P0" label: "U0<A[K,T]>_P(atgal[K,A])-G300" color: green shape: box vertical_order: 22}
+   edge: { sourcename: "U0<A[K,T]> in P0" targetname: "U1<T[A,G]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<P[K,IH]> in P0" label: "U0<P[K,IH]>_P(pirmyn[K,P])-G290" color: green shape: box vertical_order: 22}
+   edge: { sourcename: "U0<P[K,IH]> in P0" targetname: "U1<IH[P,R]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<P[K,E]> in P0" label: "U0<P[K,E]>_P(penkis[K,P])-G250" color: green shape: box vertical_order: 22}
+   edge: { sourcename: "U0<P[K,E]> in P0" targetname: "U1<E[P,N]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<T[K,R]> in P0" label: "U0<T[K,R]>_P(tris[K,T])-G230" color: green shape: box vertical_order: 22}
+   edge: { sourcename: "U0<T[K,R]> in P0" targetname: "U1<R[T,IH]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[K,SIL])-G510" label: "P(<sil>[K,SIL])-G510" color: lightblue shape: box vertical_order: 24}
+   edge: { sourcename: "P(<sil>[K,SIL])-G510" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "B[K,D]39" label: "B[K,D]39" color: lightred shape: box vertical_order: 24}
+   edge: { sourcename: "B[K,D]39" targetname: "P(dešinėn[K,D])-G420" label: "(1,1)" color: black}
+    node: {title: "B[K,K]39" label: "B[K,K]39" color: lightred shape: box vertical_order: 24}
+   edge: { sourcename: "B[K,K]39" targetname: "P(kairėn[K,K])-G410" label: "(1,1)" color: black}
+    node: {title: "U3<IY[R,K]> in P0" label: "U3<IY[R,K]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 24}
+   edge: { sourcename: "U3<IY[R,K]> in P0" targetname: "U4<K[IY,T]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U3<IY[R,K]> in P0" targetname: "U4<K[IY,P]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U3<IY[R,K]> in P0" targetname: "U4<K[IY,A]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U3<IY[R,K]> in P0" targetname: "U4<K[IY,K]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U3<IY[R,K]> in P0" targetname: "U4<K[IY,D]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U3<IY[R,K]> in P0" targetname: "U4<K[IY,V]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U3<IY[R,K]> in P0" targetname: "U4<K[IY,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "U3<ZH[EA,K]> in P0" label: "U3<ZH[EA,K]>_P(gręžkis[SIL,G])-G380" color: green shape: box vertical_order: 24}
+   edge: { sourcename: "U3<ZH[EA,K]> in P0" targetname: "U4<K[ZH,IH]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(dešinėn[K,D])-G420" label: "P(dešinėn[K,D])-G420" color: lightblue shape: box vertical_order: 25}
+   edge: { sourcename: "P(dešinėn[K,D])-G420" targetname: "U0<D[K,E]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(kairėn[K,K])-G410" label: "P(kairėn[K,K])-G410" color: lightblue shape: box vertical_order: 25}
+   edge: { sourcename: "P(kairėn[K,K])-G410" targetname: "U0<K[K,AI]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "U0<D[K,E]> in P0" label: "U0<D[K,E]>_P(dešinėn[K,D])-G420" color: green shape: box vertical_order: 26}
+   edge: { sourcename: "U0<D[K,E]> in P0" targetname: "U1<E[D,SH]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<K[K,AI]> in P0" label: "U0<K[K,AI]>_P(kairėn[K,K])-G410" color: green shape: box vertical_order: 26}
+   edge: { sourcename: "U0<K[K,AI]> in P0" targetname: "U1<AI[K,R]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<IE[V,N]> in P0" label: "U1<IE[V,N]>_P(vieną[K,V])-G210" color: green shape: box vertical_order: 27}
+   edge: { sourcename: "U1<IE[V,N]> in P0" targetname: "U2<N[IE,AA]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<UH[D,SIL]> in P0" label: "U1<UH[D,SIL]>_P(du[K,D])-G220" color: green shape: box vertical_order: 27}
+   edge: { sourcename: "U1<UH[D,SIL]> in P0" targetname: "P(<sil>[UH,SIL])-G690" label: "(1,1)" color: black}
+    node: {title: "U1<UH[D,M]> in P0" label: "U1<UH[D,M]>_P(du[K,D])-G220" color: green shape: box vertical_order: 27}
+   edge: { sourcename: "U1<UH[D,M]> in P0" targetname: "P(metrus[UH,M])-G260" label: "(1,1)" color: black}
+    node: {title: "U1<E[K,T]> in P0" label: "U1<E[K,T]>_P(keturis[K,K])-G240" color: green shape: box vertical_order: 27}
+   edge: { sourcename: "U1<E[K,T]> in P0" targetname: "U2<T[E,UH]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<T[A,G]> in P0" label: "U1<T[A,G]>_P(atgal[S,A])-G300" color: green shape: box vertical_order: 27}
+   edge: { sourcename: "U1<T[A,G]> in P0" targetname: "U2<G[T,A]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<IH[P,R]> in P0" label: "U1<IH[P,R]>_P(pirmyn[S,P])-G290" color: green shape: box vertical_order: 27}
+   edge: { sourcename: "U1<IH[P,R]> in P0" targetname: "U2<R[IH,M]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<E[P,N]> in P0" label: "U1<E[P,N]>_P(penkis[K,P])-G250" color: green shape: box vertical_order: 27}
+   edge: { sourcename: "U1<E[P,N]> in P0" targetname: "U2<N[E,K]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<R[T,IH]> in P0" label: "U1<R[T,IH]>_P(tris[K,T])-G230" color: green shape: box vertical_order: 27}
+   edge: { sourcename: "U1<R[T,IH]> in P0" targetname: "U2<IH[R,S]> in P0" label: "(1,1)" color: black}
+    node: {title: "U4<K[IY,SIL]> in P0" label: "U4<K[IY,SIL]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 29}
+   edge: { sourcename: "U4<K[IY,SIL]> in P0" targetname: "P(<sil>[K,SIL])-G670" label: "(1,1)" color: black}
+    node: {title: "U4<K[IY,V]> in P0" label: "U4<K[IY,V]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 29}
+   edge: { sourcename: "U4<K[IY,V]> in P0" targetname: "B[K,V]15" label: "(1,1)" color: black}
+    node: {title: "U4<K[IY,D]> in P0" label: "U4<K[IY,D]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 29}
+   edge: { sourcename: "U4<K[IY,D]> in P0" targetname: "B[K,D]15" label: "(1,1)" color: black}
+    node: {title: "U4<K[IY,K]> in P0" label: "U4<K[IY,K]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 29}
+   edge: { sourcename: "U4<K[IY,K]> in P0" targetname: "B[K,K]15" label: "(1,1)" color: black}
+    node: {title: "U4<K[IY,A]> in P0" label: "U4<K[IY,A]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 29}
+   edge: { sourcename: "U4<K[IY,A]> in P0" targetname: "B[K,A]15" label: "(1,1)" color: black}
+    node: {title: "U4<K[IY,P]> in P0" label: "U4<K[IY,P]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 29}
+   edge: { sourcename: "U4<K[IY,P]> in P0" targetname: "B[K,P]15" label: "(1,1)" color: black}
+    node: {title: "U4<K[IY,T]> in P0" label: "U4<K[IY,T]>_P(varyk[SIL,V])-G140" color: green shape: box vertical_order: 29}
+   edge: { sourcename: "U4<K[IY,T]> in P0" targetname: "B[K,T]15" label: "(1,1)" color: black}
+    node: {title: "U4<K[ZH,IH]> in P0" label: "U4<K[ZH,IH]>_P(gręžkis[SIL,G])-G380" color: green shape: box vertical_order: 29}
+   edge: { sourcename: "U4<K[ZH,IH]> in P0" targetname: "U5<IH[K,S]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<E[D,SH]> in P0" label: "U1<E[D,SH]>_P(dešinėn[S,D])-G420" color: green shape: box vertical_order: 31}
+   edge: { sourcename: "U1<E[D,SH]> in P0" targetname: "U2<SH[E,IH]> in P0" label: "(1,1)" color: black}
+    node: {title: "U1<AI[K,R]> in P0" label: "U1<AI[K,R]>_P(kairėn[S,K])-G410" color: green shape: box vertical_order: 31}
+   edge: { sourcename: "U1<AI[K,R]> in P0" targetname: "U2<R[AI,EH]> in P0" label: "(1,1)" color: black}
+    node: {title: "U2<N[IE,AA]> in P0" label: "U2<N[IE,AA]>_P(vieną[K,V])-G210" color: green shape: box vertical_order: 32}
+   edge: { sourcename: "U2<N[IE,AA]> in P0" targetname: "U3<AA[N,M]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U2<N[IE,AA]> in P0" targetname: "U3<AA[N,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[UH,SIL])-G690" label: "P(<sil>[UH,SIL])-G690" color: lightblue shape: box vertical_order: 32}
+   edge: { sourcename: "P(<sil>[UH,SIL])-G690" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(metrus[UH,M])-G260" label: "P(metrus[UH,M])-G260" color: lightblue shape: box vertical_order: 32}
+   edge: { sourcename: "P(metrus[UH,M])-G260" targetname: "U0<M[UH,E]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "U2<T[E,UH]> in P0" label: "U2<T[E,UH]>_P(keturis[K,K])-G240" color: green shape: box vertical_order: 32}
+   edge: { sourcename: "U2<T[E,UH]> in P0" targetname: "U3<UH[T,R]> in P0" label: "(1,1)" color: black}
+    node: {title: "U2<G[T,A]> in P0" label: "U2<G[T,A]>_P(atgal[S,A])-G300" color: green shape: box vertical_order: 32}
+   edge: { sourcename: "U2<G[T,A]> in P0" targetname: "U3<A[G,L]> in P0" label: "(1,1)" color: black}
+    node: {title: "U2<R[IH,M]> in P0" label: "U2<R[IH,M]>_P(pirmyn[S,P])-G290" color: green shape: box vertical_order: 32}
+   edge: { sourcename: "U2<R[IH,M]> in P0" targetname: "U3<M[R,IY]> in P0" label: "(1,1)" color: black}
+    node: {title: "U2<N[E,K]> in P0" label: "U2<N[E,K]>_P(penkis[K,P])-G250" color: green shape: box vertical_order: 32}
+   edge: { sourcename: "U2<N[E,K]> in P0" targetname: "U3<K[N,IH]> in P0" label: "(1,1)" color: black}
+    node: {title: "U2<IH[R,S]> in P0" label: "U2<IH[R,S]>_P(tris[K,T])-G230" color: green shape: box vertical_order: 32}
+   edge: { sourcename: "U2<IH[R,S]> in P0" targetname: "U3<S[IH,M]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U2<IH[R,S]> in P0" targetname: "U3<S[IH,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<M[UH,E]> in P0" label: "U0<M[UH,E]>_P(metrus[UH,M])-G260" color: green shape: box vertical_order: 33}
+   edge: { sourcename: "U0<M[UH,E]> in P0" targetname: "U1<E[M,T]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[K,SIL])-G670" label: "P(<sil>[K,SIL])-G670" color: lightblue shape: box vertical_order: 34}
+   edge: { sourcename: "P(<sil>[K,SIL])-G670" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "U5<IH[K,S]> in P0" label: "U5<IH[K,S]>_P(gręžkis[SIL,G])-G380" color: green shape: box vertical_order: 34}
+   edge: { sourcename: "U5<IH[K,S]> in P0" targetname: "U6<S[IH,K]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U5<IH[K,S]> in P0" targetname: "U6<S[IH,D]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U5<IH[K,S]> in P0" targetname: "U6<S[IH,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "U2<SH[E,IH]> in P0" label: "U2<SH[E,IH]>_P(dešinėn[S,D])-G420" color: green shape: box vertical_order: 36}
+   edge: { sourcename: "U2<SH[E,IH]> in P0" targetname: "U3<IH[SH,N]> in P0" label: "(1,1)" color: black}
+    node: {title: "U2<R[AI,EH]> in P0" label: "U2<R[AI,EH]>_P(kairėn[S,K])-G410" color: green shape: box vertical_order: 36}
+   edge: { sourcename: "U2<R[AI,EH]> in P0" targetname: "U3<EH[R,N]> in P0" label: "(1,1)" color: black}
+    node: {title: "U3<AA[N,SIL]> in P0" label: "U3<AA[N,SIL]>_P(vieną[K,V])-G210" color: green shape: box vertical_order: 37}
+   edge: { sourcename: "U3<AA[N,SIL]> in P0" targetname: "P(<sil>[AA,SIL])-G650" label: "(1,1)" color: black}
+    node: {title: "U3<AA[N,M]> in P0" label: "U3<AA[N,M]>_P(vieną[K,V])-G210" color: green shape: box vertical_order: 37}
+   edge: { sourcename: "U3<AA[N,M]> in P0" targetname: "P(metrus[AA,M])-G260" label: "(1,1)" color: black}
+    node: {title: "U3<UH[T,R]> in P0" label: "U3<UH[T,R]>_P(keturis[K,K])-G240" color: green shape: box vertical_order: 37}
+   edge: { sourcename: "U3<UH[T,R]> in P0" targetname: "U4<R[UH,IH]> in P0" label: "(1,1)" color: black}
+    node: {title: "U3<A[G,L]> in P0" label: "U3<A[G,L]>_P(atgal[S,A])-G300" color: green shape: box vertical_order: 37}
+   edge: { sourcename: "U3<A[G,L]> in P0" targetname: "U4<L[A,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "U3<M[R,IY]> in P0" label: "U3<M[R,IY]>_P(pirmyn[S,P])-G290" color: green shape: box vertical_order: 37}
+   edge: { sourcename: "U3<M[R,IY]> in P0" targetname: "U4<IY[M,N]> in P0" label: "(1,1)" color: black}
+    node: {title: "U3<K[N,IH]> in P0" label: "U3<K[N,IH]>_P(penkis[K,P])-G250" color: green shape: box vertical_order: 37}
+   edge: { sourcename: "U3<K[N,IH]> in P0" targetname: "U4<IH[K,S]> in P0" label: "(1,1)" color: black}
+    node: {title: "U3<S[IH,SIL]> in P0" label: "U3<S[IH,SIL]>_P(tris[K,T])-G230" color: green shape: box vertical_order: 37}
+   edge: { sourcename: "U3<S[IH,SIL]> in P0" targetname: "P(<sil>[S,SIL])-G430" label: "(1,1)" color: black}
+    node: {title: "U3<S[IH,M]> in P0" label: "U3<S[IH,M]>_P(tris[K,T])-G230" color: green shape: box vertical_order: 37}
+   edge: { sourcename: "U3<S[IH,M]> in P0" targetname: "P(metrus[S,M])-G260" label: "(1,1)" color: black}
+    node: {title: "U1<E[M,T]> in P0" label: "U1<E[M,T]>_P(metrus[AA,M])-G260" color: green shape: box vertical_order: 38}
+   edge: { sourcename: "U1<E[M,T]> in P0" targetname: "U2<T[E,R]> in P0" label: "(1,1)" color: black}
+    node: {title: "U6<S[IH,SIL]> in P0" label: "U6<S[IH,SIL]>_P(gręžkis[SIL,G])-G380" color: green shape: box vertical_order: 39}
+   edge: { sourcename: "U6<S[IH,SIL]> in P0" targetname: "P(<sil>[S,SIL])-G570" label: "(1,1)" color: black}
+    node: {title: "U6<S[IH,D]> in P0" label: "U6<S[IH,D]>_P(gręžkis[SIL,G])-G380" color: green shape: box vertical_order: 39}
+   edge: { sourcename: "U6<S[IH,D]> in P0" targetname: "B[S,D]39" label: "(1,1)" color: black}
+    node: {title: "U6<S[IH,K]> in P0" label: "U6<S[IH,K]>_P(gręžkis[SIL,G])-G380" color: green shape: box vertical_order: 39}
+   edge: { sourcename: "U6<S[IH,K]> in P0" targetname: "B[S,K]39" label: "(1,1)" color: black}
+    node: {title: "U3<IH[SH,N]> in P0" label: "U3<IH[SH,N]>_P(dešinėn[S,D])-G420" color: green shape: box vertical_order: 41}
+   edge: { sourcename: "U3<IH[SH,N]> in P0" targetname: "U4<N[IH,EH]> in P0" label: "(1,1)" color: black}
+    node: {title: "U3<EH[R,N]> in P0" label: "U3<EH[R,N]>_P(kairėn[S,K])-G410" color: green shape: box vertical_order: 41}
+   edge: { sourcename: "U3<EH[R,N]> in P0" targetname: "U4<N[EH,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[AA,SIL])-G650" label: "P(<sil>[AA,SIL])-G650" color: lightblue shape: box vertical_order: 42}
+   edge: { sourcename: "P(<sil>[AA,SIL])-G650" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(metrus[AA,M])-G260" label: "P(metrus[AA,M])-G260" color: lightblue shape: box vertical_order: 42}
+   edge: { sourcename: "P(metrus[AA,M])-G260" targetname: "U0<M[AA,E]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "U4<R[UH,IH]> in P0" label: "U4<R[UH,IH]>_P(keturis[K,K])-G240" color: green shape: box vertical_order: 42}
+   edge: { sourcename: "U4<R[UH,IH]> in P0" targetname: "U5<IH[R,S]> in P0" label: "(1,1)" color: black}
+    node: {title: "U4<L[A,SIL]> in P0" label: "U4<L[A,SIL]>_P(atgal[S,A])-G300" color: green shape: box vertical_order: 42}
+   edge: { sourcename: "U4<L[A,SIL]> in P0" targetname: "G2" label: "(1,1)" color: black}
+   edge: { sourcename: "U4<L[A,SIL]> in P0" targetname: "P(<sil>[L,SIL])-G450" label: "(1,1)" color: black}
+    node: {title: "U4<IY[M,N]> in P0" label: "U4<IY[M,N]>_P(pirmyn[S,P])-G290" color: green shape: box vertical_order: 42}
+   edge: { sourcename: "U4<IY[M,N]> in P0" targetname: "U5<N[IY,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "U4<IH[K,S]> in P0" label: "U4<IH[K,S]>_P(penkis[K,P])-G250" color: green shape: box vertical_order: 42}
+   edge: { sourcename: "U4<IH[K,S]> in P0" targetname: "U5<S[IH,M]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U4<IH[K,S]> in P0" targetname: "U5<S[IH,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[S,SIL])-G430" label: "P(<sil>[S,SIL])-G430" color: lightblue shape: box vertical_order: 42}
+   edge: { sourcename: "P(<sil>[S,SIL])-G430" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(metrus[S,M])-G260" label: "P(metrus[S,M])-G260" color: lightblue shape: box vertical_order: 42}
+   edge: { sourcename: "P(metrus[S,M])-G260" targetname: "U0<M[S,E]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "U0<M[AA,E]> in P0" label: "U0<M[AA,E]>_P(metrus[AA,M])-G260" color: green shape: box vertical_order: 43}
+   edge: { sourcename: "U0<M[AA,E]> in P0" targetname: "U1<E[M,T]> in P0" label: "(1,1)" color: black}
+    node: {title: "U2<T[E,R]> in P0" label: "U2<T[E,R]>_P(metrus[AA,M])-G260" color: green shape: box vertical_order: 43}
+   edge: { sourcename: "U2<T[E,R]> in P0" targetname: "U3<R[T,UH]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<M[S,E]> in P0" label: "U0<M[S,E]>_P(metrus[S,M])-G260" color: green shape: box vertical_order: 43}
+   edge: { sourcename: "U0<M[S,E]> in P0" targetname: "U1<E[M,T]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[S,SIL])-G570" label: "P(<sil>[S,SIL])-G570" color: lightblue shape: box vertical_order: 44}
+   edge: { sourcename: "P(<sil>[S,SIL])-G570" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "B[S,D]39" label: "B[S,D]39" color: lightred shape: box vertical_order: 44}
+   edge: { sourcename: "B[S,D]39" targetname: "P(dešinėn[S,D])-G420" label: "(1,1)" color: black}
+    node: {title: "B[S,K]39" label: "B[S,K]39" color: lightred shape: box vertical_order: 44}
+   edge: { sourcename: "B[S,K]39" targetname: "P(kairėn[S,K])-G410" label: "(1,1)" color: black}
+    node: {title: "P(dešinėn[S,D])-G420" label: "P(dešinėn[S,D])-G420" color: lightblue shape: box vertical_order: 45}
+   edge: { sourcename: "P(dešinėn[S,D])-G420" targetname: "U0<D[S,E]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(kairėn[S,K])-G410" label: "P(kairėn[S,K])-G410" color: lightblue shape: box vertical_order: 45}
+   edge: { sourcename: "P(kairėn[S,K])-G410" targetname: "U0<K[S,AI]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "U4<N[IH,EH]> in P0" label: "U4<N[IH,EH]>_P(dešinėn[S,D])-G420" color: green shape: box vertical_order: 46}
+   edge: { sourcename: "U4<N[IH,EH]> in P0" targetname: "U5<EH[N,N]> in P0" label: "(1,1)" color: black}
+    node: {title: "U4<N[EH,SIL]> in P0" label: "U4<N[EH,SIL]>_P(kairėn[S,K])-G410" color: green shape: box vertical_order: 46}
+   edge: { sourcename: "U4<N[EH,SIL]> in P0" targetname: "G2" label: "(1,1)" color: black}
+   edge: { sourcename: "U4<N[EH,SIL]> in P0" targetname: "P(<sil>[N,SIL])-G590" label: "(1,1)" color: black}
+    node: {title: "U0<D[S,E]> in P0" label: "U0<D[S,E]>_P(dešinėn[S,D])-G420" color: green shape: box vertical_order: 46}
+   edge: { sourcename: "U0<D[S,E]> in P0" targetname: "U1<E[D,SH]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<K[S,AI]> in P0" label: "U0<K[S,AI]>_P(kairėn[S,K])-G410" color: green shape: box vertical_order: 46}
+   edge: { sourcename: "U0<K[S,AI]> in P0" targetname: "U1<AI[K,R]> in P0" label: "(1,1)" color: black}
+    node: {title: "U5<IH[R,S]> in P0" label: "U5<IH[R,S]>_P(keturis[K,K])-G240" color: green shape: box vertical_order: 47}
+   edge: { sourcename: "U5<IH[R,S]> in P0" targetname: "U6<S[IH,M]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U5<IH[R,S]> in P0" targetname: "U6<S[IH,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[L,SIL])-G450" label: "P(<sil>[L,SIL])-G450" color: lightblue shape: box vertical_order: 47}
+   edge: { sourcename: "P(<sil>[L,SIL])-G450" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "G2" label: "G2!" color: magenta shape: box vertical_order: 47}
+    node: {title: "U5<N[IY,SIL]> in P0" label: "U5<N[IY,SIL]>_P(pirmyn[S,P])-G290" color: green shape: box vertical_order: 47}
+   edge: { sourcename: "U5<N[IY,SIL]> in P0" targetname: "G2" label: "(1,1)" color: black}
+   edge: { sourcename: "U5<N[IY,SIL]> in P0" targetname: "P(<sil>[N,SIL])-G530" label: "(1,1)" color: black}
+    node: {title: "U5<S[IH,SIL]> in P0" label: "U5<S[IH,SIL]>_P(penkis[K,P])-G250" color: green shape: box vertical_order: 47}
+   edge: { sourcename: "U5<S[IH,SIL]> in P0" targetname: "P(<sil>[S,SIL])-G550" label: "(1,1)" color: black}
+    node: {title: "U5<S[IH,M]> in P0" label: "U5<S[IH,M]>_P(penkis[K,P])-G250" color: green shape: box vertical_order: 47}
+   edge: { sourcename: "U5<S[IH,M]> in P0" targetname: "P(metrus[S,M])-G260" label: "(1,1)" color: black}
+    node: {title: "U3<R[T,UH]> in P0" label: "U3<R[T,UH]>_P(metrus[AA,M])-G260" color: green shape: box vertical_order: 48}
+   edge: { sourcename: "U3<R[T,UH]> in P0" targetname: "U4<UH[R,S]> in P0" label: "(1,1)" color: black}
+    node: {title: "U5<EH[N,N]> in P0" label: "U5<EH[N,N]>_P(dešinėn[S,D])-G420" color: green shape: box vertical_order: 51}
+   edge: { sourcename: "U5<EH[N,N]> in P0" targetname: "U6<N[EH,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[N,SIL])-G590" label: "P(<sil>[N,SIL])-G590" color: lightblue shape: box vertical_order: 51}
+   edge: { sourcename: "P(<sil>[N,SIL])-G590" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "U6<S[IH,M]> in P0" label: "U6<S[IH,M]>_P(keturis[K,K])-G240" color: green shape: box vertical_order: 52}
+   edge: { sourcename: "U6<S[IH,M]> in P0" targetname: "P(metrus[S,M])-G260" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[N,SIL])-G530" label: "P(<sil>[N,SIL])-G530" color: lightblue shape: box vertical_order: 52}
+   edge: { sourcename: "P(<sil>[N,SIL])-G530" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[S,SIL])-G550" label: "P(<sil>[S,SIL])-G550" color: lightblue shape: box vertical_order: 52}
+   edge: { sourcename: "P(<sil>[S,SIL])-G550" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "U4<UH[R,S]> in P0" label: "U4<UH[R,S]>_P(metrus[AA,M])-G260" color: green shape: box vertical_order: 53}
+   edge: { sourcename: "U4<UH[R,S]> in P0" targetname: "U5<S[UH,P]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U4<UH[R,S]> in P0" targetname: "U5<S[UH,A]> in P0" label: "(1,1)" color: black}
+   edge: { sourcename: "U4<UH[R,S]> in P0" targetname: "U5<S[UH,SIL]> in P0" label: "(1,1)" color: black}
+    node: {title: "U6<N[EH,SIL]> in P0" label: "U6<N[EH,SIL]>_P(dešinėn[S,D])-G420" color: green shape: box vertical_order: 56}
+   edge: { sourcename: "U6<N[EH,SIL]> in P0" targetname: "G2" label: "(1,1)" color: black}
+   edge: { sourcename: "U6<N[EH,SIL]> in P0" targetname: "P(<sil>[N,SIL])-G490" label: "(1,1)" color: black}
+    node: {title: "U5<S[UH,SIL]> in P0" label: "U5<S[UH,SIL]>_P(metrus[AA,M])-G260" color: green shape: box vertical_order: 58}
+   edge: { sourcename: "U5<S[UH,SIL]> in P0" targetname: "P(<sil>[S,SIL])-G630" label: "(1,1)" color: black}
+    node: {title: "U5<S[UH,A]> in P0" label: "U5<S[UH,A]>_P(metrus[AA,M])-G260" color: green shape: box vertical_order: 58}
+   edge: { sourcename: "U5<S[UH,A]> in P0" targetname: "B[S,A]27" label: "(1,1)" color: black}
+    node: {title: "U5<S[UH,P]> in P0" label: "U5<S[UH,P]>_P(metrus[AA,M])-G260" color: green shape: box vertical_order: 58}
+   edge: { sourcename: "U5<S[UH,P]> in P0" targetname: "B[S,P]27" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[N,SIL])-G490" label: "P(<sil>[N,SIL])-G490" color: lightblue shape: box vertical_order: 61}
+   edge: { sourcename: "P(<sil>[N,SIL])-G490" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "P(<sil>[S,SIL])-G630" label: "P(<sil>[S,SIL])-G630" color: lightblue shape: box vertical_order: 63}
+   edge: { sourcename: "P(<sil>[S,SIL])-G630" targetname: "U0<*SIL[(empty),(empty)]> in P0" label: "(1,1)" color: black}
+    node: {title: "B[S,A]27" label: "B[S,A]27" color: lightred shape: box vertical_order: 63}
+   edge: { sourcename: "B[S,A]27" targetname: "P(atgal[S,A])-G300" label: "(1,1)" color: black}
+    node: {title: "B[S,P]27" label: "B[S,P]27" color: lightred shape: box vertical_order: 63}
+   edge: { sourcename: "B[S,P]27" targetname: "P(pirmyn[S,P])-G290" label: "(1,1)" color: black}
+    node: {title: "P(atgal[S,A])-G300" label: "P(atgal[S,A])-G300" color: lightblue shape: box vertical_order: 64}
+   edge: { sourcename: "P(atgal[S,A])-G300" targetname: "U0<A[S,T]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "P(pirmyn[S,P])-G290" label: "P(pirmyn[S,P])-G290" color: lightblue shape: box vertical_order: 64}
+   edge: { sourcename: "P(pirmyn[S,P])-G290" targetname: "U0<P[S,IH]> in P0" label: "(1,1.000E-01)" color: blue}
+    node: {title: "U0<A[S,T]> in P0" label: "U0<A[S,T]>_P(atgal[S,A])-G300" color: green shape: box vertical_order: 65}
+   edge: { sourcename: "U0<A[S,T]> in P0" targetname: "U1<T[A,G]> in P0" label: "(1,1)" color: black}
+    node: {title: "U0<P[S,IH]> in P0" label: "U0<P[S,IH]>_P(pirmyn[S,P])-G290" color: green shape: box vertical_order: 65}
+   edge: { sourcename: "U0<P[S,IH]> in P0" targetname: "U1<IH[P,R]> in P0" label: "(1,1)" color: black}
+}

@@ -1,0 +1,88 @@
+ graph: {title: "unix evolution" 
+         layoutalgorithm: tree
+          scaling        : 2.0
+          colorentry 42  : 152 222 255
+     node.shape     : ellipse
+      node.color     : 42 
+node.height    : 32  
+node.fontname  : "helvB08"
+edge.color     : darkred
+edge.arrowsize :  6    
+node.textcolor : darkblue 
+splines        : yes
+node: {title: "recognizer" color: cyan}
+edge: {source: "recognizer" target: "accuracyTracker"}
+edge: {source: "recognizer" target: "speedTracker"}
+edge: {source: "recognizer" target: "memoryTracker"}
+edge: {source: "recognizer" target: "recognizerMonitor"}
+edge: {source: "recognizer" target: "decoder"}
+node: {title: "decoder" color: green}
+edge: {source: "decoder" target: "searchManager"}
+node: {title: "searchManager" color: green}
+edge: {source: "searchManager" target: "threadedScorer"}
+edge: {source: "searchManager" target: "activeList"}
+edge: {source: "searchManager" target: "logMath"}
+edge: {source: "searchManager" target: "trivialPruner"}
+edge: {source: "searchManager" target: "flatLinguist"}
+node: {title: "logMath" color: lightgrey}
+node: {title: "flatLinguist" color: lightblue}
+edge: {source: "flatLinguist" target: "unitManager"}
+edge: {source: "flatLinguist" target: "wsj"}
+edge: {source: "flatLinguist" target: "jsgfGrammar"}
+edge: {source: "flatLinguist" target: "logMath"}
+node: {title: "wsj" color: turquoise}
+edge: {source: "wsj" target: "unitManager"}
+edge: {source: "wsj" target: "wsjLoader"}
+node: {title: "wsjLoader" color: turquoise}
+edge: {source: "wsjLoader" target: "unitManager"}
+edge: {source: "wsjLoader" target: "logMath"}
+node: {title: "unitManager" color: turquoise}
+node: {title: "jsgfGrammar" color: darkgrey}
+edge: {source: "jsgfGrammar" target: "dictionary"}
+edge: {source: "jsgfGrammar" target: "logMath"}
+node: {title: "dictionary" color: lightblue}
+edge: {source: "dictionary" target: "unitManager"}
+node: {title: "trivialPruner" color: green}
+node: {title: "threadedScorer" color: green}
+edge: {source: "threadedScorer" target: "${frontend}"}
+node: {title: "epFrontEnd" color: orange}
+edge: {source: "epFrontEnd" target: "streamDataSource"}
+edge: {source: "epFrontEnd" target: "speechClassifier"}
+edge: {source: "epFrontEnd" target: "speechMarker"}
+edge: {source: "epFrontEnd" target: "nonSpeechDataFilter"}
+edge: {source: "epFrontEnd" target: "preemphasizer"}
+edge: {source: "epFrontEnd" target: "windower"}
+edge: {source: "epFrontEnd" target: "fft"}
+edge: {source: "epFrontEnd" target: "melFilterBank"}
+edge: {source: "epFrontEnd" target: "dct"}
+edge: {source: "epFrontEnd" target: "batchCMN"}
+edge: {source: "epFrontEnd" target: "featureExtraction"}
+node: {title: "streamDataSource" color: orange}
+node: {title: "speechClassifier" color: orange}
+node: {title: "speechMarker" color: orange}
+node: {title: "nonSpeechDataFilter" color: orange}
+node: {title: "preemphasizer" color: orange}
+node: {title: "windower" color: orange}
+node: {title: "fft" color: orange}
+node: {title: "melFilterBank" color: orange}
+node: {title: "dct" color: orange}
+node: {title: "batchCMN" color: orange}
+node: {title: "featureExtraction" color: orange}
+node: {title: "activeList" color: green}
+edge: {source: "activeList" target: "logMath"}
+node: {title: "accuracyTracker" color: lightgrey}
+edge: {source: "accuracyTracker" target: "${recognizer}"}
+node: {title: "speedTracker" color: lightgrey}
+edge: {source: "speedTracker" target: "${recognizer}"}
+edge: {source: "speedTracker" target: "${frontend}"}
+node: {title: "memoryTracker" color: lightgrey}
+edge: {source: "memoryTracker" target: "${recognizer}"}
+node: {title: "recognizerMonitor" color: lightgrey}
+edge: {source: "recognizerMonitor" target: "${recognizer}"}
+edge: {source: "recognizerMonitor" target: "linguistDumper"}
+edge: {source: "recognizerMonitor" target: "configMonitor"}
+node: {title: "linguistDumper" color: lightblue}
+edge: {source: "linguistDumper" target: "logMath"}
+edge: {source: "linguistDumper" target: "flatLinguist"}
+node: {title: "configMonitor" color: lightgrey}
+}

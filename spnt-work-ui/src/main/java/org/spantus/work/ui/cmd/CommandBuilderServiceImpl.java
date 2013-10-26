@@ -140,6 +140,7 @@ public class CommandBuilderServiceImpl implements CommandBuilderService {
 		safePut(cmds, new ReloadResourcesCmd(executionFacade));
 		safePut(cmds, new SaveSegmentCmd(executionFacade));
 		safePut(cmds, new AutoSegmentationCmd(executionFacade));
+		safePut(cmds, new SphinxRecognitionCmd(executionFacade));
 		safePut(cmds, new AppendNoiseCmd(executionFacade));
 		safePut(cmds, new LearnCmd(executionFacade));
                 safePut(cmds, new RecognizeCmd(executionFacade));

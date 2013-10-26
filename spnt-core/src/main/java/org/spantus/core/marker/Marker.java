@@ -61,7 +61,7 @@ public class Marker implements Serializable, Cloneable {
 
 	public void setEnd(Long end) {
 		Assert.isTrue(getStart() != null, "start not set");
-		Assert.isTrue(end - getStart() >= 0, "End should be after start");
+		Assert.isTrue(end - getStart() >= 0, "End should be after start {0} > {1}", end, getStart());
 		setLength(end - getStart());
 	}
 

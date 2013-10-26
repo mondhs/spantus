@@ -158,6 +158,12 @@ public class SpantusWorkMenuBar extends JMenuBar implements ReloadableComponent{
 			menu.add(createMenuItem(
 					GlobalCommands.tool.autoSegmentation,
 					KeyStroke.getKeyStroke(KeyEvent.VK_U, getCtrlMask())));
+
+			menu.add(
+					createMenuItem(
+							GlobalCommands.tool.sphinxRecognition));
+
+			
 			menu.setText(getResource(menuLabels.tool.name()));
 			menuItems.put(menuLabels.tool.name(), menu);
 			menu.add(createMenuItem(GlobalCommands.tool.saveSegments,
