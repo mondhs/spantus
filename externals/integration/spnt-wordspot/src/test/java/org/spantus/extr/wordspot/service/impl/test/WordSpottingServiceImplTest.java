@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.spantus.core.beans.RecognitionResult;
@@ -64,7 +65,7 @@ public class WordSpottingServiceImplTest extends AbstractSegmentExtractorTest {
         getSegmentExtractorService().getServiceConfig().setClassifier(ClassifierEnum.rulesOnline);
     }
 
-    @Test
+    @Test @Ignore
     @Category(SlowTests.class)
     public void test_wordSpotting() throws MalformedURLException {
         //given
