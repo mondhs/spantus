@@ -23,7 +23,7 @@ import org.spantus.core.service.CorpusService;
 import org.spantus.extr.wordspot.dto.SpottingSyllableCtx;
 import org.spantus.extr.wordspot.service.SegmentRecognitionThresholdService;
 import org.spantus.extr.wordspot.service.SpottingListener;
-import org.spantus.extr.wordspot.service.impl.SpottingService;
+import org.spantus.extr.wordspot.service.SpottingService;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.utils.Assert;
 import org.spantus.work.services.WorkExtractorReaderService;

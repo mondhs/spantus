@@ -1,11 +1,12 @@
 package org.spantus.extr.wordspot.service.impl;
 
 import java.net.URL;
+
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfig;
 import org.spantus.extr.wordspot.domain.SegmentExtractorServiceConfigAware;
-
 import org.spantus.extr.wordspot.service.SegmentExtractorService;
 import org.spantus.extr.wordspot.service.SpottingListener;
+import org.spantus.extr.wordspot.service.SpottingService;
 import org.spantus.segment.online.AsyncMarkerSegmentatorListenerImpl;
 /**
  * 

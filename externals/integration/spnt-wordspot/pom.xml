@@ -24,6 +24,17 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>edu.cmu.sphinx</groupId>
+			<artifactId>sphinx4</artifactId>
+			<version>1.0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>edu.cmu.sphinx.model.lt</groupId>
+			<artifactId>lt.cd_cont_200</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.spantus.externals.recognition</groupId>
 			<artifactId>spnt-dtw-recognition</artifactId>
 		</dependency>
