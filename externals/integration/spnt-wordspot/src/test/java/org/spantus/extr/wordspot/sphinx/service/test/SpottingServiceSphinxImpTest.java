@@ -27,7 +27,9 @@ public class SpottingServiceSphinxImpTest {
 	@Test
 	public void testWordSpotting() throws MalformedURLException {
 		// given
-		URL aWavUrl =  new File("../../../data/varyk_pirmyn_16k.wav").toURI().toURL();
+		URL aWavUrl =  new File("../../../data/text1.wav").toURI().toURL();
+		spottingServiceSphinxImp.addKeyword("PADEDA");
+		spottingServiceSphinxImp.addKeyword("ATSKIRTI");
 		final List<Marker> foundSegment = new ArrayList<Marker>();
 		// when
 		spottingServiceSphinxImp.wordSpotting(aWavUrl, new SpottingListener() {
@@ -50,3 +52,4 @@ public class SpottingServiceSphinxImpTest {
 	}
 	
 }
+

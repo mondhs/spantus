@@ -48,7 +48,7 @@ public class NoSkipGrammar extends Grammar implements ResultListener {
 		List<String> tokens = new ArrayList<String>();
 		while (st.hasMoreTokens()) {
 			String token = st.nextToken();
-			token = token.toLowerCase();
+			token = token.toUpperCase();
 			if (token.compareTo(" ") != 0) {
 				tokens.add(token);
 			}

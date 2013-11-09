@@ -1,3 +1,14 @@
+/*
+ * Copyright 1999-2002 Carnegie Mellon University.  
+ * Portions Copyright 2002 Sun Microsystems, Inc.  
+ * Portions Copyright 2002 Mitsubishi Electric Research Laboratories.
+ * All Rights Reserved.  Use is subject to license terms.
+ * 
+ * See the file "license.terms" for information on usage and
+ * redistribution of this file, and for a DISCLAIMER OF ALL 
+ * WARRANTIES.
+ *
+ */
 package org.spantus.extr.wordspot.sphinx.linguist.flat;
 
 import java.io.IOException;
@@ -53,22 +64,15 @@ import edu.cmu.sphinx.util.props.S4Double;
 /**
  * A simple form of the linguist.
  * <p/>
- * The flat linguist takes a Grammar graph (as returned by the underlying,
- * configurable grammar), and generates a search graph for this grammar.
+ * The flat linguist takes a Grammar graph (as returned by the underlying, configurable grammar), and generates a search
+* graph for this grammar.
  * <p/>
  * It makes the following simplifying assumptions:
  * <p/>
- * <ul>
- * <li>Zero or one word per grammar node
- * <li>No fan-in allowed ever
- * <li>No composites (yet)
- * <li>Only Unit, HMMState, and pronunciation states (and the initial/final
- * grammar state are in the graph (no word, alternative or grammar states
- * attached).
- * <li>Only valid transitions (matching contexts) are allowed
- * <li>No tree organization of units
- * <li>Branching grammar states are allowed
- * </ul>
+ * <ul> <li>Zero or one word per grammar node <li> No fan-in allowed ever <li> No composites (yet) <li> Only Unit,
+ * HMMState, and pronunciation states (and the initial/final grammar state are in the graph (no word, alternative or
+ * grammar states attached). <li> Only valid transitions (matching contexts) are allowed <li> No tree organization of
+ * units <li> Branching grammar states are  allowed </ul>
  * <p/>
  * <p/>
  * Note that all probabilities are maintained in the log math domain
@@ -76,29 +80,25 @@ import edu.cmu.sphinx.util.props.S4Double;
 public class KWSFlatLinguist implements Linguist, Configurable {
 
 	/**
-	 * The property used to define the grammar to use when building the search
-	 * graph
+	 * The property used to define the grammar to use when building the search graph
 	 */
 	@S4Component(type = Grammar.class)
 	public final static String PROP_GRAMMAR = "grammar";
 
 	/**
-	 * The property used to define the unit manager to use when building the
-	 * search graph
+	 * The property used to define the unit manager to use when building the search graph
 	 */
 	@S4Component(type = UnitManager.class)
 	public final static String PROP_UNIT_MANAGER = "unitManager";
 
 	/**
-	 * The property used to define the acoustic model to use when building the
-	 * search graph
+	 * The property used to define the acoustic model to use when building the search graph
 	 */
 	@S4Component(type = AcousticModel.class)
 	public final static String PROP_ACOUSTIC_MODEL = "acousticModel";
 
 	/**
-	 * The property that defines the name of the logmath to be used by this
-	 * search manager.
+	 * The property that defines the name of the logmath to be used by this search manager.
 	 */
 	@S4Component(type = LogMath.class)
 	public final static String PROP_LOG_MATH = "logMath";
@@ -110,8 +110,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	public final static String PROP_DUMP_GSTATES = "dumpGstates";
 
 	/**
-	 * The property that specifies whether to add a branch for detecting
-	 * out-of-grammar utterances.
+	 * The property that specifies whether to add a branch for detecting out-of-grammar utterances.
 	 */
 	@S4Boolean(defaultValue = false)
 	public final static String PROP_ADD_OUT_OF_GRAMMAR_BRANCH = "addOutOfGrammarBranch";
@@ -129,31 +128,29 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	public static final String PROP_PHONE_LOOP_ACOUSTIC_MODEL = "phoneLoopAcousticModel";
 
 	/**
-	 * The property for the probability of inserting a CI phone in the
-	 * out-of-grammar ci phone loop
+	 * The property for the probability of inserting a CI phone in the out-of-grammar ci phone loop
 	 */
 	@S4Double(defaultValue = 1.0)
 	public static final String PROP_PHONE_INSERTION_PROBABILITY = "phoneInsertionProbability";
 
 	/**
-	 * Property to control whether compilation progress is displayed on standard
-	 * output. If this property is true, a 'dot' is displayed for every 1000
-	 * search states added to the search space
+	 * Property to control whether compilation progress is displayed on standard output. 
+	 * If this property is true, a 'dot' is displayed for every 1000 search states added 
+	 *  to the search space
 	 */
 	@S4Boolean(defaultValue = false)
 	public final static String PROP_SHOW_COMPILATION_PROGRESS = "showCompilationProgress";
 
 	/**
-	 * Property that controls whether word probabilities are spread across all
-	 * pronunciations.
+	 * Property that controls whether word probabilities are spread across all pronunciations.
 	 */
 	@S4Boolean(defaultValue = false)
-	public final static String PROP_SPREAD_WORD_PROBABILITIES_ACROSS_PRONUNCIATIONS = "spreadWordProbabilitiesAcrossPronunciations";
+	public final static String PROP_SPREAD_WORD_PROBABILITIES_ACROSS_PRONUNCIATIONS =
+		"spreadWordProbabilitiesAcrossPronunciations";
 
 	protected final static float logOne = LogMath.getLogOne();
 
-	// note: some fields are protected to allow to override
-	// FlatLinguist.compileGrammar()
+	// note: some fields are protected to allow to override FlatLinguist.compileGrammar()
 
 	// ----------------------------------
 	// Subcomponents that are configured
@@ -216,32 +213,21 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		return searchGraph;
 	}
 
-	public KWSFlatLinguist(AcousticModel acousticModel, LogMath logMath,
-			Grammar grammar, UnitManager unitManager,
-			double wordInsertionProbability,
-			double silenceInsertionProbability,
-			double fillerInsertionProbability, double unitInsertionProbability,
-			float languageWeight, boolean dumpGStates,
-			boolean showCompilationProgress,
-			boolean spreadWordProbabilitiesAcrossPronunciations,
-			boolean addOutOfGrammarBranch,
-			double outOfGrammarBranchProbability,
-			double phoneInsertionProbability,
-			AcousticModel phoneLoopAcousticModel) {
+    public KWSFlatLinguist(AcousticModel acousticModel, LogMath logMath, Grammar grammar, UnitManager unitManager,
+            double wordInsertionProbability, double silenceInsertionProbability, double fillerInsertionProbability,
+            double unitInsertionProbability, float languageWeight, boolean dumpGStates, boolean showCompilationProgress,
+            boolean spreadWordProbabilitiesAcrossPronunciations, boolean addOutOfGrammarBranch,
+            double outOfGrammarBranchProbability, double phoneInsertionProbability, AcousticModel phoneLoopAcousticModel    ) {
 
 		this.acousticModel = acousticModel;
 		this.logMath = logMath;
 		this.grammar = grammar;
 		this.unitManager = unitManager;
 
-		this.logWordInsertionProbability = logMath
-				.linearToLog(wordInsertionProbability);
-		this.logSilenceInsertionProbability = logMath
-				.linearToLog(silenceInsertionProbability);
-		this.logFillerInsertionProbability = logMath
-				.linearToLog(fillerInsertionProbability);
-		this.logUnitInsertionProbability = logMath
-				.linearToLog(unitInsertionProbability);
+		this.logWordInsertionProbability = logMath.linearToLog(wordInsertionProbability);
+		this.logSilenceInsertionProbability = logMath.linearToLog(silenceInsertionProbability);
+		this.logFillerInsertionProbability = logMath.linearToLog(fillerInsertionProbability);
+		this.logUnitInsertionProbability = logMath.linearToLog(unitInsertionProbability);
 		this.languageWeight = languageWeight;
 
 		this.dumpGStates = dumpGStates;
@@ -251,10 +237,8 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		this.addOutOfGrammarBranch = addOutOfGrammarBranch;
 
 		if (addOutOfGrammarBranch) {
-			this.logOutOfGrammarBranchProbability = logMath
-					.linearToLog(outOfGrammarBranchProbability);
-			this.logPhoneInsertionProbability = logMath
-					.linearToLog(phoneInsertionProbability);
+			this.logOutOfGrammarBranchProbability = logMath.linearToLog(outOfGrammarBranchProbability);
+			this.logPhoneInsertionProbability = logMath.linearToLog(phoneInsertionProbability);
 			this.phoneLoopAcousticModel = phoneLoopAcousticModel;
 		}
 
@@ -268,9 +252,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * edu.cmu.sphinx.util.props.Configurable#newProperties(edu.cmu.sphinx.util
-	 * .props.PropertySheet)
+    * @see edu.cmu.sphinx.util.props.Configurable#newProperties(edu.cmu.sphinx.util.props.PropertySheet)
 	 */
 	@Override
 	public void newProperties(PropertySheet ps) throws PropertyException {
@@ -281,29 +263,21 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		unitManager = (UnitManager) ps.getComponent(PROP_UNIT_MANAGER);
 
 		// get the rest of the configuration data
-		logWordInsertionProbability = logMath.linearToLog(ps
-				.getDouble(PROP_WORD_INSERTION_PROBABILITY));
-		logSilenceInsertionProbability = logMath.linearToLog(ps
-				.getDouble(PROP_SILENCE_INSERTION_PROBABILITY));
-		logFillerInsertionProbability = logMath.linearToLog(ps
-				.getDouble(PROP_FILLER_INSERTION_PROBABILITY));
-		logUnitInsertionProbability = logMath.linearToLog(ps
-				.getDouble(PROP_UNIT_INSERTION_PROBABILITY));
+		logWordInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_WORD_INSERTION_PROBABILITY));
+		logSilenceInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_SILENCE_INSERTION_PROBABILITY));
+		logFillerInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_FILLER_INSERTION_PROBABILITY));
+		logUnitInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_UNIT_INSERTION_PROBABILITY));
 		languageWeight = ps.getFloat(Linguist.PROP_LANGUAGE_WEIGHT);
 		dumpGStates = ps.getBoolean(PROP_DUMP_GSTATES);
 		showCompilationProgress = ps.getBoolean(PROP_SHOW_COMPILATION_PROGRESS);
-		spreadWordProbabilitiesAcrossPronunciations = ps
-				.getBoolean(PROP_SPREAD_WORD_PROBABILITIES_ACROSS_PRONUNCIATIONS);
+		spreadWordProbabilitiesAcrossPronunciations = ps.getBoolean(PROP_SPREAD_WORD_PROBABILITIES_ACROSS_PRONUNCIATIONS);
 
 		addOutOfGrammarBranch = ps.getBoolean(PROP_ADD_OUT_OF_GRAMMAR_BRANCH);
 
 		if (addOutOfGrammarBranch) {
-			logOutOfGrammarBranchProbability = logMath.linearToLog(ps
-					.getDouble(PROP_OUT_OF_GRAMMAR_PROBABILITY));
-			logPhoneInsertionProbability = logMath.linearToLog(ps
-					.getDouble(PROP_PHONE_INSERTION_PROBABILITY));
-			phoneLoopAcousticModel = (AcousticModel) ps
-					.getComponent(PROP_PHONE_LOOP_ACOUSTIC_MODEL);
+			logOutOfGrammarBranchProbability = logMath.linearToLog(ps.getDouble(PROP_OUT_OF_GRAMMAR_PROBABILITY));
+			logPhoneInsertionProbability = logMath.linearToLog(ps.getDouble(PROP_PHONE_INSERTION_PROBABILITY));
+			phoneLoopAcousticModel = (AcousticModel) ps.getComponent(PROP_PHONE_LOOP_ACOUSTIC_MODEL);
 		}
 
 		name = ps.getInstanceName();
@@ -312,12 +286,10 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	/**
 	 * Sets up the acoustic model.
 	 * 
-	 * @param ps
-	 *            the PropertySheet from which to obtain the acoustic model
+	 * @param ps the PropertySheet from which to obtain the acoustic model
 	 * @throws edu.cmu.sphinx.util.props.PropertyException
 	 */
-	protected void setupAcousticModel(PropertySheet ps)
-			throws PropertyException {
+	protected void setupAcousticModel(PropertySheet ps) throws PropertyException {
 		acousticModel = (AcousticModel) ps.getComponent(PROP_ACOUSTIC_MODEL);
 	}
 
@@ -339,19 +311,15 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	public void allocate() throws IOException {
 		allocateAcousticModel();
 		grammar.allocate();
-		totalStates = StatisticsVariable.getStatisticsVariable(getName(),
-				"totalStates");
-		totalArcs = StatisticsVariable.getStatisticsVariable(getName(),
-				"totalArcs");
-		actualArcs = StatisticsVariable.getStatisticsVariable(getName(),
-				"actualArcs");
+		totalStates = StatisticsVariable.getStatisticsVariable(getName(), "totalStates");
+		totalArcs = StatisticsVariable.getStatisticsVariable(getName(), "totalArcs");
+		actualArcs = StatisticsVariable.getStatisticsVariable(getName(),"actualArcs");
 		stateSet = compileGrammar();
 		totalStates.value = stateSet.size();
 	}
 
 	/**
 	 * Allocates the acoustic model.
-	 * 
 	 * @throws java.io.IOException
 	 */
 	protected void allocateAcousticModel() throws IOException {
@@ -383,7 +351,6 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 			try {
 				stateSet = compileGrammar();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			totalStates.value = stateSet.size();
@@ -416,10 +383,10 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	}
 
 	/**
-	 * Compiles the grammar into a sentence HMM. A GrammarJob is created for the
-	 * initial grammar node and added to the GrammarJob queue. While there are
-	 * jobs left on the grammar job queue, a job is removed from the queue and
-	 * the associated grammar node is expanded and attached to the tails.
+     * Compiles the grammar into a sentence HMM. A GrammarJob is created for
+     * the initial grammar node and added to the GrammarJob queue. While there
+     * are jobs left on the grammar job queue, a job is removed from the queue
+     * and the associated grammar node is expanded and attached to the tails.
 	 * GrammarJobs for the successors are added to the grammar job queue.
 	 */
 	/**
@@ -501,8 +468,8 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 						logOutOfGrammarBranchProbability));
 			}
 		}
-		nodeStateMap = null;
-		arcPool = null;
+		//nodeStateMap = null;
+		//arcPool = null;
 		searchGraph = new FlatSearchGraph(initialState);
 		TimerPool.getTimer(this, "Compile").stop();
 
@@ -527,8 +494,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	}
 
 	/**
-	 * Ensures that there is a starting path by adding an empty left context to
-	 * the starting gstate
+	 * Ensures that there is a starting path by adding an empty left context to the starting gstate
 	 */
 	// TODO: Currently the FlatLinguist requires that the initial
 	// grammar node returned by the Grammar contains a "sil" word
@@ -549,14 +515,13 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	}
 
 	/**
-	 * Determines if the underlying grammar has changed since we last compiled
-	 * the search graph
+	 * Determines if the underlying grammar has changed since we last compiled the search graph
 	 * 
 	 * @return true if the grammar has changed
 	 */
 	protected boolean grammarHasChanged() {
-		return initialGrammarState == null
-				|| initialGrammarState != grammar.getInitialNode();
+		return initialGrammarState == null ||
+				initialGrammarState != grammar.getInitialNode();
 	}
 
 	/**
@@ -573,15 +538,13 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	/**
 	 * Gets a SentenceHMMStateArc. The arc is drawn from a pool of arcs.
 	 * 
-	 * @param nextState
-	 *            the next state
-	 * @param logLanguageProbability
-	 *            the log language probability
-	 * @param logInsertionProbability
-	 *            the log insertion probability
+	 * @param nextState the next state
+	 * @param logLanguageProbabilitythe log language probability
+	 * @param logInsertionProbability the log insertion probability
 	 */
 	protected SentenceHMMStateArc getArc(SentenceHMMState nextState,
-			float logLanguageProbability, float logInsertionProbability) {
+			float logLanguageProbability,
+			float logInsertionProbability) {
 		SentenceHMMStateArc arc = new SentenceHMMStateArc(nextState,
 				logLanguageProbability * languageWeight,
 				logInsertionProbability);
@@ -594,8 +557,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	/**
 	 * Given a grammar node, retrieve the grammar state
 	 * 
-	 * @param node
-	 *            the grammar node
+	 * @param node the grammar node
 	 * @return the grammar state associated with the node
 	 */
 	protected GState getGState(GrammarNode node) {
@@ -608,16 +570,14 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	protected class FlatSearchGraph implements SearchGraph {
 
 		/**
-		 * An array of classes that represents the order in which the states
-		 * will be returned.
+		 * An array of classes that represents the order in which the states will be returned.
 		 */
 		private final SearchState initialState;
 
 		/**
 		 * Constructs a flast search graph with the given initial state
 		 * 
-		 * @param initialState
-		 *            the initial state
+		 * @param initialState the initial state
 		 */
 		public FlatSearchGraph(SearchState initialState) {
 			this.initialState = initialState;
@@ -645,10 +605,9 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	}
 
 	/**
-	 * This is a nested class that is used to manage the construction of the
-	 * states in a grammar node. There is one GState created for each grammar
-	 * node. The GState is used to collect the entry and exit points for the
-	 * grammar node and for connecting up the grammar nodes to each other.
+	 * This is a nested class that is used to manage the construction of the states in a grammar node. There is one 
+	 * GState created for each grammar node. The GState is used to collect the entry and exit points for the grammar
+	 * node and for connecting up the grammar nodes to each other.
 	 */
 	protected class GState {
 
@@ -667,8 +626,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Creates a GState for a grammar node
 		 * 
-		 * @param node
-		 *            the grammar node
+		 * @param node the grammar node
 		 */
 		protected GState(GrammarNode node) {
 			this.node = node;
@@ -676,9 +634,8 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Retrieves the set of starting contexts for this node. The starting
-		 * contexts are the set of Unit[] with a size equal to the maximum right
-		 * context size.
+		 * Retrieves the set of starting contexts for this node. The starting contexts are the set of Unit[] with a size 
+		 * equal to the maximum right context size.
 		 * 
 		 * @return the set of starting contexts across nodes.
 		 */
@@ -712,23 +669,19 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Retrieves the starting UnitContext for the given pronunciation
 		 * 
-		 * @param pronunciation
-		 *            the pronunciation
-		 * @return a UnitContext representing the starting context of the
-		 *         pronunciation
+		 * @param pronunciation the pronunciation
+		 * @return a UnitContext representing the starting context of the pronunciation
 		 */
 		private UnitContext getStartingContext(Pronunciation pronunciation) {
 			int maxSize = getRightContextSize();
 			Unit[] units = pronunciation.getUnits();
-			Unit[] context = units.length > maxSize ? Arrays.copyOf(units,
-					maxSize) : units;
+			Unit[] context = units.length > maxSize ? Arrays.copyOf(units, maxSize) : units;
 			return UnitContext.get(context);
 		}
 
 		/**
-		 * Retrieves the set of trailing contexts for this node. the trailing
-		 * contexts are the set of Unit[] with a size equal to the maximum left
-		 * context size that align with the end of the node
+		 * Retrieves the set of trailing contexts for this node. the trailing contexts are the set of Unit[] with a size
+		 * equal to the maximum left context size that align with the end of the node
 		 */
 		Collection<UnitContext> getEndingContexts() {
 			Collection<UnitContext> endingContexts = new ArrayList<UnitContext>();
@@ -739,8 +692,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 				for (Pronunciation pron : prons) {
 					Unit[] units = pron.getUnits();
 					int size = units.length;
-					Unit[] context = size > maxSize ? Arrays.copyOfRange(units,
-							size - maxSize, size) : units;
+					Unit[] context = size > maxSize ? Arrays.copyOfRange(units,size - maxSize, size) : units;
 					endingContexts.add(UnitContext.get(context));
 				}
 			}
@@ -748,8 +700,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Visit all of the successor states, and gather their starting contexts
-		 * into this gstates right context
+		 * Visit all of the successor states, and gather their starting contexts into this gstates right context
 		 */
 		private void pullRightContexts() {
 			GrammarArc[] arcs = getSuccessors();
@@ -760,9 +711,8 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Returns the set of succesor arcs for this grammar node. If a
-		 * successor grammar node has no words we'll substitute the successors
-		 * for that node (avoiding loops of course)
+		 * Returns the set of succesor arcs for this grammar node. If a successor grammar node has no words we'll
+		 * substitute the successors for that node (avoiding loops of course)
 		 * 
 		 * @return an array of successors for this GState
 		 */
@@ -771,8 +721,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Visit all of the successor states, and push our ending context into
-		 * the successors left context
+		 * Visit all of the successor states, and push our ending context into  the successors left context
 		 */
 		void pushLeftContexts() {
 			Collection<UnitContext> endingContext = getEndingContexts();
@@ -781,16 +730,12 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Pushes the given left context into the successor states. If a
-		 * successor state is empty, continue to push into this empty states
-		 * successors
+		 * Pushes the given left context into the successor states. If a successor state is empty, continue to push into
+		 * this empty states successors
 		 * 
-		 * 
-		 * @param leftContext
-		 *            the context to push
+		 * @param leftContext the context to push
 		 */
-		void pushLeftContexts(Set<GrammarNode> visitedSet,
-				Collection<UnitContext> leftContext) {
+		void pushLeftContexts(Set<GrammarNode> visitedSet, Collection<UnitContext> leftContext) {
 			if (visitedSet.contains(getNode())) {
 				return;
 			} else {
@@ -809,11 +754,9 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Add the given left contexts to the set of left contexts for this
-		 * state
+		 * Add the given left contexts to the set of left contexts for this state
 		 * 
-		 * @param context
-		 *            the set of contexts to add
+		 * @param context the set of contexts to add
 		 */
 		private void addLeftContext(Collection<UnitContext> context) {
 			leftContexts.addAll(context);
@@ -822,8 +765,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Adds the given context to the set of left contexts for this state
 		 * 
-		 * @param context
-		 *            the context to add
+		 * @param context the context to add
 		 */
 		private void addLeftContext(UnitContext context) {
 			leftContexts.add(context);
@@ -858,8 +800,8 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Collects the right contexts for this node and pushes this nodes
-		 * ending context into the next next set of nodes.
+		 * Collects the right contexts for this node and pushes this nodes ending context into the next next set of 
+		 * nodes.
 		 */
 		public void collectContexts() {
 			pullRightContexts();
@@ -874,8 +816,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 			// of starting states.
 			for (UnitContext leftContext : leftContexts) {
 				for (UnitContext startingContext : getStartingContexts()) {
-					ContextPair contextPair = ContextPair.get(leftContext,
-							startingContext);
+					ContextPair contextPair = ContextPair.get(leftContext, startingContext);
 					entryPoints.put(contextPair, new ArrayList<SearchState>());
 				}
 			}
@@ -914,13 +855,11 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 				// incoming left contexts and outgoing right contexts
 				// the 'entryPoint' table already consists of such
 				// pairs so we can use that
-				for (Map.Entry<ContextPair, List<SearchState>> entry : entryPoints
-						.entrySet()) {
+				for (Map.Entry<ContextPair, List<SearchState>> entry : entryPoints .entrySet()) {
 					ContextPair cp = entry.getKey();
 					List<SearchState> epList = entry.getValue();
-					SentenceHMMState bs = new BranchState(cp.getLeftContext()
-							.toString(), cp.getRightContext().toString(),
-							node.getID());
+					SentenceHMMState bs = new BranchState(cp.getLeftContext().toString(),
+							cp.getRightContext().toString(), node.getID());
 					epList.add(bs);
 					addExitPoint(cp, bs);
 				}
@@ -929,30 +868,22 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Adds the set of empty entry points. The list of entry points are
-		 * tagged with a context pair. The context pair represent the left
-		 * context for the state and the starting context for the state, this
-		 * allows states to be hooked up properly. However, we may be
-		 * transitioning from states that have no right hand context (CI units
-		 * such as SIL fall into this category). In this case we'd normally have
-		 * no place to transition to since we add entry points for each starting
-		 * context. To make sure that there are entry points for empty contexts
-		 * if necessary, we go through the list of entry points and find all
-		 * left contexts that have a right hand context size of zero. These
-		 * entry points will need an entry point with an empty starting context.
-		 * These entries are synthesized and added to the the list of entry
-		 * points.
+         * Adds the set of empty entry points. The list of entry points are tagged with a context pair. The context pair
+         * represent the left context for the state and the starting context for the state, this allows states to be
+         * hooked up properly. However, we may be transitioning from states that have no right hand context (CI units
+         * such as SIL fall into this category). In this case we'd normally have no place to transition to since we add
+         * entry points for each starting context. To make sure that there are entry points for empty contexts if
+         * necessary, we go through the list of entry points and find all left contexts that have a right hand context
+         * size of zero. These entry points will need an entry point with an empty starting context. These entries are
+         * synthesized and added to the the list of entry points.
 		 */
 		private void addEmptyEntryPoints() {
 			Map<ContextPair, List<SearchState>> emptyEntryPoints = new HashMap<ContextPair, List<SearchState>>();
-			for (Map.Entry<ContextPair, List<SearchState>> entry : entryPoints
-					.entrySet()) {
+			for (Map.Entry<ContextPair, List<SearchState>> entry : entryPoints.entrySet()) {
 				ContextPair cp = entry.getKey();
 				if (needsEmptyVersion(cp)) {
-					ContextPair emptyContextPair = ContextPair.get(
-							cp.getLeftContext(), UnitContext.EMPTY);
-					List<SearchState> epList = emptyEntryPoints
-							.get(emptyContextPair);
+					ContextPair emptyContextPair = ContextPair.get(cp.getLeftContext(), UnitContext.EMPTY);
+					List<SearchState> epList = emptyEntryPoints.get(emptyContextPair);
 					if (epList == null) {
 						epList = new ArrayList<SearchState>();
 						emptyEntryPoints.put(emptyContextPair, epList);
@@ -964,18 +895,16 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Determines if the context pair needs an empty version. A context pair
-		 * needs an empty version if the left context has a max size of zero.
+         * Determines if the context pair needs an empty version. A context pair needs an empty version if the left
+         * context has a max size of zero.
 		 * 
-		 * @param cp
-		 *            the contex pair to check
+         * @param cp the contex pair to check
 		 * @return <code>true</code> if the pair needs an empt version
 		 */
 		private boolean needsEmptyVersion(ContextPair cp) {
 			UnitContext left = cp.getLeftContext();
 			Unit[] units = left.getUnits();
-			return units.length > 0
-					&& (getRightContextSize(units[0]) < getRightContextSize());
+			return units.length > 0 && (getRightContextSize(units[0]) < getRightContextSize());
 
 		}
 
@@ -991,8 +920,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Expand the the word given the left context
 		 * 
-		 * @param leftContext
-		 *            the left context
+         * @param leftContext the left context
 		 */
 		private void expandWord(UnitContext leftContext) {
 			Word word = node.getWord();
@@ -1006,12 +934,9 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Expand the pronunciation given the left context
 		 * 
-		 * @param leftContext
-		 *            the left context
-		 * @param pronunciation
-		 *            the pronunciation to expand
-		 * @param which
-		 *            unique ID for this pronunciation
+         * @param leftContext   the left context
+         * @param pronunciation the pronunciation to expand
+         * @param which         unique ID for this pronunciation
 		 */
 		// Each GState maintains a list of entry points. This list of
 		// entry points is used when connecting up the end states of
@@ -1059,8 +984,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 			// (based upon its left and right context)
 			String pname = "P(" + pronunciation.getWord() + '[' + leftContext
 					+ ',' + startingContext + "])-G" + getNode().getID();
-			PronunciationState ps = new PronunciationState(pname,
-					pronunciation, which);
+			PronunciationState ps = new PronunciationState(pname, pronunciation, which);
 			T(" Expanding " + ps.getPronunciation() + " for lc " + leftContext);
 			ContextPair cp = ContextPair.get(leftContext, startingContext);
 			List<SearchState> epList = entryPoints.get(cp);
@@ -1076,38 +1000,28 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 			}
 			SentenceHMMState tail = ps;
 			for (int i = 0; tail != null && i < fanOutPoint; i++) {
-				tail = attachUnit(ps, tail, units, i, leftContext,
-						UnitContext.EMPTY);
+				tail = attachUnit(ps, tail, units, i, leftContext, UnitContext.EMPTY);
 			}
 			SentenceHMMState branchTail = tail;
 			for (UnitContext finalRightContext : rightContexts) {
 				tail = branchTail;
 				for (int i = fanOutPoint; tail != null && i < units.length; i++) {
-					tail = attachUnit(ps, tail, units, i, leftContext,
-							finalRightContext);
+					tail = attachUnit(ps, tail, units, i, leftContext, finalRightContext);
 				}
 			}
 		}
 
 		/**
-		 * Attaches the given unit to the given tail, expanding the unit if
-		 * necessary. If an identical unit is already attached, then this path
-		 * is folded into the existing path.
+         * Attaches the given unit to the given tail, expanding the unit if necessary. If an identical unit is already
+         * attached, then this path is folded into the existing path.
 		 * 
-		 * @param parent
-		 *            the parent state
-		 * @param tail
-		 *            the place to attach the unit to
-		 * @param units
-		 *            the set of units
-		 * @param which
-		 *            the index into the set of units
-		 * @param leftContext
-		 *            the left context for the unit
-		 * @param rightContext
-		 *            the right context for the unit
-		 * @return the tail of the added unit (or null if the path was folded
-		 *         onto an already expanded path.
+         * @param parent       the parent state
+         * @param tail         the place to attach the unit to
+         * @param units        the set of units
+         * @param which        the index into the set of units
+         * @param leftContext  the left context for the unit
+         * @param rightContext the right context for the unit
+         * @return the tail of the added unit (or null if the path was folded onto an already expanded path.
 		 */
 		private SentenceHMMState attachUnit(PronunciationState parent,
 				SentenceHMMState tail, Unit[] units, int which,
@@ -1116,8 +1030,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 			Unit[] rc = getRC(units, which, rightContext);
 			UnitContext actualRightContext = UnitContext.get(rc);
 			LeftRightContext context = LeftRightContext.get(lc, rc);
-			Unit cdUnit = unitManager.getUnit(units[which].getName(),
-					units[which].isFiller(), context);
+			Unit cdUnit = unitManager.getUnit(units[which].getName(), units[which].isFiller(), context);
 			UnitState unitState = new ExtendedUnitState(parent, which, cdUnit);
 			float logInsertionProbability;
 			if (unitState.getUnit().isSilence()) {
@@ -1134,8 +1047,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 			// the new state and expand it.
 			SentenceHMMState existingState = getExistingState(unitState);
 			if (existingState != null) {
-				attachState(tail, existingState, logOne,
-						logInsertionProbability);
+				attachState(tail, existingState, logOne, logInsertionProbability);
 				// T(" Folding " + existingState);
 				return null;
 			} else {
@@ -1148,10 +1060,8 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 				// table is indexed by a ContextPair, consisting of
 				// the exiting left context and the right context.
 				if (unitState.isLast()) {
-					UnitContext nextLeftContext = generateNextLeftContext(
-							leftContext, units[which]);
-					ContextPair cp = ContextPair.get(nextLeftContext,
-							actualRightContext);
+					UnitContext nextLeftContext = generateNextLeftContext( leftContext, units[which]);
+					ContextPair cp = ContextPair.get(nextLeftContext, actualRightContext);
 					// T(" Adding to exitPoints " + cp);
 					addExitPoint(cp, tail);
 				}
@@ -1162,10 +1072,8 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Adds an exit point to this gstate
 		 * 
-		 * @param cp
-		 *            the context tag for the state
-		 * @param state
-		 *            the state associated with the tag
+         * @param cp    the context tag for the state
+         * @param state the state associated with the tag
 		 */
 		private void addExitPoint(ContextPair cp, SentenceHMMState state) {
 			List<SearchState> list = exitPoints.get(cp);
@@ -1177,15 +1085,13 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Get the left context for a unit based upon the left context size, the
-		 * entry left context and the current unit.
+         * Get the left context for a unit based upon the left context size, the entry left context and the current
+         * unit.
 		 * 
-		 * @param left
-		 *            the entry left context
-		 * @param units
-		 *            the set of units
-		 * @param index
-		 *            the index of the current unit
+         * @param left  the entry left context
+         * @param units the set of units
+         * @param index the index of the current unit
+
 		 */
 		private Unit[] getLC(UnitContext left, Unit[] units, int index) {
 			Unit[] leftUnits = left.getUnits();
@@ -1206,15 +1112,13 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Get the right context for a unit based upon the right context size,
-		 * the exit right context and the current unit.
+         * Get the right context for a unit based upon the right context size, the exit right context and the current
+         * unit.
 		 * 
-		 * @param units
-		 *            the set of units
-		 * @param index
-		 *            the index of the current unit
-		 * @param right
-		 *            the exiting right context
+         * @param units the set of units
+         * @param index the index of the current unit
+         * @param right the exiting right context
+
 		 */
 		private Unit[] getRC(Unit[] units, int index, UnitContext right) {
 			Unit[] rightUnits = right.getUnits();
@@ -1237,8 +1141,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Gets the maximum context size for the given unit
 		 * 
-		 * @param unit
-		 *            the unit of interest
+         * @param unit the unit of interest
 		 * @return the maximum left context size for the unit
 		 */
 		private int getLeftContextSize(Unit unit) {
@@ -1248,8 +1151,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Gets the maximum context size for the given unit
 		 * 
-		 * @param unit
-		 *            the unit of interest
+         * @param unit the unit of interest
 		 * @return the maximum right context size for the unit
 		 */
 		private int getRightContextSize(Unit unit) {
@@ -1275,16 +1177,12 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Generates the next left context based upon a previous context and a
-		 * unit
+         * Generates the next left context based upon a previous context and a unit
 		 * 
-		 * @param prevLeftContext
-		 *            the previous left context
-		 * @param unit
-		 *            the current unit
+         * @param prevLeftContext the previous left context
+         * @param unit            the current unit
 		 */
-		UnitContext generateNextLeftContext(UnitContext prevLeftContext,
-				Unit unit) {
+        UnitContext generateNextLeftContext(UnitContext prevLeftContext, Unit unit) {
 			Unit[] prevUnits = prevLeftContext.getUnits();
 			int actSize = Math.min(prevUnits.length, getLeftContextSize());
 			if (actSize == 0)
@@ -1295,11 +1193,10 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Expands the unit into a set of HMMStates. If the unit is a silence
-		 * unit add an optional loopback to the tail.
+         * Expands the unit into a set of HMMStates. If the unit is a silence unit add an optional loopback to the
+         * tail.
 		 * 
-		 * @param unit
-		 *            the unit to expand
+         * @param unit the unit to expand
 		 * @return the head of the hmm tree
 		 */
 		protected SentenceHMMState expandUnit(UnitState unit) {
@@ -1314,11 +1211,9 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Given a unit state, return the set of sentence hmm states associated
-		 * with the unit
+         * Given a unit state, return the set of sentence hmm states associated with the unit
 		 * 
-		 * @param unitState
-		 *            the unit state of intereset
+         * @param unitState the unit state of intereset
 		 * @return the hmm tree for the unit
 		 */
 		private HMMStateState getHMMStates(UnitState unitState) {
@@ -1338,10 +1233,8 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Expands the given hmm state tree
 		 * 
-		 * @param parent
-		 *            the parent of the tree
-		 * @param tree
-		 *            the tree to expand
+         * @param parent the parent of the tree
+         * @param tree   the tree to expand
 		 * @return the final state in the tree
 		 */
 		private HMMStateState expandHMMTree(UnitState parent, HMMStateState tree) {
@@ -1351,8 +1244,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 				if (arc.getHMMState().isEmitting()) {
 					newState = new HMMStateState(parent, arc.getHMMState());
 				} else {
-					newState = new NonEmittingHMMState(parent,
-							arc.getHMMState());
+					newState = new NonEmittingHMMState(parent, arc.getHMMState());
 				}
 				SentenceHMMState existingState = getExistingState(newState);
 				float logProb = arc.getLogProbability();
@@ -1368,26 +1260,22 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Connect up all of the GStates. Each state now has a table of exit
-		 * points. These exit points represent tail states for the node. Each of
-		 * these tail states is tagged with a ContextPair, that indicates what
-		 * the left context is (the exiting context) and the right context (the
-		 * entering context) for the transition. To connect up a state, the
-		 * connect does the following: 1) Iterate through all of the grammar
-		 * successors for this state 2) Get the 'entry points' for the successor
-		 * that match the exit points. 3) Hook them up.
+         * Connect up all of the GStates. Each state now has a table of exit points. These exit points represent tail
+         * states for the node. Each of these tail states is tagged with a ContextPair, that indicates what the left
+         * context is (the exiting context) and the right context (the entering context) for the transition. To connect
+         * up a state, the connect does the following: 1) Iterate through all of the grammar successors for this state
+         * 2) Get the 'entry points' for the successor that match the exit points. 3) Hook them up.
 		 * <p/>
-		 * Note that for a task with 1000 words this will involve checking on
-		 * the order of 35,000,000 connections and making about 2,000,000
-		 * connections
+         * Note that for a task with 1000 words this will involve checking on the order of 35,000,000 connections and
+         * making about 2,000,000 connections
 		 */
 		public void connect() {
 
 			for (GrammarArc arc : getSuccessors()) {
 				GState gstate = getGState(arc.getGrammarNode());
 				if (!gstate.getNode().isEmpty()
-						&& gstate.getNode().getWord().getSpelling()
-								.equals(Dictionary.SENTENCE_START_SPELLING)) {
+						&& gstate.getNode().getWord().getSpelling().equals(
+							Dictionary.SENTENCE_START_SPELLING)) {
 					continue;
 				}
 				float probability = arc.getProbability();
@@ -1397,16 +1285,12 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 				// word, then each pronunciation gets 1/3 of the total
 				// probability.
 				if (spreadWordProbabilitiesAcrossPronunciations) {
-					int numPronunciations = gstate.getNode().getWord()
-							.getPronunciations(null).length;
+					int numPronunciations = gstate.getNode().getWord().getPronunciations(null).length;
 					probability -= logMath.linearToLog(numPronunciations);
 				}
 				float fprob = probability; // final probability
-
-				for (Map.Entry<ContextPair, List<SearchState>> entry : exitPoints
-						.entrySet()) {
-					List<SearchState> destEntryPoints = gstate
-							.getEntryPoints(entry.getKey());
+				for (Map.Entry<ContextPair, List<SearchState>> entry : exitPoints.entrySet()) {
+					List<SearchState> destEntryPoints = gstate.getEntryPoints(entry.getKey());
 					if (destEntryPoints != null) {
 						List<SearchState> srcExitPoints = entry.getValue();
 						connect(srcExitPoints, destEntryPoints, fprob);
@@ -1416,16 +1300,13 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * connect all the states in the source list to the states in the
-		 * destination list
+         * connect all the states in the source list to the states in the destination list
 		 * 
-		 * @param sourceList
-		 *            the set of source states
-		 * @param destList
-		 *            the set of destination states.
+         * @param sourceList the set of source states
+         * @param destList   the set of destination states.
+
 		 */
-		private void connect(List<SearchState> sourceList,
-				List<SearchState> destList, float logLangProb) {
+		private void connect(List<SearchState> sourceList, List<SearchState> destList, float logLangProb) {
 			for (SearchState source : sourceList) {
 				SentenceHMMState sourceState = (SentenceHMMState) source;
 				for (SearchState dest : destList) {
@@ -1437,25 +1318,19 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		}
 
 		/**
-		 * Attaches one SentenceHMMState as a child to another, the transition
-		 * has the given probability
+         * Attaches one SentenceHMMState as a child to another, the transition has the given probability
 		 * 
-		 * @param prevState
-		 *            the parent state
-		 * @param nextState
-		 *            the child state
-		 * @param logLanguageProbablity
-		 *            the language probability of transition in the LogMath log
-		 *            domain
-		 * @param logInsertionProbablity
-		 *            insertion probability of transition in the LogMath log
-		 *            domain
+         * @param prevState              the parent state
+         * @param nextState              the child state
+         * @param logLanguageProbablity  the language probability of transition in the LogMath log domain
+         * @param logInsertionProbablity insertion probability of transition in the LogMath log domain
 		 */
-		protected void attachState(SentenceHMMState prevState,
-				SentenceHMMState nextState, float logLanguageProbablity,
+		protected void attachState(SentenceHMMState prevState, 
+				SentenceHMMState nextState,
+				float logLanguageProbablity,
 				float logInsertionProbablity) {
-			prevState.connect(getArc(nextState, logLanguageProbablity,
-					logInsertionProbablity));
+			prevState.connect(getArc(nextState,
+					logLanguageProbablity, logInsertionProbablity));
 			if (showCompilationProgress && totalStateCounter++ % 1000 == 0) {
 				System.out.print(".");
 			}
@@ -1470,8 +1345,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 			// since pstates are not placed in the cache we have to
 			// gather those states. All other states are found in the
 			// existingStates cache.
-			List<SearchState> allStates = new ArrayList<SearchState>(
-					existingStates.values());
+			List<SearchState> allStates = new ArrayList<SearchState>(existingStates.values());
 			for (List<SearchState> list : entryPoints.values()) {
 				allStates.addAll(list);
 			}
@@ -1481,8 +1355,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Checks to see if a state that matches the given state already exists
 		 * 
-		 * @param state
-		 *            the state to check
+		 * @param state the state to check
 		 * @return true if a state with an identical signature already exists.
 		 */
 		private SentenceHMMState getExistingState(SentenceHMMState state) {
@@ -1492,8 +1365,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Adds the given state to the cache of states
 		 * 
-		 * @param state
-		 *            the state to add
+         * @param state the state to add
 		 */
 		private void addStateToCache(SentenceHMMState state) {
 			existingStates.put(state.getSignature(), state);
@@ -1501,12 +1373,8 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 
 		/**
 		 * Prints info about this GState
-		 * 
-		 * @throws IOException
 		 */
-		void dumpInfo() throws IOException {
-			// BufferedWriter writer = new BufferedWriter(new
-			// FileWriter("./graph.dot"));
+        void dumpInfo() {
 			System.out.println(" ==== " + this + " ========");
 			System.out.print("Node: " + node);
 			if (node.isEmpty()) {
@@ -1553,8 +1421,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Dumps the exit points and their destination states
 		 * 
-		 * @param eps
-		 *            the collection of exit points
+         * @param eps the collection of exit points
 		 */
 		private void dumpExitPoints(Collection<List<SearchState>> eps) {
 			for (List<SearchState> epList : eps) {
@@ -1570,10 +1437,8 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 		/**
 		 * Dumps the given collection
 		 * 
-		 * @param name
-		 *            the name of the collection
-		 * @param collection
-		 *            the collection to dump
+         * @param name       the name of the collection
+         * @param collection the collection to dump
 		 */
 		private void dumpCollection(String name, Collection<?> collection) {
 			System.out.println(" " + name);
@@ -1600,8 +1465,7 @@ public class KWSFlatLinguist implements Linguist, Configurable {
 	/**
 	 * Quick and dirty tracing. Traces the string if 'tracing' is true
 	 * 
-	 * @param s
-	 *            the string to trace.
+     * @param s the string to trace.
 	 */
 	private void T(String s) {
 		if (tracing) {
@@ -1619,8 +1483,7 @@ class UnitContext {
 	private final Unit[] context;
 	private int hashCode = 12;
 	public final static UnitContext EMPTY = new UnitContext(Unit.EMPTY_ARRAY);
-	public final static UnitContext SILENCE = new UnitContext(
-			new Unit[] { UnitManager.SILENCE });
+	public final static UnitContext SILENCE = new UnitContext(new Unit[] { UnitManager.SILENCE });
 
 	static {
 		unitContextCache.cache(EMPTY);
@@ -1628,11 +1491,10 @@ class UnitContext {
 	}
 
 	/**
-	 * Creates a UnitContext for the given context. This constructor is not
-	 * directly accessible, use the factory method instead.
+     * Creates a UnitContext for the given context. This constructor is not directly accessible, use the factory method
+     * instead.
 	 * 
-	 * @param context
-	 *            the context to wrap with this UnitContext
+     * @param context the context to wrap with this UnitContext
 	 */
 	private UnitContext(Unit[] context) {
 		this.context = context;
@@ -1643,11 +1505,9 @@ class UnitContext {
 	}
 
 	/**
-	 * Gets the unit context for the given units. There is a single unit context
-	 * for each unit combination.
+     * Gets the unit context for the given units. There is a single unit context for each unit combination.
 	 * 
-	 * @param units
-	 *            the units of interest
+     * @param units the units of interest
 	 * @return the unit context.
 	 */
 	static UnitContext get(Unit[] units) {
@@ -1668,8 +1528,7 @@ class UnitContext {
 	/**
 	 * Determines if the given object is equal to this UnitContext
 	 * 
-	 * @param o
-	 *            the object to compare to
+     * @param o the object to compare to
 	 * @return <code>true</code> if the objects are equal
 	 */
 	@Override
@@ -1708,8 +1567,7 @@ class UnitContext {
 	 */
 	public static void dumpInfo() {
 		System.out.println("Total number of UnitContexts : "
-				+ unitContextCache.getMisses() + " folded: "
-				+ unitContextCache.getHits());
+				+ unitContextCache.getMisses() + " folded: "+ unitContextCache.getHits());
 	}
 
 	/**
@@ -1724,8 +1582,8 @@ class UnitContext {
 }
 
 /**
- * A context pair hold a left and starting context. It is used as a hash into
- * the set of starting points for a particular gstate
+ * A context pair hold a left and starting context. It is used as a hash into the set of starting points for a
+ * particular gstate
  */
 class ContextPair {
 
@@ -1735,13 +1593,11 @@ class ContextPair {
 	private final int hashCode;
 
 	/**
-	 * Creates a UnitContext for the given context. This constructor is not
-	 * directly accessible, use the factory method instead.
+     * Creates a UnitContext for the given context. This constructor is not directly accessible, use the factory method
+     * instead.
 	 * 
-	 * @param left
-	 *            the left context
-	 * @param right
-	 *            the right context
+     * @param left  the left context
+     * @param right the right context
 	 */
 	private ContextPair(UnitContext left, UnitContext right) {
 		this.left = left;
@@ -1750,14 +1606,11 @@ class ContextPair {
 	}
 
 	/**
-	 * Gets the ContextPair for the given set of contexts. This is a factory
-	 * method. If the ContextPair already exists, return that one, otherwise,
-	 * create it and store it so it can be reused.
+     * Gets the ContextPair for the given set of contexts. This is a factory method. If the ContextPair already exists,
+     * return that one, otherwise, create it and store it so it can be reused.
 	 * 
-	 * @param left
-	 *            the left context
-	 * @param right
-	 *            the right context
+     * @param left  the left context
+     * @param right the right context
 	 * @return the unit context.
 	 */
 	static ContextPair get(UnitContext left, UnitContext right) {
@@ -1769,8 +1622,7 @@ class ContextPair {
 	/**
 	 * Determines if the given object is equal to this UnitContext
 	 * 
-	 * @param o
-	 *            the object to compare to
+     * @param o the object to compare to
 	 * @return <code>true</code> if the objects are equal return;
 	 */
 	@Override
@@ -1779,8 +1631,7 @@ class ContextPair {
 			return true;
 		} else if (o instanceof ContextPair) {
 			ContextPair other = (ContextPair) o;
-			return this.left.equals(other.left)
-					&& this.right.equals(other.right);
+			return this.left.equals(other.left) && this.right.equals(other.right);
 		} else {
 			return false;
 		}

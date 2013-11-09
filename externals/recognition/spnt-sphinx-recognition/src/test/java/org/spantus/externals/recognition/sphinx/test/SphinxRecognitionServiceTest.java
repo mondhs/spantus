@@ -28,7 +28,7 @@ public class SphinxRecognitionServiceTest {
 	@Test
 	public void testRecognise() throws UnsupportedAudioFileException, IOException {
 		//given
-		URL audioFileURL = new File("../../../data/varyk_pirmyn_16k.wav").toURI().toURL();
+		URL audioFileURL = new File("../../../data/text1.wav").toURI().toURL();
 		AudioInputStream ais = AudioSystem.getAudioInputStream(audioFileURL);
 		//when
 		MarkerSetHolder markerSetHolder = shinxRecognitionServiceImpl.recognize(ais, audioFileURL.getFile());
@@ -36,7 +36,7 @@ public class SphinxRecognitionServiceTest {
 		MarkerSet wordMarkerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
 		MarkerSet phoneMarkerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());
 		Assert.assertEquals("word number",2, wordMarkerSet.getMarkers().size(),  0);
-		Assert.assertEquals("phone number",8, phoneMarkerSet.getMarkers().size(),  0);
+		Assert.assertEquals("phone number",7, phoneMarkerSet.getMarkers().size(),  0);
 	}
 
 }

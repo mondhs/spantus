@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,12 +16,16 @@ import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.Marker;
 import org.spantus.extr.wordspot.service.SpottingListener;
 import org.spantus.extr.wordspot.service.SpottingService;
+import org.spantus.extr.wordspot.sphinx.linguist.language.grammar.NoSkipGrammar;
+import org.spantus.utils.Assert;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import edu.cmu.sphinx.frontend.util.AudioFileDataSource;
 import edu.cmu.sphinx.recognizer.Recognizer;
+import edu.cmu.sphinx.result.Lattice;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.result.WordResult;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
@@ -42,9 +47,9 @@ public class SpottingServiceSphinxImp implements SpottingService {
 	
 
 	public SpottingServiceSphinxImp() {
-		String outOfGrammarProbabilityItem = "1E-10";
+//		String outOfGrammarProbabilityItem = "9E-1";
 		File dirFile = new File("./target/test-classes");
-		configurationManager = newConfigurationManager(dirFile, outOfGrammarProbabilityItem);
+		configurationManager = newConfigurationManager(dirFile);
 	}
 	
 	
@@ -68,8 +73,10 @@ public class SpottingServiceSphinxImp implements SpottingService {
 			String label = ma.group(1).toUpperCase();
 			String startStr = ma.group(2).toUpperCase();
 			String endStr = ma.group(3).toUpperCase();
-			Long start = Long.valueOf(startStr);
-			Long end = Long.valueOf(endStr);
+			Float startFloat = Float.valueOf(startStr);
+			Float endFloat = Float.valueOf(endStr);
+			Long start = (long) (startFloat.floatValue() * 1000);
+			Long end = (long) (endFloat.floatValue()*1000);
 			SignalSegment newSegment = new SignalSegment(new Marker(start, (end-start), label));
 			List<RecognitionResult> recognitionResults = Lists.newArrayList();
 			wordSpottingListener.foundSegment("sourceId", newSegment, recognitionResults);
@@ -85,18 +92,27 @@ public class SpottingServiceSphinxImp implements SpottingService {
 	 * @return
 	 */
 	private ConfigurationManager newConfigurationManager(
-			File dirFile, String outOfGrammarProbabilityItem) {
-		String cfPath = MessageFormat.format("config/{0}/cmusphinx-config.xml",
-				getLanguage(), outOfGrammarProbabilityItem);
+			File dirFile) {
+		String cfPath = MessageFormat.format("config/{0}/cmusphinx-config.xml",getLanguage());
+//		String cfPath = "lt_robotas.config.xml";
 		File cfFile = new File(dirFile, cfPath);
+		LOG.error("Config: {}", cfFile.getAbsolutePath());
 		ConfigurationManager cm = new ConfigurationManager(
 				cfFile.getAbsolutePath());
-//		KWSFlatLinguist linguist = (KWSFlatLinguist) cm.lookup("FlatLinguist");
-		ConfigurationManagerUtils.setProperty(cm, "FlatLinguist", "outOfGrammarProbability", outOfGrammarProbabilityItem); 
-//		linguist.set
+
+//		ConfigurationManagerUtils.setProperty(cm, "FlatLinguist", "outOfGrammarProbability", outOfGrammarProbabilityItem);
+		ConfigurationManagerUtils.dumpPropStructure(cm);
 		return cm;
 	}
 	
+	public void addKeyword(String keyWord){
+		NoSkipGrammar grammar = (NoSkipGrammar) configurationManager.lookup("NoSkipGrammar");
+		if(grammar == null){
+			LOG.error("Grammar NoSkipGrammar not found. Cannot add: {}", keyWord);
+			return;
+		}
+		grammar.addKeyword(keyWord);
+	}
 
 	/**
 	 * 
@@ -109,9 +125,9 @@ public class SpottingServiceSphinxImp implements SpottingService {
 		LOG.debug("[updateDataSourceAnbdGetFileSize]audioFileItem: {}", urlFile );
 		AudioFileDataSource dataSource = (AudioFileDataSource) cm
 				.lookup("audioFileDataSource");
+
 		int fileSize = 0;
 		try {
-//			dataSource.setAudioFile(new URL("file:" + audioFileItem), null);
 			dataSource.setAudioFile(urlFile, urlFile.toString());
 			fileSize = (int) new File(urlFile.toURI()).length();
 			
@@ -137,7 +153,7 @@ public class SpottingServiceSphinxImp implements SpottingService {
 		String resString = result.getTimedBestResult(false, true);
 		LOG.debug("[performTestEachAudio]Result: {}", resString);
 		
-		
+		//Lattice lat = new Lattice(result);
 		
         for (WordResult wr : result.getWords()) {
             LOG.debug("[performTestEachAudio] \t word: {} [start:{}]", wr.getPronunciation().getWord().getSpelling(), wr.getStartFrame());
@@ -158,5 +174,8 @@ public class SpottingServiceSphinxImp implements SpottingService {
 	public ConfigurationManager getConfigurationManager() {
 		return configurationManager;
 	}
+
+
+
 
 }
