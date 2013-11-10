@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,19 +16,15 @@ import org.spantus.core.marker.Marker;
 import org.spantus.extr.wordspot.service.SpottingListener;
 import org.spantus.extr.wordspot.service.SpottingService;
 import org.spantus.extr.wordspot.sphinx.linguist.language.grammar.NoSkipGrammar;
-import org.spantus.utils.Assert;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 import edu.cmu.sphinx.frontend.util.AudioFileDataSource;
 import edu.cmu.sphinx.recognizer.Recognizer;
-import edu.cmu.sphinx.result.Lattice;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.result.WordResult;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
-import edu.cmu.sphinx.util.props.ConfigurationManagerUtils;
 /**
  * 
  * @author Mindaugas Greibus
@@ -48,8 +43,8 @@ public class SpottingServiceSphinxImp implements SpottingService {
 
 	public SpottingServiceSphinxImp() {
 //		String outOfGrammarProbabilityItem = "9E-1";
-		File dirFile = new File("./target/test-classes");
-		configurationManager = newConfigurationManager(dirFile);
+//		File dirFile = new File("./target/test-classes");
+		configurationManager = newConfigurationManager();
 	}
 	
 	
@@ -91,14 +86,11 @@ public class SpottingServiceSphinxImp implements SpottingService {
 	 * @param outOfGrammarProbabilityItem
 	 * @return
 	 */
-	private ConfigurationManager newConfigurationManager(
-			File dirFile) {
-		String cfPath = MessageFormat.format("config/{0}/cmusphinx-config.xml",getLanguage());
-//		String cfPath = "lt_robotas.config.xml";
-		File cfFile = new File(dirFile, cfPath);
-		LOG.error("Config: {}", cfFile.getAbsolutePath());
-		ConfigurationManager cm = new ConfigurationManager(
-				cfFile.getAbsolutePath());
+	private ConfigurationManager newConfigurationManager() {
+		String cfPath = MessageFormat.format("/config/{0}/cmusphinx-config.xml",getLanguage());
+		URL url = this.getClass().getResource(cfPath);
+		LOG.error("Config: {}", url);
+		ConfigurationManager cm = new ConfigurationManager(url);
 
 //		ConfigurationManagerUtils.setProperty(cm, "FlatLinguist", "outOfGrammarProbability", outOfGrammarProbabilityItem);
 //		ConfigurationManagerUtils.dumpPropStructure(cm);

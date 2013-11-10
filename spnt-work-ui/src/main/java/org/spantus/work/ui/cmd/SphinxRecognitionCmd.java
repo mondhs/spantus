@@ -32,7 +32,8 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.exception.ProcessingException;
-import org.spantus.externals.recognition.sphinx.SphinxRecognitionServiceImpl;
+import org.spantus.externals.recognition.sphinx.SphinxRecognitionService;
+import org.spantus.externals.recognition.sphinx.impl.SphinxRecognitionServiceImpl;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
@@ -52,7 +53,7 @@ public class SphinxRecognitionCmd extends AbsrtactCmd {
     public static final String segmentAutoPanelMessageBody = "segmentAutoPanelMessageBody";
     private static final Logger log = Logger.getLogger(SphinxRecognitionCmd.class);
 
-    private SphinxRecognitionServiceImpl recognitionServiceImpl;
+    private SphinxRecognitionService recognitionServiceImpl;
     
     public SphinxRecognitionCmd(CommandExecutionFacade executionFacade) {
         super(executionFacade);
@@ -80,10 +81,6 @@ public class SphinxRecognitionCmd extends AbsrtactCmd {
 			throw new ProcessingException(e);
 		}
         
-        
-
-        
-
         return GlobalCommands.sample.reloadSampleChart.name();
     }
 
@@ -112,7 +109,7 @@ public class SphinxRecognitionCmd extends AbsrtactCmd {
         }
     }
 
-	public SphinxRecognitionServiceImpl getRecognitionServiceImpl() {
+	public SphinxRecognitionService getRecognitionServiceImpl() {
 		if(recognitionServiceImpl == null){
 			recognitionServiceImpl = new SphinxRecognitionServiceImpl();
 		}

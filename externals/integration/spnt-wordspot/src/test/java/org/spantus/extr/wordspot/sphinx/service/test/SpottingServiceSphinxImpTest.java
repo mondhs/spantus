@@ -27,14 +27,14 @@ public class SpottingServiceSphinxImpTest {
 	@Test
 	public void testWordSpotting() throws MalformedURLException {
 		// given
-		URL aWavUrl =  new File("../../../data/fa-ak1.wav").toURI().toURL();
+		URL audioFileURL =  new File("../../../data/fa-ak1.wav").toURI().toURL();
 //		spottingServiceSphinxImp.addKeyword("PADEDA");
 //		spottingServiceSphinxImp.addKeyword("ATSKIRTI");
 		spottingServiceSphinxImp.addKeyword("AKMUO");
 		spottingServiceSphinxImp.addKeyword("SUTVARKYTI");
 		final List<Marker> foundSegment = new ArrayList<Marker>();
 		// when
-		spottingServiceSphinxImp.wordSpotting(aWavUrl, new SpottingListener() {
+		spottingServiceSphinxImp.wordSpotting(audioFileURL, new SpottingListener() {
 			@Override
 			public String foundSegment(String sourceId,
 					SignalSegment newSegment,
