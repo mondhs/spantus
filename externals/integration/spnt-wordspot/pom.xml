@@ -39,6 +39,10 @@
 			<artifactId>spnt-dtw-recognition</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.spantus.externals.recognition</groupId>
+			<artifactId>spnt-sphinx-recognition</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>

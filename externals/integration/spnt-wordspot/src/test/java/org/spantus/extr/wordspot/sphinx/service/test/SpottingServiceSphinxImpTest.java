@@ -27,9 +27,11 @@ public class SpottingServiceSphinxImpTest {
 	@Test
 	public void testWordSpotting() throws MalformedURLException {
 		// given
-		URL aWavUrl =  new File("../../../data/text1.wav").toURI().toURL();
-		spottingServiceSphinxImp.addKeyword("PADEDA");
-		spottingServiceSphinxImp.addKeyword("ATSKIRTI");
+		URL aWavUrl =  new File("../../../data/fa-ak1.wav").toURI().toURL();
+//		spottingServiceSphinxImp.addKeyword("PADEDA");
+//		spottingServiceSphinxImp.addKeyword("ATSKIRTI");
+		spottingServiceSphinxImp.addKeyword("AKMUO");
+		spottingServiceSphinxImp.addKeyword("SUTVARKYTI");
 		final List<Marker> foundSegment = new ArrayList<Marker>();
 		// when
 		spottingServiceSphinxImp.wordSpotting(aWavUrl, new SpottingListener() {
@@ -43,6 +45,14 @@ public class SpottingServiceSphinxImpTest {
 		});
 		// then
 		assertEquals(2,foundSegment.size(),0);
+		
+		assertEquals("First word", "AKMUO",foundSegment.get(0).getLabel());
+		assertEquals("First word starts", 770,foundSegment.get(0).getStart(),0);
+		assertEquals("First word length", 560,foundSegment.get(0).getLength(),0);
+		assertEquals("Second word", "SUTVARKYTI",foundSegment.get(1).getLabel());
+		assertEquals("Second word starts", 3390,foundSegment.get(1).getStart(),0);
+		assertEquals("Second word length", 1100,foundSegment.get(1).getLength(),0);
+		
 //		for (int i = 0; i < foundSegment.size(); i++) {
 //			assertEquals("start of found key marker same as matched",
 //					spottingService.getKeySegmentList().get(i).getMarker().getStart(),

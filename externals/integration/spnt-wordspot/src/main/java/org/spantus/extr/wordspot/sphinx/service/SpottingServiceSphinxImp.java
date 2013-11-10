@@ -101,7 +101,7 @@ public class SpottingServiceSphinxImp implements SpottingService {
 				cfFile.getAbsolutePath());
 
 //		ConfigurationManagerUtils.setProperty(cm, "FlatLinguist", "outOfGrammarProbability", outOfGrammarProbabilityItem);
-		ConfigurationManagerUtils.dumpPropStructure(cm);
+//		ConfigurationManagerUtils.dumpPropStructure(cm);
 		return cm;
 	}
 	
