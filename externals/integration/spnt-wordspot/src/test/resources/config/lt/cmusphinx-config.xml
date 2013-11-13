@@ -65,14 +65,13 @@
 	</component>
 	
     <component name="dictionary" 
-        type="edu.cmu.sphinx.linguist.dictionary.FullDictionary">
+        type="org.spantus.extr.wordspot.sphinx.linguist.dictionary.KeyworGeneratedDictionary">
         <property name="dictionaryPath" 
                   value="resource:/config/lt/cmusphinx-main.dict"/>
         <property name="fillerPath"
                   value="resource:/lt.cd_cont_200/noisedict"/>
         <property name="addSilEndingPronunciation" value="true"/>
-        <property name="wordReplacement" value="&lt;sil&gt;" />
-        <property name="allowMissingWords" value="false"/>
+        <property name="allowMissingWords" value="true"/>
         <property name="unitManager" value="unitManager"/>
     </component>
 

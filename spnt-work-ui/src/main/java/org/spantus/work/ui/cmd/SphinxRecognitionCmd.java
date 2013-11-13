@@ -19,6 +19,7 @@
 package org.spantus.work.ui.cmd;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Set;
@@ -53,7 +54,6 @@ public class SphinxRecognitionCmd extends AbsrtactCmd {
     public static final String segmentAutoPanelMessageBody = "segmentAutoPanelMessageBody";
     private static final Logger log = Logger.getLogger(SphinxRecognitionCmd.class);
 
-    private SphinxRecognitionService recognitionServiceImpl;
     
     public SphinxRecognitionCmd(CommandExecutionFacade executionFacade) {
         super(executionFacade);
@@ -68,11 +68,12 @@ public class SphinxRecognitionCmd extends AbsrtactCmd {
      */
     public String execute(SpantusWorkInfo ctx) {
         URL currentFile = ctx.getProject().getSample().getCurrentFile();
-        
         AudioInputStream ais;
 		try {
 			ais = AudioSystem.getAudioInputStream(currentFile);
-			MarkerSetHolder markerSetHolder = getRecognitionServiceImpl().recognize(ais, currentFile.getFile());
+			//do the magic
+			MarkerSetHolder markerSetHolder = recognize(
+					ctx.getProject().getRecognitionConfig().getSphinxKeywords(), ais, currentFile.getFile());
 			ctx.getProject().getSample().setMarkerSetHolder(markerSetHolder);
 			inform(ctx.getProject().getSample().getMarkerSetHolder(), ctx);
 		} catch (UnsupportedAudioFileException e) {
@@ -83,14 +84,31 @@ public class SphinxRecognitionCmd extends AbsrtactCmd {
         
         return GlobalCommands.sample.reloadSampleChart.name();
     }
-
     /**
+     * Does that actual job
+     * @param keywords space or comma joined sequence of keywords
+     * @param inputStream audio input steam
+     * @param streamName any given stream name for tracking purposes only
+     * @return
+     */
+    protected MarkerSetHolder recognize(String keywords, InputStream inputStream, String streamName) {
+    	SphinxRecognitionService recognitionService = new SphinxRecognitionServiceImpl();
+    	String[] keywordArr = keywords.split("[,\\s]");
+    	for (String keyWord : keywordArr) {
+    		recognitionService.addKeyword(keyWord);
+		}
+    	MarkerSetHolder markerSetHolder = recognitionService.recognize(inputStream, streamName);
+		return markerSetHolder;
+	}
+
+	/**
      *
      * @param value
      * @param ctx
      */
     protected void inform(MarkerSetHolder markerSetHolder, SpantusWorkInfo ctx) {
-        MarkerSet markerSet = markerSetHolder.getMarkerSets().get(
+    	
+    	MarkerSet markerSet = markerSetHolder.getMarkerSets().get(
                 MarkerSetHolderEnum.word.name());
         // if word level does not exist, check for phone level
         if (markerSet == null) {
@@ -109,12 +127,6 @@ public class SphinxRecognitionCmd extends AbsrtactCmd {
         }
     }
 
-	public SphinxRecognitionService getRecognitionServiceImpl() {
-		if(recognitionServiceImpl == null){
-			recognitionServiceImpl = new SphinxRecognitionServiceImpl();
-		}
-		return recognitionServiceImpl;
-	}
 
 
 

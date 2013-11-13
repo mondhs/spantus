@@ -14,6 +14,7 @@ import org.spantus.logger.Logger;
 
 import edu.cmu.sphinx.frontend.util.StreamDataSource;
 import edu.cmu.sphinx.linguist.acoustic.Unit;
+import edu.cmu.sphinx.linguist.dictionary.Pronunciation;
 import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.result.WordResult;
@@ -131,11 +132,11 @@ public class SphinxRecognitionServiceImpl implements SphinxRecognitionService {
 		if(SILENCE.equals(word.getPronunciation().getWord().getSpelling())){
 			return null;
 		}
-		if(UNKOWN.equals(word.getPronunciation().getWord().getSpelling())){
+		if(Pronunciation.UNKNOWN.equals(word.getPronunciation())){
 			return null;
 		}
 		Marker wordMarker = new Marker();
-		wordMarker.setLabel(word.getPronunciation().toString());
+		wordMarker.setLabel(word.getPronunciation().getWord().getSpelling());
 		wordMarker.setStart((long) word.getStartFrame());
 		int end = word.getEndFrame();
 		wordMarker.setEnd((long)end);

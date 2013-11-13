@@ -34,6 +34,7 @@ public class RecognitionConfig implements Serializable {
     private String dtwWindow;
     private String localConstraint;
     private String repositoryPath;
+	private String sphinxKeywords;
 
     public String getDtwWindow() {
         return dtwWindow;
@@ -65,5 +66,13 @@ public class RecognitionConfig implements Serializable {
 
 	public void setLocalConstraint(String localConstraint) {
 		this.localConstraint = localConstraint;
+	}
+
+	public String getSphinxKeywords() {
+		return this.sphinxKeywords;
+	}
+
+	public void setSphinxKeywords(String sphinxKeywords) {
+		this.sphinxKeywords = sphinxKeywords;
 	}
 }

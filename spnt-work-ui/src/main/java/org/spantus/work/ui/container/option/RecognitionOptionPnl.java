@@ -57,7 +57,7 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
         
 
 	enum optionsLabels{
-		dtwWindow, dtwConstraint, dtwRadius, repositoryPath,  
+		dtwWindow, dtwConstraint, dtwRadius, repositoryPath, sphinxKeywords
 		} 
 
 	
@@ -85,7 +85,7 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 //		this.setSize(300, 200);
 		optionsLabels[] recognitionProcessingLabels = new optionsLabels[]{
 				optionsLabels.dtwWindow, optionsLabels.dtwConstraint, 
-				optionsLabels.dtwRadius, optionsLabels.repositoryPath
+				optionsLabels.dtwRadius, optionsLabels.repositoryPath, optionsLabels.sphinxKeywords
 		};
 		
 		
@@ -156,7 +156,9 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 						+config.getLocalConstraint()));
 				fieldEntry.getValue().setVisible(isAdvanced());
 				break;
-
+			case sphinxKeywords:
+				textField.setValue(config.getSphinxKeywords());
+				break;
 			case repositoryPath:
 				File file = new File(config.getRepositoryPath());
 				textField.setValue(file.getAbsolutePath());
@@ -203,6 +205,8 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 			textField = new JFormattedTextField();
 			addFieldList(textField, optionsLabels.repositoryPath.name() );
 			
+			textField = new JFormattedTextField();
+			addFieldList(textField, optionsLabels.sphinxKeywords.name() );
 
 			
 		}
@@ -240,6 +244,9 @@ public class RecognitionOptionPnl extends AbstractOptionPanel implements Reloada
 				}else{
 					config.setLocalConstraint(null);
 				}
+				break;
+			case sphinxKeywords:
+				config.setSphinxKeywords(field.getText());
 				break;
 			case repositoryPath:
 				File dirExist = new File(config.getRepositoryPath());

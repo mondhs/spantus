@@ -8,10 +8,13 @@ import javax.swing.JOptionPane;
 
 import org.spantus.core.extractor.IExtractor;
 import org.spantus.core.marker.Marker;
+import org.spantus.core.marker.MarkerSet;
 import org.spantus.work.services.calc.CalculateSnr;
 import org.spantus.work.services.calc.CalculateSnr.segmentStatics;
 import org.spantus.work.services.calc.impl.CalculateSnrImpl;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
+
+import scikit.util.Pair;
 
 public class CalculateStatisticsCmd extends AbsrtactCmd {
 
@@ -27,7 +30,8 @@ public class CalculateStatisticsCmd extends AbsrtactCmd {
 
 	public String execute(SpantusWorkInfo ctx) {
 		
-		Marker marker = ((Marker) getCurrentEvent().getValue());
+		Pair<MarkerSet,Marker> markerPair = ((Pair<MarkerSet,Marker>) getCurrentEvent().getValue());
+		Marker marker = markerPair.snd();
 		Set<IExtractor> extacts = getReader().getExtractorRegister();
 		StringBuilder sb = new StringBuilder();
 		for (IExtractor iExtractor : extacts) {

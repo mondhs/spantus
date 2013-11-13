@@ -34,7 +34,7 @@ public class SpottingServiceSphinxImp implements SpottingService {
 	
 	private static final Logger LOG = LoggerFactory
 			.getLogger(SpottingServiceSphinxImp.class);
-	private static final String SPHINX_RESULT = "(\\w+)\\((\\d+\\.\\d+),(\\d+\\.\\d+)\\)";// family(43.72,44.21)
+	private static final String SPHINX_RESULT = "([\\wąčęėįšųūž]+)\\((\\d+\\.\\d+),(\\d+\\.\\d+)\\)";// family(43.72,44.21)
 	private static final Pattern WORD_SPOTED_PATERN = Pattern
 			.compile(SPHINX_RESULT);
 	private String language = "lt";
@@ -143,7 +143,7 @@ public class SpottingServiceSphinxImp implements SpottingService {
 			return null;
 		}
 		String resString = result.getTimedBestResult(false, true);
-		LOG.debug("[performTestEachAudio]Result: {}", resString);
+		LOG.debug("[recognitionAudio]Result: {}", resString);
 		
 		//Lattice lat = new Lattice(result);
 		
