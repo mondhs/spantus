@@ -60,10 +60,10 @@ public class SyllableSpottingServiceImplExp extends WordSpottingServiceImplTest 
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-//				new File("/home/as/tmp/garsynas.lietuvos");
-				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
-//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
-//		new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
+//				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos");
+				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_wopitch");
+//				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_dynlen");
+//		new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_pitch");
 		
 	}
 

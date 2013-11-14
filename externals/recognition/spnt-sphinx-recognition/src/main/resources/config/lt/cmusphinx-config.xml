@@ -53,7 +53,7 @@
 		<property name="addOutOfGrammarBranch" value="true" />
 		<property name="phoneLoopAcousticModel" value="wsjAcousticModel" />
 		<property name="outOfGrammarProbability" value="1E-20" />
-		<property name="phoneInsertionProbability" value="1E-6" />
+		<property name="phoneInsertionProbability" value="1E-1" />
 	</component>
 
 
@@ -110,15 +110,15 @@
 
 	<component name="epFrontEnd" type="edu.cmu.sphinx.frontend.FrontEnd">
 		<propertylist name="pipeline">
-			<item>audioFileDataSource </item>
-			<item>dataBlocker </item>
-			<item>preemphasizer </item>
-			<item>windower </item>
+			<item>audioFileDataSource</item>
+			<item>dataBlocker</item>
+			<item>preemphasizer</item>
+			<item>windower</item>
 			<item>fft</item>
-			<item>melFilterBank </item>
-			<item>dct </item>
-			<item>liveCMN </item>
-			<item>featureExtraction </item>
+			<item>melFilterBank</item>
+			<item>dct</item>
+			<item>liveCMN</item>
+			<item>featureExtraction</item>
 		</propertylist>
 	</component>
 

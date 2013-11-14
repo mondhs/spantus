@@ -19,15 +19,17 @@ import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.result.WordResult;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
+import edu.cmu.sphinx.util.props.ConfigurationManagerUtils;
 
 public class SphinxRecognitionServiceImpl implements SphinxRecognitionService {
 	
 	private static final Logger LOG = Logger.getLogger(SphinxRecognitionServiceImpl.class);
 
 	private static final String SILENCE = "<sil>";
-	private static final String UNKOWN = "<unk>";
 
 	private ConfigurationManager configurationManager = null;
+	private String outOfGrammarProbabilityItem = null;
+	private String phoneInsertionProbability = null;
 	
 	public SphinxRecognitionServiceImpl() {
 		configurationManager = newConfigurationManager();
@@ -108,7 +110,14 @@ public class SphinxRecognitionServiceImpl implements SphinxRecognitionService {
 		LOG.error("Config: {0}", url);
 		ConfigurationManager cm = new ConfigurationManager(url);
 
-//		ConfigurationManagerUtils.setProperty(cm, "FlatLinguist", "outOfGrammarProbability", outOfGrammarProbabilityItem);
+		
+		if(outOfGrammarProbabilityItem != null){
+			ConfigurationManagerUtils.setProperty(cm, "FlatLinguist", "outOfGrammarProbability", getOutOfGrammarProbabilityItem());	
+		}
+		if(phoneInsertionProbability != null){
+			ConfigurationManagerUtils.setProperty(cm, "FlatLinguist", "phoneInsertionProbability", getPhoneInsertionProbability());	
+		}
+		
 //		ConfigurationManagerUtils.dumpPropStructure(cm);
 		return cm;
 	}
@@ -141,6 +150,22 @@ public class SphinxRecognitionServiceImpl implements SphinxRecognitionService {
 		int end = word.getEndFrame();
 		wordMarker.setEnd((long)end);
 		return wordMarker;
+	}
+
+	public String getOutOfGrammarProbabilityItem() {
+		return outOfGrammarProbabilityItem;
+	}
+
+	public void setOutOfGrammarProbabilityItem(String outOfGrammarProbabilityItem) {
+		this.outOfGrammarProbabilityItem = outOfGrammarProbabilityItem;
+	}
+
+	public String getPhoneInsertionProbability() {
+		return phoneInsertionProbability;
+	}
+
+	public void setPhoneInsertionProbability(String phoneInsertionProbability) {
+		this.phoneInsertionProbability = phoneInsertionProbability;
 	}
 
 }
