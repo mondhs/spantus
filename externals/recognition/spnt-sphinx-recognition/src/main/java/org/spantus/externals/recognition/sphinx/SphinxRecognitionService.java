@@ -6,7 +6,7 @@ import org.spantus.core.marker.MarkerSetHolder;
 
 public interface SphinxRecognitionService {
 
-	public abstract MarkerSetHolder recognize(InputStream inputStream,
+	public abstract MarkerSetHolder recognizeOffline(InputStream inputStream,
 			String streamName);
 
 	void addKeyword(String keyWord);

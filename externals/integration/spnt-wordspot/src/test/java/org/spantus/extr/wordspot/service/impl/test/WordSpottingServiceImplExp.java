@@ -40,7 +40,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 
 	private static final String SEARCH_KEY_WORD = "lietuvos";
 
-	private static final Logger log = LoggerFactory
+	private static final Logger LOG = LoggerFactory
 			.getLogger(WordSpottingServiceImplExp.class);
 
 	private WspotJdbcDao wspotDao;
@@ -59,9 +59,9 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_wopitch");
-//				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_pitch");
-				new File("/home/as/tmp/garsynas_2lietuvos/garsynas_dynlen");
+//				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_wopitch");
+//				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_pitch");
+				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_dynlen");
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
-	@Ignore
+	
 	@Test
 	@Category(SlowTests.class)
 	@Override
@@ -86,8 +86,8 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 		WordSpotResult result = doWordspot(getWavFile());
 		String resultsStr = extractResultStr(result.getSegments());
 
-		log.error("Marker =>" + result.getOriginalMarker());
-		log.error(getWavFile() + "=>"
+		LOG.error("Marker =>" + result.getOriginalMarker());
+		LOG.error(getWavFile() + "=>"
 				+ order.sortedCopy(result.getSegments().entrySet()));
 
 		// then
@@ -103,16 +103,16 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 				.getLength(), firstSegment.getMarker().getLength(), 200);
 
 	}
-
+	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {
 		wspotDao.setRecreate(true);
 		wspotDao.init();
-        log.debug("path: {}", getWavFile().getParentFile().getAbsoluteFile());
+        LOG.debug("path: {}", getWavFile().getParentFile().getAbsoluteFile());
 		File[] files = getWavFile().getParentFile().listFiles(
 				new ExtNameFilter("wav"));
-        log.debug("fileSize: {}", files.length);
+        LOG.debug("fileSize: {}", files.length);
         int index = 0;
 		int foundSize = 0;
 		for (File file : files) {
@@ -122,19 +122,19 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 			// continue;
 			// }
     		Long start = System.currentTimeMillis();
-         	log.debug("start {}: {}",index,  file);
+         	LOG.debug("start {}: {}",index,  file);
 			WordSpotResult result = doWordspot(file);
 			wspotDao.save(result);
 			foundSize += result.getSegments().size();
 			// String resultsStr = extractResultStr(result.getSegments());
-            log.debug("Marker => {}", result.getOriginalMarker());
-            log.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
-            log.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
-            log.debug("done {} in {} : {}\n", new Object[]{index, System.currentTimeMillis()-start, file});
+            LOG.debug("Marker => {}", result.getOriginalMarker());
+            LOG.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
+            LOG.debug("{} => {}",getWavFile(), order.sortedCopy(result.getSegments().entrySet()));
+            LOG.debug("done {} in {} : {}\n", new Object[]{index, System.currentTimeMillis()-start, file});
             index++;
 		}
 		// log.error("files =>" + files.length);
-        log.debug("foundSize =>{}", foundSize);
+        LOG.debug("foundSize =>{}", foundSize);
 		// Assert.assertEquals(0, list.size());
 		wspotDao.destroy();
 		Assert.assertTrue("One element at least", foundSize > 0);

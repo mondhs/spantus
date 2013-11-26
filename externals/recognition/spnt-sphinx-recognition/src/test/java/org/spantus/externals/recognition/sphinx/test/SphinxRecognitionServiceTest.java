@@ -39,7 +39,7 @@ public class SphinxRecognitionServiceTest {
 		shinxRecognitionServiceImpl.addKeyword("NĖRAŽODŽIO");
 		
 		//when
-		MarkerSetHolder markerSetHolder = shinxRecognitionServiceImpl.recognize(ais, audioFileURL.getFile());
+		MarkerSetHolder markerSetHolder = shinxRecognitionServiceImpl.recognizeOffline(ais, audioFileURL.getFile());
 		//then
 		MarkerSet wordMarkerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.word.name());
 		MarkerSet phoneMarkerSet = markerSetHolder.getMarkerSets().get(MarkerSetHolderEnum.phone.name());

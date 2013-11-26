@@ -119,7 +119,11 @@ public class WspotJdbcDao {
             Long foundStart = signalSegment.getMarker().getStart();
             Long foundEnd = signalSegment.getMarker().getEnd();
             String foundLabel = signalSegment.getMarker().getLabel();
-            Double mfccValue = recognitionResult.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+            Double mfccValue = 0D;
+            if(recognitionResult.getDetails() != null){
+            	mfccValue = recognitionResult.getDetails().getDistances().get(ExtractorEnum.MFCC_EXTRACTOR.name());
+            }
+            
             Marker originalMarker = null;
             Long minDelta = Long.MAX_VALUE ;
             for (Marker iOriginalMarker : orignalMap) {

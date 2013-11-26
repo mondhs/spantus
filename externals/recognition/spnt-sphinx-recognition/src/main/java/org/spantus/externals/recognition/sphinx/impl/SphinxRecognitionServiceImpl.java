@@ -39,7 +39,7 @@ public class SphinxRecognitionServiceImpl implements SphinxRecognitionService {
 	 * @see org.spantus.externals.recognition.sphinx.SphinxRecognitionService#recognize(java.io.InputStream, java.lang.String)
 	 */
 	@Override
-	public MarkerSetHolder  recognize(InputStream inputStream, String streamName) {
+	public MarkerSetHolder  recognizeOffline(InputStream inputStream, String streamName) {
 		Recognizer recognizer = (Recognizer) configurationManager.lookup("recognizer");
 		recognizer.allocate();
 		StreamDataSource reader = (StreamDataSource)

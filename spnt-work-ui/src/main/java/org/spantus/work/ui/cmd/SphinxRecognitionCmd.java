@@ -97,7 +97,7 @@ public class SphinxRecognitionCmd extends AbsrtactCmd {
     	for (String keyWord : keywordArr) {
     		recognitionService.addKeyword(keyWord);
 		}
-    	MarkerSetHolder markerSetHolder = recognitionService.recognize(inputStream, streamName);
+    	MarkerSetHolder markerSetHolder = recognitionService.recognizeOffline(inputStream, streamName);
 		return markerSetHolder;
 	}
 
