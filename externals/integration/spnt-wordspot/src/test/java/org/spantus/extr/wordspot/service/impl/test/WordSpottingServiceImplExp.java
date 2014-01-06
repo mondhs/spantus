@@ -59,9 +59,9 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-//				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_wopitch");
+				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_wopitch");
 //				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_pitch");
-				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_dynlen");
+//				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_dynlen");
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 		;
 		return new File(aRepositoryPathRoot, fileName);
 	}
-	
+	@Ignore
 	@Test
 	@Category(SlowTests.class)
 	@Override
@@ -103,7 +103,7 @@ public class WordSpottingServiceImplExp extends WordSpottingServiceImplTest {
 				.getLength(), firstSegment.getMarker().getLength(), 200);
 
 	}
-	@Ignore
+
 	@Test
 	@Category(SlowTests.class)
 	public void bulkTest() throws MalformedURLException {

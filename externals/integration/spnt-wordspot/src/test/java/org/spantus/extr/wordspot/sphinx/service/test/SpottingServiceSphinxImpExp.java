@@ -54,9 +54,9 @@ public class SpottingServiceSphinxImpExp extends AbstractSegmentExtractorTest {
 	@Override
 	protected File createRepositoryPathRoot() {
 		return 
-//				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_wopitch");
+				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_wopitch");
 //				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_pitch");
-				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_dynlen");
+//				new File("/home/as/src/garsynai/darbiniai/garsynas_2lietuvos/garsynas_dynlen");
 	}
 	
 	@Override
@@ -100,11 +100,11 @@ public class SpottingServiceSphinxImpExp extends AbstractSegmentExtractorTest {
         int index = 0;
 		int foundSize = 0;
 		for (File file : files) {
-			// if(!file.getName().contains(
-			// "RZd0706_18_06-30_1.wav"
-			// )){
-			// continue;
-			// }
+//			 if(!file.getName().contains(
+//					 "076-30_1.wav"
+//			)){
+//				continue;
+//			}
     		Long start = System.currentTimeMillis();
     		LOG.debug("start {}: {}",index,  file);
 			WordSpotResult result = doWordspot(file);
