@@ -33,12 +33,13 @@
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
 		</dependency>
-
+		<!--
 		<dependency>
 			<groupId>org.tritonus</groupId>
 			<artifactId>tritonus_share</artifactId>
 			<version>0.3.6</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>net.javazoom</groupId>
 			<artifactId>mp3spi</artifactId>
@@ -49,6 +50,7 @@
 			<artifactId>jlayer</artifactId>
 			<version>1.0.1</version>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>

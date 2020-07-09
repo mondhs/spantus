@@ -10,7 +10,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import javazoom.spi.mpeg.sampled.file.MpegEncoding;
+// import javazoom.spi.mpeg.sampled.file.MpegEncoding;
 
 import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.io.DefaultAudioReader;
@@ -30,9 +30,9 @@ public class Mp3SignalReader extends DefaultAudioReader {
 		AudioFileFormat audioFileFormat;
 		try {
 			audioFileFormat = AudioSystem.getAudioFileFormat(url);
-			if(audioFileFormat.getFormat().getEncoding() instanceof MpegEncoding ){
-				return true;
-			}
+			// if(audioFileFormat.getFormat().getEncoding() instanceof MpegEncoding ){
+			// 	return true;
+			// }
 
 		} catch (UnsupportedAudioFileException e) {
 			return false;

@@ -33,8 +33,8 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.core.marker.MarkerSetHolder.MarkerSetHolderEnum;
 import org.spantus.exception.ProcessingException;
-import org.spantus.externals.recognition.sphinx.SphinxRecognitionService;
-import org.spantus.externals.recognition.sphinx.impl.SphinxRecognitionServiceImpl;
+// import org.spantus.externals.recognition.sphinx.SphinxRecognitionService;
+// import org.spantus.externals.recognition.sphinx.impl.SphinxRecognitionServiceImpl;
 import org.spantus.logger.Logger;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 
@@ -92,12 +92,13 @@ public class SphinxRecognitionCmd extends AbsrtactCmd {
      * @return
      */
     protected MarkerSetHolder recognize(String keywords, InputStream inputStream, String streamName) {
-    	SphinxRecognitionService recognitionService = new SphinxRecognitionServiceImpl();
-    	String[] keywordArr = keywords.split("[,\\s]");
-    	for (String keyWord : keywordArr) {
-    		recognitionService.addKeyword(keyWord);
-		}
-    	MarkerSetHolder markerSetHolder = recognitionService.recognizeOffline(inputStream, streamName);
+    	// SphinxRecognitionService recognitionService = new SphinxRecognitionServiceImpl();
+    	// String[] keywordArr = keywords.split("[,\\s]");
+    	// for (String keyWord : keywordArr) {
+    	// 	recognitionService.addKeyword(keyWord);
+		// }
+    	// MarkerSetHolder markerSetHolder = recognitionService.recognizeOffline(inputStream, streamName);
+        MarkerSetHolder markerSetHolder = new MarkerSetHolder();
 		return markerSetHolder;
 	}
 

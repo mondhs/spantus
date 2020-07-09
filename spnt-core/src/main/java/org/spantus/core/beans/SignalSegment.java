@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.xml.bind.annotation.XmlRootElement;
+// import javax.xml.bind.annotation.XmlRootElement;
 
 import org.spantus.core.FrameValues;
 import org.spantus.core.FrameVectorValues;
@@ -13,7 +13,7 @@ import org.spantus.core.IValues;
 import org.spantus.core.marker.Marker;
 import org.spantus.exception.ProcessingException;
 
-@XmlRootElement(name = "SignalSegment")
+// @XmlRootElement(name = "SignalSegment")
 public class SignalSegment implements Serializable{
 
 	/**
