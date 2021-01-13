@@ -6,6 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.spantus.core.extractor.IExtractorInputReader;
 import org.spantus.extractor.impl.ExtractorEnum;
 import org.spantus.work.services.impl.WorkExtractorReaderServiceImpl;
@@ -19,7 +20,7 @@ public class ExtractorReaderServiceImplTest {
 		extractor = new WorkExtractorReaderServiceImpl();
 	}
 
-	@Test
+	@Test @Ignore
 	public void testReadSignal() {
 		// given
 		File wavFile = new File("../data/t_1_2.wav");

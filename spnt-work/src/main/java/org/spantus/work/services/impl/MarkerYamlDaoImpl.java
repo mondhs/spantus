@@ -14,12 +14,12 @@ import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
 import org.spantus.logger.Logger;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.enums.EnumConverter;
+// import com.thoughtworks.xstream.XStream;
+// import com.thoughtworks.xstream.converters.enums.EnumConverter;
 
-public class MarkerXmlDaoImpl implements MarkerDao {
+public class MarkerYamlDaoImpl implements MarkerDao {
 
-	private XStream xstream = null;
+	// private XStream xstream = null;
 
 	protected Logger log = Logger.getLogger(getClass());
 	
@@ -27,14 +27,14 @@ public class MarkerXmlDaoImpl implements MarkerDao {
 	public void write(MarkerSetHolder holder, File file) {
 		try {
 			FileWriter outputFile = new FileWriter(file,false);	
-			getXsteam().toXML(holder, outputFile);
+			// getXsteam().toXML(holder, outputFile);
 			log.debug("Markers are exported: " + file.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	public void write(MarkerSetHolder holder, OutputStream outputStream) {
-		getXsteam().toXML(holder, outputStream);		
+		// getXsteam().toXML(holder, outputStream);		
 	}
 
 	
@@ -42,7 +42,7 @@ public class MarkerXmlDaoImpl implements MarkerDao {
 		MarkerSetHolder holder = new MarkerSetHolder();
 		try {
 			FileReader inFile = new FileReader(file);
-			getXsteam().fromXML(inFile, holder);
+			// getXsteam().fromXML(inFile, holder);
 			log.debug("markers file read correctly. info: " + file.getAbsolutePath());
 		} catch (FileNotFoundException e) {
 			log.debug("Marker file not found: " + file);
@@ -53,21 +53,21 @@ public class MarkerXmlDaoImpl implements MarkerDao {
 	}
 	public MarkerSetHolder read(InputStream inputStream) {
 		MarkerSetHolder holder = new MarkerSetHolder();
-		getXsteam().fromXML(inputStream, holder);
+		// getXsteam().fromXML(inputStream, holder);
 		log.debug("markers file read correctly. info: ");
 		return holder;
 	}
 	
-	protected XStream getXsteam(){
-		if(xstream == null){
-			xstream = new XStream();
-//			xstream.omitField(type, fieldName);
-			xstream.alias(MarkerSetHolder.class.getSimpleName(), MarkerSetHolder.class);
-			xstream.alias(MarkerSet.class.getSimpleName(), MarkerSet.class);
-			xstream.alias(Marker.class.getSimpleName(), Marker.class);
-			xstream.registerConverter(new EnumConverter());
-		}
-		return xstream;
-	}
+// 	protected XStream getXsteam(){
+// 		if(xstream == null){
+// 			xstream = new XStream();
+// //			xstream.omitField(type, fieldName);
+// 			xstream.alias(MarkerSetHolder.class.getSimpleName(), MarkerSetHolder.class);
+// 			xstream.alias(MarkerSet.class.getSimpleName(), MarkerSet.class);
+// 			xstream.alias(Marker.class.getSimpleName(), Marker.class);
+// 			xstream.registerConverter(new EnumConverter());
+// 		}
+// 		return xstream;
+// 	}
 	
 }

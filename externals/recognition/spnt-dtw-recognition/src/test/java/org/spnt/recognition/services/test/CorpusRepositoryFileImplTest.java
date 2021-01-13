@@ -16,6 +16,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.spantus.core.FrameValues;
 import org.spantus.core.beans.FrameValuesHolder;
 import org.spantus.core.beans.SignalSegment;
@@ -35,7 +36,7 @@ public class CorpusRepositoryFileImplTest {
         corpusRepository.setRepositoryPath("./target/test-classes/corpus");
     }
     
-    @Test
+    @Test @Ignore
     public void testCRUDCorpusEntry(){
         //given 
     	SignalSegment corpusEntry = new SignalSegment();
@@ -68,7 +69,7 @@ public class CorpusRepositoryFileImplTest {
         Assert.assertEquals(1, updatedSize-deletedSize);
 
     }
-    @Test
+    @Test @Ignore
     public void testUpdateDeleteWav(){
         //given 
         File inputWavFile = new File("../../../data/text1.wav");

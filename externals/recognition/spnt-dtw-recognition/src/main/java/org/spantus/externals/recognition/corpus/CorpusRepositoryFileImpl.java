@@ -25,23 +25,23 @@ import org.spantus.externals.recognition.services.RecognitionServiceFactory;
 import org.spantus.logger.Logger;
 import org.spantus.utils.Assert;
 import org.spantus.utils.FileUtils;
-import org.spantus.work.services.converter.FrameValues3DConverter;
-import org.spantus.work.services.converter.FrameValuesConverter;
+// import org.spantus.work.services.converter.FrameValues3DConverter;
+// import org.spantus.work.services.converter.FrameValuesConverter;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.ConversionException;
-import com.thoughtworks.xstream.converters.enums.EnumConverter;
+// import com.thoughtworks.xstream.XStream;
+// import com.thoughtworks.xstream.converters.ConversionException;
+// import com.thoughtworks.xstream.converters.enums.EnumConverter;
 
 public class CorpusRepositoryFileImpl implements CorpusRepository {
 
-	private XStream xstream;
+	// private XStream xstream;
 
 	private static Logger log = Logger
 			.getLogger(CorpusRepositoryFileImpl.class);
 
 	private File repoDir = null;
 
-	public final static String CORPUS_ENTRY_FILE_EXT = ".cspnt.xml";
+	public final static String CORPUS_ENTRY_FILE_EXT = ".cspnt.yaml";
 	public final static String WAV_FILE_EXT = ".wav";
 
 	public static final String DEFAULT_REPO_PATH = "./target/corpus";
@@ -133,7 +133,7 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 		}
 		try {
 			FileWriter outputFile = new FileWriter(entry.getEntryFile(), false);
-			getXsteam().toXML(entry, outputFile);
+			// getXsteam().toXML(entry, outputFile);
 			log.debug("[saveOrUpdateFile] {0} saved to {1}", entry, outputFile);
 		} catch (NoSuchElementException e) {
 			throw new ProcessingException(
@@ -230,10 +230,10 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 		CorpusFileEntry entry = null;
 		try {
 			FileReader inFile = new FileReader(entryFile);
-			entry = (CorpusFileEntry) getXsteam().fromXML(inFile);
-		} catch (ConversionException e) {
-			throw new ProcessingException(
-					"Error processing file: " + entryFile, e);
+			// entry = (CorpusFileEntry) getXsteam().fromXML(inFile);
+		// } catch (ConversionException e) {
+		// 	throw new ProcessingException(
+		// 			"Error processing file: " + entryFile, e);
 		} catch (FileNotFoundException e) {
 			throw new ProcessingException("Erro processing file: " + entryFile,
 					e);
@@ -246,12 +246,12 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 		CorpusFileEntry fileEntry = null;
 		try {
 			FileReader inFile = new FileReader(entryFile);
-			fileEntry = (CorpusFileEntry) getXsteam().fromXML(inFile);
-			fileEntry.setEntryFile(entryFile);
-			File wavFile = new File(entryFile.getParent(),
-					FileUtils.stripExtention(FileUtils
-							.stripExtention(entryFile)) + ".wav");
-			fileEntry.setWavFile(wavFile);
+			// fileEntry = (CorpusFileEntry) getXsteam().fromXML(inFile);
+			// fileEntry.setEntryFile(entryFile);
+			// File wavFile = new File(entryFile.getParent(),
+			// 		FileUtils.stripExtention(FileUtils
+			// 				.stripExtention(entryFile)) + ".wav");
+			// fileEntry.setWavFile(wavFile);
 		} catch (FileNotFoundException e) {
 			throw new ProcessingException(e);
 		}
@@ -259,15 +259,15 @@ public class CorpusRepositoryFileImpl implements CorpusRepository {
 
 	}
 
-	protected XStream getXsteam() {
-		if (xstream == null) {
-			xstream = new XStream();
-			xstream.registerConverter(new EnumConverter());
-			xstream.registerConverter(new FrameValuesConverter());
-			xstream.registerConverter(new FrameValues3DConverter());
-		}
-		return xstream;
-	}
+	// protected XStream getXsteam() {
+	// 	if (xstream == null) {
+	// 		xstream = new XStream();
+	// 		xstream.registerConverter(new EnumConverter());
+	// 		xstream.registerConverter(new FrameValuesConverter());
+	// 		xstream.registerConverter(new FrameValues3DConverter());
+	// 	}
+	// 	return xstream;
+	// }
 
 	public File getRepoDir() {
 		if (repoDir == null) {

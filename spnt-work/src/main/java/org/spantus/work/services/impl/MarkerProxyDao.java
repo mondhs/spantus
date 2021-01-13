@@ -15,7 +15,7 @@ import org.spantus.logger.Logger;
 public class MarkerProxyDao implements MarkerDao {
 
     public static final String LABA = "laba";
-    public static final String MSPNTXML = "mspnt.xml";
+    public static final String MSPNTYAML = "mspnt.yaml";
     public static final String TEXT_GRID = "TextGrid";
     public static final String AUDACITY_TXT = "txt";
     Map<String, MarkerDao> markerDaoRegister;
@@ -23,7 +23,7 @@ public class MarkerProxyDao implements MarkerDao {
 
     public MarkerProxyDao() {
         markerDaoRegister = new HashMap<String, MarkerDao>();
-        markerDaoRegister.put(MSPNTXML, new MarkerXmlDaoImpl());
+        markerDaoRegister.put(MSPNTYAML, new MarkerYamlDaoImpl());
         markerDaoRegister.put(AUDACITY_TXT, new MarkerAudacityDao());
         markerDaoRegister.put(LABA, new MarkerLabaDao());
         markerDaoRegister.put(TEXT_GRID, new MarkerTextGridDao());
@@ -39,7 +39,7 @@ public class MarkerProxyDao implements MarkerDao {
     }
 
     public MarkerSetHolder read(InputStream inputStream) {
-        MarkerDao markerDao = resolveMarkerDao(MSPNTXML);
+        MarkerDao markerDao = resolveMarkerDao(MSPNTYAML);
         if (markerDao != null) {
             return markerDao.read(inputStream);
         }
@@ -57,7 +57,7 @@ public class MarkerProxyDao implements MarkerDao {
     }
 
     public void write(MarkerSetHolder holder, OutputStream outputStream) {
-        MarkerDao markerDao = resolveMarkerDao(MSPNTXML);
+        MarkerDao markerDao = resolveMarkerDao(MSPNTYAML);
         if (markerDao != null) {
             markerDao.write(holder, outputStream);
         }

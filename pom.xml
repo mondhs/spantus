@@ -110,7 +110,7 @@
 	</dependencies>
 
 	<repositories>
-		<repository>
+		<!-- <repository>
 			<id>spnt-global-repo</id>
 			<name>Spantus releases and 3rd party repo</name>
 			<url>http://repository-spantus.forge.cloudbees.com/release/</url>
@@ -120,7 +120,7 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
+		</repository> -->
 	</repositories>
 
 	<build>
@@ -312,28 +312,39 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>15.0</version>
+				<version>[24.1.1,)</version>
 			</dependency>
-			<dependency>
+			<!--<dependency>
 				<groupId>com.thoughtworks.xstream</groupId>
 				<artifactId>xstream</artifactId>
-				<version>1.4.3</version>
+				<version>[1.4.12,)</version>
+			</dependency>-->
+			<dependency>
+				<groupId>com.fasterxml.jackson.dataformat</groupId>
+				<artifactId>jackson-dataformat-yaml</artifactId>
+				<version>2.11.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>2.11.2</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<distributionManagement>
+	<!--
 		<repository>
 			<id>cloudbees-repository-release</id>
 			<name>cloudbees-repository-release</name>
 			<url>dav:https://repository-spantus.forge.cloudbees.com/release</url>
-			<!--<url>scpexe://shell.sourceforge.net/home/groups/s/sp/spantus/htdocs/repository</url> -->
+			<!- - <url>scpexe://shell.sourceforge.net/home/groups/s/sp/spantus/htdocs/repository</url> - - >
 		</repository>
 		<snapshotRepository>
 			<id>cloudbees-repository-sanpshot</id>
 			<name>cloudbees-repository-sanpshot</name>
 			<url>dav:https://repository-spantus.forge.cloudbees.com/snapshot</url>
-			<!--<url>scpexe://shell.sourceforge.net/home/groups/s/sp/spantus/htdocs/snapshot-repo</url> -->
-		</snapshotRepository>
+		</snapshotRepository>-->
 	</distributionManagement>
 	<licenses>
 		<license>

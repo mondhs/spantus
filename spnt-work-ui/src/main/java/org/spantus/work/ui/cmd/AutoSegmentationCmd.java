@@ -96,11 +96,14 @@ public class AutoSegmentationCmd extends AbsrtactCmd {
             ctx.getProject().getSample().setMarkerSetHolder(markerSetHolder);
 
 
-            getMarkerLabeling().update(ctx.getProject(), getExecutionFacade());
-            getMarkerLabeling().label(
+
+            log.error("ctx.getEnv().getAutoRecognition() ", ctx.getEnv().getAutoRecognition());
+            if(ctx.getEnv().getAutoRecognition() == true){
+                getMarkerLabeling().update(ctx.getProject(), getExecutionFacade());
+                getMarkerLabeling().label(
                     ctx.getProject().getSample().getMarkerSetHolder(),
                     ctx, getReader());
-
+            }
         }
         if (markerSet == null) {
             log.debug("Auto segmentaiton was not processed as there is no data.");

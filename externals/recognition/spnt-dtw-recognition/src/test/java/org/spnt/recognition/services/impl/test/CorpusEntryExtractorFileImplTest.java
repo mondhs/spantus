@@ -12,6 +12,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.spantus.core.beans.SignalSegment;
 import org.spantus.core.marker.MarkerSet;
 import org.spantus.core.marker.MarkerSetHolder;
@@ -37,7 +38,7 @@ public class CorpusEntryExtractorFileImplTest {
     }
     
     
-    @Test 
+    @Test  @Ignore
     public void testSegmentExtractInMemory(){
        //given
        File filePath = new File(path, FILE_TEST);
@@ -46,8 +47,7 @@ public class CorpusEntryExtractorFileImplTest {
        //then
        Assert.assertEquals("entries: " , 11, entries.size());
     }
-     @Test 
-    
+     @Test @Ignore
     public void testSegmentExtractAndSave(){
          //given
        File filePath = new File(path, FILE_TEST);

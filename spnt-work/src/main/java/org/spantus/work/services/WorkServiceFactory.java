@@ -16,7 +16,7 @@ import org.spantus.work.services.impl.BundleZipDaoImpl;
 import org.spantus.work.services.impl.SignalSegmentSimpleJsonDao;
 import org.spantus.work.services.impl.WorkExtractorReaderServiceImpl;
 import org.spantus.work.services.impl.MarkerProxyDao;
-import org.spantus.work.services.impl.ReaderXmlDaoImpl;
+import org.spantus.work.services.impl.ReaderYamlDaoImpl;
 import org.spantus.work.services.reader.ExternalReaderDao;
 import org.spantus.work.services.reader.impl.CsvDaoImpl;
 import org.spantus.work.services.reader.impl.WekaArffDaoImpl;
@@ -56,7 +56,7 @@ public abstract class WorkServiceFactory {
 
 	public static ReaderDao createReaderDao() {
 		if (readerDao == null) {
-			readerDao = new ReaderXmlDaoImpl();
+			readerDao = new ReaderYamlDaoImpl();
 		}
 		return readerDao;
 	}

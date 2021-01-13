@@ -11,8 +11,8 @@ import org.spantus.work.ui.dto.FeatureReader;
 import org.spantus.work.ui.dto.SpantusWorkInfo;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.enums.EnumConverter;
+// import com.thoughtworks.xstream.XStream;
+// import com.thoughtworks.xstream.converters.enums.EnumConverter;
 
 public class XmlWorkInfoManager extends AbstractWorkInfoManager{
 	
@@ -32,7 +32,7 @@ public class XmlWorkInfoManager extends AbstractWorkInfoManager{
             SpantusWorkInfo info = new SpantusWorkInfo();
 		try {
 			FileReader inFile = new FileReader(getConfigPath()+FILE_NAME);
-			getXsteam().fromXML(inFile, info);
+			// getXsteam().fromXML(inFile, info);
 			log.debug("Config file read correctly. info: " + info.getProject().getWorkingDir());
 		} catch (NullPointerException e) {
 			log.debug("Problem with loading " + e.getMessage());
@@ -55,26 +55,26 @@ public class XmlWorkInfoManager extends AbstractWorkInfoManager{
 	public void saveWorkInfo(SpantusWorkInfo info) {
 		try {
 			FileWriter outputFile = new FileWriter(getConfigPath()+FILE_NAME,false);	
-			getXsteam().toXML(info, outputFile);
+			// getXsteam().toXML(info, outputFile);
 			log.debug("Config file is saved.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 	}
-	XStream xstream = null;
-	private XStream getXsteam(){
-		if(xstream == null){
-			xstream = new XStream();
-			xstream.alias(SPANTUS_WORK_INFO, SpantusWorkInfo.class);
-			xstream.alias(CONFIG, FeatureReader.class);
-			xstream.alias(WORKING_DIR, File.class);
-			xstream.alias(PROJECT, SpantusWorkProjectInfo.class);
-			xstream.registerConverter(new EnumConverter());
-                        xstream.registerConverter(new EncodingConverter());
-		}
-		return xstream;
-	}
+	// XStream xstream = null;
+	// private XStream getXsteam(){
+	// 	if(xstream == null){
+	// 		xstream = new XStream();
+	// 		xstream.alias(SPANTUS_WORK_INFO, SpantusWorkInfo.class);
+	// 		xstream.alias(CONFIG, FeatureReader.class);
+	// 		xstream.alias(WORKING_DIR, File.class);
+	// 		xstream.alias(PROJECT, SpantusWorkProjectInfo.class);
+	// 		xstream.registerConverter(new EnumConverter());
+    //                     xstream.registerConverter(new EncodingConverter());
+	// 	}
+	// 	return xstream;
+	// }
 
 	public String getConfigPath() {
 		if(configPath == null){
@@ -91,7 +91,7 @@ public class XmlWorkInfoManager extends AbstractWorkInfoManager{
 		SpantusWorkProjectInfo project = new SpantusWorkProjectInfo();
 		try {
 			FileReader inFile = new FileReader(path);
-			getXsteam().fromXML(inFile, project);
+			// getXsteam().fromXML(inFile, project);
 			log.debug("Project file read correctly. info: " + project.getWorkingDir());
 		} catch (FileNotFoundException e) {
 			log.debug("Project file not found: " + path);
@@ -104,7 +104,7 @@ public class XmlWorkInfoManager extends AbstractWorkInfoManager{
 	public void saveProject(SpantusWorkProjectInfo project, String path) {
 		try {
 			FileWriter outputFile = new FileWriter(path, false);	
-			getXsteam().toXML(project, outputFile);
+			// getXsteam().toXML(project, outputFile);
 			log.debug("Project file is saved.");
 		} catch (IOException e) {
 			e.printStackTrace();
