@@ -4,6 +4,7 @@ import java.net.URL;
 
 import javax.sound.sampled.AudioFileFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.spantus.core.extractor.SignalFormat;
 import org.spantus.core.marker.MarkerSetHolder;
 
@@ -34,6 +35,8 @@ public class WorkSample {
 	public void setCurrentFile(URL currentFile) {
 		this.currentFile = currentFile;
 	}
+
+	@JsonIgnore
 	public boolean isSamplePlayable() {
 		return !getCurrentFile().getFile().endsWith("xml");
 	}

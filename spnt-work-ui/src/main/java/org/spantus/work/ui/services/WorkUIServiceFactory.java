@@ -18,6 +18,7 @@ import org.spantus.work.ui.dto.WorkUIExtractorConfig;
 import org.spantus.work.ui.dto.SpantusWorkProjectInfo.ProjectTypeEnum;
 import org.spantus.work.ui.services.impl.DefaultReaderService;
 import org.spantus.work.ui.services.impl.XmlWorkInfoManager;
+import org.spantus.work.ui.services.impl.YamlWorkInfoManager;
 
 /**
  * 
@@ -82,7 +83,7 @@ public abstract class WorkUIServiceFactory {
 	}
 
 	public static WorkInfoManager createInfoManager(){
-		return new XmlWorkInfoManager();
+		return new YamlWorkInfoManager();
 	}
 	
 }

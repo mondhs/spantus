@@ -23,6 +23,7 @@
 		<module>spnt-mpeg7</module>
 		<module>spnt-work</module>
 		<module>externals/recognition/spnt-dtw-recognition</module>
+		<module>externals/experiment/spnt-exp-sylcount</module>
 		<!--<module>externals/recognition/spnt-sphinx-recognition</module>-->
 		<module>spnt-work-ui</module>
 	</modules>

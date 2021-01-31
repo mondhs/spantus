@@ -66,15 +66,17 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 	 */
 	private Boolean execute(Serializable compiledRule, Map<String, Object> param) {
 		try{
-			return  MVEL.executeExpression(compiledRule, param, Boolean.class);
+			Boolean val = MVEL.executeExpression(compiledRule, param, Boolean.class);
+			return val;
 		}catch (Exception e) {
-			log.error(e);
+			log.error("[execute] compiledRule: {0}; {1}", compiledRule.toString(), param);
+			log.error("Error evaluate rule", e);
 			return Boolean.FALSE;
 		}
 	}
 	/**
 	 * 
-	 * @param compiledRule
+	 * @param strRule
 	 * @param param
 	 * @return
 	 */

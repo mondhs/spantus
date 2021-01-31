@@ -9,6 +9,10 @@ import org.spantus.utils.Assert;
 
 
 public class ExtremeSegment extends Marker implements Serializable, Cloneable {
+
+	public ExtremeSegment(){
+	}
+
 	/**
 	 * 
 	 */

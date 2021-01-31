@@ -28,8 +28,8 @@ public class ExportCmd extends AbsrtactCmd {
 	private Logger log = Logger.getLogger(getClass());
 	
 	public static final String[] IMAGE_FILES = {"png"};
-	public static final String[] MARKER_FILES = {"mspnt.xml", "txt", "laba", "TextGrid"};
-	public static final String[] SAMPLE_FILES = {"sspnt.xml"};
+	public static final String[] MARKER_FILES = {"mspnt.yaml", "txt", "laba", "TextGrid", "yaml"};
+	public static final String[] SAMPLE_FILES = {"sspnt.yaml"};
 	public static final String[] WEKA_ARFF_FILES = {"arff"};
 	public static final String[] CSV_FILES = {"csv"};
 	public static final String[] MPEG7_FILES = {"mpeg7.xml"};
