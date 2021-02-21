@@ -115,7 +115,6 @@ public class CorpusEntryExtractorFileImpl implements CorpusEntryExtractor {
 
 	/**
 	 * 
-	 * @param extractors2
 	 * @param wavFilePath
 	 * @return
 	 */

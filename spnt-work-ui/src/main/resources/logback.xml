@@ -17,8 +17,11 @@
 	</appender>
 
 
+	<logger name="org.spantus.extractor.segments.online" level="DEBUG" />
 	<logger name="org.spantus.segment.offline" level="DEBUG" />
 	<logger name="org.spantus.core.threshold" level="DEBUG" />
+	<logger name="org.spantus.work.extractor.segments.online.rule" level="DEBUG" />
+
 
 
 	<root level="error">

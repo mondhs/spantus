@@ -32,6 +32,7 @@ public class ExtractorVectorOutputHolder implements IExtractorVector {
 	private FrameVectorValues outputValues;
 	private String name;
 	private IExtractorConfig config;
+	private ExtractorParam param = new ExtractorParam();
 
 
 	public FrameVectorValues calculateWindow(Long sample, FrameValues values) {
@@ -93,17 +94,17 @@ public class ExtractorVectorOutputHolder implements IExtractorVector {
 
     @Override
     public String getRegistryName() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getName();
     }
 
     @Override
     public ExtractorParam getParam() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return  param;
     }
 
     @Override
     public void setParam(ExtractorParam param) {
-        throw new UnsupportedOperationException("Not supported yet.");
+		this.param = param;
     }
 
 }

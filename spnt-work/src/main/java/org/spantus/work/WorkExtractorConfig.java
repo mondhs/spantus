@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.extractor.ExtractorConfig;
 
 public class WorkExtractorConfig implements IExtractorConfig {
@@ -19,6 +20,7 @@ public class WorkExtractorConfig implements IExtractorConfig {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private ClassifierEnum classifier;
 
 //	public int getBitsPerSample() {
 //		return config.getBitsPerSample();
@@ -117,4 +119,12 @@ public class WorkExtractorConfig implements IExtractorConfig {
 		this.preemphasis = preemphasis;
 	}
 
+	@Override
+	public ClassifierEnum getClassifier() {
+		return this.classifier;
+	}
+
+	public void setClassifier(ClassifierEnum classifier) {
+		this.classifier = classifier;
+	}
 }

@@ -12,3 +12,6 @@ target
 *.jar
 *.war
 *.ear
+
+*.bak
+*.log

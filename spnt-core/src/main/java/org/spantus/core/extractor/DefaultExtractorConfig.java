@@ -18,6 +18,8 @@
 */
 package org.spantus.core.extractor;
 
+import org.spantus.core.threshold.ClassifierEnum;
+
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,7 +58,10 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 	private Map<String, ExtractorParam> parameters;
 
 	private String preemphasis;
-	
+
+
+	private ClassifierEnum classifier;
+
 	public DefaultExtractorConfig() {
 		sampleRate = 44000D;
 		windowSize = 512;
@@ -154,7 +159,17 @@ public class DefaultExtractorConfig implements IExtractorConfig{
 	public void setPreemphasis(String preemphasis) {
 		this.preemphasis = preemphasis;
 	}
-	
+
+	@Override
+	public ClassifierEnum getClassifier() {
+		return this.classifier;
+	}
+
+	public void setClassifier(ClassifierEnum classifier) {
+		this.classifier = classifier;
+	}
+
+
 	@Override
 	public String toString() {
 		String msg = MessageFormat.format("{0} [sampleRate: {1}, windowSize: {2}, windowOverlap: {3}, frameSize: {4}]",

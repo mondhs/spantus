@@ -19,7 +19,7 @@ public class SaveProjectCmd extends AbsrtactCmd {
 	
 	
 	Logger log = Logger.getLogger(getClass());
-	public static final String[] FILES = {"spnt.xml"};
+	public static final String[] FILES = {"spnt.yaml"};
 
 	public SaveProjectCmd(CommandExecutionFacade executionFacade) {
 		super(executionFacade);

@@ -2,7 +2,6 @@ package org.spantus.work.services.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +10,10 @@ import java.io.OutputStream;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.spantus.core.FrameValues;
+import org.spantus.core.FrameVectorValues;
 import org.spantus.core.extractor.DefaultExtractorConfig;
 import org.spantus.core.extractor.ExtractorOutputHolder;
 import org.spantus.core.extractor.ExtractorVectorOutputHolder;
@@ -27,7 +29,7 @@ import org.spantus.logger.Logger;
 // import com.thoughtworks.xstream.XStream;
 // import com.thoughtworks.xstream.converters.ConversionException;
 // import com.thoughtworks.xstream.converters.enums.EnumConverter;
-import org.spantus.core.extractor.*;
+import org.spantus.work.services.converter.*;
 
 public class ReaderYamlDaoImpl implements ReaderDao {
 
@@ -41,7 +43,7 @@ public class ReaderYamlDaoImpl implements ReaderDao {
 		try {
 //			FileReader inFile = new FileReader(file);
 			ObjectMapper om = getYamlMapper();
-			reader = om.readValue(file, IExtractorInputReader.class);
+			reader = om.readValue(file, ExportExtractorInputReader.class);
 //			reader = (IExtractorInputReader)getXsteam().fromXML(inFile);
 			log.debug("extractors file read correctly. info: " + file.getAbsolutePath());
 			// }catch (ConversionException e) {
@@ -77,7 +79,8 @@ public class ReaderYamlDaoImpl implements ReaderDao {
 		try {
 			FileWriter outputFile = new FileWriter(file, false);
 			ObjectMapper om = getYamlMapper();
-			om.writeValue(file, prepareToSave(holder));
+			ExportExtractorInputReader preparedToSave = prepareToSave(holder);
+			om.writeValue(file, preparedToSave);
 			// getXsteam().toXML(prepareToSave(holder), outputFile);
 			log.debug("reader are exported: " + file.toString());
 		} catch (IOException e) {
@@ -89,8 +92,8 @@ public class ReaderYamlDaoImpl implements ReaderDao {
 		// getXsteam().toXML(prepareToSave(holder), outputStream);
 	}
 
-	protected IExtractorInputReader prepareToSave(IExtractorInputReader reader) {
-		IExtractorInputReader rtnReader = new DefaultExtractorInputReader();
+	protected ExportExtractorInputReader prepareToSave(IExtractorInputReader reader) {
+		ExportExtractorInputReader rtnReader = new ExportExtractorInputReader();
 		for (IExtractor extractor : reader.getExtractorRegister()) {
 			ExtractorOutputHolder holder = new ExtractorOutputHolder();
 			holder.setName(extractor.getName());
@@ -109,6 +112,17 @@ public class ReaderYamlDaoImpl implements ReaderDao {
 
 	ObjectMapper getYamlMapper() {
 		ObjectMapper om = new ObjectMapper(new YAMLFactory());
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(FrameValues.class, new FrameValuesSerializer());
+		module.addSerializer(FrameVectorValues.class, new FrameVectorValuesSerializer());
+
+		//module.addDeserializer(FrameValues.class, new FrameValuesDestabilizer());
+		module.addDeserializer(IExtractor.class, new IExtractorDeserializer());
+		module.addDeserializer(IExtractorVector.class, new IExtractorVectorDeserializer());
+
+
+//		module.addDeserializer(AudioFormat.Encoding.class, new EncodingDeserializer());
+		om.registerModule(module);
 		return om;
 	}
 

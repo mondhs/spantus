@@ -48,9 +48,9 @@ public class ClassifierRuleBaseServiceMvelImpl extends
 			if (commandInd) {
 				command = ruleEntry.getResult();
 				ruleEntry.incCounter();
-				log.debug("[testOnRuleBase]: finished {0}:{1}", ruleEntry.getName(),
-						ruleEntry.getDescription());
-				log.debug("[testOnRuleBase]:  param: \n \n  [{0}]\n",param);
+				log.debug("{3}[testOnRuleBase]: rule finished # {0}:{1}->{2}", ruleEntry.getName(),
+						ruleEntry.getDescription(),command, ctx.getIndex());
+				log.debug("{1}[testOnRuleBase]:  \n\t\t param: \n \t \t  [{0}]",param, ctx.getIndex());
 				break;
 			}
 		}

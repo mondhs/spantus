@@ -18,6 +18,8 @@
 */
 package org.spantus.core.extractor;
 
+import org.spantus.core.threshold.ClassifierEnum;
+
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
@@ -47,5 +49,6 @@ public interface IExtractorConfig extends Cloneable, Serializable {
 	public void setWindowing(String windowing);
 	public String getPreemphasis();
 	public void setPreemphasis(String preemphasis);
+	public ClassifierEnum getClassifier();
 	
 }

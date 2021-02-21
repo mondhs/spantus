@@ -33,12 +33,12 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 
 	private static final Logger LOG = Logger
 			.getLogger(ExtremeOnlineRuleClassifier.class);
-	private ExtremeSegmentsOnlineCtx onlineCtx;
+	private final ExtremeSegmentsOnlineCtx onlineCtx;
 
 	private ClassifierRuleBaseService ruleBaseService;
 	private ExtremeSegmentServiceImpl extremeSegmentService;
 
-	private Deque<Boolean> states = new LinkedList<Boolean>();
+	private final Deque<Boolean> states = new LinkedList<Boolean>();
 
 	public ExtremeOnlineRuleClassifier() {
 		onlineCtx = new ExtremeSegmentsOnlineCtx();
@@ -114,6 +114,9 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 			processResult(ctx, ctx.getCurrentSegment());
 		} else if (ctx.getExtremeSegments().size() > 0) {
 			ctx.getSegmentEntry().setSignalState(FeatureStates.flush);
+			//this is needed for sitation when last segment did not reached peak. In order not to lost last one lets approve it.
+			processResult(ctx, ctx.getCurrentSegment());
+//			changePointLastApproved(ctx);
 			processResult(ctx, ctx.getCurrentSegment());
 		}
 		LOG.debug("[endupPendingSegments] markers {0} after end up",
@@ -122,10 +125,9 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 
 	/**
 	 * 
-	 * @param ctx
-	 * @param window
-	 * @param sample
-	 * @param value
+	 * @param ctx - context of the rules
+	 * @param windowValues - Values for window
+	 * @param value - value of sample
 	 */
 	protected void processValue(ExtremeSegmentsOnlineCtx ctx,
 			FrameValues windowValues, Double value) {
@@ -493,7 +495,7 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 	/**
 	 * 
 	 * @param ctx
-	 * @param marker
+	 * @param appendESegment
 	 * @return
 	 */
 	public void appendMarker(ExtremeSegment appendESegment,
@@ -602,9 +604,11 @@ public class ExtremeOnlineRuleClassifier extends AbstractClassifier {
 	public void deleteSegment(ExtremeSegmentsOnlineCtx ctx) {
 		ExtremeSegment lastSegment = onlineCtx.getExtremeSegments().size() == 0 ? null
 				: onlineCtx.getExtremeSegments().getLast();
-		if (lastSegment == null) {
+		ExtremeSegment currentSegment = ctx.getCurrentSegment();
+		if (currentSegment == null) {
 			return;
 		}
+
 		lastSegment.setLabel("DELETED");
 		LOG.debug("[deleteSegment] not adding {0}", lastSegment);
 		changePointLastApproved(ctx);

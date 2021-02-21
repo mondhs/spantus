@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
+import org.spantus.core.threshold.ClassifierEnum;
 
 public class MockExtractorConfig implements IExtractorConfig {
 
@@ -79,6 +80,11 @@ public class MockExtractorConfig implements IExtractorConfig {
 
 	public void setPreemphasis(String preemphasis) {
 		
+	}
+
+	@Override
+	public ClassifierEnum getClassifier() {
+		return null;
 	}
 
 }

@@ -1,0 +1,58 @@
+---
+markerSets:
+  phone:
+    markerSetType: "phone"
+    markers:
+    - start: 489
+      length: 394
+      label: "0"
+      id: null
+      end: 883
+    - start: 981
+      length: 837
+      label: "1"
+      id: null
+      end: 1818
+    - start: 1911
+      length: 345
+      label: "2"
+      id: null
+      end: 2256
+    - start: 2315
+      length: 482
+      label: "3"
+      id: null
+      end: 2797
+    - start: 2862
+      length: 399
+      label: "4"
+      id: null
+      end: 3261
+    - start: 3294
+      length: 168
+      label: "5"
+      id: null
+      end: 3462
+  word:
+    markerSetType: "word"
+    markers:
+    - start: 429
+      length: 455
+      label: "1"
+      id: null
+      end: 884
+    - start: 921
+      length: 898
+      label: "2"
+      id: null
+      end: 1819
+    - start: 1851
+      length: 947
+      label: "3"
+      id: null
+      end: 2798
+    - start: 2802
+      length: 662
+      label: "4"
+      id: null
+      end: 3464

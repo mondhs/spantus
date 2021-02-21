@@ -60,6 +60,7 @@ public class YamlWorkInfoManager extends AbstractWorkInfoManager{
 	public void saveWorkInfo(SpantusWorkInfo info) {
 		try {
 			FileWriter outputFile = new FileWriter(getConfigPath()+FILE_NAME,false);
+			info.getProject().getSample().getMarkerSetHolder().getMarkerSets().clear();
 			getObjectMapper().writeValue(outputFile, info);
 			log.debug("Config file is saved.");
 		} catch (IOException e) {

@@ -7,6 +7,7 @@ public class ExtractorOutputHolder implements IExtractor {
 	private String name;
 	private IExtractorConfig config;
 	private Double extractorSampleRate;
+	private ExtractorParam param = new ExtractorParam();
 
 
         @Override
@@ -67,17 +68,17 @@ public class ExtractorOutputHolder implements IExtractor {
 
     @Override
     public String getRegistryName() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return  getName();
     }
 
     @Override
     public ExtractorParam getParam() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return param;
     }
 
     @Override
     public void setParam(ExtractorParam param) {
-        throw new UnsupportedOperationException("Not supported yet.");
+		this.param =param;
     }
         
 

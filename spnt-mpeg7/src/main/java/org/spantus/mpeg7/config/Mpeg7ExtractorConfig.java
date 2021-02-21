@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.spantus.core.extractor.ExtractorParam;
 import org.spantus.core.extractor.IExtractorConfig;
+import org.spantus.core.threshold.ClassifierEnum;
 import org.spantus.mpeg7.Mpeg7ExtractorEnum;
 
 public class Mpeg7ExtractorConfig implements IExtractorConfig {
@@ -109,5 +110,11 @@ public class Mpeg7ExtractorConfig implements IExtractorConfig {
 
 	public void setPreemphasis(String preemphasis) {
 	}
+
+	@Override
+	public ClassifierEnum getClassifier() {
+		return null;
+	}
+
 
 }
